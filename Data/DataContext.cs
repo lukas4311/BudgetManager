@@ -24,6 +24,11 @@ namespace Data
                 .HasOne(e => e.UserData)
                 .WithMany(e => e.BankAccounts)
                 .HasForeignKey(e => e.UserDataId);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(e => e.BankAccount)
+                .WithMany(e => e.Payments)
+                .HasForeignKey(e => e.BankAccountId);
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }

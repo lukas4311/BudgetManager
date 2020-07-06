@@ -1,4 +1,6 @@
-﻿namespace Data.DataModels
+﻿using System.Collections.Generic;
+
+namespace Data.DataModels
 {
     public class BankAccount
     {
@@ -9,5 +11,7 @@
         public int UserDataId { get; set; }
 
         public UserData UserData { get; set; }
+
+        public List<Payment> Payments { get; set; }
     }
 }
