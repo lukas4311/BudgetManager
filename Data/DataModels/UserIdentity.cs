@@ -7,5 +7,9 @@
         public string Login { get; set; }
 
         public string PasswordHash { get; set; }
+
+        public int UserDataId { get; set; }
+
+        public UserData UserData { get; set; }
     }
 }
