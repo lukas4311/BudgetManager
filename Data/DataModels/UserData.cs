@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.DataModels
 {
@@ -19,5 +20,7 @@ namespace Data.DataModels
         public string Phone { get; set; }
 
         public string Email { get; set; }
+
+        public List<BankAccount> BankAccounts { get; set; }
     }
 }

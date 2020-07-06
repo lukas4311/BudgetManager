@@ -19,10 +19,17 @@ namespace Data
                 .HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)
                 .HasForeignKey<UserIdentity>(d => d.UserDataId);
+
+            modelBuilder.Entity<BankAccount>()
+                .HasOne(e => e.UserData)
+                .WithMany(e => e.BankAccounts)
+                .HasForeignKey(e => e.UserDataId);
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
 
         public DbSet<UserData> UserData { get; set; }
+
+        public DbSet<BankAccount> BankAccount { get; set; }
     }
 }
