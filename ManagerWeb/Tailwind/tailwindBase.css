@@ -1,0 +1,7 @@
+﻿/* npx tailwindcss build Tailwind/tailwindBase.css -o wwwroot/css/tailwind.css */
+
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
