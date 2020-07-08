@@ -1,6 +1,9 @@
-﻿module.exports = {
+module.exports = {
     theme: {
         extend: {
+            colors: {
+                mainDarkBlue: '#1b2737ff'
+            },
             width: {
                 '1/10': '10%',
                 '2/10': '20%',
