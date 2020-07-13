@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Base.css" />
     <link rel="stylesheet" href="~/css/tailwind.css" />
 </head>
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col">
-    <header class="flex-none bg-mainDarkBlue flex flex-row text-white p-4">
+    <header class="flex-none bg-mainDarkBlue flex flex-row text-white p-4 px-12">
         <div>
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LOGO</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <partial name="~/Views/IconsPartials/Logo.cshtml" />
+            </a>
         </div>
         <nav class="border-bottom box-shadow ml-auto">
+            <div class="flex flex-col spin circle button justify-center w-16 h-16">
+                <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
+                <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
+                <div class="w-3/5 bg-white h-1 rounded-lg mx-auto"></div>
+            </div>
             <div class="container">
-                <div>
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </nav>
     </header>
-    <div class="m-auto flex-auto overflow-y-auto w-full px-24">
+    <div class="m-auto flex-auto overflow-y-auto w-full px-24 rounded-lg">
         <main role="main" class="pb-3 text-white">
             @RenderBody()
         </main>

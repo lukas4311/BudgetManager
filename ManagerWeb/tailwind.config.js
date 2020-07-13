@@ -2,7 +2,13 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                mainDarkBlue: '#1b2737ff'
+                mainDarkBlue: '#1b2737ff',
+                prussianBlue: "#032b4aff",
+                blueSapphire: "#275068ff",
+                blueGreen: "#12b4baff",
+                vermilion: "#e03d15ff",
+                battleshipGrey: "#878787ff",
+                rufous: "#b00000ff"
             },
             width: {
                 '1/10': '10%',
