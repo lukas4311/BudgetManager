@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ManagerWeb.Models;
-using Microsoft.Extensions.Options;
-using ManagerWeb.Models.SettingModels;
 
 namespace ManagerWeb.Controllers
 {
