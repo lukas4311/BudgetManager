@@ -1,0 +1,14 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"allowJs": true,
+		"sourceMap": true,
+		"module": "commonjs",
+		"target": "es6",
+		"jsx": "react",
+		"outDir": ""
+	}
+}
