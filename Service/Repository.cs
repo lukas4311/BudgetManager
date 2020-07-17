@@ -1,7 +1,6 @@
 ﻿using Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -11,7 +10,7 @@ namespace Repository
     {
         protected DataContext RepositoryContext { get; set; }
 
-        public RepositoryBase(DataContext repositoryContext)
+        public Repository(DataContext repositoryContext)
         {
             this.RepositoryContext = repositoryContext;
         }
