@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/Base.css" />
     <link rel="stylesheet" href="~/css/tailwind.css" />
+    <environment include="Development">
+        <!-- Dependencies -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    </environment>
+    <environment exclude="Development">
+        <!-- Dependencies -->
+        <script src="https://unpkg.com/react@16/umd/react.production.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.js" crossorigin></script>
+    </environment>
 </head>
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col">
     <header class="flex-none bg-mainDarkBlue flex flex-row text-white p-4 px-12">

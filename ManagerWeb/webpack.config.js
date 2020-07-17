@@ -2,7 +2,7 @@ module.exports = {
     //mode: "production",
     mode: "development",
     entry: {
-        app: './Typescript/Test.tsx'
+        app: './Typescript/Overview.tsx'
     },
     output: {
         filename: "[name].js",
