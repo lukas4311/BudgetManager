@@ -1,9 +1,15 @@
 ﻿import * as React from 'react'
 import * as ReactDOM from 'react-dom';
+import PaymentsOverview from './PaymentsOverview'
 
-class Overview extends React.Component{
+class Overview extends React.Component {
     render() {
-        return <p>Ahoj jak se mas</p>
+        return (
+            <div>
+                <p> Základní přehled</p>
+                <PaymentsOverview />
+            </div>
+        )
     }
 }
 
