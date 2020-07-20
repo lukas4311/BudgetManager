@@ -22,4 +22,8 @@
     <Folder Include="ColorPalette\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -125,7 +125,10 @@ class Overview extends React.Component {
     render() {
         return (React.createElement("div", { className: "" },
             React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
-            React.createElement(PaymentsOverview_1.default, null)));
+            React.createElement("div", { className: "w-1/3 p-4" },
+                React.createElement(PaymentsOverview_1.default, null)),
+            React.createElement("div", { className: "w-1/3" }),
+            React.createElement("div", { className: "w-1/3" })));
     }
 }
 ReactDOM.render(React.createElement(Overview, null), document.getElementById('overview'));
@@ -171,17 +174,44 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         moment_1.default.locale('cs');
-        let now = moment_1.default().format('L');
-        let testPayments = new Array({ id: 1, name: "tset", amount: 100, date: now });
-        this.state = { payments: testPayments };
+        let now = moment_1.default().format('DD.MM.YYYY HH:mm');
+        // let testPayments: Array<IPaymentInfo> = new Array(
+        //     { id: 1, name: "kafe", amount: 100, date: now }, 
+        //     { id: 2, name: "výběr", amount: 300, date: now },
+        //     { id: 3, name: "BTC", amount: 2500, date: now },
+        //     { id: 4, name: "bendas", amount: 140, date: now },
+        //     { id: 5, name: "MC Donald", amount: 571, date: now }
+        // );
+        this.state = { payments: [] };
+    }
+    componentDidMount() {
+        fetch("/Payment/GetPaymentsData")
+            .then(res => {
+            if (res.ok)
+                return res.json();
+        })
+            .then((result) => {
+            if (result != undefined) {
+                this.setState({
+                    payments: result
+                });
+            }
+        }, (error) => { });
     }
     render() {
-        return (React.createElement("div", { className: "text-center mt-6" },
-            React.createElement("h2", { className: "text-xl" }, "Platby"),
-            React.createElement("table", null, this.state.payments.map(p => React.createElement("tr", { key: p.id, className: "bg-battleshipGrey p-2 rounded-xl" },
-                React.createElement("td", null, p.amount),
-                React.createElement("td", null, p.name),
-                React.createElement("td", null, p.date.toString()))))));
+        return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
+            React.createElement("div", { className: "py-4 flex" },
+                React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
+                React.createElement("span", { className: "inline-block ml-auto mr-5" },
+                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+            React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                React.createElement("p", { className: "mx-6 w-1/3" },
+                    p.amount,
+                    ",-"),
+                React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
+                React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm')))))));
     }
 }
 exports.default = PaymentsOverview;

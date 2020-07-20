@@ -68,3 +68,12 @@
 
 .baseContainer {
   border-radius: 1.5rem; }
+
+.paymentRecord {
+  position: relative;
+  left: 0;
+  -webkit-transition: left 0.5s ease-out;
+  -moz-transition: left 0.5s ease-out;
+  -o-transition: left 0.5s ease-out; }
+  .paymentRecord:hover {
+    left: 10px; }
