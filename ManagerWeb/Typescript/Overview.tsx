@@ -5,8 +5,8 @@ import PaymentsOverview from './PaymentsOverview'
 class Overview extends React.Component {
     render() {
         return (
-            <div>
-                <p> Základní přehled</p>
+            <div className="">
+                <p className="text-3xl text-center mt-6">Základní přehled</p>
                 <PaymentsOverview />
             </div>
         )
