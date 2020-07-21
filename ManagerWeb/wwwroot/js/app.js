@@ -86,6 +86,49 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/Modal.tsx":
+/*!******************************!*\
+  !*** ./Typescript/Modal.tsx ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Modal = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+exports.Modal = function (props) {
+    const showHideClassName = props.show ? "modal block" : "modal hidden";
+    return (React.createElement("div", { className: showHideClassName },
+        React.createElement("div", { className: "modal-main text-black flex flex-col w-1/3 bg-battleshipGrey" },
+            React.createElement("div", { className: "ml-auto mr-4" },
+                React.createElement("button", { onClick: props.handleClose }, "X")),
+            React.createElement("div", null, props.children))));
+};
+
+
+/***/ }),
+
 /***/ "./Typescript/Overview.tsx":
 /*!*********************************!*\
   !*** ./Typescript/Overview.tsx ***!
@@ -136,6 +179,70 @@ ReactDOM.render(React.createElement(Overview, null), document.getElementById('ov
 
 /***/ }),
 
+/***/ "./Typescript/PaymentForm.tsx":
+/*!************************************!*\
+  !*** ./Typescript/PaymentForm.tsx ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class PaymentForm extends React.Component {
+    render() {
+        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
+            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
+            React.createElement("div", { className: "flex" },
+                React.createElement("div", { className: "w-1/2" },
+                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                        React.createElement("input", { className: "effect-11", placeholder: "N\u00E1zev v\u00FDdaje" }),
+                        React.createElement("span", { className: "focus-bg" }))),
+                React.createElement("div", { className: "w-1/2" },
+                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                        React.createElement("input", { className: "effect-11", placeholder: "V\u00FD\u0161e v\u00FDdaje" }),
+                        React.createElement("span", { className: "focus-bg" })))),
+            React.createElement("div", { className: "flex mt-4" },
+                React.createElement("div", { className: "w-1/2" },
+                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                        React.createElement("input", { type: "date", className: "effect-11", placeholder: "Datum" }),
+                        React.createElement("span", { className: "focus-bg" })))),
+            React.createElement("div", { className: "flex my-4" },
+                React.createElement("div", { className: "w-full" },
+                    React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
+                        React.createElement("input", { className: "effect-11 w-full", placeholder: "Popis" }),
+                        React.createElement("span", { className: "focus-bg" })))),
+            React.createElement("div", { className: "flex" },
+                React.createElement("div", { className: "w-full" },
+                    React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
+                        React.createElement("a", { type: "button", href: "#", className: "bg-vermilion px-4 py-1 rounded-sm" }, "Potvrdit"))))));
+    }
+}
+exports.default = PaymentForm;
+
+
+/***/ }),
+
 /***/ "./Typescript/PaymentsOverview.tsx":
 /*!*****************************************!*\
   !*** ./Typescript/PaymentsOverview.tsx ***!
@@ -170,12 +277,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+const Modal_1 = __webpack_require__(/*! ./Modal */ "./Typescript/Modal.tsx");
+const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/PaymentForm.tsx"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
+        this.hideTechnologies = () => {
+            this.setState({ showPaymentFormModal: false });
+        };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0] };
+        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false };
+        this.filterClick = this.filterClick.bind(this);
+        this.addNewPayment = this.addNewPayment.bind(this);
+        this.hideTechnologies = this.hideTechnologies.bind(this);
     }
     componentDidMount() {
         this.getPaymentData(this.state.selectedFilter.days);
@@ -202,11 +317,14 @@ class PaymentsOverview extends React.Component {
             this.getPaymentData(selectedFilter.days);
         }
     }
+    addNewPayment() {
+        this.setState({ showPaymentFormModal: true });
+    }
     render() {
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
             React.createElement("div", { className: "py-4 flex" },
                 React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
-                React.createElement("span", { className: "inline-block ml-auto mr-5" },
+                React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
@@ -216,7 +334,9 @@ class PaymentsOverview extends React.Component {
                     p.amount,
                     ",-"),
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
-                React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm')))))));
+                React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
+            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideTechnologies },
+                React.createElement(PaymentForm_1.default, null))));
     }
 }
 exports.default = PaymentsOverview;

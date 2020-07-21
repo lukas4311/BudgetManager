@@ -1,5 +1,7 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
+import {IModalProps, Modal} from './Modal'
+import PaymentForm from './PaymentForm'
 
 interface IPaymentInfo {
     name: string,
@@ -10,7 +12,8 @@ interface IPaymentInfo {
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
-    selectedFilter: DateFilter
+    selectedFilter: DateFilter,
+    showPaymentFormModal: boolean
 }
 
 interface DateFilter{
@@ -26,7 +29,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         super(props);
         moment.locale('cs');
         this.filters = [{caption: "7d", days: 7, key: 1},{caption: "1m", days: 30, key: 2},{caption: "3m", days: 90, key: 3}];
-        this.state = { payments: [], selectedFilter: this.filters[0] };
+        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false };
+        this.filterClick = this.filterClick.bind(this);
+        this.addNewPayment = this.addNewPayment.bind(this);
+        this.hideTechnologies = this.hideTechnologies.bind(this);
     }
 
     componentDidMount() {
@@ -63,8 +69,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     addNewPayment(){
-        
+        this.setState({ showPaymentFormModal: true });
     }
+
+    hideTechnologies = () => {
+        this.setState({ showPaymentFormModal: false });
+    };
 
     render() {
         return (
@@ -92,6 +102,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     )}
                 </div>
+                <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
+                        <PaymentForm></PaymentForm>
+                </Modal>
             </div>
         )
     }
