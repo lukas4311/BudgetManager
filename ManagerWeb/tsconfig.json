@@ -1,7 +1,7 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
-		"noImplicitAny": true,
+		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"allowJs": true,

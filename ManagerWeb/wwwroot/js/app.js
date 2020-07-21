@@ -174,18 +174,15 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         moment_1.default.locale('cs');
-        let now = moment_1.default().format('DD.MM.YYYY HH:mm');
-        // let testPayments: Array<IPaymentInfo> = new Array(
-        //     { id: 1, name: "kafe", amount: 100, date: now }, 
-        //     { id: 2, name: "výběr", amount: 300, date: now },
-        //     { id: 3, name: "BTC", amount: 2500, date: now },
-        //     { id: 4, name: "bendas", amount: 140, date: now },
-        //     { id: 5, name: "MC Donald", amount: 571, date: now }
-        // );
-        this.state = { payments: [] };
+        this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
+        this.state = { payments: [], selectedFilter: this.filters[0] };
     }
     componentDidMount() {
-        fetch("/Payment/GetPaymentsData")
+        this.getPaymentData(this.state.selectedFilter.days);
+    }
+    getPaymentData(daysBack) {
+        let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
+        fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
             .then(res => {
             if (res.ok)
                 return res.json();
@@ -198,6 +195,13 @@ class PaymentsOverview extends React.Component {
             }
         }, (error) => { });
     }
+    filterClick(filterKey) {
+        let selectedFilter = this.filters.find(f => f.key == filterKey);
+        if (this.state.selectedFilter != selectedFilter) {
+            this.setState({ selectedFilter: selectedFilter });
+            this.getPaymentData(selectedFilter.days);
+        }
+    }
     render() {
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
             React.createElement("div", { className: "py-4 flex" },
@@ -206,6 +210,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+            React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
             React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                 React.createElement("p", { className: "mx-6 w-1/3" },
                     p.amount,

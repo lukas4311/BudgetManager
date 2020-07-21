@@ -8,7 +8,7 @@ namespace ManagerWeb.Controllers
     public class PaymentController : Controller
     {
         [HttpGet]
-        public JsonResult GetPaymentsData()
+        public JsonResult GetPaymentsData(DateTime fromDate)
         {
             List<Payment> payments = new List<Payment>();
             payments.Add(new Payment { Amount = 150, Date = DateTime.Now, Id = 1, Name = "MC Donald", Description = "Nejaka utrata v MC Donald. Asi nejaky cheseburger." });
