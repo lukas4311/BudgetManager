@@ -119,3 +119,6 @@
 .effect-11:focus ~ .focus-bg {
   transition: 0.3s;
   width: 100%; }
+
+.inputError {
+  border-color: red; }

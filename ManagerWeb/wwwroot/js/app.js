@@ -212,39 +212,42 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
+        this.requiredMessage = "Zadejte hodnotu.";
         this.handleChangeName = (e) => {
             this.setState({ name: e.target.value });
+            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: this.requiredMessage }) }));
         };
         this.handleChangeAmount = (e) => {
             let parsed = parseInt(e.target.value);
             if (isNaN(parsed)) {
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "Zadejte číselnou hodnotu." }) }));
             }
             else {
                 this.setState({ amount: e.target.value });
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
             }
         };
         this.addPayment = this.addPayment.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        this.state = { name: '', amount: '', date: '', description: '' };
+        this.state = { name: '', amount: '', date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' } };
     }
-    addPayment() {
+    addPayment(e) {
+        e.preventDefault();
         const data = this.state;
         fetch('/Payment/AddPayment', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         })
             .then(response => response.json())
-            .then(data => {
-            console.log('Success:', data);
-        })
-            .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then(data => { console.log('Success:', data); })
+            .catch((error) => { console.error('Error:', error); });
+    }
+    addErrorClassIfError(propertyName) {
+        if (this.state.formErrors[propertyName].length > 0)
+            return "inputError";
     }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
@@ -253,11 +256,11 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { className: "effect-11", placeholder: "N\u00E1zev v\u00FDdaje", value: this.state.name, onChange: this.handleChangeName }),
+                            React.createElement("input", { className: "effect-11 " + this.addErrorClassIfError("name"), placeholder: "N\u00E1zev v\u00FDdaje", value: this.state.name, onChange: this.handleChangeName }),
                             React.createElement("span", { className: "focus-bg" }))),
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { className: "effect-11", placeholder: "V\u00FD\u0161e v\u00FDdaje", value: this.state.amount, onChange: this.handleChangeAmount }),
+                            React.createElement("input", { className: "effect-11" + this.addErrorClassIfError("amount"), placeholder: "V\u00FD\u0161e v\u00FDdaje", value: this.state.amount, onChange: this.handleChangeAmount }),
                             React.createElement("span", { className: "focus-bg" })))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
