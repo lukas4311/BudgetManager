@@ -210,32 +210,69 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 class PaymentForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChangeName = (e) => {
+            this.setState({ name: e.target.value });
+        };
+        this.handleChangeAmount = (e) => {
+            let parsed = parseInt(e.target.value);
+            if (isNaN(parsed)) {
+            }
+            else {
+                this.setState({ amount: e.target.value });
+            }
+        };
+        this.addPayment = this.addPayment.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangeAmount = this.handleChangeAmount.bind(this);
+        this.state = { name: '', amount: '', date: '', description: '' };
+    }
+    addPayment() {
+        const data = this.state;
+        fetch('/Payment/AddPayment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+            console.log('Success:', data);
+        })
+            .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
-            React.createElement("div", { className: "flex" },
-                React.createElement("div", { className: "w-1/2" },
-                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                        React.createElement("input", { className: "effect-11", placeholder: "N\u00E1zev v\u00FDdaje" }),
-                        React.createElement("span", { className: "focus-bg" }))),
-                React.createElement("div", { className: "w-1/2" },
-                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                        React.createElement("input", { className: "effect-11", placeholder: "V\u00FD\u0161e v\u00FDdaje" }),
-                        React.createElement("span", { className: "focus-bg" })))),
-            React.createElement("div", { className: "flex mt-4" },
-                React.createElement("div", { className: "w-1/2" },
-                    React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                        React.createElement("input", { type: "date", className: "effect-11", placeholder: "Datum" }),
-                        React.createElement("span", { className: "focus-bg" })))),
-            React.createElement("div", { className: "flex my-4" },
-                React.createElement("div", { className: "w-full" },
-                    React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
-                        React.createElement("input", { className: "effect-11 w-full", placeholder: "Popis" }),
-                        React.createElement("span", { className: "focus-bg" })))),
-            React.createElement("div", { className: "flex" },
-                React.createElement("div", { className: "w-full" },
-                    React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                        React.createElement("a", { type: "button", href: "#", className: "bg-vermilion px-4 py-1 rounded-sm" }, "Potvrdit"))))));
+            React.createElement("form", { onSubmit: this.addPayment },
+                React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                            React.createElement("input", { className: "effect-11", placeholder: "N\u00E1zev v\u00FDdaje", value: this.state.name, onChange: this.handleChangeName }),
+                            React.createElement("span", { className: "focus-bg" }))),
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                            React.createElement("input", { className: "effect-11", placeholder: "V\u00FD\u0161e v\u00FDdaje", value: this.state.amount, onChange: this.handleChangeAmount }),
+                            React.createElement("span", { className: "focus-bg" })))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                            React.createElement("input", { type: "date", className: "effect-11", placeholder: "Datum" }),
+                            React.createElement("span", { className: "focus-bg" })))),
+                React.createElement("div", { className: "flex my-4" },
+                    React.createElement("div", { className: "w-full" },
+                        React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
+                            React.createElement("input", { className: "effect-11 w-full", placeholder: "Popis" }),
+                            React.createElement("span", { className: "focus-bg" })))),
+                React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-full" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
+                            React.createElement("button", { value: "Potvrdit", className: "bg-vermilion px-4 py-1 rounded-sm" })))))));
     }
 }
 exports.default = PaymentForm;

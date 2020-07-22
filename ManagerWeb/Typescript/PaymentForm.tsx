@@ -1,20 +1,71 @@
 import * as React from 'react'
 
-export default class PaymentForm extends React.Component<{}, {}>{
+interface IPaymentModel {
+    name: string,
+    amount: string,
+    date: string,
+    description: string
+}
+
+export default class PaymentForm extends React.Component<{}, IPaymentModel>{
+
+    constructor(props: {}) {
+        super(props);
+        this.addPayment = this.addPayment.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangeName = this.handleChangeName.bind(this);
+        this.handleChangeAmount = this.handleChangeAmount.bind(this);
+        this.state = { name: '', amount: '', date: '', description: '' };
+    }
+
+    addPayment() {
+        const data = this.state;
+
+        fetch('/Payment/AddPayment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ name: e.target.value });
+    }
+
+    handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let parsed = parseInt(e.target.value);
+
+        if (isNaN(parsed)) {
+            
+        } else {
+            this.setState({ amount: e.target.value });
+        }
+    }
+
     render() {
         return (
             <div className="bg-prussianBlue text-white">
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
+                <form onSubmit={this.addPayment}>
                 <div className="flex">
                     <div className="w-1/2">
                         <div className="relative inline-block float-left ml-6">
-                            <input className="effect-11" placeholder="Název výdaje"></input>
+                            <input className="effect-11" placeholder="Název výdaje" value={this.state.name} onChange={this.handleChangeName}></input>
                             <span className="focus-bg"></span>
                         </div>
                     </div>
                     <div className="w-1/2">
                         <div className="relative inline-block float-left ml-6">
-                            <input className="effect-11" placeholder="Výše výdaje"></input>
+                            <input className="effect-11" placeholder="Výše výdaje" value={this.state.amount} onChange={this.handleChangeAmount}></input>
                             <span className="focus-bg"></span>
                         </div>
                     </div>
@@ -38,10 +89,11 @@ export default class PaymentForm extends React.Component<{}, {}>{
                 <div className="flex">
                     <div className="w-full">
                         <div className="relative inline-block float-left ml-6 mb-6">
-                            <a type="button" href="#" className="bg-vermilion px-4 py-1 rounded-sm">Potvrdit</a>
+                            <button value="Potvrdit" className="bg-vermilion px-4 py-1 rounded-sm"/>
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         );
     }

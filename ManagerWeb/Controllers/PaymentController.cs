@@ -20,5 +20,12 @@ namespace ManagerWeb.Controllers
             payments.Add(new Payment { Amount = 240, Date = new DateTime(2020, 7, 1), Id = 7, Name = "bendas" });
             return Json(payments);
         }
+
+        [HttpPost]
+        public JsonResult AddPayment(Payment payment)
+        {
+
+            return Json(new { success = true });
+        }
     }
 }
