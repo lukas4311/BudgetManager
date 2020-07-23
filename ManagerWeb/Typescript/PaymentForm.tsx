@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { IPaymentInfo } from './PaymentsOverview'
 
 interface IPaymentModel {
     name: string,
@@ -13,19 +14,20 @@ interface IPaymentModel {
     }
 }
 
-export default class PaymentForm extends React.Component<{}, IPaymentModel>{
+export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentModel>{
     requiredMessage: string = "Zadejte hodnotu.";
 
-    constructor(props: {}) {
+    constructor(props: IPaymentInfo) {
         super(props);
         this.addPayment = this.addPayment.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        this.state = { name: '', amount: '', date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' } };
+        this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
+        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' } };
     }
 
-    addPayment(e: React.FormEvent<HTMLFormElement>) {
+    addPayment(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
         const data = this.state;
 
@@ -39,25 +41,35 @@ export default class PaymentForm extends React.Component<{}, IPaymentModel>{
             .catch((error) => { console.error('Error:', error); });
     }
 
-    handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ name: e.target.value });
-        this.setState((prevState) => ({formErrors: {...prevState.formErrors, name: this.requiredMessage}}));
+        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: this.requiredMessage } }));
     }
 
-    handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let parsed = parseInt(e.target.value);
 
         if (isNaN(parsed)) {
-            this.setState((prevState) => ({formErrors: {...prevState.formErrors, amount: "Zadejte číselnou hodnotu."}}));
+            this.setState({ amount: '' })
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "Zadejte číselnou hodnotu." } }));
         } else {
-            this.setState({amount: e.target.value})
-            this.setState((prevState) => ({formErrors: {...prevState.formErrors, amount: ""}}));
+            this.setState({ amount: e.target.value })
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "" } }));
         }
     }
 
-    addErrorClassIfError(propertyName: string){
-        if(this.state.formErrors[propertyName].length > 0)
-            return "inputError";
+    addErrorClassIfError(propertyName: string): string {
+        if (this.state.formErrors[propertyName].length > 0)
+            return " inputError";
+
+        return '';
+    }
+
+    generateErrorMessageIfError(propertyName: string): JSX.Element | '' {
+        if (this.state.formErrors[propertyName].length > 0)
+            return <span className="collapsed inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
+
+        return '';
     }
 
     render() {
@@ -68,15 +80,17 @@ export default class PaymentForm extends React.Component<{}, IPaymentModel>{
                     <div className="flex">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6">
-                                <input className={"effect-11 " + this.addErrorClassIfError("name")} placeholder="Název výdaje" value={this.state.name} onChange={this.handleChangeName}></input>
+                                <input className={"effect-11" + this.addErrorClassIfError("name")} placeholder="Název výdaje" value={this.state.name} onChange={this.handleChangeName}></input>
                                 <span className="focus-bg"></span>
                             </div>
+                            {this.generateErrorMessageIfError("name")}
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6">
                                 <input className={"effect-11" + this.addErrorClassIfError("amount")} placeholder="Výše výdaje" value={this.state.amount} onChange={this.handleChangeAmount}></input>
                                 <span className="focus-bg"></span>
                             </div>
+                            {this.generateErrorMessageIfError("amount")}
                         </div>
                     </div>
                     <div className="flex mt-4">
@@ -98,7 +112,7 @@ export default class PaymentForm extends React.Component<{}, IPaymentModel>{
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button value="Potvrdit" className="bg-vermilion px-4 py-1 rounded-sm" />
+                                <button type="button" className="bg-vermilion px-4 py-1 rounded-sm">Potvrdit</button>
                             </div>
                         </div>
                     </div>

@@ -24,7 +24,6 @@ namespace ManagerWeb.Controllers
         [HttpPost]
         public JsonResult AddPayment(Payment payment)
         {
-
             return Json(new { success = true });
         }
     }

@@ -1,13 +1,14 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
-import {IModalProps, Modal} from './Modal'
+import { IModalProps, Modal } from './Modal'
 import PaymentForm from './PaymentForm'
 
-interface IPaymentInfo {
+export interface IPaymentInfo {
     name: string,
-    amount: number,
+    amount: string,
     date: string,
-    id: number
+    id: number,
+    description: string,
 }
 
 interface PaymentsOverviewState {
@@ -16,7 +17,7 @@ interface PaymentsOverviewState {
     showPaymentFormModal: boolean
 }
 
-interface DateFilter{
+interface DateFilter {
     caption: string,
     days: number,
     key: number
@@ -28,7 +29,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     constructor(props: {}) {
         super(props);
         moment.locale('cs');
-        this.filters = [{caption: "7d", days: 7, key: 1},{caption: "1m", days: 30, key: 2},{caption: "3m", days: 90, key: 3}];
+        this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -39,7 +40,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
-    getPaymentData(daysBack: number){
+    getPaymentData(daysBack: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
 
         fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
@@ -59,16 +60,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             )
     }
 
-    filterClick(filterKey: number){
+    filterClick(filterKey: number) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
 
-        if(this.state.selectedFilter != selectedFilter){
-            this.setState({selectedFilter: selectedFilter});
+        if (this.state.selectedFilter != selectedFilter) {
+            this.setState({ selectedFilter: selectedFilter });
             this.getPaymentData(selectedFilter.days);
         }
     }
 
-    addNewPayment(){
+    addNewPayment() {
         this.setState({ showPaymentFormModal: true });
     }
 
@@ -77,6 +78,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     };
 
     render() {
+        const emptyPayment:IPaymentInfo  = { name: '', amount: '', date: '', id: null, description: '' };
+
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
                 <div className="py-4 flex">
@@ -89,7 +92,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </span>
                 </div>
                 <div className="flex text-black mb-3 ml-6 cursor-pointer">
-                    {this.filters.map((f) => 
+                    {this.filters.map((f) =>
                         <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
                     )}
                 </div>
@@ -103,7 +106,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     )}
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
-                        <PaymentForm></PaymentForm>
+                    <PaymentForm {...emptyPayment}></PaymentForm>
                 </Modal>
             </div>
         )
