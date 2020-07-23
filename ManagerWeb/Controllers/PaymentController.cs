@@ -22,7 +22,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddPayment(Payment payment)
+        public JsonResult AddPayment([FromBody]Payment payment)
         {
             return Json(new { success = true });
         }

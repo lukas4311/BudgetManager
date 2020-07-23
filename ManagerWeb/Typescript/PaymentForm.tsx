@@ -30,11 +30,11 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
     addPayment(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
         const data = this.state;
-
+        let dataJson = JSON.stringify(data);
         fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: dataJson,
         })
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
@@ -43,7 +43,16 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
 
     handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ name: e.target.value });
-        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: this.requiredMessage } }));
+
+        if(e.target.value == '' || e.target.value === undefined)
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: this.requiredMessage } }));
+    }
+
+    handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ date: e.target.value });
+
+        if(e.target.value == '' || e.target.value === undefined)
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: this.requiredMessage } })); 
     }
 
     handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -96,9 +105,10 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6">
-                                <input type="date" className="effect-11" placeholder="Datum"></input>
+                                <input type="date" className={"effect-11" + this.addErrorClassIfError("amount")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
                                 <span className="focus-bg"></span>
                             </div>
+                            {this.generateErrorMessageIfError("date")}
                         </div>
                     </div>
                     <div className="flex my-4">
@@ -112,7 +122,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button type="button" className="bg-vermilion px-4 py-1 rounded-sm">Potvrdit</button>
+                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm">Potvrdit</button>
                             </div>
                         </div>
                     </div>

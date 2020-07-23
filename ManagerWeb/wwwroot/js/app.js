@@ -215,7 +215,13 @@ class PaymentForm extends React.Component {
         this.requiredMessage = "Zadejte hodnotu.";
         this.handleChangeName = (e) => {
             this.setState({ name: e.target.value });
-            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: this.requiredMessage }) }));
+            if (e.target.value == '' || e.target.value === undefined)
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: this.requiredMessage }) }));
+        };
+        this.handleChangeDate = (e) => {
+            this.setState({ date: e.target.value });
+            if (e.target.value == '' || e.target.value === undefined)
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: this.requiredMessage }) }));
         };
         this.handleChangeAmount = (e) => {
             let parsed = parseInt(e.target.value);
@@ -238,10 +244,11 @@ class PaymentForm extends React.Component {
     addPayment(e) {
         e.preventDefault();
         const data = this.state;
+        let dataJson = JSON.stringify(data);
         fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: dataJson,
         })
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
@@ -275,8 +282,9 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { type: "date", className: "effect-11", placeholder: "Datum" }),
-                            React.createElement("span", { className: "focus-bg" })))),
+                            React.createElement("input", { type: "date", className: "effect-11" + this.addErrorClassIfError("amount"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
+                            React.createElement("span", { className: "focus-bg" })),
+                        this.generateErrorMessageIfError("date"))),
                 React.createElement("div", { className: "flex my-4" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
@@ -285,7 +293,7 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                            React.createElement("button", { type: "button", className: "bg-vermilion px-4 py-1 rounded-sm" }, "Potvrdit")))))));
+                            React.createElement("button", { type: "submit", className: "bg-vermilion px-4 py-1 rounded-sm" }, "Potvrdit")))))));
     }
 }
 exports.default = PaymentForm;
