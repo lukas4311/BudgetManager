@@ -298,7 +298,7 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                            React.createElement("button", { type: "submit", className: "bg-vermilion px-4 py-1 rounded-sm" }, "Potvrdit")))))));
+                            React.createElement("button", { type: "submit", className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
     }
 }
 exports.default = PaymentForm;

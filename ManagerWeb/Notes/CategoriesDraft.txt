@@ -5,12 +5,16 @@ Nákupy
 Doprava
 Automoto
 Bydlení
+Finanční účty
 Cestování
 Zábava
 Kultura
 Investice
-Finanční výdaje
 Mobil
 Internet
 
 Příjem
+    Mzda
+    Prodej
+    Alimenty
+    Vratka daně

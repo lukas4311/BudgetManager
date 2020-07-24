@@ -1,4 +1,5 @@
 ﻿@import '_animationSpin.scss';
+@import '_modal.scss';
 
 #logo {
     transition: 1s;
@@ -26,6 +27,7 @@
 .paymentRecord{
     position: relative;
     left: 0;
+    transition: left 0.5s ease-out;
     -webkit-transition: left 0.5s ease-out;
     -moz-transition: left 0.5s ease-out;
     -o-transition: left 0.5s ease-out;
@@ -33,25 +35,6 @@
     &:hover{
         left: 10px;
     }
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
-}
-
-.modal-main {
-    position: fixed;
-    background: white;
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
 }
 
 :focus{outline: none;}

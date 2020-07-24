@@ -134,7 +134,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm">Potvrdit</button>
+                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
                             </div>
                         </div>
                     </div>
