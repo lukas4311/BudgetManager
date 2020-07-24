@@ -2,18 +2,14 @@
 
 namespace Data.DataModels
 {
-    public class BankAccount
+    public class PaymentType
     {
         public int Id { get; set; }
 
         public string Code { get; set; }
 
-        public int UserDataId { get; set; }
-
-        public UserData UserData { get; set; }
+        public string Name { get; set; }
 
         public List<Payment> Payments { get; set; }
-
-        public int OpeningBalance { get; set; }
     }
 }

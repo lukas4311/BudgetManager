@@ -16,12 +16,18 @@ namespace Data.DataModels
 
         public string Description { get; set; }
 
-        public int MyProperty { get; set; }
-
         public DateTime Date { get; set; }
 
         public int BankAccountId { get; set; }
 
         public BankAccount BankAccount { get; set; }
+
+        public int PaymentTypeId { get; set; }
+
+        public PaymentType PaymentType { get; set; }
+
+        public int PaymentCategoryId { get; set; }
+
+        public PaymentCategory PaymentCategory { get; set; }
     }
 }
