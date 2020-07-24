@@ -223,14 +223,19 @@ class PaymentForm extends React.Component {
             if (e.target.value == '' || e.target.value === undefined)
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: this.requiredMessage }) }));
         };
+        this.handleChangeDescription = (e) => {
+            this.setState({ description: e.target.value });
+            if (e.target.value == '' || e.target.value === undefined)
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { description: this.requiredMessage }) }));
+        };
         this.handleChangeAmount = (e) => {
             let parsed = parseInt(e.target.value);
             if (isNaN(parsed)) {
-                this.setState({ amount: '' });
+                this.setState({ amount: null });
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "Zadejte číselnou hodnotu." }) }));
             }
             else {
-                this.setState({ amount: e.target.value });
+                this.setState({ amount: parsed });
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
             }
         };
@@ -238,6 +243,7 @@ class PaymentForm extends React.Component {
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
+        this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
         this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' } };
     }
@@ -264,31 +270,30 @@ class PaymentForm extends React.Component {
             return React.createElement("span", { className: "collapsed inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
         return '';
     }
+    generateInput(propertyName, placeholder, handler) {
+        return (React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                React.createElement("input", { className: "effect-11" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
+                React.createElement("span", { className: "focus-bg" })),
+            this.generateErrorMessageIfError(propertyName)));
+    }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.addPayment },
                 React.createElement("div", { className: "flex" },
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { className: "effect-11" + this.addErrorClassIfError("name"), placeholder: "N\u00E1zev v\u00FDdaje", value: this.state.name, onChange: this.handleChangeName }),
-                            React.createElement("span", { className: "focus-bg" })),
-                        this.generateErrorMessageIfError("name")),
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { className: "effect-11" + this.addErrorClassIfError("amount"), placeholder: "V\u00FD\u0161e v\u00FDdaje", value: this.state.amount, onChange: this.handleChangeAmount }),
-                            React.createElement("span", { className: "focus-bg" })),
-                        this.generateErrorMessageIfError("amount"))),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChangeName)),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChangeAmount))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("input", { type: "date", className: "effect-11" + this.addErrorClassIfError("amount"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
+                            React.createElement("input", { type: "date", className: "effect-11" + this.addErrorClassIfError("date"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
                             React.createElement("span", { className: "focus-bg" })),
                         this.generateErrorMessageIfError("date"))),
                 React.createElement("div", { className: "flex my-4" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
-                            React.createElement("input", { className: "effect-11 w-full", placeholder: "Popis" }),
+                            React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError("description"), placeholder: "Popis", value: this.state.description, onChange: this.handleChangeDescription }),
                             React.createElement("span", { className: "focus-bg" })))),
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
@@ -379,7 +384,7 @@ class PaymentsOverview extends React.Component {
         this.setState({ showPaymentFormModal: true });
     }
     render() {
-        const emptyPayment = { name: '', amount: '', date: '', id: null, description: '' };
+        const emptyPayment = { name: '', amount: 0, date: '', id: null, description: '' };
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
             React.createElement("div", { className: "py-4 flex" },
                 React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),

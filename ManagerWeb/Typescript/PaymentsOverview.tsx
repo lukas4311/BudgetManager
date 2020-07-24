@@ -5,7 +5,7 @@ import PaymentForm from './PaymentForm'
 
 export interface IPaymentInfo {
     name: string,
-    amount: string,
+    amount: number,
     date: string,
     id: number,
     description: string,
@@ -78,7 +78,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     };
 
     render() {
-        const emptyPayment:IPaymentInfo  = { name: '', amount: '', date: '', id: null, description: '' };
+        const emptyPayment:IPaymentInfo  = { name: '', amount: 0, date: '', id: null, description: '' };
 
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">

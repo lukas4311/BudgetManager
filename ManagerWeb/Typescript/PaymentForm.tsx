@@ -3,7 +3,7 @@ import { IPaymentInfo } from './PaymentsOverview'
 
 interface IPaymentModel {
     name: string,
-    amount: string,
+    amount: number,
     date: string,
     description: string,
     formErrors: {
@@ -23,6 +23,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
+        this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
         this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' } };
     }
@@ -44,25 +45,32 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
     handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ name: e.target.value });
 
-        if(e.target.value == '' || e.target.value === undefined)
+        if (e.target.value == '' || e.target.value === undefined)
             this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: this.requiredMessage } }));
     }
 
     handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ date: e.target.value });
 
-        if(e.target.value == '' || e.target.value === undefined)
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: this.requiredMessage } })); 
+        if (e.target.value == '' || e.target.value === undefined)
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: this.requiredMessage } }));
+    }
+
+    handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ description: e.target.value });
+
+        if (e.target.value == '' || e.target.value === undefined)
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, description: this.requiredMessage } }));
     }
 
     handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let parsed = parseInt(e.target.value);
 
         if (isNaN(parsed)) {
-            this.setState({ amount: '' })
+            this.setState({ amount: null })
             this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "Zadejte číselnou hodnotu." } }));
         } else {
-            this.setState({ amount: e.target.value })
+            this.setState({ amount: parsed })
             this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "" } }));
         }
     }
@@ -81,6 +89,18 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         return '';
     }
 
+    generateInput(propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) {
+        return (
+            <React.Fragment>
+                <div className="relative inline-block float-left ml-6">
+                    <input className={"effect-11" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={handler}></input>
+                    <span className="focus-bg"></span>
+                </div>
+                {this.generateErrorMessageIfError(propertyName)}
+            </React.Fragment>
+        );
+    }
+
     render() {
         return (
             <div className="bg-prussianBlue text-white">
@@ -88,24 +108,16 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                 <form onSubmit={this.addPayment}>
                     <div className="flex">
                         <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6">
-                                <input className={"effect-11" + this.addErrorClassIfError("name")} placeholder="Název výdaje" value={this.state.name} onChange={this.handleChangeName}></input>
-                                <span className="focus-bg"></span>
-                            </div>
-                            {this.generateErrorMessageIfError("name")}
+                            {this.generateInput("name", "Název výdaje", this.handleChangeName)}
                         </div>
                         <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6">
-                                <input className={"effect-11" + this.addErrorClassIfError("amount")} placeholder="Výše výdaje" value={this.state.amount} onChange={this.handleChangeAmount}></input>
-                                <span className="focus-bg"></span>
-                            </div>
-                            {this.generateErrorMessageIfError("amount")}
+                            {this.generateInput("amount", "Výše výdaje", this.handleChangeAmount)}
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6">
-                                <input type="date" className={"effect-11" + this.addErrorClassIfError("amount")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
+                                <input type="date" className={"effect-11" + this.addErrorClassIfError("date")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
                                 <span className="focus-bg"></span>
                             </div>
                             {this.generateErrorMessageIfError("date")}
@@ -114,7 +126,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex my-4">
                         <div className="w-full">
                             <div className="relative inline-block w-4/5 float-left ml-6">
-                                <input className="effect-11 w-full" placeholder="Popis"></input>
+                                <input className={"effect-11 w-full" + this.addErrorClassIfError("description")} placeholder="Popis" value={this.state.description} onChange={this.handleChangeDescription}></input>
                                 <span className="focus-bg"></span>
                             </div>
                         </div>

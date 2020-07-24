@@ -1,0 +1,16 @@
+Návrh kategorií:
+
+Jídlo
+Nákupy
+Doprava
+Automoto
+Bydlení
+Cestování
+Zábava
+Kultura
+Investice
+Finanční výdaje
+Mobil
+Internet
+
+Příjem
