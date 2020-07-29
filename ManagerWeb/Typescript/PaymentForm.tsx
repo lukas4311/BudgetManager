@@ -1,11 +1,19 @@
 import * as React from 'react'
 import { IPaymentInfo } from './PaymentsOverview'
+import DataLoader from './DataLoader'
 
-interface IPaymentModel {
+interface PaymentType {
+    id: number,
+    name: string
+}
+
+export interface IPaymentModel {
     name: string,
     amount: number,
     date: string,
     description: string,
+    selectedType: number
+    paymentTypes: Array<PaymentType>
     formErrors: {
         name: string,
         amount: string,
@@ -16,6 +24,7 @@ interface IPaymentModel {
 
 export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentModel>{
     requiredMessage: string = "Zadejte hodnotu.";
+    dataLoader: DataLoader;
 
     constructor(props: IPaymentInfo) {
         super(props);
@@ -25,18 +34,28 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' } };
+        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [] };
+        this.dataLoader = new DataLoader();
+    }
+
+    componentDidMount(){
+        let promise = this.dataLoader.getPaymentTypes();
+
+        promise
+            .then(response => response.json())
+            .then(data => {
+                if(data.success){
+                    this.setState({selectedType: 0, paymentTypes: data.types})
+                }
+            })
+            .catch((error) => { console.error('Error:', error); });
     }
 
     addPayment(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        fetch('/Payment/AddPayment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: dataJson,
-        })
+        this.dataLoader.addPayment(dataJson)
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });

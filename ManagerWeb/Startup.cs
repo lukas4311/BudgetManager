@@ -2,13 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data;
+using ManagerWeb.Extensions;
 using ManagerWeb.Models.SettingModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Repository;
 
 namespace ManagerWeb
 {
@@ -24,7 +28,11 @@ namespace ManagerWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<DbSetting>(Configuration.GetSection(nameof(DbSetting)));
+            IConfigurationSection connectinoStringSection = Configuration.GetSection(nameof(DbSetting));
+            services.Configure<DbSetting>(connectinoStringSection);
+            services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
+            services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
+            services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
             services.AddControllersWithViews();
         }
 

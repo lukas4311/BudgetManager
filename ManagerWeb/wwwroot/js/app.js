@@ -86,6 +86,40 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/DataLoader.ts":
+/*!**********************************!*\
+  !*** ./Typescript/DataLoader.ts ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class DataLoader {
+    addPayment(data) {
+        let dataJson = JSON.stringify(data);
+        return fetch('/Payment/AddPayment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: dataJson,
+        });
+    }
+    getPaymentsData(filterDate) {
+        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+    }
+    getPaymentTypes() {
+        return fetch("/Payment/GetPaymentTypes");
+    }
+    getPaymentCategories() {
+        return fetch("/Payment/GetPaymentCategories");
+    }
+}
+exports.default = DataLoader;
+
+
+/***/ }),
+
 /***/ "./Typescript/Modal.tsx":
 /*!******************************!*\
   !*** ./Typescript/Modal.tsx ***!
@@ -207,8 +241,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -245,17 +283,25 @@ class PaymentForm extends React.Component {
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' } };
+        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [] };
+        this.dataLoader = new DataLoader_1.default();
+    }
+    componentDidMount() {
+        let promise = this.dataLoader.getPaymentTypes();
+        promise
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+                this.setState({ selectedType: 0, paymentTypes: data.types });
+            }
+        })
+            .catch((error) => { console.error('Error:', error); });
     }
     addPayment(e) {
         e.preventDefault();
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        fetch('/Payment/AddPayment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: dataJson,
-        })
+        this.dataLoader.addPayment(dataJson)
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });

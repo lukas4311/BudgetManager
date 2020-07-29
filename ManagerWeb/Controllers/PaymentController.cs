@@ -42,7 +42,7 @@ namespace ManagerWeb.Controllers
                 Name = p.Name
             }).ToList();
 
-            return Json(new { sucess = true, types = paymentTypes });
+            return Json(new { success = true, types = paymentTypes });
         }
 
         [HttpGet]
@@ -54,7 +54,7 @@ namespace ManagerWeb.Controllers
                 Name = p.Name
             }).ToList();
 
-            return Json(new { sucess = true, categories = paymentCategories });
+            return Json(new { success = true, categories = paymentCategories });
         }
 
         [HttpPost]
