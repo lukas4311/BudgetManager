@@ -20,10 +20,12 @@
 
   <ItemGroup>
     <Folder Include="ColorPalette\" />
+    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\Service\Repository.csproj" />
   </ItemGroup>
 
 </Project>

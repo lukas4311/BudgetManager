@@ -1,12 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Data.DataModels;
+using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Repository;
 
 namespace ManagerWeb.Controllers
 {
     public class PaymentController : Controller
     {
+        private readonly IPaymentTypeRepository paymentTypeRepository;
+        private readonly IPaymentCategoryRepository paymentCategoryRepository;
+
+        public PaymentController(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository)
+        {
+            this.paymentTypeRepository = paymentTypeRepository;
+            this.paymentCategoryRepository = paymentCategoryRepository;
+        }
+
         [HttpGet]
         public JsonResult GetPaymentsData(DateTime fromDate)
         {
@@ -21,8 +33,32 @@ namespace ManagerWeb.Controllers
             return Json(payments);
         }
 
+        [HttpGet]
+        public JsonResult GetPaymentTypes()
+        {
+            List<PaymentTypeModel> paymentTypes = this.paymentTypeRepository.FindAll().Select(p => new PaymentTypeModel
+            {
+                Id = p.Id,
+                Name = p.Name
+            }).ToList();
+
+            return Json(new { sucess = true, types = paymentTypes });
+        }
+
+        [HttpGet]
+        public JsonResult GetPaymentCategories()
+        {
+            List<PaymentCategoryModel> paymentCategories = this.paymentCategoryRepository.FindAll().Select(p => new PaymentCategoryModel
+            {
+                Id = p.Id,
+                Name = p.Name
+            }).ToList();
+
+            return Json(new { sucess = true, categories = paymentCategories });
+        }
+
         [HttpPost]
-        public JsonResult AddPayment([FromBody]Payment payment)
+        public JsonResult AddPayment([FromBody] Payment payment)
         {
             return Json(new { success = true });
         }
