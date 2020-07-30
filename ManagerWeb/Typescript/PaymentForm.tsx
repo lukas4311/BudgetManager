@@ -34,18 +34,16 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [] };
+        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [{ id: 1, name: "Ahoj" }] };
         this.dataLoader = new DataLoader();
     }
 
-    componentDidMount(){
-        let promise = this.dataLoader.getPaymentTypes();
-
-        promise
+    componentDidMount() {
+        this.dataLoader.getPaymentTypes()
             .then(response => response.json())
             .then(data => {
-                if(data.success){
-                    this.setState({selectedType: 0, paymentTypes: data.types})
+                if (data.success) {
+                    this.setState({ selectedType: 0, paymentTypes: data.types })
                 }
             })
             .catch((error) => { console.error('Error:', error); });
@@ -126,6 +124,17 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.addPayment}>
                     <div className="flex">
+                        <div className="w-1/2">
+                            <div className="relative inline-block float-left ml-6">
+                                <select name="type" id="type" className="effect-11">
+                                    {this.state.paymentTypes.map(p => {
+                                        return <option key={p.id} value={p.id}>{p.name}</option>
+                                    })}                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex mt-4">
                         <div className="w-1/2">
                             {this.generateInput("name", "Název výdaje", this.handleChangeName)}
                         </div>

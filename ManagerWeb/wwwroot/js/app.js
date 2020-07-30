@@ -283,12 +283,11 @@ class PaymentForm extends React.Component {
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [] };
+        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [{ id: 1, name: "Ahoj" }] };
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
-        let promise = this.dataLoader.getPaymentTypes();
-        promise
+        this.dataLoader.getPaymentTypes()
             .then(response => response.json())
             .then(data => {
             if (data.success) {
@@ -328,6 +327,12 @@ class PaymentForm extends React.Component {
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.addPayment },
                 React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                            React.createElement("select", { name: "type", id: "type", className: "effect-11" }, this.state.paymentTypes.map(p => {
+                                return React.createElement("option", { key: p.id, value: p.id }, p.name);
+                            }))))),
+                React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChangeName)),
                     React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChangeAmount))),
                 React.createElement("div", { className: "flex mt-4" },

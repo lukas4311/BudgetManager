@@ -121,6 +121,9 @@
   transition: 0.3s;
   width: 100%; }
 
+.effect-11 option {
+  background: #275068ff; }
+
 .inputError {
   border-color: red; }
 
