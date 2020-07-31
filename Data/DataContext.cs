@@ -10,15 +10,10 @@ namespace Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserIdentity>()
-                .HasOne(p => p.UserData)
-                .WithOne(p => p.UserIdentity)
-                .HasForeignKey<UserData>(d => d.UserIdentityId);
-
             modelBuilder.Entity<UserData>()
                 .HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)
-                .HasForeignKey<UserIdentity>(d => d.UserDataId);
+                .HasForeignKey<UserData>(d => d.UserIdentityId);
 
             modelBuilder.Entity<BankAccount>()
                 .HasOne(e => e.UserData)

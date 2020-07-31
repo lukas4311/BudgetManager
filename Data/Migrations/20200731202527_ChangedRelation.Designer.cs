@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200731202527_ChangedRelation")]
+    partial class ChangedRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,9 +146,6 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserIdentityId")
-                        .IsUnique();
-
                     b.ToTable("UserData");
                 });
 
@@ -163,7 +162,14 @@ namespace Data.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserDataId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserDataId")
+                        .IsUnique()
+                        .HasFilter("[UserDataId] IS NOT NULL");
 
                     b.ToTable("UserIdentity");
                 });
@@ -198,13 +204,11 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.UserData", b =>
+            modelBuilder.Entity("Data.DataModels.UserIdentity", b =>
                 {
-                    b.HasOne("Data.DataModels.UserIdentity", "UserIdentity")
-                        .WithOne("UserData")
-                        .HasForeignKey("Data.DataModels.UserData", "UserIdentityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Data.DataModels.UserData", "UserData")
+                        .WithOne("UserIdentity")
+                        .HasForeignKey("Data.DataModels.UserIdentity", "UserDataId");
                 });
 #pragma warning restore 612, 618
         }
