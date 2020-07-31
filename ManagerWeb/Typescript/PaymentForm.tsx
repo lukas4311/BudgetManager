@@ -43,7 +43,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    this.setState({ selectedType: 0, paymentTypes: data.types })
+                    this.setState({ selectedType: data.types[0].id, paymentTypes: data.types })
                 }
             })
             .catch((error) => { console.error('Error:', error); });
@@ -118,6 +118,10 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         );
     }
 
+    changeType(e: React.ChangeEvent<HTMLSelectElement>) {
+        this.setState({ selectedType: parseInt(e.target.value) });
+    }
+
     render() {
         return (
             <div className="bg-prussianBlue text-white">
@@ -126,10 +130,10 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6">
-                                <select name="type" id="type" className="effect-11">
+                                <select name="type" id="type" className="effect-11" onChange={this.changeType}>
                                     {this.state.paymentTypes.map(p => {
                                         return <option key={p.id} value={p.id}>{p.name}</option>
-                                    })}                                    
+                                    })}
                                 </select>
                             </div>
                         </div>
