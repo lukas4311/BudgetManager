@@ -37,6 +37,15 @@
     }
 }
 
+.activeType{
+    background-color: #275068ff !important;
+    outline: none;
+
+    &:focus{
+        outline: none;
+    }
+}
+
 :focus{outline: none;}
 
 .effect-11

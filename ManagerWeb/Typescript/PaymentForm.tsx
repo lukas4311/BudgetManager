@@ -143,7 +143,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         );
     }
 
-    changeType(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) {
+    changeType(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
         e.preventDefault();
         this.setState({ paymentTypeId: id});
     }
@@ -158,10 +158,11 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.addPayment}>
                     <div className="w-full">
-                        <div className="inline-flex">
+                        <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {
-                                return <button key={p.id} className="bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500"
-                                    onClick={(e) => this.changeType(e, p.id)}>{p.name}</button>
+                                return <a key={p.id} 
+                                    className={"w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : "")}
+                                    onClick={(e) => this.changeType(e, p.id)}>{p.name}</a>
                             })}
                         </div>
                     </div>

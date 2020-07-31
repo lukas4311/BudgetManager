@@ -96,6 +96,12 @@
   .paymentRecord:hover {
     left: 10px; }
 
+.activeType {
+  background-color: #275068ff !important;
+  outline: none; }
+  .activeType:focus {
+    outline: none; }
+
 :focus {
   outline: none; }
 

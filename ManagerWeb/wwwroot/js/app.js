@@ -349,8 +349,8 @@ class PaymentForm extends React.Component {
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.addPayment },
                 React.createElement("div", { className: "w-full" },
-                    React.createElement("div", { className: "inline-flex" }, this.state.paymentTypes.map(p => {
-                        return React.createElement("button", { key: p.id, className: "bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500", onClick: (e) => this.changeType(e, p.id) }, p.name);
+                    React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
+                        return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
                     }))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
