@@ -33,6 +33,7 @@ namespace ManagerWeb
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
             services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddControllersWithViews();
         }
 

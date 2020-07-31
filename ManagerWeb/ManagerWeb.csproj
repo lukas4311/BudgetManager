@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="ColorPalette\" />
-    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
 
   <ItemGroup>
