@@ -134,8 +134,8 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
     generateInput(propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) {
         return (
             <React.Fragment>
-                <div className="relative inline-block float-left ml-6">
-                    <input className={"effect-11" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={handler}></input>
+                <div className="relative inline-block float-left ml-6 w-2/3">
+                    <input className={"effect-11 w-full" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={handler}></input>
                     <span className="focus-bg"></span>
                 </div>
                 {this.generateErrorMessageIfError(propertyName)}
@@ -143,8 +143,9 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         );
     }
 
-    changeType(e: React.ChangeEvent<HTMLSelectElement>) {
-        this.setState({ paymentTypeId: parseInt(e.target.value) });
+    changeType(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) {
+        e.preventDefault();
+        this.setState({ paymentTypeId: id});
     }
 
     changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -156,19 +157,18 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
             <div className="bg-prussianBlue text-white">
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.addPayment}>
-                    <div className="flex">
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6">
-                                <select name="type" id="type" className="effect-11" onChange={this.changeType}>
-                                    {this.state.paymentTypes.map(p => {
-                                        return <option key={p.id} value={p.id}>{p.name}</option>
-                                    })}
-                                </select>
-                            </div>
+                    <div className="w-full">
+                        <div className="inline-flex">
+                            {this.state.paymentTypes.map(p => {
+                                return <button key={p.id} className="bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500"
+                                    onClick={(e) => this.changeType(e, p.id)}>{p.name}</button>
+                            })}
                         </div>
+                    </div>
+                    <div className="flex mt-4">
                         <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6">
-                                <select name="type" id="type" className="effect-11" onChange={this.changeCategory}>
+                            <div className="relative inline-block float-left ml-6 w-2/3">
+                                <select name="type" id="type" className="effect-11 w-full" onChange={this.changeCategory}>
                                     {this.state.paymentCategories.map(p => {
                                         return <option key={p.id} value={p.id}>{p.name}</option>
                                     })}
@@ -186,8 +186,8 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6">
-                                <input type="date" className={"effect-11" + this.addErrorClassIfError("date")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
+                            <div className="relative inline-block float-left ml-6 w-2/3">
+                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("date")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
                                 <span className="focus-bg"></span>
                             </div>
                             {this.generateErrorMessageIfError("date")}
