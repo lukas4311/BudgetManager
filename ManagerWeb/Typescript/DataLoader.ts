@@ -1,10 +1,9 @@
 export default class DataLoader {
     addPayment(data: string) : Promise<Response> {
-        let dataJson = JSON.stringify(data);
         return fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: dataJson,
+            body: data,
         });
     }
 

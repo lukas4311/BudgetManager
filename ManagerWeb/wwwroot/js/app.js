@@ -98,11 +98,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
     addPayment(data) {
-        let dataJson = JSON.stringify(data);
         return fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: dataJson,
+            body: data,
         });
     }
     getPaymentsData(filterDate) {
@@ -252,19 +251,21 @@ class PaymentForm extends React.Component {
         super(props);
         this.requiredMessage = "Zadejte hodnotu.";
         this.handleChangeName = (e) => {
+            let errorMessage = '';
             this.setState({ name: e.target.value });
             if (e.target.value == '' || e.target.value === undefined)
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: this.requiredMessage }) }));
+                errorMessage = this.requiredMessage;
+            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: errorMessage }) }));
         };
         this.handleChangeDate = (e) => {
+            let errorMessage = '';
             this.setState({ date: e.target.value });
             if (e.target.value == '' || e.target.value === undefined)
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: this.requiredMessage }) }));
+                errorMessage = this.requiredMessage;
+            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: errorMessage }) }));
         };
         this.handleChangeDescription = (e) => {
             this.setState({ description: e.target.value });
-            if (e.target.value == '' || e.target.value === undefined)
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { description: this.requiredMessage }) }));
         };
         this.handleChangeAmount = (e) => {
             let parsed = parseInt(e.target.value);
@@ -283,7 +284,13 @@ class PaymentForm extends React.Component {
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [{ id: 1, name: "Ahoj" }] };
+        this.changeCategory = this.changeCategory.bind(this);
+        this.changeType = this.changeType.bind(this);
+        this.state = {
+            name: props.name, amount: props.amount, date: props.date, description: props.description,
+            formErrors: { name: '', amount: '', date: '', description: '' },
+            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: []
+        };
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
@@ -291,7 +298,15 @@ class PaymentForm extends React.Component {
             .then(response => response.json())
             .then(data => {
             if (data.success) {
-                this.setState({ selectedType: 0, paymentTypes: data.types });
+                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
+            }
+        })
+            .catch((error) => { console.error('Error:', error); });
+        this.dataLoader.getPaymentCategories()
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
             }
         })
             .catch((error) => { console.error('Error:', error); });
@@ -312,7 +327,7 @@ class PaymentForm extends React.Component {
     }
     generateErrorMessageIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
-            return React.createElement("span", { className: "collapsed inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
+            return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
         return '';
     }
     generateInput(propertyName, placeholder, handler) {
@@ -322,6 +337,12 @@ class PaymentForm extends React.Component {
                 React.createElement("span", { className: "focus-bg" })),
             this.generateErrorMessageIfError(propertyName)));
     }
+    changeType(e) {
+        this.setState({ paymentTypeId: parseInt(e.target.value) });
+    }
+    changeCategory(e) {
+        this.setState({ paymentCategoryId: parseInt(e.target.value) });
+    }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
@@ -329,7 +350,12 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6" },
-                            React.createElement("select", { name: "type", id: "type", className: "effect-11" }, this.state.paymentTypes.map(p => {
+                            React.createElement("select", { name: "type", id: "type", className: "effect-11", onChange: this.changeType }, this.state.paymentTypes.map(p => {
+                                return React.createElement("option", { key: p.id, value: p.id }, p.name);
+                            })))),
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6" },
+                            React.createElement("select", { name: "type", id: "type", className: "effect-11", onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
                                 return React.createElement("option", { key: p.id, value: p.id }, p.name);
                             }))))),
                 React.createElement("div", { className: "flex mt-4" },

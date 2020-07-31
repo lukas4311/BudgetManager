@@ -7,13 +7,20 @@ interface PaymentType {
     name: string
 }
 
+interface PaymentCategory {
+    id: number,
+    name: string
+}
+
 export interface IPaymentModel {
     name: string,
     amount: number,
     date: string,
     description: string,
-    selectedType: number
-    paymentTypes: Array<PaymentType>
+    paymentTypeId: number,
+    paymentTypes: Array<PaymentType>,
+    paymentCategoryId: number
+    paymentCategories: Array<PaymentCategory>,
     formErrors: {
         name: string,
         amount: string,
@@ -34,7 +41,13 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
         this.handleChangeDescription = this.handleChangeDescription.bind(this);
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.state = { name: props.name, amount: props.amount, date: props.date, description: props.description, formErrors: { name: '', amount: '', date: '', description: '' }, selectedType: -1, paymentTypes: [{ id: 1, name: "Ahoj" }] };
+        this.changeCategory = this.changeCategory.bind(this);
+        this.changeType = this.changeType.bind(this);
+        this.state = {
+            name: props.name, amount: props.amount, date: props.date, description: props.description,
+            formErrors: { name: '', amount: '', date: '', description: '' },
+            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: []
+        };
         this.dataLoader = new DataLoader();
     }
 
@@ -43,7 +56,16 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    this.setState({ selectedType: data.types[0].id, paymentTypes: data.types })
+                    this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
+                }
+            })
+            .catch((error) => { console.error('Error:', error); });
+
+        this.dataLoader.getPaymentCategories()
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
                 }
             })
             .catch((error) => { console.error('Error:', error); });
@@ -60,24 +82,27 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
     }
 
     handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        let errorMessage = '';
         this.setState({ name: e.target.value });
 
         if (e.target.value == '' || e.target.value === undefined)
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: this.requiredMessage } }));
+            errorMessage = this.requiredMessage;
+
+        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: errorMessage } }));
     }
 
     handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        let errorMessage = '';
         this.setState({ date: e.target.value });
 
         if (e.target.value == '' || e.target.value === undefined)
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: this.requiredMessage } }));
+            errorMessage = this.requiredMessage;
+
+        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: errorMessage } }));
     }
 
     handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ description: e.target.value });
-
-        if (e.target.value == '' || e.target.value === undefined)
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, description: this.requiredMessage } }));
     }
 
     handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -101,7 +126,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
 
     generateErrorMessageIfError(propertyName: string): JSX.Element | '' {
         if (this.state.formErrors[propertyName].length > 0)
-            return <span className="collapsed inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
+            return <span className="inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
 
         return '';
     }
@@ -119,7 +144,11 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
     }
 
     changeType(e: React.ChangeEvent<HTMLSelectElement>) {
-        this.setState({ selectedType: parseInt(e.target.value) });
+        this.setState({ paymentTypeId: parseInt(e.target.value) });
+    }
+
+    changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
+        this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
 
     render() {
@@ -132,6 +161,15 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                             <div className="relative inline-block float-left ml-6">
                                 <select name="type" id="type" className="effect-11" onChange={this.changeType}>
                                     {this.state.paymentTypes.map(p => {
+                                        return <option key={p.id} value={p.id}>{p.name}</option>
+                                    })}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="w-1/2">
+                            <div className="relative inline-block float-left ml-6">
+                                <select name="type" id="type" className="effect-11" onChange={this.changeCategory}>
+                                    {this.state.paymentCategories.map(p => {
                                         return <option key={p.id} value={p.id}>{p.name}</option>
                                     })}
                                 </select>
