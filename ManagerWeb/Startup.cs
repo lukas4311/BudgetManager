@@ -34,6 +34,7 @@ namespace ManagerWeb
             services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
             services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
+            services.AddTransient<IBankAccountRepository, BankAccountRepository>();
             services.AddControllersWithViews();
         }
 

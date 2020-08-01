@@ -1,4 +1,8 @@
 export default class DataLoader {
+    getPayments(filterDate: string){
+        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
+    }
+
     addPayment(data: string) : Promise<Response> {
         return fetch('/Payment/AddPayment', {
             method: 'POST',
@@ -17,5 +21,9 @@ export default class DataLoader {
 
     getPaymentCategories() : Promise<Response>{
         return fetch("/Payment/GetPaymentCategories");
+    }
+
+    getBankAccounts() : Promise<Response>{
+        return fetch("/Payment/GetBankAccounts");
     }
 }

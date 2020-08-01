@@ -97,6 +97,9 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
+    getPayments(filterDate) {
+        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+    }
     addPayment(data) {
         return fetch('/Payment/AddPayment', {
             method: 'POST',
@@ -112,6 +115,9 @@ class DataLoader {
     }
     getPaymentCategories() {
         return fetch("/Payment/GetPaymentCategories");
+    }
+    getBankAccounts() {
+        return fetch("/Payment/GetBankAccounts");
     }
 }
 exports.default = DataLoader;
@@ -419,6 +425,7 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 const Modal_1 = __webpack_require__(/*! ./Modal */ "./Typescript/Modal.tsx");
 const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/PaymentForm.tsx"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -427,17 +434,29 @@ class PaymentsOverview extends React.Component {
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false };
+        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [] };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
         this.hideTechnologies = this.hideTechnologies.bind(this);
+        this.bankAccountChange = this.bankAccountChange.bind(this);
+        this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
+        this.dataLoader.getBankAccounts()
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+                let bankAccounts = data.bankAccounts;
+                bankAccounts.unshift({ code: "Vše" });
+                this.setState({ bankAccounts: bankAccounts });
+            }
+        })
+            .catch((error) => { console.error('Error:', error); });
         this.getPaymentData(this.state.selectedFilter.days);
     }
     getPaymentData(daysBack) {
         let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
+        this.dataLoader.getPayments(filterDate)
             .then(res => {
             if (res.ok)
                 return res.json();
@@ -460,6 +479,9 @@ class PaymentsOverview extends React.Component {
     addNewPayment() {
         this.setState({ showPaymentFormModal: true });
     }
+    bankAccountChange() {
+        this.getPaymentData(this.state.selectedFilter.days);
+    }
     render() {
         const emptyPayment = { name: '', amount: 0, date: '', id: null, description: '' };
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
@@ -470,9 +492,9 @@ class PaymentsOverview extends React.Component {
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
             React.createElement("div", { className: "flex mb-3 ml-6" },
-                React.createElement("select", { className: "effect-11 py-1" },
-                    React.createElement("option", null, "Fio"),
-                    React.createElement("option", null, "CSOB"))),
+                React.createElement("select", { className: "effect-11 py-1", onChange: this.bankAccountChange }, this.state.bankAccounts.map(b => {
+                    return React.createElement("option", { key: b.code, value: b.code }, b.code);
+                }))),
             React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
             React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                 React.createElement("p", { className: "mx-6 w-1/3" },

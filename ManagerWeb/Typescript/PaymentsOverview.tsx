@@ -2,6 +2,7 @@
 import moment from 'moment';
 import { IModalProps, Modal } from './Modal'
 import PaymentForm from './PaymentForm'
+import DataLoader from './DataLoader';
 
 export interface IPaymentInfo {
     name: string,
@@ -11,10 +12,15 @@ export interface IPaymentInfo {
     description: string,
 }
 
+interface BankAccount {
+    code: string
+}
+
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
     selectedFilter: DateFilter,
-    showPaymentFormModal: boolean
+    showPaymentFormModal: boolean,
+    bankAccounts: Array<BankAccount>
 }
 
 interface DateFilter {
@@ -25,25 +31,39 @@ interface DateFilter {
 
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
     filters: DateFilter[];
+    dataLoader: DataLoader;
 
     constructor(props: {}) {
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false };
+        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [] };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
         this.hideTechnologies = this.hideTechnologies.bind(this);
+        this.bankAccountChange = this.bankAccountChange.bind(this);
+        this.dataLoader = new DataLoader();
     }
 
     componentDidMount() {
+        this.dataLoader.getBankAccounts()
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let bankAccounts: Array<BankAccount> = data.bankAccounts;
+                    bankAccounts.unshift({ code: "Vše" });
+                    this.setState({ bankAccounts: bankAccounts })
+                }
+            })
+            .catch((error) => { console.error('Error:', error); });
+        
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
     getPaymentData(daysBack: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
 
-        fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
+        this.dataLoader.getPayments(filterDate)
             .then(res => {
                 if (res.ok)
                     return res.json()
@@ -77,8 +97,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ showPaymentFormModal: false });
     };
 
+    bankAccountChange(){
+        this.getPaymentData(this.state.selectedFilter.days);
+    }
+
     render() {
-        const emptyPayment:IPaymentInfo  = { name: '', amount: 0, date: '', id: null, description: '' };
+        const emptyPayment: IPaymentInfo = { name: '', amount: 0, date: '', id: null, description: '' };
 
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
@@ -92,9 +116,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </span>
                 </div>
                 <div className="flex mb-3 ml-6">
-                    <select className="effect-11 py-1">
-                        <option>Fio</option>
-                        <option>CSOB</option>
+                    <select className="effect-11 py-1" onChange={this.bankAccountChange}>
+                        {this.state.bankAccounts.map(b => {
+                            return <option key={b.code} value={b.code}>{b.code}</option>
+                        })}
                     </select>
                 </div>
                 <div className="flex text-black mb-3 ml-6 cursor-pointer">
@@ -114,7 +139,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
                     <PaymentForm {...emptyPayment}></PaymentForm>
                 </Modal>
-            </div>
+            </div >
         )
     }
 }
