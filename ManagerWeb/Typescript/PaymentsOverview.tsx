@@ -91,6 +91,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </svg>
                     </span>
                 </div>
+                <div className="flex mb-3 ml-6">
+                    <select className="effect-11 py-1">
+                        <option>Fio</option>
+                        <option>CSOB</option>
+                    </select>
+                </div>
                 <div className="flex text-black mb-3 ml-6 cursor-pointer">
                     {this.filters.map((f) =>
                         <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>

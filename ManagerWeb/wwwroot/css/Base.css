@@ -81,7 +81,7 @@
   fill: #e03d15ff; }
 
 .st1 {
-  fill: #FFFFFF; }
+  fill: #ffffff; }
 
 .baseContainer {
   border-radius: 1.5rem; }
@@ -107,7 +107,10 @@
 
 .effect-11 {
   border: 0;
-  padding: 7px 15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  padding-left: 15px;
+  padding-right: 15px;
   border: 1px solid #e03d15ff;
   position: relative;
   background: transparent;

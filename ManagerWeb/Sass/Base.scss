@@ -1,11 +1,11 @@
-﻿@import '_animationSpin.scss';
-@import '_modal.scss';
+﻿@import "_animationSpin.scss";
+@import "_modal.scss";
 
 #logo {
     transition: 1s;
     width: 60px;
-    -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+    -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+    filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
 
     &:hover {
         width: 65px;
@@ -17,14 +17,14 @@
 }
 
 .st1 {
-    fill: #FFFFFF;
+    fill: #ffffff;
 }
 
 .baseContainer {
     border-radius: 1.5rem;
 }
 
-.paymentRecord{
+.paymentRecord {
     position: relative;
     left: 0;
     transition: left 0.5s ease-out;
@@ -32,36 +32,59 @@
     -moz-transition: left 0.5s ease-out;
     -o-transition: left 0.5s ease-out;
 
-    &:hover{
+    &:hover {
         left: 10px;
     }
 }
 
-.activeType{
+.activeType {
     background-color: #275068ff !important;
     outline: none;
 
-    &:focus{
+    &:focus {
         outline: none;
     }
 }
 
-:focus{outline: none;}
+:focus {
+    outline: none;
+}
 
-.effect-11
-{border: 0; padding: 7px 15px; border: 1px solid #e03d15ff; position: relative; background: transparent; z-index: 1;}
+.effect-11 {
+    border: 0;
+    padding-bottom: 7px;
+    padding-top: 7px; 
+    padding-left: 15px;
+    padding-right: 15px;
+    border: 1px solid #e03d15ff;
+    position: relative;
+    background: transparent;
+    z-index: 1;
+}
 
-.effect-11 ~ .focus-bg{position: absolute; left: 0; top: 0; width: 0; height: 100%; background-color: #275068ff; transition: 0.3s; z-index: 0;}
-.effect-11:focus ~ .focus-bg{transition: 0.3s; width: 100%;}
+.effect-11 ~ .focus-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background-color: #275068ff;
+    transition: 0.3s;
+    z-index: 0;
+}
+.effect-11:focus ~ .focus-bg {
+    transition: 0.3s;
+    width: 100%;
+}
 
-.effect-11 option{
+.effect-11 option {
     background: #275068ff;
 }
 
-.inputError{
+.inputError {
     border-color: red;
 }
 
-.collapsed{
+.collapsed {
     visibility: collapse;
 }

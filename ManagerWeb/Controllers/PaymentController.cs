@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 using Data.DataModels;
 using ManagerWeb.Models.DTOs;
 using ManagerWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Repository;
 
 namespace ManagerWeb.Controllers
@@ -14,12 +16,14 @@ namespace ManagerWeb.Controllers
         private readonly IPaymentTypeRepository paymentTypeRepository;
         private readonly IPaymentCategoryRepository paymentCategoryRepository;
         private readonly IPaymentRepository paymentRepository;
+        private readonly IBankAccountRepository bankAccountRepository;
 
-        public PaymentController(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, IPaymentRepository paymentRepository)
+        public PaymentController(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, IPaymentRepository paymentRepository, IBankAccountRepository bankAccountRepository)
         {
             this.paymentTypeRepository = paymentTypeRepository;
             this.paymentCategoryRepository = paymentCategoryRepository;
             this.paymentRepository = paymentRepository;
+            this.bankAccountRepository = bankAccountRepository;
         }
 
         [HttpGet]
@@ -58,6 +62,16 @@ namespace ManagerWeb.Controllers
             }).ToList();
 
             return Json(new { success = true, categories = paymentCategories });
+        }
+
+        [HttpGet]
+        public JsonResult GetBankAccounts()
+        {
+            List<BankAccount> bankAccounts = this.bankAccountRepository.FindAll()
+                //.Include(b => b.UserDataId == loggedUserId)
+                .ToList();
+
+            return Json(new { success = true, bankAccounts });
         }
 
         [HttpPost]
