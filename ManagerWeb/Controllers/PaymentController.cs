@@ -84,8 +84,9 @@ namespace ManagerWeb.Controllers
                 Description = paymentViewModel.Description,
                 Id = paymentViewModel.Id,
                 Name = paymentViewModel.Name,
-                PaymentCategoryId = paymentViewModel.PaymentCategoryId,
-                PaymentTypeId = paymentViewModel.PaymentTypeId
+                PaymentCategoryId = paymentViewModel.PaymentCategoryId.Value,
+                PaymentTypeId = paymentViewModel.PaymentTypeId.Value,
+                BankAccountId = paymentViewModel.BankAccountId.Value
             };
 
             this.paymentRepository.Create(payment);

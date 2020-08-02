@@ -21,6 +21,7 @@ export interface IPaymentModel {
     paymentTypes: Array<PaymentType>,
     paymentCategoryId: number
     paymentCategories: Array<PaymentCategory>,
+    bankAccountId: number
     formErrors: {
         name: string,
         amount: string,
@@ -46,7 +47,8 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.state = {
             name: props.name, amount: props.amount, date: props.date, description: props.description,
             formErrors: { name: '', amount: '', date: '', description: '' },
-            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: []
+            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
+            bankAccountId: this.props.bankAccountId
         };
         this.dataLoader = new DataLoader();
     }
@@ -205,7 +207,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
+                                <button  type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
                             </div>
                         </div>
                     </div>

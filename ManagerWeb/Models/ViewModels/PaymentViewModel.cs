@@ -14,10 +14,10 @@ namespace ManagerWeb.Models.ViewModels
 
         public DateTime Date { get; set; }
 
-        public int BankAccountId { get; set; }
+        public int? BankAccountId { get; set; }
 
-        public int PaymentTypeId { get; set; }
+        public int? PaymentTypeId { get; set; }
 
-        public int PaymentCategoryId { get; set; }
+        public int? PaymentCategoryId { get; set; }
     }
 }

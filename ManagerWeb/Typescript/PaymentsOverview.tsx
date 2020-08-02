@@ -10,9 +10,11 @@ export interface IPaymentInfo {
     date: string,
     id: number,
     description: string,
+    bankAccountId: number
 }
 
 interface BankAccount {
+    id: number,
     code: string
 }
 
@@ -21,6 +23,8 @@ interface PaymentsOverviewState {
     selectedFilter: DateFilter,
     showPaymentFormModal: boolean,
     bankAccounts: Array<BankAccount>
+    selectedBankAccount?: number,
+    showBankAccountError: boolean
 }
 
 interface DateFilter {
@@ -30,6 +34,7 @@ interface DateFilter {
 }
 
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
+    defaultBankOption: string = "Vše";
     filters: DateFilter[];
     dataLoader: DataLoader;
 
@@ -37,7 +42,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [] };
+        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: null, showBankAccountError: false };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
         this.hideTechnologies = this.hideTechnologies.bind(this);
@@ -51,12 +56,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             .then(data => {
                 if (data.success) {
                     let bankAccounts: Array<BankAccount> = data.bankAccounts;
-                    bankAccounts.unshift({ code: "Vše" });
+                    bankAccounts.unshift({ code: this.defaultBankOption, id: null });
                     this.setState({ bankAccounts: bankAccounts })
                 }
             })
             .catch((error) => { console.error('Error:', error); });
-        
+
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
@@ -90,19 +95,25 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     addNewPayment() {
-        this.setState({ showPaymentFormModal: true });
+        if (this.state.selectedBankAccount != null) {
+            this.setState({ showPaymentFormModal: true, showBankAccountError: false });
+        }
+        else {
+            this.setState({ showBankAccountError: true });
+        }
     }
 
     hideTechnologies = () => {
         this.setState({ showPaymentFormModal: false });
     };
 
-    bankAccountChange(){
+    bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
+        this.setState({selectedBankAccount: parseInt(e.target.value)})
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
     render() {
-        const emptyPayment: IPaymentInfo = { name: '', amount: 0, date: '', id: null, description: '' };
+        const emptyPayment: IPaymentInfo = { name: '', amount: 0, date: '', id: null, description: '', bankAccountId: this.state.selectedBankAccount  };
 
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
@@ -115,10 +126,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </svg>
                     </span>
                 </div>
-                <div className="flex mb-3 ml-6">
-                    <select className="effect-11 py-1" onChange={this.bankAccountChange}>
+                <div className="flex flex-col mb-3 ml-6">
+                    <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
+                    <select className="effect-11 py-1 w-1/3" onChange={this.bankAccountChange} value={this.state.selectedBankAccount}>
                         {this.state.bankAccounts.map(b => {
-                            return <option key={b.code} value={b.code}>{b.code}</option>
+                            return <option key={b.id} value={b.id}>{b.code}</option>
                         })}
                     </select>
                 </div>
@@ -137,7 +149,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     )}
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
-                    <PaymentForm {...emptyPayment}></PaymentForm>
+                    <PaymentForm key={this.state.selectedBankAccount} {...emptyPayment}></PaymentForm>
                 </Modal>
             </div >
         )
