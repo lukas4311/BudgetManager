@@ -94,5 +94,22 @@ namespace ManagerWeb.Controllers
 
             return Json(new { success = true });
         }
+
+        public JsonResult GetPayment(int id)
+        {
+            PaymentViewModel payment = this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentViewModel {
+                Amount = a.Amount,
+                Date = a.Date,
+                Id = a.Id,
+                Name = a.Name,
+                Description = a.Description,
+                BankAccountId = a.BankAccountId,
+                PaymentCategoryId = a.PaymentCategoryId,
+                PaymentTypeId = a.PaymentTypeId
+            })
+            .Single();
+
+            return Json(new { success = true, payment = payment });
+        }
     }
 }

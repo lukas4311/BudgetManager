@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { IPaymentInfo } from './PaymentsOverview'
+import { IPaymentFormProps } from './PaymentsOverview'
 import DataLoader from './DataLoader'
 
 interface PaymentType {
@@ -13,6 +13,7 @@ interface PaymentCategory {
 }
 
 export interface IPaymentModel {
+    id?: number
     name: string,
     amount: number,
     date: string,
@@ -30,11 +31,11 @@ export interface IPaymentModel {
     }
 }
 
-export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentModel>{
+export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
     requiredMessage: string = "Zadejte hodnotu.";
     dataLoader: DataLoader;
 
-    constructor(props: IPaymentInfo) {
+    constructor(props: IPaymentFormProps) {
         super(props);
         this.addPayment = this.addPayment.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
@@ -45,10 +46,10 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
         this.state = {
-            name: props.name, amount: props.amount, date: props.date, description: props.description,
+            name: '', amount: 0, date: '', description: '',
             formErrors: { name: '', amount: '', date: '', description: '' },
             paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
-            bankAccountId: this.props.bankAccountId
+            bankAccountId: this.props.bankAccountId, id: this.props.id
         };
         this.dataLoader = new DataLoader();
     }
@@ -71,6 +72,18 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                 }
             })
             .catch((error) => { console.error('Error:', error); });
+        
+        if(this.state.id != null){
+            this.dataLoader.getPayment(this.state.id)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.setState({name: data.Name, amount: data.Amount, date: data.Date, description: data.Description, paymentTypeId: data.PaymentTypeId, 
+                            paymentCategoryId: data.PaymentCategoryId, bankAccountId: data.BankAccountId})
+                    }
+                })
+                .catch((error) => { console.error('Error:', error); });
+        }
     }
 
     addPayment(e: React.FormEvent<HTMLFormElement>): void {
@@ -147,7 +160,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
 
     changeType(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
         e.preventDefault();
-        this.setState({ paymentTypeId: id});
+        this.setState({ paymentTypeId: id });
     }
 
     changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -162,7 +175,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="w-full">
                         <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {
-                                return <a key={p.id} 
+                                return <a key={p.id}
                                     className={"w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : "")}
                                     onClick={(e) => this.changeType(e, p.id)}>{p.name}</a>
                             })}
@@ -207,7 +220,7 @@ export default class PaymentForm extends React.Component<IPaymentInfo, IPaymentM
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button  type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
+                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
                             </div>
                         </div>
                     </div>

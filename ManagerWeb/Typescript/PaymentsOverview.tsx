@@ -9,7 +9,11 @@ export interface IPaymentInfo {
     amount: number,
     date: string,
     id: number,
-    description: string,
+    bankAccountId: number
+}
+
+export interface IPaymentFormProps {
+    id: number,
     bankAccountId: number
 }
 
@@ -112,8 +116,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
+    paymentEdit(id: number){
+        
+    }
+
     render() {
-        const emptyPayment: IPaymentInfo = { name: '', amount: 0, date: '', id: null, description: '', bankAccountId: this.state.selectedBankAccount  };
+        const paymentProps: IPaymentFormProps = { id: null, bankAccountId: this.state.selectedBankAccount  };
 
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
@@ -141,7 +149,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 </div>
                 <div className="pb-10">
                     {this.state.payments.map(p =>
-                        <div key={p.id} className="paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                        <div key={p.id} className="paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit( p.id)}>
                             <p className="mx-6 w-1/3">{p.amount},-</p>
                             <p className="mx-6 w-1/3">{p.name}</p>
                             <p className="mx-6 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>
@@ -149,7 +157,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     )}
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
-                    <PaymentForm key={this.state.selectedBankAccount} {...emptyPayment}></PaymentForm>
+                    <PaymentForm key={this.state.selectedBankAccount} {...paymentProps}></PaymentForm>
                 </Modal>
             </div >
         )

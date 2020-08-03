@@ -26,4 +26,8 @@ export default class DataLoader {
     getBankAccounts() : Promise<Response>{
         return fetch("/Payment/GetBankAccounts");
     }
+
+    getPayment(id: number): Promise<Response>{
+        return fetch(`/Payment/GetPayment/${id}`);
+    }
 }
