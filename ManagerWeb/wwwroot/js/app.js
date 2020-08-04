@@ -107,6 +107,13 @@ class DataLoader {
             body: data,
         });
     }
+    updatePayment(data) {
+        return fetch('/Payment/AddPayment', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: data,
+        });
+    }
     getPaymentsData(filterDate) {
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
     }
@@ -118,6 +125,9 @@ class DataLoader {
     }
     getBankAccounts() {
         return fetch("/Payment/GetBankAccounts");
+    }
+    getPayment(id) {
+        return fetch(`/Payment/GetPayment/${id}`);
     }
 }
 exports.default = DataLoader;
@@ -284,7 +294,7 @@ class PaymentForm extends React.Component {
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
             }
         };
-        this.addPayment = this.addPayment.bind(this);
+        this.confirmPayment = this.confirmPayment.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
@@ -293,10 +303,10 @@ class PaymentForm extends React.Component {
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
         this.state = {
-            name: props.name, amount: props.amount, date: props.date, description: props.description,
+            name: '', amount: 0, date: '', description: '',
             formErrors: { name: '', amount: '', date: '', description: '' },
             paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
-            bankAccountId: this.props.bankAccountId
+            bankAccountId: this.props.bankAccountId, id: this.props.id
         };
         this.dataLoader = new DataLoader_1.default();
     }
@@ -317,12 +327,32 @@ class PaymentForm extends React.Component {
             }
         })
             .catch((error) => { console.error('Error:', error); });
+        if (this.state.id != null) {
+            this.dataLoader.getPayment(this.state.id)
+                .then(response => response.json())
+                .then(data => {
+                if (data.success) {
+                    this.setState({
+                        name: data.Name, amount: data.Amount, date: data.Date, description: data.Description, paymentTypeId: data.PaymentTypeId,
+                        paymentCategoryId: data.PaymentCategoryId, bankAccountId: data.BankAccountId
+                    });
+                }
+            })
+                .catch((error) => { console.error('Error:', error); });
+        }
     }
-    addPayment(e) {
+    confirmPayment(e) {
         e.preventDefault();
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        this.dataLoader.addPayment(dataJson)
+        let promise;
+        if (this.state.id != undefined) {
+            promise = this.dataLoader.updatePayment(dataJson);
+        }
+        else {
+            promise = this.dataLoader.addPayment(dataJson);
+        }
+        promise
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });
@@ -354,7 +384,7 @@ class PaymentForm extends React.Component {
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
-            React.createElement("form", { onSubmit: this.addPayment },
+            React.createElement("form", { onSubmit: this.confirmPayment },
                 React.createElement("div", { className: "w-full" },
                     React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
                         return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
@@ -431,15 +461,18 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         this.defaultBankOption = "Vše";
-        this.hideTechnologies = () => {
+        this.hideModal = () => {
             this.setState({ showPaymentFormModal: false });
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: null, showBankAccountError: false };
+        this.state = {
+            payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: null }
+        };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
-        this.hideTechnologies = this.hideTechnologies.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.bankAccountChange = this.bankAccountChange.bind(this);
         this.dataLoader = new DataLoader_1.default();
     }
@@ -450,7 +483,7 @@ class PaymentsOverview extends React.Component {
             if (data.success) {
                 let bankAccounts = data.bankAccounts;
                 bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                this.setState({ bankAccounts: bankAccounts });
+                this.setState(s => ({ bankAccounts: bankAccounts, paymentFormProps: Object.assign(Object.assign({}, s.paymentFormProps), { bankAccountId: this.state.selectedBankAccount }) }));
             }
         })
             .catch((error) => { console.error('Error:', error); });
@@ -479,19 +512,22 @@ class PaymentsOverview extends React.Component {
         }
     }
     addNewPayment() {
-        if (this.state.selectedBankAccount != null) {
-            this.setState({ showPaymentFormModal: true, showBankAccountError: false });
+        if (this.state.selectedBankAccount != undefined) {
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: s.selectedBankAccount } }));
         }
         else {
             this.setState({ showBankAccountError: true });
         }
     }
+    paymentEdit(id) {
+        this.setState(s => ({ paymentFormProps: { id: id, bankAccountId: s.selectedBankAccount } }));
+    }
     bankAccountChange(e) {
-        this.setState({ selectedBankAccount: parseInt(e.target.value) });
+        let selectedbankId = parseInt(e.target.value);
+        this.setState(s => ({ selectedBankAccount: selectedbankId, paymentFormProps: { id: s.paymentFormProps.id, bankAccountId: selectedbankId } }));
         this.getPaymentData(this.state.selectedFilter.days);
     }
     render() {
-        const emptyPayment = { name: '', amount: 0, date: '', id: null, description: '', bankAccountId: this.state.selectedBankAccount };
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
             React.createElement("div", { className: "py-4 flex" },
                 React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
@@ -505,14 +541,14 @@ class PaymentsOverview extends React.Component {
                     return React.createElement("option", { key: b.id, value: b.id }, b.code);
                 }))),
             React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-            React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+            React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                 React.createElement("p", { className: "mx-6 w-1/3" },
                     p.amount,
                     ",-"),
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
                 React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
-            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideTechnologies },
-                React.createElement(PaymentForm_1.default, Object.assign({ key: this.state.selectedBankAccount }, emptyPayment)))));
+            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
+                React.createElement(PaymentForm_1.default, Object.assign({ key: this.state.selectedBankAccount + this.state.paymentFormProps.id }, this.state.paymentFormProps)))));
     }
 }
 exports.default = PaymentsOverview;

@@ -4,7 +4,7 @@ namespace ManagerWeb.Models.ViewModels
 {
     public class PaymentViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public decimal Amount { get; set; }
 

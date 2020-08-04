@@ -11,6 +11,14 @@ export default class DataLoader {
         });
     }
 
+    updatePayment(data: string):Promise<Response>{
+        return fetch('/Payment/AddPayment', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: data,
+        });
+    }
+
     getPaymentsData(filterDate: string): Promise<Response> {
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
     }

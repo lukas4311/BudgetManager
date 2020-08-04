@@ -37,7 +37,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     constructor(props: IPaymentFormProps) {
         super(props);
-        this.addPayment = this.addPayment.bind(this);
+        this.confirmPayment = this.confirmPayment.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeName = this.handleChangeName.bind(this);
         this.handleChangeAmount = this.handleChangeAmount.bind(this);
@@ -72,25 +72,36 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                 }
             })
             .catch((error) => { console.error('Error:', error); });
-        
-        if(this.state.id != null){
+
+        if (this.state.id != null) {
             this.dataLoader.getPayment(this.state.id)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        this.setState({name: data.Name, amount: data.Amount, date: data.Date, description: data.Description, paymentTypeId: data.PaymentTypeId, 
-                            paymentCategoryId: data.PaymentCategoryId, bankAccountId: data.BankAccountId})
+                        this.setState({
+                            name: data.Name, amount: data.Amount, date: data.Date, description: data.Description, paymentTypeId: data.PaymentTypeId,
+                            paymentCategoryId: data.PaymentCategoryId, bankAccountId: data.BankAccountId
+                        })
                     }
                 })
                 .catch((error) => { console.error('Error:', error); });
         }
     }
 
-    addPayment(e: React.FormEvent<HTMLFormElement>): void {
+    confirmPayment(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        this.dataLoader.addPayment(dataJson)
+        let promise: Promise<Response>;
+
+        if (this.state.id != undefined) {
+            promise = this.dataLoader.updatePayment(dataJson)
+
+        } else {
+            promise = this.dataLoader.addPayment(dataJson)
+        }
+
+        promise
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });
@@ -171,7 +182,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         return (
             <div className="bg-prussianBlue text-white">
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
-                <form onSubmit={this.addPayment}>
+                <form onSubmit={this.confirmPayment}>
                     <div className="w-full">
                         <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {

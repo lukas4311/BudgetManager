@@ -29,7 +29,8 @@ namespace ManagerWeb.Controllers
         [HttpGet]
         public JsonResult GetPaymentsData(DateTime? fromDate)
         {
-            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue)).Select(a => new PaymentViewModel {
+            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue)).Select(a => new PaymentViewModel
+            {
                 Amount = a.Amount,
                 Date = a.Date,
                 Id = a.Id,
@@ -82,7 +83,6 @@ namespace ManagerWeb.Controllers
                 Amount = paymentViewModel.Amount,
                 Date = paymentViewModel.Date,
                 Description = paymentViewModel.Description,
-                Id = paymentViewModel.Id,
                 Name = paymentViewModel.Name,
                 PaymentCategoryId = paymentViewModel.PaymentCategoryId.Value,
                 PaymentTypeId = paymentViewModel.PaymentTypeId.Value,
@@ -95,9 +95,28 @@ namespace ManagerWeb.Controllers
             return Json(new { success = true });
         }
 
+        [HttpPut]
+        public JsonResult UpdatePayment([FromBody] PaymentViewModel paymentViewModel)
+        {
+            Payment payment = this.paymentRepository.FindByCondition(p => p.Id == paymentViewModel.Id).Single();
+            payment.Amount = paymentViewModel.Amount;
+            payment.Date = paymentViewModel.Date;
+            payment.Description = paymentViewModel.Description;
+            payment.Name = paymentViewModel.Name;
+            payment.PaymentCategoryId = paymentViewModel.PaymentCategoryId.Value;
+            payment.PaymentTypeId = paymentViewModel.PaymentTypeId.Value;
+            payment.BankAccountId = paymentViewModel.BankAccountId.Value;
+
+            this.paymentRepository.Update(payment);
+            this.paymentRepository.Save();
+
+            return Json(new { success = true });
+        }
+
         public JsonResult GetPayment(int id)
         {
-            PaymentViewModel payment = this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentViewModel {
+            PaymentViewModel payment = this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentViewModel
+            {
                 Amount = a.Amount,
                 Date = a.Date,
                 Id = a.Id,
@@ -109,7 +128,7 @@ namespace ManagerWeb.Controllers
             })
             .Single();
 
-            return Json(new { success = true, payment = payment });
+            return Json(new { success = true, payment });
         }
     }
 }

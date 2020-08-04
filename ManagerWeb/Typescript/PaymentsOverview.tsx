@@ -28,7 +28,8 @@ interface PaymentsOverviewState {
     showPaymentFormModal: boolean,
     bankAccounts: Array<BankAccount>
     selectedBankAccount?: number,
-    showBankAccountError: boolean
+    showBankAccountError: boolean,
+    paymentFormProps: IPaymentFormProps
 }
 
 interface DateFilter {
@@ -46,10 +47,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = { payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: null, showBankAccountError: false };
+        this.state = {
+            payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: null }
+        };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
-        this.hideTechnologies = this.hideTechnologies.bind(this);
+        this.hideModal = this.hideModal.bind(this);
         this.bankAccountChange = this.bankAccountChange.bind(this);
         this.dataLoader = new DataLoader();
     }
@@ -61,7 +65,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 if (data.success) {
                     let bankAccounts: Array<BankAccount> = data.bankAccounts;
                     bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                    this.setState({ bankAccounts: bankAccounts })
+                    this.setState(s => ({ bankAccounts: bankAccounts, paymentFormProps:{ ...s.paymentFormProps, bankAccountId: this.state.selectedBankAccount } }))
                 }
             })
             .catch((error) => { console.error('Error:', error); });
@@ -99,30 +103,29 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     addNewPayment() {
-        if (this.state.selectedBankAccount != null) {
-            this.setState({ showPaymentFormModal: true, showBankAccountError: false });
+        if (this.state.selectedBankAccount != undefined) {
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: s.selectedBankAccount } }));
         }
         else {
             this.setState({ showBankAccountError: true });
         }
     }
 
-    hideTechnologies = () => {
+    paymentEdit(id: number) {
+        this.setState(s => ({paymentFormProps: { id: id, bankAccountId: s.selectedBankAccount } }));
+    }
+
+    hideModal = () => {
         this.setState({ showPaymentFormModal: false });
     };
 
     bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        this.setState({selectedBankAccount: parseInt(e.target.value)})
+        let selectedbankId: number = parseInt(e.target.value);
+        this.setState(s => ({ selectedBankAccount: selectedbankId, paymentFormProps: { id: s.paymentFormProps.id, bankAccountId: selectedbankId } }));
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
-    paymentEdit(id: number){
-        
-    }
-
     render() {
-        const paymentProps: IPaymentFormProps = { id: null, bankAccountId: this.state.selectedBankAccount  };
-
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
                 <div className="py-4 flex">
@@ -149,15 +152,15 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 </div>
                 <div className="pb-10">
                     {this.state.payments.map(p =>
-                        <div key={p.id} className="paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit( p.id)}>
+                        <div key={p.id} className="paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
                             <p className="mx-6 w-1/3">{p.amount},-</p>
                             <p className="mx-6 w-1/3">{p.name}</p>
                             <p className="mx-6 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>
                         </div>
                     )}
                 </div>
-                <Modal show={this.state.showPaymentFormModal} handleClose={this.hideTechnologies}>
-                    <PaymentForm key={this.state.selectedBankAccount} {...paymentProps}></PaymentForm>
+                <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
+                    <PaymentForm key={this.state.selectedBankAccount + this.state.paymentFormProps.id} {...this.state.paymentFormProps}></PaymentForm>
                 </Modal>
             </div >
         )
