@@ -306,7 +306,7 @@ class PaymentForm extends React.Component {
             name: '', amount: 0, date: '', description: '',
             formErrors: { name: '', amount: '', date: '', description: '' },
             paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
-            bankAccountId: this.props.bankAccountId, id: this.props.id
+            bankAccountId: this.props.bankAccountId, id: this.props.paymentId
         };
         this.dataLoader = new DataLoader_1.default();
     }
@@ -468,7 +468,7 @@ class PaymentsOverview extends React.Component {
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: null }
+            showBankAccountError: false, paymentId: null
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -483,7 +483,7 @@ class PaymentsOverview extends React.Component {
             if (data.success) {
                 let bankAccounts = data.bankAccounts;
                 bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                this.setState(s => ({ bankAccounts: bankAccounts, paymentFormProps: Object.assign(Object.assign({}, s.paymentFormProps), { bankAccountId: this.state.selectedBankAccount }) }));
+                this.setState({ bankAccounts: bankAccounts });
             }
         })
             .catch((error) => { console.error('Error:', error); });
@@ -513,18 +513,18 @@ class PaymentsOverview extends React.Component {
     }
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: s.selectedBankAccount } }));
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
         }
         else {
             this.setState({ showBankAccountError: true });
         }
     }
     paymentEdit(id) {
-        this.setState(s => ({ paymentFormProps: { id: id, bankAccountId: s.selectedBankAccount } }));
+        this.setState({ paymentId: id, showPaymentFormModal: true });
     }
     bankAccountChange(e) {
         let selectedbankId = parseInt(e.target.value);
-        this.setState(s => ({ selectedBankAccount: selectedbankId, paymentFormProps: { id: s.paymentFormProps.id, bankAccountId: selectedbankId } }));
+        this.setState({ selectedBankAccount: selectedbankId });
         this.getPaymentData(this.state.selectedFilter.days);
     }
     render() {
@@ -547,8 +547,8 @@ class PaymentsOverview extends React.Component {
                     ",-"),
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
                 React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
-            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(PaymentForm_1.default, Object.assign({ key: this.state.selectedBankAccount + this.state.paymentFormProps.id }, this.state.paymentFormProps)))));
+            React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount }),
+            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal })));
     }
 }
 exports.default = PaymentsOverview;

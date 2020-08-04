@@ -1,6 +1,10 @@
 import * as React from 'react'
-import { IPaymentFormProps } from './PaymentsOverview'
 import DataLoader from './DataLoader'
+
+interface IPaymentFormProps{
+    paymentId: number
+    ,bankAccountId: number
+}
 
 interface PaymentType {
     id: number,
@@ -49,7 +53,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
             name: '', amount: 0, date: '', description: '',
             formErrors: { name: '', amount: '', date: '', description: '' },
             paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
-            bankAccountId: this.props.bankAccountId, id: this.props.id
+            bankAccountId: this.props.bankAccountId, id: this.props.paymentId
         };
         this.dataLoader = new DataLoader();
     }

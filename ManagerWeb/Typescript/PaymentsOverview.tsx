@@ -12,11 +12,6 @@ export interface IPaymentInfo {
     bankAccountId: number
 }
 
-export interface IPaymentFormProps {
-    id: number,
-    bankAccountId: number
-}
-
 interface BankAccount {
     id: number,
     code: string
@@ -29,7 +24,7 @@ interface PaymentsOverviewState {
     bankAccounts: Array<BankAccount>
     selectedBankAccount?: number,
     showBankAccountError: boolean,
-    paymentFormProps: IPaymentFormProps
+    paymentId: number
 }
 
 interface DateFilter {
@@ -49,7 +44,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: null }
+            showBankAccountError: false, paymentId: null
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -65,7 +60,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 if (data.success) {
                     let bankAccounts: Array<BankAccount> = data.bankAccounts;
                     bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                    this.setState(s => ({ bankAccounts: bankAccounts, paymentFormProps:{ ...s.paymentFormProps, bankAccountId: this.state.selectedBankAccount } }))
+                    this.setState({ bankAccounts: bankAccounts })
                 }
             })
             .catch((error) => { console.error('Error:', error); });
@@ -104,7 +99,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentFormProps: { id: null, bankAccountId: s.selectedBankAccount } }));
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
         }
         else {
             this.setState({ showBankAccountError: true });
@@ -112,7 +107,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     paymentEdit(id: number) {
-        this.setState(s => ({paymentFormProps: { id: id, bankAccountId: s.selectedBankAccount } }));
+        this.setState({ paymentId: id, showPaymentFormModal: true });
     }
 
     hideModal = () => {
@@ -121,7 +116,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
-        this.setState(s => ({ selectedBankAccount: selectedbankId, paymentFormProps: { id: s.paymentFormProps.id, bankAccountId: selectedbankId } }));
+        this.setState({ selectedBankAccount: selectedbankId });
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
@@ -159,8 +154,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     )}
                 </div>
+                <PaymentForm key={this.state.paymentId + this.state.selectedBankAccount} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}></PaymentForm>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                    <PaymentForm key={this.state.selectedBankAccount + this.state.paymentFormProps.id} {...this.state.paymentFormProps}></PaymentForm>
                 </Modal>
             </div >
         )
