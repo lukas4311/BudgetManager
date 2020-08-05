@@ -477,7 +477,7 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.hideModal = () => {
-            this.setState({ showPaymentFormModal: false });
+            this.setState({ showPaymentFormModal: false, paymentId: null });
         };
         this.showModal = () => {
             this.setState({ showPaymentFormModal: true });
@@ -540,10 +540,6 @@ class PaymentsOverview extends React.Component {
     paymentEdit(id) {
         this.setState({ paymentId: id, showPaymentFormModal: true });
     }
-    returnModal() {
-        return (React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-            React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount })));
-    }
     bankAccountChange(e) {
         let selectedbankId = parseInt(e.target.value);
         this.setState({ selectedBankAccount: selectedbankId });
@@ -569,7 +565,8 @@ class PaymentsOverview extends React.Component {
                     ",-"),
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
                 React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
-            this.returnModal()));
+            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
+                React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount }))));
     }
 }
 exports.default = PaymentsOverview;
