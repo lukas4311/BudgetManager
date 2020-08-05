@@ -114,6 +114,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ showPaymentFormModal: false });
     };
 
+    showModal = () => {
+        this.setState({ showPaymentFormModal: true });
+    };
+
+    returnModal() {
+        return (<Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
+            <PaymentForm key={this.state.paymentId + this.state.selectedBankAccount} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}></PaymentForm>
+        </Modal>)
+    }
+
     bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: selectedbankId });
@@ -154,9 +164,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     )}
                 </div>
-                <PaymentForm key={this.state.paymentId + this.state.selectedBankAccount} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}></PaymentForm>
-                <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                </Modal>
+                {this.returnModal()}
             </div >
         )
     }

@@ -58,6 +58,22 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.dataLoader = new DataLoader();
     }
 
+    componentDidUpdate(prevProps:IPaymentFormProps):void{
+        if (this.props.paymentId != null && prevProps.paymentId != this.props.paymentId) {
+            this.dataLoader.getPayment(this.props.paymentId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.setState({
+                            name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
+                            paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
+                        })
+                    }
+                })
+                .catch((error) => { console.error('Error:', error); });
+        }
+    }
+
     componentDidMount() {
         this.dataLoader.getPaymentTypes()
             .then(response => response.json())

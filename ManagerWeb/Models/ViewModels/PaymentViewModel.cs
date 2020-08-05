@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ManagerWeb.Converters;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ManagerWeb.Models.ViewModels
 {
@@ -12,6 +15,8 @@ namespace ManagerWeb.Models.ViewModels
 
         public string Description { get; set; }
 
+        [DataType(DataType.Date)]
+        [JsonConverter(typeof(JsonDateConverter))]
         public DateTime Date { get; set; }
 
         public int? BankAccountId { get; set; }
