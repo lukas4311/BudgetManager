@@ -4,11 +4,8 @@ import { Modal } from './Modal'
 import PaymentForm from './PaymentForm'
 import DataLoader from './DataLoader';
 import { IPaymentInfo } from "./Model/IPaymentInfo"
-
-interface BankAccount {
-    id: number,
-    code: string
-}
+import { BankAccount } from './Model/BankAccount';
+import { BankAccountReponse } from './Model/BankAccountReponse';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -63,7 +60,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.dataLoader.getPayments(filterDate, this.setPayments, this.onRejected);
     }
 
-    private setBankAccounts(data: any) {
+    setBankAccounts(data: BankAccountReponse) {
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
             bankAccounts.unshift({ code: this.defaultBankOption, id: null });
@@ -129,6 +126,17 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         return tag;
     }
 
+    private getPaymentColor(paymentTypeCode: string): string {
+        switch (paymentTypeCode) {
+            case "Revenue":
+                return "bg-green-800"
+            case "Expenses":
+                return "bg-red-600"
+            case "Transfer":
+                return "bg-blue-500"
+        }
+    }
+
     public render() {
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
@@ -158,7 +166,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 <div className="pb-10">
                     {this.state.payments.map(p =>
                         <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
-                            <span className={"min-h-full w-4 inline-block " + (p.amount < 0 ? "bg-red-600" : "bg-green-800")}></span>
+                            <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
                             <p className="mx-6 my-2 w-1/3">{p.amount},-</p>
                             <p className="mx-6 my-2 w-1/3">{p.name}</p>
                             <p className="mx-6 my-2 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>

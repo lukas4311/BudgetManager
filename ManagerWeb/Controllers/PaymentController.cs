@@ -29,13 +29,14 @@ namespace ManagerWeb.Controllers
         [HttpGet]
         public JsonResult GetPaymentsData(DateTime? fromDate)
         {
-            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue)).Select(a => new PaymentViewModel
+            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue)).Include(a => a.PaymentType).Select(a => new PaymentViewModel
             {
                 Amount = a.Amount,
                 Date = a.Date,
                 Id = a.Id,
                 Name = a.Name,
-                Description = a.Description
+                Description = a.Description,
+                PaymentTypeCode = a.PaymentType.Code
             }).ToList();
 
             return Json(payments);

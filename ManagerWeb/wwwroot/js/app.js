@@ -109,6 +109,19 @@ class DataLoader {
             onSuccess(result);
         }, (_) => onRejected());
     }
+    getBankAccounts(onSuccess, onRejected) {
+        return fetch("/Payment/GetBankAccounts")
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
+        })
+            .then((result) => {
+            onSuccess(result);
+        }, (_) => onRejected());
+        ;
+    }
     addPayment(data) {
         return fetch('/Payment/AddPayment', {
             method: 'POST',
@@ -131,19 +144,6 @@ class DataLoader {
     }
     getPaymentCategories() {
         return fetch("/Payment/GetPaymentCategories");
-    }
-    getBankAccounts(onSuccess, onRejected) {
-        return fetch("/Payment/GetBankAccounts")
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
-                onRejected();
-        })
-            .then((result) => {
-            onSuccess(result);
-        }, (_) => onRejected());
-        ;
     }
     getPayment(id) {
         return fetch(`/Payment/GetPayment/${id}`);
@@ -559,6 +559,16 @@ class PaymentsOverview extends React.Component {
         }
         return tag;
     }
+    getPaymentColor(paymentTypeCode) {
+        switch (paymentTypeCode) {
+            case "Revenue":
+                return "bg-green-800";
+            case "Expenses":
+                return "bg-red-600";
+            case "Transfer":
+                return "bg-blue-500";
+        }
+    }
     render() {
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
             this.showErrorMessage(),
@@ -575,7 +585,7 @@ class PaymentsOverview extends React.Component {
                 }))),
             React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
             React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
-                React.createElement("span", { className: "min-h-full w-4 inline-block " + (p.amount < 0 ? "bg-red-600" : "bg-green-800") }),
+                React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
                 React.createElement("p", { className: "mx-6 my-2 w-1/3" },
                     p.amount,
                     ",-"),

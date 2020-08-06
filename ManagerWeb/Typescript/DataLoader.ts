@@ -1,4 +1,5 @@
 import { IPaymentInfo } from "./Model/IPaymentInfo"
+import { BankAccountReponse } from './Model/BankAccountReponse'
 
 export default class DataLoader {
     getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any) {
@@ -15,6 +16,22 @@ export default class DataLoader {
                 },
                 (_) => onRejected()
             );
+    }
+
+    getBankAccounts(onSuccess: (BankAccountReponse) => void, onRejected: any): Promise<Response> {
+        return fetch("/Payment/GetBankAccounts")
+            .then(res => {
+                if (res.ok)
+                    return res.json()
+                else
+                    onRejected();
+            })
+            .then(
+                (result: BankAccountReponse) => {
+                    onSuccess(result);
+                },
+                (_) => onRejected()
+            );;
     }
 
     addPayment(data: string): Promise<Response> {
@@ -43,22 +60,6 @@ export default class DataLoader {
 
     getPaymentCategories(): Promise<Response> {
         return fetch("/Payment/GetPaymentCategories");
-    }
-
-    getBankAccounts(onSuccess: any, onRejected: any): Promise<Response> {
-        return fetch("/Payment/GetBankAccounts")
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                (result) => {
-                    onSuccess(result);
-                },
-                (_) => onRejected()
-            );;
     }
 
     getPayment(id: number): Promise<Response> {

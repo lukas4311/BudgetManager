@@ -4,7 +4,7 @@ interface IPaymentInfo {
     date: string,
     id: number,
     bankAccountId: number,
-    typeCode: string
+    paymentTypeCode: string
 }
 
 export { IPaymentInfo };
