@@ -1,6 +1,18 @@
 export default class DataLoader {
-    getPayments(filterDate: string){
+    getPayments(filterDate: string, onRejected: any, onSuccess: any){
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
+        .then(res => {
+            if (res.ok)
+                return res.json()
+            else
+                onRejected();
+        })
+        .then(
+            (result) => {
+                onSuccess(result);
+            },
+            (_) => onRejected()
+        );
     }
 
     addPayment(data: string) : Promise<Response> {

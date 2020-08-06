@@ -97,8 +97,17 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
-    getPayments(filterDate) {
-        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+    getPayments(filterDate, onRejected, onSuccess) {
+        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
+        })
+            .then((result) => {
+            onSuccess(result);
+        }, (_) => onRejected());
     }
     addPayment(data) {
         return fetch('/Payment/AddPayment', {
@@ -460,6 +469,7 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         this.defaultBankOption = "Vše";
+        this.apiErrorMessage = "Při získnání data došlo k chybě.";
         this.hideModal = () => {
             this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         };
@@ -471,13 +481,15 @@ class PaymentsOverview extends React.Component {
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentId: null, formKey: Date.now()
+            showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.bankAccountChange = this.bankAccountChange.bind(this);
         this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
+        this.onRejected = this.onRejected.bind(this);
+        this.setPayments = this.setPayments.bind(this);
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
@@ -495,18 +507,18 @@ class PaymentsOverview extends React.Component {
     }
     getPaymentData(daysBack) {
         let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        this.dataLoader.getPayments(filterDate)
-            .then(res => {
-            if (res.ok)
-                return res.json();
-        })
-            .then((result) => {
-            if (result != undefined) {
-                this.setState({
-                    payments: result
-                });
-            }
-        }, (error) => { });
+        this.dataLoader.getPayments(filterDate, this.onRejected, this.setPayments);
+    }
+    onRejected(error) {
+        this.setState({ apiError: this.apiErrorMessage });
+    }
+    setPayments(response) {
+        if (response != undefined) {
+            this.setState({ payments: response });
+        }
+        else {
+            this.setState({ apiError: this.apiErrorMessage });
+        }
     }
     filterClick(filterKey) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
@@ -531,8 +543,16 @@ class PaymentsOverview extends React.Component {
         this.setState({ selectedBankAccount: selectedbankId });
         this.getPaymentData(this.state.selectedFilter.days);
     }
+    showErrorMessage() {
+        let tag = React.createElement(React.Fragment, null);
+        if (this.state.apiError != undefined) {
+            tag = React.createElement("span", { className: "errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3" }, this.state.apiError);
+        }
+        return tag;
+    }
     render() {
         return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
+            this.showErrorMessage(),
             React.createElement("div", { className: "py-4 flex" },
                 React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
                 React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
