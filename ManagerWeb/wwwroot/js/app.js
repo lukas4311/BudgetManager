@@ -97,7 +97,7 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
-    getPayments(filterDate, onRejected, onSuccess) {
+    getPayments(filterDate, onSuccess, onRejected) {
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
             .then(res => {
             if (res.ok)
@@ -132,8 +132,18 @@ class DataLoader {
     getPaymentCategories() {
         return fetch("/Payment/GetPaymentCategories");
     }
-    getBankAccounts() {
-        return fetch("/Payment/GetBankAccounts");
+    getBankAccounts(onSuccess, onRejected) {
+        return fetch("/Payment/GetBankAccounts")
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
+        })
+            .then((result) => {
+            onSuccess(result);
+        }, (_) => onRejected());
+        ;
     }
     getPayment(id) {
         return fetch(`/Payment/GetPayment/${id}`);
@@ -490,26 +500,25 @@ class PaymentsOverview extends React.Component {
         this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
         this.onRejected = this.onRejected.bind(this);
         this.setPayments = this.setPayments.bind(this);
+        this.setBankAccounts = this.setBankAccounts.bind(this);
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
-        this.dataLoader.getBankAccounts()
-            .then(response => response.json())
-            .then(data => {
-            if (data.success) {
-                let bankAccounts = data.bankAccounts;
-                bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                this.setState({ bankAccounts: bankAccounts });
-            }
-        })
-            .catch((error) => { console.error('Error:', error); });
+        this.dataLoader.getBankAccounts(this.setBankAccounts, this.onRejected);
         this.getPaymentData(this.state.selectedFilter.days);
     }
     getPaymentData(daysBack) {
         let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        this.dataLoader.getPayments(filterDate, this.onRejected, this.setPayments);
+        this.dataLoader.getPayments(filterDate, this.setPayments, this.onRejected);
     }
-    onRejected(error) {
+    setBankAccounts(data) {
+        if (data.success) {
+            let bankAccounts = data.bankAccounts;
+            bankAccounts.unshift({ code: this.defaultBankOption, id: null });
+            this.setState({ bankAccounts: bankAccounts });
+        }
+    }
+    onRejected(_) {
         this.setState({ apiError: this.apiErrorMessage });
     }
     setPayments(response) {
@@ -565,12 +574,13 @@ class PaymentsOverview extends React.Component {
                     return React.createElement("option", { key: b.id, value: b.id }, b.code);
                 }))),
             React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-            React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
-                React.createElement("p", { className: "mx-6 w-1/3" },
+            React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
+                React.createElement("span", { className: "min-h-full w-4 inline-block " + (p.amount < 0 ? "bg-red-600" : "bg-green-800") }),
+                React.createElement("p", { className: "mx-6 my-2 w-1/3" },
                     p.amount,
                     ",-"),
-                React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
-                React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
+                React.createElement("p", { className: "mx-6 my-2 w-1/3" }, p.name),
+                React.createElement("p", { className: "mx-6 my-2 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

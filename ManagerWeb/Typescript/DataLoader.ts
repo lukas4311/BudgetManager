@@ -1,5 +1,5 @@
 export default class DataLoader {
-    getPayments(filterDate: string, onRejected: any, onSuccess: any){
+    getPayments(filterDate: string, onSuccess: any, onRejected: any){
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
         .then(res => {
             if (res.ok)
@@ -43,7 +43,7 @@ export default class DataLoader {
         return fetch("/Payment/GetPaymentCategories");
     }
 
-    getBankAccounts(onRejected: any, onSuccess: any) : Promise<Response>{
+    getBankAccounts(onSuccess: any, onRejected: any) : Promise<Response>{
         return fetch("/Payment/GetBankAccounts")
         .then(res => {
             if (res.ok)

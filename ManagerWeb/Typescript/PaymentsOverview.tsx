@@ -36,10 +36,10 @@ interface DateFilter {
 }
 
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
-    defaultBankOption: string = "Vše";
-    filters: DateFilter[];
-    dataLoader: DataLoader;
-    apiErrorMessage: string = "Při získnání data došlo k chybě.";
+    private defaultBankOption: string = "Vše";
+    private filters: DateFilter[];
+    private dataLoader: DataLoader;
+    private apiErrorMessage: string = "Při získnání data došlo k chybě.";
 
     constructor(props: {}) {
         super(props);
@@ -56,17 +56,18 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
         this.onRejected = this.onRejected.bind(this);
         this.setPayments = this.setPayments.bind(this);
+        this.setBankAccounts = this.setBankAccounts.bind(this);
         this.dataLoader = new DataLoader();
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         this.dataLoader.getBankAccounts(this.setBankAccounts, this.onRejected);
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
-    getPaymentData(daysBack: number) {
+    private getPaymentData(daysBack: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        this.dataLoader.getPayments(filterDate, this.onRejected, this.setPayments);
+        this.dataLoader.getPayments(filterDate, this.setPayments, this.onRejected);
     }
 
     private setBankAccounts(data: any) {
@@ -89,7 +90,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    filterClick(filterKey: number) {
+    private filterClick(filterKey: number) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
 
         if (this.state.selectedFilter != selectedFilter) {
@@ -98,7 +99,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    addNewPayment() {
+    private addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
             this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() }));
         }
@@ -107,26 +108,26 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    paymentEdit(id: number) {
+    private paymentEdit(id: number) {
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
 
-    hideModal = () => {
+    private hideModal = () => {
         this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
     };
 
-    handleConfirmationClose = () => {
+    private handleConfirmationClose = () => {
         this.hideModal();
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
-    bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    private bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: selectedbankId });
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
-    showErrorMessage() {
+    private showErrorMessage() {
         let tag: JSX.Element = <React.Fragment></React.Fragment>;
         if (this.state.apiError != undefined) {
             tag = <span className="errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3">{this.state.apiError}</span>
@@ -135,7 +136,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         return tag;
     }
 
-    render() {
+    public render() {
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
                 {this.showErrorMessage()}
@@ -163,10 +164,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 </div>
                 <div className="pb-10">
                     {this.state.payments.map(p =>
-                        <div key={p.id} className="paymentRecord bg-battleshipGrey p-2 rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
-                            <p className="mx-6 w-1/3">{p.amount},-</p>
-                            <p className="mx-6 w-1/3">{p.name}</p>
-                            <p className="mx-6 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>
+                        <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
+                            <span className={"min-h-full w-4 inline-block " + (p.amount < 0 ? "bg-red-600" : "bg-green-800")}></span>
+                            <p className="mx-6 my-2 w-1/3">{p.amount},-</p>
+                            <p className="mx-6 my-2 w-1/3">{p.name}</p>
+                            <p className="mx-6 my-2 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>
                         </div>
                     )}
                 </div>
