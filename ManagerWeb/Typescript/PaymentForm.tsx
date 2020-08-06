@@ -4,6 +4,7 @@ import DataLoader from './DataLoader'
 interface IPaymentFormProps{
     paymentId: number
     ,bankAccountId: number
+    ,handleClose: () => void
 }
 
 interface PaymentType {
@@ -125,6 +126,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });
+
+        this.props.handleClose();
     }
 
     handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {

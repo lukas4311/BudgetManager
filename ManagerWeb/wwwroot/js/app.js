@@ -371,6 +371,7 @@ class PaymentForm extends React.Component {
             .then(response => response.json())
             .then(data => { console.log('Success:', data); })
             .catch((error) => { console.error('Error:', error); });
+        this.props.handleClose();
     }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
@@ -479,8 +480,9 @@ class PaymentsOverview extends React.Component {
         this.hideModal = () => {
             this.setState({ showPaymentFormModal: false, paymentId: null });
         };
-        this.showModal = () => {
-            this.setState({ showPaymentFormModal: true });
+        this.handleConfirmationClose = () => {
+            this.hideModal();
+            this.getPaymentData(this.state.selectedFilter.days);
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -492,6 +494,7 @@ class PaymentsOverview extends React.Component {
         this.addNewPayment = this.addNewPayment.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.bankAccountChange = this.bankAccountChange.bind(this);
+        this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
@@ -566,7 +569,7 @@ class PaymentsOverview extends React.Component {
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
                 React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount }))));
+                React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }
 }
 exports.default = PaymentsOverview;
