@@ -1,16 +1,9 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
-import { IModalProps, Modal } from './Modal'
+import { Modal } from './Modal'
 import PaymentForm from './PaymentForm'
 import DataLoader from './DataLoader';
-
-export interface IPaymentInfo {
-    name: string,
-    amount: number,
-    date: string,
-    id: number,
-    bankAccountId: number
-}
+import { IPaymentInfo } from "./Model/IPaymentInfo"
 
 interface BankAccount {
     id: number,
