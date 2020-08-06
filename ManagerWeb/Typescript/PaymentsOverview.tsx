@@ -101,8 +101,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState({formKey: Date.now()});
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() }));
         }
         else {
             this.setState({ showBankAccountError: true });
@@ -110,16 +109,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     paymentEdit(id: number) {
-        this.setState({formKey: Date.now()});
-        this.setState({ paymentId: id, showPaymentFormModal: true });
+        this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
 
     hideModal = () => {
-        this.setState({formKey: Date.now()});
-        this.setState({ showPaymentFormModal: false, paymentId: null });
+        this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
     };
 
-    handleConfirmationClose = () =>{
+    handleConfirmationClose = () => {
         this.hideModal();
         this.getPaymentData(this.state.selectedFilter.days);
     }
@@ -165,7 +162,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     )}
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                    <PaymentForm key={this.state.formKey}  paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
+                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
                 </Modal>
             </div >
         )

@@ -303,10 +303,8 @@ class PaymentForm extends React.Component {
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
         this.state = {
-            name: '', amount: 0, date: '', description: '',
-            formErrors: { name: '', amount: '', date: '', description: '' },
-            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [],
-            bankAccountId: this.props.bankAccountId, id: this.props.paymentId
+            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' },
+            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId
         };
         this.dataLoader = new DataLoader_1.default();
     }
@@ -463,8 +461,7 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.hideModal = () => {
-            this.setState({ formKey: Date.now() });
-            this.setState({ showPaymentFormModal: false, paymentId: null });
+            this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
@@ -520,16 +517,14 @@ class PaymentsOverview extends React.Component {
     }
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState({ formKey: Date.now() });
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
+            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() }));
         }
         else {
             this.setState({ showBankAccountError: true });
         }
     }
     paymentEdit(id) {
-        this.setState({ formKey: Date.now() });
-        this.setState({ paymentId: id, showPaymentFormModal: true });
+        this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
     bankAccountChange(e) {
         let selectedbankId = parseInt(e.target.value);
