@@ -43,8 +43,20 @@ export default class DataLoader {
         return fetch("/Payment/GetPaymentCategories");
     }
 
-    getBankAccounts() : Promise<Response>{
-        return fetch("/Payment/GetBankAccounts");
+    getBankAccounts(onRejected: any, onSuccess: any) : Promise<Response>{
+        return fetch("/Payment/GetBankAccounts")
+        .then(res => {
+            if (res.ok)
+                return res.json()
+            else
+                onRejected();
+        })
+        .then(
+            (result) => {
+                onSuccess(result);
+            },
+            (_) => onRejected()
+        );;
     }
 
     getPayment(id: number): Promise<Response>{

@@ -60,17 +60,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     componentDidMount() {
-        this.dataLoader.getBankAccounts()
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let bankAccounts: Array<BankAccount> = data.bankAccounts;
-                    bankAccounts.unshift({ code: this.defaultBankOption, id: null });
-                    this.setState({ bankAccounts: bankAccounts });
-                }
-            })
-            .catch((error) => { console.error('Error:', error); });
-
+        this.dataLoader.getBankAccounts(this.setBankAccounts, this.onRejected);
         this.getPaymentData(this.state.selectedFilter.days);
     }
 
@@ -79,11 +69,19 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.dataLoader.getPayments(filterDate, this.onRejected, this.setPayments);
     }
 
-    onRejected(error: any) {
+    private setBankAccounts(data: any) {
+        if (data.success) {
+            let bankAccounts: Array<BankAccount> = data.bankAccounts;
+            bankAccounts.unshift({ code: this.defaultBankOption, id: null });
+            this.setState({ bankAccounts: bankAccounts });
+        }
+    }
+
+    private onRejected(_: any) {
         this.setState({ apiError: this.apiErrorMessage })
     }
 
-    setPayments(response: any) {
+    private setPayments(response: any) {
         if (response != undefined) {
             this.setState({ payments: response });
         } else {
