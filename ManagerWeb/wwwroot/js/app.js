@@ -310,21 +310,6 @@ class PaymentForm extends React.Component {
         };
         this.dataLoader = new DataLoader_1.default();
     }
-    componentDidUpdate(prevProps) {
-        if (this.props.paymentId != null && prevProps.paymentId != this.props.paymentId) {
-            this.dataLoader.getPayment(this.props.paymentId)
-                .then(response => response.json())
-                .then(data => {
-                if (data.success) {
-                    this.setState({
-                        name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
-                        paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-                    });
-                }
-            })
-                .catch((error) => { console.error('Error:', error); });
-        }
-    }
     componentDidMount() {
         this.dataLoader.getPaymentTypes()
             .then(response => response.json())
@@ -348,8 +333,8 @@ class PaymentForm extends React.Component {
                 .then(data => {
                 if (data.success) {
                     this.setState({
-                        name: data.Name, amount: data.Amount, date: data.Date, description: data.Description, paymentTypeId: data.PaymentTypeId,
-                        paymentCategoryId: data.PaymentCategoryId, bankAccountId: data.BankAccountId
+                        name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
+                        paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
                     });
                 }
             })
@@ -478,6 +463,7 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.hideModal = () => {
+            this.setState({ formKey: Date.now() });
             this.setState({ showPaymentFormModal: false, paymentId: null });
         };
         this.handleConfirmationClose = () => {
@@ -488,7 +474,7 @@ class PaymentsOverview extends React.Component {
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentId: null
+            showBankAccountError: false, paymentId: null, formKey: Date.now()
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -534,6 +520,7 @@ class PaymentsOverview extends React.Component {
     }
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
+            this.setState({ formKey: Date.now() });
             this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
         }
         else {
@@ -541,6 +528,7 @@ class PaymentsOverview extends React.Component {
         }
     }
     paymentEdit(id) {
+        this.setState({ formKey: Date.now() });
         this.setState({ paymentId: id, showPaymentFormModal: true });
     }
     bankAccountChange(e) {
@@ -569,7 +557,7 @@ class PaymentsOverview extends React.Component {
                 React.createElement("p", { className: "mx-6 w-1/3" }, p.name),
                 React.createElement("p", { className: "mx-6 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(PaymentForm_1.default, { key: this.state.paymentId + this.state.selectedBankAccount, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
+                React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }
 }
 exports.default = PaymentsOverview;

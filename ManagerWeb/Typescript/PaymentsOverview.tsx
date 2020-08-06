@@ -24,7 +24,8 @@ interface PaymentsOverviewState {
     bankAccounts: Array<BankAccount>
     selectedBankAccount?: number,
     showBankAccountError: boolean,
-    paymentId: number
+    paymentId: number,
+    formKey: number
 }
 
 interface DateFilter {
@@ -44,7 +45,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentId: null
+            showBankAccountError: false, paymentId: null, formKey: Date.now()
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -100,6 +101,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
+            this.setState({formKey: Date.now()});
             this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null }));
         }
         else {
@@ -108,10 +110,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     paymentEdit(id: number) {
+        this.setState({formKey: Date.now()});
         this.setState({ paymentId: id, showPaymentFormModal: true });
     }
 
     hideModal = () => {
+        this.setState({formKey: Date.now()});
         this.setState({ showPaymentFormModal: false, paymentId: null });
     };
 
@@ -161,7 +165,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     )}
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                    <PaymentForm key={this.state.paymentId + this.state.selectedBankAccount} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
+                    <PaymentForm key={this.state.formKey}  paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
                 </Modal>
             </div >
         )
