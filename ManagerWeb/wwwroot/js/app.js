@@ -120,21 +120,26 @@ class DataLoader {
             .then((result) => {
             onSuccess(result);
         }, (_) => onRejected());
-        ;
     }
-    addPayment(data) {
+    addPayment(data, onSuccess, onRejected) {
         return fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: data,
-        });
+        })
+            .then(response => response.json())
+            .then(data => { onSuccess(data); })
+            .catch(_ => onRejected());
     }
-    updatePayment(data) {
+    updatePayment(data, onSuccess, onRejected) {
         return fetch('/Payment/AddPayment', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: data,
-        });
+        })
+            .then(response => response.json())
+            .then(data => { onSuccess(data); })
+            .catch(_ => onRejected());
     }
     getPaymentsData(filterDate) {
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
@@ -322,8 +327,8 @@ class PaymentForm extends React.Component {
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
         this.state = {
-            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' },
-            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId
+            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
+            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
         };
         this.dataLoader = new DataLoader_1.default();
     }
@@ -360,20 +365,20 @@ class PaymentForm extends React.Component {
     }
     confirmPayment(e) {
         e.preventDefault();
+        this.setState({ disabledConfirm: true });
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        let promise;
+        // TODO: dodelat handlery
         if (this.state.id != undefined) {
-            promise = this.dataLoader.updatePayment(dataJson);
+            this.dataLoader.updatePayment(dataJson, () => { }, this.onError);
         }
         else {
-            promise = this.dataLoader.addPayment(dataJson);
+            this.dataLoader.addPayment(dataJson, () => { }, this.onError);
         }
-        promise
-            .then(response => response.json())
-            .then(data => { console.log('Success:', data); })
-            .catch((error) => { console.error('Error:', error); });
         this.props.handleClose();
+    }
+    onError() {
+        this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
     }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
@@ -401,6 +406,8 @@ class PaymentForm extends React.Component {
     }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
+            React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
+                React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.confirmPayment },
                 React.createElement("div", { className: "w-full" },
@@ -430,7 +437,7 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                            React.createElement("button", { type: "submit", className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
+                            React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
     }
 }
 exports.default = PaymentForm;
@@ -538,7 +545,7 @@ class PaymentsOverview extends React.Component {
     }
     addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() }));
+            this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
         }
         else {
             this.setState({ showBankAccountError: true });
@@ -579,18 +586,19 @@ class PaymentsOverview extends React.Component {
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
             React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
-                React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
+                React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
                 React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map(b => {
                     return React.createElement("option", { key: b.id, value: b.id }, b.code);
                 }))),
             React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
             React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                 React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                React.createElement("p", { className: "mx-6 my-2 w-1/3" },
+                React.createElement("p", { className: "mx-6 my-2 w-1/5" },
                     p.amount,
                     ",-"),
-                React.createElement("p", { className: "mx-6 my-2 w-1/3" }, p.name),
-                React.createElement("p", { className: "mx-6 my-2 w-1/3" }, moment_1.default(p.date).format('DD.MM.YYYY HH:mm'))))),
+                React.createElement("p", { className: "mx-6 my-2 w-2/5" }, p.name),
+                React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
+                React.createElement("p", { className: "mx-6 my-2 w-1/5" }, "Ikona")))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

@@ -2,7 +2,7 @@ import { IPaymentInfo } from "./Model/IPaymentInfo"
 import { BankAccountReponse } from './Model/BankAccountReponse'
 
 export default class DataLoader {
-    getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any) {
+    getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<Response> {
         return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
             .then(res => {
                 if (res.ok)
@@ -31,23 +31,29 @@ export default class DataLoader {
                     onSuccess(result);
                 },
                 (_) => onRejected()
-            );;
+            );
     }
 
-    addPayment(data: string): Promise<Response> {
+    addPayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
         return fetch('/Payment/AddPayment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: data,
-        });
+        })
+            .then(response => response.json())
+            .then(data => { onSuccess(data)})
+            .catch(_ => onRejected());
     }
 
-    updatePayment(data: string): Promise<Response> {
+    updatePayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
         return fetch('/Payment/AddPayment', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: data,
-        });
+        })
+            .then(response => response.json())
+            .then(data => { onSuccess(data)})
+            .catch(_ => onRejected());
     }
 
     getPaymentsData(filterDate: string): Promise<Response> {

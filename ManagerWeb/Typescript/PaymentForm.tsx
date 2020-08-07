@@ -1,10 +1,10 @@
 import * as React from 'react'
 import DataLoader from './DataLoader'
 
-interface IPaymentFormProps{
+interface IPaymentFormProps {
     paymentId: number
-    ,bankAccountId: number
-    ,handleClose: () => void
+    , bankAccountId: number
+    , handleClose: () => void
 }
 
 interface PaymentType {
@@ -33,7 +33,9 @@ export interface IPaymentModel {
         amount: string,
         date: string,
         description: string
-    }
+    },
+    disabledConfirm: boolean,
+    errorMessage: string
 }
 
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
@@ -51,8 +53,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
         this.state = {
-            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' },
-            paymentTypeId: -1, paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId
+            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
+            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
         };
         this.dataLoader = new DataLoader();
     }
@@ -91,28 +93,28 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         }
     }
 
-    confirmPayment(e: React.FormEvent<HTMLFormElement>): void {
+    private confirmPayment(e: React.FormEvent<HTMLFormElement>): void {
         e.preventDefault();
+        this.setState({ disabledConfirm: true });
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        let promise: Promise<Response>;
 
+        // TODO: dodelat handlery
         if (this.state.id != undefined) {
-            promise = this.dataLoader.updatePayment(dataJson)
+            this.dataLoader.updatePayment(dataJson, () => { }, this.onError)
 
         } else {
-            promise = this.dataLoader.addPayment(dataJson)
+            this.dataLoader.addPayment(dataJson, () => { }, this.onError)
         }
-
-        promise
-            .then(response => response.json())
-            .then(data => { console.log('Success:', data); })
-            .catch((error) => { console.error('Error:', error); });
 
         this.props.handleClose();
     }
 
-    handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    private onError() {
+        this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
+    }
+
+    private handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let errorMessage = '';
         this.setState({ name: e.target.value });
 
@@ -122,7 +124,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: errorMessage } }));
     }
 
-    handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    private handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let errorMessage = '';
         this.setState({ date: e.target.value });
 
@@ -132,11 +134,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: errorMessage } }));
     }
 
-    handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    private handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ description: e.target.value });
     }
 
-    handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    private handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let parsed = parseInt(e.target.value);
 
         if (isNaN(parsed)) {
@@ -148,21 +150,21 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         }
     }
 
-    addErrorClassIfError(propertyName: string): string {
+    private addErrorClassIfError(propertyName: string): string {
         if (this.state.formErrors[propertyName].length > 0)
             return " inputError";
 
         return '';
     }
 
-    generateErrorMessageIfError(propertyName: string): JSX.Element | '' {
+    private generateErrorMessageIfError(propertyName: string): JSX.Element | '' {
         if (this.state.formErrors[propertyName].length > 0)
             return <span className="inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
 
         return '';
     }
 
-    generateInput(propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) {
+    private generateInput(propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) {
         return (
             <React.Fragment>
                 <div className="relative inline-block float-left ml-6 w-2/3">
@@ -174,18 +176,21 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         );
     }
 
-    changeType(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
+    private changeType(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
         e.preventDefault();
         this.setState({ paymentTypeId: id });
     }
 
-    changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
+    private changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
 
     render() {
         return (
             <div className="bg-prussianBlue text-white">
+                <div className={"transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>
+                    <span className="text-sm text-left text-white">{this.state.errorMessage}</span>
+                </div>
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.confirmPayment}>
                     <div className="w-full">
@@ -236,7 +241,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
-                                <button type="submit" className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
+                                <button type="submit" disabled={this.state.disabledConfirm} className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
                             </div>
                         </div>
                     </div>

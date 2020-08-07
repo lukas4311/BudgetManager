@@ -69,7 +69,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private onRejected(_: any) {
-        this.setState({ apiError: this.apiErrorMessage })
+        this.setState({ apiError: this.apiErrorMessage });
     }
 
     private setPayments(response: any) {
@@ -91,7 +91,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private addNewPayment() {
         if (this.state.selectedBankAccount != undefined) {
-            this.setState(s => ({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() }));
+            this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
         }
         else {
             this.setState({ showBankAccountError: true });
@@ -151,7 +151,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </span>
                 </div>
                 <div className="flex flex-col mb-3 ml-6">
-                    <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
+                    <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
                     <select className="effect-11 py-1 w-1/3" onChange={this.bankAccountChange} value={this.state.selectedBankAccount}>
                         {this.state.bankAccounts.map(b => {
                             return <option key={b.id} value={b.id}>{b.code}</option>
@@ -167,9 +167,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     {this.state.payments.map(p =>
                         <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
                             <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                            <p className="mx-6 my-2 w-1/3">{p.amount},-</p>
-                            <p className="mx-6 my-2 w-1/3">{p.name}</p>
-                            <p className="mx-6 my-2 w-1/3">{moment(p.date).format('DD.MM.YYYY HH:mm')}</p>
+                            <p className="mx-6 my-2 w-1/5">{p.amount},-</p>
+                            <p className="mx-6 my-2 w-2/5">{p.name}</p>
+                            <p className="mx-6 my-2 w-1/5">{moment(p.date).format('DD.MM.YYYY')}</p>
+                            <p className="mx-6 my-2 w-1/5">Ikona</p>
                         </div>
                     )}
                 </div>
