@@ -1,20 +1,20 @@
 Návrh kategorií:
 Výdej
-    Jídlo
-    Nákupy
-    Doprava
-    Automoto
-    Bydlení
-    Finanční účty
-    Cestování
-    Zábava
-    Kultura
-    Investice
-    Mobil
-    Internet
+    Jídlo - food.svg
+    Nákupy - shop.svg
+    Doprava - bus.svg
+    Automoto - car.svg
+    Bydlení - real-estate.svg
+    Finanční účty - bill.svg
+    Cestování - travel.svg
+    Zábava - fun.svg
+    Kultura - theatre.svg
+    Investice - cash.svg
+    Mobil - mobile.svg
+    Internet - net.svg
 
 Příjem
-    Mzda
-    Prodej
-    Alimenty
-    Vratka daně
+    Mzda - salary.svg
+    Prodej - sale.svg
+    Alimenty - 
+    Vratka daně - 
