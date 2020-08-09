@@ -1,17 +1,17 @@
 Návrh kategorií:
-
-Jídlo
-Nákupy
-Doprava
-Automoto
-Bydlení
-Finanční účty
-Cestování
-Zábava
-Kultura
-Investice
-Mobil
-Internet
+Výdej
+    Jídlo
+    Nákupy
+    Doprava
+    Automoto
+    Bydlení
+    Finanční účty
+    Cestování
+    Zábava
+    Kultura
+    Investice
+    Mobil
+    Internet
 
 Příjem
     Mzda
