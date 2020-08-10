@@ -21,7 +21,7 @@ export default class DataLoader {
             );
     }
 
-    getBankAccounts(onSuccess: (BankAccountReponse) => void, onRejected: any): Promise<Response> {
+    getBankAccounts(onSuccess: (bankAccountResponse: BankAccountReponse) => void, onRejected: any): Promise<Response> {
         return fetch("/Payment/GetBankAccounts")
             .then(res => {
                 if (res.ok)
