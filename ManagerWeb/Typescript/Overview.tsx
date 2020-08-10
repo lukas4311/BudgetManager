@@ -7,9 +7,7 @@ class Overview extends React.Component {
         return (
             <div className="">
                 <p className="text-3xl text-center mt-6">Základní přehled</p>
-                <div className="w-1/3 p-4"><PaymentsOverview /></div>
-                <div className="w-1/3"></div>
-                <div className="w-1/3"></div>
+                <div className="w-full p-4"><PaymentsOverview /></div>
             </div>
         )
     }
