@@ -102,7 +102,6 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         // TODO: dodelat handlery
         if (this.state.id != undefined) {
             this.dataLoader.updatePayment(dataJson, () => { }, this.onError)
-
         } else {
             this.dataLoader.addPayment(dataJson, () => { }, this.onError)
         }
