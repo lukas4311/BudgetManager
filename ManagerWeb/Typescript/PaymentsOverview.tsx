@@ -7,7 +7,7 @@ import { IPaymentInfo } from "./Model/IPaymentInfo"
 import { BankAccount } from './Model/BankAccount';
 import { BankAccountReponse } from './Model/BankAccountReponse';
 import { IconsData } from './IconsEnum';
-import { AreaChart } from './AreaChart';
+import { LineChart } from './LineChart';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -33,6 +33,34 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private filters: DateFilter[];
     private dataLoader: DataLoader;
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
+    private chartData = [
+        {
+            id: 'fake corp. A',
+            data: [
+                { x: '2018-01-01', y: 7 },
+                { x: '2018-01-02', y: 5 },
+                { x: '2018-01-03', y: 11 },
+                { x: '2018-01-04', y: 9 },
+                { x: '2018-01-05', y: 12 },
+                { x: '2018-01-06', y: 16 },
+                { x: '2018-01-07', y: 13 },
+                { x: '2018-01-08', y: 13 },
+            ],
+        },
+        {
+            id: 'fake corp. B',
+            data: [
+                { x: '2018-01-04', y: 14 },
+                { x: '2018-01-05', y: 14 },
+                { x: '2018-01-06', y: 15 },
+                { x: '2018-01-07', y: 11 },
+                { x: '2018-01-08', y: 10 },
+                { x: '2018-01-09', y: 12 },
+                { x: '2018-01-10', y: 9 },
+                { x: '2018-01-11', y: 7 },
+            ],
+        },
+    ]
 
     constructor(props: {}) {
         super(props);
@@ -41,7 +69,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            chartData: [{ "Stav účtu": 20000 }, { "Stav účtu": 22000 }, { "Stav účtu": 21000 }, { "Stav účtu": 24000 }]
+            chartData: this.chartData
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -184,7 +212,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     </div>
                     <div className="w-3/5">
-                        <AreaChart chartData={this.state.chartData}></AreaChart>
+                        <LineChart data={this.state.chartData}></LineChart>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
