@@ -11,5 +11,7 @@ namespace Data.DataModels
         public string Name { get; set; }
 
         public List<Payment> Payments { get; set; }
+
+        public string Icon { get; set; }
     }
 }

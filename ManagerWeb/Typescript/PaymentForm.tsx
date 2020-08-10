@@ -52,8 +52,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     private processPaymentData(data: IPaymentResponseModel ){
         if (data.success) {
             this.setState({
-                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
-                paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
+                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', 
+                paymentTypeId: data.payment.paymentTypeId, paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
             })
         }
     }
@@ -178,7 +178,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <select name="type" id="type" className="effect-11 w-full" onChange={this.changeCategory}>
+                                <select name="type" id="type" className="effect-11 w-full" value={this.state.paymentCategoryId} onChange={this.changeCategory}>
                                     {this.state.paymentCategories.map(p => {
                                         return <option key={p.id} value={p.id}>{p.name}</option>
                                     })}

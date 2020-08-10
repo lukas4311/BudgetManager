@@ -6,6 +6,7 @@ import DataLoader from './DataLoader';
 import { IPaymentInfo } from "./Model/IPaymentInfo"
 import { BankAccount } from './Model/BankAccount';
 import { BankAccountReponse } from './Model/BankAccountReponse';
+import { IconsData } from './IconsEnum';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -138,6 +139,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     public render() {
+        let iconsData:IconsData = new IconsData();
+
         return (
             <div className="text-center mt-6 bg-prussianBlue rounded-lg">
                 {this.showErrorMessage()}
@@ -170,7 +173,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             <p className="mx-6 my-2 w-1/5">{p.amount},-</p>
                             <p className="mx-6 my-2 w-2/5">{p.name}</p>
                             <p className="mx-6 my-2 w-1/5">{moment(p.date).format('DD.MM.YYYY')}</p>
-                            <p className="mx-6 my-2 w-1/5">Ikona</p>
+                            <span className="mx-6 my-2 w-1/5 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
                         </div>
                     )}
                 </div>
