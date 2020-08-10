@@ -95,6 +95,15 @@
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
     getPayments(filterDate, onSuccess, onRejected) {
@@ -122,36 +131,70 @@ class DataLoader {
         }, (_) => onRejected());
     }
     addPayment(data, onSuccess, onRejected) {
-        return fetch('/Payment/AddPayment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: data,
-        })
-            .then(response => response.json())
-            .then(data => { onSuccess(data); })
-            .catch(_ => onRejected());
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield fetch('/Payment/AddPayment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data,
+                });
+                const responseData = yield response.json();
+                onSuccess(responseData);
+            }
+            catch (_) {
+                return onRejected();
+            }
+        });
     }
     updatePayment(data, onSuccess, onRejected) {
-        return fetch('/Payment/AddPayment', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: data,
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield fetch('/Payment/AddPayment', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data,
+                });
+                const responseData = yield response.json();
+                onSuccess(responseData);
+            }
+            catch (_) {
+                return onRejected();
+            }
+        });
+    }
+    getPaymentTypes(onSuccess, onRejected) {
+        return fetch("/Payment/GetPaymentTypes")
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
         })
-            .then(response => response.json())
-            .then(data => { onSuccess(data); })
-            .catch(_ => onRejected());
+            .then(onSuccess, (_) => onRejected())
+            .catch(onRejected);
     }
-    getPaymentsData(filterDate) {
-        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+    getPaymentCategories(onSuccess, onRejected) {
+        return fetch("/Payment/GetPaymentCategories")
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
+        })
+            .then(onSuccess, (_) => onRejected())
+            .catch(onRejected);
     }
-    getPaymentTypes() {
-        return fetch("/Payment/GetPaymentTypes");
-    }
-    getPaymentCategories() {
-        return fetch("/Payment/GetPaymentCategories");
-    }
-    getPayment(id) {
-        return fetch(`/Payment/GetPayment/${id}`);
+    getPayment(id, onSuccess, onRejected) {
+        return fetch(`/Payment/GetPayment/${id}`)
+            .then(res => {
+            if (res.ok)
+                return res.json();
+            else
+                onRejected();
+        })
+            .then(onSuccess, (_) => onRejected())
+            .catch(onRejected);
+        ;
     }
 }
 exports.default = DataLoader;
@@ -326,41 +369,39 @@ class PaymentForm extends React.Component {
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
+        this.onError = this.onError.bind(this);
+        this.processPaymentTypesData = this.processPaymentTypesData.bind(this);
+        this.processPaymentCategoryData = this.processPaymentCategoryData.bind(this);
+        this.processPaymentData = this.processPaymentData.bind(this);
         this.state = {
             name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
         };
         this.dataLoader = new DataLoader_1.default();
     }
+    processPaymentTypesData(data) {
+        if (data.success) {
+            this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
+        }
+    }
+    processPaymentCategoryData(data) {
+        if (data.success) {
+            this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
+        }
+    }
+    processPaymentData(data) {
+        if (data.success) {
+            this.setState({
+                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
+                paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
+            });
+        }
+    }
     componentDidMount() {
-        this.dataLoader.getPaymentTypes()
-            .then(response => response.json())
-            .then(data => {
-            if (data.success) {
-                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
-            }
-        })
-            .catch((error) => { console.error('Error:', error); });
-        this.dataLoader.getPaymentCategories()
-            .then(response => response.json())
-            .then(data => {
-            if (data.success) {
-                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
-            }
-        })
-            .catch((error) => { console.error('Error:', error); });
+        this.dataLoader.getPaymentTypes(this.processPaymentTypesData, this.onError);
+        this.dataLoader.getPaymentCategories(this.processPaymentCategoryData, this.onError);
         if (this.state.id != null) {
-            this.dataLoader.getPayment(this.state.id)
-                .then(response => response.json())
-                .then(data => {
-                if (data.success) {
-                    this.setState({
-                        name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
-                        paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-                    });
-                }
-            })
-                .catch((error) => { console.error('Error:', error); });
+            this.dataLoader.getPayment(this.state.id, this.processPaymentData, this.onError);
         }
     }
     confirmPayment(e) {

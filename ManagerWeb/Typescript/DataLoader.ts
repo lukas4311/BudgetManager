@@ -1,5 +1,8 @@
 import { IPaymentInfo } from "./Model/IPaymentInfo"
 import { BankAccountReponse } from './Model/BankAccountReponse'
+import { PaymentTypeResponse } from './Model/PaymentTypeResponse'
+import { PaymentCategoryResponse } from "./Model/PaymentCategoryResponse";
+import { IPaymentResponseModel } from "./Model/IPaymentResponseModel";
 
 export default class DataLoader {
     getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<Response> {
@@ -34,41 +37,78 @@ export default class DataLoader {
             );
     }
 
-    addPayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
-        return fetch('/Payment/AddPayment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: data,
-        })
-            .then(response => response.json())
-            .then(data => { onSuccess(data)})
-            .catch(_ => onRejected());
+    async addPayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
+        try {
+            const response = await fetch('/Payment/AddPayment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: data,
+            });
+            const responseData = await response.json();
+            onSuccess(responseData);
+        }
+        catch (_) {
+            return onRejected();
+        }
     }
 
-    updatePayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
-        return fetch('/Payment/AddPayment', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: data,
-        })
-            .then(response => response.json())
-            .then(data => { onSuccess(data)})
-            .catch(_ => onRejected());
+    async updatePayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
+        try {
+            const response = await fetch('/Payment/AddPayment', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: data,
+            });
+            const responseData = await response.json();
+            onSuccess(responseData);
+        }
+        catch (_) {
+            return onRejected();
+        }
     }
 
-    getPaymentsData(filterDate: string): Promise<Response> {
-        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+    getPaymentTypes(onSuccess: (response: PaymentTypeResponse) => void, onRejected: any): Promise<Response> {
+        return fetch("/Payment/GetPaymentTypes")
+            .then(res => {
+                if (res.ok)
+                    return res.json()
+                else
+                    onRejected();
+            })
+            .then(
+                onSuccess,
+                (_) => onRejected()
+            )
+            .catch(onRejected);
     }
 
-    getPaymentTypes(): Promise<Response> {
-        return fetch("/Payment/GetPaymentTypes");
+    getPaymentCategories(onSuccess: (response: PaymentCategoryResponse) => void, onRejected: any): Promise<Response> {
+        return fetch("/Payment/GetPaymentCategories")
+            .then(res => {
+                if (res.ok)
+                    return res.json()
+                else
+                    onRejected();
+            })
+            .then(
+                onSuccess,
+                (_) => onRejected()
+            )
+            .catch(onRejected);
     }
 
-    getPaymentCategories(): Promise<Response> {
-        return fetch("/Payment/GetPaymentCategories");
-    }
-
-    getPayment(id: number): Promise<Response> {
-        return fetch(`/Payment/GetPayment/${id}`);
+    getPayment(id: number, onSuccess: (response: IPaymentResponseModel) => void, onRejected: any): Promise<Response> {
+        return fetch(`/Payment/GetPayment/${id}`)
+            .then(res => {
+                if (res.ok)
+                    return res.json()
+                else
+                    onRejected();
+            })
+            .then(
+                onSuccess,
+                (_) => onRejected()
+            )
+            .catch(onRejected);;
     }
 }

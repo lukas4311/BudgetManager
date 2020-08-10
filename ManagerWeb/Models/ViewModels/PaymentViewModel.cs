@@ -25,6 +25,6 @@ namespace ManagerWeb.Models.ViewModels
 
         public int? PaymentCategoryId { get; set; }
 
-        public string PaymentTypeCode {get; set;}
+        public string PaymentTypeCode { get; set; }
     }
 }

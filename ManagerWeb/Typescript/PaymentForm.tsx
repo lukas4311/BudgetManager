@@ -1,46 +1,19 @@
 import * as React from 'react'
 import DataLoader from './DataLoader'
+import { PaymentTypeResponse } from './Model/PaymentTypeResponse';
+import { PaymentCategoryResponse } from './Model/PaymentCategoryResponse';
+import { IPaymentModel } from './Model/IPaymentModel';
+import { IPaymentResponseModel } from './Model/IPaymentResponseModel';
 
 interface IPaymentFormProps {
-    paymentId: number
-    , bankAccountId: number
-    , handleClose: () => void
-}
-
-interface PaymentType {
-    id: number,
-    name: string
-}
-
-interface PaymentCategory {
-    id: number,
-    name: string
-}
-
-export interface IPaymentModel {
-    id?: number
-    name: string,
-    amount: number,
-    date: string,
-    description: string,
-    paymentTypeId: number,
-    paymentTypes: Array<PaymentType>,
-    paymentCategoryId: number
-    paymentCategories: Array<PaymentCategory>,
-    bankAccountId: number
-    formErrors: {
-        name: string,
-        amount: string,
-        date: string,
-        description: string
-    },
-    disabledConfirm: boolean,
-    errorMessage: string
+    paymentId: number,
+    bankAccountId: number,
+    handleClose: () => void
 }
 
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
-    requiredMessage: string = "Zadejte hodnotu.";
-    dataLoader: DataLoader;
+    private requiredMessage: string = "Zadejte hodnotu.";
+    private  dataLoader: DataLoader;
 
     constructor(props: IPaymentFormProps) {
         super(props);
@@ -52,6 +25,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
         this.changeCategory = this.changeCategory.bind(this);
         this.changeType = this.changeType.bind(this);
+        this.onError = this.onError.bind(this);
+        this.processPaymentTypesData = this.processPaymentTypesData.bind(this);
+        this.processPaymentCategoryData = this.processPaymentCategoryData.bind(this);
+        this.processPaymentData = this.processPaymentData.bind(this);
+
         this.state = {
             name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
@@ -59,37 +37,33 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.dataLoader = new DataLoader();
     }
 
-    componentDidMount() {
-        this.dataLoader.getPaymentTypes()
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
-                }
-            })
-            .catch((error) => { console.error('Error:', error); });
+    private processPaymentTypesData(data: PaymentTypeResponse ){
+        if (data.success) {
+            this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
+        }
+    }
 
-        this.dataLoader.getPaymentCategories()
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
-                }
+    private processPaymentCategoryData(data: PaymentCategoryResponse ){
+        if (data.success) {
+            this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
+        }
+    } 
+
+    private processPaymentData(data: IPaymentResponseModel ){
+        if (data.success) {
+            this.setState({
+                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
+                paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
             })
-            .catch((error) => { console.error('Error:', error); });
+        }
+    }
+
+    public componentDidMount() {
+        this.dataLoader.getPaymentTypes(this.processPaymentTypesData, this.onError);
+        this.dataLoader.getPaymentCategories(this.processPaymentCategoryData, this.onError);
 
         if (this.state.id != null) {
-            this.dataLoader.getPayment(this.state.id)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        this.setState({
-                            name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', paymentTypeId: data.payment.paymentTypeId,
-                            paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-                        })
-                    }
-                })
-                .catch((error) => { console.error('Error:', error); });
+            this.dataLoader.getPayment(this.state.id, this.processPaymentData, this.onError);
         }
     }
 
@@ -184,7 +158,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
 
-    render() {
+    public render() {
         return (
             <div className="bg-prussianBlue text-white">
                 <div className={"transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>
