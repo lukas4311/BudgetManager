@@ -4,6 +4,7 @@ import { PaymentTypeResponse } from './Model/PaymentTypeResponse';
 import { PaymentCategoryResponse } from './Model/PaymentCategoryResponse';
 import { IPaymentModel } from './Model/IPaymentModel';
 import { IPaymentResponseModel } from './Model/IPaymentResponseModel';
+import moment from 'moment';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -31,7 +32,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.processPaymentData = this.processPaymentData.bind(this);
 
         this.state = {
-            name: '', amount: 0, date: '', description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
+            name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
         };
         this.dataLoader = new DataLoader();

@@ -54,7 +54,7 @@ export default class DataLoader {
 
     async updatePayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
         try {
-            const response = await fetch('/Payment/AddPayment', {
+            const response = await fetch('/Payment/UpdatePayment', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: data,

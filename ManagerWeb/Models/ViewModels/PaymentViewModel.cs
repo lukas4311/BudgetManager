@@ -27,6 +27,6 @@ namespace ManagerWeb.Models.ViewModels
 
         public string PaymentTypeCode { get; set; }
 
-        public string PaymentCategoryIcon {get; set;}
+        public string PaymentCategoryIcon { get; set; }
     }
 }
