@@ -26,8 +26,8 @@ namespace ManagerWeb.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody]UserModel model)
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate([FromForm] UserModel model)
         {
             UserModel user = await _userService.Authenticate(model.Login, model.Password).ConfigureAwait(false);
 

@@ -1,4 +1,6 @@
-﻿@model UserModel
+﻿@using ManagerWeb.Controllers
+
+@model UserModel
 
 @{
     ViewData["Title"] = "Přihlášení";
@@ -6,18 +8,23 @@
 
 <div class="m-auto text-center">
     <h1 class="text-2xl">Přihlášení</h1>
-    <form class="flex w-2/5 m-auto mt-8">
-        <div class="w-1/2">
-            <div class="relative inline-block w-2/3 m-auto">
-                <input asp-for="@Model.Login" class="effect-11 w-full" placeholder="Login"/>
-                <span class="focus-bg"></span>
+    <form method="post" asp-controller="User" asp-action="@nameof(UserController.Authenticate)" class="flex flex-col w-2/5 m-auto mt-8">
+        <div class="flex">
+            <div class="w-1/2">
+                <div class="relative inline-block w-2/3 m-auto">
+                    <input asp-for="@Model.Login" class="effect-11 w-full" placeholder="Login" />
+                    <span class="focus-bg"></span>
+                </div>
+            </div>
+            <div class="w-1/2">
+                <div class="relative inline-block w-2/3 m-auto">
+                    <input type="password" asp-for="@Model.Password" class="effect-11 w-full" placeholder="Heslo" />
+                    <span class="focus-bg"></span>
+                </div>
             </div>
         </div>
-        <div class="w-1/2">
-            <div class="relative inline-block w-2/3 m-auto">
-                <input type="password" asp-for="@Model.Password" class="effect-11 w-full" placeholder="Heslo" />
-                <span class="focus-bg"></span>
-            </div>
+        <div class="flex mt-8">
+            <button type="submit" class="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
         </div>
     </form>
 </div>
