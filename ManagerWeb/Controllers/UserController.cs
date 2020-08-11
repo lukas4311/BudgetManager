@@ -29,7 +29,7 @@ namespace ManagerWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Authenticate([FromBody]UserModel model)
         {
-            UserModel user = await _userService.Authenticate(model.Login, model.Password);
+            UserModel user = await _userService.Authenticate(model.Login, model.Password).ConfigureAwait(false);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
