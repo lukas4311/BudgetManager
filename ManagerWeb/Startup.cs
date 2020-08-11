@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Data;
 using ManagerWeb.Extensions;
 using ManagerWeb.Models.SettingModels;
+using ManagerWeb.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,13 +31,23 @@ namespace ManagerWeb
         public void ConfigureServices(IServiceCollection services)
         {
             IConfigurationSection connectinoStringSection = Configuration.GetSection(nameof(DbSetting));
+
+            // configure basic authentication 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
             services.Configure<DbSetting>(connectinoStringSection);
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
             services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<IBankAccountRepository, BankAccountRepository>();
+            services.AddTransient<IUserIdentityRepository, UserIdentityRepository>();
+            services.AddTransient<IUserService, UserService>();
+
             services.AddControllersWithViews();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +68,7 @@ namespace ManagerWeb
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

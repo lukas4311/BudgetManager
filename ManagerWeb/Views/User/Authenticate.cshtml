@@ -1,0 +1,18 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Přihlášení";
+}
+
+<div class="m-auto text-center">
+    <h1 class="text-2xl">Přihlášení</h1>
+    <form class="flex w-2/5 m-auto mt-8">
+        <div class="w-1/2">
+            <input asp-for="@Model.Login" />
+        </div>
+        <div class="w-1/2">
+            <input type="password" asp-for="@Model.Password" />
+        </div>
+    </form>
+</div>
+
