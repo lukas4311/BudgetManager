@@ -1,3 +1,7 @@
+using System;
+using System.Security;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using ManagerWeb.Models;
 using ManagerWeb.Services;
@@ -11,11 +15,13 @@ namespace ManagerWeb.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private IUserService _userService;
+        private IUserService userService;
+        private readonly HashManager hashManager;
 
         public UserController(IUserService userService)
         {
-            _userService = userService;
+            this.userService = userService;
+            this.hashManager = new HashManager();
         }
 
         [AllowAnonymous]
@@ -29,7 +35,8 @@ namespace ManagerWeb.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromForm] UserModel model)
         {
-            UserModel user = await _userService.Authenticate(model.Login, model.Password).ConfigureAwait(false);
+            string passwordHash = this.hashManager.HashPasswordToSha512(model.Password);
+            UserModel user = await userService.Authenticate(model.Login, passwordHash).ConfigureAwait(false);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });

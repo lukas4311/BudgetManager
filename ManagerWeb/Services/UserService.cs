@@ -14,9 +14,9 @@ namespace ManagerWeb.Services
             this.userIdentityRepository = userIdentityRepository;
         }
 
-        public async Task<UserModel> Authenticate(string username, string password)
+        public async Task<UserModel> Authenticate(string username, string passwordHash)
         {
-            return await Task.Run(() => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == password).Select(a => new UserModel { Login = a.Login }).SingleOrDefault()).ConfigureAwait(false);
+            return await Task.Run(() => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == passwordHash).Select(a => new UserModel { Login = a.Login }).SingleOrDefault()).ConfigureAwait(false);
         }
     }
 }

@@ -5,12 +5,14 @@ using Data;
 using Data.DataModels;
 using ManagerWeb.Models.DTOs;
 using ManagerWeb.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 
 namespace ManagerWeb.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentTypeRepository paymentTypeRepository;
