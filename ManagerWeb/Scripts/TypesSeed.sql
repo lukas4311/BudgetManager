@@ -3,4 +3,5 @@ insert into dbo.PaymentType(
 )
 values
 ('Revenue','Příjem'),
-('Expense','Výdej')
+('Expense','Výdej'),
+('Transfer','Převod'),

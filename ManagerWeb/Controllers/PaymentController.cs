@@ -74,7 +74,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetBankAccounts()
         {
             List<BankAccount> bankAccounts = this.bankAccountRepository.FindAll()
-                //.Include(b => b.UserDataId == loggedUserId)
                 .ToList();
 
             return Json(new { success = true, bankAccounts });
@@ -118,6 +117,7 @@ namespace ManagerWeb.Controllers
             return Json(new { success = true });
         }
 
+        [HttpGet]
         public JsonResult GetPayment(int id)
         {
             PaymentViewModel payment = this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentViewModel
