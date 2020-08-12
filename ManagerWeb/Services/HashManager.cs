@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManagerWeb.Services
 {
-    public class HashManager
+    internal class HashManager
     {
         public string HashPasswordToSha512(string password)
         {

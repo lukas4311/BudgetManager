@@ -42,11 +42,7 @@ namespace ManagerWeb
             services.Configure<DbSetting>(connectinoStringSection);
             services.AddHttpContextAccessor();
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
-            services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
-            services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
-            services.AddTransient<IPaymentRepository, PaymentRepository>();
-            services.AddTransient<IBankAccountRepository, BankAccountRepository>();
-            services.AddTransient<IUserIdentityRepository, UserIdentityRepository>();
+            services.ConfigureIoCRepositories();
             services.AddTransient<IUserService, UserService>();
 
             services.AddControllersWithViews();
