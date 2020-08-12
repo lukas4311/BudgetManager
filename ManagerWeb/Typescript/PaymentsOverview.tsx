@@ -35,7 +35,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartData = [
         {
-            id: 'fake corp. A',
+            id: 'Příjem',
             data: [
                 { x: '2018-01-01', y: 7 },
                 { x: '2018-01-02', y: 5 },
@@ -48,7 +48,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             ],
         },
         {
-            id: 'fake corp. B',
+            id: 'Výdej',
             data: [
                 { x: '2018-01-04', y: 14 },
                 { x: '2018-01-05', y: 14 },
