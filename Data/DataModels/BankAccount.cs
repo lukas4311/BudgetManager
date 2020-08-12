@@ -8,9 +8,9 @@ namespace Data.DataModels
 
         public string Code { get; set; }
 
-        public int UserDataId { get; set; }
+        public int UserIdentityId { get; set; }
 
-        public UserData UserData { get; set; }
+        public UserIdentity UserIdentity { get; set; }
 
         public List<Payment> Payments { get; set; }
 

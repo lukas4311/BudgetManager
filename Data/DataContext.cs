@@ -16,9 +16,9 @@ namespace Data
                 .HasForeignKey<UserData>(d => d.UserIdentityId);
 
             modelBuilder.Entity<BankAccount>()
-                .HasOne(e => e.UserData)
+                .HasOne(e => e.UserIdentity)
                 .WithMany(e => e.BankAccounts)
-                .HasForeignKey(e => e.UserDataId);
+                .HasForeignKey(e => e.UserIdentityId);
 
             modelBuilder.Entity<Payment>()
                 .HasOne(e => e.BankAccount)

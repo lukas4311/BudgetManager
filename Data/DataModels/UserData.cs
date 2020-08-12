@@ -20,7 +20,5 @@ namespace Data.DataModels
         public string Phone { get; set; }
 
         public string Email { get; set; }
-
-        public List<BankAccount> BankAccounts { get; set; }
     }
 }

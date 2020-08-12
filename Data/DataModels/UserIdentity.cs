@@ -1,4 +1,6 @@
-﻿namespace Data.DataModels
+﻿using System.Collections.Generic;
+
+namespace Data.DataModels
 {
     public class UserIdentity
     {
@@ -9,5 +11,7 @@
         public string PasswordHash { get; set; }
 
         public UserData UserData { get; set; }
+
+        public List<BankAccount> BankAccounts { get; set; }
     }
 }
