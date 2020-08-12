@@ -7,6 +7,7 @@ using ManagerWeb.Extensions;
 using ManagerWeb.Models.SettingModels;
 using ManagerWeb.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,10 +35,12 @@ namespace ManagerWeb
             IConfigurationSection connectinoStringSection = Configuration.GetSection(nameof(DbSetting));
 
             // configure basic authentication 
-            services.AddAuthentication("BasicAuthentication")
-                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            services
+                .AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => options.LoginPath = "/User/Authenticate");
 
             services.Configure<DbSetting>(connectinoStringSection);
+            services.AddHttpContextAccessor();
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.AddTransient<IPaymentCategoryRepository, PaymentCategoryRepository>();
             services.AddTransient<IPaymentTypeRepository, PaymentTypeRepository>();
@@ -47,8 +50,6 @@ namespace ManagerWeb
             services.AddTransient<IUserService, UserService>();
 
             services.AddControllersWithViews();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

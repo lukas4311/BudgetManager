@@ -7,5 +7,7 @@ namespace ManagerWeb.Services
     public interface IUserService
     {
         Task<UserModel> Authenticate(string username, string password);
+
+        Task SignIn(string login);
     }
 }
