@@ -28,6 +28,11 @@ interface DateFilter {
     key: number
 }
 
+class LineChartData {
+    x: string
+    y: number
+}
+
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
     private defaultBankOption: string = "Vše";
     private filters: DateFilter[];
@@ -79,29 +84,23 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private setPayments(response: Array<IPaymentInfo>) {
         if (response != undefined) {
             let balance = 0;
-            let expenses = response.filter(a => a.paymentTypeCode == 'Expenses')
-                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : 0)
-                .map(p => {
-                    let obj = { x: undefined, y: 0 };
-                    balance += p.amount;
-                    obj.x = p.date;
-                    obj.y = balance;
-                    return obj;
+            let expenses: LineChartData[] = [];
+            let revenues: LineChartData[] = [];
+            response.filter(a => a.paymentTypeCode == 'Expense')
+                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                .forEach(a => {
+                    balance += a.amount;
+                    expenses.push({ x: a.date, y: balance });
                 });
 
             balance = 0;
-            let revenues = response.filter(a => a.paymentTypeCode == 'Revenue')
-                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : 0)
-                .map(p => {
-                    let obj = { x: undefined, y: 0 };
-                    balance += p.amount;
-                    obj.x = p.date;
-                    obj.y = balance;
-                    return obj;
+            response.filter(a => a.paymentTypeCode == 'Revenue')
+                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                .forEach(a => {
+                    balance += a.amount;
+                    revenues.push({ x: a.date, y: balance });
                 });
 
-            // let revenues = response.filter(a => a.paymentTypeCode = 'Revenue').map(p => ({ x: p.date, y: p.amount }));
-            // let expenses = response.filter(a => a.paymentTypeCode = 'Expenses').map(p => ({ x: p.date, y: p.amount }));
             this.setState({ payments: response, chartData: [{ id: 'Příjem', data: revenues }, { id: 'Výdej', data: expenses }] });
         } else {
             this.setState({ apiError: this.apiErrorMessage })
@@ -158,7 +157,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         switch (paymentTypeCode) {
             case "Revenue":
                 return "bg-green-800"
-            case "Expenses":
+            case "Expense":
                 return "bg-red-600"
             case "Transfer":
                 return "bg-blue-500"

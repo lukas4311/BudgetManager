@@ -1,22 +1,85 @@
-insert into dbo.PaymentCategory(
-    Code, Name, Icon
+INSERT INTO dbo.PaymentCategory
+(
+	 Code
+	,Name
+	,Icon
 )
-values
-('Food','Jídlo','food'),
-('Shop','Nákupy','shop'),
-( 'Transport','Doprava','bus'),
-( 'Automoto','Automoto','car'),
-( 'Housing','Bydlení','realestate'),
-( 'Bills','Finanční účty','bill'),
-( 'Travel','Cestování','travel'),
-( 'Fun','Zábava','fun'),
-( 'Culture','Kultura','theatre'),
-( 'Invetsment','Investice','cash'),
-( 'Phone','Mobil','mobile'),
-( 'Network','Internet','net'),
-( 'Network','Internet','net'),
-( 'Salary','Mzda','salary'),
-( 'Sale','Prodej','sale')
+VALUES
+(
+	 'Food'
+	,'Jídlo'
+	,'food'
+),
+(
+	 'Shop'
+	,'Nákupy'
+	,'shop'
+),
+(
+	 'Transport'
+	,'Doprava'
+	,'bus'
+),
+(
+	 'Automoto'
+	,'Automoto'
+	,'car'
+),
+(
+	 'Housing'
+	,'Bydlení'
+	,'realestate'
+),
+(
+	 'Bills'
+	,'Finanční účty'
+	,'bill'
+),
+(
+	 'Travel'
+	,'Cestování'
+	,'travel'
+),
+(
+	 'Fun'
+	,'Zábava'
+	,'fun'
+),
+(
+	 'Culture'
+	,'Kultura'
+	,'theatre'
+),
+(
+	 'Invetsment'
+	,'Investice'
+	,'cash'
+),
+(
+	 'Phone'
+	,'Mobil'
+	,'mobile'
+),
+(
+	 'Network'
+	,'Internet'
+	,'net'
+),
+(
+	 'Network'
+	,'Internet'
+	,'net'
+),
+(
+	 'Salary'
+	,'Mzda'
+	,'salary'
+),
+(
+	 'Sale'
+	,'Prodej'
+	,'sale'
+)
 
 
 -- Výdej

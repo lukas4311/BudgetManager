@@ -1,7 +1,18 @@
-insert into dbo.PaymentType(
-    Code, Name
+INSERT INTO dbo.PaymentType
+(
+	 Code
+	,Name
 )
-values
-('Revenue','Příjem'),
-('Expense','Výdej'),
-('Transfer','Převod'),
+VALUES
+(
+	 'Revenue'
+	,'Příjem'
+),
+(
+	 'Expense'
+	,'Výdej'
+),
+(
+	 'Transfer'
+	,'Převod'
+)
