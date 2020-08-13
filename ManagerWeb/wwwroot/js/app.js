@@ -860,7 +860,7 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            chartData: []
+            expenseChartData: [], balanceChartData: []
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -894,21 +894,13 @@ class PaymentsOverview extends React.Component {
         if (response != undefined) {
             let balance = 0;
             let expenses = [];
-            let revenues = [];
             response.filter(a => a.paymentTypeCode == 'Expense')
                 .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
                 .forEach(a => {
                 balance += a.amount;
                 expenses.push({ x: a.date, y: balance });
             });
-            balance = 0;
-            response.filter(a => a.paymentTypeCode == 'Revenue')
-                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                balance += a.amount;
-                revenues.push({ x: a.date, y: balance });
-            });
-            this.setState({ payments: response, chartData: [{ id: 'Příjem', data: revenues }, { id: 'Výdej', data: expenses }] });
+            this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
         }
         else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -981,7 +973,7 @@ class PaymentsOverview extends React.Component {
                         React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
                         React.createElement("span", { className: "mx-6 my-2 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
                 React.createElement("div", { className: "w-3/5" },
-                    React.createElement(LineChart_1.LineChart, { data: this.state.chartData }))),
+                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

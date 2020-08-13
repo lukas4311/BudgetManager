@@ -30,7 +30,8 @@ namespace ManagerWeb.Services
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, login)
+                new Claim(ClaimTypes.NameIdentifier, login),
+                new Claim(ClaimTypes.Name, login)
             };
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

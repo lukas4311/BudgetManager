@@ -19,7 +19,8 @@ interface PaymentsOverviewState {
     paymentId: number,
     formKey: number,
     apiError: string,
-    chartData: any[]
+    expenseChartData: any[],
+    balanceChartData: any[]
 }
 
 interface DateFilter {
@@ -46,7 +47,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            chartData: []
+            expenseChartData: [], balanceChartData: []
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -85,7 +86,6 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         if (response != undefined) {
             let balance = 0;
             let expenses: LineChartData[] = [];
-            let revenues: LineChartData[] = [];
             response.filter(a => a.paymentTypeCode == 'Expense')
                 .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
                 .forEach(a => {
@@ -93,15 +93,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     expenses.push({ x: a.date, y: balance });
                 });
 
-            balance = 0;
-            response.filter(a => a.paymentTypeCode == 'Revenue')
-                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                    balance += a.amount;
-                    revenues.push({ x: a.date, y: balance });
-                });
-
-            this.setState({ payments: response, chartData: [{ id: 'Příjem', data: revenues }, { id: 'Výdej', data: expenses }] });
+            this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
         } else {
             this.setState({ apiError: this.apiErrorMessage })
         }
@@ -207,7 +199,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     </div>
                     <div className="w-3/5">
-                        <LineChart data={this.state.chartData}></LineChart>
+                        <LineChart data={this.state.expenseChartData}></LineChart>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
