@@ -726,7 +726,6 @@ class PaymentForm extends React.Component {
         this.setState({ disabledConfirm: true });
         const data = this.state;
         let dataJson = JSON.stringify(data);
-        // TODO: dodelat handlery
         if (this.state.id != undefined) {
             this.dataLoader.updatePayment(dataJson, () => { }, this.onError);
         }
@@ -847,34 +846,6 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
-        this.chartData = [
-            {
-                id: 'fake corp. A',
-                data: [
-                    { x: '2018-01-01', y: 7 },
-                    { x: '2018-01-02', y: 5 },
-                    { x: '2018-01-03', y: 11 },
-                    { x: '2018-01-04', y: 9 },
-                    { x: '2018-01-05', y: 12 },
-                    { x: '2018-01-06', y: 16 },
-                    { x: '2018-01-07', y: 13 },
-                    { x: '2018-01-08', y: 13 },
-                ],
-            },
-            {
-                id: 'fake corp. B',
-                data: [
-                    { x: '2018-01-04', y: 14 },
-                    { x: '2018-01-05', y: 14 },
-                    { x: '2018-01-06', y: 15 },
-                    { x: '2018-01-07', y: 11 },
-                    { x: '2018-01-08', y: 10 },
-                    { x: '2018-01-09', y: 12 },
-                    { x: '2018-01-10', y: 9 },
-                    { x: '2018-01-11', y: 7 },
-                ],
-            },
-        ];
         this.hideModal = () => {
             this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         };
@@ -887,7 +858,7 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            chartData: this.chartData
+            chartData: []
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -919,7 +890,29 @@ class PaymentsOverview extends React.Component {
     }
     setPayments(response) {
         if (response != undefined) {
-            this.setState({ payments: response });
+            let balance = 0;
+            let expenses = response.filter(a => a.paymentTypeCode == 'Expenses')
+                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : 0)
+                .map(p => {
+                let obj = { x: undefined, y: 0 };
+                balance += p.amount;
+                obj.x = p.date;
+                obj.y = balance;
+                return obj;
+            });
+            balance = 0;
+            let revenues = response.filter(a => a.paymentTypeCode == 'Revenue')
+                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : 0)
+                .map(p => {
+                let obj = { x: undefined, y: 0 };
+                balance += p.amount;
+                obj.x = p.date;
+                obj.y = balance;
+                return obj;
+            });
+            // let revenues = response.filter(a => a.paymentTypeCode = 'Revenue').map(p => ({ x: p.date, y: p.amount }));
+            // let expenses = response.filter(a => a.paymentTypeCode = 'Expenses').map(p => ({ x: p.date, y: p.amount }));
+            this.setState({ payments: response, chartData: [{ id: 'Příjem', data: revenues }, { id: 'Výdej', data: expenses }] });
         }
         else {
             this.setState({ apiError: this.apiErrorMessage });
