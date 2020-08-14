@@ -28,8 +28,10 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetBankAccountBalanceToDate(DateTime? toDate)
+        public JsonResult GetBankAccountsBalanceToDate(DateTime? toDate)
         {
+            toDate ??= DateTime.MinValue;
+
             IEnumerable<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.HttpContext.User.Identity.Name)
                 .AsNoTracking()
                 .Include(b => b.BankAccounts)
@@ -37,8 +39,8 @@ namespace ManagerWeb.Controllers
                 .AsEnumerable()
                 .Select(b => new BankBalanceModel { Id = b.Id, Balance = b.OpeningBalance });
 
-            var payments = this.paymentRepository
-                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId))
+            IEnumerable<BankBalanceModel> bankAccountsBalance = this.paymentRepository
+                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date < toDate)
                 .AsNoTracking()
                 .GroupBy(a => a.BankAccountId)
                 .Select(g => new
@@ -52,7 +54,7 @@ namespace ManagerWeb.Controllers
                     return bankAccount;
                 });
 
-            return Json(new { success = true, payment = payments });
+            return Json(new { success = true, bankAccountsBalance = bankAccountsBalance });
         }
     }
 }

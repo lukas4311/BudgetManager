@@ -3,6 +3,7 @@ import { BankAccountReponse } from './Model/BankAccountReponse'
 import { PaymentTypeResponse } from './Model/PaymentTypeResponse'
 import { PaymentCategoryResponse } from "./Model/PaymentCategoryResponse";
 import { IPaymentResponseModel } from "./Model/IPaymentResponseModel";
+import { IBankAccountBalanceResponseModel } from "./Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
     getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<Response> {
@@ -109,6 +110,20 @@ export default class DataLoader {
                 onSuccess,
                 (_) => onRejected()
             )
-            .catch(onRejected);;
+            .catch(onRejected);
+    }
+
+    async getBankAccountsBalanceToDate(toDate: string, onRejected: any): Promise<IBankAccountBalanceResponseModel> {
+        let response:IBankAccountBalanceResponseModel;
+        
+        try {
+            const res = await fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response
     }
 }

@@ -194,7 +194,19 @@ class DataLoader {
         })
             .then(onSuccess, (_) => onRejected())
             .catch(onRejected);
-        ;
+    }
+    getBankAccountsBalanceToDate(toDate, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
     }
 }
 exports.default = DataLoader;
@@ -830,6 +842,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -891,20 +912,31 @@ class PaymentsOverview extends React.Component {
         this.setState({ apiError: this.apiErrorMessage });
     }
     setPayments(response) {
-        if (response != undefined) {
-            let balance = 0;
-            let expenses = [];
-            response.filter(a => a.paymentTypeCode == 'Expense')
-                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                balance += a.amount;
-                expenses.push({ x: a.date, y: balance });
-            });
-            this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
-        }
-        else {
-            this.setState({ apiError: this.apiErrorMessage });
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            if (response != undefined) {
+                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+                let balance = 0;
+                if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
+                    let bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+                    balance = bankInfo.openingBalance + bankInfo.balance;
+                }
+                else {
+                    bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+                }
+                let expenses = [];
+                response.filter(a => a.paymentTypeCode == 'Expense')
+                    .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                    .forEach(a => {
+                    balance += a.amount;
+                    expenses.push({ x: a.date, y: balance });
+                });
+                this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
+            }
+            else {
+                this.setState({ apiError: this.apiErrorMessage });
+            }
+        });
     }
     filterClick(filterKey) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);

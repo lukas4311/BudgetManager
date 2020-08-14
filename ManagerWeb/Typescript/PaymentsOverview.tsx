@@ -8,6 +8,7 @@ import { BankAccount } from './Model/BankAccount';
 import { BankAccountReponse } from './Model/BankAccountReponse';
 import { IconsData } from './IconsEnum';
 import { LineChart } from './LineChart';
+import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -82,9 +83,19 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ apiError: this.apiErrorMessage });
     }
 
-    private setPayments(response: Array<IPaymentInfo>) {
+    private async setPayments(response: Array<IPaymentInfo>) {
         if (response != undefined) {
+            let dateTo: string = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+            let bankAccountBalanceResponse:IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
             let balance = 0;
+
+            if(this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null){
+                let bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+                balance = bankInfo.openingBalance + bankInfo.balance;
+            }else{
+                bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+            }
+
             let expenses: LineChartData[] = [];
             response.filter(a => a.paymentTypeCode == 'Expense')
                 .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
