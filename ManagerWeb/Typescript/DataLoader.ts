@@ -6,116 +6,105 @@ import { IPaymentResponseModel } from "./Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "./Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
-    getPayments(filterDate: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<Response> {
-        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                (result: IPaymentInfo[]) => {
-                    onSuccess(result);
-                },
-                (_) => onRejected()
-            );
-    }
+    async getPayments(filterDate: string, onRejected: any): Promise<IPaymentInfo[]> {
+        let response: IPaymentInfo[];
 
-    getBankAccounts(onSuccess: (bankAccountResponse: BankAccountReponse) => void, onRejected: any): Promise<Response> {
-        return fetch("/Payment/GetBankAccounts")
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                (result: BankAccountReponse) => {
-                    onSuccess(result);
-                },
-                (_) => onRejected()
-            );
-    }
-
-    async addPayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
         try {
-            const response = await fetch('/Payment/AddPayment', {
+            const res = await fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response;
+    }
+
+    async getBankAccounts(onRejected: any): Promise<BankAccountReponse> {
+        let response: BankAccountReponse;
+
+        try {
+            const res = await fetch("/Payment/GetBankAccounts");
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response;
+    }
+
+    async addPayment(data: string, onRejected: any): Promise<void> {
+        try {
+            await fetch('/Payment/AddPayment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: data,
             });
-            const responseData = await response.json();
-            onSuccess(responseData);
         }
         catch (_) {
-            return onRejected();
+            onRejected();
         }
     }
 
-    async updatePayment(data: string, onSuccess: (payments: IPaymentInfo[]) => void, onRejected: any): Promise<void> {
+    async updatePayment(data: string, onRejected: any): Promise<void> {
         try {
-            const response = await fetch('/Payment/UpdatePayment', {
+            fetch('/Payment/UpdatePayment', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: data,
             });
-            const responseData = await response.json();
-            onSuccess(responseData);
         }
         catch (_) {
-            return onRejected();
+            onRejected();
         }
     }
 
-    getPaymentTypes(onSuccess: (response: PaymentTypeResponse) => void, onRejected: any): Promise<Response> {
-        return fetch("/Payment/GetPaymentTypes")
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                onSuccess,
-                (_) => onRejected()
-            )
-            .catch(onRejected);
+    async getPaymentTypes(onRejected: any): Promise<PaymentTypeResponse> {
+        let response: PaymentTypeResponse;
+
+        try {
+            const res = await fetch("/Payment/GetPaymentTypes");
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response;
     }
 
-    getPaymentCategories(onSuccess: (response: PaymentCategoryResponse) => void, onRejected: any): Promise<Response> {
-        return fetch("/Payment/GetPaymentCategories")
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                onSuccess,
-                (_) => onRejected()
-            )
-            .catch(onRejected);
+    async getPaymentCategories(onRejected: any): Promise<PaymentCategoryResponse> {
+        let response: PaymentCategoryResponse;
+
+        try {
+            const res = await fetch("/Payment/GetPaymentCategories");
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response;
     }
 
-    getPayment(id: number, onSuccess: (response: IPaymentResponseModel) => void, onRejected: any): Promise<Response> {
-        return fetch(`/Payment/GetPayment/${id}`)
-            .then(res => {
-                if (res.ok)
-                    return res.json()
-                else
-                    onRejected();
-            })
-            .then(
-                onSuccess,
-                (_) => onRejected()
-            )
-            .catch(onRejected);
+    async getPayment(id: number, onRejected: any): Promise<IPaymentResponseModel> {
+        let response: IPaymentResponseModel;
+
+        try {
+            const res = await fetch(`/Payment/GetPayment/${id}`);
+            response = await res.json();
+        }
+        catch (_) {
+            onRejected();
+        }
+
+        return response
     }
 
     async getBankAccountsBalanceToDate(toDate: string, onRejected: any): Promise<IBankAccountBalanceResponseModel> {
-        let response:IBankAccountBalanceResponseModel;
-        
+        let response: IBankAccountBalanceResponseModel;
+
         try {
             const res = await fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
             response = await res.json();

@@ -106,94 +106,98 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
-    getPayments(filterDate, onSuccess, onRejected) {
-        return fetch("/Payment/GetPaymentsData?fromDate=" + filterDate)
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
+    getPayments(filterDate, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+                response = yield res.json();
+            }
+            catch (_) {
                 onRejected();
-        })
-            .then((result) => {
-            onSuccess(result);
-        }, (_) => onRejected());
+            }
+            return response;
+        });
     }
-    getBankAccounts(onSuccess, onRejected) {
-        return fetch("/Payment/GetBankAccounts")
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
+    getBankAccounts(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetBankAccounts");
+                response = yield res.json();
+            }
+            catch (_) {
                 onRejected();
-        })
-            .then((result) => {
-            onSuccess(result);
-        }, (_) => onRejected());
+            }
+            return response;
+        });
     }
-    addPayment(data, onSuccess, onRejected) {
+    addPayment(data, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield fetch('/Payment/AddPayment', {
+                yield fetch('/Payment/AddPayment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: data,
                 });
-                const responseData = yield response.json();
-                onSuccess(responseData);
             }
             catch (_) {
-                return onRejected();
+                onRejected();
             }
         });
     }
-    updatePayment(data, onSuccess, onRejected) {
+    updatePayment(data, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield fetch('/Payment/UpdatePayment', {
+                fetch('/Payment/UpdatePayment', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: data,
                 });
-                const responseData = yield response.json();
-                onSuccess(responseData);
             }
             catch (_) {
-                return onRejected();
+                onRejected();
             }
         });
     }
-    getPaymentTypes(onSuccess, onRejected) {
-        return fetch("/Payment/GetPaymentTypes")
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
+    getPaymentTypes(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetPaymentTypes");
+                response = yield res.json();
+            }
+            catch (_) {
                 onRejected();
-        })
-            .then(onSuccess, (_) => onRejected())
-            .catch(onRejected);
+            }
+            return response;
+        });
     }
-    getPaymentCategories(onSuccess, onRejected) {
-        return fetch("/Payment/GetPaymentCategories")
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
+    getPaymentCategories(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetPaymentCategories");
+                response = yield res.json();
+            }
+            catch (_) {
                 onRejected();
-        })
-            .then(onSuccess, (_) => onRejected())
-            .catch(onRejected);
+            }
+            return response;
+        });
     }
-    getPayment(id, onSuccess, onRejected) {
-        return fetch(`/Payment/GetPayment/${id}`)
-            .then(res => {
-            if (res.ok)
-                return res.json();
-            else
+    getPayment(id, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch(`/Payment/GetPayment/${id}`);
+                response = yield res.json();
+            }
+            catch (_) {
                 onRejected();
-        })
-            .then(onSuccess, (_) => onRejected())
-            .catch(onRejected);
+            }
+            return response;
+        });
     }
     getBankAccountsBalanceToDate(toDate, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -651,6 +655,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -727,11 +740,16 @@ class PaymentForm extends React.Component {
         }
     }
     componentDidMount() {
-        this.dataLoader.getPaymentTypes(this.processPaymentTypesData, this.onError);
-        this.dataLoader.getPaymentCategories(this.processPaymentCategoryData, this.onError);
-        if (this.state.id != null) {
-            this.dataLoader.getPayment(this.state.id, this.processPaymentData, this.onError);
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            const paymentReponse = yield this.dataLoader.getPaymentTypes(this.onError);
+            this.processPaymentTypesData(paymentReponse);
+            const categories = yield this.dataLoader.getPaymentCategories(this.onError);
+            this.processPaymentCategoryData(categories);
+            if (this.state.id != null) {
+                let paymentResponse = yield this.dataLoader.getPayment(this.state.id, this.onError);
+                this.processPaymentData(paymentResponse);
+            }
+        });
     }
     confirmPayment(e) {
         e.preventDefault();
@@ -739,10 +757,10 @@ class PaymentForm extends React.Component {
         const data = this.state;
         let dataJson = JSON.stringify(data);
         if (this.state.id != undefined) {
-            this.dataLoader.updatePayment(dataJson, () => { }, this.onError);
+            this.dataLoader.updatePayment(dataJson, this.onError);
         }
         else {
-            this.dataLoader.addPayment(dataJson, () => { }, this.onError);
+            this.dataLoader.addPayment(dataJson, this.onError);
         }
         this.props.handleClose();
     }
@@ -894,12 +912,18 @@ class PaymentsOverview extends React.Component {
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
-        this.dataLoader.getBankAccounts(this.setBankAccounts, this.onRejected);
-        this.getPaymentData(this.state.selectedFilter.days);
+        return __awaiter(this, void 0, void 0, function* () {
+            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
+            this.getPaymentData(this.state.selectedFilter.days);
+            this.setBankAccounts(bankAccounts);
+        });
     }
     getPaymentData(daysBack) {
-        let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        this.dataLoader.getPayments(filterDate, this.setPayments, this.onRejected);
+        return __awaiter(this, void 0, void 0, function* () {
+            let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
+            const payments = yield this.dataLoader.getPayments(filterDate, this.onRejected);
+            this.setPayments(payments);
+        });
     }
     setBankAccounts(data) {
         if (data.success) {
@@ -918,8 +942,9 @@ class PaymentsOverview extends React.Component {
                 let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
                 let balance = 0;
                 if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
-                    let bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
-                    balance = bankInfo.openingBalance + bankInfo.balance;
+                    const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+                    if (bankInfo != undefined)
+                        balance = bankInfo.openingBalance + bankInfo.balance;
                 }
                 else {
                     bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);

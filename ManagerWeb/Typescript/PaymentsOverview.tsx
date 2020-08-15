@@ -61,14 +61,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.dataLoader = new DataLoader();
     }
 
-    public componentDidMount() {
-        this.dataLoader.getBankAccounts(this.setBankAccounts, this.onRejected);
+    public async componentDidMount() {
+        const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
         this.getPaymentData(this.state.selectedFilter.days);
+        this.setBankAccounts(bankAccounts);
     }
 
-    private getPaymentData(daysBack: number) {
+    private async getPaymentData(daysBack: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        this.dataLoader.getPayments(filterDate, this.setPayments, this.onRejected);
+        const payments = await this.dataLoader.getPayments(filterDate, this.onRejected);
+        this.setPayments(payments);
     }
 
     private setBankAccounts(data: BankAccountReponse) {
@@ -86,13 +88,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private async setPayments(response: Array<IPaymentInfo>) {
         if (response != undefined) {
             let dateTo: string = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
-            let bankAccountBalanceResponse:IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
+            let bankAccountBalanceResponse: IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
             let balance = 0;
 
-            if(this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null){
-                let bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
-                balance = bankInfo.openingBalance + bankInfo.balance;
-            }else{
+            if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
+                const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+
+                if (bankInfo != undefined) 
+                    balance = bankInfo.openingBalance + bankInfo.balance;
+
+            } else {
                 bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
             }
 

@@ -59,12 +59,15 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         }
     }
 
-    public componentDidMount() {
-        this.dataLoader.getPaymentTypes(this.processPaymentTypesData, this.onError);
-        this.dataLoader.getPaymentCategories(this.processPaymentCategoryData, this.onError);
+    public async componentDidMount() {
+        const paymentReponse = await this.dataLoader.getPaymentTypes(this.onError);
+        this.processPaymentTypesData(paymentReponse);
+        const categories = await this.dataLoader.getPaymentCategories(this.onError);
+        this.processPaymentCategoryData(categories);
 
         if (this.state.id != null) {
-            this.dataLoader.getPayment(this.state.id, this.processPaymentData, this.onError);
+            let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
+            this.processPaymentData(paymentResponse);
         }
     }
 
@@ -75,9 +78,9 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         let dataJson = JSON.stringify(data);
 
         if (this.state.id != undefined) {
-            this.dataLoader.updatePayment(dataJson, () => { }, this.onError)
+            this.dataLoader.updatePayment(dataJson, this.onError)
         } else {
-            this.dataLoader.addPayment(dataJson, () => { }, this.onError)
+            this.dataLoader.addPayment(dataJson, this.onError)
         }
 
         this.props.handleClose();
