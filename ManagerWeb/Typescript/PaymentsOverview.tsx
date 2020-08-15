@@ -85,34 +85,51 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ apiError: this.apiErrorMessage });
     }
 
-    private async setPayments(response: Array<IPaymentInfo>) {
-        if (response != undefined) {
-            let dateTo: string = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
-            let bankAccountBalanceResponse: IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
-            let balance = 0;
-
-            if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
-                const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
-
-                if (bankInfo != undefined) 
-                    balance = bankInfo.openingBalance + bankInfo.balance;
-
-            } else {
-                bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
-            }
-
-            let expenses: LineChartData[] = [];
-            response.filter(a => a.paymentTypeCode == 'Expense')
-                .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                    balance += a.amount;
-                    expenses.push({ x: a.date, y: balance });
-                });
-
-            this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
+    private async setPayments(payments: Array<IPaymentInfo>) {
+        if (payments != undefined) {
+            const expenses = await this.prepareExpenseChartData(payments);
+            const balance = await this.prepareBalanceChartData(payments)
+            this.setState({ payments: payments, expenseChartData: [{ id: 'Výdej', data: expenses }], balanceChartData: [{ id: 'Balance', data: balance }] });
         } else {
             this.setState({ apiError: this.apiErrorMessage })
         }
+    }
+
+    private async prepareExpenseChartData(payments: Array<IPaymentInfo>) {
+        let expenseSum = 0;
+        let expenses: LineChartData[] = [];
+        payments.filter(a => a.paymentTypeCode == 'Expense')
+            .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
+            .forEach(a => {
+                expenseSum += a.amount;
+                expenses.push({ x: a.date, y: expenseSum });
+            });
+    }
+
+    private async prepareBalanceChartData(payments: Array<IPaymentInfo>): Promise<LineChartData[]> {
+        let dateTo: string = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+        let bankAccountBalanceResponse: IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
+        let balance: number = 0;
+
+        if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
+            const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+
+            if (bankInfo != undefined)
+                balance = bankInfo.openingBalance + bankInfo.balance;
+
+        } else {
+            bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+        }
+
+        let paymentChartData: LineChartData[] = [];
+        payments
+            .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
+            .forEach(a => {
+                balance += a.amount;
+                paymentChartData.push({ x: a.date, y: balance });
+            });
+
+        return paymentChartData;
     }
 
     private filterClick(filterKey: number) {

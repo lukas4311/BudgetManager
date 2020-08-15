@@ -935,32 +935,51 @@ class PaymentsOverview extends React.Component {
     onRejected(_) {
         this.setState({ apiError: this.apiErrorMessage });
     }
-    setPayments(response) {
+    setPayments(payments) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (response != undefined) {
-                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
-                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
-                let balance = 0;
-                if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
-                    const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
-                    if (bankInfo != undefined)
-                        balance = bankInfo.openingBalance + bankInfo.balance;
-                }
-                else {
-                    bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
-                }
-                let expenses = [];
-                response.filter(a => a.paymentTypeCode == 'Expense')
-                    .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                    .forEach(a => {
-                    balance += a.amount;
-                    expenses.push({ x: a.date, y: balance });
-                });
-                this.setState({ payments: response, expenseChartData: [{ id: 'Výdej', data: expenses }] });
+            if (payments != undefined) {
+                const expenses = yield this.prepareExpenseChartData(payments);
+                const balance = yield this.prepareBalanceChartData(payments);
+                this.setState({ payments: payments, expenseChartData: [{ id: 'Výdej', data: expenses }], balanceChartData: [{ id: 'Balance', data: balance }] });
             }
             else {
                 this.setState({ apiError: this.apiErrorMessage });
             }
+        });
+    }
+    prepareExpenseChartData(payments) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let expenseSum = 0;
+            let expenses = [];
+            payments.filter(a => a.paymentTypeCode == 'Expense')
+                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                .forEach(a => {
+                expenseSum += a.amount;
+                expenses.push({ x: a.date, y: expenseSum });
+            });
+        });
+    }
+    prepareBalanceChartData(payments) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+            let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+            let balance = 0;
+            if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
+                const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
+                if (bankInfo != undefined)
+                    balance = bankInfo.openingBalance + bankInfo.balance;
+            }
+            else {
+                bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+            }
+            let paymentChartData = [];
+            payments
+                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                .forEach(a => {
+                balance += a.amount;
+                paymentChartData.push({ x: a.date, y: balance });
+            });
+            return paymentChartData;
         });
     }
     filterClick(filterKey) {
