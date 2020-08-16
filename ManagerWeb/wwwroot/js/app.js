@@ -494,42 +494,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const LineChart = ({ data }) => (react_1.default.createElement(line_1.ResponsiveLine, { data: data, margin: { top: 50, right: 50, bottom: 50, left: 50 }, xScale: {
-        type: 'time',
-        format: '%Y-%m-%d',
-        useUTC: false,
-        precision: 'day',
-    }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false }, axisLeft: {
-        legend: 'linear scale',
-        legendOffset: 12,
-        tickValues: 6
-    }, axisBottom: {
-        format: '%b %d',
-        tickValues: 'every 2 days',
-        legend: 'time scale',
-        legendOffset: -12,
-    }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, theme: {
-        axis: {
-            ticks: {
+function LineChart({ dataSets }) {
+    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 50 }, xScale: {
+            type: 'time',
+            format: '%Y-%m-%d',
+            useUTC: false,
+            precision: 'day',
+        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false }, axisLeft: {
+            legend: 'linear scale',
+            legendOffset: 12,
+            tickValues: 6,
+            tickPadding: 15
+        }, axisBottom: {
+            format: '%b %d',
+            tickValues: 'every 2 days',
+            legend: 'time scale',
+            legendOffset: -12,
+        }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, theme: {
+            axis: {
+                ticks: {
+                    line: {
+                        stroke: "white"
+                    },
+                    text: {
+                        fill: "white"
+                    }
+                }
+            },
+            grid: {
                 line: {
-                    stroke: "white"
-                },
+                    stroke: "white",
+                }
+            },
+            dots: {
                 text: {
-                    fill: "white"
+                    fill: 'white',
                 }
             }
-        },
-        grid: {
-            line: {
-                stroke: "white",
-            }
-        },
-        dots: {
-            text: {
-                fill: 'white',
-            }
-        }
-    } }));
+        } }));
+}
 exports.LineChart = LineChart;
 
 
@@ -879,8 +882,6 @@ const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
 const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
-class LineChartData {
-}
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -898,7 +899,7 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: [], balanceChartData: []
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -939,7 +940,7 @@ class PaymentsOverview extends React.Component {
             if (payments != undefined) {
                 const expenses = yield this.prepareExpenseChartData(payments);
                 const balance = yield this.prepareBalanceChartData(payments);
-                this.setState({ payments: payments, expenseChartData: [{ id: 'Výdej', data: expenses }], balanceChartData: [{ id: 'Balance', data: balance }] });
+                this.setState({ payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] }, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] } });
             }
             else {
                 this.setState({ apiError: this.apiErrorMessage });
@@ -1049,10 +1050,10 @@ class PaymentsOverview extends React.Component {
                         React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
                         React.createElement("span", { className: "mx-6 my-2 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
                 React.createElement("div", { className: "w-3/5" },
-                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData }))),
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets }))),
             React.createElement("div", { className: "flex flex-row" },
                 React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { data: this.state.balanceChartData }))),
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

@@ -9,6 +9,8 @@ import { BankAccountReponse } from './Model/BankAccountReponse';
 import { IconsData } from './IconsEnum';
 import { LineChart } from './LineChart';
 import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
+import { LineChartData } from './Model/LineChartData';
+import { LineChartProps } from './Model/LineChartProps';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -20,19 +22,14 @@ interface PaymentsOverviewState {
     paymentId: number,
     formKey: number,
     apiError: string,
-    expenseChartData: any[],
-    balanceChartData: any[]
+    expenseChartData: LineChartProps,
+    balanceChartData: LineChartProps
 }
 
 interface DateFilter {
     caption: string,
     days: number,
     key: number
-}
-
-class LineChartData {
-    x: string
-    y: number
 }
 
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
@@ -48,7 +45,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: [], balanceChartData: []
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -69,7 +66,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private async getPaymentData(daysBack: number, bankAccountId: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        const payments = await this.dataLoader.getPayments(filterDate, bankAccountId,  this.onRejected);
+        const payments = await this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
         this.setPayments(payments);
     }
 
@@ -89,13 +86,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         if (payments != undefined) {
             const expenses = await this.prepareExpenseChartData(payments);
             const balance = await this.prepareBalanceChartData(payments)
-            this.setState({ payments: payments, expenseChartData: [{ id: 'Výdej', data: expenses }], balanceChartData: [{ id: 'Balance', data: balance }] });
+            this.setState({ payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] }, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] } });
         } else {
             this.setState({ apiError: this.apiErrorMessage })
         }
     }
 
-    private async prepareExpenseChartData(payments: Array<IPaymentInfo>):Promise<LineChartData[]> {
+    private async prepareExpenseChartData(payments: Array<IPaymentInfo>): Promise<LineChartData[]> {
         let expenseSum = 0;
         let expenses: LineChartData[] = [];
         payments.filter(a => a.paymentTypeCode == 'Expense')
@@ -166,7 +163,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
-        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId)});
+        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
         this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
 
@@ -233,12 +230,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     </div>
                     <div className="w-3/5">
-                        <LineChart data={this.state.expenseChartData}></LineChart>
-                    </div>                    
+                        <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
+                    </div>
                 </div>
                 <div className="flex flex-row">
                     <div className="w-1/3 h-64">
-                        <LineChart data={this.state.balanceChartData}></LineChart> 
+                        <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
