@@ -32,29 +32,39 @@ namespace ManagerWeb.Controllers
         {
             toDate ??= DateTime.MinValue;
 
-            IEnumerable<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.HttpContext.User.Identity.Name)
+            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.HttpContext.User.Identity.Name)
                 .AsNoTracking()
                 .Include(b => b.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .AsEnumerable()
-                .Select(b => new BankBalanceModel { Id = b.Id, Balance = b.OpeningBalance });
+                .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
+                .ToList();
 
-            IEnumerable<BankBalanceModel> bankAccountsBalance = this.paymentRepository
-                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date < toDate)
+            List<BankPaymentSumModel> bankAccountsBalance = this.paymentRepository
+                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date > toDate)
                 .AsNoTracking()
                 .GroupBy(a => a.BankAccountId)
-                .Select(g => new
+                .Select(g => new BankPaymentSumModel
                 {
                     BankAccountId = g.Key,
                     Sum = g.Sum(a => a.Amount)
                 })
-                .ToList()
-                .Join(bankAccounts, payment => payment.BankAccountId, bankAccount => bankAccount.Id, (payment, bankAccount) => {
-                    bankAccount.Balance = payment.Sum;
-                    return bankAccount;
+                .ToList();
+
+            IEnumerable<BankBalanceModel> bankInfo = bankAccounts
+                .GroupJoin(bankAccountsBalance, bank => bank.Id, balance => balance.BankAccountId, (x, y) => new { Bank = x, BankBalance = y })
+                .SelectMany(x => x.BankBalance.DefaultIfEmpty(),(x, y) => {
+                    x.Bank.Balance = y?.Sum ?? 0;
+                    return x.Bank;
                 });
 
-            return Json(new { success = true, bankAccountsBalance = bankAccountsBalance });
+            return Json(new { success = true, bankAccountsBalance = bankInfo });
+        }
+
+        internal class BankPaymentSumModel
+        {
+            public int BankAccountId { get; set; }
+            public decimal Sum { get; set; }
         }
     }
 }

@@ -234,8 +234,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <div className="w-3/5">
                         <LineChart data={this.state.expenseChartData}></LineChart>
-                    </div>
-                    <div className="w-full">
+                    </div>                    
+                </div>
+                <div className="flex flex-row">
+                    <div className="w-1/3 h-64">
                         <LineChart data={this.state.balanceChartData}></LineChart> 
                     </div>
                 </div>

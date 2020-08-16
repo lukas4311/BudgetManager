@@ -1050,8 +1050,9 @@ class PaymentsOverview extends React.Component {
                         React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
                         React.createElement("span", { className: "mx-6 my-2 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
                 React.createElement("div", { className: "w-3/5" },
-                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData })),
-                React.createElement("div", { className: "w-full" },
+                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData }))),
+            React.createElement("div", { className: "flex flex-row" },
+                React.createElement("div", { className: "w-1/3 h-64" },
                     React.createElement(LineChart_1.LineChart, { data: this.state.balanceChartData }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
