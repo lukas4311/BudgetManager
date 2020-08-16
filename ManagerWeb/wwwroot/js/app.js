@@ -494,22 +494,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const LineChart = ({ data }) => (react_1.default.createElement(line_1.ResponsiveLine, { data: data, margin: { top: 50, right: 110, bottom: 50, left: 60 }, xScale: {
+const LineChart = ({ data }) => (react_1.default.createElement(line_1.ResponsiveLine, { data: data, margin: { top: 50, right: 50, bottom: 50, left: 50 }, xScale: {
         type: 'time',
         format: '%Y-%m-%d',
         useUTC: false,
         precision: 'day',
-    }, xFormat: "time:%Y-%m-%d", yScale: {
-        type: 'linear'
-    }, axisLeft: {
+    }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false }, axisLeft: {
         legend: 'linear scale',
         legendOffset: 12,
+        tickValues: 6
     }, axisBottom: {
         format: '%b %d',
         tickValues: 'every 2 days',
         legend: 'time scale',
         legendOffset: -12,
-    }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableSlices: false, enableArea: true, theme: {
+    }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, theme: {
         axis: {
             ticks: {
                 line: {
