@@ -6,11 +6,11 @@ import { IPaymentResponseModel } from "./Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "./Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
-    async getPayments(filterDate: string, onRejected: any): Promise<IPaymentInfo[]> {
+    async getPayments(filterDate: string, bankAccountId: number, onRejected: any): Promise<IPaymentInfo[]> {
         let response: IPaymentInfo[];
 
         try {
-            const res = await fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+            const res = await fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
             response = await res.json();
         }
         catch (_) {

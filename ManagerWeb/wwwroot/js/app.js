@@ -106,11 +106,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
-    getPayments(filterDate, onRejected) {
+    getPayments(filterDate, bankAccountId, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch("/Payment/GetPaymentsData?fromDate=" + filterDate);
+                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
                 response = yield res.json();
             }
             catch (_) {
@@ -892,7 +892,7 @@ class PaymentsOverview extends React.Component {
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
-            this.getPaymentData(this.state.selectedFilter.days);
+            this.getPaymentData(this.state.selectedFilter.days, this.state.selectedBankAccount);
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -914,14 +914,14 @@ class PaymentsOverview extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(this.state.selectedFilter.days);
+            this.getPaymentData(this.state.selectedFilter.days, null);
             this.setBankAccounts(bankAccounts);
         });
     }
-    getPaymentData(daysBack) {
+    getPaymentData(daysBack, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
             let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-            const payments = yield this.dataLoader.getPayments(filterDate, this.onRejected);
+            const payments = yield this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
             this.setPayments(payments);
         });
     }
@@ -986,7 +986,7 @@ class PaymentsOverview extends React.Component {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
         if (this.state.selectedFilter != selectedFilter) {
             this.setState({ selectedFilter: selectedFilter });
-            this.getPaymentData(selectedFilter.days);
+            this.getPaymentData(selectedFilter.days, this.state.selectedBankAccount);
         }
     }
     addNewPayment() {
@@ -1003,7 +1003,7 @@ class PaymentsOverview extends React.Component {
     bankAccountChange(e) {
         let selectedbankId = parseInt(e.target.value);
         this.setState({ selectedBankAccount: selectedbankId });
-        this.getPaymentData(this.state.selectedFilter.days);
+        this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
     showErrorMessage() {
         let tag = React.createElement(React.Fragment, null);
@@ -1049,7 +1049,9 @@ class PaymentsOverview extends React.Component {
                         React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
                         React.createElement("span", { className: "mx-6 my-2 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
                 React.createElement("div", { className: "w-3/5" },
-                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData }))),
+                    React.createElement(LineChart_1.LineChart, { data: this.state.expenseChartData })),
+                React.createElement("div", { className: "w-full" },
+                    React.createElement(LineChart_1.LineChart, { data: this.state.balanceChartData }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

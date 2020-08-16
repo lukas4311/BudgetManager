@@ -63,13 +63,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     public async componentDidMount() {
         const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
-        this.getPaymentData(this.state.selectedFilter.days);
+        this.getPaymentData(this.state.selectedFilter.days, null);
         this.setBankAccounts(bankAccounts);
     }
 
-    private async getPaymentData(daysBack: number) {
+    private async getPaymentData(daysBack: number, bankAccountId: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        const payments = await this.dataLoader.getPayments(filterDate, this.onRejected);
+        const payments = await this.dataLoader.getPayments(filterDate, bankAccountId,  this.onRejected);
         this.setPayments(payments);
     }
 
@@ -137,7 +137,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
         if (this.state.selectedFilter != selectedFilter) {
             this.setState({ selectedFilter: selectedFilter });
-            this.getPaymentData(selectedFilter.days);
+            this.getPaymentData(selectedFilter.days, this.state.selectedBankAccount);
         }
     }
 
@@ -160,13 +160,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private handleConfirmationClose = () => {
         this.hideModal();
-        this.getPaymentData(this.state.selectedFilter.days);
+        this.getPaymentData(this.state.selectedFilter.days, this.state.selectedBankAccount);
     }
 
     private bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: selectedbankId });
-        this.getPaymentData(this.state.selectedFilter.days);
+        this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
 
     private showErrorMessage() {
@@ -233,6 +233,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <div className="w-3/5">
                         <LineChart data={this.state.expenseChartData}></LineChart>
+                    </div>
+                    <div className="w-full">
+                        <LineChart data={this.state.balanceChartData}></LineChart> 
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>

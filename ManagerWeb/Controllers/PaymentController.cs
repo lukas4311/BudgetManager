@@ -29,9 +29,10 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPaymentsData(DateTime? fromDate)
+        public JsonResult GetPaymentsData(DateTime? fromDate, int? bankAccountId)
         {
-            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue))
+            List<PaymentViewModel> payments = this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue) 
+                && (!bankAccountId.HasValue || a.BankAccountId == bankAccountId ))
             .Include(a => a.PaymentType)
             .Include(a => a.PaymentCategory)
             .Select(a => new PaymentViewModel
