@@ -928,7 +928,7 @@ class PaymentsOverview extends React.Component {
     setBankAccounts(data) {
         if (data.success) {
             let bankAccounts = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: null });
+            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
             this.setState({ bankAccounts: bankAccounts });
         }
     }
@@ -957,6 +957,7 @@ class PaymentsOverview extends React.Component {
                 expenseSum += a.amount;
                 expenses.push({ x: a.date, y: expenseSum });
             });
+            return expenses;
         });
     }
     prepareBalanceChartData(payments) {
@@ -1002,7 +1003,7 @@ class PaymentsOverview extends React.Component {
     }
     bankAccountChange(e) {
         let selectedbankId = parseInt(e.target.value);
-        this.setState({ selectedBankAccount: selectedbankId });
+        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
         this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
     showErrorMessage() {

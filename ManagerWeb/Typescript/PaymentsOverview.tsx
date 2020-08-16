@@ -76,7 +76,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private setBankAccounts(data: BankAccountReponse) {
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: null });
+            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
             this.setState({ bankAccounts: bankAccounts });
         }
     }
@@ -95,7 +95,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private async prepareExpenseChartData(payments: Array<IPaymentInfo>) {
+    private async prepareExpenseChartData(payments: Array<IPaymentInfo>):Promise<LineChartData[]> {
         let expenseSum = 0;
         let expenses: LineChartData[] = [];
         payments.filter(a => a.paymentTypeCode == 'Expense')
@@ -104,6 +104,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 expenseSum += a.amount;
                 expenses.push({ x: a.date, y: expenseSum });
             });
+
+        return expenses;
     }
 
     private async prepareBalanceChartData(payments: Array<IPaymentInfo>): Promise<LineChartData[]> {
@@ -116,7 +118,6 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
             if (bankInfo != undefined)
                 balance = bankInfo.openingBalance + bankInfo.balance;
-
         } else {
             bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
         }
@@ -165,7 +166,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
         let selectedbankId: number = parseInt(e.target.value);
-        this.setState({ selectedBankAccount: selectedbankId });
+        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId)});
         this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
 
