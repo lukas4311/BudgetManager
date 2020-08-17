@@ -504,7 +504,7 @@ function LineChart({ dataSets }) {
             format: '%Y-%m-%d',
             useUTC: false,
             precision: 'day',
-        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - (minY / 10), max: maxY + (maxY / 10) }, axisLeft: {
+        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - (minY / 100), max: maxY + (minY / 100) }, axisLeft: {
             legend: 'linear scale',
             legendOffset: 12,
             tickValues: 6,
@@ -514,7 +514,7 @@ function LineChart({ dataSets }) {
             tickValues: 'every 2 days',
             legend: 'time scale',
             legendOffset: -12,
-        }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, areaBaselineValue: minY - (minY / 10), theme: {
+        }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, areaBaselineValue: minY - (minY / 100), theme: {
             axis: {
                 ticks: {
                     line: {

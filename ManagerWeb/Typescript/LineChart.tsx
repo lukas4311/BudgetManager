@@ -19,7 +19,7 @@ function LineChart ({dataSets}: LineChartProps){
       precision: 'day',
     }}
     xFormat="time:%Y-%m-%d"
-    yScale={{ type: 'linear', reverse: false, min: minY - (minY/10), max: maxY + (maxY/10) }}
+    yScale={{ type: 'linear', reverse: false, min: minY - (minY/100), max: maxY + (minY/100) }}
     axisLeft={{
       legend: 'linear scale',
       legendOffset: 12,
@@ -38,7 +38,7 @@ function LineChart ({dataSets}: LineChartProps){
     useMesh={true}
     enableArea={true}
     areaOpacity={0.25}
-    areaBaselineValue={minY - (minY/10)}
+    areaBaselineValue={minY - (minY/100)}
     theme={{
       axis: {
         ticks: {
