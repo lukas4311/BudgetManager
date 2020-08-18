@@ -32,7 +32,7 @@ function LineChart({ dataSets }: LineChartProps) {
       legend: 'time scale',
       legendOffset: -12,
     }}
-    colors={{ scheme: 'category10' }}
+    colors={{ scheme: 'set1' }}
     curve='linear'
     enablePointLabel={true}
     pointSize={7}

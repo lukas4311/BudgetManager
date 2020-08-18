@@ -514,7 +514,7 @@ function LineChart({ dataSets }) {
             tickValues: 'every 2 days',
             legend: 'time scale',
             legendOffset: -12,
-        }, colors: { scheme: 'category10' }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, areaBaselineValue: minY - (minY / 100), enableSlices: "y", sliceTooltip: ({ slice }) => {
+        }, colors: { scheme: 'set1' }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.25, areaBaselineValue: minY - (minY / 100), enableSlices: "y", sliceTooltip: ({ slice }) => {
             return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
                 react_1.default.createElement("span", null, point.data.xFormatted),
                 react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
@@ -985,7 +985,7 @@ class PaymentsOverview extends React.Component {
             payments
                 .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
                 .forEach(a => {
-                balance += a.amount;
+                balance += a.amount * (a.paymentTypeCode == 'Revenue' ? 1 : -1);
                 paymentChartData.push({ x: a.date, y: balance });
             });
             return paymentChartData;

@@ -123,7 +123,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         payments
             .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
-                balance += a.amount;
+                balance += a.amount * (a.paymentTypeCode == 'Revenue' ? 1 : -1);
                 paymentChartData.push({ x: a.date, y: balance });
             });
 
