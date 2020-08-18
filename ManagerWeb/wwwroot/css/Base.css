@@ -62,7 +62,7 @@
   z-index: 10; }
 
 .modal-main {
-  position: fixed;
+  position: absolute;
   background: white;
   height: auto;
   top: 50%;

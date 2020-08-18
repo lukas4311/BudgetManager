@@ -38,7 +38,7 @@ function LineChart({ dataSets }: LineChartProps) {
     pointSize={7}
     useMesh={true}
     enableArea={true}
-    areaOpacity={0.25}
+    areaOpacity={0.5}
     areaBaselineValue={minY - (minY / 100)}
     enableSlices="y"
     sliceTooltip={({slice}) => {
