@@ -11,7 +11,7 @@ function LineChart ({dataSets}: LineChartProps){
 
   return (<ResponsiveLine
     data={dataSets}
-    margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+    margin={{ top: 50, right: 50, bottom: 50, left: 100 }}
     xScale={{
       type: 'time',
       format: '%Y-%m-%d',

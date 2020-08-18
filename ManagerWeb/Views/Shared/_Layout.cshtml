@@ -19,7 +19,7 @@
     </environment>
 </head>
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col">
-    <header class="flex-none bg-mainDarkBlue flex flex-row text-white p-4 px-12">
+    <header class="bg-mainDarkBlue flex flex-row text-white p-4 px-12">
         <div>
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                 <partial name="~/Views/IconsPartials/Logo.cshtml" />
@@ -35,13 +35,13 @@
             </div>
         </nav>
     </header>
-    <div class="baseContainer flex-auto overflow-y-auto mx-auto w-11/12">
+    <div class="baseContainer mx-auto w-11/12">
         <main role="main" class="pb-3 text-white">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="text-center flex-none m-4 text-white">
+    <footer class="text-center  m-4 text-white">
         <span class="m-auto">@DateTime.Now.Year - Budget&Investment</span>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -499,7 +499,7 @@ function LineChart({ dataSets }) {
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
     var minY = Math.min(...allYData);
     var maxY = Math.max(...allYData);
-    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 50 }, xScale: {
+    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
             type: 'time',
             format: '%Y-%m-%d',
             useUTC: false,
@@ -1041,18 +1041,18 @@ class PaymentsOverview extends React.Component {
                                 React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
                     React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
                         React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
-                        React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map(b => {
-                            return React.createElement("option", { key: b.id, value: b.id }, b.code);
+                        React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map((b, i) => {
+                            return React.createElement("option", { key: i, value: b.id }, b.code);
                         }))),
                     React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
                     React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                         React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                        React.createElement("p", { className: "mx-6 my-2 w-1/5" },
+                        React.createElement("p", { className: "mx-6 my-1 w-1/5" },
                             p.amount,
                             ",-"),
-                        React.createElement("p", { className: "mx-6 my-2 w-2/5" }, p.name),
-                        React.createElement("p", { className: "mx-6 my-2 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
-                        React.createElement("span", { className: "mx-6 my-2 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
+                        React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
+                        React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
+                        React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
                 React.createElement("div", { className: "w-3/5" },
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets }))),
             React.createElement("div", { className: "flex flex-row" },
