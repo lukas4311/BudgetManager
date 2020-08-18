@@ -495,26 +495,29 @@ exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function LineChart({ dataSets }) {
-    var allYData = [];
+    let allYData = [];
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
-    var minY = Math.min(...allYData);
-    var maxY = Math.max(...allYData);
+    let minY = Math.min(...allYData);
+    let maxY = Math.max(...allYData);
+    let yScale = (minY / 100);
+    if (yScale < 1000)
+        yScale = 1000;
     return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
             type: 'time',
             format: '%Y-%m-%d',
             useUTC: false,
             precision: 'day',
-        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - (minY / 100), max: maxY + (minY / 100) }, axisLeft: {
+        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - yScale, max: maxY + yScale }, axisLeft: {
             legend: 'linear scale',
             legendOffset: 12,
             tickValues: 6,
             tickPadding: 15
         }, axisBottom: {
-            format: '%b %d',
+            format: '%Y-%m-%d',
             tickValues: 'every 2 days',
             legend: 'time scale',
             legendOffset: -12,
-        }, colors: { scheme: 'set1' }, curve: 'linear', enablePointLabel: true, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - (minY / 100), enableSlices: "y", sliceTooltip: ({ slice }) => {
+        }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
             return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
                 react_1.default.createElement("span", null, point.data.xFormatted),
                 react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
@@ -1049,7 +1052,7 @@ class PaymentsOverview extends React.Component {
                             return React.createElement("option", { key: i, value: b.id }, b.code);
                         }))),
                     React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-                    React.createElement("div", { className: "pb-10" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
+                    React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                         React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
                         React.createElement("p", { className: "mx-6 my-1 w-1/5" },
                             p.amount,

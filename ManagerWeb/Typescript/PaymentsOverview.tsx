@@ -217,7 +217,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                 <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
                             )}
                         </div>
-                        <div className="pb-10">
+                        <div className="pb-10 h-64 overflow-y-scroll">
                             {this.state.payments.map(p =>
                                 <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
                                     <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
