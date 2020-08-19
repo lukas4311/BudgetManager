@@ -13,6 +13,7 @@ import { LineChartData } from './Model/LineChartData';
 import { LineChartProps } from './Model/LineChartProps';
 import { CalendarChartProps } from './Model/CalendarChartProps';
 import { CalendarChart } from './CalendarChart';
+import { CalendarChartData } from './Model/CalendarChartData';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -87,15 +88,38 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private async setPayments(payments: Array<IPaymentInfo>) {
         if (payments != undefined) {
-            const expenses = await this.prepareExpenseChartData(payments);
+            const expenses = this.prepareExpenseChartData(payments);
             const balance = await this.prepareBalanceChartData(payments)
-            this.setState({ payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] }, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] } });
+            const chartData = this.prepareCalendarCharData(payments);
+            this.setState({
+                payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
+                balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData }
+            });
         } else {
             this.setState({ apiError: this.apiErrorMessage })
         }
     }
 
-    private async prepareExpenseChartData(payments: Array<IPaymentInfo>): Promise<LineChartData[]> {
+    private prepareCalendarCharData(payments: Array<IPaymentInfo>): CalendarChartData[] {
+        let calendarChartData: CalendarChartData[] = [];
+
+        payments.filter(p => p.paymentTypeCode == "Expense").forEach(payment => {
+            let paymentDay = calendarChartData.find(p => p.day == payment.date);
+
+            if (paymentDay) {
+                paymentDay.value += payment.amount;
+            } else {
+                let data = new CalendarChartData();
+                data.day = payment.date;
+                data.value = payment.amount;
+                calendarChartData.push(data);
+            }
+        });
+
+        return calendarChartData;
+    }
+
+    private prepareExpenseChartData(payments: Array<IPaymentInfo>): LineChartData[] {
         let expenseSum = 0;
         let expenses: LineChartData[] = [];
         payments.filter(a => a.paymentTypeCode == 'Expense')

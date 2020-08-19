@@ -17,26 +17,16 @@ function CalendarChart(props: CalendarChartProps) {
             dayBorderWidth={2}
             dayBorderColor="#000000"
             isInteractive={true}
+            tooltip={({ day, value, color }) => (
+                <strong style={{ color }}>
+                    {day}: {value}
+                </strong>
+            )}
             theme={{
-                axis: {
-                    ticks: {
-                        line: {
-                            stroke: "white"
-                        },
-                        text: {
-                            fill: "white"
-                        }
+                tooltip: {
+                    container: {
+                        background: '#333',
                     },
-                    legend: {
-                        text: {
-                            fill: "white"
-                        }
-                    },
-                    domain: {
-                        line: {
-                            stroke: "white"
-                        }
-                    }
                 }
             }}
         />

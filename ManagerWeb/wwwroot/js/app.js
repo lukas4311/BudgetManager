@@ -103,26 +103,14 @@ exports.CalendarChart = void 0;
 const calendar_1 = __webpack_require__(/*! @nivo/calendar */ "./node_modules/@nivo/calendar/dist/nivo-calendar.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function CalendarChart(props) {
-    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, theme: {
-            axis: {
-                ticks: {
-                    line: {
-                        stroke: "white"
-                    },
-                    text: {
-                        fill: "white"
-                    }
+    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, tooltip: ({ day, value, color }) => (react_1.default.createElement("strong", { style: { color } },
+            day,
+            ": ",
+            value)), theme: {
+            tooltip: {
+                container: {
+                    background: '#333',
                 },
-                legend: {
-                    text: {
-                        fill: "white"
-                    }
-                },
-                domain: {
-                    line: {
-                        stroke: "white"
-                    }
-                }
             }
         } }));
 }
@@ -637,6 +625,24 @@ exports.Modal = function (props) {
 
 /***/ }),
 
+/***/ "./Typescript/Model/CalendarChartData.ts":
+/*!***********************************************!*\
+  !*** ./Typescript/Model/CalendarChartData.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CalendarChartData = void 0;
+class CalendarChartData {
+}
+exports.CalendarChartData = CalendarChartData;
+
+
+/***/ }),
+
 /***/ "./Typescript/Overview.tsx":
 /*!*********************************!*\
   !*** ./Typescript/Overview.tsx ***!
@@ -939,6 +945,7 @@ const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./
 const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
 const CalendarChart_1 = __webpack_require__(/*! ./CalendarChart */ "./Typescript/CalendarChart.tsx");
+const CalendarChartData_1 = __webpack_require__(/*! ./Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -995,27 +1002,45 @@ class PaymentsOverview extends React.Component {
     setPayments(payments) {
         return __awaiter(this, void 0, void 0, function* () {
             if (payments != undefined) {
-                const expenses = yield this.prepareExpenseChartData(payments);
+                const expenses = this.prepareExpenseChartData(payments);
                 const balance = yield this.prepareBalanceChartData(payments);
-                this.setState({ payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] }, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] } });
+                const chartData = this.prepareCalendarCharData(payments);
+                this.setState({
+                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
+                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData }
+                });
             }
             else {
                 this.setState({ apiError: this.apiErrorMessage });
             }
         });
     }
-    prepareExpenseChartData(payments) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let expenseSum = 0;
-            let expenses = [];
-            payments.filter(a => a.paymentTypeCode == 'Expense')
-                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                expenseSum += a.amount;
-                expenses.push({ x: a.date, y: expenseSum });
-            });
-            return expenses;
+    prepareCalendarCharData(payments) {
+        let calendarChartData = [];
+        payments.filter(p => p.paymentTypeCode == "Expense").forEach(payment => {
+            let paymentDay = calendarChartData.find(p => p.day == payment.date);
+            if (paymentDay) {
+                paymentDay.value += payment.amount;
+            }
+            else {
+                let data = new CalendarChartData_1.CalendarChartData();
+                data.day = payment.date;
+                data.value = payment.amount;
+                calendarChartData.push(data);
+            }
         });
+        return calendarChartData;
+    }
+    prepareExpenseChartData(payments) {
+        let expenseSum = 0;
+        let expenses = [];
+        payments.filter(a => a.paymentTypeCode == 'Expense')
+            .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+            .forEach(a => {
+            expenseSum += a.amount;
+            expenses.push({ x: a.date, y: expenseSum });
+        });
+        return expenses;
     }
     prepareBalanceChartData(payments) {
         return __awaiter(this, void 0, void 0, function* () {
