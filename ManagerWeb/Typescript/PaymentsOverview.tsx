@@ -11,6 +11,8 @@ import { LineChart } from './LineChart';
 import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
 import { LineChartData } from './Model/LineChartData';
 import { LineChartProps } from './Model/LineChartProps';
+import { CalendarChartProps } from './Model/CalendarChartProps';
+import { CalendarChart } from './CalendarChart';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -23,7 +25,8 @@ interface PaymentsOverviewState {
     formKey: number,
     apiError: string,
     expenseChartData: LineChartProps,
-    balanceChartData: LineChartProps
+    balanceChartData: LineChartProps,
+    calendarChartData: CalendarChartProps
 }
 
 interface DateFilter {
@@ -45,7 +48,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -207,7 +210,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         <div className="flex flex-col mb-3 ml-6">
                             <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
                             <select className="effect-11 py-1 w-1/3" onChange={this.bankAccountChange} value={this.state.selectedBankAccount}>
-                                {this.state.bankAccounts.map((b,i) => {
+                                {this.state.bankAccounts.map((b, i) => {
                                     return <option key={i} value={b.id}>{b.code}</option>
                                 })}
                             </select>
@@ -236,6 +239,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 <div className="flex flex-row">
                     <div className="w-1/3 h-64">
                         <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
+                    </div>
+                    <div className="w-1/3 h-64">
+                        <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>

@@ -86,6 +86,51 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/CalendarChart.tsx":
+/*!**************************************!*\
+  !*** ./Typescript/CalendarChart.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CalendarChart = void 0;
+const calendar_1 = __webpack_require__(/*! @nivo/calendar */ "./node_modules/@nivo/calendar/dist/nivo-calendar.esm.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function CalendarChart(props) {
+    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, theme: {
+            axis: {
+                ticks: {
+                    line: {
+                        stroke: "white"
+                    },
+                    text: {
+                        fill: "white"
+                    }
+                },
+                legend: {
+                    text: {
+                        fill: "white"
+                    }
+                },
+                domain: {
+                    line: {
+                        stroke: "white"
+                    }
+                }
+            }
+        } }));
+}
+exports.CalendarChart = CalendarChart;
+
+
+/***/ }),
+
 /***/ "./Typescript/DataLoader.ts":
 /*!**********************************!*\
   !*** ./Typescript/DataLoader.ts ***!
@@ -893,6 +938,7 @@ const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
 const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
+const CalendarChart_1 = __webpack_require__(/*! ./CalendarChart */ "./Typescript/CalendarChart.tsx");
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -910,7 +956,7 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -1064,7 +1110,9 @@ class PaymentsOverview extends React.Component {
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets }))),
             React.createElement("div", { className: "flex flex-row" },
                 React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets }))),
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
+                React.createElement("div", { className: "w-1/3 h-64" },
+                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }
@@ -2064,6 +2112,1015 @@ var renderGridLinesToCanvas = function renderGridLinesToCanvas(ctx, _ref3) {
 
 
 
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/calendar/dist/nivo-calendar.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@nivo/calendar/dist/nivo-calendar.esm.js ***!
+  \***************************************************************/
+/*! exports provided: Calendar, CalendarCanvas, CalendarCanvasDefaultProps, CalendarCanvasPropTypes, CalendarDefaultProps, CalendarPropTypes, ResponsiveCalendar, ResponsiveCalendarCanvas */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Calendar", function() { return Calendar$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarCanvas", function() { return CalendarCanvas$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarCanvasDefaultProps", function() { return CalendarCanvasDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarCanvasPropTypes", function() { return CalendarCanvasPropTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarDefaultProps", function() { return CalendarDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarPropTypes", function() { return CalendarPropTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendar", function() { return ResponsiveCalendar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendarCanvas", function() { return ResponsiveCalendarCanvas; });
+/* harmony import */ var recompose_setDisplayName__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! recompose/setDisplayName */ "./node_modules/recompose/setDisplayName.js");
+/* harmony import */ var recompose_setDisplayName__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(recompose_setDisplayName__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.esm.js");
+/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.esm.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var d3_time_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-time-format */ "./node_modules/d3-time-format/src/index.js");
+/* harmony import */ var recompose_pure__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! recompose/pure */ "./node_modules/recompose/pure.js");
+/* harmony import */ var recompose_pure__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(recompose_pure__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! recompose/withPropsOnChange */ "./node_modules/recompose/withPropsOnChange.js");
+/* harmony import */ var recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var recompose_defaultProps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! recompose/defaultProps */ "./node_modules/recompose/defaultProps.js");
+/* harmony import */ var recompose_defaultProps__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(recompose_defaultProps__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var recompose_compose__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! recompose/compose */ "./node_modules/recompose/compose.js");
+/* harmony import */ var recompose_compose__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(recompose_compose__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash.memoize */ "./node_modules/lodash.memoize/index.js");
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_memoize__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var lodash_isdate__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! lodash.isdate */ "./node_modules/lodash.isdate/index.js");
+/* harmony import */ var lodash_isdate__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(lodash_isdate__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! lodash.range */ "./node_modules/lodash.range/index.js");
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(lodash_range__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var d3_time__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! d3-time */ "./node_modules/d3-time/src/index.js");
+/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.esm.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var monthLabelFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%b');
+var commonPropTypes = {
+  from: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.instanceOf(Date)]).isRequired,
+  to: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.instanceOf(Date)]).isRequired,
+  data: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.shape({
+    day: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+    value: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired
+  })).isRequired,
+  align: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["boxAlignments"]).isRequired,
+  originX: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  originY: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  calendarWidth: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  calendarHeight: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  minValue: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(['auto']), prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number]).isRequired,
+  maxValue: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(['auto']), prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number]).isRequired,
+  colors: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string).isRequired,
+  colorScale: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  direction: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(['horizontal', 'vertical']),
+  emptyColor: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  yearLegend: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  yearSpacing: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  yearLegendPosition: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(['before', 'after']).isRequired,
+  yearLegendOffset: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  monthBorderWidth: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  monthBorderColor: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  monthLegend: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  monthLegendPosition: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(['before', 'after']).isRequired,
+  monthLegendOffset: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  daySpacing: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  dayBorderWidth: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  dayBorderColor: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  isInteractive: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+  onClick: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  tooltipFormat: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string]),
+  tooltip: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+  legends: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.shape(_objectSpread({}, _nivo_legends__WEBPACK_IMPORTED_MODULE_3__["LegendPropShape"], {
+    itemCount: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired
+  }))).isRequired
+};
+var CalendarPropTypes = commonPropTypes;
+var CalendarCanvasPropTypes = _objectSpread({}, commonPropTypes, {
+  pixelRatio: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired
+});
+var commonDefaultProps = {
+  colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'],
+  align: 'center',
+  direction: 'horizontal',
+  emptyColor: '#fff',
+  minValue: 0,
+  maxValue: 'auto',
+  yearSpacing: 30,
+  yearLegend: function yearLegend(year) {
+    return year;
+  },
+  yearLegendPosition: 'before',
+  yearLegendOffset: 10,
+  monthBorderWidth: 2,
+  monthBorderColor: '#000',
+  monthLegend: function monthLegend(year, month, date) {
+    return monthLabelFormat(date);
+  },
+  monthLegendPosition: 'before',
+  monthLegendOffset: 10,
+  weekdayLegend: function weekdayLegend(d) {
+    return d;
+  },
+  daySpacing: 0,
+  dayBorderWidth: 1,
+  dayBorderColor: '#000',
+  isInteractive: true,
+  onClick: _nivo_core__WEBPACK_IMPORTED_MODULE_2__["noop"],
+  legends: []
+};
+var CalendarDefaultProps = commonDefaultProps;
+var CalendarCanvasDefaultProps = _objectSpread({}, commonDefaultProps, {
+  pixelRatio: global.window && global.window.devicePixelRatio ? global.window.devicePixelRatio : 1
+});
+
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } return target; }
+function _defineProperty$1(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+var computeDomain = function computeDomain(data, minSpec, maxSpec) {
+  var allValues = data.map(function (d) {
+    return d.value;
+  });
+  var minValue = minSpec === 'auto' ? Math.min.apply(Math, _toConsumableArray(allValues)) : minSpec;
+  var maxValue = maxSpec === 'auto' ? Math.max.apply(Math, _toConsumableArray(allValues)) : maxSpec;
+  return [minValue, maxValue];
+};
+var computeCellSize = function computeCellSize(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      direction = _ref.direction,
+      yearRange = _ref.yearRange,
+      yearSpacing = _ref.yearSpacing,
+      daySpacing = _ref.daySpacing,
+      maxWeeks = _ref.maxWeeks;
+  var hCellSize;
+  var vCellSize;
+  if (direction === 'horizontal') {
+    hCellSize = (width - daySpacing * maxWeeks) / maxWeeks;
+    vCellSize = (height - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
+  } else {
+    hCellSize = (width - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
+    vCellSize = (height - daySpacing * maxWeeks) / maxWeeks;
+  }
+  return Math.min(hCellSize, vCellSize);
+};
+var monthPathAndBBox = function monthPathAndBBox(_ref2) {
+  var date = _ref2.date,
+      cellSize = _ref2.cellSize,
+      yearIndex = _ref2.yearIndex,
+      yearSpacing = _ref2.yearSpacing,
+      daySpacing = _ref2.daySpacing,
+      direction = _ref2.direction,
+      originX = _ref2.originX,
+      originY = _ref2.originY;
+  var t1 = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  var firstWeek = d3_time__WEBPACK_IMPORTED_MODULE_14__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeYear"])(date), date);
+  var lastWeek = d3_time__WEBPACK_IMPORTED_MODULE_14__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeYear"])(t1), t1);
+  var firstDay = date.getDay();
+  var lastDay = t1.getDay();
+  var xO = originX;
+  var yO = originY;
+  var yearOffset = yearIndex * (7 * (cellSize + daySpacing) + yearSpacing);
+  if (direction === 'horizontal') {
+    yO += yearOffset;
+  } else {
+    xO += yearOffset;
+  }
+  var path;
+  var bbox = {
+    x: xO,
+    y: yO,
+    width: 0,
+    height: 0
+  };
+  if (direction === 'horizontal') {
+    path = ["M".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), ",").concat(yO + firstDay * (cellSize + daySpacing)), "H".concat(xO + firstWeek * (cellSize + daySpacing), "V").concat(yO + 7 * (cellSize + daySpacing)), "H".concat(xO + lastWeek * (cellSize + daySpacing), "V").concat(yO + (lastDay + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastWeek + 1) * (cellSize + daySpacing), "V").concat(yO), "H".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), "Z")].join('');
+    bbox.x = xO + firstWeek * (cellSize + daySpacing);
+    bbox.width = xO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.x;
+    bbox.height = 7 * (cellSize + daySpacing);
+  } else {
+    path = ["M".concat(xO + firstDay * (cellSize + daySpacing), ",").concat(yO + (firstWeek + 1) * (cellSize + daySpacing)), "H".concat(xO, "V").concat(yO + (lastWeek + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastDay + 1) * (cellSize + daySpacing), "V").concat(yO + lastWeek * (cellSize + daySpacing)), "H".concat(xO + 7 * (cellSize + daySpacing), "V").concat(yO + firstWeek * (cellSize + daySpacing)), "H".concat(xO + firstDay * (cellSize + daySpacing), "Z")].join('');
+    bbox.y = yO + firstWeek * (cellSize + daySpacing);
+    bbox.width = 7 * (cellSize + daySpacing);
+    bbox.height = yO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.y;
+  }
+  return {
+    path: path,
+    bbox: bbox
+  };
+};
+var memoMonthPathAndBBox = lodash_memoize__WEBPACK_IMPORTED_MODULE_11___default()(monthPathAndBBox, function (_ref3) {
+  var date = _ref3.date,
+      cellSize = _ref3.cellSize,
+      yearIndex = _ref3.yearIndex,
+      yearSpacing = _ref3.yearSpacing,
+      daySpacing = _ref3.daySpacing,
+      direction = _ref3.direction,
+      originX = _ref3.originX,
+      originY = _ref3.originY;
+  return "".concat(date.toString(), ".").concat(cellSize, ".").concat(yearIndex, ".").concat(yearSpacing, ".").concat(daySpacing, ".").concat(direction, ".").concat(originX, ".").concat(originY);
+});
+var cellPositionHorizontal = function cellPositionHorizontal(cellSize, yearSpacing, daySpacing) {
+  return function (originX, originY, d, yearIndex) {
+    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_14__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeYear"])(d), d);
+    return {
+      x: originX + weekOfYear * (cellSize + daySpacing) + daySpacing / 2,
+      y: originY + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing))
+    };
+  };
+};
+var cellPositionVertical = function cellPositionVertical(cellSize, yearSpacing, daySpacing) {
+  return function (originX, originY, d, yearIndex) {
+    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_14__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeYear"])(d), d);
+    return {
+      x: originX + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing)),
+      y: originY + weekOfYear * (cellSize + daySpacing) + daySpacing / 2
+    };
+  };
+};
+var dayFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%Y-%m-%d');
+var computeLayout = function computeLayout(_ref4) {
+  var width = _ref4.width,
+      height = _ref4.height,
+      from = _ref4.from,
+      to = _ref4.to,
+      direction = _ref4.direction,
+      yearSpacing = _ref4.yearSpacing,
+      daySpacing = _ref4.daySpacing,
+      align = _ref4.align;
+  var fromDate = lodash_isdate__WEBPACK_IMPORTED_MODULE_12___default()(from) ? from : new Date(from);
+  var toDate = lodash_isdate__WEBPACK_IMPORTED_MODULE_12___default()(to) ? to : new Date(to);
+  var yearRange = lodash_range__WEBPACK_IMPORTED_MODULE_13___default()(fromDate.getFullYear(), toDate.getFullYear() + 1);
+  var maxWeeks = Math.max.apply(Math, _toConsumableArray(yearRange.map(function (year) {
+    return Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeWeeks"])(new Date(year, 0, 1), new Date(year + 1, 0, 1)).length;
+  }))) + 1;
+  var cellSize = computeCellSize({
+    width: width,
+    height: height,
+    direction: direction,
+    yearRange: yearRange,
+    yearSpacing: yearSpacing,
+    daySpacing: daySpacing,
+    maxWeeks: maxWeeks
+  });
+  var monthsSize = cellSize * maxWeeks + daySpacing * maxWeeks;
+  var yearsSize = (cellSize + daySpacing) * 7 * yearRange.length + yearSpacing * (yearRange.length - 1);
+  var calendarWidth = direction === 'horizontal' ? monthsSize : yearsSize;
+  var calendarHeight = direction === 'horizontal' ? yearsSize : monthsSize;
+  var _alignBox = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["alignBox"])({
+    x: 0,
+    y: 0,
+    width: calendarWidth,
+    height: calendarHeight
+  }, {
+    x: 0,
+    y: 0,
+    width: width,
+    height: height
+  }, align),
+      _alignBox2 = _slicedToArray(_alignBox, 2),
+      originX = _alignBox2[0],
+      originY = _alignBox2[1];
+  var cellPosition;
+  if (direction === 'horizontal') {
+    cellPosition = cellPositionHorizontal(cellSize, yearSpacing, daySpacing);
+  } else {
+    cellPosition = cellPositionVertical(cellSize, yearSpacing, daySpacing);
+  }
+  var years = [];
+  var months = [];
+  var days = [];
+  yearRange.forEach(function (year, i) {
+    var yearStart = new Date(year, 0, 1);
+    var yearEnd = new Date(year + 1, 0, 1);
+    days = days.concat(Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeDays"])(yearStart, yearEnd).map(function (dayDate) {
+      return _objectSpread$1({
+        date: dayDate,
+        day: dayFormat(dayDate),
+        size: cellSize
+      }, cellPosition(originX, originY, dayDate, i));
+    }));
+    var yearMonths = Object(d3_time__WEBPACK_IMPORTED_MODULE_14__["timeMonths"])(yearStart, yearEnd).map(function (monthDate) {
+      return _objectSpread$1({
+        date: monthDate,
+        year: monthDate.getFullYear(),
+        month: monthDate.getMonth()
+      }, memoMonthPathAndBBox({
+        originX: originX,
+        originY: originY,
+        date: monthDate,
+        direction: direction,
+        yearIndex: i,
+        yearSpacing: yearSpacing,
+        daySpacing: daySpacing,
+        cellSize: cellSize
+      }));
+    });
+    months = months.concat(yearMonths);
+    years.push({
+      year: year,
+      bbox: {
+        x: yearMonths[0].bbox.x,
+        y: yearMonths[0].bbox.y,
+        width: yearMonths[11].bbox.x - yearMonths[0].bbox.x + yearMonths[11].bbox.width,
+        height: yearMonths[11].bbox.y - yearMonths[0].bbox.y + yearMonths[11].bbox.height
+      }
+    });
+  });
+  return {
+    years: years,
+    months: months,
+    days: days,
+    cellSize: cellSize,
+    calendarWidth: calendarWidth,
+    calendarHeight: calendarHeight,
+    originX: originX,
+    originY: originY
+  };
+};
+var bindDaysData = function bindDaysData(_ref5) {
+  var days = _ref5.days,
+      data = _ref5.data,
+      colorScale = _ref5.colorScale,
+      emptyColor = _ref5.emptyColor;
+  return days.map(function (day) {
+    day.color = emptyColor;
+    data.forEach(function (dayData) {
+      if (dayData.day === day.day) {
+        day.value = dayData.value;
+        day.color = colorScale(dayData.value);
+        day.data = dayData;
+      }
+    });
+    return day;
+  });
+};
+var computeYearLegendPositions = function computeYearLegendPositions(_ref6) {
+  var years = _ref6.years,
+      direction = _ref6.direction,
+      position = _ref6.position,
+      offset = _ref6.offset;
+  return years.map(function (year) {
+    var x = 0;
+    var y = 0;
+    var rotation = 0;
+    if (direction === 'horizontal' && position === 'before') {
+      x = year.bbox.x - offset;
+      y = year.bbox.y + year.bbox.height / 2;
+      rotation = -90;
+    } else if (direction === 'horizontal' && position === 'after') {
+      x = year.bbox.x + year.bbox.width + offset;
+      y = year.bbox.y + year.bbox.height / 2;
+      rotation = -90;
+    } else if (direction === 'vertical' && position === 'before') {
+      x = year.bbox.x + year.bbox.width / 2;
+      y = year.bbox.y - offset;
+    } else {
+      x = year.bbox.x + year.bbox.width / 2;
+      y = year.bbox.y + year.bbox.height + offset;
+    }
+    return _objectSpread$1({}, year, {
+      x: x,
+      y: y,
+      rotation: rotation
+    });
+  });
+};
+var computeMonthLegendPositions = function computeMonthLegendPositions(_ref7) {
+  var months = _ref7.months,
+      direction = _ref7.direction,
+      position = _ref7.position,
+      offset = _ref7.offset;
+  return months.map(function (month) {
+    var x = 0;
+    var y = 0;
+    var rotation = 0;
+    if (direction === 'horizontal' && position === 'before') {
+      x = month.bbox.x + month.bbox.width / 2;
+      y = month.bbox.y - offset;
+    } else if (direction === 'horizontal' && position === 'after') {
+      x = month.bbox.x + month.bbox.width / 2;
+      y = month.bbox.y + month.bbox.height + offset;
+    } else if (direction === 'vertical' && position === 'before') {
+      x = month.bbox.x - offset;
+      y = month.bbox.y + month.bbox.height / 2;
+      rotation = -90;
+    } else {
+      x = month.bbox.x + month.bbox.width + offset;
+      y = month.bbox.y + month.bbox.height / 2;
+      rotation = -90;
+    }
+    return _objectSpread$1({}, month, {
+      x: x,
+      y: y,
+      rotation: rotation
+    });
+  });
+};
+
+var commonEnhancers = [Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["withTheme"])(), Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["withDimensions"])(), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['data', 'minValue', 'maxValue', 'colors', 'colorScale'], function (_ref) {
+  var data = _ref.data,
+      minValue = _ref.minValue,
+      maxValue = _ref.maxValue,
+      colors = _ref.colors,
+      colorScale = _ref.colorScale;
+  if (colorScale) return {
+    colorScale: colorScale
+  };
+  var domain = computeDomain(data, minValue, maxValue);
+  var defaultColorScale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_10__["scaleQuantize"])().domain(domain).range(colors);
+  return {
+    colorScale: defaultColorScale
+  };
+}), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['width', 'height', 'from', 'to', 'direction', 'yearSpacing', 'daySpacing', 'align'], function (_ref2) {
+  var width = _ref2.width,
+      height = _ref2.height,
+      from = _ref2.from,
+      to = _ref2.to,
+      direction = _ref2.direction,
+      yearSpacing = _ref2.yearSpacing,
+      daySpacing = _ref2.daySpacing,
+      align = _ref2.align;
+  return computeLayout({
+    width: width,
+    height: height,
+    from: from,
+    to: to,
+    direction: direction,
+    yearSpacing: yearSpacing,
+    daySpacing: daySpacing,
+    align: align
+  });
+}), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['years', 'direction', 'yearLegendPosition', 'yearLegendOffset'], function (_ref3) {
+  var years = _ref3.years,
+      direction = _ref3.direction,
+      yearLegendPosition = _ref3.yearLegendPosition,
+      yearLegendOffset = _ref3.yearLegendOffset;
+  return {
+    yearLegends: computeYearLegendPositions({
+      years: years,
+      direction: direction,
+      position: yearLegendPosition,
+      offset: yearLegendOffset
+    })
+  };
+}), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['months', 'direction', 'monthLegendPosition', 'monthLegendOffset'], function (_ref4) {
+  var months = _ref4.months,
+      direction = _ref4.direction,
+      monthLegendPosition = _ref4.monthLegendPosition,
+      monthLegendOffset = _ref4.monthLegendOffset;
+  return {
+    monthLegends: computeMonthLegendPositions({
+      months: months,
+      direction: direction,
+      position: monthLegendPosition,
+      offset: monthLegendOffset
+    })
+  };
+}), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['days', 'data', 'colorScale', 'emptyColor'], function (_ref5) {
+  var days = _ref5.days,
+      data = _ref5.data,
+      colorScale = _ref5.colorScale,
+      emptyColor = _ref5.emptyColor;
+  return {
+    days: bindDaysData({
+      days: days,
+      data: data,
+      colorScale: colorScale,
+      emptyColor: emptyColor
+    })
+  };
+})];
+var enhance = (function (Component) {
+  switch (Component.displayName) {
+    case 'Calendar':
+      return recompose_compose__WEBPACK_IMPORTED_MODULE_9___default.a.apply(void 0, [recompose_defaultProps__WEBPACK_IMPORTED_MODULE_8___default()(CalendarDefaultProps)].concat(commonEnhancers, [recompose_pure__WEBPACK_IMPORTED_MODULE_6___default.a]))(Component);
+    case 'CalendarCanvas':
+      return recompose_compose__WEBPACK_IMPORTED_MODULE_9___default.a.apply(void 0, [recompose_defaultProps__WEBPACK_IMPORTED_MODULE_8___default()(CalendarCanvasDefaultProps)].concat(commonEnhancers, [recompose_pure__WEBPACK_IMPORTED_MODULE_6___default.a]))(Component);
+  }
+  return Component;
+});
+
+var CalendarYearLegends = Object(react__WEBPACK_IMPORTED_MODULE_1__["memo"])(function (_ref) {
+  var years = _ref.years,
+      legend = _ref.legend,
+      theme = _ref.theme;
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, years.map(function (year) {
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("text", {
+      key: year.year,
+      transform: "translate(".concat(year.x, ",").concat(year.y, ") rotate(").concat(year.rotation, ")"),
+      textAnchor: "middle",
+      style: theme.labels.text
+    }, legend(year.year));
+  }));
+});
+CalendarYearLegends.propTypes = {
+  years: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.array.isRequired,
+  legend: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  theme: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object.isRequired
+};
+CalendarYearLegends.displayName = 'CalendarYearLegends';
+
+var CalendarMonthPath = function CalendarMonthPath(_ref) {
+  var path = _ref.path,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor;
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("path", {
+    d: path,
+    style: {
+      fill: 'none',
+      strokeWidth: borderWidth,
+      stroke: borderColor,
+      pointerEvents: 'none'
+    }
+  });
+};
+CalendarMonthPath.propTypes = {
+  path: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  borderWidth: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  borderColor: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired
+};
+var CalendarMonthPath$1 = recompose_pure__WEBPACK_IMPORTED_MODULE_6___default()(CalendarMonthPath);
+
+var CalendarMonthLegends = Object(react__WEBPACK_IMPORTED_MODULE_1__["memo"])(function (_ref) {
+  var months = _ref.months,
+      legend = _ref.legend,
+      theme = _ref.theme;
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, months.map(function (month) {
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("text", {
+      key: "".concat(month.date.toString(), ".legend"),
+      transform: "translate(".concat(month.x, ",").concat(month.y, ") rotate(").concat(month.rotation, ")"),
+      textAnchor: "middle",
+      style: theme.labels.text
+    }, legend(month.year, month.month, month.date));
+  }));
+});
+CalendarMonthLegends.propTypes = {
+  months: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.array.isRequired,
+  legend: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  theme: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object.isRequired
+};
+CalendarMonthLegends.displayName = 'CalendarMonthLegends';
+
+function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty$2(target, key, source[key]); }); } return target; }
+function _defineProperty$2(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var CalendarDay = Object(react__WEBPACK_IMPORTED_MODULE_1__["memo"])(function (_ref) {
+  var x = _ref.x,
+      y = _ref.y,
+      size = _ref.size,
+      spacing = _ref.spacing,
+      color = _ref.color,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      onClick = _ref.onClick,
+      showTooltip = _ref.showTooltip,
+      hideTooltip = _ref.hideTooltip;
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("rect", {
+    x: x,
+    y: y,
+    width: size,
+    height: size,
+    style: {
+      fill: color,
+      strokeWidth: borderWidth,
+      stroke: borderColor
+    }
+  }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("rect", {
+    fill: "rgba(0, 0, 0, 0)",
+    x: x - spacing / 2,
+    y: y - spacing / 2,
+    width: size + spacing,
+    height: size + spacing,
+    onClick: onClick,
+    onMouseEnter: showTooltip,
+    onMouseMove: showTooltip,
+    onMouseLeave: hideTooltip
+  }));
+});
+CalendarDay.propTypes = {
+  onClick: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  data: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object.isRequired,
+  x: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  y: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  size: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  spacing: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  color: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  borderWidth: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number.isRequired,
+  borderColor: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string.isRequired,
+  tooltipFormat: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string]),
+  tooltip: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+  showTooltip: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  hideTooltip: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired,
+  theme: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.shape({
+    tooltip: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.shape({}).isRequired
+  }).isRequired
+};
+CalendarDay.displayName = 'CalendarDay';
+var enhance$1 = recompose_compose__WEBPACK_IMPORTED_MODULE_9___default()(recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['data', 'onClick'], function (_ref2) {
+  var data = _ref2.data,
+      _onClick = _ref2.onClick;
+  return {
+    onClick: function onClick(event) {
+      return _onClick(data, event);
+    }
+  };
+}), recompose_withPropsOnChange__WEBPACK_IMPORTED_MODULE_7___default()(['data', 'color', 'showTooltip', 'tooltipFormat', 'tooltip', 'theme'], function (_ref3) {
+  var data = _ref3.data,
+      color = _ref3.color,
+      _showTooltip = _ref3.showTooltip,
+      tooltipFormat = _ref3.tooltipFormat,
+      tooltip = _ref3.tooltip,
+      theme = _ref3.theme;
+  if (data.value === undefined) return {
+    showTooltip: _nivo_core__WEBPACK_IMPORTED_MODULE_2__["noop"]
+  };
+  return {
+    showTooltip: function showTooltip(event) {
+      return _showTooltip(react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_15__["BasicTooltip"], {
+        id: "".concat(data.day),
+        value: data.value,
+        enableChip: true,
+        color: color,
+        theme: theme,
+        format: tooltipFormat,
+        renderContent: typeof tooltip === 'function' ? tooltip.bind(null, _objectSpread$2({
+          color: color
+        }, data)) : null
+      }), event);
+    }
+  };
+}), recompose_pure__WEBPACK_IMPORTED_MODULE_6___default.a);
+var CalendarDay$1 = enhance$1(CalendarDay);
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var Calendar = function Calendar(_ref) {
+  var colorScale = _ref.colorScale,
+      margin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      outerWidth = _ref.outerWidth,
+      outerHeight = _ref.outerHeight,
+      yearLegends = _ref.yearLegends,
+      yearLegend = _ref.yearLegend,
+      monthLegends = _ref.monthLegends,
+      monthLegend = _ref.monthLegend,
+      monthBorderWidth = _ref.monthBorderWidth,
+      monthBorderColor = _ref.monthBorderColor,
+      daySpacing = _ref.daySpacing,
+      dayBorderWidth = _ref.dayBorderWidth,
+      dayBorderColor = _ref.dayBorderColor,
+      theme = _ref.theme,
+      isInteractive = _ref.isInteractive,
+      tooltipFormat = _ref.tooltipFormat,
+      tooltip = _ref.tooltip,
+      onClick = _ref.onClick,
+      legends = _ref.legends,
+      months = _ref.months,
+      days = _ref.days;
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["Container"], {
+    isInteractive: isInteractive,
+    theme: theme,
+    animate: false
+  }, function (_ref2) {
+    var showTooltip = _ref2.showTooltip,
+        hideTooltip = _ref2.hideTooltip;
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["SvgWrapper"], {
+      width: outerWidth,
+      height: outerHeight,
+      margin: margin,
+      theme: theme
+    }, days.map(function (d) {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(CalendarDay$1, {
+        key: d.date.toString(),
+        data: d,
+        x: d.x,
+        y: d.y,
+        size: d.size,
+        spacing: daySpacing,
+        color: d.color,
+        borderWidth: dayBorderWidth,
+        borderColor: dayBorderColor,
+        showTooltip: showTooltip,
+        hideTooltip: hideTooltip,
+        tooltipFormat: tooltipFormat,
+        tooltip: tooltip,
+        theme: theme,
+        onClick: onClick
+      });
+    }), months.map(function (m) {
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(CalendarMonthPath$1, {
+        key: m.date.toString(),
+        path: m.path,
+        borderWidth: monthBorderWidth,
+        borderColor: monthBorderColor
+      });
+    }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(CalendarMonthLegends, {
+      months: monthLegends,
+      legend: monthLegend,
+      theme: theme
+    }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(CalendarYearLegends, {
+      years: yearLegends,
+      legend: yearLegend,
+      theme: theme
+    }), legends.map(function (legend, i) {
+      var legendData = colorScale.ticks(legend.itemCount).map(function (value) {
+        return {
+          id: value,
+          label: value,
+          color: colorScale(value)
+        };
+      });
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["BoxLegendSvg"], _extends({
+        key: i
+      }, legend, {
+        containerWidth: width,
+        containerHeight: height,
+        data: legendData,
+        theme: theme
+      }));
+    }));
+  });
+};
+Calendar.displayName = 'Calendar';
+Calendar.propTypes = CalendarPropTypes;
+var Calendar$1 = recompose_setDisplayName__WEBPACK_IMPORTED_MODULE_0___default()('Calendar')(enhance(Calendar));
+
+function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+var ResponsiveCalendar = function ResponsiveCalendar(props) {
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["ResponsiveWrapper"], null, function (_ref) {
+    var width = _ref.width,
+        height = _ref.height;
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Calendar$1, _extends$1({
+      width: width,
+      height: height
+    }, props));
+  });
+};
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty$3(target, key, source[key]); }); } return target; }
+function _slicedToArray$1(arr, i) { return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _nonIterableRest$1(); }
+function _nonIterableRest$1() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _iterableToArrayLimit$1(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles$1(arr) { if (Array.isArray(arr)) return arr; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _defineProperty$3(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var findDayUnderCursor = function findDayUnderCursor(days, size, spacing, margin, x, y) {
+  return days.find(function (day) {
+    return day.value !== undefined && Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["isCursorInRect"])(day.x + margin.left - spacing / 2, day.y + margin.top - spacing / 2, size + spacing, size + spacing, x, y);
+  });
+};
+var CalendarCanvas =
+function (_Component) {
+  _inherits(CalendarCanvas, _Component);
+  function CalendarCanvas() {
+    var _getPrototypeOf2;
+    var _this;
+    _classCallCheck(this, CalendarCanvas);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(CalendarCanvas)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _defineProperty$3(_assertThisInitialized(_this), "handleMouseHover", function (showTooltip, hideTooltip) {
+      return function (event) {
+        var _this$props = _this.props,
+            isInteractive = _this$props.isInteractive,
+            margin = _this$props.margin,
+            theme = _this$props.theme,
+            days = _this$props.days,
+            daySpacing = _this$props.daySpacing,
+            tooltipFormat = _this$props.tooltipFormat,
+            tooltip = _this$props.tooltip;
+        if (!isInteractive || !days || days.length === 0) return;
+        var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["getRelativeCursor"])(_this.surface, event),
+            _getRelativeCursor2 = _slicedToArray$1(_getRelativeCursor, 2),
+            x = _getRelativeCursor2[0],
+            y = _getRelativeCursor2[1];
+        var currentDay = findDayUnderCursor(days, days[0].size, daySpacing, margin, x, y);
+        if (currentDay !== undefined) {
+          showTooltip(react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_15__["BasicTooltip"], {
+            id: "".concat(currentDay.day),
+            value: currentDay.value,
+            enableChip: true,
+            color: currentDay.color,
+            theme: theme,
+            format: tooltipFormat,
+            renderContent: typeof tooltip === 'function' ? tooltip.bind(null, currentDay) : null
+          }), event);
+        } else {
+          hideTooltip();
+        }
+      };
+    });
+    _defineProperty$3(_assertThisInitialized(_this), "handleMouseLeave", function (hideTooltip) {
+      return function () {
+        if (_this.props.isInteractive !== true) return;
+        hideTooltip();
+      };
+    });
+    _defineProperty$3(_assertThisInitialized(_this), "handleClick", function (event) {
+      var _this$props2 = _this.props,
+          isInteractive = _this$props2.isInteractive,
+          margin = _this$props2.margin,
+          onClick = _this$props2.onClick,
+          days = _this$props2.days,
+          daySpacing = _this$props2.daySpacing;
+      if (!isInteractive || !days || days.length === 0) return;
+      var _getRelativeCursor3 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["getRelativeCursor"])(_this.surface, event),
+          _getRelativeCursor4 = _slicedToArray$1(_getRelativeCursor3, 2),
+          x = _getRelativeCursor4[0],
+          y = _getRelativeCursor4[1];
+      var currentDay = findDayUnderCursor(days, days[0].size, daySpacing, margin, x, y);
+      if (currentDay !== undefined) onClick(currentDay, event);
+    });
+    return _this;
+  }
+  _createClass(CalendarCanvas, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.ctx = this.surface.getContext('2d');
+      this.draw(this.props);
+    }
+  }, {
+    key: "shouldComponentUpdate",
+    value: function shouldComponentUpdate(props) {
+      if (this.props.outerWidth !== props.outerWidth || this.props.outerHeight !== props.outerHeight || this.props.isInteractive !== props.isInteractive || this.props.theme !== props.theme) {
+        return true;
+      } else {
+        this.draw(props);
+        return false;
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.ctx = this.surface.getContext('2d');
+      this.draw(this.props);
+    }
+  }, {
+    key: "draw",
+    value: function draw(props) {
+      var _this2 = this;
+      var pixelRatio = props.pixelRatio,
+          margin = props.margin,
+          width = props.width,
+          height = props.height,
+          outerWidth = props.outerWidth,
+          outerHeight = props.outerHeight,
+          colorScale = props.colorScale,
+          yearLegends = props.yearLegends,
+          yearLegend = props.yearLegend,
+          monthLegends = props.monthLegends,
+          monthLegend = props.monthLegend,
+          days = props.days,
+          dayBorderWidth = props.dayBorderWidth,
+          dayBorderColor = props.dayBorderColor,
+          legends = props.legends,
+          theme = props.theme;
+      this.surface.width = outerWidth * pixelRatio;
+      this.surface.height = outerHeight * pixelRatio;
+      this.ctx.scale(pixelRatio, pixelRatio);
+      this.ctx.fillStyle = theme.background;
+      this.ctx.fillRect(0, 0, outerWidth, outerHeight);
+      this.ctx.translate(margin.left, margin.top);
+      days.forEach(function (day) {
+        _this2.ctx.fillStyle = day.color;
+        if (dayBorderWidth > 0) {
+          _this2.ctx.strokeStyle = dayBorderColor;
+          _this2.ctx.lineWidth = dayBorderWidth;
+        }
+        _this2.ctx.beginPath();
+        _this2.ctx.rect(day.x, day.y, day.size, day.size);
+        _this2.ctx.fill();
+        if (dayBorderWidth > 0) {
+          _this2.ctx.stroke();
+        }
+      });
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillStyle = theme.labels.text.fill;
+      this.ctx.font = "".concat(theme.labels.text.fontSize, "px ").concat(theme.labels.text.fontFamily);
+      monthLegends.forEach(function (month) {
+        _this2.ctx.save();
+        _this2.ctx.translate(month.x, month.y);
+        _this2.ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["degreesToRadians"])(month.rotation));
+        _this2.ctx.fillText(monthLegend(month.year, month.month, month.date), 0, 0);
+        _this2.ctx.restore();
+      });
+      yearLegends.forEach(function (year) {
+        _this2.ctx.save();
+        _this2.ctx.translate(year.x, year.y);
+        _this2.ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["degreesToRadians"])(year.rotation));
+        _this2.ctx.fillText(yearLegend(year.year), 0, 0);
+        _this2.ctx.restore();
+      });
+      legends.forEach(function (legend) {
+        var legendData = colorScale.ticks(legend.itemCount).map(function (value) {
+          return {
+            id: value,
+            label: value,
+            color: colorScale(value)
+          };
+        });
+        Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["renderLegendToCanvas"])(_this2.ctx, _objectSpread$3({}, legend, {
+          data: legendData,
+          containerWidth: width,
+          containerHeight: height,
+          theme: theme
+        }));
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+      var _this$props3 = this.props,
+          outerWidth = _this$props3.outerWidth,
+          outerHeight = _this$props3.outerHeight,
+          pixelRatio = _this$props3.pixelRatio,
+          isInteractive = _this$props3.isInteractive,
+          theme = _this$props3.theme;
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["Container"], {
+        isInteractive: isInteractive,
+        theme: theme,
+        animate: false
+      }, function (_ref) {
+        var showTooltip = _ref.showTooltip,
+            hideTooltip = _ref.hideTooltip;
+        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("canvas", {
+          ref: function ref(surface) {
+            _this3.surface = surface;
+          },
+          width: outerWidth * pixelRatio,
+          height: outerHeight * pixelRatio,
+          style: {
+            width: outerWidth,
+            height: outerHeight
+          },
+          onMouseEnter: _this3.handleMouseHover(showTooltip, hideTooltip),
+          onMouseMove: _this3.handleMouseHover(showTooltip, hideTooltip),
+          onMouseLeave: _this3.handleMouseLeave(hideTooltip),
+          onClick: _this3.handleClick
+        });
+      });
+    }
+  }]);
+  return CalendarCanvas;
+}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]);
+_defineProperty$3(CalendarCanvas, "propTypes", CalendarCanvasPropTypes);
+CalendarCanvas.displayName = 'CalendarCanvas';
+var CalendarCanvas$1 = recompose_setDisplayName__WEBPACK_IMPORTED_MODULE_0___default()(CalendarCanvas.displayName)(enhance(CalendarCanvas));
+
+function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
+var ResponsiveCalendarCanvas = function ResponsiveCalendarCanvas(props) {
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["ResponsiveWrapper"], null, function (_ref) {
+    var width = _ref.width,
+        height = _ref.height;
+    return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(CalendarCanvas$1, _extends$2({
+      width: width,
+      height: height
+    }, props));
+  });
+};
+
+
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -24156,6 +25213,137 @@ module.exports = get;
 
 /***/ }),
 
+/***/ "./node_modules/lodash.isdate/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash.isdate/index.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, module) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** `Object#toString` result references. */
+var dateTag = '[object Date]';
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `exports`. */
+var freeExports =  true && exports && !exports.nodeType && exports;
+
+/** Detect free variable `module`. */
+var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+/** Detect the popular CommonJS extension `module.exports`. */
+var moduleExports = freeModule && freeModule.exports === freeExports;
+
+/** Detect free variable `process` from Node.js. */
+var freeProcess = moduleExports && freeGlobal.process;
+
+/** Used to access faster Node.js helpers. */
+var nodeUtil = (function() {
+  try {
+    return freeProcess && freeProcess.binding('util');
+  } catch (e) {}
+}());
+
+/* Node.js helper references. */
+var nodeIsDate = nodeUtil && nodeUtil.isDate;
+
+/**
+ * The base implementation of `_.unary` without support for storing metadata.
+ *
+ * @private
+ * @param {Function} func The function to cap arguments for.
+ * @returns {Function} Returns the new capped function.
+ */
+function baseUnary(func) {
+  return function(value) {
+    return func(value);
+  };
+}
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/**
+ * The base implementation of `_.isDate` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
+ */
+function baseIsDate(value) {
+  return isObjectLike(value) && objectToString.call(value) == dateTag;
+}
+
+/**
+ * Checks if `value` is classified as a `Date` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
+ * @example
+ *
+ * _.isDate(new Date);
+ * // => true
+ *
+ * _.isDate('Mon April 23 2012');
+ * // => false
+ */
+var isDate = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+module.exports = isDate;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
 /***/ "./node_modules/lodash.isplainobject/index.js":
 /*!****************************************************!*\
   !*** ./node_modules/lodash.isplainobject/index.js ***!
@@ -24302,6 +25490,1167 @@ function isPlainObject(value) {
 }
 
 module.exports = isPlainObject;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash.memoize/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash.memoize/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used to stand-in for `undefined` hash values. */
+var HASH_UNDEFINED = '__lodash_hash_undefined__';
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]';
+
+/**
+ * Used to match `RegExp`
+ * [syntax characters](http://ecma-international.org/ecma-262/7.0/#sec-patterns).
+ */
+var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+
+/** Used to detect host constructors (Safari). */
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/**
+ * Gets the value at `key` of `object`.
+ *
+ * @private
+ * @param {Object} [object] The object to query.
+ * @param {string} key The key of the property to get.
+ * @returns {*} Returns the property value.
+ */
+function getValue(object, key) {
+  return object == null ? undefined : object[key];
+}
+
+/**
+ * Checks if `value` is a host object in IE < 9.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
+ */
+function isHostObject(value) {
+  // Many host objects are `Object` objects that can coerce to strings
+  // despite having improperly defined `toString` methods.
+  var result = false;
+  if (value != null && typeof value.toString != 'function') {
+    try {
+      result = !!(value + '');
+    } catch (e) {}
+  }
+  return result;
+}
+
+/** Used for built-in method references. */
+var arrayProto = Array.prototype,
+    funcProto = Function.prototype,
+    objectProto = Object.prototype;
+
+/** Used to detect overreaching core-js shims. */
+var coreJsData = root['__core-js_shared__'];
+
+/** Used to detect methods masquerading as native. */
+var maskSrcKey = (function() {
+  var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+  return uid ? ('Symbol(src)_1.' + uid) : '';
+}());
+
+/** Used to resolve the decompiled source of functions. */
+var funcToString = funcProto.toString;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/** Used to detect if a method is native. */
+var reIsNative = RegExp('^' +
+  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+);
+
+/** Built-in value references. */
+var splice = arrayProto.splice;
+
+/* Built-in method references that are verified to be native. */
+var Map = getNative(root, 'Map'),
+    nativeCreate = getNative(Object, 'create');
+
+/**
+ * Creates a hash object.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function Hash(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the hash.
+ *
+ * @private
+ * @name clear
+ * @memberOf Hash
+ */
+function hashClear() {
+  this.__data__ = nativeCreate ? nativeCreate(null) : {};
+}
+
+/**
+ * Removes `key` and its value from the hash.
+ *
+ * @private
+ * @name delete
+ * @memberOf Hash
+ * @param {Object} hash The hash to modify.
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function hashDelete(key) {
+  return this.has(key) && delete this.__data__[key];
+}
+
+/**
+ * Gets the hash value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf Hash
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function hashGet(key) {
+  var data = this.__data__;
+  if (nativeCreate) {
+    var result = data[key];
+    return result === HASH_UNDEFINED ? undefined : result;
+  }
+  return hasOwnProperty.call(data, key) ? data[key] : undefined;
+}
+
+/**
+ * Checks if a hash value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf Hash
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function hashHas(key) {
+  var data = this.__data__;
+  return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+}
+
+/**
+ * Sets the hash `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf Hash
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the hash instance.
+ */
+function hashSet(key, value) {
+  var data = this.__data__;
+  data[key] = (nativeCreate && value === undefined) ? HASH_UNDEFINED : value;
+  return this;
+}
+
+// Add methods to `Hash`.
+Hash.prototype.clear = hashClear;
+Hash.prototype['delete'] = hashDelete;
+Hash.prototype.get = hashGet;
+Hash.prototype.has = hashHas;
+Hash.prototype.set = hashSet;
+
+/**
+ * Creates an list cache object.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function ListCache(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the list cache.
+ *
+ * @private
+ * @name clear
+ * @memberOf ListCache
+ */
+function listCacheClear() {
+  this.__data__ = [];
+}
+
+/**
+ * Removes `key` and its value from the list cache.
+ *
+ * @private
+ * @name delete
+ * @memberOf ListCache
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function listCacheDelete(key) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    return false;
+  }
+  var lastIndex = data.length - 1;
+  if (index == lastIndex) {
+    data.pop();
+  } else {
+    splice.call(data, index, 1);
+  }
+  return true;
+}
+
+/**
+ * Gets the list cache value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf ListCache
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function listCacheGet(key) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  return index < 0 ? undefined : data[index][1];
+}
+
+/**
+ * Checks if a list cache value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf ListCache
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function listCacheHas(key) {
+  return assocIndexOf(this.__data__, key) > -1;
+}
+
+/**
+ * Sets the list cache `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf ListCache
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the list cache instance.
+ */
+function listCacheSet(key, value) {
+  var data = this.__data__,
+      index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    data.push([key, value]);
+  } else {
+    data[index][1] = value;
+  }
+  return this;
+}
+
+// Add methods to `ListCache`.
+ListCache.prototype.clear = listCacheClear;
+ListCache.prototype['delete'] = listCacheDelete;
+ListCache.prototype.get = listCacheGet;
+ListCache.prototype.has = listCacheHas;
+ListCache.prototype.set = listCacheSet;
+
+/**
+ * Creates a map cache object to store key-value pairs.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function MapCache(entries) {
+  var index = -1,
+      length = entries ? entries.length : 0;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+/**
+ * Removes all key-value entries from the map.
+ *
+ * @private
+ * @name clear
+ * @memberOf MapCache
+ */
+function mapCacheClear() {
+  this.__data__ = {
+    'hash': new Hash,
+    'map': new (Map || ListCache),
+    'string': new Hash
+  };
+}
+
+/**
+ * Removes `key` and its value from the map.
+ *
+ * @private
+ * @name delete
+ * @memberOf MapCache
+ * @param {string} key The key of the value to remove.
+ * @returns {boolean} Returns `true` if the entry was removed, else `false`.
+ */
+function mapCacheDelete(key) {
+  return getMapData(this, key)['delete'](key);
+}
+
+/**
+ * Gets the map value for `key`.
+ *
+ * @private
+ * @name get
+ * @memberOf MapCache
+ * @param {string} key The key of the value to get.
+ * @returns {*} Returns the entry value.
+ */
+function mapCacheGet(key) {
+  return getMapData(this, key).get(key);
+}
+
+/**
+ * Checks if a map value for `key` exists.
+ *
+ * @private
+ * @name has
+ * @memberOf MapCache
+ * @param {string} key The key of the entry to check.
+ * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
+ */
+function mapCacheHas(key) {
+  return getMapData(this, key).has(key);
+}
+
+/**
+ * Sets the map `key` to `value`.
+ *
+ * @private
+ * @name set
+ * @memberOf MapCache
+ * @param {string} key The key of the value to set.
+ * @param {*} value The value to set.
+ * @returns {Object} Returns the map cache instance.
+ */
+function mapCacheSet(key, value) {
+  getMapData(this, key).set(key, value);
+  return this;
+}
+
+// Add methods to `MapCache`.
+MapCache.prototype.clear = mapCacheClear;
+MapCache.prototype['delete'] = mapCacheDelete;
+MapCache.prototype.get = mapCacheGet;
+MapCache.prototype.has = mapCacheHas;
+MapCache.prototype.set = mapCacheSet;
+
+/**
+ * Gets the index at which the `key` is found in `array` of key-value pairs.
+ *
+ * @private
+ * @param {Array} array The array to inspect.
+ * @param {*} key The key to search for.
+ * @returns {number} Returns the index of the matched value, else `-1`.
+ */
+function assocIndexOf(array, key) {
+  var length = array.length;
+  while (length--) {
+    if (eq(array[length][0], key)) {
+      return length;
+    }
+  }
+  return -1;
+}
+
+/**
+ * The base implementation of `_.isNative` without bad shim checks.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a native function,
+ *  else `false`.
+ */
+function baseIsNative(value) {
+  if (!isObject(value) || isMasked(value)) {
+    return false;
+  }
+  var pattern = (isFunction(value) || isHostObject(value)) ? reIsNative : reIsHostCtor;
+  return pattern.test(toSource(value));
+}
+
+/**
+ * Gets the data for `map`.
+ *
+ * @private
+ * @param {Object} map The map to query.
+ * @param {string} key The reference key.
+ * @returns {*} Returns the map data.
+ */
+function getMapData(map, key) {
+  var data = map.__data__;
+  return isKeyable(key)
+    ? data[typeof key == 'string' ? 'string' : 'hash']
+    : data.map;
+}
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+/**
+ * Checks if `value` is suitable for use as unique object key.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
+ */
+function isKeyable(value) {
+  var type = typeof value;
+  return (type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean')
+    ? (value !== '__proto__')
+    : (value === null);
+}
+
+/**
+ * Checks if `func` has its source masked.
+ *
+ * @private
+ * @param {Function} func The function to check.
+ * @returns {boolean} Returns `true` if `func` is masked, else `false`.
+ */
+function isMasked(func) {
+  return !!maskSrcKey && (maskSrcKey in func);
+}
+
+/**
+ * Converts `func` to its source code.
+ *
+ * @private
+ * @param {Function} func The function to process.
+ * @returns {string} Returns the source code.
+ */
+function toSource(func) {
+  if (func != null) {
+    try {
+      return funcToString.call(func);
+    } catch (e) {}
+    try {
+      return (func + '');
+    } catch (e) {}
+  }
+  return '';
+}
+
+/**
+ * Creates a function that memoizes the result of `func`. If `resolver` is
+ * provided, it determines the cache key for storing the result based on the
+ * arguments provided to the memoized function. By default, the first argument
+ * provided to the memoized function is used as the map cache key. The `func`
+ * is invoked with the `this` binding of the memoized function.
+ *
+ * **Note:** The cache is exposed as the `cache` property on the memoized
+ * function. Its creation may be customized by replacing the `_.memoize.Cache`
+ * constructor with one whose instances implement the
+ * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
+ * method interface of `delete`, `get`, `has`, and `set`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to have its output memoized.
+ * @param {Function} [resolver] The function to resolve the cache key.
+ * @returns {Function} Returns the new memoized function.
+ * @example
+ *
+ * var object = { 'a': 1, 'b': 2 };
+ * var other = { 'c': 3, 'd': 4 };
+ *
+ * var values = _.memoize(_.values);
+ * values(object);
+ * // => [1, 2]
+ *
+ * values(other);
+ * // => [3, 4]
+ *
+ * object.a = 2;
+ * values(object);
+ * // => [1, 2]
+ *
+ * // Modify the result cache.
+ * values.cache.set(object, ['a', 'b']);
+ * values(object);
+ * // => ['a', 'b']
+ *
+ * // Replace `_.memoize.Cache`.
+ * _.memoize.Cache = WeakMap;
+ */
+function memoize(func, resolver) {
+  if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  var memoized = function() {
+    var args = arguments,
+        key = resolver ? resolver.apply(this, args) : args[0],
+        cache = memoized.cache;
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    var result = func.apply(this, args);
+    memoized.cache = cache.set(key, result);
+    return result;
+  };
+  memoized.cache = new (memoize.Cache || MapCache);
+  return memoized;
+}
+
+// Assign cache to `_.memoize`.
+memoize.Cache = MapCache;
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || (value !== value && other !== other);
+}
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 8-9 which returns 'object' for typed array and other constructors.
+  var tag = isObject(value) ? objectToString.call(value) : '';
+  return tag == funcTag || tag == genTag;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+module.exports = memoize;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/lodash.range/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash.range/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as references for various `Number` constants. */
+var INFINITY = 1 / 0,
+    MAX_SAFE_INTEGER = 9007199254740991,
+    MAX_INTEGER = 1.7976931348623157e+308,
+    NAN = 0 / 0;
+
+/** `Object#toString` result references. */
+var funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    symbolTag = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Used to detect unsigned integer values. */
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeCeil = Math.ceil,
+    nativeMax = Math.max;
+
+/**
+ * The base implementation of `_.range` and `_.rangeRight` which doesn't
+ * coerce arguments.
+ *
+ * @private
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} step The value to increment or decrement by.
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Array} Returns the range of numbers.
+ */
+function baseRange(start, end, step, fromRight) {
+  var index = -1,
+      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+      result = Array(length);
+
+  while (length--) {
+    result[fromRight ? length : ++index] = start;
+    start += step;
+  }
+  return result;
+}
+
+/**
+ * Creates a `_.range` or `_.rangeRight` function.
+ *
+ * @private
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Function} Returns the new range function.
+ */
+function createRange(fromRight) {
+  return function(start, end, step) {
+    if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
+      end = step = undefined;
+    }
+    // Ensure the sign of `-0` is preserved.
+    start = toFinite(start);
+    if (end === undefined) {
+      end = start;
+      start = 0;
+    } else {
+      end = toFinite(end);
+    }
+    step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
+    return baseRange(start, end, step, fromRight);
+  };
+}
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return !!length &&
+    (typeof value == 'number' || reIsUint.test(value)) &&
+    (value > -1 && value % 1 == 0 && value < length);
+}
+
+/**
+ * Checks if the given arguments are from an iteratee call.
+ *
+ * @private
+ * @param {*} value The potential iteratee value argument.
+ * @param {*} index The potential iteratee index or key argument.
+ * @param {*} object The potential iteratee object argument.
+ * @returns {boolean} Returns `true` if the arguments are from an iteratee call,
+ *  else `false`.
+ */
+function isIterateeCall(value, index, object) {
+  if (!isObject(object)) {
+    return false;
+  }
+  var type = typeof index;
+  if (type == 'number'
+        ? (isArrayLike(object) && isIndex(index, object.length))
+        : (type == 'string' && index in object)
+      ) {
+    return eq(object[index], value);
+  }
+  return false;
+}
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || (value !== value && other !== other);
+}
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 8-9 which returns 'object' for typed array and other constructors.
+  var tag = isObject(value) ? objectToString.call(value) : '';
+  return tag == funcTag || tag == genTag;
+}
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This method is loosely based on
+ * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ * @example
+ *
+ * _.isLength(3);
+ * // => true
+ *
+ * _.isLength(Number.MIN_VALUE);
+ * // => false
+ *
+ * _.isLength(Infinity);
+ * // => false
+ *
+ * _.isLength('3');
+ * // => false
+ */
+function isLength(value) {
+  return typeof value == 'number' &&
+    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a finite number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.12.0
+ * @category Lang
+ * @param {*} value The value to convert.
+ * @returns {number} Returns the converted number.
+ * @example
+ *
+ * _.toFinite(3.2);
+ * // => 3.2
+ *
+ * _.toFinite(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toFinite(Infinity);
+ * // => 1.7976931348623157e+308
+ *
+ * _.toFinite('3.2');
+ * // => 3.2
+ */
+function toFinite(value) {
+  if (!value) {
+    return value === 0 ? value : 0;
+  }
+  value = toNumber(value);
+  if (value === INFINITY || value === -INFINITY) {
+    var sign = (value < 0 ? -1 : 1);
+    return sign * MAX_INTEGER;
+  }
+  return value === value ? value : 0;
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+/**
+ * Creates an array of numbers (positive and/or negative) progressing from
+ * `start` up to, but not including, `end`. A step of `-1` is used if a negative
+ * `start` is specified without an `end` or `step`. If `end` is not specified,
+ * it's set to `start` with `start` then set to `0`.
+ *
+ * **Note:** JavaScript follows the IEEE-754 standard for resolving
+ * floating-point values which can produce unexpected results.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {number} [start=0] The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} [step=1] The value to increment or decrement by.
+ * @returns {Array} Returns the range of numbers.
+ * @see _.inRange, _.rangeRight
+ * @example
+ *
+ * _.range(4);
+ * // => [0, 1, 2, 3]
+ *
+ * _.range(-4);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 5);
+ * // => [1, 2, 3, 4]
+ *
+ * _.range(0, 20, 5);
+ * // => [0, 5, 10, 15]
+ *
+ * _.range(0, -4, -1);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 4, 0);
+ * // => [1, 1, 1]
+ *
+ * _.range(0);
+ * // => []
+ */
+var range = createRange();
+
+module.exports = range;
 
 
 /***/ }),
