@@ -43,27 +43,4 @@ function CalendarChart(props: CalendarChartProps) {
     )
 }
 
-// theme={{
-//     axis: {
-//       ticks: {
-//         line: {
-//           stroke: "white"
-//         },
-//         text: {
-//           fill: "white"
-//         }
-//       }
-//     },
-//     grid: {
-//       line: {
-//         stroke: "white",
-//       }
-//     },
-//     dots: {
-//       text: {
-//         fill: 'white',
-//       }
-//     }
-//   }}
-
 export { CalendarChart }

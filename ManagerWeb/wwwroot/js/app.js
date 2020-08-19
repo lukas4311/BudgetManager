@@ -1111,7 +1111,7 @@ class PaymentsOverview extends React.Component {
             React.createElement("div", { className: "flex flex-row" },
                 React.createElement("div", { className: "w-1/3 h-64" },
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64" },
+                React.createElement("div", { className: "calendar w-2/3 h-64" },
                     React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));

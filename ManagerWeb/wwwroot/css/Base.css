@@ -152,3 +152,6 @@
 .categoryIcon svg {
   width: 1.5em;
   margin: auto; }
+
+.calendar text {
+  fill: white !important; }
