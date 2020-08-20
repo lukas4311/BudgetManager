@@ -38,6 +38,15 @@ namespace Data
             modelBuilder.Entity<TaxSetting>()
                 .HasIndex(b => b.TaxType)
                 .IsUnique();
+
+            modelBuilder.Entity<InterestRate>()
+                .Property(i => i.BankAccountId)
+                .IsRequired();
+
+            modelBuilder.Entity<InterestRate>()
+               .HasOne(e => e.BankAccount)
+               .WithMany(e => e.InterestRates)
+               .HasForeignKey(e => e.BankAccountId);
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
@@ -53,5 +62,7 @@ namespace Data
         public DbSet<PaymentCategory> PaymentCategory { get; set; }
 
         public DbSet<TaxSetting> TaxSetting { get; set; }
+
+        public DbSet<InterestRate> InterestRate { get; set; }
     }
 }

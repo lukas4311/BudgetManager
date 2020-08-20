@@ -14,6 +14,8 @@ namespace Data.DataModels
 
         public List<Payment> Payments { get; set; }
 
+        public List<InterestRate> InterestRates { get; set; }
+
         public int OpeningBalance { get; set; }
     }
 }
