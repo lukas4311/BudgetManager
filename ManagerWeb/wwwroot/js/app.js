@@ -103,7 +103,21 @@ exports.CalendarChart = void 0;
 const calendar_1 = __webpack_require__(/*! @nivo/calendar */ "./node_modules/@nivo/calendar/dist/nivo-calendar.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function CalendarChart(props) {
-    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, tooltip: ({ day, value, color }) => (react_1.default.createElement("strong", { style: { color } },
+    const czechMonths = [
+        'Leden',
+        'Únor',
+        'Březen',
+        'Duben',
+        'Květen',
+        'Ćerven',
+        'Červenec',
+        'Srpen',
+        'Září',
+        'Říjen',
+        'Listopad',
+        'Prosinec',
+    ];
+    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, monthLegend: (year, month) => czechMonths[month], tooltip: ({ day, value, color }) => (react_1.default.createElement("strong", { style: { color } },
             day,
             ": ",
             value)), theme: {
