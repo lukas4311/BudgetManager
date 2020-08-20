@@ -34,6 +34,10 @@ namespace Data
                 .HasOne(e => e.PaymentType)
                 .WithMany(e => e.Payments)
                 .HasForeignKey(e => e.PaymentTypeId);
+
+            modelBuilder.Entity<TaxSetting>()
+                .HasIndex(b => b.TaxType)
+                .IsUnique();
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
@@ -47,5 +51,7 @@ namespace Data
         public DbSet<PaymentType> PaymentType { get; set; }
 
         public DbSet<PaymentCategory> PaymentCategory { get; set; }
+
+        public DbSet<TaxSetting> TaxSetting { get; set; }
     }
 }
