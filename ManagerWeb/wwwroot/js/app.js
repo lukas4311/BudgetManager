@@ -1131,13 +1131,14 @@ class PaymentsOverview extends React.Component {
                         React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
                         React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
                         React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
-                React.createElement("div", { className: "w-3/5" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets }))),
+                React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
+                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
             React.createElement("div", { className: "flex flex-row" },
                 React.createElement("div", { className: "w-1/3 h-64" },
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                React.createElement("div", { className: "calendar w-2/3 h-64" },
-                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
+                React.createElement("div", { className: "w-1/3 h-64" },
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                React.createElement("div", { className: "w-1/3 h-64" }, "tady bude graf s kategoriemi")),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

@@ -256,16 +256,19 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             )}
                         </div>
                     </div>
-                    <div className="w-3/5">
-                        <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
+                    <div className="w-3/5 h-64 mt-auto calendar">
+                        <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart>
                     </div>
                 </div>
                 <div className="flex flex-row">
                     <div className="w-1/3 h-64">
                         <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
                     </div>
-                    <div className="calendar w-2/3 h-64">
-                        <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart>
+                    <div className="w-1/3 h-64">
+                        <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
+                    </div>
+                    <div className="w-1/3 h-64">
+                                tady bude graf s kategoriemi
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
