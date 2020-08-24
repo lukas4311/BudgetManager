@@ -4,6 +4,21 @@ import { CalendarChartProps } from './Model/CalendarChartProps'
 
 function CalendarChart(props: CalendarChartProps) {
 
+    const czechMonths = [
+        'Leden',
+        'Únor',
+        'Březen',
+        'Duben',
+        'Květen',
+        'Ćerven',
+        'Červenec',
+        'Srpen',
+        'Září',
+        'Říjen',
+        'Listopad',
+        'Prosinec',
+    ]
+
     return (
         <ResponsiveCalendar
             data={props.dataSets}
@@ -17,6 +32,7 @@ function CalendarChart(props: CalendarChartProps) {
             dayBorderWidth={2}
             dayBorderColor="#000000"
             isInteractive={true}
+            monthLegend={(year, month) => czechMonths[month]}
             tooltip={({ day, value, color }) => (
                 <strong style={{ color }}>
                     {day}: {value}
