@@ -43,7 +43,8 @@ namespace ManagerWeb.Controllers
                 Name = a.Name,
                 Description = a.Description,
                 PaymentTypeCode = a.PaymentType.Code,
-                PaymentCategoryIcon = a.PaymentCategory.Icon
+                PaymentCategoryIcon = a.PaymentCategory.Icon,
+                PaymentCategoryCode = a.PaymentCategory.Code
             }).ToList();
 
             return Json(payments);

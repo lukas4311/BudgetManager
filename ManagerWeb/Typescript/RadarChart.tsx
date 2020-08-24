@@ -6,8 +6,8 @@ function RadarChart({ dataSets }: RadarChartProps) {
   return (
     <ResponsiveRadar
       data={dataSets}
-      keys={['chardonay', 'carmenere', 'syrah']}
-      indexBy="taste"
+      keys={['value']}
+      indexBy="id"
       maxValue="auto"
       margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
       curve="linearClosed"
@@ -17,9 +17,9 @@ function RadarChart({ dataSets }: RadarChartProps) {
       gridShape="circular"
       gridLabelOffset={27}
       enableDots={true}
-      dotSize={2}
+      dotSize={0}
       dotColor={{ theme: 'background' }}
-      dotBorderWidth={2}
+      dotBorderWidth={0}
       dotBorderColor={{ from: 'color' }}
       enableDotLabel={false}
       dotLabel="value"

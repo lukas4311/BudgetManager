@@ -14,6 +14,9 @@ import { LineChartProps } from './Model/LineChartProps';
 import { CalendarChartProps } from './Model/CalendarChartProps';
 import { CalendarChart } from './CalendarChart';
 import { CalendarChartData } from './Model/CalendarChartData';
+import { RadarChartProps } from './Model/RadarChartProps';
+import { RadarChartData } from './Model/RadarChartData';
+import { RadarChartDataSets } from './Model/RadarChartDataSet';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -27,7 +30,8 @@ interface PaymentsOverviewState {
     apiError: string,
     expenseChartData: LineChartProps,
     balanceChartData: LineChartProps,
-    calendarChartData: CalendarChartProps
+    calendarChartData: CalendarChartProps,
+    radarChartData: RadarChartProps
 }
 
 interface DateFilter {
@@ -49,7 +53,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -155,6 +159,21 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             });
 
         return paymentChartData;
+    }
+
+    private prepareDataForRadarChart(payments: Array<IPaymentInfo>) {
+        let categoryGroups: RadarChartData[] = [];
+        payments.reduce(function (res, val) {
+            if (!res[val.paymentCategoryCode]) {
+                res[val.paymentCategoryCode] = { Id: val.paymentCategoryCode, qty: 0 };
+                categoryGroups.push(res[val.paymentCategoryCode].map((a: IPaymentInfo): RadarChartData => ({ key: a.paymentCategoryCode, value: a.amount })));
+            }
+            res[val.paymentCategoryCode].qty += val.amount;
+            return res;
+        }, {});
+
+        let dataSet: RadarChartDataSets = { id: 'Neco', data: [] };
+        this.setState({ radarChartData: { dataSets: [dataSet] } });
     }
 
     private filterClick(filterKey: number) {
@@ -268,7 +287,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
                     </div>
                     <div className="w-1/3 h-64">
-                                tady bude graf s kategoriemi
+                        tady bude graf s kategoriemi
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>

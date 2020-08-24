@@ -977,7 +977,7 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
         this.filterClick = this.filterClick.bind(this);
         this.addNewPayment = this.addNewPayment.bind(this);
@@ -1078,6 +1078,19 @@ class PaymentsOverview extends React.Component {
             });
             return paymentChartData;
         });
+    }
+    prepareDataForRadarChart(payments) {
+        let categoryGroups = [];
+        payments.reduce(function (res, val) {
+            if (!res[val.paymentCategoryCode]) {
+                res[val.paymentCategoryCode] = { Id: val.paymentCategoryCode, qty: 0 };
+                categoryGroups.push(res[val.paymentCategoryCode].map((a) => ({ key: a.paymentCategoryCode, value: a.amount })));
+            }
+            res[val.paymentCategoryCode].qty += val.amount;
+            return res;
+        }, {});
+        let dataSet = { id: 'Neco', data: [] };
+        this.setState({ radarChartData: { dataSets: [dataSet] } });
     }
     filterClick(filterKey) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
