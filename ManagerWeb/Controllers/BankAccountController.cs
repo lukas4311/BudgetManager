@@ -12,7 +12,7 @@ using Repository;
 
 namespace ManagerWeb.Controllers
 {
-    public class BankAccountController : Controller
+    public partial class BankAccountController : Controller
     {
         private readonly IPaymentTypeRepository paymentTypeRepository;
         private readonly IPaymentRepository paymentRepository;
@@ -59,12 +59,6 @@ namespace ManagerWeb.Controllers
                 });
 
             return Json(new { success = true, bankAccountsBalance = bankInfo });
-        }
-
-        internal class BankPaymentSumModel
-        {
-            public int BankAccountId { get; set; }
-            public decimal Sum { get; set; }
         }
     }
 }
