@@ -5,7 +5,8 @@ interface IPaymentInfo {
     id: number,
     bankAccountId: number,
     paymentTypeCode: string,
-    paymentCategoryIcon: string
+    paymentCategoryIcon: string,
+    paymentCategoryCode: string
 }
 
 export { IPaymentInfo };
