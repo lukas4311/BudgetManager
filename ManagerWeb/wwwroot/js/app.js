@@ -959,8 +959,8 @@ const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./
 const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
 const CalendarChart_1 = __webpack_require__(/*! ./CalendarChart */ "./Typescript/CalendarChart.tsx");
-const CalendarChartData_1 = __webpack_require__(/*! ./Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
 const RadarChart_1 = __webpack_require__(/*! ./RadarChart */ "./Typescript/RadarChart.tsx");
+const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -989,6 +989,7 @@ class PaymentsOverview extends React.Component {
         this.setPayments = this.setPayments.bind(this);
         this.setBankAccounts = this.setBankAccounts.bind(this);
         this.dataLoader = new DataLoader_1.default();
+        this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -1017,81 +1018,22 @@ class PaymentsOverview extends React.Component {
     setPayments(payments) {
         return __awaiter(this, void 0, void 0, function* () {
             if (payments != undefined) {
-                const expenses = this.prepareExpenseChartData(payments);
-                const balance = yield this.prepareBalanceChartData(payments);
-                const chartData = this.prepareCalendarCharData(payments);
-                this.prepareDataForRadarChart(payments);
+                const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+                const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
+                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+                const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData }
+                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                    radarChartData: { dataSets: radarData }
                 });
             }
             else {
                 this.setState({ apiError: this.apiErrorMessage });
             }
         });
-    }
-    prepareCalendarCharData(payments) {
-        let calendarChartData = [];
-        payments.filter(p => p.paymentTypeCode == "Expense").forEach(payment => {
-            let paymentDay = calendarChartData.find(p => p.day == payment.date);
-            if (paymentDay) {
-                paymentDay.value += payment.amount;
-            }
-            else {
-                let data = new CalendarChartData_1.CalendarChartData();
-                data.day = payment.date;
-                data.value = payment.amount;
-                calendarChartData.push(data);
-            }
-        });
-        return calendarChartData;
-    }
-    prepareExpenseChartData(payments) {
-        let expenseSum = 0;
-        let expenses = [];
-        payments.filter(a => a.paymentTypeCode == 'Expense')
-            .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-            .forEach(a => {
-            expenseSum += a.amount;
-            expenses.push({ x: a.date, y: expenseSum });
-        });
-        return expenses;
-    }
-    prepareBalanceChartData(payments) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
-            let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
-            let balance = 0;
-            if (this.state.selectedBankAccount != undefined && this.state.selectedBankAccount != null) {
-                const bankInfo = bankAccountBalanceResponse.bankAccountsBalance.filter(b => b.id == this.state.selectedBankAccount)[0];
-                if (bankInfo != undefined)
-                    balance = bankInfo.openingBalance + bankInfo.balance;
-            }
-            else {
-                bankAccountBalanceResponse.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
-            }
-            let paymentChartData = [];
-            payments
-                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
-                .forEach(a => {
-                balance += a.amount * (a.paymentTypeCode == 'Revenue' ? 1 : -1);
-                paymentChartData.push({ x: a.date, y: balance });
-            });
-            return paymentChartData;
-        });
-    }
-    prepareDataForRadarChart(payments) {
-        let categoryGroups = [];
-        payments.reduce(function (res, val) {
-            if (!res[val.paymentCategoryCode]) {
-                res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
-                categoryGroups.push(res[val.paymentCategoryCode]);
-            }
-            res[val.paymentCategoryCode].value += val.amount;
-            return res;
-        }, {});
-        this.setState({ radarChartData: { dataSets: categoryGroups } });
     }
     filterClick(filterKey) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
@@ -1199,6 +1141,102 @@ function RadarChart({ dataSets }) {
         })},-` }));
 }
 exports.RadarChart = RadarChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/ChartDataProcessor.ts":
+/*!***************************************************!*\
+  !*** ./Typescript/Services/ChartDataProcessor.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChartDataProcessor = void 0;
+const CalendarChartData_1 = __webpack_require__(/*! ../Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../DataLoader */ "./Typescript/DataLoader.ts"));
+class ChartDataProcessor {
+    constructor() {
+        this.dataLoader = new DataLoader_1.default();
+    }
+    prepareCalendarCharData(payments) {
+        let calendarChartData = [];
+        payments.filter(p => p.paymentTypeCode == "Expense").forEach(payment => {
+            let paymentDay = calendarChartData.find(p => p.day == payment.date);
+            if (paymentDay) {
+                paymentDay.value += payment.amount;
+            }
+            else {
+                let data = new CalendarChartData_1.CalendarChartData();
+                data.day = payment.date;
+                data.value = payment.amount;
+                calendarChartData.push(data);
+            }
+        });
+        return calendarChartData;
+    }
+    prepareExpenseChartData(payments) {
+        let expenseSum = 0;
+        let expenses = [];
+        payments.filter(a => a.paymentTypeCode == 'Expense')
+            .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+            .forEach(a => {
+            expenseSum += a.amount;
+            expenses.push({ x: a.date, y: expenseSum });
+        });
+        return expenses;
+    }
+    prepareBalanceChartData(payments, accountBalance, selectedBankAccount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let balance = 0;
+            if (selectedBankAccount != undefined && selectedBankAccount != null) {
+                const bankInfo = accountBalance.bankAccountsBalance.filter(b => b.id == selectedBankAccount)[0];
+                if (bankInfo != undefined)
+                    balance = bankInfo.openingBalance + bankInfo.balance;
+            }
+            else {
+                accountBalance.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+            }
+            let paymentChartData = [];
+            payments
+                .sort((a, b) => moment_1.default(a.date).format("YYYY-MM-DD") > moment_1.default(b.date).format("YYYY-MM-DD") ? 1 : -1)
+                .forEach(a => {
+                balance += a.amount * (a.paymentTypeCode == 'Revenue' ? 1 : -1);
+                paymentChartData.push({ x: a.date, y: balance });
+            });
+            return paymentChartData;
+        });
+    }
+    prepareDataForRadarChart(payments) {
+        let categoryGroups = [];
+        payments.reduce(function (res, val) {
+            if (!res[val.paymentCategoryCode]) {
+                res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
+                categoryGroups.push(res[val.paymentCategoryCode]);
+            }
+            res[val.paymentCategoryCode].value += val.amount;
+            return res;
+        }, {});
+        return categoryGroups;
+    }
+}
+exports.ChartDataProcessor = ChartDataProcessor;
 
 
 /***/ }),
