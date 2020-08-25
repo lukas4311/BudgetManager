@@ -7,9 +7,9 @@ function RadarChart({ dataSets }: RadarChartProps) {
     <ResponsiveRadar
       data={dataSets}
       keys={['value']}
-      indexBy="id"
+      indexBy="key"
       maxValue="auto"
-      margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
+      margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
       curve="linearClosed"
       borderWidth={0}
       borderColor={{ from: 'color' }}
@@ -24,7 +24,7 @@ function RadarChart({ dataSets }: RadarChartProps) {
       enableDotLabel={false}
       dotLabel="value"
       dotLabelYOffset={-17}
-      colors={{ scheme: 'paired' }}
+      colors={{ scheme: 'category10' }}
       fillOpacity={0.75}
       blendMode="normal"
       animate={true}
@@ -35,9 +35,9 @@ function RadarChart({ dataSets }: RadarChartProps) {
         {
           anchor: 'top-left',
           direction: 'column',
-          translateX: -50,
-          translateY: -40,
-          itemWidth: 80,
+          translateX: -20,
+          translateY: -20,
+          itemWidth: 40,
           itemHeight: 20,
           itemTextColor: '#999',
           symbolSize: 12,

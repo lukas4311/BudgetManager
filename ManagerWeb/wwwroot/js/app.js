@@ -960,6 +960,7 @@ const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEn
 const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
 const CalendarChart_1 = __webpack_require__(/*! ./CalendarChart */ "./Typescript/CalendarChart.tsx");
 const CalendarChartData_1 = __webpack_require__(/*! ./Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
+const RadarChart_1 = __webpack_require__(/*! ./RadarChart */ "./Typescript/RadarChart.tsx");
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -1019,6 +1020,7 @@ class PaymentsOverview extends React.Component {
                 const expenses = this.prepareExpenseChartData(payments);
                 const balance = yield this.prepareBalanceChartData(payments);
                 const chartData = this.prepareCalendarCharData(payments);
+                this.prepareDataForRadarChart(payments);
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData }
@@ -1083,14 +1085,13 @@ class PaymentsOverview extends React.Component {
         let categoryGroups = [];
         payments.reduce(function (res, val) {
             if (!res[val.paymentCategoryCode]) {
-                res[val.paymentCategoryCode] = { Id: val.paymentCategoryCode, qty: 0 };
-                categoryGroups.push(res[val.paymentCategoryCode].map((a) => ({ key: a.paymentCategoryCode, value: a.amount })));
+                res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
+                categoryGroups.push(res[val.paymentCategoryCode]);
             }
-            res[val.paymentCategoryCode].qty += val.amount;
+            res[val.paymentCategoryCode].value += val.amount;
             return res;
         }, {});
-        let dataSet = { id: 'Neco', data: [] };
-        this.setState({ radarChartData: { dataSets: [dataSet] } });
+        this.setState({ radarChartData: { dataSets: categoryGroups } });
     }
     filterClick(filterKey) {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
@@ -1165,12 +1166,57 @@ class PaymentsOverview extends React.Component {
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
                 React.createElement("div", { className: "w-1/3 h-64" },
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64" }, "tady bude graf s kategoriemi")),
+                React.createElement("div", { className: "w-1/3 h-64 calendar" },
+                    React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }
 }
 exports.default = PaymentsOverview;
+
+
+/***/ }),
+
+/***/ "./Typescript/RadarChart.tsx":
+/*!***********************************!*\
+  !*** ./Typescript/RadarChart.tsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RadarChart = void 0;
+const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function RadarChart({ dataSets }) {
+    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: true, dotSize: 0, dotColor: { theme: 'background' }, dotBorderWidth: 0, dotBorderColor: { from: 'color' }, enableDotLabel: false, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [
+            {
+                anchor: 'top-left',
+                direction: 'column',
+                translateX: -20,
+                translateY: -20,
+                itemWidth: 40,
+                itemHeight: 20,
+                itemTextColor: '#999',
+                symbolSize: 12,
+                symbolShape: 'circle',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemTextColor: '#000'
+                        }
+                    }
+                ]
+            }
+        ] }));
+}
+exports.RadarChart = RadarChart;
 
 
 /***/ }),
@@ -8033,6 +8079,828 @@ var ResponsiveLineCanvas = function ResponsiveLineCanvas(props) {
 
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@nivo/radar/dist/nivo-radar.esm.js ***!
+  \*********************************************************/
+/*! exports provided: Radar, RadarDefaultProps, RadarDots, RadarPropTypes, ResponsiveRadar */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Radar", function() { return Radar$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadarDefaultProps", function() { return RadarDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadarDots", function() { return RadarDots; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadarPropTypes", function() { return RadarPropTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveRadar", function() { return ResponsiveRadar; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.esm.js");
+/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.esm.js");
+/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.esm.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js");
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash_range__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_motion__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-motion */ "./node_modules/react-motion/lib/react-motion.js");
+/* harmony import */ var react_motion__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_motion__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/sortBy */ "./node_modules/lodash/sortBy.js");
+/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_sortBy__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var d3_format__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-format */ "./node_modules/d3-format/src/index.js");
+/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.esm.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+var RadarShapes = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var data = _ref.data,
+      keys = _ref.keys,
+      colorByKey = _ref.colorByKey,
+      radiusScale = _ref.radiusScale,
+      angleStep = _ref.angleStep,
+      curveInterpolator = _ref.curveInterpolator,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      fillOpacity = _ref.fillOpacity,
+      blendMode = _ref.blendMode;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.springConfig;
+  var getBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_3__["useInheritedColor"])(borderColor, theme);
+  var lineGenerator = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_6__["lineRadial"])().radius(function (d) {
+      return radiusScale(d);
+    }).angle(function (d, i) {
+      return i * angleStep;
+    }).curve(curveInterpolator);
+  }, [radiusScale, angleStep, curveInterpolator]);
+  if (animate !== true) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, keys.map(function (key) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
+        key: key,
+        d: lineGenerator(data.map(function (d) {
+          return d[key];
+        })),
+        fill: colorByKey[key],
+        fillOpacity: fillOpacity,
+        stroke: getBorderColor({
+          key: key,
+          color: colorByKey[key]
+        }),
+        strokeWidth: borderWidth,
+        style: {
+          mixBlendMode: blendMode
+        }
+      });
+    }));
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, keys.map(function (key) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["SmartMotion"], {
+      key: key,
+      style: function style(spring) {
+        return {
+          d: spring(lineGenerator(data.map(function (d) {
+            return d[key];
+          })), springConfig),
+          fill: spring(colorByKey[key], springConfig),
+          stroke: spring(getBorderColor({
+            key: key,
+            color: colorByKey[key]
+          }), springConfig)
+        };
+      }
+    }, function (style) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", _extends({
+        fillOpacity: fillOpacity,
+        strokeWidth: borderWidth,
+        style: {
+          mixBlendMode: blendMode
+        }
+      }, style));
+    });
+  }));
+});
+RadarShapes.displayName = 'RadarShapes';
+RadarShapes.propTypes = {
+  data: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object).isRequired,
+  keys: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  colorByKey: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object.isRequired,
+  radiusScale: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  angleStep: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  curveInterpolator: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  borderWidth: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  borderColor: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"].isRequired,
+  fillOpacity: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  blendMode: _nivo_core__WEBPACK_IMPORTED_MODULE_2__["blendModePropType"].isRequired
+};
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var textAnchorFromAngle = function textAnchorFromAngle(_angle) {
+  var angle = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["radiansToDegrees"])(_angle) + 90;
+  if (angle <= 10 || angle >= 350 || angle >= 170 && angle <= 190) return 'middle';
+  if (angle > 180) return 'end';
+  return 'start';
+};
+var renderLabel = function renderLabel(label, theme, labelComponent) {
+  var labelNode;
+  if (labelComponent === undefined) {
+    labelNode = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("text", {
+      style: theme.axis.ticks.text,
+      dominantBaseline: "central",
+      textAnchor: label.anchor
+    }, label.id);
+  } else {
+    labelNode = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(labelComponent, label);
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", {
+    key: label.id,
+    transform: "translate(".concat(label.x, ", ").concat(label.y, ")")
+  }, labelNode);
+};
+var RadarGridLabels = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var radius = _ref.radius,
+      angles = _ref.angles,
+      indices = _ref.indices,
+      labelComponent = _ref.label,
+      labelOffset = _ref.labelOffset;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.springConfig;
+  var labels = indices.map(function (index, i) {
+    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["positionFromAngle"])(angles[i], radius + labelOffset);
+    var textAnchor = textAnchorFromAngle(angles[i]);
+    return _objectSpread({
+      id: index,
+      angle: Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["radiansToDegrees"])(angles[i]),
+      anchor: textAnchor
+    }, position);
+  });
+  if (animate !== true) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, labels.map(function (label) {
+      return renderLabel(label, theme, labelComponent);
+    }));
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_motion__WEBPACK_IMPORTED_MODULE_8__["TransitionMotion"], {
+    styles: labels.map(function (label) {
+      return {
+        key: label.id,
+        data: label,
+        style: {
+          x: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(label.x, springConfig),
+          y: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(label.y, springConfig)
+        }
+      };
+    })
+  }, function (interpolatedStyles) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, interpolatedStyles.map(function (_ref2) {
+      var data = _ref2.data;
+      return renderLabel(data, theme, labelComponent);
+    }));
+  });
+});
+RadarGridLabels.displayName = 'RadarGridLabels';
+RadarGridLabels.propTypes = {
+  radius: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  angles: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number).isRequired,
+  indices: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  label: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  labelOffset: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired
+};
+
+function _extends$1() { _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$1.apply(this, arguments); }
+var levelWillEnter = function levelWillEnter() {
+  return {
+    r: 0
+  };
+};
+var RadarGridLevels = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var shape = _ref.shape,
+      radii = _ref.radii,
+      angleStep = _ref.angleStep,
+      dataLength = _ref.dataLength;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.springConfig;
+  var levelsTransitionProps = {
+    willEnter: levelWillEnter,
+    willLeave: function willLeave() {
+      return {
+        r: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(0, springConfig)
+      };
+    },
+    styles: radii.map(function (r, i) {
+      return {
+        key: "level.".concat(i),
+        style: {
+          r: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(r, springConfig)
+        }
+      };
+    })
+  };
+  if (shape === 'circular') {
+    if (animate !== true) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, radii.map(function (r, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", _extends$1({
+          key: "level.".concat(i),
+          fill: "none",
+          r: r
+        }, theme.grid.line));
+      }));
+    }
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_motion__WEBPACK_IMPORTED_MODULE_8__["TransitionMotion"], levelsTransitionProps, function (interpolatedStyles) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, interpolatedStyles.map(function (_ref2) {
+        var key = _ref2.key,
+            style = _ref2.style;
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", _extends$1({
+          key: key,
+          fill: "none",
+          r: Math.max(style.r, 0)
+        }, theme.grid.line));
+      }));
+    });
+  }
+  var radarLineGenerator = Object(d3_shape__WEBPACK_IMPORTED_MODULE_6__["lineRadial"])().angle(function (i) {
+    return i * angleStep;
+  }).curve(d3_shape__WEBPACK_IMPORTED_MODULE_6__["curveLinearClosed"]);
+  var points = lodash_range__WEBPACK_IMPORTED_MODULE_7___default()(dataLength);
+  if (animate !== true) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, radii.map(function (radius, i) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", _extends$1({
+        key: "level.".concat(i),
+        fill: "none",
+        d: radarLineGenerator.radius(radius)(points)
+      }, theme.grid.line));
+    }));
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_motion__WEBPACK_IMPORTED_MODULE_8__["TransitionMotion"], levelsTransitionProps, function (interpolatedStyles) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, interpolatedStyles.map(function (_ref3) {
+      var key = _ref3.key,
+          style = _ref3.style;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", _extends$1({
+        key: key,
+        fill: "none",
+        d: radarLineGenerator.radius(style.r)(points)
+      }, theme.grid.line));
+    }));
+  });
+});
+RadarGridLevels.displayName = 'RadarGridLevels';
+RadarGridLevels.propTypes = {
+  shape: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOf(['circular', 'linear']).isRequired,
+  radii: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number).isRequired,
+  angleStep: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  dataLength: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired
+};
+
+function _extends$2() { _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$2.apply(this, arguments); }
+var RadarGrid = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var indices = _ref.indices,
+      levels = _ref.levels,
+      shape = _ref.shape,
+      radius = _ref.radius,
+      angleStep = _ref.angleStep,
+      label = _ref.label,
+      labelOffset = _ref.labelOffset;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return {
+      radii: lodash_range__WEBPACK_IMPORTED_MODULE_7___default()(levels).map(function (i) {
+        return radius / levels * (i + 1);
+      }).reverse(),
+      angles: lodash_range__WEBPACK_IMPORTED_MODULE_7___default()(indices.length).map(function (i) {
+        return i * angleStep - Math.PI / 2;
+      })
+    };
+  }, [indices, levels, radius, angleStep]),
+      radii = _useMemo.radii,
+      angles = _useMemo.angles;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, angles.map(function (angle, i) {
+    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["positionFromAngle"])(angle, radius);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("line", _extends$2({
+      key: "axis.".concat(i),
+      x1: 0,
+      y1: 0,
+      x2: position.x,
+      y2: position.y
+    }, theme.grid));
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarGridLevels, {
+    shape: shape,
+    radii: radii,
+    angleStep: angleStep,
+    dataLength: indices.length
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarGridLabels, {
+    radius: radius,
+    angles: angles,
+    indices: indices,
+    labelOffset: labelOffset,
+    label: label
+  }));
+});
+RadarGrid.displayName = 'RadarGrid';
+RadarGrid.propTypes = {
+  indices: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  shape: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOf(['circular', 'linear']).isRequired,
+  radius: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  levels: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  angleStep: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  label: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  labelOffset: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired
+};
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var RadarTooltipItem = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var datum = _ref.datum,
+      keys = _ref.keys,
+      index = _ref.index,
+      colorByKey = _ref.colorByKey,
+      radius = _ref.radius,
+      startAngle = _ref.startAngle,
+      endAngle = _ref.endAngle,
+      arcGenerator = _ref.arcGenerator,
+      tooltipFormat = _ref.tooltipFormat;
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      isHover = _useState2[0],
+      setIsHover = _useState2[1];
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_11__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+  var tooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var format$1 = !tooltipFormat || typeof tooltipFormat === 'function' ? tooltipFormat : Object(d3_format__WEBPACK_IMPORTED_MODULE_10__["format"])(tooltipFormat);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_11__["TableTooltip"], {
+      title: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, index),
+      rows: lodash_sortBy__WEBPACK_IMPORTED_MODULE_9___default()(keys.map(function (key) {
+        return [react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_11__["Chip"], {
+          key: key,
+          color: colorByKey[key]
+        }), key, format$1 ? format$1(datum[key], key) : datum[key]];
+      }), '2').reverse(),
+      theme: theme
+    });
+  }, [datum, keys, index, colorByKey, theme, tooltipFormat]);
+  var showItemTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    setIsHover(true);
+    showTooltipFromEvent(tooltip, event);
+  }, [showTooltipFromEvent, tooltip]);
+  var hideItemTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    setIsHover(false);
+    hideTooltip();
+  }, [hideTooltip, setIsHover]);
+  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["positionFromAngle"])(startAngle + (endAngle - startAngle) * 0.5 - Math.PI / 2, radius);
+    return {
+      path: arcGenerator({
+        startAngle: startAngle,
+        endAngle: endAngle
+      }),
+      tipX: position.x,
+      tipY: position.y
+    };
+  }, [startAngle, endAngle, radius, arcGenerator]),
+      path = _useMemo.path,
+      tipX = _useMemo.tipX,
+      tipY = _useMemo.tipY;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isHover && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("line", {
+    x1: 0,
+    y1: 0,
+    x2: tipX,
+    y2: tipY,
+    style: theme.crosshair.line
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
+    d: path,
+    fill: "#F00",
+    fillOpacity: 0,
+    onMouseEnter: showItemTooltip,
+    onMouseMove: showItemTooltip,
+    onMouseLeave: hideItemTooltip
+  }));
+});
+RadarTooltipItem.displayName = 'RadarTooltipItem';
+RadarTooltipItem.propTypes = {
+  datum: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.array]).isRequired,
+  keys: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  index: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number]).isRequired,
+  colorByKey: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object.isRequired,
+  startAngle: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  endAngle: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  radius: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  arcGenerator: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  tooltipFormat: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func])
+};
+
+var RadarTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var data = _ref.data,
+      keys = _ref.keys,
+      getIndex = _ref.getIndex,
+      colorByKey = _ref.colorByKey,
+      radius = _ref.radius,
+      angleStep = _ref.angleStep,
+      tooltipFormat = _ref.tooltipFormat;
+  var arc$1 = Object(d3_shape__WEBPACK_IMPORTED_MODULE_6__["arc"])().outerRadius(radius).innerRadius(0);
+  var halfAngleStep = angleStep * 0.5;
+  var rootStartAngle = -halfAngleStep;
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, data.map(function (d) {
+    var index = getIndex(d);
+    var startAngle = rootStartAngle;
+    var endAngle = startAngle + angleStep;
+    rootStartAngle += angleStep;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarTooltipItem, {
+      key: index,
+      datum: d,
+      keys: keys,
+      index: index,
+      colorByKey: colorByKey,
+      startAngle: startAngle,
+      endAngle: endAngle,
+      radius: radius,
+      arcGenerator: arc$1,
+      tooltipFormat: tooltipFormat
+    });
+  }));
+});
+RadarTooltip.displayName = 'RadarTooltip';
+RadarTooltip.propTypes = {
+  data: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.array.isRequired,
+  keys: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  getIndex: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  colorByKey: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object.isRequired,
+  radius: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  angleStep: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  tooltipFormat: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string])
+};
+
+function _extends$3() { _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$3.apply(this, arguments); }
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty$1(target, key, source[key]); }); } return target; }
+function _defineProperty$1(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var RadarDots = function RadarDots(_ref) {
+  var data = _ref.data,
+      keys = _ref.keys,
+      getIndex = _ref.getIndex,
+      colorByKey = _ref.colorByKey,
+      radiusScale = _ref.radiusScale,
+      angleStep = _ref.angleStep,
+      symbol = _ref.symbol,
+      size = _ref.size,
+      color = _ref.color,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      enableLabel = _ref.enableLabel,
+      label = _ref.label,
+      labelFormat = _ref.labelFormat,
+      labelYOffset = _ref.labelYOffset;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.springConfig;
+  var fillColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_3__["getInheritedColorGenerator"])(color, theme);
+  var strokeColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_3__["getInheritedColorGenerator"])(borderColor, theme);
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["getLabelGenerator"])(label, labelFormat);
+  var points = data.reduce(function (acc, datum, i) {
+    var index = getIndex(datum);
+    keys.forEach(function (key) {
+      var pointData = {
+        index: index,
+        key: key,
+        value: datum[key],
+        color: colorByKey[key]
+      };
+      acc.push({
+        key: "".concat(key, ".").concat(index),
+        label: enableLabel ? getLabel(pointData) : null,
+        style: _objectSpread$1({
+          fill: fillColor(pointData),
+          stroke: strokeColor(pointData)
+        }, Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["positionFromAngle"])(angleStep * i - Math.PI / 2, radiusScale(datum[key]))),
+        data: pointData
+      });
+    });
+    return acc;
+  }, []);
+  if (animate !== true) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, points.map(function (point) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["DotsItem"], {
+        key: point.key,
+        x: point.style.x,
+        y: point.style.y,
+        symbol: symbol,
+        size: size,
+        color: point.style.fill,
+        borderWidth: borderWidth,
+        borderColor: point.style.stroke,
+        label: point.label,
+        labelYOffset: labelYOffset,
+        theme: theme,
+        datum: point.data
+      });
+    }));
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_motion__WEBPACK_IMPORTED_MODULE_8__["TransitionMotion"], {
+    styles: points.map(function (point) {
+      return {
+        key: point.key,
+        data: point,
+        style: {
+          x: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(point.style.x, springConfig),
+          y: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(point.style.y, springConfig),
+          size: Object(react_motion__WEBPACK_IMPORTED_MODULE_8__["spring"])(size, springConfig)
+        }
+      };
+    })
+  }, function (interpolatedStyles) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", null, interpolatedStyles.map(function (_ref2) {
+      var key = _ref2.key,
+          style = _ref2.style,
+          point = _ref2.data;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["DotsItem"], _extends$3({
+        key: key
+      }, style, {
+        symbol: symbol,
+        color: point.style.fill,
+        borderWidth: borderWidth,
+        borderColor: point.style.stroke,
+        label: point.label,
+        labelYOffset: labelYOffset,
+        theme: theme,
+        datum: point.data
+      }));
+    }));
+  });
+};
+RadarDots.propTypes = {
+  data: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object).isRequired,
+  keys: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  getIndex: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  colorByKey: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object.isRequired,
+  radiusScale: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func.isRequired,
+  angleStep: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  symbol: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  size: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  color: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"].isRequired,
+  borderWidth: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  borderColor: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"].isRequired,
+  enableLabel: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool.isRequired,
+  label: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func]).isRequired,
+  labelFormat: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string,
+  labelYOffset: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number
+};
+RadarDots.defaultProps = {
+  size: 6,
+  color: {
+    from: 'color'
+  },
+  borderWidth: 0,
+  borderColor: {
+    from: 'color'
+  },
+  enableLabel: false,
+  label: 'value'
+};
+
+function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(Object(source)); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty$2(target, key, source[key]); }); } return target; }
+function _defineProperty$2(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var RadarPropTypes = _objectSpread$2({
+  data: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object).isRequired,
+  keys: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number])).isRequired,
+  indexBy: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func]).isRequired,
+  maxValue: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOf(['auto'])]).isRequired,
+  curve: _nivo_core__WEBPACK_IMPORTED_MODULE_2__["closedCurvePropType"].isRequired,
+  borderWidth: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  borderColor: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"].isRequired,
+  gridLevels: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number,
+  gridShape: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOf(['circular', 'linear']),
+  gridLabel: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  gridLabelOffset: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number,
+  enableDots: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool.isRequired,
+  dotSymbol: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  dotSize: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number,
+  dotColor: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"],
+  dotBorderWidth: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number,
+  dotBorderColor: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["inheritedColorPropType"],
+  enableDotLabel: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool,
+  dotLabel: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func]),
+  dotLabelFormat: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string,
+  dotLabelYOffset: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number,
+  colors: _nivo_colors__WEBPACK_IMPORTED_MODULE_3__["ordinalColorsPropType"].isRequired,
+  fillOpacity: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.number.isRequired,
+  blendMode: _nivo_core__WEBPACK_IMPORTED_MODULE_2__["blendModePropType"].isRequired,
+  isInteractive: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool.isRequired,
+  tooltipFormat: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string]),
+  legends: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.shape(_nivo_legends__WEBPACK_IMPORTED_MODULE_4__["LegendPropShape"])).isRequired
+}, _nivo_core__WEBPACK_IMPORTED_MODULE_2__["motionPropTypes"]);
+var RadarDefaultProps = {
+  maxValue: 'auto',
+  curve: 'linearClosed',
+  borderWidth: 2,
+  borderColor: {
+    from: 'color'
+  },
+  gridLevels: 5,
+  gridShape: 'circular',
+  gridLabelOffset: 16,
+  enableDots: true,
+  colors: {
+    scheme: 'nivo'
+  },
+  fillOpacity: 0.25,
+  blendMode: 'normal',
+  isInteractive: true,
+  legends: [],
+  animate: true,
+  motionDamping: 13,
+  motionStiffness: 90
+};
+
+function _extends$4() { _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$4.apply(this, arguments); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+var Radar = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
+  var data = _ref.data,
+      keys = _ref.keys,
+      indexBy = _ref.indexBy,
+      maxValue = _ref.maxValue,
+      curve = _ref.curve,
+      partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      gridLevels = _ref.gridLevels,
+      gridShape = _ref.gridShape,
+      gridLabel = _ref.gridLabel,
+      gridLabelOffset = _ref.gridLabelOffset,
+      enableDots = _ref.enableDots,
+      dotSymbol = _ref.dotSymbol,
+      dotSize = _ref.dotSize,
+      dotColor = _ref.dotColor,
+      dotBorderWidth = _ref.dotBorderWidth,
+      dotBorderColor = _ref.dotBorderColor,
+      enableDotLabel = _ref.enableDotLabel,
+      dotLabel = _ref.dotLabel,
+      dotLabelFormat = _ref.dotLabelFormat,
+      dotLabelYOffset = _ref.dotLabelYOffset,
+      colors = _ref.colors,
+      fillOpacity = _ref.fillOpacity,
+      blendMode = _ref.blendMode,
+      isInteractive = _ref.isInteractive,
+      tooltipFormat = _ref.tooltipFormat,
+      legends = _ref.legends;
+  var getIndex = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["getAccessorFor"])(indexBy);
+  }, [indexBy]);
+  var indices = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return data.map(getIndex);
+  }, [data, getIndex]);
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useDimensions"])(width, height, partialMargin),
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
+  var getColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_3__["useOrdinalColorScale"])(colors, 'key');
+  var colorByKey = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return keys.reduce(function (mapping, key, index) {
+      mapping[key] = getColor({
+        key: key,
+        index: index
+      });
+      return mapping;
+    }, {});
+  }, [keys, getColor]);
+  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var computedMaxValue = maxValue !== 'auto' ? maxValue : Math.max.apply(Math, _toConsumableArray(data.reduce(function (acc, d) {
+      return [].concat(_toConsumableArray(acc), _toConsumableArray(keys.map(function (key) {
+        return d[key];
+      })));
+    }, [])));
+    var radius = Math.min(innerWidth, innerHeight) / 2;
+    var radiusScale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_1__["scaleLinear"])().range([0, radius]).domain([0, computedMaxValue]);
+    return {
+      radius: radius,
+      radiusScale: radiusScale,
+      centerX: innerWidth / 2,
+      centerY: innerHeight / 2,
+      angleStep: Math.PI * 2 / data.length
+    };
+  }, [keys, indexBy, data, maxValue, innerWidth, innerHeight]),
+      radius = _useMemo.radius,
+      radiusScale = _useMemo.radiusScale,
+      centerX = _useMemo.centerX,
+      centerY = _useMemo.centerY,
+      angleStep = _useMemo.angleStep;
+  var legendData = keys.map(function (key) {
+    return {
+      id: key,
+      label: key,
+      color: colorByKey[key]
+    };
+  });
+  var curveInterpolator = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useCurveInterpolation"])(curve);
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["SvgWrapper"], {
+    width: outerWidth,
+    height: outerHeight,
+    margin: margin,
+    theme: theme
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("g", {
+    transform: "translate(".concat(centerX, ", ").concat(centerY, ")")
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarGrid, {
+    levels: gridLevels,
+    shape: gridShape,
+    radius: radius,
+    angleStep: angleStep,
+    indices: indices,
+    label: gridLabel,
+    labelOffset: gridLabelOffset
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarShapes, {
+    data: data,
+    keys: keys,
+    colorByKey: colorByKey,
+    radiusScale: radiusScale,
+    angleStep: angleStep,
+    curveInterpolator: curveInterpolator,
+    borderWidth: borderWidth,
+    borderColor: borderColor,
+    fillOpacity: fillOpacity,
+    blendMode: blendMode
+  }), isInteractive && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarTooltip, {
+    data: data,
+    keys: keys,
+    getIndex: getIndex,
+    colorByKey: colorByKey,
+    radius: radius,
+    angleStep: angleStep,
+    tooltipFormat: tooltipFormat
+  }), enableDots && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RadarDots, {
+    data: data,
+    keys: keys,
+    getIndex: getIndex,
+    radiusScale: radiusScale,
+    angleStep: angleStep,
+    symbol: dotSymbol,
+    size: dotSize,
+    colorByKey: colorByKey,
+    color: dotColor,
+    borderWidth: dotBorderWidth,
+    borderColor: dotBorderColor,
+    enableLabel: enableDotLabel,
+    label: dotLabel,
+    labelFormat: dotLabelFormat,
+    labelYOffset: dotLabelYOffset
+  })), legends.map(function (legend, i) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_legends__WEBPACK_IMPORTED_MODULE_4__["BoxLegendSvg"], _extends$4({
+      key: i
+    }, legend, {
+      containerWidth: width,
+      containerHeight: height,
+      data: legendData,
+      theme: theme
+    }));
+  }));
+});
+Radar.displayName = 'Radar';
+Radar.propTypes = RadarPropTypes;
+Radar.defaultProps = RadarDefaultProps;
+var Radar$1 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["withContainer"])(Radar);
+
+function _extends$5() { _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends$5.apply(this, arguments); }
+var ResponsiveRadar = function ResponsiveRadar(props) {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["ResponsiveWrapper"], null, function (_ref) {
+    var width = _ref.width,
+        height = _ref.height;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Radar$1, _extends$5({
+      width: width,
+      height: height
+    }, props));
+  });
+};
+
+
+
 
 /***/ }),
 
@@ -29008,6 +29876,45 @@ module.exports = basePropertyDeep;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseRange.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseRange.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeCeil = Math.ceil,
+    nativeMax = Math.max;
+
+/**
+ * The base implementation of `_.range` and `_.rangeRight` which doesn't
+ * coerce arguments.
+ *
+ * @private
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} step The value to increment or decrement by.
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Array} Returns the range of numbers.
+ */
+function baseRange(start, end, step, fromRight) {
+  var index = -1,
+      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+      result = Array(length);
+
+  while (length--) {
+    result[fromRight ? length : ++index] = start;
+    start += step;
+  }
+  return result;
+}
+
+module.exports = baseRange;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseRest.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_baseRest.js ***!
@@ -30295,6 +31202,47 @@ function createPartial(func, bitmask, thisArg, partials) {
 }
 
 module.exports = createPartial;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_createRange.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_createRange.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseRange = __webpack_require__(/*! ./_baseRange */ "./node_modules/lodash/_baseRange.js"),
+    isIterateeCall = __webpack_require__(/*! ./_isIterateeCall */ "./node_modules/lodash/_isIterateeCall.js"),
+    toFinite = __webpack_require__(/*! ./toFinite */ "./node_modules/lodash/toFinite.js");
+
+/**
+ * Creates a `_.range` or `_.rangeRight` function.
+ *
+ * @private
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Function} Returns the new range function.
+ */
+function createRange(fromRight) {
+  return function(start, end, step) {
+    if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
+      end = step = undefined;
+    }
+    // Ensure the sign of `-0` is preserved.
+    start = toFinite(start);
+    if (end === undefined) {
+      end = start;
+      start = 0;
+    } else {
+      end = toFinite(end);
+    }
+    step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
+    return baseRange(start, end, step, fromRight);
+  };
+}
+
+module.exports = createRange;
 
 
 /***/ }),
@@ -34787,6 +35735,63 @@ function property(path) {
 }
 
 module.exports = property;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/range.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/range.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var createRange = __webpack_require__(/*! ./_createRange */ "./node_modules/lodash/_createRange.js");
+
+/**
+ * Creates an array of numbers (positive and/or negative) progressing from
+ * `start` up to, but not including, `end`. A step of `-1` is used if a negative
+ * `start` is specified without an `end` or `step`. If `end` is not specified,
+ * it's set to `start` with `start` then set to `0`.
+ *
+ * **Note:** JavaScript follows the IEEE-754 standard for resolving
+ * floating-point values which can produce unexpected results.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {number} [start=0] The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} [step=1] The value to increment or decrement by.
+ * @returns {Array} Returns the range of numbers.
+ * @see _.inRange, _.rangeRight
+ * @example
+ *
+ * _.range(4);
+ * // => [0, 1, 2, 3]
+ *
+ * _.range(-4);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 5);
+ * // => [1, 2, 3, 4]
+ *
+ * _.range(0, 20, 5);
+ * // => [0, 5, 10, 15]
+ *
+ * _.range(0, -4, -1);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 4, 0);
+ * // => [1, 1, 1]
+ *
+ * _.range(0);
+ * // => []
+ */
+var range = createRange();
+
+module.exports = range;
 
 
 /***/ }),

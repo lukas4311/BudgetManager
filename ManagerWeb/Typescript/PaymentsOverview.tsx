@@ -16,7 +16,7 @@ import { CalendarChart } from './CalendarChart';
 import { CalendarChartData } from './Model/CalendarChartData';
 import { RadarChartProps } from './Model/RadarChartProps';
 import { RadarChartData } from './Model/RadarChartData';
-import { RadarChartDataSets } from './Model/RadarChartDataSet';
+import { RadarChart } from './RadarChart';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -95,6 +95,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             const expenses = this.prepareExpenseChartData(payments);
             const balance = await this.prepareBalanceChartData(payments)
             const chartData = this.prepareCalendarCharData(payments);
+            this.prepareDataForRadarChart(payments);
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData }
@@ -165,15 +166,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         let categoryGroups: RadarChartData[] = [];
         payments.reduce(function (res, val) {
             if (!res[val.paymentCategoryCode]) {
-                res[val.paymentCategoryCode] = { Id: val.paymentCategoryCode, qty: 0 };
-                categoryGroups.push(res[val.paymentCategoryCode].map((a: IPaymentInfo): RadarChartData => ({ key: a.paymentCategoryCode, value: a.amount })));
+                res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
+                categoryGroups.push(res[val.paymentCategoryCode]);
             }
-            res[val.paymentCategoryCode].qty += val.amount;
+            res[val.paymentCategoryCode].value += val.amount;
             return res;
         }, {});
 
-        let dataSet: RadarChartDataSets = { id: 'Neco', data: [] };
-        this.setState({ radarChartData: { dataSets: [dataSet] } });
+        this.setState({ radarChartData: { dataSets: categoryGroups } });
     }
 
     private filterClick(filterKey: number) {
@@ -286,8 +286,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     <div className="w-1/3 h-64">
                         <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
                     </div>
-                    <div className="w-1/3 h-64">
-                        tady bude graf s kategoriemi
+                    <div className="w-1/3 h-64 calendar">
+                        <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>

@@ -1,5 +1,5 @@
-import { RadarChartDataSets } from "./RadarChartDataSet";
+import { RadarChartData } from "./RadarChartData";
 
 export class RadarChartProps {
-    dataSets: RadarChartDataSets[];
+    dataSets: RadarChartData[];
 }
