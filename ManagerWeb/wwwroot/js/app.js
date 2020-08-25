@@ -1194,27 +1194,9 @@ exports.RadarChart = void 0;
 const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function RadarChart({ dataSets }) {
-    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: true, dotSize: 0, dotColor: { theme: 'background' }, dotBorderWidth: 0, dotBorderColor: { from: 'color' }, enableDotLabel: false, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [
-            {
-                anchor: 'top-left',
-                direction: 'column',
-                translateX: -20,
-                translateY: -20,
-                itemWidth: 40,
-                itemHeight: 20,
-                itemTextColor: '#999',
-                symbolSize: 12,
-                symbolShape: 'circle',
-                effects: [
-                    {
-                        on: 'hover',
-                        style: {
-                            itemTextColor: '#000'
-                        }
-                    }
-                ]
-            }
-        ] }));
+    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
+            minimumFractionDigits: 2,
+        })},-` }));
 }
 exports.RadarChart = RadarChart;
 

@@ -16,12 +16,12 @@ function RadarChart({ dataSets }: RadarChartProps) {
       gridLevels={8}
       gridShape="circular"
       gridLabelOffset={27}
-      enableDots={true}
-      dotSize={0}
-      dotColor={{ theme: 'background' }}
+      enableDots={false}
+      dotSize={10}
       dotBorderWidth={0}
-      dotBorderColor={{ from: 'color' }}
       enableDotLabel={false}
+      dotColor={{ theme: 'background' }}
+      dotBorderColor={{ from: 'color' }}
       dotLabel="value"
       dotLabelYOffset={-17}
       colors={{ scheme: 'category10' }}
@@ -31,27 +31,12 @@ function RadarChart({ dataSets }: RadarChartProps) {
       motionStiffness={85}
       motionDamping={15}
       isInteractive={true}
-      legends={[
-        {
-          anchor: 'top-left',
-          direction: 'column',
-          translateX: -20,
-          translateY: -20,
-          itemWidth: 40,
-          itemHeight: 20,
-          itemTextColor: '#999',
-          symbolSize: 12,
-          symbolShape: 'circle',
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemTextColor: '#000'
-              }
-            }
-          ]
-        }
-      ]}
+      legends={[]}
+      tooltipFormat={value =>
+        `${Number(value).toLocaleString('cs-CZ', {
+          minimumFractionDigits: 2,
+        })},-`
+      }
     />
   )
 }
