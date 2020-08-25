@@ -34,8 +34,8 @@ function RadarChart({ dataSets }: RadarChartProps) {
       legends={[]}
       tooltipFormat={value =>
         `${Number(value).toLocaleString('cs-CZ', {
-          minimumFractionDigits: 2,
-        })},-`
+          minimumFractionDigits: 0,
+        })} Kč`
       }
     />
   )

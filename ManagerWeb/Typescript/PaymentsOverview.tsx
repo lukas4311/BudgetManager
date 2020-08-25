@@ -222,7 +222,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     <div className="w-1/3 h-64">
                         <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
                     </div>
-                    <div className="w-1/3 h-64 calendar">
+                    <div className="w-1/3 h-64 calendar text-black">
                         <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
                     </div>
                 </div>

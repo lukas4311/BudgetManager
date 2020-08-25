@@ -1108,7 +1108,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
                 React.createElement("div", { className: "w-1/3 h-64" },
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64 calendar" },
+                React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                     React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
@@ -1137,8 +1137,8 @@ const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/rad
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function RadarChart({ dataSets }) {
     return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
-            minimumFractionDigits: 2,
-        })},-` }));
+            minimumFractionDigits: 0,
+        })} Kč` }));
 }
 exports.RadarChart = RadarChart;
 
@@ -1225,7 +1225,7 @@ class ChartDataProcessor {
     }
     prepareDataForRadarChart(payments) {
         let categoryGroups = [];
-        payments.reduce(function (res, val) {
+        payments.filter(a => a.paymentTypeCode == 'Expense').reduce(function (res, val) {
             if (!res[val.paymentCategoryCode]) {
                 res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
                 categoryGroups.push(res[val.paymentCategoryCode]);

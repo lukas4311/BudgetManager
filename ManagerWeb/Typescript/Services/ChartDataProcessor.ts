@@ -70,7 +70,7 @@ export class ChartDataProcessor{
 
     public prepareDataForRadarChart(payments: Array<IPaymentInfo>): RadarChartData[] {
         let categoryGroups: RadarChartData[] = [];
-        payments.reduce(function (res, val) {
+        payments.filter(a => a.paymentTypeCode == 'Expense').reduce(function (res, val) {
             if (!res[val.paymentCategoryCode]) {
                 res[val.paymentCategoryCode] = { key: val.paymentCategoryCode, value: 0 };
                 categoryGroups.push(res[val.paymentCategoryCode]);
