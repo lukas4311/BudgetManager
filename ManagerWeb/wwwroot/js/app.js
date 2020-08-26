@@ -990,26 +990,12 @@ class PaymentsOverview extends React.Component {
             method.bind(this);
         });
     }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(this.state.selectedFilter.days, null);
-            this.setBankAccounts(bankAccounts);
-        });
-    }
     getPaymentData(daysBack, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
             let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
             const payments = yield this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
             this.setPayments(payments);
         });
-    }
-    setBankAccounts(data) {
-        if (data.success) {
-            let bankAccounts = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-            this.setState({ bankAccounts: bankAccounts });
-        }
     }
     onRejected(_) {
         this.setState({ apiError: this.apiErrorMessage });
@@ -1073,6 +1059,20 @@ class PaymentsOverview extends React.Component {
             case "Transfer":
                 return "bg-blue-500";
         }
+    }
+    setBankAccounts(data) {
+        if (data.success) {
+            let bankAccounts = data.bankAccounts;
+            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
+            this.setState({ bankAccounts: bankAccounts });
+        }
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
+            this.getPaymentData(this.state.selectedFilter.days, null);
+            this.setBankAccounts(bankAccounts);
+        });
     }
     render() {
         let iconsData = new IconsEnum_1.IconsData();

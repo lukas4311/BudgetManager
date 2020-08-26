@@ -66,24 +66,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         });
     }
 
-    public async componentDidMount() {
-        const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
-        this.getPaymentData(this.state.selectedFilter.days, null);
-        this.setBankAccounts(bankAccounts);
-    }
-
     private async getPaymentData(daysBack: number, bankAccountId: number) {
         let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
         const payments = await this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
         this.setPayments(payments);
-    }
-
-    private setBankAccounts(data: BankAccountReponse) {
-        if (data.success) {
-            let bankAccounts: Array<BankAccount> = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-            this.setState({ bankAccounts: bankAccounts });
-        }
     }
 
     private onRejected(_: any) {
@@ -164,6 +150,20 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             case "Transfer":
                 return "bg-blue-500"
         }
+    }
+
+    private setBankAccounts(data: BankAccountReponse) {
+        if (data.success) {
+            let bankAccounts: Array<BankAccount> = data.bankAccounts;
+            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
+            this.setState({ bankAccounts: bankAccounts });
+        }
+    }
+
+    public async componentDidMount() {
+        const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
+        this.getPaymentData(this.state.selectedFilter.days, null);
+        this.setBankAccounts(bankAccounts);
     }
 
     public render() {
