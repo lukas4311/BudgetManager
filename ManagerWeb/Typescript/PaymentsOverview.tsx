@@ -54,16 +54,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.bindThisToAllMethods([this.filterClick, this.addNewPayment, this.hideModal, this.bankAccountChange, 
-            this.handleConfirmationClose, this.onRejected, this.setPayments, this.setBankAccounts]);
+        this.setPayments = this.setPayments.bind(this);
+        this.setBankAccounts = this.setBankAccounts.bind(this);
+
         this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor();
-    }
-
-    private bindThisToAllMethods(methods: ((...args: any[]) => void)[]){
-        methods.forEach(method => {
-            method.bind(this);
-        });
     }
 
     private async getPaymentData(daysBack: number, bankAccountId: number) {
@@ -72,11 +67,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setPayments(payments);
     }
 
-    private onRejected(_: any) {
+    private onRejected = (_: any) => {
         this.setState({ apiError: this.apiErrorMessage });
     }
 
-    private async setPayments(payments: Array<IPaymentInfo>) {
+    private async setPayments (payments: Array<IPaymentInfo>) {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
@@ -95,7 +90,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private filterClick(filterKey: number) {
+    private filterClick = (filterKey: number) => {
         let selectedFilter = this.filters.find(f => f.key == filterKey);
 
         if (this.state.selectedFilter != selectedFilter) {
@@ -104,7 +99,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private addNewPayment() {
+    private addNewPayment = () => {
         if (this.state.selectedBankAccount != undefined) {
             this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
         }
@@ -126,7 +121,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.getPaymentData(this.state.selectedFilter.days, this.state.selectedBankAccount);
     }
 
-    private bankAccountChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
         this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
@@ -152,7 +147,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private setBankAccounts(data: BankAccountReponse) {
+    private setBankAccounts = (data: BankAccountReponse) => {
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
             bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });

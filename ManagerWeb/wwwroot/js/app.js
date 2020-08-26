@@ -860,12 +860,42 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
+        this.onRejected = (_) => {
+            this.setState({ apiError: this.apiErrorMessage });
+        };
+        this.filterClick = (filterKey) => {
+            let selectedFilter = this.filters.find(f => f.key == filterKey);
+            if (this.state.selectedFilter != selectedFilter) {
+                this.setState({ selectedFilter: selectedFilter });
+                this.getPaymentData(selectedFilter.days, this.state.selectedBankAccount);
+            }
+        };
+        this.addNewPayment = () => {
+            if (this.state.selectedBankAccount != undefined) {
+                this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
+            }
+            else {
+                this.setState({ showBankAccountError: true });
+            }
+        };
         this.hideModal = () => {
             this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
             this.getPaymentData(this.state.selectedFilter.days, this.state.selectedBankAccount);
+        };
+        this.bankAccountChange = (e) => {
+            let selectedbankId = parseInt(e.target.value);
+            this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
+            this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
+        };
+        this.setBankAccounts = (data) => {
+            if (data.success) {
+                let bankAccounts = data.bankAccounts;
+                bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
+                this.setState({ bankAccounts: bankAccounts });
+            }
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -874,15 +904,10 @@ class PaymentsOverview extends React.Component {
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.bindThisToAllMethods([this.filterClick, this.addNewPayment, this.hideModal, this.bankAccountChange,
-            this.handleConfirmationClose, this.onRejected, this.setPayments, this.setBankAccounts]);
+        this.setPayments = this.setPayments.bind(this);
+        this.setBankAccounts = this.setBankAccounts.bind(this);
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
-    }
-    bindThisToAllMethods(methods) {
-        methods.forEach(method => {
-            method.bind(this);
-        });
     }
     getPaymentData(daysBack, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -890,9 +915,6 @@ class PaymentsOverview extends React.Component {
             const payments = yield this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
             this.setPayments(payments);
         });
-    }
-    onRejected(_) {
-        this.setState({ apiError: this.apiErrorMessage });
     }
     setPayments(payments) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -914,28 +936,8 @@ class PaymentsOverview extends React.Component {
             }
         });
     }
-    filterClick(filterKey) {
-        let selectedFilter = this.filters.find(f => f.key == filterKey);
-        if (this.state.selectedFilter != selectedFilter) {
-            this.setState({ selectedFilter: selectedFilter });
-            this.getPaymentData(selectedFilter.days, this.state.selectedBankAccount);
-        }
-    }
-    addNewPayment() {
-        if (this.state.selectedBankAccount != undefined) {
-            this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
-        }
-        else {
-            this.setState({ showBankAccountError: true });
-        }
-    }
     paymentEdit(id) {
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
-    }
-    bankAccountChange(e) {
-        let selectedbankId = parseInt(e.target.value);
-        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-        this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
     }
     showErrorMessage() {
         let tag = React.createElement(React.Fragment, null);
@@ -952,13 +954,6 @@ class PaymentsOverview extends React.Component {
                 return "bg-red-600";
             case "Transfer":
                 return "bg-blue-500";
-        }
-    }
-    setBankAccounts(data) {
-        if (data.success) {
-            let bankAccounts = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-            this.setState({ bankAccounts: bankAccounts });
         }
     }
     componentDidMount() {
