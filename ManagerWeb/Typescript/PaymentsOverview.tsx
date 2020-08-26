@@ -9,13 +9,10 @@ import { BankAccountReponse } from './Model/BankAccountReponse';
 import { IconsData } from './IconsEnum';
 import { LineChart } from './LineChart';
 import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
-import { LineChartData } from './Model/LineChartData';
 import { LineChartProps } from './Model/LineChartProps';
 import { CalendarChartProps } from './Model/CalendarChartProps';
 import { CalendarChart } from './CalendarChart';
-import { CalendarChartData } from './Model/CalendarChartData';
 import { RadarChartProps } from './Model/RadarChartProps';
-import { RadarChartData } from './Model/RadarChartData';
 import { RadarChart } from './RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
 
@@ -57,16 +54,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.filterClick = this.filterClick.bind(this);
-        this.addNewPayment = this.addNewPayment.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-        this.bankAccountChange = this.bankAccountChange.bind(this);
-        this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
-        this.onRejected = this.onRejected.bind(this);
-        this.setPayments = this.setPayments.bind(this);
-        this.setBankAccounts = this.setBankAccounts.bind(this);
+        this.bindThisToAllMethods([this.filterClick, this.addNewPayment, this.hideModal, this.bankAccountChange, 
+            this.handleConfirmationClose, this.onRejected, this.setPayments, this.setBankAccounts]);
         this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor();
+    }
+
+    private bindThisToAllMethods(methods: ((...args: any[]) => void)[]){
+        methods.forEach(method => {
+            method.bind(this);
+        });
     }
 
     public async componentDidMount() {

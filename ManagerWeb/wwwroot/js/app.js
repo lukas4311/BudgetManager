@@ -980,16 +980,15 @@ class PaymentsOverview extends React.Component {
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.filterClick = this.filterClick.bind(this);
-        this.addNewPayment = this.addNewPayment.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-        this.bankAccountChange = this.bankAccountChange.bind(this);
-        this.handleConfirmationClose = this.handleConfirmationClose.bind(this);
-        this.onRejected = this.onRejected.bind(this);
-        this.setPayments = this.setPayments.bind(this);
-        this.setBankAccounts = this.setBankAccounts.bind(this);
+        this.bindThisToAllMethods([this.filterClick, this.addNewPayment, this.hideModal, this.bankAccountChange,
+            this.handleConfirmationClose, this.onRejected, this.setPayments, this.setBankAccounts]);
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
+    }
+    bindThisToAllMethods(methods) {
+        methods.forEach(method => {
+            method.bind(this);
+        });
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
