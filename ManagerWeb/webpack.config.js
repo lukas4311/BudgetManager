@@ -2,7 +2,8 @@ module.exports = {
     //mode: "production",
     mode: "development",
     entry: {
-        app: './Typescript/Overview.tsx'
+        app: './Typescript/Overview.tsx',
+        menu: './Typescript/Components/Menu.tsx'
     },
     output: {
         filename: "[name].js",

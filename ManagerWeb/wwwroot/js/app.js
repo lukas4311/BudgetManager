@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./Typescript/CalendarChart.tsx":
-/*!**************************************!*\
-  !*** ./Typescript/CalendarChart.tsx ***!
-  \**************************************/
+/***/ "./Typescript/Components/CalendarChart.tsx":
+/*!*************************************************!*\
+  !*** ./Typescript/Components/CalendarChart.tsx ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -133,142 +133,107 @@ exports.CalendarChart = CalendarChart;
 
 /***/ }),
 
-/***/ "./Typescript/DataLoader.ts":
-/*!**********************************!*\
-  !*** ./Typescript/DataLoader.ts ***!
-  \**********************************/
+/***/ "./Typescript/Components/LineChart.tsx":
+/*!*********************************************!*\
+  !*** ./Typescript/Components/LineChart.tsx ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class DataLoader {
-    getPayments(filterDate, bankAccountId, onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
-                response = yield res.json();
+exports.LineChart = void 0;
+const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.esm.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function LineChart({ dataSets }) {
+    let allYData = [];
+    dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
+    let minY = Math.min(...allYData);
+    let maxY = Math.max(...allYData);
+    let yScale = (minY / 100);
+    if (yScale < 1000)
+        yScale = 1000;
+    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
+            type: 'time',
+            format: '%Y-%m-%d',
+            useUTC: false,
+            precision: 'day',
+        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - yScale, max: maxY + yScale }, axisLeft: {
+            legend: 'linear scale',
+            legendOffset: 12,
+            tickValues: 6,
+            tickPadding: 15
+        }, axisBottom: {
+            format: '%Y-%m-%d',
+            tickValues: 'every 2 days',
+            legend: 'time scale',
+            legendOffset: -12,
+        }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
+            return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
+                react_1.default.createElement("span", null, point.data.xFormatted),
+                react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
+        }, theme: {
+            axis: {
+                ticks: {
+                    line: {
+                        stroke: "white"
+                    },
+                    text: {
+                        fill: "white"
+                    }
+                }
+            },
+            grid: {
+                line: {
+                    stroke: "white",
+                }
+            },
+            dots: {
+                text: {
+                    fill: 'white',
+                }
             }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
-    getBankAccounts(onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch("/Payment/GetBankAccounts");
-                response = yield res.json();
-            }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
-    addPayment(data, onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield fetch('/Payment/AddPayment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: data,
-                });
-            }
-            catch (_) {
-                onRejected();
-            }
-        });
-    }
-    updatePayment(data, onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                fetch('/Payment/UpdatePayment', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: data,
-                });
-            }
-            catch (_) {
-                onRejected();
-            }
-        });
-    }
-    getPaymentTypes(onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch("/Payment/GetPaymentTypes");
-                response = yield res.json();
-            }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
-    getPaymentCategories(onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch("/Payment/GetPaymentCategories");
-                response = yield res.json();
-            }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
-    getPayment(id, onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch(`/Payment/GetPayment/${id}`);
-                response = yield res.json();
-            }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
-    getBankAccountsBalanceToDate(toDate, onRejected) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response;
-            try {
-                const res = yield fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
-                response = yield res.json();
-            }
-            catch (_) {
-                onRejected();
-            }
-            return response;
-        });
-    }
+        } }));
 }
-exports.default = DataLoader;
+exports.LineChart = LineChart;
 
 
 /***/ }),
 
-/***/ "./Typescript/IconsEnum.tsx":
-/*!**********************************!*\
-  !*** ./Typescript/IconsEnum.tsx ***!
-  \**********************************/
+/***/ "./Typescript/Components/RadarChart.tsx":
+/*!**********************************************!*\
+  !*** ./Typescript/Components/RadarChart.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RadarChart = void 0;
+const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function RadarChart({ dataSets }) {
+    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
+            minimumFractionDigits: 0,
+        })} Kč` }));
+}
+exports.RadarChart = RadarChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Enums/IconsEnum.tsx":
+/*!****************************************!*\
+  !*** ./Typescript/Enums/IconsEnum.tsx ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -525,77 +490,6 @@ exports.IconsData = IconsData;
 
 /***/ }),
 
-/***/ "./Typescript/LineChart.tsx":
-/*!**********************************!*\
-  !*** ./Typescript/LineChart.tsx ***!
-  \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LineChart = void 0;
-const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.esm.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function LineChart({ dataSets }) {
-    let allYData = [];
-    dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
-    let minY = Math.min(...allYData);
-    let maxY = Math.max(...allYData);
-    let yScale = (minY / 100);
-    if (yScale < 1000)
-        yScale = 1000;
-    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
-            type: 'time',
-            format: '%Y-%m-%d',
-            useUTC: false,
-            precision: 'day',
-        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - yScale, max: maxY + yScale }, axisLeft: {
-            legend: 'linear scale',
-            legendOffset: 12,
-            tickValues: 6,
-            tickPadding: 15
-        }, axisBottom: {
-            format: '%Y-%m-%d',
-            tickValues: 'every 2 days',
-            legend: 'time scale',
-            legendOffset: -12,
-        }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
-            return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
-                react_1.default.createElement("span", null, point.data.xFormatted),
-                react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
-        }, theme: {
-            axis: {
-                ticks: {
-                    line: {
-                        stroke: "white"
-                    },
-                    text: {
-                        fill: "white"
-                    }
-                }
-            },
-            grid: {
-                line: {
-                    stroke: "white",
-                }
-            },
-            dots: {
-                text: {
-                    fill: 'white',
-                }
-            }
-        } }));
-}
-exports.LineChart = LineChart;
-
-
-/***/ }),
-
 /***/ "./Typescript/Modal.tsx":
 /*!******************************!*\
   !*** ./Typescript/Modal.tsx ***!
@@ -747,7 +641,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 class PaymentForm extends React.Component {
     constructor(props) {
@@ -955,11 +849,11 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 const Modal_1 = __webpack_require__(/*! ./Modal */ "./Typescript/Modal.tsx");
 const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/PaymentForm.tsx"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/DataLoader.ts"));
-const IconsEnum_1 = __webpack_require__(/*! ./IconsEnum */ "./Typescript/IconsEnum.tsx");
-const LineChart_1 = __webpack_require__(/*! ./LineChart */ "./Typescript/LineChart.tsx");
-const CalendarChart_1 = __webpack_require__(/*! ./CalendarChart */ "./Typescript/CalendarChart.tsx");
-const RadarChart_1 = __webpack_require__(/*! ./RadarChart */ "./Typescript/RadarChart.tsx");
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const LineChart_1 = __webpack_require__(/*! ./Components/LineChart */ "./Typescript/Components/LineChart.tsx");
+const CalendarChart_1 = __webpack_require__(/*! ./Components/CalendarChart */ "./Typescript/Components/CalendarChart.tsx");
+const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Typescript/Components/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 class PaymentsOverview extends React.Component {
     constructor(props) {
@@ -1118,32 +1012,6 @@ exports.default = PaymentsOverview;
 
 /***/ }),
 
-/***/ "./Typescript/RadarChart.tsx":
-/*!***********************************!*\
-  !*** ./Typescript/RadarChart.tsx ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RadarChart = void 0;
-const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function RadarChart({ dataSets }) {
-    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
-            minimumFractionDigits: 0,
-        })} Kč` }));
-}
-exports.RadarChart = RadarChart;
-
-
-/***/ }),
-
 /***/ "./Typescript/Services/ChartDataProcessor.ts":
 /*!***************************************************!*\
   !*** ./Typescript/Services/ChartDataProcessor.ts ***!
@@ -1169,7 +1037,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChartDataProcessor = void 0;
 const CalendarChartData_1 = __webpack_require__(/*! ../Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ../DataLoader */ "./Typescript/DataLoader.ts"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/Services/DataLoader.ts"));
 class ChartDataProcessor {
     constructor() {
         this.dataLoader = new DataLoader_1.default();
@@ -1236,6 +1104,138 @@ class ChartDataProcessor {
     }
 }
 exports.ChartDataProcessor = ChartDataProcessor;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/DataLoader.ts":
+/*!*******************************************!*\
+  !*** ./Typescript/Services/DataLoader.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+class DataLoader {
+    getPayments(filterDate, bankAccountId, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+    getBankAccounts(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetBankAccounts");
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+    addPayment(data, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield fetch('/Payment/AddPayment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data,
+                });
+            }
+            catch (_) {
+                onRejected();
+            }
+        });
+    }
+    updatePayment(data, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                fetch('/Payment/UpdatePayment', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: data,
+                });
+            }
+            catch (_) {
+                onRejected();
+            }
+        });
+    }
+    getPaymentTypes(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetPaymentTypes");
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+    getPaymentCategories(onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/Payment/GetPaymentCategories");
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+    getPayment(id, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch(`/Payment/GetPayment/${id}`);
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+    getBankAccountsBalanceToDate(toDate, onRejected) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            try {
+                const res = yield fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
+                response = yield res.json();
+            }
+            catch (_) {
+                onRejected();
+            }
+            return response;
+        });
+    }
+}
+exports.default = DataLoader;
 
 
 /***/ }),

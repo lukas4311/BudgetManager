@@ -25,15 +25,19 @@
                 <partial name="~/Views/IconsPartials/Logo.cshtml" />
             </a>
         </div>
-        <nav class="border-bottom box-shadow ml-auto">
-            <div class="flex flex-col spin circle button justify-center w-16 h-16">
-                <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
-                <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
-                <div class="w-3/5 bg-white h-1 rounded-lg mx-auto"></div>
-            </div>
-            <div class="container">
-            </div>
-        </nav>
+        <div id="navMenu" class="ml-auto">
+            @* <nav class="border-bottom box-shadow ">
+                    <div class="flex flex-col spin circle button justify-center w-12 h-12" onClick={this.menuClick}>
+                        <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
+                        <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
+                        <div class="w-3/5 bg-white h-1 rounded-lg mx-auto"></div>
+                    </div>
+                    <div class="containerClosed absolute text-white bg-black w-48"}>
+                        <a class="block">Home</a>
+                        <a class="block">Platby</a>
+                    </div>
+                </nav> *@
+        </div>
     </header>
     <div class="baseContainer mx-auto w-11/12">
         <main role="main" class="pb-3 text-white">
@@ -47,6 +51,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/menu.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

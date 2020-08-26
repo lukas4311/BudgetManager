@@ -1,9 +1,9 @@
-import { IPaymentInfo } from "./Model/IPaymentInfo"
-import { BankAccountReponse } from './Model/BankAccountReponse'
-import { PaymentTypeResponse } from './Model/PaymentTypeResponse'
-import { PaymentCategoryResponse } from "./Model/PaymentCategoryResponse";
-import { IPaymentResponseModel } from "./Model/IPaymentResponseModel";
-import { IBankAccountBalanceResponseModel } from "./Model/IBankAccountBalanceResponseModel";
+import { IPaymentInfo } from "../Model/IPaymentInfo"
+import { BankAccountReponse } from '../Model/BankAccountReponse'
+import { PaymentTypeResponse } from '../Model/PaymentTypeResponse'
+import { PaymentCategoryResponse } from "../Model/PaymentCategoryResponse";
+import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
+import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
     async getPayments(filterDate: string, bankAccountId: number, onRejected: any): Promise<IPaymentInfo[]> {

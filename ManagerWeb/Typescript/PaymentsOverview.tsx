@@ -2,18 +2,18 @@
 import moment from 'moment';
 import { Modal } from './Modal'
 import PaymentForm from './PaymentForm'
-import DataLoader from './DataLoader';
+import DataLoader from './Services/DataLoader';
 import { IPaymentInfo } from "./Model/IPaymentInfo"
 import { BankAccount } from './Model/BankAccount';
 import { BankAccountReponse } from './Model/BankAccountReponse';
-import { IconsData } from './IconsEnum';
-import { LineChart } from './LineChart';
+import { IconsData } from './Enums/IconsEnum';
+import { LineChart } from './Components/LineChart';
 import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
 import { LineChartProps } from './Model/LineChartProps';
 import { CalendarChartProps } from './Model/CalendarChartProps';
-import { CalendarChart } from './CalendarChart';
+import { CalendarChart } from './Components/CalendarChart';
 import { RadarChartProps } from './Model/RadarChartProps';
-import { RadarChart } from './RadarChart';
+import { RadarChart } from './Components/RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
 
 interface PaymentsOverviewState {

@@ -98,3 +98,15 @@
 .calendar text{
     fill: white !important;
 }
+
+.menu{
+    transition: 2s;
+}
+
+.containerClosed{
+    right: -12em;
+}
+
+.containerOpen{
+    right: 0em;
+}

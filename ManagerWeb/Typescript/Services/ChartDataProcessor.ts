@@ -3,7 +3,7 @@ import { IPaymentInfo } from "../Model/IPaymentInfo";
 import moment from "moment";
 import { LineChartData } from "../Model/LineChartData";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
-import DataLoader from "../DataLoader";
+import DataLoader from "./DataLoader";
 import { RadarChartData } from "../Model/RadarChartData";
 
 export class ChartDataProcessor{

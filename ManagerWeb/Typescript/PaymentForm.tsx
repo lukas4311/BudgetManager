@@ -1,5 +1,5 @@
 import * as React from 'react'
-import DataLoader from './DataLoader'
+import DataLoader from './Services/DataLoader'
 import { PaymentTypeResponse } from './Model/PaymentTypeResponse';
 import { PaymentCategoryResponse } from './Model/PaymentCategoryResponse';
 import { IPaymentModel } from './Model/IPaymentModel';

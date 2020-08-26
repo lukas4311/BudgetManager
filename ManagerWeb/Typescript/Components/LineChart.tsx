@@ -1,6 +1,6 @@
 import { ResponsiveLine } from '@nivo/line'
 import React from 'react'
-import { LineChartProps } from './Model/LineChartProps';
+import { LineChartProps } from '../Model/LineChartProps';
 
 function LineChart({ dataSets }: LineChartProps) {
   let allYData: number[] = [];
