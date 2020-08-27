@@ -47,6 +47,16 @@ namespace Data
                .HasOne(e => e.BankAccount)
                .WithMany(e => e.InterestRates)
                .HasForeignKey(e => e.BankAccountId);
+
+            modelBuilder.Entity<PaymentTag>()
+                .HasOne<Payment>(sc => sc.Payment)
+                .WithMany(s => s.PaymentTags)
+                .HasForeignKey(sc => sc.PaymentId);
+
+            modelBuilder.Entity<PaymentTag>()
+                .HasOne<Tag>(sc => sc.Tag)
+                .WithMany(s => s.PaymentTags)
+                .HasForeignKey(sc => sc.TagId);
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
@@ -64,5 +74,9 @@ namespace Data
         public DbSet<TaxSetting> TaxSetting { get; set; }
 
         public DbSet<InterestRate> InterestRate { get; set; }
+
+        public DbSet<Tag> Tag { get; set; }
+
+        public DbSet<PaymentTag> PaymentTag { get; set; }
     }
 }

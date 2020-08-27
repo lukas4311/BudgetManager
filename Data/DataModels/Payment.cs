@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.DataModels
 {
@@ -29,5 +26,7 @@ namespace Data.DataModels
         public int PaymentCategoryId { get; set; }
 
         public PaymentCategory PaymentCategory { get; set; }
+
+        public IList<PaymentTag> PaymentTags { get; set; }
     }
 }
