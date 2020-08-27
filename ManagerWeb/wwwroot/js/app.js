@@ -230,6 +230,34 @@ exports.RadarChart = RadarChart;
 
 /***/ }),
 
+/***/ "./Typescript/Components/TagEditor.tsx":
+/*!*********************************************!*\
+  !*** ./Typescript/Components/TagEditor.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class TagEditor extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (react_1.default.createElement("div", { className: "p-4" },
+            react_1.default.createElement("h2", { className: "text-2xl" }, "Spr\u00E1va tag\u016F")));
+    }
+}
+exports.default = TagEditor;
+
+
+/***/ }),
+
 /***/ "./Typescript/Enums/IconsEnum.tsx":
 /*!****************************************!*\
   !*** ./Typescript/Enums/IconsEnum.tsx ***!
@@ -855,6 +883,7 @@ const LineChart_1 = __webpack_require__(/*! ./Components/LineChart */ "./Typescr
 const CalendarChart_1 = __webpack_require__(/*! ./Components/CalendarChart */ "./Typescript/Components/CalendarChart.tsx");
 const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Typescript/Components/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
+const TagEditor_1 = __importDefault(__webpack_require__(/*! ./Components/TagEditor */ "./Typescript/Components/TagEditor.tsx"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -998,6 +1027,8 @@ class PaymentsOverview extends React.Component {
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
                 React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                     React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+            React.createElement("div", { className: "flex flex-row" },
+                React.createElement(TagEditor_1.default, null)),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }
