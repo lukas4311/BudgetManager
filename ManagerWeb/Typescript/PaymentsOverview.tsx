@@ -67,11 +67,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setPayments(payments);
     }
 
-    private onRejected = (_: any) => {
+    private onRejected = () => {
         this.setState({ apiError: this.apiErrorMessage });
     }
 
-    private async setPayments (payments: Array<IPaymentInfo>) {
+    private async setPayments(payments: Array<IPaymentInfo>) {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
@@ -86,7 +86,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 radarChartData: { dataSets: radarData }
             });
         } else {
-            this.setState({ apiError: this.apiErrorMessage })
+            this.setState({ apiError: this.apiErrorMessage });
         }
     }
 
@@ -139,11 +139,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private getPaymentColor(paymentTypeCode: string): string {
         switch (paymentTypeCode) {
             case "Revenue":
-                return "bg-green-800"
+                return "bg-green-800";
             case "Expense":
-                return "bg-red-600"
+                return "bg-red-600";
             case "Transfer":
-                return "bg-blue-500"
+                return "bg-blue-500";
         }
     }
 

@@ -860,7 +860,7 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
-        this.onRejected = (_) => {
+        this.onRejected = () => {
             this.setState({ apiError: this.apiErrorMessage });
         };
         this.filterClick = (filterKey) => {

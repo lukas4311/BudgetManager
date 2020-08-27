@@ -6,7 +6,7 @@ import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
-    async getPayments(filterDate: string, bankAccountId: number, onRejected: any): Promise<IPaymentInfo[]> {
+    async getPayments(filterDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
         let response: IPaymentInfo[];
 
         try {
@@ -20,7 +20,7 @@ export default class DataLoader {
         return response;
     }
 
-    async getBankAccounts(onRejected: any): Promise<BankAccountReponse> {
+    async getBankAccounts(onRejected: () => void): Promise<BankAccountReponse> {
         let response: BankAccountReponse;
 
         try {
@@ -34,7 +34,7 @@ export default class DataLoader {
         return response;
     }
 
-    async addPayment(data: string, onRejected: any): Promise<void> {
+    async addPayment(data: string, onRejected: () => void): Promise<void> {
         try {
             await fetch('/Payment/AddPayment', {
                 method: 'POST',
@@ -47,7 +47,7 @@ export default class DataLoader {
         }
     }
 
-    async updatePayment(data: string, onRejected: any): Promise<void> {
+    async updatePayment(data: string, onRejected: () => void): Promise<void> {
         try {
             fetch('/Payment/UpdatePayment', {
                 method: 'PUT',
@@ -60,7 +60,7 @@ export default class DataLoader {
         }
     }
 
-    async getPaymentTypes(onRejected: any): Promise<PaymentTypeResponse> {
+    async getPaymentTypes(onRejected: () => void): Promise<PaymentTypeResponse> {
         let response: PaymentTypeResponse;
 
         try {
@@ -74,7 +74,7 @@ export default class DataLoader {
         return response;
     }
 
-    async getPaymentCategories(onRejected: any): Promise<PaymentCategoryResponse> {
+    async getPaymentCategories(onRejected: () => void): Promise<PaymentCategoryResponse> {
         let response: PaymentCategoryResponse;
 
         try {
@@ -88,7 +88,7 @@ export default class DataLoader {
         return response;
     }
 
-    async getPayment(id: number, onRejected: any): Promise<IPaymentResponseModel> {
+    async getPayment(id: number, onRejected: () => void): Promise<IPaymentResponseModel> {
         let response: IPaymentResponseModel;
 
         try {
@@ -102,7 +102,7 @@ export default class DataLoader {
         return response
     }
 
-    async getBankAccountsBalanceToDate(toDate: string, onRejected: any): Promise<IBankAccountBalanceResponseModel> {
+    async getBankAccountsBalanceToDate(toDate: string, onRejected: () => void): Promise<IBankAccountBalanceResponseModel> {
         let response: IBankAccountBalanceResponseModel;
 
         try {
