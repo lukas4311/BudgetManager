@@ -1,6 +1,6 @@
 ﻿namespace ManagerWeb.Models.DTOs
 {
-    internal class BankBalanceModel
+    public class BankBalanceModel
     {
         public int Id { get; set; }
 

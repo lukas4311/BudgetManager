@@ -45,6 +45,8 @@ namespace ManagerWeb
             services.ConfigureIoCRepositories();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IBankAccountService, BankAccountService>();
 
             services.AddControllersWithViews();
         }
