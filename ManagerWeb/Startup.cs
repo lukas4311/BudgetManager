@@ -44,6 +44,7 @@ namespace ManagerWeb
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.ConfigureIoCRepositories();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPaymentService, PaymentService>();
 
             services.AddControllersWithViews();
         }
