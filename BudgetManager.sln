@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerWeb", "ManagerWeb\Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentIntegrationApi", "InvestmentIntegrationApi\InvestmentIntegrationApi.csproj", "{3AF953B7-222B-4A6F-AF49-C87050124EBC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Service\Repository.csproj", "{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repositories\Repository.csproj", "{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
