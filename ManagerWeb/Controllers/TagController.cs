@@ -30,10 +30,16 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddTag(TagModel tagModel)
+        public JsonResult AddTagToPayment(TagModel tagModel)
         {
             this.tagService.AddTag(tagModel);
 
+            return Json(new {});
+        }
+
+        [HttpDelete]
+        public JsonResult RemoveTagFromPayment()
+        {
             return Json(new {});
         }
 
