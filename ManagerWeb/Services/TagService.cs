@@ -65,6 +65,14 @@ namespace ManagerWeb.Services
             this.tagRepository.Save();
         }
 
+        public void RemoveTagFromPayment(int tagId, int paymentId)
+        {
+            PaymentTag paymentTag = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId && t.TagId == tagId).Single();
+
+            this.paymentTagRepository.Delete(paymentTag);
+            this.paymentTagRepository.Save();
+        }
+
         public void DeleteTag(int tagId)
         {
             Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
