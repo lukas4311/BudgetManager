@@ -5,8 +5,10 @@ namespace ManagerWeb.Services
 {
     public interface ITagService
     {
-        void AddTag(TagModel tagModel);
+        void AddTagToPayment(AddTagModel tagModel);
+
         void DeleteTag(int tagId);
+
         IEnumerable<TagModel> GetPaymentTags();
     }
 }

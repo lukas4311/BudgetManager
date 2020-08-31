@@ -1,6 +1,7 @@
 ﻿using Data.DataModels;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Repository;
 using System;
 using System.Collections.Generic;
@@ -13,35 +14,55 @@ namespace ManagerWeb.Services
         private const string AlreadyExist = "Tag with this code already exists";
         private const string DoesntExists = "Tag doesn't exists";
         private readonly ITagRepository tagRepository;
-        private readonly IPaymentRepository paymentRepository;
+        private readonly IPaymentTagRepository paymentTagRepository;
+        private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public IPaymentRepository PaymentRepository { get; }
-
-        public TagService(ITagRepository tagRepository, IPaymentRepository paymentRepository, IHttpContextAccessor httpContextAccessor)
+        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.tagRepository = tagRepository;
-            this.paymentRepository = paymentRepository;
+            this.paymentTagRepository = paymentTagRepository;
+            this.userIdentityRepository = userIdentityRepository;
             this.httpContextAccessor = httpContextAccessor;
         }
 
         public IEnumerable<TagModel> GetPaymentTags()
         {
             string userName = this.httpContextAccessor.HttpContext.User.Identity.Name;
-
-            return this.tagRepository.FindAll().Select(t => new TagModel
-            {
-                Code = t.Code,
-                Id = t.Id
-            });
+            return this.userIdentityRepository.FindByCondition(u => u.Login == userName)
+                .Include(p => p.BankAccounts)
+                .SelectMany(a => a.BankAccounts)
+                .SelectMany(t => t.Payments)
+                .SelectMany(p => p.PaymentTags)
+                .Select(t => new TagModel
+                {
+                    Code = t.Tag.Code,
+                    Id = t.Id
+                })
+                .Distinct();
         }
 
-        public void AddTag(TagModel tagModel)
+        public void AddTagToPayment(AddTagModel tagModel)
         {
             bool tagCodeExists = this.tagRepository.FindByCondition(t => string.Compare(t.Code, tagModel.Code, true) == 0).Any();
 
             if (tagCodeExists)
                 throw new ArgumentException(AlreadyExist);
+
+            Tag tag = new Tag
+            {
+                Code = tagModel.Code,
+                Id = tagModel.Id
+            };
+
+            this.tagRepository.Create(tag);
+            this.paymentTagRepository.Create(new PaymentTag
+            {
+                PaymentId = tagModel.PaymentId,
+                TagId = tag.Id
+            });
+
+            this.tagRepository.Save();
         }
 
         public void DeleteTag(int tagId)
@@ -51,7 +72,13 @@ namespace ManagerWeb.Services
             if (tag == null)
                 throw new ArgumentException(DoesntExists);
 
+            foreach (PaymentTag paymentTag in this.paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))
+            {
+                this.paymentTagRepository.Delete(paymentTag);
+            }
+
             this.tagRepository.Delete(tag);
+            this.tagRepository.Save();
         }
     }
 }

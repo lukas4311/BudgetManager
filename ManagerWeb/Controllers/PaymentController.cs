@@ -23,7 +23,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetPaymentsData(DateTime? fromDate, int? bankAccountId)
         {
             List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, bankAccountId);
-
             return Json(payments);
         }
 
@@ -31,7 +30,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetPaymentTypes()
         {
             List<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
-
             return Json(new { success = true, types = paymentTypes });
         }
 
@@ -39,7 +37,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetPaymentCategories()
         {
             List<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
-
             return Json(new { success = true, categories = paymentCategories });
         }
 
@@ -47,7 +44,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetBankAccounts()
         {
             List<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
-
             return Json(new { success = true, bankAccounts });
         }
 
@@ -55,7 +51,6 @@ namespace ManagerWeb.Controllers
         public JsonResult AddPayment([FromBody] PaymentViewModel paymentViewModel)
         {
             this.paymentService.AddPayment(paymentViewModel);
-
             return Json(new { success = true });
         }
 
@@ -63,7 +58,6 @@ namespace ManagerWeb.Controllers
         public JsonResult UpdatePayment([FromBody] PaymentViewModel paymentViewModel)
         {
             this.paymentService.UpdatePayment(paymentViewModel);
-
             return Json(new { success = true });
         }
 
@@ -71,7 +65,6 @@ namespace ManagerWeb.Controllers
         public JsonResult GetPayment(int id)
         {
             PaymentViewModel payment = this.paymentService.GetPayment(id);
-
             return Json(new { success = true, payment });
         }
     }

@@ -1,12 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using Repository;
-using System.Linq;
 using ManagerWeb.Models.DTOs;
 using System.Collections.Generic;
-using System;
-using Data.DataModels;
 using ManagerWeb.Services;
 
 namespace ManagerWeb.Controllers
@@ -25,15 +20,13 @@ namespace ManagerWeb.Controllers
         public JsonResult GetPaymentTags()
         {
             IEnumerable<TagModel> tags = this.tagService.GetPaymentTags();
-
             return Json(new { tags });
         }
 
         [HttpPost]
-        public JsonResult AddTagToPayment(TagModel tagModel)
+        public JsonResult AddTagToPayment([FromBody]AddTagModel tagModel)
         {
-            this.tagService.AddTag(tagModel);
-
+            this.tagService.AddTagToPayment(tagModel);
             return Json(new {});
         }
 
@@ -47,7 +40,6 @@ namespace ManagerWeb.Controllers
         public JsonResult DeleteTag(int tagId)
         {
             this.tagService.DeleteTag(tagId);
-
             return Json(new {});
         }
     }
