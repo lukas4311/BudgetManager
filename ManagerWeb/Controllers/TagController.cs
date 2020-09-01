@@ -31,8 +31,9 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpDelete]
-        public JsonResult RemoveTagFromPayment()
+        public JsonResult RemoveTagFromPayment([FromBody]int tagId, int paymentId)
         {
+            this.tagService.RemoveTagFromPayment(tagId, paymentId);
             return Json(new {});
         }
 

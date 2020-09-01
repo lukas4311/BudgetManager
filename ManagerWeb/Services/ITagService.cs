@@ -10,5 +10,7 @@ namespace ManagerWeb.Services
         void DeleteTag(int tagId);
 
         IEnumerable<TagModel> GetPaymentTags();
+
+        void RemoveTagFromPayment(int tagId, int paymentId);
     }
 }
