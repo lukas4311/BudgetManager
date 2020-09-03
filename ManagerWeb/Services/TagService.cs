@@ -52,7 +52,6 @@ namespace ManagerWeb.Services
             Tag tag = new Tag
             {
                 Code = tagModel.Code,
-                Id = tagModel.Id
             };
 
             this.tagRepository.Create(tag);

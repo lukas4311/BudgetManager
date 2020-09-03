@@ -115,4 +115,15 @@ export default class DataLoader {
 
         return response
     }
+
+    async addTagToPayment(code: string, paymentId: number): Promise<void>
+    {
+        let dataJson = JSON.stringify({code, paymentId});
+
+        fetch('/Tag/AddTagToPayment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: dataJson,
+        });
+    }
 }
