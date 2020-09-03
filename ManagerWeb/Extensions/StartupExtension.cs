@@ -21,6 +21,7 @@ namespace ManagerWeb.Extensions
             services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddTransient<IBankAccountRepository, BankAccountRepository>();
             services.AddTransient<IUserIdentityRepository, UserIdentityRepository>();
+            services.AddTransient<IPaymentTagRepository, PaymentTagRepository>();
             services.AddTransient<ITagRepository, TagRepository>();
         }
     }

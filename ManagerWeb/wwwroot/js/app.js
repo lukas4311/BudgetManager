@@ -675,6 +675,40 @@ class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
         this.requiredMessage = "Zadejte hodnotu.";
+        this.processPaymentTypesData = (data) => {
+            if (data.success) {
+                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
+            }
+        };
+        this.processPaymentCategoryData = (data) => {
+            if (data.success) {
+                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
+            }
+        };
+        this.processPaymentData = (data) => {
+            if (data.success) {
+                this.setState({
+                    name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '',
+                    paymentTypeId: data.payment.paymentTypeId, paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
+                });
+            }
+        };
+        this.confirmPayment = (e) => {
+            e.preventDefault();
+            this.setState({ disabledConfirm: true });
+            const data = this.state;
+            let dataJson = JSON.stringify(data);
+            if (this.state.id != undefined) {
+                this.dataLoader.updatePayment(dataJson, this.onError);
+            }
+            else {
+                this.dataLoader.addPayment(dataJson, this.onError);
+            }
+            this.props.handleClose();
+        };
+        this.onError = () => {
+            this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
+        };
         this.handleChangeName = (e) => {
             let errorMessage = '';
             this.setState({ name: e.target.value });
@@ -703,41 +737,30 @@ class PaymentForm extends React.Component {
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
             }
         };
-        this.confirmPayment = this.confirmPayment.bind(this);
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        this.handleChangeDescription = this.handleChangeDescription.bind(this);
-        this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.changeCategory = this.changeCategory.bind(this);
-        this.changeType = this.changeType.bind(this);
-        this.onError = this.onError.bind(this);
-        this.processPaymentTypesData = this.processPaymentTypesData.bind(this);
-        this.processPaymentCategoryData = this.processPaymentCategoryData.bind(this);
-        this.processPaymentData = this.processPaymentData.bind(this);
+        this.generateErrorMessageIfError = (propertyName) => {
+            if (this.state.formErrors[propertyName].length > 0)
+                return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
+            return '';
+        };
+        this.generateInput = (propertyName, placeholder, handler) => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
+                    React.createElement("span", { className: "focus-bg" })),
+                this.generateErrorMessageIfError(propertyName)));
+        };
+        this.changeType = (e, id) => {
+            e.preventDefault();
+            this.setState({ paymentTypeId: id });
+        };
+        this.changeCategory = (e) => {
+            this.setState({ paymentCategoryId: parseInt(e.target.value) });
+        };
         this.state = {
             name: '', amount: 0, date: moment_1.default(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
         };
         this.dataLoader = new DataLoader_1.default();
-    }
-    processPaymentTypesData(data) {
-        if (data.success) {
-            this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
-        }
-    }
-    processPaymentCategoryData(data) {
-        if (data.success) {
-            this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
-        }
-    }
-    processPaymentData(data) {
-        if (data.success) {
-            this.setState({
-                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '',
-                paymentTypeId: data.payment.paymentTypeId, paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-            });
-        }
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -751,45 +774,10 @@ class PaymentForm extends React.Component {
             }
         });
     }
-    confirmPayment(e) {
-        e.preventDefault();
-        this.setState({ disabledConfirm: true });
-        const data = this.state;
-        let dataJson = JSON.stringify(data);
-        if (this.state.id != undefined) {
-            this.dataLoader.updatePayment(dataJson, this.onError);
-        }
-        else {
-            this.dataLoader.addPayment(dataJson, this.onError);
-        }
-        this.props.handleClose();
-    }
-    onError() {
-        this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
-    }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
             return " inputError";
         return '';
-    }
-    generateErrorMessageIfError(propertyName) {
-        if (this.state.formErrors[propertyName].length > 0)
-            return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
-        return '';
-    }
-    generateInput(propertyName, placeholder, handler) {
-        return (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
-                React.createElement("span", { className: "focus-bg" })),
-            this.generateErrorMessageIfError(propertyName)));
-    }
-    changeType(e, id) {
-        e.preventDefault();
-        this.setState({ paymentTypeId: id });
-    }
-    changeCategory(e) {
-        this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
     render() {
         return (React.createElement("div", { className: "bg-prussianBlue text-white" },
@@ -1258,6 +1246,16 @@ class DataLoader {
                 onRejected();
             }
             return response;
+        });
+    }
+    addTagToPayment(code, paymentId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let dataJson = JSON.stringify({ code, paymentId });
+            fetch('/Tag/AddTagToPayment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: dataJson,
+            });
         });
     }
 }

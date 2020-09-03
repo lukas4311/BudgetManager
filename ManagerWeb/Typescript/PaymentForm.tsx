@@ -18,19 +18,6 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     constructor(props: IPaymentFormProps) {
         super(props);
-        this.confirmPayment = this.confirmPayment.bind(this);
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        this.handleChangeDescription = this.handleChangeDescription.bind(this);
-        this.generateErrorMessageIfError = this.generateErrorMessageIfError.bind(this);
-        this.changeCategory = this.changeCategory.bind(this);
-        this.changeType = this.changeType.bind(this);
-        this.onError = this.onError.bind(this);
-        this.processPaymentTypesData = this.processPaymentTypesData.bind(this);
-        this.processPaymentCategoryData = this.processPaymentCategoryData.bind(this);
-        this.processPaymentData = this.processPaymentData.bind(this);
-
         this.state = {
             name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
@@ -38,19 +25,19 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.dataLoader = new DataLoader();
     }
 
-    private processPaymentTypesData(data: PaymentTypeResponse ){
+    private processPaymentTypesData = (data: PaymentTypeResponse ) => {
         if (data.success) {
             this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
         }
     }
 
-    private processPaymentCategoryData(data: PaymentCategoryResponse ){
+    private processPaymentCategoryData = (data: PaymentCategoryResponse ) => {
         if (data.success) {
             this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
         }
     } 
 
-    private processPaymentData(data: IPaymentResponseModel ){
+    private processPaymentData = (data: IPaymentResponseModel ) => {
         if (data.success) {
             this.setState({
                 name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', 
@@ -71,7 +58,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         }
     }
 
-    private confirmPayment(e: React.FormEvent<HTMLFormElement>): void {
+    private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         this.setState({ disabledConfirm: true });
         const data = this.state;
@@ -86,7 +73,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.props.handleClose();
     }
 
-    private onError() {
+    private onError = () => {
         this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
     }
 
@@ -133,14 +120,14 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         return '';
     }
 
-    private generateErrorMessageIfError(propertyName: string): JSX.Element | '' {
+    private generateErrorMessageIfError = (propertyName: string): JSX.Element | '' => {
         if (this.state.formErrors[propertyName].length > 0)
             return <span className="inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
 
         return '';
     }
 
-    private generateInput(propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) {
+    private generateInput = (propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
         return (
             <React.Fragment>
                 <div className="relative inline-block float-left ml-6 w-2/3">
@@ -152,12 +139,12 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         );
     }
 
-    private changeType(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
+    private changeType = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) => {
         e.preventDefault();
         this.setState({ paymentTypeId: id });
     }
 
-    private changeCategory(e: React.ChangeEvent<HTMLSelectElement>) {
+    private changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
 
