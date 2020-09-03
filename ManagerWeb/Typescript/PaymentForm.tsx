@@ -5,6 +5,7 @@ import { PaymentCategoryResponse } from './Model/PaymentCategoryResponse';
 import { IPaymentModel } from './Model/IPaymentModel';
 import { IPaymentResponseModel } from './Model/IPaymentResponseModel';
 import moment from 'moment';
+import PaymentTagManager from './Components/PaymentTagManager';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -20,7 +21,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         super(props);
         this.state = {
             name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
-            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
+            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
+            tags: ['test']
         };
         this.dataLoader = new DataLoader();
     }
@@ -156,6 +158,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                 </div>
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.confirmPayment}>
+                    <PaymentTagManager tags={this.state.tags}/>
                     <div className="w-full">
                         <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {

@@ -20,4 +20,5 @@ export interface IPaymentModel {
     };
     disabledConfirm: boolean;
     errorMessage: string;
+    tags: string[]
 }

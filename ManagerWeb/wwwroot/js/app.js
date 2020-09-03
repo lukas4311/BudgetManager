@@ -204,6 +204,42 @@ exports.LineChart = LineChart;
 
 /***/ }),
 
+/***/ "./Typescript/Components/PaymentTagManager.tsx":
+/*!*****************************************************!*\
+  !*** ./Typescript/Components/PaymentTagManager.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class TagComponentState {
+}
+class TagComponentProps {
+}
+class PaymentTagManager extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.state = { tags: props.tags };
+    }
+    render() {
+        return (react_1.default.createElement("div", null,
+            react_1.default.createElement("p", null, "Tag komponenta"),
+            this.state.tags.map(t => (react_1.default.createElement("div", null,
+                react_1.default.createElement("span", null, t),
+                react_1.default.createElement("span", null, "X"))))));
+    }
+}
+exports.default = PaymentTagManager;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/RadarChart.tsx":
 /*!**********************************************!*\
   !*** ./Typescript/Components/RadarChart.tsx ***!
@@ -671,6 +707,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ./Components/PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -758,7 +795,8 @@ class PaymentForm extends React.Component {
         };
         this.state = {
             name: '', amount: 0, date: moment_1.default(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
-            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined
+            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
+            tags: ['test']
         };
         this.dataLoader = new DataLoader_1.default();
     }
@@ -785,6 +823,7 @@ class PaymentForm extends React.Component {
                 React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.confirmPayment },
+                React.createElement(PaymentTagManager_1.default, { tags: this.state.tags }),
                 React.createElement("div", { className: "w-full" },
                     React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
                         return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
