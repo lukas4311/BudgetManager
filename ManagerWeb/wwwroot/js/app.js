@@ -225,14 +225,31 @@ class TagComponentProps {
 class PaymentTagManager extends react_1.default.Component {
     constructor(props) {
         super(props);
-        this.state = { tags: props.tags };
+        this.tagInputLost = () => {
+            let tags = this.state.tags;
+            tags.push(this.state.tagName);
+            this.setState({ tags: tags, tagName: "" });
+        };
+        this.handleChangeName = (e) => {
+            this.setState({ tagName: e.target.value });
+        };
+        this.deleteTag = (event, tagName) => {
+            let tags = this.state.tags;
+            let index = tags.indexOf(tagName);
+            if (index != -1) {
+                tags.splice(index, 1);
+                this.setState({ tags: tags });
+            }
+        };
+        this.state = { tags: props.tags, tagName: "" };
     }
     render() {
-        return (react_1.default.createElement("div", null,
-            react_1.default.createElement("p", null, "Tag komponenta"),
-            this.state.tags.map(t => (react_1.default.createElement("div", null,
-                react_1.default.createElement("span", null, t),
-                react_1.default.createElement("span", null, "X"))))));
+        return (react_1.default.createElement("div", { className: "flex mb-4" },
+            react_1.default.createElement("div", { className: "w-7/10 pl-6 text-left" }, this.state.tags.map(t => (react_1.default.createElement("div", { key: t, className: "bg-battleshipGrey inline rounded-sm mr-2" },
+                react_1.default.createElement("span", { className: "mr-4 mb-1 ml-1" }, t),
+                react_1.default.createElement("span", { className: "closeTag align-text-top mr-1 mt-1", onClick: (e) => this.deleteTag(e, t) }, "X"))))),
+            react_1.default.createElement("div", { className: "w-3/10 pr-6" },
+                react_1.default.createElement("input", { className: "text-black border-1 border-white rounded-md w-32 right", onBlur: this.tagInputLost, value: this.state.tagName, onChange: this.handleChangeName }))));
     }
 }
 exports.default = PaymentTagManager;
