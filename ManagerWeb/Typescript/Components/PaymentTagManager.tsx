@@ -43,7 +43,7 @@ export default class PaymentTagManager extends React.Component<TagComponentProps
                     {this.state.tags.map(t => (
                         <div key={t} className="bg-battleshipGrey inline rounded-sm mr-2">
                             <span className="mr-4 mb-1 ml-1">{t}</span>
-                            <span className="closeTag align-text-top mr-1 mt-1" onClick={(e) => this.deleteTag(e, t)}>X</span>
+                            <span className="closeTag align-text-top mr-1 mt-1 cursor-pointer" onClick={(e) => this.deleteTag(e, t)}>X</span>
                         </div>
                     ))}
                 </div>
