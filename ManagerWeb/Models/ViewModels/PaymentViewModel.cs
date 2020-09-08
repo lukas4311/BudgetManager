@@ -30,5 +30,7 @@ namespace ManagerWeb.Models.ViewModels
         public string PaymentCategoryIcon { get; set; }
 
         public string PaymentCategoryCode { get; set; }
+
+        public string[] Tags { get; set; }
     }
 }

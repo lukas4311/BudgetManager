@@ -113,5 +113,9 @@ namespace ManagerWeb.Services
             })
             .Single();
         }
+
+        public void UpdateAllTags(string[] tags) { 
+            // TODO: pridat logiku na kontrolu vsech tagu a rozdil zupdatovat
+        }
     }
 }

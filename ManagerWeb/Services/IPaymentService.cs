@@ -15,5 +15,6 @@ namespace ManagerWeb.Services
         List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, int? bankAccountId);
         List<PaymentTypeModel> GetPaymentTypes();
         void UpdatePayment(PaymentViewModel paymentViewModel);
+        void UpdateAllTags(string[] tags);
     }
 }

@@ -13,10 +13,12 @@ namespace ManagerWeb.Controllers
     public class PaymentController : Controller
     {
         private readonly IPaymentService paymentService;
+        private readonly ITagService tagService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaymentService paymentService, ITagService tagService)
         {
             this.paymentService = paymentService;
+            this.tagService = tagService;
         }
 
         [HttpGet]
@@ -51,6 +53,7 @@ namespace ManagerWeb.Controllers
         public JsonResult AddPayment([FromBody] PaymentViewModel paymentViewModel)
         {
             this.paymentService.AddPayment(paymentViewModel);
+            this.paymentService.UpdateAllTags(paymentViewModel.Tags);
             return Json(new { success = true });
         }
 
