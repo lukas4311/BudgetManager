@@ -12,5 +12,7 @@ namespace ManagerWeb.Services
         IEnumerable<TagModel> GetPaymentTags();
 
         void RemoveTagFromPayment(int tagId, int paymentId);
+
+        void UpdateAllTags(List<string> tags, int paymentId);
     }
 }

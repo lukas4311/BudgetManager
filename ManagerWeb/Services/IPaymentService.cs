@@ -8,13 +8,18 @@ namespace ManagerWeb.Services
 {
     public interface IPaymentService
     {
-        void AddPayment(PaymentViewModel paymentViewModel);
+        int AddPayment(PaymentViewModel paymentViewModel);
+
         List<BankAccount> GetBankAccounts();
+
         PaymentViewModel GetPayment(int id);
+
         List<PaymentCategoryModel> GetPaymentCategories();
+
         List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, int? bankAccountId);
+
         List<PaymentTypeModel> GetPaymentTypes();
+
         void UpdatePayment(PaymentViewModel paymentViewModel);
-        void UpdateAllTags(string[] tags);
     }
 }

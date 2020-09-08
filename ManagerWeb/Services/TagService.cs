@@ -44,17 +44,17 @@ namespace ManagerWeb.Services
 
         public void AddTagToPayment(AddTagModel tagModel)
         {
-            bool tagCodeExists = this.tagRepository.FindByCondition(t => string.Compare(t.Code, tagModel.Code, true) == 0).Any();
+            Tag tag = this.tagRepository.FindByCondition(t => string.Compare(t.Code, tagModel.Code, true) == 0).SingleOrDefault();
 
-            if (tagCodeExists)
-                throw new ArgumentException(AlreadyExist);
-
-            Tag tag = new Tag
+            if (tag is null)
             {
-                Code = tagModel.Code,
-            };
+                tag = new Tag
+                {
+                    Code = tagModel.Code,
+                };
+                this.tagRepository.Create(tag);
+            }
 
-            this.tagRepository.Create(tag);
             this.paymentTagRepository.Create(new PaymentTag
             {
                 PaymentId = tagModel.PaymentId,
@@ -86,6 +86,24 @@ namespace ManagerWeb.Services
 
             this.tagRepository.Delete(tag);
             this.tagRepository.Save();
+        }
+
+        public void UpdateAllTags(List<string> tags, int paymentId)
+        {
+            List<(string tag, int tagId)> tagsOnPayment = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId).Include(i => i.Tag).ToList().Select(m => (tag: m.Tag.Code, tagId: m.TagId)).ToList();
+
+            IEnumerable<(string tag, int tagId)> toDelete = tagsOnPayment.Where(t => tags.Contains(t.tag));
+            IEnumerable<string> toAdd = tags.Where(t => !tagsOnPayment.Exists(a => a.tag == t));
+
+            foreach ((string tag, int tagId) in toDelete)
+            {
+                this.RemoveTagFromPayment(tagId, paymentId);
+            }
+
+            foreach (string tag in toAdd)
+            {
+                this.AddTagToPayment(new AddTagModel { Code = tag, PaymentId = paymentId });
+            }
         }
     }
 }

@@ -66,7 +66,7 @@ namespace ManagerWeb.Services
             return this.bankAccountRepository.FindAll().ToList();
         }
 
-        public void AddPayment(PaymentViewModel paymentViewModel)
+        public int AddPayment(PaymentViewModel paymentViewModel)
         {
             Payment payment = new Payment
             {
@@ -81,6 +81,7 @@ namespace ManagerWeb.Services
 
             this.paymentRepository.Create(payment);
             this.paymentRepository.Save();
+            return payment.Id;
         }
 
         public void UpdatePayment(PaymentViewModel paymentViewModel)
@@ -112,10 +113,6 @@ namespace ManagerWeb.Services
                 PaymentTypeId = a.PaymentTypeId
             })
             .Single();
-        }
-
-        public void UpdateAllTags(string[] tags) { 
-            // TODO: pridat logiku na kontrolu vsech tagu a rozdil zupdatovat
         }
     }
 }

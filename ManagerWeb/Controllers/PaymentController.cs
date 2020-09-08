@@ -52,8 +52,9 @@ namespace ManagerWeb.Controllers
         [HttpPost]
         public JsonResult AddPayment([FromBody] PaymentViewModel paymentViewModel)
         {
-            this.paymentService.AddPayment(paymentViewModel);
-            this.paymentService.UpdateAllTags(paymentViewModel.Tags);
+            int paymentId = this.paymentService.AddPayment(paymentViewModel);
+
+            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
             return Json(new { success = true });
         }
 

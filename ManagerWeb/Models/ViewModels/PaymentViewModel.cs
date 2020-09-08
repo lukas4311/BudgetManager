@@ -1,5 +1,6 @@
 ﻿using ManagerWeb.Converters;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -31,6 +32,6 @@ namespace ManagerWeb.Models.ViewModels
 
         public string PaymentCategoryCode { get; set; }
 
-        public string[] Tags { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
