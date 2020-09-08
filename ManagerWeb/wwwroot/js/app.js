@@ -229,6 +229,7 @@ class PaymentTagManager extends react_1.default.Component {
             let tags = this.state.tags;
             tags.push(this.state.tagName);
             this.setState({ tags: tags, tagName: "" });
+            this.props.tagsChange(tags);
         };
         this.handleChangeName = (e) => {
             this.setState({ tagName: e.target.value });
@@ -239,6 +240,7 @@ class PaymentTagManager extends react_1.default.Component {
             if (index != -1) {
                 tags.splice(index, 1);
                 this.setState({ tags: tags });
+                this.props.tagsChange(tags);
             }
         };
         this.state = { tags: props.tags, tagName: "" };
@@ -247,7 +249,7 @@ class PaymentTagManager extends react_1.default.Component {
         return (react_1.default.createElement("div", { className: "flex mb-4" },
             react_1.default.createElement("div", { className: "w-7/10 pl-6 text-left" }, this.state.tags.map(t => (react_1.default.createElement("div", { key: t, className: "bg-battleshipGrey inline rounded-sm mr-2" },
                 react_1.default.createElement("span", { className: "mr-4 mb-1 ml-1" }, t),
-                react_1.default.createElement("span", { className: "closeTag align-text-top mr-1 mt-1", onClick: (e) => this.deleteTag(e, t) }, "X"))))),
+                react_1.default.createElement("span", { className: "closeTag align-text-top mr-1 mt-1 cursor-pointer", onClick: (e) => this.deleteTag(e, t) }, "X"))))),
             react_1.default.createElement("div", { className: "w-3/10 pr-6" },
                 react_1.default.createElement("input", { className: "text-black border-1 border-white rounded-md w-32 right", onBlur: this.tagInputLost, value: this.state.tagName, onChange: this.handleChangeName }))));
     }
@@ -810,6 +812,9 @@ class PaymentForm extends React.Component {
         this.changeCategory = (e) => {
             this.setState({ paymentCategoryId: parseInt(e.target.value) });
         };
+        this.tagsChange = (tags) => {
+            this.setState({ tags: tags });
+        };
         this.state = {
             name: '', amount: 0, date: moment_1.default(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
@@ -840,7 +845,7 @@ class PaymentForm extends React.Component {
                 React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.confirmPayment },
-                React.createElement(PaymentTagManager_1.default, { tags: this.state.tags }),
+                React.createElement(PaymentTagManager_1.default, { tags: this.state.tags, tagsChange: this.tagsChange }),
                 React.createElement("div", { className: "w-full" },
                     React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
                         return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);

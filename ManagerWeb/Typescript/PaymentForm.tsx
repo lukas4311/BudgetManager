@@ -150,6 +150,10 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
     }
 
+    private tagsChange = (tags: string[]) => {
+        this.setState({tags: tags});
+    }
+
     public render() {
         return (
             <div className="bg-prussianBlue text-white">
@@ -158,7 +162,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                 </div>
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.confirmPayment}>
-                    <PaymentTagManager tags={this.state.tags}/>
+                    <PaymentTagManager tags={this.state.tags} tagsChange={this.tagsChange}/>
                     <div className="w-full">
                         <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {

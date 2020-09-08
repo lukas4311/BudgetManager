@@ -6,7 +6,8 @@ class TagComponentState {
 }
 
 class TagComponentProps {
-    tags: string[]
+    tags: string[];
+    tagsChange: (tags: string[]) => void;
 }
 
 export default class PaymentTagManager extends React.Component<TagComponentProps, TagComponentState>{
@@ -20,6 +21,7 @@ export default class PaymentTagManager extends React.Component<TagComponentProps
         let tags: string[] = this.state.tags;
         tags.push(this.state.tagName);
         this.setState({ tags: tags, tagName: "" });
+        this.props.tagsChange(tags);
     }
 
     private handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -30,9 +32,10 @@ export default class PaymentTagManager extends React.Component<TagComponentProps
         let tags = this.state.tags;
         let index = tags.indexOf(tagName);
 
-        if(index != -1){
+        if (index != -1) {
             tags.splice(index, 1);
-            this.setState({tags: tags});
+            this.setState({ tags: tags });
+            this.props.tagsChange(tags);
         }
     };
 
