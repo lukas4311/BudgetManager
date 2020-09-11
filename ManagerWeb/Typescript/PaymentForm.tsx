@@ -22,7 +22,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.state = {
             name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
             paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
-            tags: ['test']
+            tags: []
         };
         this.dataLoader = new DataLoader();
     }

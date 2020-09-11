@@ -44,7 +44,7 @@ namespace ManagerWeb.Services
 
         public void AddTagToPayment(AddTagModel tagModel)
         {
-            Tag tag = this.tagRepository.FindByCondition(t => string.Compare(t.Code, tagModel.Code, true) == 0).SingleOrDefault();
+            Tag tag = this.tagRepository.FindAll().ToList().SingleOrDefault(t => string.Compare(t.Code, tagModel.Code, true) == 0);
 
             if (tag is null)
             {
