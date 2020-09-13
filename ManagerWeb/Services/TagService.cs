@@ -65,9 +65,7 @@ namespace ManagerWeb.Services
                 paymentTag.TagId = tag.Id;
             }
 
-
             this.paymentTagRepository.Create(paymentTag);
-
             this.paymentTagRepository.Save();
         }
 
