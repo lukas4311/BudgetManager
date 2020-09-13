@@ -57,11 +57,6 @@ namespace Data
                 .HasOne<Tag>(sc => sc.Tag)
                 .WithMany(s => s.PaymentTags)
                 .HasForeignKey(sc => sc.TagId);
-
-            modelBuilder.Entity<Tag>()
-                .HasMany(s => s.PaymentTags)
-                .WithOne(s => s.Tag)
-                .HasForeignKey();
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
