@@ -44,6 +44,11 @@ namespace ManagerWeb.Services
 
         public void AddTagToPayment(AddTagModel tagModel)
         {
+            PaymentTag paymentTag = new PaymentTag
+            {
+                PaymentId = tagModel.PaymentId
+            };
+
             Tag tag = this.tagRepository.FindAll().ToList().SingleOrDefault(t => string.Compare(t.Code, tagModel.Code, true) == 0);
 
             if (tag is null)
@@ -53,15 +58,17 @@ namespace ManagerWeb.Services
                     Code = tagModel.Code,
                 };
                 this.tagRepository.Create(tag);
+                paymentTag.Tag = tag;
+            }
+            else
+            {
+                paymentTag.TagId = tag.Id;
             }
 
-            this.paymentTagRepository.Create(new PaymentTag
-            {
-                PaymentId = tagModel.PaymentId,
-                TagId = tag.Id
-            });
 
-            this.tagRepository.Save();
+            this.paymentTagRepository.Create(paymentTag);
+
+            this.paymentTagRepository.Save();
         }
 
         public void RemoveTagFromPayment(int tagId, int paymentId)
