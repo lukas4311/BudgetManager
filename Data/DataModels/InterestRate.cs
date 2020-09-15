@@ -8,7 +8,7 @@ namespace Data.DataModels
 
         public decimal RangeFrom { get; set; }
 
-        public decimal RangeTo { get; set; }
+        public decimal? RangeTo { get; set; }
 
         public decimal Value { get; set; }
 
