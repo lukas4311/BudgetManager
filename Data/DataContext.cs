@@ -14,34 +14,10 @@ namespace Data
             modelBuilder.ConfigureBankAccount();
             modelBuilder.ConfigurePaymentCategory();
             modelBuilder.ConfigurePayment();
-
-            modelBuilder.Entity<UserData>()
-                .HasOne(p => p.UserIdentity)
-                .WithOne(p => p.UserData)
-                .HasForeignKey<UserData>(d => d.UserIdentityId);
-
-            modelBuilder.Entity<TaxSetting>()
-                .HasIndex(b => b.TaxType)
-                .IsUnique();
-
-            modelBuilder.Entity<InterestRate>()
-                .Property(i => i.BankAccountId)
-                .IsRequired();
-
-            modelBuilder.Entity<InterestRate>()
-               .HasOne(e => e.BankAccount)
-               .WithMany(e => e.InterestRates)
-               .HasForeignKey(e => e.BankAccountId);
-
-            modelBuilder.Entity<PaymentTag>()
-                .HasOne<Payment>(sc => sc.Payment)
-                .WithMany(s => s.PaymentTags)
-                .HasForeignKey(sc => sc.PaymentId);
-
-            modelBuilder.Entity<PaymentTag>()
-                .HasOne<Tag>(sc => sc.Tag)
-                .WithMany(s => s.PaymentTags)
-                .HasForeignKey(sc => sc.TagId);
+            modelBuilder.ConfigureInterestRate();
+            modelBuilder.ConfigurePaymentTag();
+            modelBuilder.ConfigureUserData();
+            modelBuilder.ConfigureTax();
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
