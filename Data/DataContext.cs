@@ -12,6 +12,7 @@ namespace Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ConfigureBankAccount();
+            modelBuilder.ConfigurePaymentCategory();
 
             modelBuilder.Entity<UserData>()
                 .HasOne(p => p.UserIdentity)
