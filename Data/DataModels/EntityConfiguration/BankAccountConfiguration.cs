@@ -2,7 +2,7 @@
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class BankAccountConfigurationExtension
+    internal static class BankAccountConfiguration
     {
         private const int MaxLengthCode = 20;
 

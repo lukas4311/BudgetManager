@@ -13,26 +13,12 @@ namespace Data
         {
             modelBuilder.ConfigureBankAccount();
             modelBuilder.ConfigurePaymentCategory();
+            modelBuilder.ConfigurePayment();
 
             modelBuilder.Entity<UserData>()
                 .HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)
                 .HasForeignKey<UserData>(d => d.UserIdentityId);
-
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.BankAccount)
-                .WithMany(e => e.Payments)
-                .HasForeignKey(e => e.BankAccountId);
-
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.PaymentCategory)
-                .WithMany(e => e.Payments)
-                .HasForeignKey(e => e.PaymentCategoryId);
-
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.PaymentType)
-                .WithMany(e => e.Payments)
-                .HasForeignKey(e => e.PaymentTypeId);
 
             modelBuilder.Entity<TaxSetting>()
                 .HasIndex(b => b.TaxType)
