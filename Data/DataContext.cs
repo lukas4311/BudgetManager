@@ -1,4 +1,5 @@
 ﻿using Data.DataModels;
+using Data.DataModels.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -10,15 +11,12 @@ namespace Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ConfigureBankAccount();
+
             modelBuilder.Entity<UserData>()
                 .HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)
                 .HasForeignKey<UserData>(d => d.UserIdentityId);
-
-            modelBuilder.Entity<BankAccount>()
-                .HasOne(e => e.UserIdentity)
-                .WithMany(e => e.BankAccounts)
-                .HasForeignKey(e => e.UserIdentityId);
 
             modelBuilder.Entity<Payment>()
                 .HasOne(e => e.BankAccount)
