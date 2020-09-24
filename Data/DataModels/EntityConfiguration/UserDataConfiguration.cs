@@ -1,31 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class UserDataConfiguration
+    internal class UserDataConfiguration : IEntityTypeConfiguration<UserData>
     {
         private const int NameMaxLenght = 100;
 
-        internal static void ConfigureUserData(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<UserData> builder)
         {
-            modelBuilder.Entity<UserData>()
-                .Property(u => u.FirstName)
+            builder.Property(u => u.FirstName)
+                    .HasMaxLength(NameMaxLenght)
+                    .IsRequired();
+
+            builder.Property(u => u.LastName)
                 .HasMaxLength(NameMaxLenght)
                 .IsRequired();
 
-            modelBuilder.Entity<UserData>()
-                .Property(u => u.LastName)
-                .HasMaxLength(NameMaxLenght)
-                .IsRequired();
-
-            modelBuilder.Entity<UserData>()
-                .Property(u => u.Phone)
+            builder.Property(u => u.Phone)
                 .HasMaxLength(9)
                 .IsFixedLength()
                 .IsRequired();
 
-            modelBuilder.Entity<UserData>()
-                .HasOne(p => p.UserIdentity)
+            builder.HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)
                 .HasForeignKey<UserData>(d => d.UserIdentityId);
         }

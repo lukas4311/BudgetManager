@@ -1,30 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class PaymentConfiguration
+    internal class PaymentConfiguration : IEntityTypeConfiguration<Payment>
     {
         private const int MaxNameLength = 100;
 
-        internal static void ConfigurePayment(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.BankAccount)
+            builder.HasOne(e => e.BankAccount)
                 .WithMany(e => e.Payments)
                 .HasForeignKey(e => e.BankAccountId);
 
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.PaymentCategory)
+            builder.HasOne(e => e.PaymentCategory)
                 .WithMany(e => e.Payments)
                 .HasForeignKey(e => e.PaymentCategoryId);
 
-            modelBuilder.Entity<Payment>()
-                .HasOne(e => e.PaymentType)
+            builder.HasOne(e => e.PaymentType)
                 .WithMany(e => e.Payments)
                 .HasForeignKey(e => e.PaymentTypeId);
 
-            modelBuilder.Entity<Payment>()
-                .Property(p => p.Name)
+            builder.Property(p => p.Name)
                 .HasMaxLength(MaxNameLength)
                 .IsRequired();
         }

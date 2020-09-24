@@ -11,20 +11,22 @@ namespace Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureBankAccount();
-            modelBuilder.ConfigurePaymentCategory();
-            modelBuilder.ConfigurePayment();
-            modelBuilder.ConfigureInterestRate();
-            modelBuilder.ConfigurePaymentTag();
-            modelBuilder.ConfigureUserData();
-            modelBuilder.ConfigureTax();
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+
+            //modelBuilder.ConfigureBankAccount();
+            //modelBuilder.ConfigurePaymentCategory();
+            //modelBuilder.ConfigurePayment();
+            //modelBuilder.ConfigureInterestRate();
+            //modelBuilder.ConfigurePaymentTag();
+            //modelBuilder.ConfigureUserData();
+            //modelBuilder.ConfigureTax();
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
 
         public DbSet<UserData> UserData { get; set; }
 
-        public DbSet<BankAccount> BankAccount { get; set; }
+        public DbSet<InterestRate> BankAccount { get; set; }
 
         public DbSet<Payment> Payment { get; set; }
 

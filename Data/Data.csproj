@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20200920164049_ChangePaymentCategoryConfigation.Designer.cs" />
     <Compile Remove="Migrations\20200920165033_ChangePaymentConfigation.cs" />
     <Compile Remove="Migrations\20200920165033_ChangePaymentConfigation.Designer.cs" />
+    <Compile Remove="Migrations\20200924165241_ConfigChanges.cs" />
+    <Compile Remove="Migrations\20200924165241_ConfigChanges.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

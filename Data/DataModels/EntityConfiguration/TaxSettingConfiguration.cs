@@ -1,20 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class TaxSettingConfiguration
+    internal class TaxSettingConfiguration : IEntityTypeConfiguration<TaxSetting>
     {
         private const int TaxTypeMaxLength = 50;
 
-        internal static void ConfigureTax(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<TaxSetting> builder)
         {
-            modelBuilder.Entity<TaxSetting>()
-                .Property(b => b.TaxType)
+            builder.Property(b => b.TaxType)
                 .HasMaxLength(TaxTypeMaxLength)
                 .IsRequired();
 
-            modelBuilder.Entity<TaxSetting>()
-                .HasIndex(b => b.TaxType)
+            builder.HasIndex(b => b.TaxType)
                 .IsUnique();
         }
     }

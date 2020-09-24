@@ -1,25 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class BankAccountConfiguration
+    internal class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
     {
         private const int MaxLengthCode = 20;
 
-        internal static void ConfigureBankAccount(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<BankAccount> builder)
         {
-            modelBuilder.Entity<BankAccount>()
-                .HasOne(e => e.UserIdentity)
+            builder.HasOne(e => e.UserIdentity)
                 .WithMany(e => e.BankAccounts)
                 .HasForeignKey(e => e.UserIdentityId);
 
-            modelBuilder.Entity<BankAccount>()
-                .Property(b => b.Code)
+            builder.Property(b => b.Code)
                 .HasMaxLength(MaxLengthCode)
                 .IsRequired();
 
-            modelBuilder.Entity<BankAccount>()
-                .Property(b => b.UserIdentityId)
+            builder.Property(b => b.UserIdentityId)
                 .HasDefaultValue();
         }
     }

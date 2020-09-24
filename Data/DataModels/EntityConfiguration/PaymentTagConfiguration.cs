@@ -1,20 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class PaymentTagConfiguration
+    internal class PaymentTagConfiguration : IEntityTypeConfiguration<PaymentTag>
     {
-        private const int MaxNameLength = 100;
-
-        internal static void ConfigurePaymentTag(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<PaymentTag> builder)
         {
-            modelBuilder.Entity<PaymentTag>()
-                .HasOne<Payment>(sc => sc.Payment)
+            builder.HasOne<Payment>(sc => sc.Payment)
                 .WithMany(s => s.PaymentTags)
                 .HasForeignKey(sc => sc.PaymentId);
 
-            modelBuilder.Entity<PaymentTag>()
-                .HasOne<Tag>(sc => sc.Tag)
+            builder.HasOne<Tag>(sc => sc.Tag)
                 .WithMany(s => s.PaymentTags)
                 .HasForeignKey(sc => sc.TagId);
         }

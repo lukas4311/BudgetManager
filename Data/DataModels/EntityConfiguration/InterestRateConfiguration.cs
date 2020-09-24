@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class InterestRateConfiguration
+    internal class InterestRateConfiguration : IEntityTypeConfiguration<InterestRate>
     {
-        internal static void ConfigureInterestRate(this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<InterestRate> builder)
         {
-            modelBuilder.Entity<InterestRate>()
-                .Property(i => i.BankAccountId)
+            builder.Property(i => i.BankAccountId)
                 .IsRequired();
 
-            modelBuilder.Entity<InterestRate>()
-               .HasOne(e => e.BankAccount)
+            builder.HasOne(e => e.BankAccount)
                .WithMany(e => e.InterestRates)
                .HasForeignKey(e => e.BankAccountId);
         }

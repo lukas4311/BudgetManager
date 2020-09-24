@@ -1,26 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Data.DataModels.EntityConfiguration
 {
-    internal static class PaymentCategoryConfiguration
+    internal class PaymentCategoryConfiguration : IEntityTypeConfiguration<PaymentCategory>
     {
         private const int MaxLengthCode = 20;
         private const int MaxLengthName = 100;
 
-        internal static void ConfigurePaymentCategory (this ModelBuilder modelBuilder)
+        public void Configure(EntityTypeBuilder<PaymentCategory> modelBuilder)
         {
-            modelBuilder.Entity<PaymentCategory>()
-                .Property(b => b.Code)
+            modelBuilder.Property(b => b.Code)
                 .HasMaxLength(MaxLengthCode)
                 .IsRequired();
 
-            modelBuilder.Entity<PaymentCategory>()
-                .Property(b => b.Icon)
+            modelBuilder.Property(b => b.Icon)
                 .HasMaxLength(MaxLengthCode)
                 .IsRequired();
 
-            modelBuilder.Entity<PaymentCategory>()
-                .Property(b => b.Name)
+            modelBuilder.Property(b => b.Name)
                 .HasMaxLength(MaxLengthName)
                 .IsRequired();
         }
