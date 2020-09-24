@@ -61,7 +61,7 @@ namespace ManagerWeb.Services
             }).ToList();
         }
 
-        public List<BankAccount> GetBankAccounts()
+        public List<InterestRate> GetBankAccounts()
         {
             return this.bankAccountRepository.FindAll().ToList();
         }
