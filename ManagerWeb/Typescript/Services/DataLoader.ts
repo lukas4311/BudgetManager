@@ -6,11 +6,11 @@ import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 
 export default class DataLoader {
-    async getPayments(filterDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
+    async getPayments(fromDate: string, toDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
         let response: IPaymentInfo[];
 
         try {
-            const res = await fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
+            const res = await fetch(`/Payment/GetPaymentsData?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
             response = await res.json();
         }
         catch (_) {
@@ -116,9 +116,8 @@ export default class DataLoader {
         return response
     }
 
-    async addTagToPayment(code: string, paymentId: number): Promise<void>
-    {
-        let dataJson = JSON.stringify({code, paymentId});
+    async addTagToPayment(code: string, paymentId: number): Promise<void> {
+        let dataJson = JSON.stringify({ code, paymentId });
 
         fetch('/Tag/AddTagToPayment', {
             method: 'POST',

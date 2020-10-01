@@ -16,7 +16,7 @@ namespace ManagerWeb.Services
 
         List<PaymentCategoryModel> GetPaymentCategories();
 
-        List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, int? bankAccountId);
+        List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId);
 
         List<PaymentTypeModel> GetPaymentTypes();
 

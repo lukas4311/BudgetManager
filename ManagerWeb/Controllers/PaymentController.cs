@@ -22,9 +22,9 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPaymentsData(DateTime? fromDate, int? bankAccountId)
+        public JsonResult GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId)
         {
-            List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, bankAccountId);
+            List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, bankAccountId);
             return Json(payments);
         }
 

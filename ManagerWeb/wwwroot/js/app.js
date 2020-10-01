@@ -912,6 +912,24 @@ class PaymentsOverview extends React.Component {
         this.onRejected = () => {
             this.setState({ apiError: this.apiErrorMessage });
         };
+        this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
+            if (payments != undefined) {
+                const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+                const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
+                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+                const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
+                this.setState({
+                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
+                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                    radarChartData: { dataSets: radarData }
+                });
+            }
+            else {
+                this.setState({ apiError: this.apiErrorMessage });
+            }
+        });
         this.filterClick = (filterKey) => {
             let selectedFilter = this.filters.find(f => f.key == filterKey);
             if (this.state.selectedFilter != selectedFilter) {
@@ -953,36 +971,25 @@ class PaymentsOverview extends React.Component {
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.setPayments = this.setPayments.bind(this);
-        this.setBankAccounts = this.setBankAccounts.bind(this);
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
     getPaymentData(daysBack, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let filterDate = moment_1.default(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-            const payments = yield this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
+            const payments = yield this.getExactDateRangeDaysPaymentData(moment_1.default(Date.now()).subtract(daysBack, 'days').toDate(), moment_1.default(Date.now()).toDate(), bankAccountId);
             this.setPayments(payments);
         });
     }
-    setPayments(payments) {
+    getPaymentDataForRange(dateFrom, dateTo, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (payments != undefined) {
-                const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
-                const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
-                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
-                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
-                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
-                const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
-                this.setState({
-                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
-                    radarChartData: { dataSets: radarData }
-                });
-            }
-            else {
-                this.setState({ apiError: this.apiErrorMessage });
-            }
+            const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+            this.setPayments(payments);
+        });
+    }
+    getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let filterDate = moment_1.default(dateFrom).format("YYYY-MM-DD");
+            return yield this.dataLoader.getPayments(filterDate, moment_1.default(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
         });
     }
     paymentEdit(id) {
@@ -1172,11 +1179,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
-    getPayments(filterDate, bankAccountId, onRejected) {
+    getPayments(fromDate, toDate, bankAccountId, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${filterDate}&bankAccountId=${bankAccountId}`);
+                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
                 response = yield res.json();
             }
             catch (_) {

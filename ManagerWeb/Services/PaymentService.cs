@@ -24,9 +24,9 @@ namespace ManagerWeb.Services
             this.bankAccountRepository = bankAccountRepository;
         }
 
-        public List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, int? bankAccountId)
+        public List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId)
         {
-            return this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue)
+            return this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue) && a.Date < (toDate ?? DateTime.MaxValue)
                 && (!bankAccountId.HasValue || a.BankAccountId == bankAccountId))
             .Include(a => a.PaymentType)
             .Include(a => a.PaymentCategory)

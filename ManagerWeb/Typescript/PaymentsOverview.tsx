@@ -54,24 +54,32 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
         };
-        this.setPayments = this.setPayments.bind(this);
-        this.setBankAccounts = this.setBankAccounts.bind(this);
 
         this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor();
     }
 
     private async getPaymentData(daysBack: number, bankAccountId: number) {
-        let filterDate: string = moment(Date.now()).subtract(daysBack, 'days').format("YYYY-MM-DD");
-        const payments = await this.dataLoader.getPayments(filterDate, bankAccountId, this.onRejected);
+        const payments = await this.getExactDateRangeDaysPaymentData(moment(Date.now()).subtract(daysBack, 'days').toDate(),
+            moment(Date.now()).toDate(), bankAccountId);
         this.setPayments(payments);
+    }
+
+    private async getPaymentDataForRange(dateFrom: Date, dateTo: Date, bankAccountId: number){
+        const payments = await this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+        this.setPayments(payments);
+    }
+
+    private async getExactDateRangeDaysPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<IPaymentInfo[]> {
+        let filterDate: string = moment(dateFrom).format("YYYY-MM-DD");
+        return await this.dataLoader.getPayments(filterDate, moment(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
     }
 
     private onRejected = () => {
         this.setState({ apiError: this.apiErrorMessage });
     }
 
-    private async setPayments(payments: Array<IPaymentInfo>) {
+    private setPayments = async (payments: Array<IPaymentInfo>) => {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
