@@ -19,6 +19,8 @@ import { ChartDataProcessor } from './Services/ChartDataProcessor';
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
     selectedFilter: DateFilter,
+    filterDateFrom: string,
+    filterDateTo: string,
     showPaymentFormModal: boolean,
     bankAccounts: Array<BankAccount>
     selectedBankAccount?: number,
@@ -52,7 +54,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
+            filterDateFrom: null, filterDateTo: null
         };
 
         this.dataLoader = new DataLoader();
@@ -65,7 +68,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setPayments(payments);
     }
 
-    private async getPaymentDataForRange(dateFrom: Date, dateTo: Date, bankAccountId: number){
+    private async getPaymentDataForRange(dateFrom: Date, dateTo: Date, bankAccountId: number) {
         const payments = await this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
         this.setPayments(payments);
     }
@@ -194,10 +197,18 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                 })}
                             </select>
                         </div>
-                        <div className="flex text-black mb-3 ml-6 cursor-pointer">
-                            {this.filters.map((f) =>
-                                <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
-                            )}
+                        <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
+                            <div className="text-left mr-4">
+                                {this.filters.map((f) =>
+                                    <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
+                                )}
+                            </div>
+                            <div className="exactDates w-1/3 flex flex-row">
+                                <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
+                                    value={this.state.filterDateFrom}></input>
+                                <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"
+                                    value={this.state.filterDateTo}></input>
+                            </div>
                         </div>
                         <div className="pb-10 h-64 overflow-y-scroll">
                             {this.state.payments.map(p =>

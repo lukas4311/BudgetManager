@@ -969,7 +969,8 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] }
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
+            filterDateFrom: null, filterDateTo: null
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
@@ -1036,7 +1037,11 @@ class PaymentsOverview extends React.Component {
                         React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map((b, i) => {
                             return React.createElement("option", { key: i, value: b.id }, b.code);
                         }))),
-                    React.createElement("div", { className: "flex text-black mb-3 ml-6 cursor-pointer" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
+                    React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                        React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
+                        React.createElement("div", { className: "exactDates w-1/3 flex flex-row" },
+                            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom }),
+                            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo }))),
                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                         React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
                         React.createElement("p", { className: "mx-6 my-1 w-1/5" },

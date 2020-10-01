@@ -1,5 +1,4 @@
 ﻿using Data.DataModels;
-using Data.DataModels.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -12,14 +11,6 @@ namespace Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
-
-            //modelBuilder.ConfigureBankAccount();
-            //modelBuilder.ConfigurePaymentCategory();
-            //modelBuilder.ConfigurePayment();
-            //modelBuilder.ConfigureInterestRate();
-            //modelBuilder.ConfigurePaymentTag();
-            //modelBuilder.ConfigureUserData();
-            //modelBuilder.ConfigureTax();
         }
 
         public DbSet<UserIdentity> UserIdentity { get; set; }
