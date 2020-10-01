@@ -964,6 +964,12 @@ class PaymentsOverview extends React.Component {
                 this.setState({ bankAccounts: bankAccounts });
             }
         };
+        this.handleChangeDateFrom = (e) => {
+            this.setState({ filterDateFrom: e.target.value });
+        };
+        this.handleChangeDateTo = (e) => {
+            this.setState({ filterDateTo: e.target.value });
+        };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
@@ -1040,8 +1046,8 @@ class PaymentsOverview extends React.Component {
                     React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
                         React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
                         React.createElement("div", { className: "exactDates w-1/3 flex flex-row" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom }),
-                            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo }))),
+                            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
+                            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo }))),
                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                         React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
                         React.createElement("p", { className: "mx-6 my-1 w-1/5" },

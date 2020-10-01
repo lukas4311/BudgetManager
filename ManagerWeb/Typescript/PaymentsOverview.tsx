@@ -172,6 +172,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setBankAccounts(bankAccounts);
     }
 
+    private handleChangeDateFrom = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ filterDateFrom: e.target.value });
+    }
+
+    private handleChangeDateTo = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        this.setState({ filterDateTo: e.target.value });
+    }
+
     public render() {
         let iconsData: IconsData = new IconsData();
 
@@ -205,9 +213,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             </div>
                             <div className="exactDates w-1/3 flex flex-row">
                                 <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
-                                    value={this.state.filterDateFrom}></input>
+                                    value={this.state.filterDateFrom} onChange={this.handleChangeDateFrom}></input>
                                 <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"
-                                    value={this.state.filterDateTo}></input>
+                                    value={this.state.filterDateTo} onChange={this.handleChangeDateTo}></input>
                             </div>
                         </div>
                         <div className="pb-10 h-64 overflow-y-scroll">
