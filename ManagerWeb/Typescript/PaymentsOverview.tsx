@@ -55,7 +55,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: undefined, filterDateTo: undefined
+            filterDateFrom: '', filterDateTo: ''
         };
 
         this.dataLoader = new DataLoader();
@@ -87,8 +87,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
             const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+            let dateTo: string;
 
-            let dateTo: string = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+            if (this.state.selectedFilter != undefined) {
+                dateTo = (moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
+            } else {
+                dateTo = this.state.filterDateTo;
+            }
+
             let bankAccountBalanceResponse: IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             this.setState({
@@ -173,11 +179,18 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private handleChangeDateFrom = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ filterDateFrom: e.target.value });
+        this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
     }
 
     private handleChangeDateTo = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ filterDateTo: e.target.value });
+        this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
+    }
+
+    private findByExplicitDataIfSet = (): void => {
+        if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
+            this.getPaymentDataForRange(moment(this.state.filterDateFrom).toDate(), moment(this.state.filterDateTo).toDate(), this.state.selectedBankAccount);
+            this.setState({ selectedFilter: undefined });
+        }
     }
 
     public render() {

@@ -917,7 +917,13 @@ class PaymentsOverview extends React.Component {
                 const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
-                let dateTo = moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD");
+                let dateTo;
+                if (this.state.selectedFilter != undefined) {
+                    dateTo = (moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
+                }
+                else {
+                    dateTo = this.state.filterDateTo;
+                }
                 let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
@@ -965,10 +971,16 @@ class PaymentsOverview extends React.Component {
             }
         };
         this.handleChangeDateFrom = (e) => {
-            this.setState({ filterDateFrom: e.target.value });
+            this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
         };
         this.handleChangeDateTo = (e) => {
-            this.setState({ filterDateTo: e.target.value });
+            this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
+        };
+        this.findByExplicitDataIfSet = () => {
+            if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
+                this.getPaymentDataForRange(moment_1.default(this.state.filterDateFrom).toDate(), moment_1.default(this.state.filterDateTo).toDate(), this.state.selectedBankAccount);
+                this.setState({ selectedFilter: undefined });
+            }
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -976,7 +988,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: undefined, filterDateTo: undefined
+            filterDateFrom: '', filterDateTo: ''
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
