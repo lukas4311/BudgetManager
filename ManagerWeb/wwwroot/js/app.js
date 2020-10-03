@@ -976,7 +976,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: null, filterDateTo: null
+            filterDateFrom: undefined, filterDateTo: undefined
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
@@ -1045,7 +1045,7 @@ class PaymentsOverview extends React.Component {
                         }))),
                     React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
                         React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-                        React.createElement("div", { className: "exactDates w-1/3 flex flex-row" },
+                        React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
                             React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
                             React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo }))),
                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },

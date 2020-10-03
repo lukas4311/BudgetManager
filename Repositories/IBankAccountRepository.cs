@@ -2,7 +2,7 @@
 
 namespace Repository
 {
-    public interface IBankAccountRepository : IRepository<InterestRate>
+    public interface IBankAccountRepository : IRepository<BankAccount>
     {
     }
 }

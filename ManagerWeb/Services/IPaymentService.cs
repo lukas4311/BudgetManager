@@ -10,7 +10,7 @@ namespace ManagerWeb.Services
     {
         int AddPayment(PaymentViewModel paymentViewModel);
 
-        List<InterestRate> GetBankAccounts();
+        List<BankAccount> GetBankAccounts();
 
         PaymentViewModel GetPayment(int id);
 
