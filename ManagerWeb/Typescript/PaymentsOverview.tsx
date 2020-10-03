@@ -55,7 +55,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: null, filterDateTo: null
+            filterDateFrom: undefined, filterDateTo: undefined
         };
 
         this.dataLoader = new DataLoader();
@@ -211,7 +211,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                     <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
                                 )}
                             </div>
-                            <div className="exactDates w-1/3 flex flex-row">
+                            <div className="exactDates w-1/3 flex flex-row text-white">
                                 <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
                                     value={this.state.filterDateFrom} onChange={this.handleChangeDateFrom}></input>
                                 <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"

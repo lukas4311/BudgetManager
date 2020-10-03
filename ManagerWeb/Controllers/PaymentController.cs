@@ -45,7 +45,7 @@ namespace ManagerWeb.Controllers
         [HttpGet]
         public JsonResult GetBankAccounts()
         {
-            List<InterestRate> bankAccounts = this.paymentService.GetBankAccounts();
+            List<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
             return Json(new { success = true, bankAccounts });
         }
 
