@@ -140,9 +140,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private showErrorMessage() {
         let tag: JSX.Element = <React.Fragment></React.Fragment>;
-        if (this.state.apiError != undefined) {
+        if (this.state.apiError != undefined)
             tag = <span className="errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3">{this.state.apiError}</span>
-        }
+
 
         return tag;
     }

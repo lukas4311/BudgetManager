@@ -1064,9 +1064,8 @@ class PaymentsOverview extends React.Component {
     }
     showErrorMessage() {
         let tag = React.createElement(React.Fragment, null);
-        if (this.state.apiError != undefined) {
+        if (this.state.apiError != undefined)
             tag = React.createElement("span", { className: "errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3" }, this.state.apiError);
-        }
         return tag;
     }
     getPaymentColor(paymentTypeCode) {
