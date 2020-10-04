@@ -15,11 +15,11 @@ import { CalendarChart } from './Components/CalendarChart';
 import { RadarChartProps } from './Model/RadarChartProps';
 import { RadarChart } from './Components/RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
+import DateRangeComponent from './Components/DateRangeComponent';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
     selectedFilter: DateFilter,
-    filterDateFrom: string,
     filterDateTo: string,
     showPaymentFormModal: boolean,
     bankAccounts: Array<BankAccount>
@@ -55,7 +55,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: '', filterDateTo: ''
+            filterDateTo: ''
         };
 
         this.dataLoader = new DataLoader();
@@ -178,19 +178,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setBankAccounts(bankAccounts);
     }
 
-    private handleChangeDateFrom = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
-    }
-
-    private handleChangeDateTo = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
-    }
-
-    private findByExplicitDataIfSet = (): void => {
-        if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
-            this.getPaymentDataForRange(moment(this.state.filterDateFrom).toDate(), moment(this.state.filterDateTo).toDate(), this.state.selectedBankAccount);
-            this.setState({ selectedFilter: undefined });
-        }
+    private rangeDatesHandler = (dateFrom: string, dateTo: string): void => {
+        this.getPaymentDataForRange(moment(dateFrom).toDate(), moment(dateTo).toDate(), this.state.selectedBankAccount);
+        this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
     }
 
     public render() {
@@ -224,12 +214,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                     <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
                                 )}
                             </div>
-                            <div className="exactDates w-1/3 flex flex-row text-white">
-                                <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
-                                    value={this.state.filterDateFrom} onChange={this.handleChangeDateFrom}></input>
-                                <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"
-                                    value={this.state.filterDateTo} onChange={this.handleChangeDateTo}></input>
-                            </div>
+                            <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
                         </div>
                         <div className="pb-10 h-64 overflow-y-scroll">
                             {this.state.payments.map(p =>

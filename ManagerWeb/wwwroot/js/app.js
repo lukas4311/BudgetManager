@@ -133,6 +133,67 @@ exports.CalendarChart = CalendarChart;
 
 /***/ }),
 
+/***/ "./Typescript/Components/DateRangeComponent.tsx":
+/*!******************************************************!*\
+  !*** ./Typescript/Components/DateRangeComponent.tsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class DateRangeState {
+}
+class DateRangeProps {
+}
+class DateRangeComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChangeDateFrom = (e) => {
+            this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
+        };
+        this.handleChangeDateTo = (e) => {
+            this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
+        };
+        this.findByExplicitDataIfSet = () => {
+            if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
+                this.props.datesFilledHandler(this.state.filterDateFrom, this.state.filterDateTo);
+            }
+        };
+        this.state = { filterDateFrom: '', filterDateTo: '' };
+    }
+    render() {
+        return (React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
+            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
+            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo })));
+    }
+}
+exports.default = DateRangeComponent;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/LineChart.tsx":
 /*!*********************************************!*\
   !*** ./Typescript/Components/LineChart.tsx ***!
@@ -904,6 +965,7 @@ const LineChart_1 = __webpack_require__(/*! ./Components/LineChart */ "./Typescr
 const CalendarChart_1 = __webpack_require__(/*! ./Components/CalendarChart */ "./Typescript/Components/CalendarChart.tsx");
 const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Typescript/Components/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
+const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ./Components/DateRangeComponent */ "./Typescript/Components/DateRangeComponent.tsx"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -970,17 +1032,9 @@ class PaymentsOverview extends React.Component {
                 this.setState({ bankAccounts: bankAccounts });
             }
         };
-        this.handleChangeDateFrom = (e) => {
-            this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
-        };
-        this.handleChangeDateTo = (e) => {
-            this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
-        };
-        this.findByExplicitDataIfSet = () => {
-            if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
-                this.getPaymentDataForRange(moment_1.default(this.state.filterDateFrom).toDate(), moment_1.default(this.state.filterDateTo).toDate(), this.state.selectedBankAccount);
-                this.setState({ selectedFilter: undefined });
-            }
+        this.rangeDatesHandler = (dateFrom, dateTo) => {
+            this.getPaymentDataForRange(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
+            this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -988,7 +1042,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateFrom: '', filterDateTo: ''
+            filterDateTo: ''
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
@@ -1057,9 +1111,7 @@ class PaymentsOverview extends React.Component {
                         }))),
                     React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
                         React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-                        React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
-                            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo }))),
+                        React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                         React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
                         React.createElement("p", { className: "mx-6 my-1 w-1/5" },
