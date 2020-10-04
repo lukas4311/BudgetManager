@@ -1002,7 +1002,7 @@ class PaymentsOverview extends React.Component {
             let selectedFilter = this.filters.find(f => f.key == filterKey);
             if (this.state.selectedFilter != selectedFilter) {
                 this.setState({ selectedFilter: selectedFilter });
-                this.getPaymentData(selectedFilter.days, this.state.selectedBankAccount);
+                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
             }
         };
         this.addNewPayment = () => {
@@ -1018,12 +1018,12 @@ class PaymentsOverview extends React.Component {
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
-            this.getPaymentData(this.state.selectedFilter.days, this.state.selectedBankAccount);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
         };
         this.bankAccountChange = (e) => {
             let selectedbankId = parseInt(e.target.value);
             this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-            this.getPaymentData(this.state.selectedFilter.days, selectedbankId);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
         };
         this.setBankAccounts = (data) => {
             if (data.success) {
@@ -1033,7 +1033,7 @@ class PaymentsOverview extends React.Component {
             }
         };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
-            this.getPaymentDataForRange(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
+            this.getPaymentData(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
             this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
         };
         moment_1.default.locale('cs');
@@ -1047,13 +1047,7 @@ class PaymentsOverview extends React.Component {
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
-    getPaymentData(daysBack, bankAccountId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payments = yield this.getExactDateRangeDaysPaymentData(moment_1.default(Date.now()).subtract(daysBack, 'days').toDate(), moment_1.default(Date.now()).toDate(), bankAccountId);
-            this.setPayments(payments);
-        });
-    }
-    getPaymentDataForRange(dateFrom, dateTo, bankAccountId) {
+    getPaymentData(dateFrom, dateTo, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
             const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
             this.setPayments(payments);
@@ -1088,7 +1082,7 @@ class PaymentsOverview extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(this.state.selectedFilter.days, null);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), null);
             this.setBankAccounts(bankAccounts);
         });
     }
