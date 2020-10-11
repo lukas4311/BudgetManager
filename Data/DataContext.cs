@@ -32,5 +32,7 @@ namespace Data
         public DbSet<Tag> Tag { get; set; }
 
         public DbSet<PaymentTag> PaymentTag { get; set; }
+
+        public DbSet<Budget> Budget { get; set; }
     }
 }
