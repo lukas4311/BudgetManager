@@ -23,6 +23,7 @@ namespace ManagerWeb.Extensions
             services.AddTransient<IUserIdentityRepository, UserIdentityRepository>();
             services.AddTransient<IPaymentTagRepository, PaymentTagRepository>();
             services.AddTransient<ITagRepository, TagRepository>();
+            services.AddTransient<IBudgetRepository, BudgetRepository>();
         }
     }
 }
