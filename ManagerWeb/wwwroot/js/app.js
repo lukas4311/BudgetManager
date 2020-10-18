@@ -86,6 +86,52 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/Components/BudgetComponent.tsx":
+/*!***************************************************!*\
+  !*** ./Typescript/Components/BudgetComponent.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class BudgetComponent extends React.Component {
+    render() {
+        return (React.createElement("div", { className: "flex w-full" },
+            React.createElement("div", { className: "py-4 flex w-full" },
+                React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
+                React.createElement("span", { className: "inline-block ml-auto mr-5" },
+                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))))));
+    }
+}
+exports.default = BudgetComponent;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/CalendarChart.tsx":
 /*!*************************************************!*\
   !*** ./Typescript/Components/CalendarChart.tsx ***!
@@ -966,6 +1012,7 @@ const CalendarChart_1 = __webpack_require__(/*! ./Components/CalendarChart */ ".
 const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Typescript/Components/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ./Components/DateRangeComponent */ "./Typescript/Components/DateRangeComponent.tsx"));
+const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/BudgetComponent */ "./Typescript/Components/BudgetComponent.tsx"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -1122,6 +1169,9 @@ class PaymentsOverview extends React.Component {
                     React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
                 React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                     React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+            React.createElement("div", { className: "flex flex-row p-6" },
+                React.createElement("div", { className: "w-1/3" },
+                    React.createElement(BudgetComponent_1.default, null))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                 React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
     }

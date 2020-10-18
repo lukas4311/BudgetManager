@@ -16,6 +16,7 @@ import { RadarChartProps } from './Model/RadarChartProps';
 import { RadarChart } from './Components/RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
 import DateRangeComponent from './Components/DateRangeComponent';
+import BudgetComponent from './Components/BudgetComponent';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -235,6 +236,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <div className="w-1/3 h-64 calendar text-black">
                         <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
+                    </div>
+                </div>
+                <div className="flex flex-row p-6">
+                    <div className="w-1/3">
+                        <BudgetComponent></BudgetComponent>
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
