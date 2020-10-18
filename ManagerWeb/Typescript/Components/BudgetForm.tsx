@@ -62,23 +62,6 @@ export default class BudgetForm extends React.Component<{}, BudgetFormState> {
                             {this.generateInput("amount", "Výše výdaje", this.handleChange)}
                         </div>
                     </div>
-                    <div className="flex mt-4">
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6 w-2/3">
-                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("date")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
-                                <span className="focus-bg"></span>
-                            </div>
-                            {this.generateErrorMessageIfError("date")}
-                        </div>
-                    </div>
-                    <div className="flex my-4">
-                        <div className="w-full">
-                            <div className="relative inline-block w-4/5 float-left ml-6">
-                                <input className={"effect-11 w-full" + this.addErrorClassIfError("description")} placeholder="Popis" value={this.state.description} onChange={this.handleChangeDescription}></input>
-                                <span className="focus-bg"></span>
-                            </div>
-                        </div>
-                    </div>
                     <div className="flex">
                         <div className="w-full">
                             <div className="relative inline-block float-left ml-6 mb-6">
