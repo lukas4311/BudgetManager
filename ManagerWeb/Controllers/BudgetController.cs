@@ -1,11 +1,6 @@
-﻿using Data.DataModels;
-using ManagerWeb.Models.DTOs;
-using Microsoft.AspNetCore.Http;
+﻿using ManagerWeb.Models.DTOs;
+using ManagerWeb.Services;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 
 namespace ManagerWeb.Controllers
 {
@@ -13,42 +8,30 @@ namespace ManagerWeb.Controllers
     [Route("budget")]
     public class BudgetController : ControllerBase
     {
-        private readonly IBudgetRepository budgetRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IBudgetService budgetService;
 
-        public BudgetController(IBudgetRepository budgetRepository, IHttpContextAccessor httpContextAccessor)
+        public BudgetController(IBudgetService budgetService)
         {
-            this.budgetRepository = budgetRepository;
-            this.httpContextAccessor = httpContextAccessor;
+            this.budgetService = budgetService;
         }
 
         [HttpGet("getAll")]
         public IActionResult Get()
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ICollection<BudgetModel> budgets = this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => new BudgetModel
-            {
-                Amount = b.Amount,
-                DateFrom = b.DateFrom,
-                DateTo = b.DateTo,
-                Id = b.Id
-            }).ToList();
-
-            return Ok(budgets);
+            return Ok(this.budgetService.Get());
         }
 
         [HttpPost("add")]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            this.budgetService.Add(budgetModel);
+            return Ok();
+        }
 
-            this.budgetRepository.Create(new Budget()
-            {
-                Amount = budgetModel.Amount,
-                DateFrom = budgetModel.DateFrom,
-                DateTo = budgetModel.DateTo,
-            });
-
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] BudgetModel budgetModel)
+        {
+            this.budgetService.Update(budgetModel);
             return Ok();
         }
     }
