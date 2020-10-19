@@ -17,6 +17,7 @@ import { RadarChart } from './Components/RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
 import DateRangeComponent from './Components/DateRangeComponent';
 import BudgetComponent from './Components/BudgetComponent';
+import BudgetForm from './Components/BudgetForm';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,

@@ -114,20 +114,144 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const Modal_1 = __webpack_require__(/*! ../Modal */ "./Typescript/Modal.tsx");
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/BudgetForm.tsx"));
+class BudgetComponentState {
+}
+class BudgetComponentProps {
+}
 class BudgetComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.hideBudgetModal = () => {
+            this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
+        };
+        this.showModal = () => {
+            this.setState({ showBudgetFormModal: true });
+        };
+        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [] };
+        this.dataLoader = new DataLoader_1.default();
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.props.budgetId != undefined && this.props.budgetId != null)
+                yield this.loadBudget();
+        });
+    }
+    loadBudget() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let budgets = yield this.dataLoader.getAllBudgets();
+            this.setState({ budgets: budgets });
+        });
+    }
     render() {
-        return (React.createElement("div", { className: "flex w-full" },
-            React.createElement("div", { className: "py-4 flex w-full" },
-                React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
-                React.createElement("span", { className: "inline-block ml-auto mr-5" },
-                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))))));
+        return (React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "flex w-full" },
+                React.createElement("div", { className: "py-4 flex w-full" },
+                    React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
+                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.showModal },
+                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                React.createElement("div", null)),
+            React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
+                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey }))));
     }
 }
 exports.default = BudgetComponent;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/BudgetForm.tsx":
+/*!**********************************************!*\
+  !*** ./Typescript/Components/BudgetForm.tsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class BudgetFormState {
+}
+class BudgetForm extends React.Component {
+    constructor() {
+        super(...arguments);
+        this.generateErrorMessageIfError = (propertyName) => {
+            if (this.state.formErrors[propertyName].length > 0)
+                return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
+            return '';
+        };
+        this.generateInput = (propertyName, placeholder, handler) => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => handler(e, propertyName) }),
+                    React.createElement("span", { className: "focus-bg" })),
+                this.generateErrorMessageIfError(propertyName)));
+        };
+        this.confirmBudget = () => {
+        };
+        this.handleChange = (e, propertyName) => {
+            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: e.target.value })));
+        };
+    }
+    addErrorClassIfError(propertyName) {
+        if (this.state.formErrors[propertyName].length > 0)
+            return " inputError";
+        return '';
+    }
+    render() {
+        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
+            React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
+                React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
+            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail rozpo\u010Dtu"),
+            React.createElement("form", { onSubmit: this.confirmBudget },
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChange)),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChange))),
+                React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-full" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
+                            React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
+    }
+}
+exports.default = BudgetForm;
 
 
 /***/ }),
@@ -1411,6 +1535,13 @@ class DataLoader {
                 headers: { 'Content-Type': 'application/json' },
                 body: dataJson,
             });
+        });
+    }
+    getAllBudgets() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield fetch(`/Budget/GetAll/`);
+            const response = yield res.json();
+            return response;
         });
     }
 }

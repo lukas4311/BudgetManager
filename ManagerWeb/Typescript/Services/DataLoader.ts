@@ -4,6 +4,7 @@ import { PaymentTypeResponse } from '../Model/PaymentTypeResponse'
 import { PaymentCategoryResponse } from "../Model/PaymentCategoryResponse";
 import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
+import { BudgetModel } from "../Model/BudgetModel";
 
 export default class DataLoader {
     async getPayments(fromDate: string, toDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
@@ -124,5 +125,12 @@ export default class DataLoader {
             headers: { 'Content-Type': 'application/json' },
             body: dataJson,
         });
+    }
+
+    async getAllBudgets(): Promise<BudgetModel[]> {
+        const res = await fetch(`/Budget/GetAll/`);
+        const response = await res.json();
+
+        return response
     }
 }
