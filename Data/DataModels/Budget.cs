@@ -12,6 +12,8 @@ namespace Data.DataModels
 
         public int Amount { get; set; }
 
+        public string Name { get; set; }
+
         public int UserIdentityId { get; set; }
 
         public UserIdentity UserIdentity { get; set; }
