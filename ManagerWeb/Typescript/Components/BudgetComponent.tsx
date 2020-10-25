@@ -59,7 +59,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                     </div>
                 </div>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
-                    <BudgetForm key={this.state.budgetFormKey}></BudgetForm>
+                    <BudgetForm key={this.state.budgetFormKey} id={undefined} handleClose={this.hideBudgetModal}></BudgetForm>
                 </Modal>
             </React.Fragment>
         );

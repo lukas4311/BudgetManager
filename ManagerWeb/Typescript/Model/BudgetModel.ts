@@ -3,4 +3,5 @@ export class BudgetModel {
     amount: number;
     dateFrom: string;
     dateTo: string;
+    name: string;
 }

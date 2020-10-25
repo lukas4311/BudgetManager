@@ -170,7 +170,7 @@ class BudgetComponent extends React.Component {
                             React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
                 React.createElement("div", null)),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
-                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey }))));
+                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: undefined, handleClose: this.hideBudgetModal }))));
     }
 }
 exports.default = BudgetComponent;
@@ -210,9 +210,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 class BudgetFormState {
 }
+class BudgetFormProps {
+}
 class BudgetForm extends React.Component {
-    constructor() {
-        super(...arguments);
+    constructor(props) {
+        super(props);
         this.generateErrorMessageIfError = (propertyName) => {
             if (this.state.formErrors[propertyName].length > 0)
                 return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
@@ -225,11 +227,23 @@ class BudgetForm extends React.Component {
                     React.createElement("span", { className: "focus-bg" })),
                 this.generateErrorMessageIfError(propertyName)));
         };
-        this.confirmBudget = () => {
+        this.confirmBudget = (e) => {
+            e.preventDefault();
+            this.setState({ disabledConfirm: true });
+            const data = this.state;
+            let dataJson = JSON.stringify(data);
+            if (this.state.id != undefined) {
+                // this.dataLoader.updatePayment(dataJson, this.onError)
+            }
+            else {
+                // this.dataLoader.addPayment(dataJson, this.onError)
+            }
+            this.props.handleClose();
         };
         this.handleChange = (e, propertyName) => {
             this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: e.target.value })));
         };
+        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: true, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
@@ -243,9 +257,20 @@ class BudgetForm extends React.Component {
             React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail rozpo\u010Dtu"),
             React.createElement("form", { onSubmit: this.confirmBudget },
                 React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChange)),
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChange))),
-                React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název rozpočtu", this.handleChange)),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše rozpočtu", this.handleChange))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("from"), placeholder: "Datum od", value: this.state.from, onChange: e => this.handleChange(e, 'from') }),
+                            React.createElement("span", { className: "focus-bg" })),
+                        this.generateErrorMessageIfError("from")),
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("to"), placeholder: "Datum do", value: this.state.to, onChange: e => this.handleChange(e, 'to') }),
+                            React.createElement("span", { className: "focus-bg" })),
+                        this.generateErrorMessageIfError("to"))),
+                React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
                             React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
