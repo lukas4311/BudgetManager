@@ -29,7 +29,8 @@ namespace ManagerWeb.Services
                 Amount = b.Amount,
                 DateFrom = b.DateFrom,
                 DateTo = b.DateTo,
-                Id = b.Id
+                Id = b.Id,
+                Name = b.Name
             }).ToList();
         }
 
@@ -43,7 +44,8 @@ namespace ManagerWeb.Services
                 Amount = budgetModel.Amount,
                 DateFrom = budgetModel.DateFrom,
                 DateTo = budgetModel.DateTo,
-                UserIdentityId = userId
+                UserIdentityId = userId,
+                Name = budgetModel.Name
             });
         }
 
@@ -53,6 +55,7 @@ namespace ManagerWeb.Services
             budget.Amount = budgetModel.Amount;
             budget.DateFrom = budgetModel.DateFrom;
             budget.DateTo = budgetModel.DateTo;
+            budget.Name = budgetModel.Name;
 
             this.budgetRepository.Update(budget);
         }
