@@ -133,4 +133,24 @@ export default class DataLoader {
 
         return response
     }
+
+    async addBudget(budgetModel: BudgetModel) {
+        const dataJson = JSON.stringify(budgetModel);
+
+        await fetch('/budget/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: dataJson,
+        });
+    }
+
+    async updateBudget(budgetModel: BudgetModel) {
+        const dataJson = JSON.stringify(budgetModel);
+
+        await fetch('/budget/update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: dataJson,
+        });
+    }
 }

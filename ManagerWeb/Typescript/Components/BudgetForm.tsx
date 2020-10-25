@@ -1,4 +1,5 @@
 import * as React from 'react'
+import DataLoader from '../Services/DataLoader';
 
 class BudgetFormState {
     id: number;
@@ -22,8 +23,11 @@ class BudgetFormProps {
 }
 
 export default class BudgetForm extends React.Component<BudgetFormProps, BudgetFormState> {
+    dataLoader: DataLoader;
+
     constructor(props: BudgetFormProps) {
         super(props);
+        this.dataLoader = new DataLoader();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: true, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
@@ -56,13 +60,11 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
     private confirmBudget = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         this.setState({ disabledConfirm: true });
-        const data = this.state;
-        let dataJson = JSON.stringify(data);
 
         if (this.state.id != undefined) {
-            // this.dataLoader.updatePayment(dataJson, this.onError)
+            this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
         } else {
-            // this.dataLoader.addPayment(dataJson, this.onError)
+            this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to })
         }
 
         this.props.handleClose();

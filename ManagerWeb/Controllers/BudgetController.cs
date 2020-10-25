@@ -28,7 +28,7 @@ namespace ManagerWeb.Controllers
             return Ok();
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update([FromBody] BudgetModel budgetModel)
         {
             this.budgetService.Update(budgetModel);
