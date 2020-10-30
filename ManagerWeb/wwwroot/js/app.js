@@ -248,7 +248,7 @@ class BudgetForm extends React.Component {
                 this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
             }
             else {
-                this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to });
+                this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
             }
             this.props.handleClose();
         };
@@ -257,7 +257,7 @@ class BudgetForm extends React.Component {
             this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
         };
         this.dataLoader = new DataLoader_1.default();
-        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: true, formErrors: { from: '', to: '', amount: '', name: '' } };
+        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)

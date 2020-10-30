@@ -47,6 +47,7 @@ namespace ManagerWeb
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
+            services.AddTransient<IBudgetService, BudgetService>();
 
             services.AddControllersWithViews();
         }

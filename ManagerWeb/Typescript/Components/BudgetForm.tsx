@@ -28,7 +28,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
     constructor(props: BudgetFormProps) {
         super(props);
         this.dataLoader = new DataLoader();
-        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: true, formErrors: { from: '', to: '', amount: '', name: '' } }
+        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
     private addErrorClassIfError(propertyName: string): string {
@@ -64,7 +64,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         if (this.state.id != undefined) {
             this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
         } else {
-            this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to })
+            this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
         }
 
         this.props.handleClose();
