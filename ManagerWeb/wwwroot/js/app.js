@@ -127,6 +127,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Modal_1 = __webpack_require__(/*! ../Modal */ "./Typescript/Modal.tsx");
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
@@ -141,10 +142,10 @@ class BudgetComponent extends React.Component {
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
         };
-        this.showModal = () => {
+        this.addNewBudget = () => {
             this.setState({ showBudgetFormModal: true });
         };
-        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [] };
+        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
@@ -159,18 +160,27 @@ class BudgetComponent extends React.Component {
             this.setState({ budgets: budgets });
         });
     }
+    budgetEdit(id) {
+        this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
+    }
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement("div", { className: "flex w-full" },
                 React.createElement("div", { className: "py-4 flex w-full" },
                     React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
-                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.showModal },
+                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
                         React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                             React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                             React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                React.createElement("div", null)),
+                React.createElement("div", null, this.state.budgets.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.budgetEdit(p.id) },
+                    React.createElement("p", { className: "mx-6 my-1 w-1/5" },
+                        p.amount,
+                        ",-"),
+                    React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
+                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.dateFrom).format('DD.MM.YYYY')),
+                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.dateTo).format('DD.MM.YYYY')))))),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
-                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: undefined, handleClose: this.hideBudgetModal }))));
+                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: this.state.selectedBudgetId, handleClose: this.hideBudgetModal }))));
     }
 }
 exports.default = BudgetComponent;
@@ -206,8 +216,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 class BudgetFormState {
 }
 class BudgetFormProps {
@@ -223,26 +237,26 @@ class BudgetForm extends React.Component {
         this.generateInput = (propertyName, placeholder, handler) => {
             return (React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => handler(e, propertyName) }),
+                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => this.handleChange(e, propertyName) }),
                     React.createElement("span", { className: "focus-bg" })),
                 this.generateErrorMessageIfError(propertyName)));
         };
         this.confirmBudget = (e) => {
             e.preventDefault();
             this.setState({ disabledConfirm: true });
-            const data = this.state;
-            let dataJson = JSON.stringify(data);
             if (this.state.id != undefined) {
-                // this.dataLoader.updatePayment(dataJson, this.onError)
+                this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
             }
             else {
-                // this.dataLoader.addPayment(dataJson, this.onError)
+                this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to });
             }
             this.props.handleClose();
         };
         this.handleChange = (e, propertyName) => {
-            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: e.target.value })));
+            let value = e.target.value;
+            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
         };
+        this.dataLoader = new DataLoader_1.default();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: true, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
     addErrorClassIfError(propertyName) {
@@ -1567,6 +1581,26 @@ class DataLoader {
             const res = yield fetch(`/Budget/GetAll/`);
             const response = yield res.json();
             return response;
+        });
+    }
+    addBudget(budgetModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataJson = JSON.stringify(budgetModel);
+            yield fetch('/budget/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: dataJson,
+            });
+        });
+    }
+    updateBudget(budgetModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dataJson = JSON.stringify(budgetModel);
+            yield fetch('/budget/update', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: dataJson,
+            });
         });
     }
 }
