@@ -49,7 +49,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         return (
             <React.Fragment>
                 <div className="relative inline-block float-left ml-6 w-2/3">
-                    <input className={"effect-11 w-full" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={e => this.handleChange(e, propertyName)}></input>
+                    <input className={"effect-11 w-full" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={e => handler(e, propertyName)}></input>
                     <span className="focus-bg"></span>
                 </div>
                 {this.generateErrorMessageIfError(propertyName)}
@@ -75,6 +75,11 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         this.setState(prevState => ({ ...prevState, [propertyName]: value }));
     }
 
+    private handleChangeNumber = (e: React.ChangeEvent<HTMLInputElement>, propertyName: string) => {
+        let value:Number = Number.parseInt(e.target.value);
+        this.setState(prevState => ({ ...prevState, [propertyName]: value }));
+    }
+
     render() {
         return (
             <div className="bg-prussianBlue text-white">
@@ -88,7 +93,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
                             {this.generateInput("name", "Název rozpočtu", this.handleChange)}
                         </div>
                         <div className="w-1/2">
-                            {this.generateInput("amount", "Výše rozpočtu", this.handleChange)}
+                            {this.generateInput("amount", "Výše rozpočtu", this.handleChangeNumber)}
                         </div>
                     </div>
                     <div className="flex mt-4">

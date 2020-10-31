@@ -237,7 +237,7 @@ class BudgetForm extends React.Component {
         this.generateInput = (propertyName, placeholder, handler) => {
             return (React.createElement(React.Fragment, null,
                 React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => this.handleChange(e, propertyName) }),
+                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => handler(e, propertyName) }),
                     React.createElement("span", { className: "focus-bg" })),
                 this.generateErrorMessageIfError(propertyName)));
         };
@@ -256,6 +256,10 @@ class BudgetForm extends React.Component {
             let value = e.target.value;
             this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
         };
+        this.handleChangeNumber = (e, propertyName) => {
+            let value = Number.parseInt(e.target.value);
+            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
+        };
         this.dataLoader = new DataLoader_1.default();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
@@ -272,7 +276,7 @@ class BudgetForm extends React.Component {
             React.createElement("form", { onSubmit: this.confirmBudget },
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název rozpočtu", this.handleChange)),
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše rozpočtu", this.handleChange))),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše rozpočtu", this.handleChangeNumber))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },

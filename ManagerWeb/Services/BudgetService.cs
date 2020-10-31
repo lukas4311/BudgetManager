@@ -47,6 +47,8 @@ namespace ManagerWeb.Services
                 UserIdentityId = userId,
                 Name = budgetModel.Name
             });
+
+            this.budgetRepository.Save();
         }
 
         public void Update(BudgetModel budgetModel)
@@ -58,6 +60,7 @@ namespace ManagerWeb.Services
             budget.Name = budgetModel.Name;
 
             this.budgetRepository.Update(budget);
+            this.budgetRepository.Save();
         }
     }
 }
