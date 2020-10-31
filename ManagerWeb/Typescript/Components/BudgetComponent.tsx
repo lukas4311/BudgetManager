@@ -26,8 +26,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     public async componentDidMount() {
-        if (this.props.budgetId != undefined && this.props.budgetId != null)
-            await this.loadBudget();
+        await this.loadBudget();
     }
 
     private async loadBudget(): Promise<void> {
@@ -50,7 +49,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     public render() {
         return (
             <React.Fragment>
-                <div className="flex w-full">
+                <div className="flex w-ful flex-col">
                     <div className="py-4 flex w-full">
                         <h1 className="ml-6 text-xl">Rozpočty</h1>
                         <span className="inline-block ml-auto mr-5" onClick={this.addNewBudget}>

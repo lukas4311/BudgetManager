@@ -150,8 +150,7 @@ class BudgetComponent extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.props.budgetId != undefined && this.props.budgetId != null)
-                yield this.loadBudget();
+            yield this.loadBudget();
         });
     }
     loadBudget() {
@@ -165,7 +164,7 @@ class BudgetComponent extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "flex w-full" },
+            React.createElement("div", { className: "flex w-ful flex-col" },
                 React.createElement("div", { className: "py-4 flex w-full" },
                     React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
                     React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
