@@ -59,13 +59,19 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                             </svg>
                         </span>
                     </div>
+                    <div className="text-center flex">
+                        <p className="mx-6 my-1 w-1/5">Od</p>
+                        <p className="mx-6 my-1 w-1/5">Do</p>
+                        <p className="mx-6 my-1 w-1/5">Výše</p>
+                        <p className="mx-6 my-1 w-2/5">Název</p>
+                    </div>
                     <div>
                         {this.state.budgets.map(p =>
                             <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.budgetEdit(p.id)}>
-                                <p className="mx-6 my-1 w-1/5">{p.amount},-</p>
-                                <p className="mx-6 my-1 w-2/5">{p.name}</p>
                                 <p className="mx-6 my-1 w-1/5">{moment(p.dateFrom).format('DD.MM.YYYY')}</p>
                                 <p className="mx-6 my-1 w-1/5">{moment(p.dateTo).format('DD.MM.YYYY')}</p>
+                                <p className="mx-6 my-1 w-1/5">{p.amount}</p>
+                                <p className="mx-6 my-1 w-2/5">{p.name}</p>
                             </div>
                         )}
                     </div>
