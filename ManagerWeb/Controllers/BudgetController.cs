@@ -21,6 +21,12 @@ namespace ManagerWeb.Controllers
             return Ok(this.budgetService.Get());
         }
 
+        [HttpGet("get")]
+        public IActionResult Get(int id)
+        {
+            return Ok(this.budgetService.Get(id));
+        }
+
         [HttpPost("add")]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {

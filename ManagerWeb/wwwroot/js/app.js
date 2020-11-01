@@ -218,6 +218,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -264,6 +273,14 @@ class BudgetForm extends React.Component {
         };
         this.dataLoader = new DataLoader_1.default();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.props.id != null) {
+                const budgetModel = yield this.dataLoader.getBudget(this.props.id);
+                this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
+            }
+        });
     }
     addErrorClassIfError(propertyName) {
         if (this.state.formErrors[propertyName].length > 0)
@@ -1585,8 +1602,13 @@ class DataLoader {
     getAllBudgets() {
         return __awaiter(this, void 0, void 0, function* () {
             const res = yield fetch(`/Budget/GetAll/`);
-            const response = yield res.json();
-            return response;
+            return yield res.json();
+        });
+    }
+    getBudget(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield fetch("/budget/get?id=" + id);
+            return yield res.json();
         });
     }
     addBudget(budgetModel) {

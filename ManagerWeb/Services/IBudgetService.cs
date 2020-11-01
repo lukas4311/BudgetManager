@@ -7,6 +7,7 @@ namespace ManagerWeb.Services
     {
         void Add(BudgetModel budgetModel);
         IEnumerable<BudgetModel> Get();
+        BudgetModel Get(int id);
         void Update(BudgetModel budgetModel);
     }
 }

@@ -129,9 +129,12 @@ export default class DataLoader {
 
     async getAllBudgets(): Promise<BudgetModel[]> {
         const res = await fetch(`/Budget/GetAll/`);
-        const response = await res.json();
+        return await res.json();
+    }
 
-        return response
+    async getBudget(id: number): Promise<BudgetModel> {
+        const res = await fetch("/budget/get?id=" + id);
+        return await res.json();
     }
 
     async addBudget(budgetModel: BudgetModel) {
@@ -142,7 +145,6 @@ export default class DataLoader {
             headers: { 'Content-Type': 'application/json' },
             body: dataJson,
         });
-
     }
 
     async updateBudget(budgetModel: BudgetModel) {

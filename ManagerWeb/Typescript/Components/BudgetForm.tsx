@@ -31,6 +31,13 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
+    async componentDidMount(){
+        if(this.props.id != null){
+            const budgetModel = await this.dataLoader.getBudget(this.props.id);
+            this.setState({id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom});
+        }
+    }
+
     private addErrorClassIfError(propertyName: string): string {
         if (this.state.formErrors[propertyName].length > 0)
             return " inputError";

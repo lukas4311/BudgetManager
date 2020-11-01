@@ -34,6 +34,19 @@ namespace ManagerWeb.Services
             }).ToList();
         }
 
+        public BudgetModel Get(int id)
+        {
+            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => new BudgetModel
+            {
+                Amount = b.Amount,
+                DateFrom = b.DateFrom,
+                DateTo = b.DateTo,
+                Id = b.Id,
+                Name = b.Name
+            }).Single();
+        }
+
         public void Add(BudgetModel budgetModel)
         {
             string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
