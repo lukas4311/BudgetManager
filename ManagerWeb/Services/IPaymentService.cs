@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ManagerWeb.Services
 {
-    internal interface IPaymentService
+    public interface IPaymentService
     {
         int AddPayment(PaymentViewModel paymentViewModel);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ManagerWeb.Services
 {
-    internal interface ITagService
+    public interface ITagService
     {
         void AddTagToPayment(AddTagModel tagModel);
 

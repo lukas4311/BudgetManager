@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ManagerWeb.Services
 {
-    internal interface IBudgetService
+    public interface IBudgetService
     {
         void Add(BudgetModel budgetModel);
         IEnumerable<BudgetModel> Get();

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ManagerWeb.Services
 {
-    internal interface IBankAccountService
+    public interface IBankAccountService
     {
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate);
     }
