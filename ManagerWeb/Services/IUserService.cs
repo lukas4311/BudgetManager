@@ -4,7 +4,7 @@ using ManagerWeb.Models;
 
 namespace ManagerWeb.Services
 {
-    public interface IUserService
+    internal interface IUserService
     {
         Task<UserModel> Authenticate(string username, string password);
 

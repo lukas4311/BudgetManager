@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ManagerWeb.Services
 {
-    public class UserService : IUserService
+    internal class UserService : IUserService
     {
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;

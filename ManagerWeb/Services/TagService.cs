@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace ManagerWeb.Services
 {
-    public class TagService : ITagService
+    internal class TagService : ITagService
     {
         private const string AlreadyExist = "Tag with this code already exists";
         private const string DoesntExists = "Tag doesn't exists";

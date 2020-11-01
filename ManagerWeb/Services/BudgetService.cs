@@ -1,4 +1,5 @@
 ﻿using Data.DataModels;
+using ManagerWeb.Extensions;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Repository;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 
 namespace ManagerWeb.Services
 {
-    public class BudgetService : IBudgetService
+    internal class BudgetService : IBudgetService
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -24,27 +25,13 @@ namespace ManagerWeb.Services
         public IEnumerable<BudgetModel> Get()
         {
             string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => new BudgetModel
-            {
-                Amount = b.Amount,
-                DateFrom = b.DateFrom,
-                DateTo = b.DateTo,
-                Id = b.Id,
-                Name = b.Name
-            }).ToList();
+            return this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => b.MapToViewModel()).ToList();
         }
 
         public BudgetModel Get(int id)
         {
             string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => new BudgetModel
-            {
-                Amount = b.Amount,
-                DateFrom = b.DateFrom,
-                DateTo = b.DateTo,
-                Id = b.Id,
-                Name = b.Name
-            }).Single();
+            return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
         }
 
         public void Add(BudgetModel budgetModel)
@@ -67,10 +54,7 @@ namespace ManagerWeb.Services
         public void Update(BudgetModel budgetModel)
         {
             Budget budget = this.budgetRepository.FindByCondition(a => a.Id == budgetModel.Id).Single();
-            budget.Amount = budgetModel.Amount;
-            budget.DateFrom = budgetModel.DateFrom;
-            budget.DateTo = budgetModel.DateTo;
-            budget.Name = budgetModel.Name;
+            budgetModel.MapToDataModel(budget);
 
             this.budgetRepository.Update(budget);
             this.budgetRepository.Save();

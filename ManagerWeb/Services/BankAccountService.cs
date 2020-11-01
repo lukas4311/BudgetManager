@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace ManagerWeb.Services
 {
-    public class BankAccountService : IBankAccountService
+    internal class BankAccountService : IBankAccountService
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IUserIdentityRepository userIdentityRepository;

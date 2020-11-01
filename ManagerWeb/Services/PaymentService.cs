@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace ManagerWeb.Services
 {
-    public class PaymentService : IPaymentService
+    internal class PaymentService : IPaymentService
     {
         private readonly IPaymentTypeRepository paymentTypeRepository;
         private readonly IPaymentCategoryRepository paymentCategoryRepository;

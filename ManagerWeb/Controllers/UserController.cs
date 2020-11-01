@@ -12,7 +12,7 @@ namespace ManagerWeb.Controllers
     public class UserController : Controller
     {
         private IUserService userService;
-        private readonly HashManager hashManager;
+        private readonly IHashManager hashManager;
 
         public UserController(IUserService userService)
         {
