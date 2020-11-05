@@ -107,7 +107,7 @@ export default class DataLoader {
         let response: IBankAccountBalanceResponseModel;
 
         try {
-            const res = await fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
+            const res = await fetch("/bankAccount/getAllAccountBalance?toDate=" + toDate);
             response = await res.json();
         }
         catch (_) {

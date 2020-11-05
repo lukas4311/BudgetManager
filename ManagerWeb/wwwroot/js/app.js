@@ -1580,7 +1580,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch("/BankAccount/GetBankAccountsBalanceToDate?toDate=" + toDate);
+                const res = yield fetch("/bankAccount/getAllAccountBalance?toDate=" + toDate);
                 response = yield res.json();
             }
             catch (_) {

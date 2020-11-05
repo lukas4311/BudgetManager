@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerWeb.Controllers
 {
+    [Route("bankAccount")]
     public partial class BankAccountController : Controller
     {
         private readonly IBankAccountService bankAccountService;
@@ -15,8 +16,8 @@ namespace ManagerWeb.Controllers
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet]
-        public JsonResult GetBankAccountsBalanceToDate(DateTime? toDate)
+        [HttpGet("getAllAccountBalance")]
+        public JsonResult GetBankAccountsBalanceToDate([FromQuery] DateTime? toDate = null)
         {
             IEnumerable<BankBalanceModel> bankInfo = this.bankAccountService.GetBankAccountsBalanceToDate(toDate);
 
