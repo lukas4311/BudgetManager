@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ManagerWeb.Controllers
 {
     [Authorize]
+    [Route("payment")]
     public class PaymentController : Controller
     {
         private readonly IPaymentService paymentService;
@@ -21,28 +22,28 @@ namespace ManagerWeb.Controllers
             this.tagService = tagService;
         }
 
-        [HttpGet]
-        public JsonResult GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId)
+        [HttpGet("data")]
+        public JsonResult GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId)
         {
             List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, bankAccountId);
             return Json(payments);
         }
 
-        [HttpGet]
+        [HttpGet("types")]
         public JsonResult GetPaymentTypes()
         {
             List<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
             return Json(new { success = true, types = paymentTypes });
         }
 
-        [HttpGet]
+        [HttpGet("categories")]
         public JsonResult GetPaymentCategories()
         {
             List<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
             return Json(new { success = true, categories = paymentCategories });
         }
 
-        [HttpGet]
+        [HttpGet("bankAccounts")]
         public JsonResult GetBankAccounts()
         {
             List<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
@@ -65,8 +66,8 @@ namespace ManagerWeb.Controllers
             return Json(new { success = true });
         }
 
-        [HttpGet]
-        public JsonResult GetPayment(int id)
+        [HttpGet("detail")]
+        public JsonResult GetPayment([FromQuery] int id)
         {
             PaymentViewModel payment = this.paymentService.GetPayment(id);
             return Json(new { success = true, payment });

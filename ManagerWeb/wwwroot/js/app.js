@@ -1487,7 +1487,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch(`/Payment/GetPaymentsData?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+                const res = yield fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
                 response = yield res.json();
             }
             catch (_) {
@@ -1500,7 +1500,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch("/Payment/GetBankAccounts");
+                const res = yield fetch("/payment/bankAccounts");
                 response = yield res.json();
             }
             catch (_) {
@@ -1512,7 +1512,7 @@ class DataLoader {
     addPayment(data, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield fetch('/Payment/AddPayment', {
+                yield fetch('/payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: data,
@@ -1526,7 +1526,7 @@ class DataLoader {
     updatePayment(data, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                fetch('/Payment/UpdatePayment', {
+                fetch('/payment', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: data,
@@ -1541,7 +1541,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch("/Payment/GetPaymentTypes");
+                const res = yield fetch("/payment/types");
                 response = yield res.json();
             }
             catch (_) {
@@ -1554,7 +1554,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch("/Payment/GetPaymentCategories");
+                const res = yield fetch("/payment/categories");
                 response = yield res.json();
             }
             catch (_) {
@@ -1567,7 +1567,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch(`/Payment/GetPayment/${id}`);
+                const res = yield fetch(`/payment/detail?=${id}`);
                 response = yield res.json();
             }
             catch (_) {

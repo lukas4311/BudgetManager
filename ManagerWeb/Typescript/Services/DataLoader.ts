@@ -11,7 +11,7 @@ export default class DataLoader {
         let response: IPaymentInfo[];
 
         try {
-            const res = await fetch(`/Payment/GetPaymentsData?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+            const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
             response = await res.json();
         }
         catch (_) {
@@ -25,7 +25,7 @@ export default class DataLoader {
         let response: BankAccountReponse;
 
         try {
-            const res = await fetch("/Payment/GetBankAccounts");
+            const res = await fetch("/payment/bankAccounts");
             response = await res.json();
         }
         catch (_) {
@@ -37,7 +37,7 @@ export default class DataLoader {
 
     async addPayment(data: string, onRejected: () => void): Promise<void> {
         try {
-            await fetch('/Payment/AddPayment', {
+            await fetch('/payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: data,
@@ -50,7 +50,7 @@ export default class DataLoader {
 
     async updatePayment(data: string, onRejected: () => void): Promise<void> {
         try {
-            fetch('/Payment/UpdatePayment', {
+            fetch('/payment', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: data,
@@ -65,7 +65,7 @@ export default class DataLoader {
         let response: PaymentTypeResponse;
 
         try {
-            const res = await fetch("/Payment/GetPaymentTypes");
+            const res = await fetch("/payment/types");
             response = await res.json();
         }
         catch (_) {
@@ -79,7 +79,7 @@ export default class DataLoader {
         let response: PaymentCategoryResponse;
 
         try {
-            const res = await fetch("/Payment/GetPaymentCategories");
+            const res = await fetch("/payment/categories");
             response = await res.json();
         }
         catch (_) {
@@ -93,7 +93,7 @@ export default class DataLoader {
         let response: IPaymentResponseModel;
 
         try {
-            const res = await fetch(`/Payment/GetPayment/${id}`);
+            const res = await fetch(`/payment/detail?=${id}`);
             response = await res.json();
         }
         catch (_) {
