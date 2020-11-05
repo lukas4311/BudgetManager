@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ManagerWeb.Controllers
 {
+    [ApiController]
     [Authorize]
     [Route("payment")]
-    public class PaymentController : Controller
+    public class PaymentController : ControllerBase
     {
         private readonly IPaymentService paymentService;
         private readonly ITagService tagService;
@@ -23,54 +24,54 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("data")]
-        public JsonResult GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId)
+        public IActionResult GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
             List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, bankAccountId);
-            return Json(payments);
+            return Ok(payments);
         }
 
         [HttpGet("types")]
-        public JsonResult GetPaymentTypes()
+        public IActionResult GetPaymentTypes()
         {
             List<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
-            return Json(new { success = true, types = paymentTypes });
+            return Ok(new { success = true, types = paymentTypes });
         }
 
         [HttpGet("categories")]
-        public JsonResult GetPaymentCategories()
+        public IActionResult GetPaymentCategories()
         {
             List<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
-            return Json(new { success = true, categories = paymentCategories });
+            return Ok(new { success = true, categories = paymentCategories });
         }
 
         [HttpGet("bankAccounts")]
-        public JsonResult GetBankAccounts()
+        public IActionResult GetBankAccounts()
         {
             List<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
-            return Json(new { success = true, bankAccounts });
+            return Ok(new { success = true, bankAccounts });
         }
 
         [HttpPost]
-        public JsonResult AddPayment([FromBody] PaymentViewModel paymentViewModel)
+        public IActionResult AddPayment([FromBody] PaymentViewModel paymentViewModel)
         {
             int paymentId = this.paymentService.AddPayment(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
-            return Json(new { success = true });
+            return Ok(new { success = true });
         }
 
         [HttpPut]
-        public JsonResult UpdatePayment([FromBody] PaymentViewModel paymentViewModel)
+        public IActionResult UpdatePayment([FromBody] PaymentViewModel paymentViewModel)
         {
             this.paymentService.UpdatePayment(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
-            return Json(new { success = true });
+            return Ok(new { success = true });
         }
 
         [HttpGet("detail")]
-        public JsonResult GetPayment([FromQuery] int id)
+        public IActionResult GetPayment([FromQuery] int id)
         {
             PaymentViewModel payment = this.paymentService.GetPayment(id);
-            return Json(new { success = true, payment });
+            return Ok(new { success = true, payment });
         }
     }
 }
