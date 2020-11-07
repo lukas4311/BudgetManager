@@ -9,5 +9,7 @@ namespace ManagerWeb.Services
         Task<UserModel> Authenticate(string username, string password);
 
         Task SignIn(string login);
+
+        int GetUserId(string login, int userId);
     }
 }

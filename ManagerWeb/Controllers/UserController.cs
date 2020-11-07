@@ -36,7 +36,8 @@ namespace ManagerWeb.Controllers
 
             if (user != null)
             {
-                await this.userService.SignIn(user.Login).ConfigureAwait(false);
+                int userId = this.userService.GetUserId(user.Login);
+                await this.userService.SignIn(user.Login, userId).ConfigureAwait(false);
                 return this.RedirectToAction("Index", "Home");
             }
 

@@ -26,11 +26,16 @@ namespace ManagerWeb.Services
             return await Task.Run(() => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == passwordHash).Select(a => new UserModel { Login = a.Login }).SingleOrDefault()).ConfigureAwait(false);
         }
 
-        public async Task SignIn(string login)
+        public int GetUserId(string userLogin)
+        {
+            return this.userIdentityRepository.FindByCondition(a => a.Login == userLogin).Single().Id;
+        }
+
+        public async Task SignIn(string login, int userId)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, login),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, login)
             };
 
