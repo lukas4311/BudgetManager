@@ -7,7 +7,9 @@ using ManagerWeb.Services;
 namespace ManagerWeb.Controllers
 {
     [Authorize]
-    public class TagController : Controller
+    [ApiController]
+    [Route("tag")]
+    public class TagController : ControllerBase
     {
         private readonly ITagService tagService;
 
@@ -17,31 +19,33 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetPaymentTags()
+        [Route("payment/all")]
+        public IActionResult GetPaymentTags()
         {
             IEnumerable<TagModel> tags = this.tagService.GetPaymentTags();
-            return Json(new { tags });
+            return Ok(tags);
         }
 
         [HttpPost]
-        public JsonResult AddTagToPayment([FromBody]AddTagModel tagModel)
+        public IActionResult AddTagToPayment([FromBody] AddTagModel tagModel)
         {
             this.tagService.AddTagToPayment(tagModel);
-            return Json(new {});
+            return Ok();
         }
 
         [HttpDelete]
-        public JsonResult RemoveTagFromPayment([FromBody]int tagId, int paymentId)
+        [Route("payment")]
+        public IActionResult RemoveTagFromPayment([FromBody] int tagId, int paymentId)
         {
             this.tagService.RemoveTagFromPayment(tagId, paymentId);
-            return Json(new {});
+            return Ok();
         }
 
         [HttpDelete]
-        public JsonResult DeleteTag(int tagId)
+        public IActionResult DeleteTag(int tagId)
         {
             this.tagService.DeleteTag(tagId);
-            return Json(new {});
+            return Ok();
         }
     }
 }

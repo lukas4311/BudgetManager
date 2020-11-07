@@ -120,7 +120,7 @@ export default class DataLoader {
     async addTagToPayment(code: string, paymentId: number): Promise<void> {
         let dataJson = JSON.stringify({ code, paymentId });
 
-        fetch('/Tag/AddTagToPayment', {
+        fetch('/tag', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: dataJson,
@@ -128,7 +128,7 @@ export default class DataLoader {
     }
 
     async getAllBudgets(): Promise<BudgetModel[]> {
-        const res = await fetch(`/Budget/GetAll/`);
+        const res = await fetch(`/budget/getAll/`);
         return await res.json();
     }
 
