@@ -8,8 +8,8 @@ namespace ManagerWeb.Services
     {
         Task<UserModel> Authenticate(string username, string password);
 
-        Task SignIn(string login);
+        Task SignIn(string login, int userId);
 
-        int GetUserId(string login, int userId);
+        int GetUserId(string userLogin);
     }
 }

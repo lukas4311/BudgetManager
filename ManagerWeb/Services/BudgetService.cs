@@ -24,19 +24,19 @@ namespace ManagerWeb.Services
 
         public IEnumerable<BudgetModel> Get()
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             return this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => b.MapToViewModel()).ToList();
         }
 
         public BudgetModel Get(int id)
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
         }
 
         public void Add(BudgetModel budgetModel)
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             int userId = this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
 
             this.budgetRepository.Create(new Budget()
