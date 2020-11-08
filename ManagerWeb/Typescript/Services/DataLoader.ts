@@ -5,13 +5,17 @@ import { PaymentCategoryResponse } from "../Model/PaymentCategoryResponse";
 import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 import { BudgetModel } from "../Model/BudgetModel";
+import { IPaymentModel } from "../Model/IPaymentModel";
 
 export default class DataLoader {
     async getPayments(fromDate: string, toDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
         let response: IPaymentInfo[];
+        let url = '/payment/data';
+
 
         try {
-            const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+            // const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+            const res = await fetch(`/payment/data?${this.queryParams({fromDate: fromDate, toDate: toDate, bankAccountId: bankAccountId})}`);
             response = await res.json();
         }
         catch (_) {
@@ -89,11 +93,11 @@ export default class DataLoader {
         return response;
     }
 
-    async getPayment(id: number, onRejected: () => void): Promise<IPaymentResponseModel> {
-        let response: IPaymentResponseModel;
+    async getPayment(id: number, onRejected: () => void): Promise<IPaymentModel> {
+        let response: IPaymentModel;
 
         try {
-            const res = await fetch(`/payment/detail?=${id}`);
+            const res = await fetch(`/payment/detail?id=${id}`);
             response = await res.json();
         }
         catch (_) {
@@ -155,5 +159,12 @@ export default class DataLoader {
             headers: { 'Content-Type': 'application/json' },
             body: dataJson,
         });
+    }
+
+    private queryParams(params: any): string {
+        return Object.keys(params)
+            .filter(k => params[k] != null && params[k] != undefined)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+            .join('&');
     }
 }

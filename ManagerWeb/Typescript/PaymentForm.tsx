@@ -15,7 +15,7 @@ interface IPaymentFormProps {
 
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
     private requiredMessage: string = "Zadejte hodnotu.";
-    private  dataLoader: DataLoader;
+    private dataLoader: DataLoader;
 
     constructor(props: IPaymentFormProps) {
         super(props);
@@ -27,25 +27,23 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.dataLoader = new DataLoader();
     }
 
-    private processPaymentTypesData = (data: PaymentTypeResponse ) => {
+    private processPaymentTypesData = (data: PaymentTypeResponse) => {
         if (data.success) {
             this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
         }
     }
 
-    private processPaymentCategoryData = (data: PaymentCategoryResponse ) => {
+    private processPaymentCategoryData = (data: PaymentCategoryResponse) => {
         if (data.success) {
             this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
         }
-    } 
+    }
 
-    private processPaymentData = (data: IPaymentResponseModel ) => {
-        if (data.success) {
-            this.setState({
-                name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '', 
-                paymentTypeId: data.payment.paymentTypeId, paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-            })
-        }
+    private processPaymentData = (data: IPaymentModel) => {
+        this.setState({
+            name: data.name, amount: data.amount, date: data.date, description: data.description || '',
+            paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
+        })
     }
 
     public async componentDidMount() {
@@ -151,7 +149,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     private tagsChange = (tags: string[]) => {
-        this.setState({tags: tags});
+        this.setState({ tags: tags });
     }
 
     public render() {
@@ -162,7 +160,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                 </div>
                 <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.confirmPayment}>
-                    <PaymentTagManager tags={this.state.tags} tagsChange={this.tagsChange}/>
+                    <PaymentTagManager tags={this.state.tags} tagsChange={this.tagsChange} />
                     <div className="w-full">
                         <div className="inline-flex w-11/12">
                             {this.state.paymentTypes.map(p => {

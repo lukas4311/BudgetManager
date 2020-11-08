@@ -71,7 +71,7 @@ namespace ManagerWeb.Controllers
         public IActionResult GetPayment([FromQuery] int id)
         {
             PaymentViewModel payment = this.paymentService.GetPayment(id);
-            return Ok(new { success = true, payment });
+            return Ok(payment);
         }
     }
 }

@@ -1007,12 +1007,10 @@ class PaymentForm extends React.Component {
             }
         };
         this.processPaymentData = (data) => {
-            if (data.success) {
-                this.setState({
-                    name: data.payment.name, amount: data.payment.amount, date: data.payment.date, description: data.payment.description || '',
-                    paymentTypeId: data.payment.paymentTypeId, paymentCategoryId: data.payment.paymentCategoryId, bankAccountId: data.payment.bankAccountId
-                });
-            }
+            this.setState({
+                name: data.name, amount: data.amount, date: data.date, description: data.description || '',
+                paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
+            });
         };
         this.confirmPayment = (e) => {
             e.preventDefault();
@@ -1486,8 +1484,10 @@ class DataLoader {
     getPayments(fromDate, toDate, bankAccountId, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
+            let url = '/payment/data';
             try {
-                const res = yield fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+                // const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
+                const res = yield fetch(`/payment/data?${this.queryParams({ fromDate: fromDate, toDate: toDate, bankAccountId: bankAccountId })}`);
                 response = yield res.json();
             }
             catch (_) {
@@ -1567,7 +1567,7 @@ class DataLoader {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const res = yield fetch(`/payment/detail?=${id}`);
+                const res = yield fetch(`/payment/detail?id=${id}`);
                 response = yield res.json();
             }
             catch (_) {
@@ -1592,7 +1592,7 @@ class DataLoader {
     addTagToPayment(code, paymentId) {
         return __awaiter(this, void 0, void 0, function* () {
             let dataJson = JSON.stringify({ code, paymentId });
-            fetch('/Tag/AddTagToPayment', {
+            fetch('/tag', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: dataJson,
@@ -1601,7 +1601,7 @@ class DataLoader {
     }
     getAllBudgets() {
         return __awaiter(this, void 0, void 0, function* () {
-            const res = yield fetch(`/Budget/GetAll/`);
+            const res = yield fetch(`/budget/getAll/`);
             return yield res.json();
         });
     }
@@ -1630,6 +1630,12 @@ class DataLoader {
                 body: dataJson,
             });
         });
+    }
+    queryParams(params) {
+        return Object.keys(params)
+            .filter(k => params[k] != null && params[k] != undefined)
+            .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+            .join('&');
     }
 }
 exports.default = DataLoader;
