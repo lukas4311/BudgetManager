@@ -18,6 +18,7 @@ import { ChartDataProcessor } from './Services/ChartDataProcessor';
 import DateRangeComponent from './Components/DateRangeComponent';
 import BudgetComponent from './Components/BudgetComponent';
 import BudgetForm from './Components/BudgetForm';
+import ErrorBoundary from './Components/ErrorBoundry';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
@@ -245,7 +246,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                 </div>
                 <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
+                    <ErrorBoundary>
+                        <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
+                    </ErrorBoundary>
                 </Modal>
             </div >
         )

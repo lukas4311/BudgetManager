@@ -426,6 +426,41 @@ exports.default = DateRangeComponent;
 
 /***/ }),
 
+/***/ "./Typescript/Components/ErrorBoundry.tsx":
+/*!************************************************!*\
+  !*** ./Typescript/Components/ErrorBoundry.tsx ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class ErrorBoundary extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    componentDidCatch(error, info) {
+        this.setState({ hasError: true });
+        console.log(error);
+    }
+    render() {
+        if (this.state.hasError) {
+            return react_1.default.createElement("h1", null, "Something went wrong.");
+        }
+        return this.props.children;
+    }
+}
+exports.default = ErrorBoundary;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/LineChart.tsx":
 /*!*********************************************!*\
   !*** ./Typescript/Components/LineChart.tsx ***!
@@ -933,6 +968,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "react-dom"));
+const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Components/ErrorBoundry */ "./Typescript/Components/ErrorBoundry.tsx"));
 const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./PaymentsOverview */ "./Typescript/PaymentsOverview.tsx"));
 class Overview extends React.Component {
     render() {
@@ -942,7 +978,8 @@ class Overview extends React.Component {
                 React.createElement(PaymentsOverview_1.default, null))));
     }
 }
-ReactDOM.render(React.createElement(Overview, null), document.getElementById('overview'));
+ReactDOM.render(React.createElement(ErrorBoundry_1.default, null,
+    React.createElement(Overview, null)), document.getElementById('overview'));
 
 
 /***/ }),
@@ -1197,6 +1234,7 @@ const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Types
 const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ./Components/DateRangeComponent */ "./Typescript/Components/DateRangeComponent.tsx"));
 const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/BudgetComponent */ "./Typescript/Components/BudgetComponent.tsx"));
+const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Components/ErrorBoundry */ "./Typescript/Components/ErrorBoundry.tsx"));
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -1357,7 +1395,8 @@ class PaymentsOverview extends React.Component {
                 React.createElement("div", { className: "w-1/3" },
                     React.createElement(BudgetComponent_1.default, null))),
             React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))));
+                React.createElement(ErrorBoundry_1.default, null,
+                    React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))));
     }
 }
 exports.default = PaymentsOverview;
