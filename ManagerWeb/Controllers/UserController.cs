@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ManagerWeb.Models;
+using ManagerWeb.Resources;
 using ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,14 +35,15 @@ namespace ManagerWeb.Controllers
             string passwordHash = this.hashManager.HashPasswordToSha512(model.Password);
             UserModel user = await userService.Authenticate(model.Login, passwordHash).ConfigureAwait(false);
 
-            if (user != null)
+            if (user is null)
             {
-                int userId = this.userService.GetUserId(user.Login);
-                await this.userService.SignIn(user.Login, userId).ConfigureAwait(false);
-                return this.RedirectToAction("Index", "Home");
+                this.ModelState.AddModelError(nameof(Resource.InvalidUserOrPassword), Resource.InvalidUserOrPassword);
+                return this.View(user);
             }
 
-            return this.View(user);
+            int userId = this.userService.GetUserId(user.Login);
+            await this.userService.SignIn(user.Login, userId).ConfigureAwait(false);
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }
