@@ -1271,7 +1271,7 @@ class PaymentsOverview extends React.Component {
             let selectedFilter = this.filters.find(f => f.key == filterKey);
             if (this.state.selectedFilter != selectedFilter) {
                 this.setState({ selectedFilter: selectedFilter });
-                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
             }
         };
         this.addNewPayment = () => {

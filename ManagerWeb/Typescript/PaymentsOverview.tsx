@@ -17,7 +17,6 @@ import { RadarChart } from './Components/RadarChart';
 import { ChartDataProcessor } from './Services/ChartDataProcessor';
 import DateRangeComponent from './Components/DateRangeComponent';
 import BudgetComponent from './Components/BudgetComponent';
-import BudgetForm from './Components/BudgetForm';
 import ErrorBoundary from './Components/ErrorBoundry';
 
 interface PaymentsOverviewState {
@@ -109,7 +108,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
         if (this.state.selectedFilter != selectedFilter) {
             this.setState({ selectedFilter: selectedFilter });
-            this.getPaymentData(moment(Date.now()).subtract(selectedFilter.days).toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
+            this.getPaymentData(moment(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
         }
     }
 
