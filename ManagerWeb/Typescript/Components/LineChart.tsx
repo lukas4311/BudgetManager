@@ -31,7 +31,7 @@ function LineChart({ dataSets }: LineChartProps) {
     }}
     axisBottom={{
       format: '%Y-%m-%d',
-      tickValues: 'every 2 days',
+      tickValues: 'every 1 month',
       legend: 'time scale',
       legendOffset: -12,
     }}

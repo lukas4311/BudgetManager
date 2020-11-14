@@ -131,13 +131,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private handleConfirmationClose = () => {
         this.hideModal();
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
+        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
     }
 
     private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment(Date.now()).toDate(), selectedbankId);
+        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), selectedbankId);
     }
 
     private showErrorMessage() {
@@ -170,7 +170,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     public async componentDidMount() {
         const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment(Date.now()).toDate(), null);
+        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
         this.setBankAccounts(bankAccounts);
     }
 

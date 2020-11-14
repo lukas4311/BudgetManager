@@ -497,7 +497,7 @@ function LineChart({ dataSets }) {
             tickPadding: 15
         }, axisBottom: {
             format: '%Y-%m-%d',
-            tickValues: 'every 2 days',
+            tickValues: 'every 1 month',
             legend: 'time scale',
             legendOffset: -12,
         }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
@@ -1287,12 +1287,12 @@ class PaymentsOverview extends React.Component {
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
         };
         this.bankAccountChange = (e) => {
             let selectedbankId = parseInt(e.target.value);
             this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
         };
         this.setBankAccounts = (data) => {
             if (data.success) {
@@ -1350,7 +1350,7 @@ class PaymentsOverview extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days).toDate(), moment_1.default(Date.now()).toDate(), null);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), null);
             this.setBankAccounts(bankAccounts);
         });
     }
