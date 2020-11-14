@@ -1,20 +1,10 @@
 import moment from 'moment';
 import * as React from 'react'
 import { Modal } from '../Modal';
-import { BudgetModel } from '../Model/BudgetModel';
 import DataLoader from '../Services/DataLoader';
+import { BudgetComponentProps } from './BudgetComponentProps';
+import { BudgetComponentState } from './BudgetComponentState';
 import BudgetForm from './BudgetForm';
-
-class BudgetComponentState {
-    budgetFormKey: number;
-    showBudgetFormModal: boolean;
-    budgets: BudgetModel[];
-    selectedBudgetId: number;
-}
-
-class BudgetComponentProps {
-    budgetId?: number;
-}
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
     private dataLoader: DataLoader;
@@ -25,7 +15,11 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.dataLoader = new DataLoader();
     }
 
-    public async componentDidMount() {
+    public componentDidMount() {
+        this.loadData();
+    }
+
+    public loadData = async () => {
         await this.loadBudget();
     }
 

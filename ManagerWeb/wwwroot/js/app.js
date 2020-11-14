@@ -132,10 +132,6 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Modal_1 = __webpack_require__(/*! ../Modal */ "./Typescript/Modal.tsx");
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/BudgetForm.tsx"));
-class BudgetComponentState {
-}
-class BudgetComponentProps {
-}
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
