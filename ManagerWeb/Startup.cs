@@ -49,6 +49,8 @@ namespace ManagerWeb
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IBudgetService, BudgetService>();
 
+            services.AddSwaggerGen();
+
             services.AddControllersWithViews();
         }
 
@@ -67,6 +69,12 @@ namespace ManagerWeb
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 
