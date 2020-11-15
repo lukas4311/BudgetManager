@@ -1,0 +1,6 @@
+{
+  "test": "Hi there. I am config.",
+  "stockSetting": {
+    "uri": "https://finnhub.io/api/v1/stock"
+  }
+}

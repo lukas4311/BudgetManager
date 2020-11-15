@@ -9,7 +9,6 @@ namespace FinanceDataMining.StockApi
 {
     public partial class FinnhubApi
     {
-        private const string Token = "bs445d7rh5rbsfggj800";
         private readonly HttpClient httpClient;
 
         public FinnhubApi(HttpClient httpClient)
@@ -29,7 +28,7 @@ namespace FinanceDataMining.StockApi
 
         private async Task GetStockData(DateTime from, DateTime to, string ticker)
         {
-            string fetchedData = await this.httpClient.GetStringAsync($"https://finnhub.io/api/v1/stock/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={Token}").ConfigureAwait(false);
+            string fetchedData = await this.httpClient.GetStringAsync($"https://finnhub.io/api/v1/stock/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={"test"}").ConfigureAwait(false);
 
             QuoteData quoteData = JsonConvert.DeserializeObject<QuoteData>(fetchedData);
         }

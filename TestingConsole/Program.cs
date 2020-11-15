@@ -10,7 +10,7 @@ namespace TestingConsole
             Console.WriteLine("Hello World!");
 
             SettingService testReadingConfig = new SettingService();
-            testReadingConfig.ReadConfig();
+            testReadingConfig.LoadConfig();
         }
     }
 }

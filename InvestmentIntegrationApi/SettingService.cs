@@ -12,7 +12,7 @@ namespace FinanceDataMining
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             string path = Path.Combine(Directory.GetCurrentDirectory(), ConfigFileName);
             configurationBuilder.AddJsonFile(path, false);
-
+            configurationBuilder.AddUserSecrets(this.GetType().Assembly, optional: true);
             IConfigurationRoot root = configurationBuilder.Build();
             //_sqlConnection = root.GetConnectionString("DataConnection");
         }
