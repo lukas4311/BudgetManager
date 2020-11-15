@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace InvestmentIntegrationApi.Comodity.JsonModelDto
+namespace FinanceDataMining.Comodity.JsonModelDto
 {
     internal class Dataset
     {

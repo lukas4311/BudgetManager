@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace InvestmentIntegrationApi.StockApi.JsonModelDto
+namespace FinanceDataMining.StockApi.JsonModelDto
 {
     internal class QuoteData
     {

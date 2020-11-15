@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InvestmentIntegrationApi.Extensions
+namespace FinanceDataMining.Extensions
 {
     internal static class DateTimeExtensions
     {

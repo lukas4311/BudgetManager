@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
-using InvestmentIntegrationApi.StockApi.JsonModelDto;
+using FinanceDataMining.StockApi.JsonModelDto;
 
-namespace InvestmentIntegrationApi.StockApi
+namespace FinanceDataMining.StockApi
 {
     public partial class FinnhubApi
     {

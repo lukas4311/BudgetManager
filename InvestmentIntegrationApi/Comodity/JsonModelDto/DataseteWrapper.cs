@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace InvestmentIntegrationApi.Comodity.JsonModelDto
+namespace FinanceDataMining.Comodity.JsonModelDto
 {
     internal class DataseteWrapper
     {

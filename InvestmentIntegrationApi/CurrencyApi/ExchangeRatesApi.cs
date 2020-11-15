@@ -7,7 +7,7 @@ using System.Dynamic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace InvestmentIntegrationApi.CurrencyApi
+namespace FinanceDataMining.CurrencyApi
 {
     public class ExchangeRatesApi
     {

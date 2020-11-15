@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace InvestmentIntegrationApi.Comodity
+namespace FinanceDataMining.Comodity
 {
     public class GoldApi
     {

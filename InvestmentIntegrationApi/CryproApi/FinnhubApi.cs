@@ -2,10 +2,10 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using SystemInterface;
-using InvestmentIntegrationApi.Extensions;
-using InvestmentIntegrationApi.StockApi.JsonModelDto;
+using FinanceDataMining.Extensions;
+using FinanceDataMining.StockApi.JsonModelDto;
 
-namespace InvestmentIntegrationApi.CryproApi
+namespace FinanceDataMining.CryproApi
 {
     public partial class FinnhubApi
     {

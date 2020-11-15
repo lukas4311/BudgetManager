@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace InvestmentIntegrationApi.StockApi.JsonModelDto
+namespace FinanceDataMining.StockApi.JsonModelDto
 {
     internal class CandleData
     {
