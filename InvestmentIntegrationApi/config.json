@@ -1,5 +1,5 @@
 {
-  "test": "Hi there. I am config.",
+  "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=TestDb;Trusted_Connection=True;",
   "stockSetting": {
     "uri": "https://finnhub.io/api/v1/stock"
   }
