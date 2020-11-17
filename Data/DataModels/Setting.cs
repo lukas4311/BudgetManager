@@ -2,7 +2,7 @@
 {
     public class Setting
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Code { get; set; }
 
