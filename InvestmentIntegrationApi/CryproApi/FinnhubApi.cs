@@ -9,7 +9,6 @@ namespace FinanceDataMining.CryproApi
 {
     public partial class FinnhubApi
     {
-        private const string Token = "bs445d7rh5rbsfggj800";
         private readonly HttpClient httpClient;
         private readonly IDateTime dateTime;
 
