@@ -22,7 +22,7 @@ namespace FinanceDataMining.CryproApi
         {
             double seconds = this.dateTime.Now.DateTimeInstance.ConvertToUnixTimestamp();
             double secondsPrevoiusMonth = this.dateTime.Now.AddMonths(-1).DateTimeInstance.ConvertToUnixTimestamp();
-            string res = await this.httpClient.GetStringAsync($"https://finnhub.io/api/v1/crypto/candle?symbol=BINANCE:{cryptoSymbol}&resolution=1&from={secondsPrevoiusMonth}&to={seconds}&token={Token}").ConfigureAwait(false);
+            string res = await this.httpClient.GetStringAsync($"https://finnhub.io/api/v1/crypto/candle?symbol=BINANCE:{cryptoSymbol}&resolution=1&from={secondsPrevoiusMonth}&to={seconds}&token={"test"}").ConfigureAwait(false);
             CandleData candleData = JsonConvert.DeserializeObject<CandleData>(res);
         }
     }

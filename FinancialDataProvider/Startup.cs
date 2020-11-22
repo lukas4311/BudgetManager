@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http;
 
 namespace FinancialDataProvider
 {
@@ -23,7 +24,10 @@ namespace FinancialDataProvider
             services.Configure<StockOptions>(Configuration.GetSection(nameof(StockOptions)));
             string url = Configuration.GetSection($"{nameof(StockOptions)}:Uri").Value;
             services.AddTransient(s => new StockSetting { FinhubApiUrlBase = url });
+            services.AddTransient(s => new HttpClient());
             services.AddTransient<IFinnhubStockApi, FinnhubStockApi>();
+
+            services.AddSwaggerGen();
 
             services.AddControllers();
         }
@@ -37,6 +41,13 @@ namespace FinancialDataProvider
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 
