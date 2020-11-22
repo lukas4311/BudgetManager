@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceDataMining", "Invest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repositories\Repository.csproj", "{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingConsole", "TestingConsole\TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestingConsole", "TestingConsole\TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialDataProvider", "FinancialDataProvider\FinancialDataProvider.csproj", "{943EC85F-4669-4452-AEAD-53FF786E629F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{943EC85F-4669-4452-AEAD-53FF786E629F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{943EC85F-4669-4452-AEAD-53FF786E629F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{943EC85F-4669-4452-AEAD-53FF786E629F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{943EC85F-4669-4452-AEAD-53FF786E629F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,21 +4,16 @@ using System.Threading.Tasks;
 using FinanceDataMining.StockApi.JsonModelDto;
 using System;
 using FinanceDataMining.Extensions;
-using Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace FinanceDataMining.StockApi
 {
-    public partial class FinnhubApi
+    public partial class FinnhubStockApi
     {
         private readonly HttpClient httpClient;
 
-        public FinnhubApi(HttpClient httpClient)
+        public FinnhubStockApi(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-            //optionsBuilder.UseSqlServer(new SettingService().LoadConfig());
-            //DataContext dataContext = new DataContext(optionsBuilder);
         }
 
         public async Task GetPreviousMonthCandles(string ticker)
