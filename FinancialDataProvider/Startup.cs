@@ -1,3 +1,4 @@
+using FinanceDataMining.StockApi;
 using FinancialDataProvider.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,9 @@ namespace FinancialDataProvider
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<StockOptions>(Configuration.GetSection(nameof(StockOptions)));
+            string url = Configuration.GetSection($"{nameof(StockOptions)}:Uri").Value;
+            services.AddTransient(s => new StockSetting { FinhubApiUrlBase = url });
+            services.AddTransient<IFinnhubStockApi, FinnhubStockApi>();
 
             services.AddControllers();
         }

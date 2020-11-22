@@ -7,7 +7,7 @@ using FinanceDataMining.Extensions;
 
 namespace FinanceDataMining.StockApi
 {
-    public partial class FinnhubStockApi
+    public partial class FinnhubStockApi : IFinnhubStockApi
     {
         private readonly HttpClient httpClient;
 
