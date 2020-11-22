@@ -1,6 +1,6 @@
 ﻿namespace FinancialDataProvider.Settings
 {
-    public class StockOptions
+    internal class StockOptions
     {
         public string Uri { get; set; }
     }
