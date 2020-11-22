@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using FinanceDataMining.StockApi.Models;
+using System.Threading.Tasks;
 
 namespace FinanceDataMining.StockApi
 {
     public interface IFinnhubStockApi
     {
-        Task GetPreviousMonthCandles(string ticker);
+        Task<StockData> GetPreviousMonthCandles(string ticker);
 
-        Task GetRealTimeQuoteData(string ticker);
+        Task<StockData> GetRealTimeQuoteData(string ticker);
     }
 }

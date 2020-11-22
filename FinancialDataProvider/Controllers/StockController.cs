@@ -2,11 +2,11 @@
 
 namespace FinancialDataProvider.Controllers
 {
-    public class StockController : Controller
+    public class StockController : ControllerBase
     {
-        public IActionResult Index()
+        public string Index()
         {
-            return View();
+            return "Ahoj";
         }
     }
 }

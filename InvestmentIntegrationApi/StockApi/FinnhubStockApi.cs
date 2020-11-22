@@ -4,33 +4,45 @@ using System.Threading.Tasks;
 using FinanceDataMining.StockApi.JsonModelDto;
 using System;
 using FinanceDataMining.Extensions;
+using FinanceDataMining.StockApi.Models;
 
 namespace FinanceDataMining.StockApi
 {
     public partial class FinnhubStockApi : IFinnhubStockApi
     {
         private readonly HttpClient httpClient;
+        private readonly StockSetting stockSetting;
 
-        public FinnhubStockApi(HttpClient httpClient)
+        public FinnhubStockApi(HttpClient httpClient, StockSetting stockSetting)
         {
             this.httpClient = httpClient;
+            this.stockSetting = stockSetting;
         }
 
-        public async Task GetPreviousMonthCandles(string ticker)
+        public async Task<StockData> GetPreviousMonthCandles(string ticker)
         {
-            await this.GetStockData(DateTime.Now, DateTime.Now.AddMonths(-1), ticker).ConfigureAwait(false);
+            return await this.GetStockData(DateTime.Now, DateTime.Now.AddMonths(-1), ticker).ConfigureAwait(false);
         }
 
-        public async Task GetRealTimeQuoteData(string ticker)
+        public async Task<StockData> GetRealTimeQuoteData(string ticker)
         {
-            await this.GetStockData(DateTime.Now, DateTime.Now, ticker).ConfigureAwait(false);
+            return await this.GetStockData(DateTime.Now, DateTime.Now, ticker).ConfigureAwait(false);
         }
 
-        private async Task GetStockData(DateTime from, DateTime to, string ticker)
+        private async Task<StockData> GetStockData(DateTime from, DateTime to, string ticker)
         {
-            string fetchedData = await this.httpClient.GetStringAsync($"https://finnhub.io/api/v1/stock/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={"test"}").ConfigureAwait(false);
+            string fetchedData = await this.httpClient.GetStringAsync($"{this.stockSetting}/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={"test"}").ConfigureAwait(false);
+            QuoteData data = JsonConvert.DeserializeObject<QuoteData>(fetchedData);
 
-            QuoteData quoteData = JsonConvert.DeserializeObject<QuoteData>(fetchedData);
+            return new StockData
+            {
+                CurrentPrice = data.CurrentPrice,
+                Date = data.Date,
+                HighPrice = data.HighPrice,
+                LowPrice = data.LowPrice,
+                OpenPrice = data.OpenPrice,
+                PreviousClosePrice = data.PreviousClosePrice
+            };
         }
     }
 }
