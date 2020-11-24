@@ -23,7 +23,8 @@ namespace FinancialDataProvider
         {
             services.Configure<StockOptions>(Configuration.GetSection(nameof(StockOptions)));
             string url = Configuration.GetSection($"{nameof(StockOptions)}:Uri").Value;
-            services.AddTransient(_ => new StockSetting { FinhubApiUrlBase = url });
+            string token = Configuration.GetSection($"{nameof(StockOptions)}:Token").Value;
+            services.AddTransient(_ => new StockSetting { FinhubApiUrlBase = url, Token = token });
             services.AddTransient(_ => new HttpClient());
             services.AddTransient<IFinnhubStockApi, FinnhubStockApi>();
 

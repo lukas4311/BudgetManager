@@ -1,5 +1,7 @@
 ﻿using FinanceDataMining.StockApi;
+using FinanceDataMining.StockApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FinancialDataProvider.Controllers
 {
@@ -15,9 +17,10 @@ namespace FinancialDataProvider.Controllers
         }
 
         [HttpGet("get")]
-        public string Index()
+        public async Task<StockData> Get()
         {
-            return "Ahoj";
+            StockData stockData = await this.finnhubStockApi.GetRealTimeQuoteData("NASDAQ:AAPL");
+            return stockData;
         }
     }
 }
