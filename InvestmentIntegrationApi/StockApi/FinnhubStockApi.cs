@@ -37,7 +37,7 @@ namespace FinanceDataMining.StockApi
             return new StockData
             {
                 CurrentPrice = data.CurrentPrice,
-                Date = data.Date,
+                Date = DateTimeOffset.FromUnixTimeSeconds(data.Date).Date,
                 HighPrice = data.HighPrice,
                 LowPrice = data.LowPrice,
                 OpenPrice = data.OpenPrice,

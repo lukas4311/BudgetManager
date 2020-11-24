@@ -1,4 +1,6 @@
-﻿namespace FinanceDataMining.StockApi.Models
+﻿using System;
+
+namespace FinanceDataMining.StockApi.Models
 {
     public class StockData
     {
@@ -12,6 +14,6 @@
 
         public double PreviousClosePrice { get; set; }
 
-        public int Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }
