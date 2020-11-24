@@ -31,7 +31,7 @@ namespace FinanceDataMining.StockApi
 
         private async Task<StockData> GetStockData(DateTime from, DateTime to, string ticker)
         {
-            string fetchedData = await this.httpClient.GetStringAsync($"{this.stockSetting}/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={"test"}").ConfigureAwait(false);
+            string fetchedData = await this.httpClient.GetStringAsync($"{this.stockSetting}/candle?symbol={ticker}&resolution=1&from={from.ConvertToUnixTimestamp()}&to={to.ConvertToUnixTimestamp()}&token={stockSetting.Token}").ConfigureAwait(false);
             QuoteData data = JsonConvert.DeserializeObject<QuoteData>(fetchedData);
 
             return new StockData
