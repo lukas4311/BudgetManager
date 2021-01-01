@@ -9,8 +9,8 @@ namespace TestingConsole
         {
             Console.WriteLine("Hello World!");
 
-            SettingService testReadingConfig = new SettingService();
-            testReadingConfig.LoadConfig();
+            //SettingService testReadingConfig = new SettingService();
+            //testReadingConfig.LoadConfig();
         }
     }
 }
