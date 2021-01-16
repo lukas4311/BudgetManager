@@ -1,7 +1,13 @@
-﻿using FinanceDataMining.StockApi;
+﻿using FinanceDataMining.CryproApi;
+using FinanceDataMining.Models;
+using FinanceDataMining.StockApi;
 using FinanceDataMining.StockApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using SystemInterface;
+using SystemWrapper;
 
 namespace FinancialDataProvider.Controllers
 {
@@ -21,6 +27,14 @@ namespace FinancialDataProvider.Controllers
         {
             StockData stockData = await this.finnhubStockApi.GetRealTimeQuoteData("NASDAQ:AAPL");
             return stockData;
+        }
+
+        [HttpGet("getCrypto")]
+        public async Task<List<CandleModel>> GetHistoricData()
+        {
+            IDateTime dateTime = new DateTimeWrap();
+            CryptoCandleDataApi cryptoCandleDataApi = new CryptoCandleDataApi(new HttpClient(), dateTime);
+            return await cryptoCandleDataApi.GetPreviousMonthCryptoCandles("BTC-EUR");
         }
     }
 }
