@@ -1,5 +1,6 @@
 ﻿using FinanceDataMining.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,20 +11,18 @@ namespace FinanceDataMining.CryproApi
     public class CryptoCandleDataApi
     {
         private readonly HttpClient httpClient;
-        private readonly IDateTime dateTime;
         private const string dateFormat = "yyyy-MM-dd HH:mm:ss";
 
-        public CryptoCandleDataApi(HttpClient httpClient, IDateTime dateTime)
+        public CryptoCandleDataApi(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.dateTime = dateTime;
         }
 
-        public async Task<List<CandleModel>> GetPreviousMonthCryptoCandles(string cryptoSymbol)
+        public async Task<List<CandleModel>> GetCandlesMonthData(string cryptoSymbol, DateTime dateTime)
         {
-            string now = this.dateTime.Now.DateTimeInstance.ToString(dateFormat);
-            string prevoiusMonth = this.dateTime.Now.AddMonths(-1).DateTimeInstance.ToString(dateFormat);
-            string url = $"https://cryptocandledata.com/api/candles?exchange=coinbase&tradingPair={cryptoSymbol}&interval=1d&startDateTime={prevoiusMonth}&endDateTime={now}";
+            string start = dateTime.ToString(dateFormat);
+            string end = dateTime.AddMonths(1).ToString(dateFormat);
+            string url = $"https://cryptocandledata.com/api/candles?exchange=coinbase&tradingPair={cryptoSymbol}&interval=1d&startDateTime={start}&endDateTime={end}";
             var data = await this.httpClient.GetStringAsync(url);
             return JsonConvert.DeserializeObject<List<CandleModel>>(data);
         }

@@ -12,5 +12,6 @@ namespace InfluxDbData
         Task<List<TModel>> GetPastDaysData(DataSourceIdentification dataSourceIdentification, int days);
         Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour);
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
+        Task WriteAll(List<TModel> model, DataSourceIdentification dataSourceIdentification);
     }
 }

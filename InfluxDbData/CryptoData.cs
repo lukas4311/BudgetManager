@@ -3,8 +3,8 @@ using System;
 
 namespace InfluxDbData
 {
-    [Measurement("stockData")]
-    public class StockData : IInfluxModel
+    [Measurement("cryptoData")]
+    public class CryptoData : IInfluxModel
     {
         [Column("closePrice")]
         public double ClosePrice { get; set; }
@@ -17,9 +17,6 @@ namespace InfluxDbData
 
         [Column("openPrices")]
         public double OpenPrice { get; set; }
-
-        [Column("status")]
-        public string Status { get; set; }
 
         [Column("volumes")]
         public double Volume { get; set; }

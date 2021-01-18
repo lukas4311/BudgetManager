@@ -30,7 +30,19 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             WriteApiAsync writeContext = this.context.Client.GetWriteApiAsync();
-            await writeContext.WriteMeasurementAsync(dataSourceIdentification.Bucket, dataSourceIdentification.Organization, WritePrecision.S, model).ConfigureAwait(false);
+            await writeContext.WriteMeasurementAsync(dataSourceIdentification.Bucket, dataSourceIdentification.Organization, WritePrecision.Ns, model).ConfigureAwait(false);
+        }
+
+        public async Task WriteAll(List<TModel> model, DataSourceIdentification dataSourceIdentification)
+        {
+            if (model is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(model));
+
+            if (dataSourceIdentification is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
+
+            WriteApiAsync writeContext = this.context.Client.GetWriteApiAsync();
+            await writeContext.WriteMeasurementsAsync(dataSourceIdentification.Bucket, dataSourceIdentification.Organization, WritePrecision.Ns, model).ConfigureAwait(false);
         }
 
         public async Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour)
@@ -112,7 +124,7 @@ namespace InfluxDbData
         {
             TModel model = new TModel
             {
-                Time = record.GetTimeInDateTime()
+                Time = record.GetTimeInDateTime().Value
             };
 
             foreach (KeyValuePair<string, object> pair in record.Values)

@@ -32,9 +32,8 @@ namespace FinancialDataProvider.Controllers
         [HttpGet("getCrypto")]
         public async Task<List<CandleModel>> GetHistoricData()
         {
-            IDateTime dateTime = new DateTimeWrap();
-            CryptoCandleDataApi cryptoCandleDataApi = new CryptoCandleDataApi(new HttpClient(), dateTime);
-            return await cryptoCandleDataApi.GetPreviousMonthCryptoCandles("BTC-EUR");
+            CryptoCandleDataApi cryptoCandleDataApi = new CryptoCandleDataApi(new HttpClient());
+            return await cryptoCandleDataApi.GetCandlesMonthData("BTC-EUR", new System.DateTime(2019, 1,1));
         }
     }
 }

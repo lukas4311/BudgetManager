@@ -4,6 +4,6 @@ namespace InfluxDbData
 {
     public interface IInfluxModel
     {
-        DateTime? Time { get; set; }
+        DateTime Time { get; set; }
     }
 }
