@@ -24,8 +24,28 @@ namespace FinanceDataMining.CryproApi
             string url = $"https://api.cryptowat.ch/markets/coinbase-pro/{cryptoSymbol}/ohlc?periods={fourHourCandles}&after={from}";
             string response = await this.httpClient.GetStringAsync(url);
             var data = JsonConvert.DeserializeObject<CandleStickRootModel>(response);
+            List<CandleModel> candleModels = new List<CandleModel>();
 
-            return new List<CandleModel>();
+
+            foreach (var item in data.CandleStickData.FourHour)
+            {
+                candleModels.Add(this.ParseToCandleModel(item));
+            }
+
+            return candleModels;
+        }
+
+        private CandleModel ParseToCandleModel(List<double> item)
+        {
+            return new CandleModel
+            {
+                DateTime = item[0].ToString(),
+                Open = item[1],
+                High = item[2],
+                Low = item[3],
+                Close = item[4],
+                Volume = item[5]
+            };
         }
     }
 }
