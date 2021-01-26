@@ -24,11 +24,11 @@ namespace TestingConsole
 
             ConfigManager configManager = new ConfigManager();
             InfluxConfig config = configManager.GetSecretToken();
+            DataDownloader dataDownloader = new DataDownloader();
 
-            CryptoWatch cryptoCandleDataApi = new CryptoWatch(new HttpClient());
-            List<CandleModel> data = await cryptoCandleDataApi.GetCandlesDataFrom("BTCUSD", new System.DateTime(2019, 1, 1));
+            List<CandleModel> data = await dataDownloader.DownloadData(CryptoTicker.BTCUSD, new DateTime(2021, 1, 26)).ConfigureAwait(false);
+
             Repository<CryptoData> influxRepo = new Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
-
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification("8f46f33452affe4a", "Crypto");
 
             foreach (CandleModel model in data)
