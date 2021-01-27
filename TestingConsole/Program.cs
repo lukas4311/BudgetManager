@@ -18,7 +18,7 @@ namespace TestingConsole
             InfluxConfig config = configManager.GetSecretToken();
             DataDownloader dataDownloader = new DataDownloader();
 
-            CryptoTicker tickerToDownload = CryptoTicker.ETHUSD;
+            CryptoTicker tickerToDownload = CryptoTicker.SNXUSD;
 
             List<CandleModel> data = await dataDownloader.DownloadData(tickerToDownload, new DateTime(2019, 1, 1)).ConfigureAwait(false);
 
@@ -39,7 +39,5 @@ namespace TestingConsole
                 }, dataSourceIdentification);
             }
         }
-
-
     }
 }

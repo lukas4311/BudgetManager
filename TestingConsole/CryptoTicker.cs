@@ -9,6 +9,9 @@ namespace TestingConsole
     public enum CryptoTicker
     {
         BTCUSD,
-        ETHUSD
+        ETHUSD,
+        LINKUSD,
+        ATOMUSD,
+        SNXUSD
     }
 }
