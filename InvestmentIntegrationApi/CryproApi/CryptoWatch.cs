@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace FinanceDataMining.CryproApi
 {
+
+    /// <summary>
+    /// https://docs.cryptowat.ch/home/
+    /// </summary>
     public class CryptoWatch
     {
         private readonly HttpClient httpClient;

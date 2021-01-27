@@ -9,6 +9,9 @@ namespace TestingConsole
 {
     public class DataDownloader
     {
+        const string organizationId = "8f46f33452affe4a";
+        const string bucket = "Crypto";
+
         public async Task<List<CandleModel>> DownloadData(CryptoTicker cryptoTicker, DateTime from)
         {
             CryptoWatch cryptoCandleDataApi = new CryptoWatch(new HttpClient());

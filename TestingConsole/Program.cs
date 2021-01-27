@@ -1,24 +1,16 @@
-﻿using FinanceDataMining;
-using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
+﻿using FinanceDataMining.Models;
 using InfluxDbData;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
-using SystemInterface;
-using SystemWrapper;
 
 namespace TestingConsole
 {
     class Program
     {
+        const string organizationId = "8f46f33452affe4a";
+        const string bucket = "Crypto";
+
         static async Task Main(string[] args)
         {
 
@@ -26,10 +18,12 @@ namespace TestingConsole
             InfluxConfig config = configManager.GetSecretToken();
             DataDownloader dataDownloader = new DataDownloader();
 
-            List<CandleModel> data = await dataDownloader.DownloadData(CryptoTicker.BTCUSD, new DateTime(2021, 1, 26)).ConfigureAwait(false);
+            CryptoTicker tickerToDownload = CryptoTicker.ETHUSD;
+
+            List<CandleModel> data = await dataDownloader.DownloadData(tickerToDownload, new DateTime(2019, 1, 1)).ConfigureAwait(false);
 
             Repository<CryptoData> influxRepo = new Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification("8f46f33452affe4a", "Crypto");
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucket);
 
             foreach (CandleModel model in data)
             {
@@ -39,12 +33,13 @@ namespace TestingConsole
                     HighPrice = model.High,
                     LowPrice = model.Low,
                     OpenPrice = model.Open,
-                    Ticker = "BTCUSD",
+                    Ticker = tickerToDownload.ToString(),
                     Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(model.DateTime)).DateTime.ToUniversalTime(),
                     Volume = model.Volume
-                }
-                , dataSourceIdentification);
+                }, dataSourceIdentification);
             }
         }
+
+
     }
 }
