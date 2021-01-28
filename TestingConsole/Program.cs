@@ -18,13 +18,13 @@ namespace TestingConsole
             ConfigManager configManager = new ConfigManager();
             InfluxConfig config = configManager.GetSecretToken();
 
-            //CryptoDataDownloader dataDownloader = new CryptoDataDownloader(config);
-            //await dataDownloader.CryptoDownload(config, CryptoTicker.SNXUSD).ConfigureAwait(false);
+            //Repository<ForexData> repo = new Repository<ForexData>(new InfluxContext(config.Url, config.Token));
+            //CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
+            //await dataDownloader.CryptoDownload(CryptoTicker.SNXUSD).ConfigureAwait(false);
 
             Repository<ForexData> repo = new Repository<ForexData>(new InfluxContext(config.Url, config.Token));
             ForexDataDownloader forexDataDownloader = new ForexDataDownloader(repo, new DataSourceIdentification(organizationId, bucketForex));
-
-            await forexDataDownloader.ForexDownload(ForexTicker.CZK).ConfigureAwait(false);
+            await forexDataDownloader.ForexDownload(ForexTicker.USD).ConfigureAwait(false);
         }
     }
 }
