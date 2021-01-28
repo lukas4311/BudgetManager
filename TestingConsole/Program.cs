@@ -8,9 +8,6 @@ namespace TestingConsole
 {
     class Program
     {
-        const string organizationId = "8f46f33452affe4a";
-        const string bucket = "Crypto";
-
         static async Task Main(string[] args)
         {
 
