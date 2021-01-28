@@ -8,6 +8,7 @@ using SystemInterface;
 
 namespace FinanceDataMining.CryproApi
 {
+    [Obsolete]
     public class CryptoCandleDataApi
     {
         private readonly HttpClient httpClient;

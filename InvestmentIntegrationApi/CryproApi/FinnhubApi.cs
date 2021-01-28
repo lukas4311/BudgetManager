@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using SystemInterface;
 using FinanceDataMining.Extensions;
 using FinanceDataMining.StockApi.JsonModelDto;
+using System;
 
 namespace FinanceDataMining.CryproApi
 {
+    [Obsolete]
     public partial class FinnhubApi
     {
         private readonly HttpClient httpClient;
