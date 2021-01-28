@@ -17,10 +17,11 @@ namespace FinanceDataMining.CurrencyApi
             this.httpClient = httpClient;
         }
 
-        public async Task GetCurrencyHistory(DateTime from, DateTime to, string currencyCode)
+        public async Task<List<CurrencyData>> GetCurrencyHistory(DateTime from, DateTime to, string currencyCode)
         {
             string json = await httpClient.GetStringAsync($"https://api.exchangeratesapi.io/history?start_at={from.Date:yyyy-MM-dd}&end_at={to.Date:yyyy-MM-dd}&base={currencyCode}").ConfigureAwait(false);
-            this.ParseDonwloadedData(json);
+
+            return this.ParseDonwloadedData(json, currencyCode);
         }
 
         public async Task GetActualValueOfCurrency(string currencyCode)
@@ -28,7 +29,7 @@ namespace FinanceDataMining.CurrencyApi
             await this.GetCurrencyHistory(DateTime.Now, DateTime.Now, currencyCode).ConfigureAwait(false);
         }
 
-        private void ParseAllProperties(dynamic expandoObject)
+        private List<CurrencyData> ParseAllProperties(dynamic expandoObject, string currencyCode)
         {
             IDictionary<string, object> propertyValues = expandoObject.rates;
             List<CurrencyData> allCurrencyHistoryData = new List<CurrencyData>();
@@ -37,25 +38,27 @@ namespace FinanceDataMining.CurrencyApi
             {
                 CurrencyData currencyData = new CurrencyData
                 {
-                    Date = DateTime.Parse(property)
+                    Date = DateTime.Parse(property),
+                    BaseCurrency = currencyCode
                 };
+
                 IDictionary<string, object> anotherCurrecies = propertyValues[property] as IDictionary<string, object>;
 
                 foreach (string propertyCurrency in anotherCurrecies.Keys)
-                {
                     currencyData.PriceOfAnotherCurrencies.Add((propertyCurrency, decimal.Parse(anotherCurrecies[propertyCurrency].ToString())));
-                }
 
                 allCurrencyHistoryData.Add(currencyData);
             }
+
+            return allCurrencyHistoryData;
         }
 
-        private void ParseDonwloadedData(string json)
+        private List<CurrencyData> ParseDonwloadedData(string json, string currencyCode)
         {
             ExpandoObjectConverter converter = new ExpandoObjectConverter();
             dynamic deserializedData = JsonConvert.DeserializeObject<ExpandoObject>(json, converter);
 
-            this.ParseAllProperties(deserializedData);
+            return this.ParseAllProperties(deserializedData, currencyCode);
         }
     }
 }

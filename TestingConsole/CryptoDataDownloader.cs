@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 
 namespace TestingConsole
 {
-    internal class DataDownloader
+    internal class CryptoDataDownloader
     {
-        const string organizationId = "8f46f33452affe4a";
-        const string bucket = "Crypto";
+        private readonly IRepository<CryptoData> influxRepo;
+        private readonly DataSourceIdentification dataSourceIdentification;
 
-        public async Task CryptoDownload(InfluxConfig config, CryptoTicker tickerToDownload)
+        public CryptoDataDownloader(IRepository<CryptoData> influxRepository, DataSourceIdentification dataSourceIdentification)
+        {
+            this.influxRepo = influxRepository;
+            this.dataSourceIdentification = dataSourceIdentification;
+        }
+
+        public async Task CryptoDownload(CryptoTicker tickerToDownload)
         {
             List<CandleModel> data = await this.DownloadData(tickerToDownload, new DateTime(2019, 1, 1)).ConfigureAwait(false);
-
-            Repository<CryptoData> influxRepo = new Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucket);
 
             foreach (CandleModel model in data)
             {
@@ -31,7 +34,7 @@ namespace TestingConsole
                     Ticker = tickerToDownload.ToString(),
                     Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(model.DateTime)).DateTime.ToUniversalTime(),
                     Volume = model.Volume
-                }, dataSourceIdentification);
+                }, this.dataSourceIdentification).ConfigureAwait(false);
             }
         }
 
