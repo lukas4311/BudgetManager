@@ -18,26 +18,7 @@ namespace TestingConsole
             InfluxConfig config = configManager.GetSecretToken();
             DataDownloader dataDownloader = new DataDownloader();
 
-            CryptoTicker tickerToDownload = CryptoTicker.SNXUSD;
-
-            List<CandleModel> data = await dataDownloader.DownloadData(tickerToDownload, new DateTime(2019, 1, 1)).ConfigureAwait(false);
-
-            Repository<CryptoData> influxRepo = new Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucket);
-
-            foreach (CandleModel model in data)
-            {
-                await influxRepo.Write(new CryptoData
-                {
-                    ClosePrice = model.Close,
-                    HighPrice = model.High,
-                    LowPrice = model.Low,
-                    OpenPrice = model.Open,
-                    Ticker = tickerToDownload.ToString(),
-                    Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(model.DateTime)).DateTime.ToUniversalTime(),
-                    Volume = model.Volume
-                }, dataSourceIdentification);
-            }
+            await dataDownloader.CryptoDownload(config, CryptoTicker.SNXUSD).ConfigureAwait(false);
         }
     }
 }
