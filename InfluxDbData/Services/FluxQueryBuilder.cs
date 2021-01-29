@@ -7,10 +7,14 @@ namespace InfluxDbData.Services
     {
         private const string rangeStartStopAbsoluteClause = "range(start: {0}, stop: {1})";
         private const string rangeStartRelativeClause = "range(start: {0})";
-        private const string pivot = @"pivot(rowKey:[""_time""],columnKey: [""_field""],valueColumn: ""_value"")";
+        private const string pivotClause = @"pivot(rowKey:[""_time""],columnKey: [""_field""],valueColumn: ""_value"")";
+        private const string sortClause = @"sort(columns: [""_time""], desc: {0})";
+        private const string tailClause = "tail(n: {0})";
 
         private string fromClause = "from(bucket:\"{0}\")";
         private string range = string.Empty;
+        private string tail = string.Empty;
+        private string sort = string.Empty;
 
         private List<(string, object)> filters = new List<(string, object)>();
 
@@ -56,6 +60,18 @@ namespace InfluxDbData.Services
             return this;
         }
 
+        public FluxQueryBuilder Sort(bool ascending = true)
+        {
+            this.sort = string.Format(sortClause, ascending.ToString());
+            return this;
+        }
+
+        public FluxQueryBuilder Take(int count)
+        {
+            this.tail = string.Format(tailClause, count);
+            return this;
+        }
+
         public string CreateQuery()
         {
             string query = this.fromClause;
@@ -64,7 +80,19 @@ namespace InfluxDbData.Services
             query += " |> ";
             query += this.GetFilterQeuryPartToQuery();
             query += " |> ";
-            query += pivot;
+            query += pivotClause;
+
+            if (!string.IsNullOrEmpty(this.sort))
+            {
+                query += " |> ";
+                query += this.sort;
+            }
+
+            if (!string.IsNullOrEmpty(this.tail))
+            {
+                query += " |> ";
+                query += this.tail;
+            }
 
             return query;
         }
