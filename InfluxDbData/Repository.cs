@@ -15,10 +15,14 @@ namespace InfluxDbData
     {
         private const string ParameterErrorMessage = "Parameter cannot be null!";
         private readonly IInfluxContext context;
+        private readonly string measurementName;
 
         public Repository(IInfluxContext context)
         {
             this.context = context;
+
+            Measurement measurementAttribute = typeof(TModel).GetCustomAttributes(typeof(Measurement)).Single() as Measurement;
+            this.measurementName = measurementAttribute.Name;
         }
 
         public async Task Write(TModel model, DataSourceIdentification dataSourceIdentification)
