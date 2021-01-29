@@ -51,7 +51,7 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(hour).AddFilter("_measurement", "stockData").CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(hour).AddFilter("_measurement", "cryptoData").CreateQuery();
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
@@ -63,10 +63,29 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(days).AddFilter("_measurement", "stockData").CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(days).AddFilter("_measurement", "cryptoData").CreateQuery();
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
+        }
+
+        public async Task<DateTime> GetLastWrittenRecordTime(DataSourceIdentification dataSourceIdentification)
+        {
+            if (dataSourceIdentification is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
+
+            FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
+            string query = queryBuilder
+                .From(dataSourceIdentification.Bucket)
+                .RangePastDays(int.MaxValue)
+                .AddFilter("_measurement", "cryptoData")
+                .Sort(false)
+                .Take(1)
+                .CreateQuery();
+
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
+
+            return this.ParseData(data).SingleOrDefault().Time;
         }
 
         public async Task Delete(DataSourceIdentification dataSourceIdentification, DateTimeRange dateTimeRange)

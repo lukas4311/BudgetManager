@@ -62,7 +62,7 @@ namespace InfluxDbData.Services
 
         public FluxQueryBuilder Sort(bool ascending = true)
         {
-            this.sort = string.Format(sortClause, ascending.ToString());
+            this.sort = string.Format(sortClause, ascending.ToString().ToLower());
             return this;
         }
 
