@@ -55,7 +55,11 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(hour).AddFilter("_measurement", this.measurementName).CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket)
+                .RangePastDays(hour)
+                .AddMeasurementFilter(this.measurementName)
+                .CreateQuery();
+
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
@@ -67,7 +71,11 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(days).AddFilter("_measurement", this.measurementName).CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket)
+                .RangePastDays(days)
+                .AddMeasurementFilter(this.measurementName)
+                .CreateQuery();
+
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
@@ -82,7 +90,7 @@ namespace InfluxDbData
             string query = queryBuilder
                 .From(dataSourceIdentification.Bucket)
                 .RangePastDays(int.MaxValue)
-                .AddFilter("_measurement", this.measurementName)
+                .AddMeasurementFilter(this.measurementName)
                 .Sort(false)
                 .Take(1)
                 .CreateQuery();
@@ -111,7 +119,7 @@ namespace InfluxDbData
             if (deletePredicate is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(deletePredicate));
 
-            await this.context.Client.GetDeleteApi().Delete(deletePredicate, dataSourceIdentification.Bucket, dataSourceIdentification.Organization);
+            await this.context.Client.GetDeleteApi().Delete(deletePredicate, dataSourceIdentification.Bucket, dataSourceIdentification.Organization).ConfigureAwait(false);
         }
 
         public async Task DeleteAll(DataSourceIdentification dataSourceIdentification)

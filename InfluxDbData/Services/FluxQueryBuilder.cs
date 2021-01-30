@@ -60,6 +60,11 @@ namespace InfluxDbData.Services
             return this;
         }
 
+        public FluxQueryBuilder AddMeasurementFilter(string measurementName)
+        {
+            return this.AddFilter("_measurement", measurementName);
+        }
+
         public FluxQueryBuilder Sort(bool ascending = true)
         {
             this.sort = string.Format(sortClause, ascending.ToString().ToLower());
