@@ -55,7 +55,7 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(hour).AddFilter("_measurement", "cryptoData").CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(hour).AddFilter("_measurement", this.measurementName).CreateQuery();
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
@@ -67,7 +67,7 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(days).AddFilter("_measurement", "cryptoData").CreateQuery();
+            string query = queryBuilder.From(dataSourceIdentification.Bucket).RangePastDays(days).AddFilter("_measurement", this.measurementName).CreateQuery();
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
             return this.ParseData(data);
@@ -82,7 +82,7 @@ namespace InfluxDbData
             string query = queryBuilder
                 .From(dataSourceIdentification.Bucket)
                 .RangePastDays(int.MaxValue)
-                .AddFilter("_measurement", "cryptoData")
+                .AddFilter("_measurement", this.measurementName)
                 .Sort(false)
                 .Take(1)
                 .CreateQuery();
