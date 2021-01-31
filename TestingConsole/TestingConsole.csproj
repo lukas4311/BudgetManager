@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\InfluxDbData\InfluxDbData.csproj" />
     <ProjectReference Include="..\InvestmentIntegrationApi\FinanceDataMining.csproj" />
+    <ProjectReference Include="..\Repositories\Repository.csproj" />
   </ItemGroup>
 
 </Project>

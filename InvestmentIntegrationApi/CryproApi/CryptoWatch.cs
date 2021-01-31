@@ -16,7 +16,7 @@ namespace FinanceDataMining.CryproApi
     public class CryptoWatch
     {
         private readonly HttpClient httpClient;
-        private const string cryptoWatchBaseUrl = "https://api.cryptowat.ch/";
+        private const string cryptoWatchBaseUrl = "https://api.cryptowat.ch";
         private Exchanges exchange = Exchanges.CoinbasePro;
         private int fourHourCandles = 14400;
 

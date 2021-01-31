@@ -1,29 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace FinanceDataMining.Models
 {
     public class CryptoAsset
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("symbol")]
+        [JsonProperty("symbol")]
         public string Symbol { get; set; }
 
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("fiat")]
+        [JsonProperty("fiat")]
         public bool Fiat { get; set; }
 
-        [JsonPropertyName("route")]
+        [JsonProperty("route")]
         public string Route { get; set; }
     }
 
     public class CryptoAssetRoot
     {
-        [JsonPropertyName("result")]
+        [JsonProperty("result")]
         public IEnumerable<CryptoAsset> Assets { get; set; }
     }
 }
