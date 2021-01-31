@@ -3,7 +3,8 @@ module.exports = {
     mode: "development",
     entry: {
         app: './Typescript/Overview.tsx',
-        menu: './Typescript/Components/Menu.tsx'
+        menu: './Typescript/Components/Menu.tsx',
+        crypto: './Typescript/Crypto.tsx'
     },
     output: {
         filename: "[name].js",
