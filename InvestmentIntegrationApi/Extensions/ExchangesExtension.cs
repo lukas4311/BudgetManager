@@ -1,7 +1,7 @@
-﻿using FinanceDataMining.CryproApi.Enums;
+﻿using FinanceDataMining.Enums;
 using System.ComponentModel;
 
-namespace FinanceDataMining.CryproApi.Extensions
+namespace FinanceDataMining.Extensions
 {
     internal static class ExchangesExtension
     {

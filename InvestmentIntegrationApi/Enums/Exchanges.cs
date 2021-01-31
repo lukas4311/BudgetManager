@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace FinanceDataMining.CryproApi.Enums
+namespace FinanceDataMining.Enums
 {
     public enum Exchanges
     {

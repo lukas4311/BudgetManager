@@ -1,8 +1,7 @@
-﻿using FinanceDataMining.CryproApi.Enums;
-using FinanceDataMining.CryproApi.Extensions;
+﻿using FinanceDataMining.Enums;
+using FinanceDataMining.Extensions;
 using FinanceDataMining.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -40,6 +39,15 @@ namespace FinanceDataMining.CryproApi
                 candleModels.Add(this.ParseToCandleModel(item));
 
             return candleModels;
+        }
+
+        public async Task<IEnumerable<CryptoAsset>> GetAssets()
+        {
+            string url = $"{cryptoWatchBaseUrl}/assets";
+            string response = await this.httpClient.GetStringAsync(url);
+            CryptoAssetRoot data = JsonConvert.DeserializeObject<CryptoAssetRoot>(response);
+
+            return data.Assets;
         }
 
         private CandleModel ParseToCandleModel(List<double> item)
