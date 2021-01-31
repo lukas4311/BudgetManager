@@ -16,6 +16,10 @@ class Menu extends React.Component<{}, MenuState> {
         this.setState((prev) => ({ isClosed: !prev.isClosed }));
     }
 
+    redirectToPage = (link: string) => {
+        window.location.href = '/' + link;
+    }
+
     public render() {
 
         return (
@@ -26,12 +30,12 @@ class Menu extends React.Component<{}, MenuState> {
                     <div className="w-3/5 bg-white h-1 rounded-lg mx-auto"></div>
                 </div>
                 <div className={(this.state.isClosed ? "containerClosed" : "containerOpen") + " menu absolute text-white rounded-lg bg-black mt-4 w-48 text-xl"}>
-                    <a className="block mt-2 ml-10">Home</a>
-                    <a className="block mt-2 ml-10">Platby</a>
-                    <a className="block mt-2 ml-10">Crypto</a>
-                    <a className="block mt-2 ml-10">Rozpočet</a>
-                    <a className="block mt-2 ml-10">Dluhy</a>
-                    <a className="block mt-2 ml-10 mb-2">Statistiky</a>
+                    <a className="block mt-2 ml-10 cursor-pointer" onClick={_ => this.redirectToPage("")}>Home</a>
+                    <a className="block mt-2 ml-10 cursor-pointer" onClick={_ => this.redirectToPage("payments")}>Platby</a>
+                    <a className="block mt-2 ml-10 cursor-pointer" onClick={_ => this.redirectToPage("crypto")}>Crypto</a>
+                    <a className="block mt-2 ml-10 cursor-pointer" onClick={_ => this.redirectToPage("budget")}>Rozpočet</a>
+                    <a className="block mt-2 ml-10 cursor-pointer" onClick={_ => this.redirectToPage("debts")}>Dluhy</a>
+                    <a className="block mt-2 ml-10 mb-2 cursor-pointer" onClick={_ => this.redirectToPage("stats")}>Statistiky</a>
                 </div>
             </nav>
         );

@@ -104,6 +104,9 @@ const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-
 class Menu extends react_1.default.Component {
     constructor(props) {
         super(props);
+        this.redirectToPage = (link) => {
+            window.location.href = '/' + link;
+        };
         this.menuClick = this.menuClick.bind(this);
         this.state = { isClosed: true };
     }
@@ -117,12 +120,12 @@ class Menu extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto" }),
                 react_1.default.createElement("div", { className: "w-3/5 bg-white h-1 rounded-lg mx-auto" })),
             react_1.default.createElement("div", { className: (this.state.isClosed ? "containerClosed" : "containerOpen") + " menu absolute text-white rounded-lg bg-black mt-4 w-48 text-xl" },
-                react_1.default.createElement("a", { className: "block mt-2 ml-10" }, "Home"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10" }, "Platby"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10" }, "Crypto"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10" }, "Rozpo\u010Det"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10" }, "Dluhy"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10 mb-2" }, "Statistiky"))));
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("") }, "Home"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("payments") }, "Platby"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("crypto") }, "Crypto"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("budget") }, "Rozpo\u010Det"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("debts") }, "Dluhy"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 mb-2 cursor-pointer", onClick: _ => this.redirectToPage("stats") }, "Statistiky"))));
     }
 }
 react_dom_1.default.render(react_1.default.createElement(Menu, null), document.getElementById('navMenu'));

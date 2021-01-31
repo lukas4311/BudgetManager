@@ -21,6 +21,12 @@ namespace ManagerWeb.Controllers
             return View();
         }
 
+        [HttpGet("crypto")]
+        public IActionResult Crypto()
+        {
+            return this.View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

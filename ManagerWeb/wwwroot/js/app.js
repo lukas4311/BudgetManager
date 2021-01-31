@@ -135,6 +135,9 @@ const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.loadData = () => __awaiter(this, void 0, void 0, function* () {
+            yield this.loadBudget();
+        });
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
         };
@@ -145,9 +148,7 @@ class BudgetComponent extends React.Component {
         this.dataLoader = new DataLoader_1.default();
     }
     componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.loadBudget();
-        });
+        this.loadData();
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
