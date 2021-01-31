@@ -36,7 +36,9 @@ namespace TestingConsole
 
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(configManager.GetConnectionString());
-            DataContext dataContext = new DataContext(optionsBuilder.Options);   
+            DataContext dataContext = new DataContext(optionsBuilder.Options);
+
+
         }
     }
 }
