@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CryproApi\Attributes\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

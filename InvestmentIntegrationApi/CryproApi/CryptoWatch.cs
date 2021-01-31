@@ -1,4 +1,6 @@
-﻿using FinanceDataMining.Models;
+﻿using FinanceDataMining.CryproApi.Enums;
+using FinanceDataMining.CryproApi.Extensions;
+using FinanceDataMining.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,6 +17,8 @@ namespace FinanceDataMining.CryproApi
     public class CryptoWatch
     {
         private readonly HttpClient httpClient;
+        private const string cryptoWatchBaseUrl = "https://api.cryptowat.ch/";
+        private Exchanges exchange = Exchanges.CoinbasePro;
         private int fourHourCandles = 14400;
 
         public CryptoWatch(HttpClient httpClient)
@@ -22,19 +26,18 @@ namespace FinanceDataMining.CryproApi
             this.httpClient = httpClient;
         }
 
+        public void ChangeExchange(Exchanges exchange) => this.exchange = exchange;
+
         public async Task<List<CandleModel>> GetCandlesDataFrom(string cryptoSymbol, DateTime dateTime)
         {
             long from = ((DateTimeOffset)dateTime).ToUnixTimeSeconds();
-            string url = $"https://api.cryptowat.ch/markets/coinbase-pro/{cryptoSymbol}/ohlc?periods={fourHourCandles}&after={from}";
+            string url = $"{cryptoWatchBaseUrl}/markets/{exchange.ToDescriptionString()}/{cryptoSymbol}/ohlc?periods={fourHourCandles}&after={from}";
             string response = await this.httpClient.GetStringAsync(url);
-            var data = JsonConvert.DeserializeObject<CandleStickRootModel>(response);
+            CandleStickRootModel data = JsonConvert.DeserializeObject<CandleStickRootModel>(response);
             List<CandleModel> candleModels = new List<CandleModel>();
 
-
             foreach (var item in data.CandleStickData.FourHour)
-            {
                 candleModels.Add(this.ParseToCandleModel(item));
-            }
 
             return candleModels;
         }
