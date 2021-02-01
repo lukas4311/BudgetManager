@@ -27,7 +27,12 @@ namespace ManagerWeb
             // configure basic authentication 
             services
                 .AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => options.LoginPath = "/User/Authenticate");
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => options.LoginPath = "/User/Authenticate")
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "[MyGoogleClientId]";
+                    options.ClientSecret = "[MyGoogleSecretKey]";
+                }); ;
 
             services.Configure<DbSetting>(connectinoStringSection);
             services.AddHttpContextAccessor();
