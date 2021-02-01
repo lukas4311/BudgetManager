@@ -1,21 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data;
 using ManagerWeb.Extensions;
 using ManagerWeb.Models.SettingModels;
-using ManagerWeb.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Repository;
 
 namespace ManagerWeb
 {
@@ -43,11 +33,7 @@ namespace ManagerWeb
             services.AddHttpContextAccessor();
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.ConfigureIoCRepositories();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IPaymentService, PaymentService>();
-            services.AddTransient<ITagService, TagService>();
-            services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IBudgetService, BudgetService>();
+            services.RegisterServices();
 
             services.AddSwaggerGen();
 
