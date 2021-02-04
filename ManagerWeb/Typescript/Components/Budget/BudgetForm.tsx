@@ -1,6 +1,5 @@
 import * as React from 'react'
 import DataLoader from '../../Services/DataLoader';
-
 class BudgetFormState {
     id: number;
     errorMessage: string;

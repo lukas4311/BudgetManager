@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import CryptoPayments from "./Components/Crypto/CryptoPayments";
 import ErrorBoundary from "./Utils/ErrorBoundry";
 
 class CryptoComponent extends React.Component<{},{}>{
@@ -8,6 +9,7 @@ class CryptoComponent extends React.Component<{},{}>{
             <div className="">
                 <p className="text-3xl text-center mt-6">Crypto přehled</p>
                 <div className="w-full p-4">NECO CHYTREHO</div>
+                <CryptoPayments></CryptoPayments>
             </div>
         );
     }

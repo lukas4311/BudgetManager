@@ -86,6 +86,32 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/Components/Crypto/CryptoPayments.tsx":
+/*!*********************************************************!*\
+  !*** ./Typescript/Components/Crypto/CryptoPayments.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class CryptoTrade {
+}
+class CryptoPayments extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", null, "Seznam plateb"));
+    }
+}
+exports.default = CryptoPayments;
+
+
+/***/ }),
+
 /***/ "./Typescript/Crypto.tsx":
 /*!*******************************!*\
   !*** ./Typescript/Crypto.tsx ***!
@@ -101,12 +127,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-dom"));
+const CryptoPayments_1 = __importDefault(__webpack_require__(/*! ./Components/Crypto/CryptoPayments */ "./Typescript/Components/Crypto/CryptoPayments.tsx"));
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 class CryptoComponent extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto p\u0159ehled"),
-            react_1.default.createElement("div", { className: "w-full p-4" }, "NECO CHYTREHO")));
+            react_1.default.createElement("div", { className: "w-full p-4" }, "NECO CHYTREHO"),
+            react_1.default.createElement(CryptoPayments_1.default, null)));
     }
 }
 react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
