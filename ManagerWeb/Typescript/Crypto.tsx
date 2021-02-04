@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ErrorBoundary from "./Components/ErrorBoundry";
+import ErrorBoundary from "./Utils/ErrorBoundry";
 
 class CryptoComponent extends React.Component<{},{}>{
     render(){

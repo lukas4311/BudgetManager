@@ -1,6 +1,6 @@
 import { Calendar, ResponsiveCalendar } from '@nivo/calendar'
 import React from 'react'
-import { CalendarChartProps } from '../Model/CalendarChartProps'
+import { CalendarChartProps } from '../../Model/CalendarChartProps'
 
 function CalendarChart(props: CalendarChartProps) {
 

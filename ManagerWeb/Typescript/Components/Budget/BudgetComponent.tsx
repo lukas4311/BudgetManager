@@ -1,7 +1,7 @@
 import moment from 'moment';
 import * as React from 'react'
-import { Modal } from '../Modal';
-import DataLoader from '../Services/DataLoader';
+import { Modal } from '../../Modal';
+import DataLoader from '../../Services/DataLoader';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
 import BudgetForm from './BudgetForm';

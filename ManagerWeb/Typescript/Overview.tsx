@@ -1,7 +1,7 @@
 ﻿import * as React from 'react'
 import * as ReactDOM from 'react-dom';
-import ErrorBoundary from './Components/ErrorBoundry';
-import PaymentsOverview from './PaymentsOverview'
+import ErrorBoundary from './Utils/ErrorBoundry';
+import PaymentsOverview from './Components/Payments/PaymentsOverview'
 
 class Overview extends React.Component {
     render() {

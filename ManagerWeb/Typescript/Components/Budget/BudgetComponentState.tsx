@@ -1,4 +1,4 @@
-import { BudgetModel } from '../Model/BudgetModel';
+import { BudgetModel } from '../../Model/BudgetModel';
 
 export class BudgetComponentState {
     budgetFormKey: number;

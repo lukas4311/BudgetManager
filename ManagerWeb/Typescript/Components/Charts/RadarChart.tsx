@@ -1,6 +1,6 @@
 import { ResponsiveRadar } from '@nivo/radar'
 import React from 'react'
-import { RadarChartProps } from '../Model/RadarChartProps';
+import { RadarChartProps } from '../../Model/RadarChartProps';
 
 function RadarChart({ dataSets }: RadarChartProps) {
   return (

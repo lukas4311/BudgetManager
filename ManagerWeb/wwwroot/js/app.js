@@ -86,10 +86,10 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./Typescript/Components/BudgetComponent.tsx":
-/*!***************************************************!*\
-  !*** ./Typescript/Components/BudgetComponent.tsx ***!
-  \***************************************************/
+/***/ "./Typescript/Components/Budget/BudgetComponent.tsx":
+/*!**********************************************************!*\
+  !*** ./Typescript/Components/Budget/BudgetComponent.tsx ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -129,9 +129,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const Modal_1 = __webpack_require__(/*! ../Modal */ "./Typescript/Modal.tsx");
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
-const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/BudgetForm.tsx"));
+const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx"));
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -187,10 +187,10 @@ exports.default = BudgetComponent;
 
 /***/ }),
 
-/***/ "./Typescript/Components/BudgetForm.tsx":
-/*!**********************************************!*\
-  !*** ./Typescript/Components/BudgetForm.tsx ***!
-  \**********************************************/
+/***/ "./Typescript/Components/Budget/BudgetForm.tsx":
+/*!*****************************************************!*\
+  !*** ./Typescript/Components/Budget/BudgetForm.tsx ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -229,7 +229,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 class BudgetFormState {
 }
 class BudgetFormProps {
@@ -315,10 +315,10 @@ exports.default = BudgetForm;
 
 /***/ }),
 
-/***/ "./Typescript/Components/CalendarChart.tsx":
-/*!*************************************************!*\
-  !*** ./Typescript/Components/CalendarChart.tsx ***!
-  \*************************************************/
+/***/ "./Typescript/Components/Charts/CalendarChart.tsx":
+/*!********************************************************!*\
+  !*** ./Typescript/Components/Charts/CalendarChart.tsx ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -362,106 +362,10 @@ exports.CalendarChart = CalendarChart;
 
 /***/ }),
 
-/***/ "./Typescript/Components/DateRangeComponent.tsx":
-/*!******************************************************!*\
-  !*** ./Typescript/Components/DateRangeComponent.tsx ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = __importStar(__webpack_require__(/*! react */ "react"));
-class DateRangeState {
-}
-class DateRangeProps {
-}
-class DateRangeComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleChangeDateFrom = (e) => {
-            this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
-        };
-        this.handleChangeDateTo = (e) => {
-            this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
-        };
-        this.findByExplicitDataIfSet = () => {
-            if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
-                this.props.datesFilledHandler(this.state.filterDateFrom, this.state.filterDateTo);
-            }
-        };
-        this.state = { filterDateFrom: '', filterDateTo: '' };
-    }
-    render() {
-        return (React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
-            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
-            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo })));
-    }
-}
-exports.default = DateRangeComponent;
-
-
-/***/ }),
-
-/***/ "./Typescript/Components/ErrorBoundry.tsx":
-/*!************************************************!*\
-  !*** ./Typescript/Components/ErrorBoundry.tsx ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-class ErrorBoundary extends react_1.default.Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
-    componentDidCatch(error, info) {
-        this.setState({ hasError: true });
-        console.log(error);
-    }
-    render() {
-        if (this.state.hasError) {
-            return react_1.default.createElement("h1", null, "Something went wrong.");
-        }
-        return this.props.children;
-    }
-}
-exports.default = ErrorBoundary;
-
-
-/***/ }),
-
-/***/ "./Typescript/Components/LineChart.tsx":
-/*!*********************************************!*\
-  !*** ./Typescript/Components/LineChart.tsx ***!
-  \*********************************************/
+/***/ "./Typescript/Components/Charts/LineChart.tsx":
+/*!****************************************************!*\
+  !*** ./Typescript/Components/Charts/LineChart.tsx ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -529,6 +433,32 @@ exports.LineChart = LineChart;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Charts/RadarChart.tsx":
+/*!*****************************************************!*\
+  !*** ./Typescript/Components/Charts/RadarChart.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RadarChart = void 0;
+const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function RadarChart({ dataSets }) {
+    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
+            minimumFractionDigits: 0,
+        })} Kč` }));
+}
+exports.RadarChart = RadarChart;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/PaymentTagManager.tsx":
 /*!*****************************************************!*\
   !*** ./Typescript/Components/PaymentTagManager.tsx ***!
@@ -584,28 +514,422 @@ exports.default = PaymentTagManager;
 
 /***/ }),
 
-/***/ "./Typescript/Components/RadarChart.tsx":
-/*!**********************************************!*\
-  !*** ./Typescript/Components/RadarChart.tsx ***!
-  \**********************************************/
+/***/ "./Typescript/Components/Payments/PaymentForm.tsx":
+/*!********************************************************!*\
+  !*** ./Typescript/Components/Payments/PaymentForm.tsx ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RadarChart = void 0;
-const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.esm.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function RadarChart({ dataSets }) {
-    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, motionStiffness: 85, motionDamping: 15, isInteractive: true, legends: [], tooltipFormat: value => `${Number(value).toLocaleString('cs-CZ', {
-            minimumFractionDigits: 0,
-        })} Kč` }));
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
+class PaymentForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.requiredMessage = "Zadejte hodnotu.";
+        this.processPaymentTypesData = (data) => {
+            if (data.success) {
+                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
+            }
+        };
+        this.processPaymentCategoryData = (data) => {
+            if (data.success) {
+                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
+            }
+        };
+        this.processPaymentData = (data) => {
+            this.setState({
+                name: data.name, amount: data.amount, date: data.date, description: data.description || '',
+                paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
+            });
+        };
+        this.confirmPayment = (e) => {
+            e.preventDefault();
+            this.setState({ disabledConfirm: true });
+            const data = this.state;
+            let dataJson = JSON.stringify(data);
+            if (this.state.id != undefined) {
+                this.dataLoader.updatePayment(dataJson, this.onError);
+            }
+            else {
+                this.dataLoader.addPayment(dataJson, this.onError);
+            }
+            this.props.handleClose();
+        };
+        this.onError = () => {
+            this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
+        };
+        this.handleChangeName = (e) => {
+            let errorMessage = '';
+            this.setState({ name: e.target.value });
+            if (e.target.value == '' || e.target.value === undefined)
+                errorMessage = this.requiredMessage;
+            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: errorMessage }) }));
+        };
+        this.handleChangeDate = (e) => {
+            let errorMessage = '';
+            this.setState({ date: e.target.value });
+            if (e.target.value == '' || e.target.value === undefined)
+                errorMessage = this.requiredMessage;
+            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: errorMessage }) }));
+        };
+        this.handleChangeDescription = (e) => {
+            this.setState({ description: e.target.value });
+        };
+        this.handleChangeAmount = (e) => {
+            let parsed = parseInt(e.target.value);
+            if (isNaN(parsed)) {
+                this.setState({ amount: null });
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "Zadejte číselnou hodnotu." }) }));
+            }
+            else {
+                this.setState({ amount: parsed });
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
+            }
+        };
+        this.generateErrorMessageIfError = (propertyName) => {
+            if (this.state.formErrors[propertyName].length > 0)
+                return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
+            return '';
+        };
+        this.generateInput = (propertyName, placeholder, handler) => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
+                    React.createElement("span", { className: "focus-bg" })),
+                this.generateErrorMessageIfError(propertyName)));
+        };
+        this.changeType = (e, id) => {
+            e.preventDefault();
+            this.setState({ paymentTypeId: id });
+        };
+        this.changeCategory = (e) => {
+            this.setState({ paymentCategoryId: parseInt(e.target.value) });
+        };
+        this.tagsChange = (tags) => {
+            this.setState({ tags: tags });
+        };
+        this.state = {
+            name: '', amount: 0, date: moment_1.default(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
+            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
+            tags: []
+        };
+        this.dataLoader = new DataLoader_1.default();
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const paymentReponse = yield this.dataLoader.getPaymentTypes(this.onError);
+            this.processPaymentTypesData(paymentReponse);
+            const categories = yield this.dataLoader.getPaymentCategories(this.onError);
+            this.processPaymentCategoryData(categories);
+            if (this.state.id != null) {
+                let paymentResponse = yield this.dataLoader.getPayment(this.state.id, this.onError);
+                this.processPaymentData(paymentResponse);
+            }
+        });
+    }
+    addErrorClassIfError(propertyName) {
+        if (this.state.formErrors[propertyName].length > 0)
+            return " inputError";
+        return '';
+    }
+    render() {
+        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
+            React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
+                React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
+            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
+            React.createElement("form", { onSubmit: this.confirmPayment },
+                React.createElement(PaymentTagManager_1.default, { tags: this.state.tags, tagsChange: this.tagsChange }),
+                React.createElement("div", { className: "w-full" },
+                    React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
+                        return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
+                    }))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement("select", { name: "type", id: "type", className: "effect-11 w-full", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
+                                return React.createElement("option", { key: p.id, value: p.id }, p.name);
+                            }))))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChangeName)),
+                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChangeAmount))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("date"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
+                            React.createElement("span", { className: "focus-bg" })),
+                        this.generateErrorMessageIfError("date"))),
+                React.createElement("div", { className: "flex my-4" },
+                    React.createElement("div", { className: "w-full" },
+                        React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
+                            React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError("description"), placeholder: "Popis", value: this.state.description, onChange: this.handleChangeDescription }),
+                            React.createElement("span", { className: "focus-bg" })))),
+                React.createElement("div", { className: "flex" },
+                    React.createElement("div", { className: "w-full" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
+                            React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
+    }
 }
-exports.RadarChart = RadarChart;
+exports.default = PaymentForm;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Payments/PaymentsOverview.tsx":
+/*!*************************************************************!*\
+  !*** ./Typescript/Components/Payments/PaymentsOverview.tsx ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
+const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/Components/Payments/PaymentForm.tsx"));
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
+const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
+const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
+const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
+const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
+const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
+const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
+class PaymentsOverview extends React.Component {
+    constructor(props) {
+        super(props);
+        this.defaultBankOption = "Vše";
+        this.apiErrorMessage = "Při získnání data došlo k chybě.";
+        this.onRejected = () => {
+            this.setState({ apiError: this.apiErrorMessage });
+        };
+        this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
+            if (payments != undefined) {
+                const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+                const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
+                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+                let dateTo;
+                if (this.state.selectedFilter != undefined) {
+                    dateTo = (moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
+                }
+                else {
+                    dateTo = this.state.filterDateTo;
+                }
+                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+                const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
+                this.setState({
+                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
+                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                    radarChartData: { dataSets: radarData }
+                });
+            }
+            else {
+                this.setState({ apiError: this.apiErrorMessage });
+            }
+        });
+        this.filterClick = (filterKey) => {
+            let selectedFilter = this.filters.find(f => f.key == filterKey);
+            if (this.state.selectedFilter != selectedFilter) {
+                this.setState({ selectedFilter: selectedFilter });
+                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+            }
+        };
+        this.addNewPayment = () => {
+            if (this.state.selectedBankAccount != undefined) {
+                this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
+            }
+            else {
+                this.setState({ showBankAccountError: true });
+            }
+        };
+        this.hideModal = () => {
+            this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
+        };
+        this.handleConfirmationClose = () => {
+            this.hideModal();
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+        };
+        this.bankAccountChange = (e) => {
+            let selectedbankId = parseInt(e.target.value);
+            this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
+        };
+        this.setBankAccounts = (data) => {
+            if (data.success) {
+                let bankAccounts = data.bankAccounts;
+                bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
+                this.setState({ bankAccounts: bankAccounts });
+            }
+        };
+        this.rangeDatesHandler = (dateFrom, dateTo) => {
+            this.getPaymentData(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
+            this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
+        };
+        moment_1.default.locale('cs');
+        this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
+        this.state = {
+            payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
+            filterDateTo: ''
+        };
+        this.dataLoader = new DataLoader_1.default();
+        this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
+    }
+    getPaymentData(dateFrom, dateTo, bankAccountId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+            this.setPayments(payments);
+        });
+    }
+    getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let filterDate = moment_1.default(dateFrom).format("YYYY-MM-DD");
+            return yield this.dataLoader.getPayments(filterDate, moment_1.default(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
+        });
+    }
+    paymentEdit(id) {
+        this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
+    }
+    showErrorMessage() {
+        let tag = React.createElement(React.Fragment, null);
+        if (this.state.apiError != undefined)
+            tag = React.createElement("span", { className: "errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3" }, this.state.apiError);
+        return tag;
+    }
+    getPaymentColor(paymentTypeCode) {
+        switch (paymentTypeCode) {
+            case "Revenue":
+                return "bg-green-800";
+            case "Expense":
+                return "bg-red-600";
+            case "Transfer":
+                return "bg-blue-500";
+        }
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), null);
+            this.setBankAccounts(bankAccounts);
+        });
+    }
+    render() {
+        let iconsData = new IconsEnum_1.IconsData();
+        return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
+            this.showErrorMessage(),
+            React.createElement("div", { className: "flex flex-row" },
+                React.createElement("div", { className: "w-2/5" },
+                    React.createElement("div", { className: "py-4 flex" },
+                        React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
+                        React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
+                            React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                    React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
+                        React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
+                        React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map((b, i) => {
+                            return React.createElement("option", { key: i, value: b.id }, b.code);
+                        }))),
+                    React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                        React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
+                        React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
+                    React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
+                        React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
+                        React.createElement("p", { className: "mx-6 my-1 w-1/5" },
+                            p.amount,
+                            ",-"),
+                        React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
+                        React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
+                        React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
+                React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
+                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
+            React.createElement("div", { className: "flex flex-row" },
+                React.createElement("div", { className: "w-1/3 h-64" },
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
+                React.createElement("div", { className: "w-1/3 h-64" },
+                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
+                    React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+            React.createElement("div", { className: "flex flex-row p-6" },
+                React.createElement("div", { className: "w-1/3" },
+                    React.createElement(BudgetComponent_1.default, null))),
+            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
+                React.createElement(ErrorBoundry_1.default, null,
+                    React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))));
+    }
+}
+exports.default = PaymentsOverview;
 
 
 /***/ }),
@@ -965,8 +1289,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "react-dom"));
-const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Components/ErrorBoundry */ "./Typescript/Components/ErrorBoundry.tsx"));
-const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./PaymentsOverview */ "./Typescript/PaymentsOverview.tsx"));
+const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
+const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 class Overview extends React.Component {
     render() {
         return (React.createElement("div", { className: "" },
@@ -977,426 +1301,6 @@ class Overview extends React.Component {
 }
 ReactDOM.render(React.createElement(ErrorBoundry_1.default, null,
     React.createElement(Overview, null)), document.getElementById('overview'));
-
-
-/***/ }),
-
-/***/ "./Typescript/PaymentForm.tsx":
-/*!************************************!*\
-  !*** ./Typescript/PaymentForm.tsx ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = __importStar(__webpack_require__(/*! react */ "react"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
-const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ./Components/PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
-class PaymentForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.requiredMessage = "Zadejte hodnotu.";
-        this.processPaymentTypesData = (data) => {
-            if (data.success) {
-                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
-            }
-        };
-        this.processPaymentCategoryData = (data) => {
-            if (data.success) {
-                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
-            }
-        };
-        this.processPaymentData = (data) => {
-            this.setState({
-                name: data.name, amount: data.amount, date: data.date, description: data.description || '',
-                paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
-            });
-        };
-        this.confirmPayment = (e) => {
-            e.preventDefault();
-            this.setState({ disabledConfirm: true });
-            const data = this.state;
-            let dataJson = JSON.stringify(data);
-            if (this.state.id != undefined) {
-                this.dataLoader.updatePayment(dataJson, this.onError);
-            }
-            else {
-                this.dataLoader.addPayment(dataJson, this.onError);
-            }
-            this.props.handleClose();
-        };
-        this.onError = () => {
-            this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
-        };
-        this.handleChangeName = (e) => {
-            let errorMessage = '';
-            this.setState({ name: e.target.value });
-            if (e.target.value == '' || e.target.value === undefined)
-                errorMessage = this.requiredMessage;
-            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: errorMessage }) }));
-        };
-        this.handleChangeDate = (e) => {
-            let errorMessage = '';
-            this.setState({ date: e.target.value });
-            if (e.target.value == '' || e.target.value === undefined)
-                errorMessage = this.requiredMessage;
-            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: errorMessage }) }));
-        };
-        this.handleChangeDescription = (e) => {
-            this.setState({ description: e.target.value });
-        };
-        this.handleChangeAmount = (e) => {
-            let parsed = parseInt(e.target.value);
-            if (isNaN(parsed)) {
-                this.setState({ amount: null });
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "Zadejte číselnou hodnotu." }) }));
-            }
-            else {
-                this.setState({ amount: parsed });
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
-            }
-        };
-        this.generateErrorMessageIfError = (propertyName) => {
-            if (this.state.formErrors[propertyName].length > 0)
-                return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
-            return '';
-        };
-        this.generateInput = (propertyName, placeholder, handler) => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
-                    React.createElement("span", { className: "focus-bg" })),
-                this.generateErrorMessageIfError(propertyName)));
-        };
-        this.changeType = (e, id) => {
-            e.preventDefault();
-            this.setState({ paymentTypeId: id });
-        };
-        this.changeCategory = (e) => {
-            this.setState({ paymentCategoryId: parseInt(e.target.value) });
-        };
-        this.tagsChange = (tags) => {
-            this.setState({ tags: tags });
-        };
-        this.state = {
-            name: '', amount: 0, date: moment_1.default(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
-            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
-            tags: []
-        };
-        this.dataLoader = new DataLoader_1.default();
-    }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const paymentReponse = yield this.dataLoader.getPaymentTypes(this.onError);
-            this.processPaymentTypesData(paymentReponse);
-            const categories = yield this.dataLoader.getPaymentCategories(this.onError);
-            this.processPaymentCategoryData(categories);
-            if (this.state.id != null) {
-                let paymentResponse = yield this.dataLoader.getPayment(this.state.id, this.onError);
-                this.processPaymentData(paymentResponse);
-            }
-        });
-    }
-    addErrorClassIfError(propertyName) {
-        if (this.state.formErrors[propertyName].length > 0)
-            return " inputError";
-        return '';
-    }
-    render() {
-        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
-            React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
-                React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
-            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
-            React.createElement("form", { onSubmit: this.confirmPayment },
-                React.createElement(PaymentTagManager_1.default, { tags: this.state.tags, tagsChange: this.tagsChange }),
-                React.createElement("div", { className: "w-full" },
-                    React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
-                        return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
-                    }))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("select", { name: "type", id: "type", className: "effect-11 w-full", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
-                                return React.createElement("option", { key: p.id, value: p.id }, p.name);
-                            }))))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChangeName)),
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChangeAmount))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("date"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
-                            React.createElement("span", { className: "focus-bg" })),
-                        this.generateErrorMessageIfError("date"))),
-                React.createElement("div", { className: "flex my-4" },
-                    React.createElement("div", { className: "w-full" },
-                        React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
-                            React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError("description"), placeholder: "Popis", value: this.state.description, onChange: this.handleChangeDescription }),
-                            React.createElement("span", { className: "focus-bg" })))),
-                React.createElement("div", { className: "flex" },
-                    React.createElement("div", { className: "w-full" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                            React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
-    }
-}
-exports.default = PaymentForm;
-
-
-/***/ }),
-
-/***/ "./Typescript/PaymentsOverview.tsx":
-/*!*****************************************!*\
-  !*** ./Typescript/PaymentsOverview.tsx ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const React = __importStar(__webpack_require__(/*! react */ "react"));
-const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
-const Modal_1 = __webpack_require__(/*! ./Modal */ "./Typescript/Modal.tsx");
-const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/PaymentForm.tsx"));
-const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
-const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
-const LineChart_1 = __webpack_require__(/*! ./Components/LineChart */ "./Typescript/Components/LineChart.tsx");
-const CalendarChart_1 = __webpack_require__(/*! ./Components/CalendarChart */ "./Typescript/Components/CalendarChart.tsx");
-const RadarChart_1 = __webpack_require__(/*! ./Components/RadarChart */ "./Typescript/Components/RadarChart.tsx");
-const ChartDataProcessor_1 = __webpack_require__(/*! ./Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
-const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ./Components/DateRangeComponent */ "./Typescript/Components/DateRangeComponent.tsx"));
-const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/BudgetComponent */ "./Typescript/Components/BudgetComponent.tsx"));
-const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Components/ErrorBoundry */ "./Typescript/Components/ErrorBoundry.tsx"));
-class PaymentsOverview extends React.Component {
-    constructor(props) {
-        super(props);
-        this.defaultBankOption = "Vše";
-        this.apiErrorMessage = "Při získnání data došlo k chybě.";
-        this.onRejected = () => {
-            this.setState({ apiError: this.apiErrorMessage });
-        };
-        this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
-            if (payments != undefined) {
-                const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
-                const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
-                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
-                let dateTo;
-                if (this.state.selectedFilter != undefined) {
-                    dateTo = (moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
-                }
-                else {
-                    dateTo = this.state.filterDateTo;
-                }
-                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
-                const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
-                this.setState({
-                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
-                    radarChartData: { dataSets: radarData }
-                });
-            }
-            else {
-                this.setState({ apiError: this.apiErrorMessage });
-            }
-        });
-        this.filterClick = (filterKey) => {
-            let selectedFilter = this.filters.find(f => f.key == filterKey);
-            if (this.state.selectedFilter != selectedFilter) {
-                this.setState({ selectedFilter: selectedFilter });
-                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
-            }
-        };
-        this.addNewPayment = () => {
-            if (this.state.selectedBankAccount != undefined) {
-                this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
-            }
-            else {
-                this.setState({ showBankAccountError: true });
-            }
-        };
-        this.hideModal = () => {
-            this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
-        };
-        this.handleConfirmationClose = () => {
-            this.hideModal();
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
-        };
-        this.bankAccountChange = (e) => {
-            let selectedbankId = parseInt(e.target.value);
-            this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
-        };
-        this.setBankAccounts = (data) => {
-            if (data.success) {
-                let bankAccounts = data.bankAccounts;
-                bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-                this.setState({ bankAccounts: bankAccounts });
-            }
-        };
-        this.rangeDatesHandler = (dateFrom, dateTo) => {
-            this.getPaymentData(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
-            this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
-        };
-        moment_1.default.locale('cs');
-        this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
-        this.state = {
-            payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
-            showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: ''
-        };
-        this.dataLoader = new DataLoader_1.default();
-        this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
-    }
-    getPaymentData(dateFrom, dateTo, bankAccountId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
-            this.setPayments(payments);
-        });
-    }
-    getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let filterDate = moment_1.default(dateFrom).format("YYYY-MM-DD");
-            return yield this.dataLoader.getPayments(filterDate, moment_1.default(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
-        });
-    }
-    paymentEdit(id) {
-        this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
-    }
-    showErrorMessage() {
-        let tag = React.createElement(React.Fragment, null);
-        if (this.state.apiError != undefined)
-            tag = React.createElement("span", { className: "errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3" }, this.state.apiError);
-        return tag;
-    }
-    getPaymentColor(paymentTypeCode) {
-        switch (paymentTypeCode) {
-            case "Revenue":
-                return "bg-green-800";
-            case "Expense":
-                return "bg-red-600";
-            case "Transfer":
-                return "bg-blue-500";
-        }
-    }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), null);
-            this.setBankAccounts(bankAccounts);
-        });
-    }
-    render() {
-        let iconsData = new IconsEnum_1.IconsData();
-        return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
-            this.showErrorMessage(),
-            React.createElement("div", { className: "flex flex-row" },
-                React.createElement("div", { className: "w-2/5" },
-                    React.createElement("div", { className: "py-4 flex" },
-                        React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
-                        React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
-                            React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                                React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                                React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                    React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
-                        React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
-                        React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map((b, i) => {
-                            return React.createElement("option", { key: i, value: b.id }, b.code);
-                        }))),
-                    React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                        React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-                        React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                    React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
-                        React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                        React.createElement("p", { className: "mx-6 my-1 w-1/5" },
-                            p.amount,
-                            ",-"),
-                        React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
-                        React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
-                        React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
-                React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
-                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
-            React.createElement("div", { className: "flex flex-row" },
-                React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
-                    React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-            React.createElement("div", { className: "flex flex-row p-6" },
-                React.createElement("div", { className: "w-1/3" },
-                    React.createElement(BudgetComponent_1.default, null))),
-            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(ErrorBoundry_1.default, null,
-                    React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))));
-    }
-}
-exports.default = PaymentsOverview;
 
 
 /***/ }),
@@ -1675,6 +1579,102 @@ class DataLoader {
     }
 }
 exports.default = DataLoader;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/DateRangeComponent.tsx":
+/*!*************************************************!*\
+  !*** ./Typescript/Utils/DateRangeComponent.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class DateRangeState {
+}
+class DateRangeProps {
+}
+class DateRangeComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChangeDateFrom = (e) => {
+            this.setState({ filterDateFrom: e.target.value }, this.findByExplicitDataIfSet);
+        };
+        this.handleChangeDateTo = (e) => {
+            this.setState({ filterDateTo: e.target.value }, this.findByExplicitDataIfSet);
+        };
+        this.findByExplicitDataIfSet = () => {
+            if (this.state.filterDateFrom != '' && this.state.filterDateTo != '') {
+                this.props.datesFilledHandler(this.state.filterDateFrom, this.state.filterDateTo);
+            }
+        };
+        this.state = { filterDateFrom: '', filterDateTo: '' };
+    }
+    render() {
+        return (React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
+            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
+            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo })));
+    }
+}
+exports.default = DateRangeComponent;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/ErrorBoundry.tsx":
+/*!*******************************************!*\
+  !*** ./Typescript/Utils/ErrorBoundry.tsx ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class ErrorBoundary extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    componentDidCatch(error, info) {
+        this.setState({ hasError: true });
+        console.log(error);
+    }
+    render() {
+        if (this.state.hasError) {
+            return react_1.default.createElement("h1", null, "Something went wrong.");
+        }
+        return this.props.children;
+    }
+}
+exports.default = ErrorBoundary;
 
 
 /***/ }),

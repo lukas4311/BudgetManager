@@ -1,11 +1,11 @@
 import * as React from 'react'
-import DataLoader from './Services/DataLoader'
-import { PaymentTypeResponse } from './Model/PaymentTypeResponse';
-import { PaymentCategoryResponse } from './Model/PaymentCategoryResponse';
-import { IPaymentModel } from './Model/IPaymentModel';
-import { IPaymentResponseModel } from './Model/IPaymentResponseModel';
+import DataLoader from '../../Services/DataLoader'
+import { PaymentTypeResponse } from '../../Model/PaymentTypeResponse';
+import { PaymentCategoryResponse } from '../../Model/PaymentCategoryResponse';
+import { IPaymentModel } from '../../Model/IPaymentModel';
+import { IPaymentResponseModel } from '../../Model/IPaymentResponseModel';
 import moment from 'moment';
-import PaymentTagManager from './Components/PaymentTagManager';
+import PaymentTagManager from '../PaymentTagManager';
 
 interface IPaymentFormProps {
     paymentId: number,

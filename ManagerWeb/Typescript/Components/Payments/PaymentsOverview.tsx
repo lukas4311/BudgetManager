@@ -1,23 +1,23 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
-import { Modal } from './Modal'
+import { Modal } from '../../Modal'
 import PaymentForm from './PaymentForm'
-import DataLoader from './Services/DataLoader';
-import { IPaymentInfo } from "./Model/IPaymentInfo"
-import { BankAccount } from './Model/BankAccount';
-import { BankAccountReponse } from './Model/BankAccountReponse';
-import { IconsData } from './Enums/IconsEnum';
-import { LineChart } from './Components/LineChart';
-import { IBankAccountBalanceResponseModel } from './Model/IBankAccountBalanceResponseModel';
-import { LineChartProps } from './Model/LineChartProps';
-import { CalendarChartProps } from './Model/CalendarChartProps';
-import { CalendarChart } from './Components/CalendarChart';
-import { RadarChartProps } from './Model/RadarChartProps';
-import { RadarChart } from './Components/RadarChart';
-import { ChartDataProcessor } from './Services/ChartDataProcessor';
-import DateRangeComponent from './Components/DateRangeComponent';
-import BudgetComponent from './Components/BudgetComponent';
-import ErrorBoundary from './Components/ErrorBoundry';
+import DataLoader from '../../Services/DataLoader';
+import { IPaymentInfo } from "../../Model/IPaymentInfo"
+import { BankAccount } from '../../Model/BankAccount';
+import { BankAccountReponse } from '../../Model/BankAccountReponse';
+import { IconsData } from '../../Enums/IconsEnum';
+import { LineChart } from '../Charts/LineChart';
+import { IBankAccountBalanceResponseModel } from '../../Model/IBankAccountBalanceResponseModel';
+import { LineChartProps } from '../../Model/LineChartProps';
+import { CalendarChartProps } from '../../Model/CalendarChartProps';
+import { CalendarChart } from '../Charts/CalendarChart';
+import { RadarChartProps } from '../../Model/RadarChartProps';
+import { RadarChart } from '../Charts/RadarChart';
+import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
+import DateRangeComponent from '../../Utils/DateRangeComponent';
+import BudgetComponent from '../Budget/BudgetComponent';
+import ErrorBoundary from '../../Utils/ErrorBoundry';
 
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
