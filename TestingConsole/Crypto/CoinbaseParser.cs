@@ -28,7 +28,7 @@ namespace TestingConsole.Crypto
             this.LoadFile(pathToFile);
         }
 
-        public void LoadFile(string path)
+        private void LoadFile(string path)
         {
             TextReader reader = new StreamReader(path);
             CsvReader csvReader = new CsvReader(reader, culture: CultureInfo.InvariantCulture);
@@ -40,7 +40,7 @@ namespace TestingConsole.Crypto
             }
         }
 
-        public void MapCoinbaseRecordToDbRecord(CoinbaseRecord coinbaseRecord)
+        private void MapCoinbaseRecordToDbRecord(CoinbaseRecord coinbaseRecord)
         {
 
         }

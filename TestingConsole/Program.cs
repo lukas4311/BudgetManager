@@ -23,7 +23,7 @@ namespace TestingConsole
             ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(dataContext);
             ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(dataContext);
             CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
-            coinbaseParser.LoadFile("D:\\fills.csv");
+            coinbaseParser.ParseCoinbaseReport();
         }
 
         private static DataContext GetDataContext()
