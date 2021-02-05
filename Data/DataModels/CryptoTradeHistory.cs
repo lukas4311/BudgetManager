@@ -14,7 +14,7 @@ namespace Data.DataModels
 
         public double TradeValue { get; set; }
 
-        public int ValueCurrencyId { get; set; }
+        public int CurrencySymbolId { get; set; }
 
         public CurrencySymbol CurrencySymbol { get; set; }
     }
