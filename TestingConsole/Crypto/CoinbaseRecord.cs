@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration.Attributes;
+using System;
 
 namespace TestingConsole.Crypto
 {
@@ -18,10 +19,10 @@ namespace TestingConsole.Crypto
         public string Side { get; set; }
 
         [Name("created at")]
-        public string CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Name("size")]
-        public string Size { get; set; }
+        public double Size { get; set; }
 
         [Name("size unit")]
         public string SizeUnit { get; set; }
@@ -33,7 +34,7 @@ namespace TestingConsole.Crypto
         public string Fee { get; set; }
 
         [Name("total")]
-        public string Total { get; set; }
+        public double Total { get; set; }
 
         [Name("price/fee/total unit")]
         public string PriceFeeTotalUnit { get; set; }

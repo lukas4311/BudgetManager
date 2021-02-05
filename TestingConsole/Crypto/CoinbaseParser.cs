@@ -1,10 +1,12 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration.Attributes;
+using Data.DataModels;
 using Repository;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace TestingConsole.Crypto
 {
@@ -13,6 +15,8 @@ namespace TestingConsole.Crypto
         private readonly ICryptoTickerRepository cryptoTickerRepository;
         private readonly ICurrencySymbolRepository currencySymbolRepository;
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
+        private List<CurrencySymbol> currencySymbols;
+        private List<Data.DataModels.CryptoTicker> cryptoTickers;
 
         public CoinbaseParser(ICryptoTickerRepository cryptoTickerRepository, ICurrencySymbolRepository currencySymbolRepository, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository)
         {
@@ -33,16 +37,41 @@ namespace TestingConsole.Crypto
             TextReader reader = new StreamReader(path);
             CsvReader csvReader = new CsvReader(reader, culture: CultureInfo.InvariantCulture);
             IEnumerable<CoinbaseRecord> records = csvReader.GetRecords<CoinbaseRecord>();
+            this.CacheCurrencySymbols();
+            this.CacheCryptoTickers();
 
             foreach (CoinbaseRecord record in records)
             {
-                Console.Write(record.Price);
+                this.MapCoinbaseRecordToDbRecord(record);
             }
+
+            this.cryptoTradeHistoryRepository.Save();
         }
 
         private void MapCoinbaseRecordToDbRecord(CoinbaseRecord coinbaseRecord)
         {
+            int crypto = this.cryptoTickers.Single(t => string.Equals(t.Ticker, coinbaseRecord.SizeUnit, StringComparison.OrdinalIgnoreCase)).Id;
+            int currency = currencySymbols.Single(t => string.Equals(t.Symbol, coinbaseRecord.PriceFeeTotalUnit, StringComparison.OrdinalIgnoreCase)).Id;
 
+            CryptoTradeHistory cryptoTradeHistory = new CryptoTradeHistory {
+                CryptoTickerId = crypto,
+                CurrencySymbolId = currency,
+                TradeValue = coinbaseRecord.Total * -1,
+                TradeSize = coinbaseRecord.Size,
+                TradeTimeStamp = coinbaseRecord.CreatedAt
+            };
+
+            this.cryptoTradeHistoryRepository.Create(cryptoTradeHistory);
+        }
+
+        private void CacheCurrencySymbols()
+        {
+            this.currencySymbols = this.currencySymbolRepository.FindAll().ToList();
+        }
+
+        private void CacheCryptoTickers()
+        {
+            this.cryptoTickers = this.cryptoTickerRepository.FindAll().ToList();
         }
     }
 }
