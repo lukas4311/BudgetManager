@@ -13,5 +13,9 @@ namespace Data.DataModels
         public CryptoTicker CryptoTicker { get; set; }
 
         public double TradeValue { get; set; }
+
+        public int ValueCurrencyId { get; set; }
+
+        public CurrencySymbol CurrencySymbol { get; set; }
     }
 }
