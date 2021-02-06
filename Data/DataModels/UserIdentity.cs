@@ -13,5 +13,7 @@ namespace Data.DataModels
         public UserData UserData { get; set; }
 
         public List<BankAccount> BankAccounts { get; set; }
+
+        public List<CryptoTradeHistory> CryptoTradesHistory { get; set; }
     }
 }

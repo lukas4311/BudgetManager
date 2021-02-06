@@ -17,6 +17,10 @@ namespace Data.DataModels.EntityConfiguration
             builder.HasOne(e => e.CurrencySymbol)
                .WithMany(e => e.CryptoTradeHistory)
                .HasForeignKey(e => e.CurrencySymbolId);
+
+            builder.HasOne(e => e.UserIdentity)
+                .WithMany(e => e.CryptoTradesHistory)
+                .HasForeignKey(e => e.UserIdentityId);
         }
     }
 }

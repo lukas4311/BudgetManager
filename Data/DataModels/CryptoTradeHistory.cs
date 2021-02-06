@@ -19,5 +19,9 @@ namespace Data.DataModels
         public int CurrencySymbolId { get; set; }
 
         public CurrencySymbol CurrencySymbol { get; set; }
+
+        public int UserIdentityId { get; set; }
+
+        public UserIdentity UserIdentity { get; set; }
     }
 }
