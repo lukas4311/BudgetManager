@@ -21,7 +21,7 @@ namespace ManagerWeb.Controllers
             return View();
         }
 
-        [HttpGet("crypto")]
+        [HttpGet("crypto-overview")]
         public IActionResult Crypto()
         {
             return this.View();

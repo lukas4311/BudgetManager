@@ -1,5 +1,7 @@
-﻿using ManagerWeb.Services;
+﻿using ManagerWeb.Models.DTOs;
+using ManagerWeb.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace ManagerWeb.Controllers
 {
@@ -15,7 +17,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("getAll")]
-        public IActionResult Get()
+        public ActionResult<IEnumerable<TradeHistory>> Get()
         {
             return Ok(this.cryptoService.Get());
         }

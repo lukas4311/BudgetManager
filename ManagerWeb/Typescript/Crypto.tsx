@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import CryptoPayments from "./Components/Crypto/CryptoPayments";
+import CryptoPayments from "./Components/Crypto/CryptoTrades";
 import ErrorBoundary from "./Utils/ErrorBoundry";
 
 class CryptoComponent extends React.Component<{},{}>{
