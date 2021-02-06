@@ -1,4 +1,5 @@
 ﻿using Data.DataModels;
+using ManagerWeb.Extensions;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,7 @@ namespace ManagerWeb.Services
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
-                .Select(e => this.MapToViewModel(e));
+                .Select(e => e.MapToOverViewViewModel());
         }
 
         public TradeHistory Get(int id)
@@ -39,20 +40,8 @@ namespace ManagerWeb.Services
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
                 .Where(s => s.Id == id)
-                .Select(e => this.MapToViewModel(e))
+                .Select(e => e.MapToOverViewViewModel())
                 .Single();
         }
-
-        private TradeHistory MapToViewModel(CryptoTradeHistory e) => new TradeHistory
-        {
-            CryptoTicker = e.CryptoTicker.Name,
-            CryptoTickerId = e.CryptoTickerId,
-            CurrencySymbol = e.CurrencySymbol.Symbol,
-            CurrencySymbolId = e.CurrencySymbolId,
-            Id = e.Id,
-            TradeSize = e.TradeSize,
-            TradeTimeStamp = e.TradeTimeStamp,
-            TradeValue = e.TradeValue
-        };
     }
 }
