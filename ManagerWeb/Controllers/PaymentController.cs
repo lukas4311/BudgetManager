@@ -24,30 +24,30 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("data")]
-        public IActionResult GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
+        public ActionResult<IEnumerable<PaymentViewModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
-            List<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, bankAccountId);
+            IEnumerable<PaymentViewModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, bankAccountId);
             return Ok(payments);
         }
 
         [HttpGet("types")]
         public IActionResult GetPaymentTypes()
         {
-            List<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
+            IEnumerable<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
             return Ok(new { success = true, types = paymentTypes });
         }
 
         [HttpGet("categories")]
         public IActionResult GetPaymentCategories()
         {
-            List<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
+            IEnumerable<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
             return Ok(new { success = true, categories = paymentCategories });
         }
 
         [HttpGet("bankAccounts")]
         public IActionResult GetBankAccounts()
         {
-            List<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
+            IEnumerable<BankAccount> bankAccounts = this.paymentService.GetBankAccounts();
             return Ok(new { success = true, bankAccounts });
         }
 

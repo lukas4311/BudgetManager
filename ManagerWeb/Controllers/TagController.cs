@@ -20,7 +20,7 @@ namespace ManagerWeb.Controllers
 
         [HttpGet]
         [Route("payment/all")]
-        public IActionResult GetPaymentTags()
+        public ActionResult<IEnumerable<TagModel>> GetPaymentTags()
         {
             IEnumerable<TagModel> tags = this.tagService.GetPaymentTags();
             return Ok(tags);

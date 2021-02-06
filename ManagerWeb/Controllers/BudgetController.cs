@@ -1,4 +1,5 @@
-﻿using ManagerWeb.Models.DTOs;
+﻿using System.Collections.Generic;
+using ManagerWeb.Models.DTOs;
 using ManagerWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,13 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("getAll")]
-        public IActionResult Get()
+        public ActionResult<IEnumerable<BudgetModel>> Get()
         {
             return Ok(this.budgetService.Get());
         }
 
         [HttpGet("get")]
-        public IActionResult Get(int id)
+        public ActionResult<BudgetModel> Get(int id)
         {
             return Ok(this.budgetService.Get(id));
         }

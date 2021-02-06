@@ -1,10 +1,12 @@
 ﻿using ManagerWeb.Models.DTOs;
 using ManagerWeb.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace ManagerWeb.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("crypto")]
     public class CryptoController : ControllerBase
@@ -23,7 +25,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("get")]
-        public IActionResult Get(int id)
+        public ActionResult<TradeHistory> Get(int id)
         {
             return Ok(this.cryptoService.Get(id));
         }

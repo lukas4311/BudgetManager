@@ -18,7 +18,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("getAllAccountBalance")]
-        public IActionResult GetBankAccountsBalanceToDate([FromQuery] DateTime? toDate = null)
+        public ActionResult<IEnumerable<BankBalanceModel>> GetBankAccountsBalanceToDate([FromQuery] DateTime? toDate = null)
         {
             IEnumerable<BankBalanceModel> bankInfo = this.bankAccountService.GetBankAccountsBalanceToDate(toDate);
             return Ok(new { success = true, bankAccountsBalance = bankInfo });
