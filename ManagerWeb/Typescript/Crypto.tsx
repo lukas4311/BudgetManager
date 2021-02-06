@@ -1,15 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import CryptoPortfolio from "./Components/Crypto/CryptoPortfolio";
 import CryptoPayments from "./Components/Crypto/CryptoTrades";
 import ErrorBoundary from "./Utils/ErrorBoundry";
 
-class CryptoComponent extends React.Component<{},{}>{
-    render(){
-        return(
+class CryptoComponent extends React.Component<{}, {}>{
+    render() {
+        return (
             <div className="">
                 <p className="text-3xl text-center mt-6">Crypto přehled</p>
-                <div className="w-full p-4"><CryptoPayments></CryptoPayments></div>
-                
+                <div className="flex">
+                    <div className="w-1/2 p-4"><CryptoPayments></CryptoPayments></div>
+                    <div className="w-1/2 p-4"><CryptoPortfolio></CryptoPortfolio></div>
+                </div>
             </div>
         );
     }
