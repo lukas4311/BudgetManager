@@ -1,5 +1,4 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration.Attributes;
 using Data.DataModels;
 using Repository;
 using System;
@@ -58,7 +57,8 @@ namespace TestingConsole.Crypto
                 CurrencySymbolId = currency,
                 TradeValue = coinbaseRecord.Total * -1,
                 TradeSize = coinbaseRecord.Size,
-                TradeTimeStamp = coinbaseRecord.CreatedAt
+                TradeTimeStamp = coinbaseRecord.CreatedAt,
+                UserIdentityId = 1 // for testing purpose no user contedxt in this app
             };
 
             this.cryptoTradeHistoryRepository.Create(cryptoTradeHistory);
