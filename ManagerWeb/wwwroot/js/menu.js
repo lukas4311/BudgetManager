@@ -122,7 +122,7 @@ class Menu extends react_1.default.Component {
             react_1.default.createElement("div", { className: (this.state.isClosed ? "containerClosed" : "containerOpen") + " menu absolute text-white rounded-lg bg-black mt-4 w-48 text-xl" },
                 react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("") }, "Home"),
                 react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("payments") }, "Platby"),
-                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("crypto") }, "Crypto"),
+                react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("crypto-overview") }, "Crypto"),
                 react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("budget") }, "Rozpo\u010Det"),
                 react_1.default.createElement("a", { className: "block mt-2 ml-10 cursor-pointer", onClick: _ => this.redirectToPage("debts") }, "Dluhy"),
                 react_1.default.createElement("a", { className: "block mt-2 ml-10 mb-2 cursor-pointer", onClick: _ => this.redirectToPage("stats") }, "Statistiky"))));

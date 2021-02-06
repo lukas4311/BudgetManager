@@ -8,8 +8,8 @@ class CryptoComponent extends React.Component<{},{}>{
         return(
             <div className="">
                 <p className="text-3xl text-center mt-6">Crypto přehled</p>
-                <div className="w-full p-4">NECO CHYTREHO</div>
-                <CryptoPayments></CryptoPayments>
+                <div className="w-full p-4"><CryptoPayments></CryptoPayments></div>
+                
             </div>
         );
     }

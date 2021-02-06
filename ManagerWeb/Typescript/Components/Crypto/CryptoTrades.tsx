@@ -1,8 +1,9 @@
+import moment from "moment";
 import React from "react";
-import { CryptoApi, CryptoApiInterface } from "../../ApiClient";
+import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
 
 class CryptoTradesState {
-    trades: any;
+    trades: TradeHistory[];
 }
 
 export default class CryptoTrades extends React.Component<{}, CryptoTradesState> {
@@ -10,7 +11,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
 
     constructor(props: {}) {
         super(props);
-        this.cryptoInterface = new CryptoApi();
+        this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: undefined };
     }
 
@@ -19,13 +20,32 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     }
 
     private async load(): Promise<void> {
-        let trades = await this.cryptoInterface.cryptoGetAllGet();
+        let trades: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
+        trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
         this.setState({ trades });
     }
 
     render() {
         return (
-            <div>Seznam plateb</div>
+            <div>
+                <h2 className="text-xl ml-12 mb-10">Seznam plateb</h2>
+                {this.state.trades != undefined ?
+                    <div className="pb-10 h-64 overflow-y-scroll">
+                        {this.state.trades.map(p =>
+                            <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                                <p className="mx-6 my-1 w-1/5">{p.cryptoTicker}</p>
+                                <p className="mx-6 my-1 w-2/5">{p.tradeSize}</p>
+                                <p className="mx-6 my-1 w-1/5">{moment(p.tradeTimeStamp).format('DD.MM.YYYY')}</p>
+                                <p className="mx-6 my-1 w-1/5">{p.tradeValue}</p>
+                                <p className="mx-6 my-1 w-1/5">{p.currencySymbol}</p>
+                            </div>
+                        )}
+                    </div>
+                    : <div>
+                        <p>Probíhá načátíní</p>
+                    </div>
+                }
+            </div>
         );
     }
 }
