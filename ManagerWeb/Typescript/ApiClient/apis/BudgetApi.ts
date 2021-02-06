@@ -58,11 +58,11 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetGetAllGetRaw(): Promise<runtime.ApiResponse<void>>;
+    budgetGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
 
     /**
      */
-    budgetGetAllGet(): Promise<void>;
+    budgetGetAllGet(): Promise<Array<BudgetModel>>;
 
     /**
      * 
@@ -71,11 +71,11 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetGetGetRaw(requestParameters: BudgetGetGetRequest): Promise<runtime.ApiResponse<void>>;
+    budgetGetGetRaw(requestParameters: BudgetGetGetRequest): Promise<runtime.ApiResponse<BudgetModel>>;
 
     /**
      */
-    budgetGetGet(requestParameters: BudgetGetGetRequest): Promise<void>;
+    budgetGetGet(requestParameters: BudgetGetGetRequest): Promise<BudgetModel>;
 
     /**
      * 
@@ -125,7 +125,7 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
 
     /**
      */
-    async budgetGetAllGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async budgetGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -137,18 +137,19 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BudgetModelFromJSON));
     }
 
     /**
      */
-    async budgetGetAllGet(): Promise<void> {
-        await this.budgetGetAllGetRaw();
+    async budgetGetAllGet(): Promise<Array<BudgetModel>> {
+        const response = await this.budgetGetAllGetRaw();
+        return await response.value();
     }
 
     /**
      */
-    async budgetGetGetRaw(requestParameters: BudgetGetGetRequest): Promise<runtime.ApiResponse<void>> {
+    async budgetGetGetRaw(requestParameters: BudgetGetGetRequest): Promise<runtime.ApiResponse<BudgetModel>> {
         const queryParameters: any = {};
 
         if (requestParameters.id !== undefined) {
@@ -164,13 +165,14 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => BudgetModelFromJSON(jsonValue));
     }
 
     /**
      */
-    async budgetGetGet(requestParameters: BudgetGetGetRequest): Promise<void> {
-        await this.budgetGetGetRaw(requestParameters);
+    async budgetGetGet(requestParameters: BudgetGetGetRequest): Promise<BudgetModel> {
+        const response = await this.budgetGetGetRaw(requestParameters);
+        return await response.value();
     }
 
     /**

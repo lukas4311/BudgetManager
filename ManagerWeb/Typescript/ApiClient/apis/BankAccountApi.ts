@@ -14,6 +14,11 @@
 
 
 import * as runtime from '../runtime';
+import {
+    BankBalanceModel,
+    BankBalanceModelFromJSON,
+    BankBalanceModelToJSON,
+} from '../models';
 
 export interface BankAccountGetAllAccountBalanceGetRequest {
     toDate?: Date | null;
@@ -33,11 +38,11 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountGetAllAccountBalanceGetRaw(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<runtime.ApiResponse<void>>;
+    bankAccountGetAllAccountBalanceGetRaw(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<runtime.ApiResponse<Array<BankBalanceModel>>>;
 
     /**
      */
-    bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<void>;
+    bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>>;
 
 }
 
@@ -48,7 +53,7 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
 
     /**
      */
-    async bankAccountGetAllAccountBalanceGetRaw(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<runtime.ApiResponse<void>> {
+    async bankAccountGetAllAccountBalanceGetRaw(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<runtime.ApiResponse<Array<BankBalanceModel>>> {
         const queryParameters: any = {};
 
         if (requestParameters.toDate !== undefined) {
@@ -64,13 +69,14 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BankBalanceModelFromJSON));
     }
 
     /**
      */
-    async bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<void> {
-        await this.bankAccountGetAllAccountBalanceGetRaw(requestParameters);
+    async bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>> {
+        const response = await this.bankAccountGetAllAccountBalanceGetRaw(requestParameters);
+        return await response.value();
     }
 
 }

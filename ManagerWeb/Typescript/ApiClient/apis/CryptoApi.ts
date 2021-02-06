@@ -14,6 +14,11 @@
 
 
 import * as runtime from '../runtime';
+import {
+    TradeHistory,
+    TradeHistoryFromJSON,
+    TradeHistoryToJSON,
+} from '../models';
 
 export interface CryptoGetGetRequest {
     id?: number;
@@ -32,11 +37,11 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptoGetAllGetRaw(): Promise<runtime.ApiResponse<void>>;
+    cryptoGetAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
 
     /**
      */
-    cryptoGetAllGet(): Promise<void>;
+    cryptoGetAllGet(): Promise<Array<TradeHistory>>;
 
     /**
      * 
@@ -45,11 +50,11 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptoGetGetRaw(requestParameters: CryptoGetGetRequest): Promise<runtime.ApiResponse<void>>;
+    cryptoGetGetRaw(requestParameters: CryptoGetGetRequest): Promise<runtime.ApiResponse<TradeHistory>>;
 
     /**
      */
-    cryptoGetGet(requestParameters: CryptoGetGetRequest): Promise<void>;
+    cryptoGetGet(requestParameters: CryptoGetGetRequest): Promise<TradeHistory>;
 
 }
 
@@ -60,7 +65,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async cryptoGetAllGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async cryptoGetAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -72,18 +77,19 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradeHistoryFromJSON));
     }
 
     /**
      */
-    async cryptoGetAllGet(): Promise<void> {
-        await this.cryptoGetAllGetRaw();
+    async cryptoGetAllGet(): Promise<Array<TradeHistory>> {
+        const response = await this.cryptoGetAllGetRaw();
+        return await response.value();
     }
 
     /**
      */
-    async cryptoGetGetRaw(requestParameters: CryptoGetGetRequest): Promise<runtime.ApiResponse<void>> {
+    async cryptoGetGetRaw(requestParameters: CryptoGetGetRequest): Promise<runtime.ApiResponse<TradeHistory>> {
         const queryParameters: any = {};
 
         if (requestParameters.id !== undefined) {
@@ -99,13 +105,14 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => TradeHistoryFromJSON(jsonValue));
     }
 
     /**
      */
-    async cryptoGetGet(requestParameters: CryptoGetGetRequest): Promise<void> {
-        await this.cryptoGetGetRaw(requestParameters);
+    async cryptoGetGet(requestParameters: CryptoGetGetRequest): Promise<TradeHistory> {
+        const response = await this.cryptoGetGetRaw(requestParameters);
+        return await response.value();
     }
 
 }

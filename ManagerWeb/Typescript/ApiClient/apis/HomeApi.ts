@@ -28,11 +28,11 @@ export interface HomeApiInterface {
      * @throws {RequiredError}
      * @memberof HomeApiInterface
      */
-    cryptoGetRaw(): Promise<runtime.ApiResponse<void>>;
+    cryptoOverviewGetRaw(): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    cryptoGet(): Promise<void>;
+    cryptoOverviewGet(): Promise<void>;
 
 }
 
@@ -43,13 +43,13 @@ export class HomeApi extends runtime.BaseAPI implements HomeApiInterface {
 
     /**
      */
-    async cryptoGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async cryptoOverviewGetRaw(): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/crypto`,
+            path: `/crypto-overview`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -60,8 +60,8 @@ export class HomeApi extends runtime.BaseAPI implements HomeApiInterface {
 
     /**
      */
-    async cryptoGet(): Promise<void> {
-        await this.cryptoGetRaw();
+    async cryptoOverviewGet(): Promise<void> {
+        await this.cryptoOverviewGetRaw();
     }
 
 }

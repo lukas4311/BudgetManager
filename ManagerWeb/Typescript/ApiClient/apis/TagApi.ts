@@ -18,6 +18,9 @@ import {
     AddTagModel,
     AddTagModelFromJSON,
     AddTagModelToJSON,
+    TagModel,
+    TagModelFromJSON,
+    TagModelToJSON,
 } from '../models';
 
 export interface TagDeleteRequest {
@@ -59,11 +62,11 @@ export interface TagApiInterface {
      * @throws {RequiredError}
      * @memberof TagApiInterface
      */
-    tagPaymentAllGetRaw(): Promise<runtime.ApiResponse<void>>;
+    tagPaymentAllGetRaw(): Promise<runtime.ApiResponse<Array<TagModel>>>;
 
     /**
      */
-    tagPaymentAllGet(): Promise<void>;
+    tagPaymentAllGet(): Promise<Array<TagModel>>;
 
     /**
      * 
@@ -128,7 +131,7 @@ export class TagApi extends runtime.BaseAPI implements TagApiInterface {
 
     /**
      */
-    async tagPaymentAllGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async tagPaymentAllGetRaw(): Promise<runtime.ApiResponse<Array<TagModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -140,13 +143,14 @@ export class TagApi extends runtime.BaseAPI implements TagApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TagModelFromJSON));
     }
 
     /**
      */
-    async tagPaymentAllGet(): Promise<void> {
-        await this.tagPaymentAllGetRaw();
+    async tagPaymentAllGet(): Promise<Array<TagModel>> {
+        const response = await this.tagPaymentAllGetRaw();
+        return await response.value();
     }
 
     /**
