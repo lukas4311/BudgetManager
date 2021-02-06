@@ -24,6 +24,9 @@ namespace ManagerWeb.Extensions
             services.AddTransient<IPaymentTagRepository, PaymentTagRepository>();
             services.AddTransient<ITagRepository, TagRepository>();
             services.AddTransient<IBudgetRepository, BudgetRepository>();
+            services.AddTransient<ICryptoTradeHistoryRepository, CryptoTradeHistoryRepository>();
+            services.AddTransient<ICryptoTickerRepository, CryptoTickerRepository>();
+            services.AddTransient<ICurrencySymbolRepository, CurrencySymbolRepository>();
         }
     }
 }

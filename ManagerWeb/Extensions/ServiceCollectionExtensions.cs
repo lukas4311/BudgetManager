@@ -12,6 +12,7 @@ namespace ManagerWeb.Extensions
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
             services.AddTransient<IBudgetService, BudgetService>();
+            services.AddTransient<ICryptoService, CryptoService>();
         }
     }
 }
