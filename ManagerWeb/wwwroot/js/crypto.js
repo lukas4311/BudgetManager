@@ -1983,7 +1983,7 @@ class CryptoPortfolio extends react_1.default.Component {
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Portfolio"),
             this.state.allCryptoSum != undefined ?
                 react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
-                    react_1.default.createElement("div", { className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                    react_1.default.createElement("div", { className: "font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
@@ -2048,7 +2048,7 @@ class CryptoTrades extends react_1.default.Component {
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
             this.state.trades != undefined ?
                 react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
-                    react_1.default.createElement("div", { className: "bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                    react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),

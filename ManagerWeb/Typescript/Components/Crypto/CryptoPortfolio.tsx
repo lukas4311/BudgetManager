@@ -47,7 +47,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
                 <h2 className="text-xl ml-12 mb-10">Portfolio</h2>
                 {this.state.allCryptoSum != undefined ?
                     <div className="pb-10 overflow-y-scroll">
-                        <div className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                        <div className="font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                             <p className="mx-6 my-1 w-1/3">Ticker</p>
                             <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
                             <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>

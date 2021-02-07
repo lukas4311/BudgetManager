@@ -31,7 +31,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                 <h2 className="text-xl ml-12 mb-10">Seznam plateb</h2>
                 {this.state.trades != undefined ?
                     <div className="pb-10 overflow-y-scroll">
-                        <div className="bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                        <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                 <p className="mx-6 my-1 w-1/10">Ticker</p>
                                 <p className="mx-6 my-1 w-3/10">Velikost tradu</p>
                                 <p className="mx-6 my-1 w-2/10">Datum tradu</p>
