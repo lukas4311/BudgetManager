@@ -5,7 +5,8 @@ import * as _ from "lodash"
 
 class CryptoSum {
     ticker: string;
-    sum: number;
+    tradeSizeSum: number;
+    tradeValueSum: number;
 }
 
 class CryptoPortfolioState {
@@ -32,8 +33,9 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
 
         _.forOwn(groupedTrades, function (value: TradeHistory[], key) {
             console.log(key);
-            let sum = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0)
-            cryptoSums.push({ sum: sum, ticker: key });
+            let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0)
+            let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0)
+            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue });
         });
 
         this.setState({ allCryptoSum: cryptoSums });
@@ -44,11 +46,17 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
             <div>
                 <h2 className="text-xl ml-12 mb-10">Portfolio</h2>
                 {this.state.allCryptoSum != undefined ?
-                    <div className="pb-10 h-64 overflow-y-scroll">
+                    <div className="pb-10 overflow-y-scroll">
+                        <div className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                            <p className="mx-6 my-1 w-1/3">Ticker</p>
+                            <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
+                            <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>
+                        </div>
                         {this.state.allCryptoSum.map(p =>
                             <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
-                                <p className="mx-6 my-1 w-1/3">{p.ticker}</p>
-                                <p className="mx-6 my-1 w-2/3">{p.sum}</p>
+                                <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum}</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)}</p>
                             </div>
                         )}
                     </div>

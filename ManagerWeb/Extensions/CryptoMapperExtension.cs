@@ -9,7 +9,7 @@ namespace ManagerWeb.Extensions
         {
             return new TradeHistory
             {
-                CryptoTicker = cryptoTradeHistory.CryptoTicker.Name,
+                CryptoTicker = cryptoTradeHistory.CryptoTicker.Ticker,
                 CryptoTickerId = cryptoTradeHistory.CryptoTickerId,
                 CurrencySymbol = cryptoTradeHistory.CurrencySymbol.Symbol,
                 CurrencySymbolId = cryptoTradeHistory.CurrencySymbolId,

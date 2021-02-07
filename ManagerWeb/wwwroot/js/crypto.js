@@ -1971,8 +1971,9 @@ class CryptoPortfolio extends react_1.default.Component {
             let cryptoSums = [];
             _.forOwn(groupedTrades, function (value, key) {
                 console.log(key);
-                let sum = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-                cryptoSums.push({ sum: sum, ticker: key });
+                let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+                let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+                cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue });
             });
             this.setState({ allCryptoSum: cryptoSums });
         });
@@ -1981,9 +1982,15 @@ class CryptoPortfolio extends react_1.default.Component {
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Portfolio"),
             this.state.allCryptoSum != undefined ?
-                react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker),
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3" }, p.sum))))
+                react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
+                    react_1.default.createElement("div", { className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
+                    this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker.toUpperCase()),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.tradeSizeSum),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.tradeValueSum.toFixed(2)))))
                 : react_1.default.createElement("div", null,
                     react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED"))));
     }
@@ -2040,12 +2047,19 @@ class CryptoTrades extends react_1.default.Component {
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
             this.state.trades != undefined ?
-                react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.trades.map(p => react_1.default.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-1/5" }, p.cryptoTicker),
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.tradeSize),
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.tradeTimeStamp).format('DD.MM.YYYY')),
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-1/5" }, p.tradeValue),
-                    react_1.default.createElement("p", { className: "mx-6 my-1 w-1/5" }, p.currencySymbol))))
+                react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
+                    react_1.default.createElement("div", { className: "bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")),
+                    this.state.trades.map(p => react_1.default.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, moment_1.default(p.tradeTimeStamp).format('DD.MM.YYYY')),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol))))
                 : react_1.default.createElement("div", null,
                     react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED"))));
     }
