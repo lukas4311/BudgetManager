@@ -10,10 +10,11 @@ namespace TestingConsole
     {
         static async Task Main(string[] args)
         {
-            //ProcessManager processManager = new ProcessManager();
+            ProcessManager processManager = new ProcessManager();
             //await processManager.DownloadAssets();
+            await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
 
-            SaveCoinbaseDataToDb();
+            //SaveCoinbaseDataToDb();
         }
 
         private static void SaveCoinbaseDataToDb()

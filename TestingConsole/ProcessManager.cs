@@ -4,6 +4,7 @@ using FinanceDataMining.Models;
 using InfluxDbData;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -27,9 +28,9 @@ namespace TestingConsole
             InfluxConfig config = configManager.GetSecretToken();
 
             InfluxDbData.Repository<CryptoData> repo = new InfluxDbData.Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
-            var data = await repo.GetLastWrittenRecordTime(new DataSourceIdentification(organizationId, bucketCrypto));
+            DateTime? lastUpdate = await repo.GetLastWrittenRecordTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
             CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
-            await dataDownloader.CryptoDownload(cryptoTicker).ConfigureAwait(false);
+            await dataDownloader.CryptoDownload(cryptoTicker, lastUpdate).ConfigureAwait(false);
         }
 
         public async Task DownloadForexHistory(ForexTicker forexTicker)

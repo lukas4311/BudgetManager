@@ -19,9 +19,9 @@ namespace TestingConsole
             this.dataSourceIdentification = dataSourceIdentification;
         }
 
-        public async Task CryptoDownload(CryptoTicker tickerToDownload)
+        public async Task CryptoDownload(CryptoTicker tickerToDownload, DateTime? from = null)
         {
-            List<CandleModel> data = await this.DownloadData(tickerToDownload, new DateTime(2019, 1, 1)).ConfigureAwait(false);
+            List<CandleModel> data = await this.DownloadData(tickerToDownload, from ?? new DateTime(2019,1,1)).ConfigureAwait(false);
 
             foreach (CandleModel model in data)
             {
