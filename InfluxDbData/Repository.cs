@@ -51,16 +51,16 @@ namespace InfluxDbData
 
         public async Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour)
         {
-            if (dataSourceIdentification is null)
-                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
+            FluxQueryBuilder queryBulder = this.GetHourDataQuery(dataSourceIdentification, hour);
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(queryBulder.CreateQuery(), dataSourceIdentification.Organization);
 
-            FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
-            string query = queryBuilder.From(dataSourceIdentification.Bucket)
-                .RangePastDays(hour)
-                .AddMeasurementFilter(this.measurementName)
-                .CreateQuery();
+            return this.ParseData(data);
+        }
 
-            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
+        public async Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour, string cryptoTicker)
+        {
+            FluxQueryBuilder queryBulder = this.GetHourDataQuery(dataSourceIdentification, hour).AddFilter("ticker", cryptoTicker);
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(queryBulder.CreateQuery(), dataSourceIdentification.Organization);
 
             return this.ParseData(data);
         }
@@ -128,6 +128,17 @@ namespace InfluxDbData
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
             await this.Delete(dataSourceIdentification, new DateTimeRange());
+        }
+
+        private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
+        {
+            if (dataSourceIdentification is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
+
+            FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
+            return queryBuilder.From(dataSourceIdentification.Bucket)
+                .RangePastDays(hour)
+                .AddMeasurementFilter(this.measurementName);
         }
 
         private List<TModel> ParseData(List<FluxTable> fluxTables)
