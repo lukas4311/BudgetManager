@@ -81,7 +81,7 @@ namespace InfluxDbData
             return this.ParseData(data);
         }
 
-        public async Task<DateTime?> GetLastWrittenRecordTime(DataSourceIdentification dataSourceIdentification)
+        public async Task<List<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification)
         {
             if (dataSourceIdentification is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
@@ -97,7 +97,7 @@ namespace InfluxDbData
 
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query, dataSourceIdentification.Organization);
 
-            return this.ParseData(data).SingleOrDefault()?.Time;
+            return this.ParseData(data);
         }
 
         public async Task Delete(DataSourceIdentification dataSourceIdentification, DateTimeRange dateTimeRange)
