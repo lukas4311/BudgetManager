@@ -17,7 +17,7 @@ namespace InfluxDbData
 
         Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour);
 
-        Task<DateTime> GetLastWrittenRecordTime(DataSourceIdentification dataSourceIdentification);
+        Task<DateTime?> GetLastWrittenRecordTime(DataSourceIdentification dataSourceIdentification)
 
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
 
