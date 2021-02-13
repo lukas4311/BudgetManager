@@ -12,7 +12,7 @@ namespace TestingConsole
         {
             ProcessManager processManager = new ProcessManager();
             //await processManager.DownloadAssets();
-            await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
+            await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
             //SaveCoinbaseDataToDb();
         }
