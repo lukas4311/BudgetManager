@@ -7,6 +7,7 @@ class CryptoSum {
     ticker: string;
     tradeSizeSum: number;
     tradeValueSum: number;
+    valueTicker: string;
 }
 
 class CryptoPortfolioState {
@@ -35,7 +36,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
             console.log(key);
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0)
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0)
-            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue });
+            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, ValueTicker });
         });
 
         this.setState({ allCryptoSum: cryptoSums });

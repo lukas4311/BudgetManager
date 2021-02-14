@@ -1973,7 +1973,7 @@ class CryptoPortfolio extends react_1.default.Component {
                 console.log(key);
                 let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
                 let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-                cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue });
+                cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, ValueTicker });
             });
             this.setState({ allCryptoSum: cryptoSums });
         });
