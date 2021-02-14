@@ -27,7 +27,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
 
     render() {
         return (
-            <div>
+            <div className="max-h-96 overflow-x-auto">
                 <h2 className="text-xl ml-12 mb-10">Seznam plateb</h2>
                 {this.state.trades != undefined ?
                     <div className="pb-10 overflow-y-scroll">

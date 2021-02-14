@@ -2044,7 +2044,7 @@ class CryptoTrades extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", null,
+        return (react_1.default.createElement("div", { className: "max-h-96 overflow-x-auto" },
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
             this.state.trades != undefined ?
                 react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
@@ -2092,9 +2092,9 @@ class CryptoComponent extends react_1.default.Component {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto p\u0159ehled"),
             react_1.default.createElement("div", { className: "flex" },
-                react_1.default.createElement("div", { className: "w-1/2 p-4" },
+                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
                     react_1.default.createElement(CryptoTrades_1.default, null)),
-                react_1.default.createElement("div", { className: "w-1/2 p-4" },
+                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
                     react_1.default.createElement(CryptoPortfolio_1.default, null)))));
     }
 }

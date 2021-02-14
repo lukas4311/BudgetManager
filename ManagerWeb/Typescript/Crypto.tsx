@@ -10,8 +10,8 @@ class CryptoComponent extends React.Component<{}, {}>{
             <div className="">
                 <p className="text-3xl text-center mt-6">Crypto přehled</p>
                 <div className="flex">
-                    <div className="w-1/2 p-4"><CryptoPayments></CryptoPayments></div>
-                    <div className="w-1/2 p-4"><CryptoPortfolio></CryptoPortfolio></div>
+                    <div className="w-1/2 p-4 overflow-y-auto"><CryptoPayments></CryptoPayments></div>
+                    <div className="w-1/2 p-4 overflow-y-auto"><CryptoPortfolio></CryptoPortfolio></div>
                 </div>
             </div>
         );
