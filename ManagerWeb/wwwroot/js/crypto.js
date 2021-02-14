@@ -2044,10 +2044,10 @@ class CryptoTrades extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", { className: "max-h-96 overflow-x-auto" },
+        return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
             this.state.trades != undefined ?
-                react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
+                react_1.default.createElement("div", { className: "pb-10 max-h-96 overflow-x-auto" },
                     react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
