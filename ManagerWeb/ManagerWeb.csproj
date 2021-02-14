@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\InfluxDbData\InfluxDbData.csproj" />
     <ProjectReference Include="..\Repositories\Repository.csproj" />
   </ItemGroup>
 

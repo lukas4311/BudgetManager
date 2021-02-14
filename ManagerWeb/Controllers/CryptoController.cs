@@ -24,6 +24,17 @@ namespace ManagerWeb.Controllers
             return Ok(this.cryptoService.Get());
         }
 
+        [HttpGet("getExchangeRate/{fromCurrency}/{toCurrency}")]
+        public ActionResult GetCurrentExchangeRate(string fromCurrency, string toCurrency)
+        {
+            // TODO: watch influx currency bucket if ticker [fromCurrency/toCurrency] exists there
+            // if not then watch bucket of crypto if ticker [fromCurrency/toCurrency] exists there
+            // then return last evidated exchange rate
+            // if not throw exception
+
+            return Ok();
+        }
+
         [HttpGet("get")]
         public ActionResult<TradeHistory> Get(int id)
         {
