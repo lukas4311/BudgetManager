@@ -33,6 +33,7 @@ namespace ManagerWeb.Extensions
         internal static void ConfigureInfluxRepositories(this IServiceCollection services)
         {
             services.AddTransient<InfluxDbData.IRepository<ForexData>, InfluxDbData.Repository<ForexData>>();
+            services.AddTransient<InfluxDbData.IRepository<CryptoData>, InfluxDbData.Repository<CryptoData>>();
         }
     }
 }

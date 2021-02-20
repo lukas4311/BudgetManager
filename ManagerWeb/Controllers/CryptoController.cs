@@ -32,12 +32,19 @@ namespace ManagerWeb.Controllers
         public async Task<ActionResult> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
             ForexData forexData = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
+            double exhangeRate;
 
-            // if not then watch bucket of crypto if ticker [fromCurrency/toCurrency] exists there
-            // then return last evidated exchange rate
-            // if not throw exception
+            if (forexData is null)
+            {
+                CryptoData data = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency);
+                exhangeRate = data?.ClosePrice ?? 0;
+            }
+            else
+            {
+                exhangeRate = forexData.Price;
+            }
 
-            return Ok();
+            return Ok(exhangeRate);
         }
 
         [HttpGet("get")]

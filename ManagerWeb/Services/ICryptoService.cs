@@ -1,5 +1,7 @@
-﻿using ManagerWeb.Models.DTOs;
+﻿using InfluxDbData;
+using ManagerWeb.Models.DTOs;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ManagerWeb.Services
 {
@@ -8,5 +10,7 @@ namespace ManagerWeb.Services
         IEnumerable<TradeHistory> Get();
 
         TradeHistory Get(int id);
+
+        Task<CryptoData> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
     }
 }
