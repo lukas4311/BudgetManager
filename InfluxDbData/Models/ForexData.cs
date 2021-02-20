@@ -7,7 +7,7 @@ namespace InfluxDbData
     public class ForexData : IInfluxModel
     {
         [Column("price")]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         [Column("currency", IsTag = true)]
         public string Currency { get; set; }

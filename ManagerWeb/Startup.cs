@@ -1,3 +1,4 @@
+using InfluxDbData;
 using ManagerWeb.Extensions;
 using ManagerWeb.Models.SettingModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -24,6 +25,9 @@ namespace ManagerWeb
             services.AddCors();
             IConfigurationSection connectinoStringSection = Configuration.GetSection(nameof(DbSetting));
 
+            Influxdb influxdbConfig = new Influxdb();
+            Configuration.Bind(nameof(Influxdb), influxdbConfig);
+
             // configure basic authentication 
             services
                 .AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
@@ -36,12 +40,14 @@ namespace ManagerWeb
 
             services.Configure<DbSetting>(connectinoStringSection);
             services.AddHttpContextAccessor();
+
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             services.ConfigureIoCRepositories();
+            services.ConfigureInfluxRepositories();
             services.RegisterServices();
+            services.AddTransient<IInfluxContext>(_ => new InfluxContext(influxdbConfig.Url, influxdbConfig.Token));
 
             services.AddSwaggerGen();
-
             services.AddControllersWithViews();
         }
 

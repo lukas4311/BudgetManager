@@ -1,8 +1,10 @@
-﻿using ManagerWeb.Models.DTOs;
+﻿using InfluxDbData;
+using ManagerWeb.Models.DTOs;
 using ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ManagerWeb.Controllers
 {
@@ -12,10 +14,12 @@ namespace ManagerWeb.Controllers
     public class CryptoController : ControllerBase
     {
         private readonly ICryptoService cryptoService;
+        private readonly IForexService forexService;
 
-        public CryptoController(ICryptoService cryptoService)
+        public CryptoController(ICryptoService cryptoService, IForexService forexService)
         {
             this.cryptoService = cryptoService;
+            this.forexService = forexService;
         }
 
         [HttpGet("getAll")]
@@ -25,9 +29,10 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("getExchangeRate/{fromCurrency}/{toCurrency}")]
-        public ActionResult GetCurrentExchangeRate(string fromCurrency, string toCurrency)
+        public async Task<ActionResult> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
-            // TODO: watch influx currency bucket if ticker [fromCurrency/toCurrency] exists there
+            ForexData forexData = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
+
             // if not then watch bucket of crypto if ticker [fromCurrency/toCurrency] exists there
             // then return last evidated exchange rate
             // if not throw exception

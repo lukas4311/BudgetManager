@@ -1,4 +1,5 @@
 ﻿using Data;
+using InfluxDbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
@@ -27,6 +28,11 @@ namespace ManagerWeb.Extensions
             services.AddTransient<ICryptoTradeHistoryRepository, CryptoTradeHistoryRepository>();
             services.AddTransient<ICryptoTickerRepository, CryptoTickerRepository>();
             services.AddTransient<ICurrencySymbolRepository, CurrencySymbolRepository>();
+        }
+
+        internal static void ConfigureInfluxRepositories(this IServiceCollection services)
+        {
+            services.AddTransient<InfluxDbData.IRepository<ForexData>, InfluxDbData.Repository<ForexData>>();
         }
     }
 }
