@@ -16,12 +16,12 @@ namespace ManagerWeb.Services
             this.forexRepository = forexRepository;
         }
 
-        public async Task<ForexData> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
+        public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
             List<ForexData> data = await this.forexRepository.GetLastWrittenRecordsTime(dataSourceIdentification);
             return data.SingleOrDefault(a => string.Equals(a.BaseCurrency, fromSymbol, System.StringComparison.OrdinalIgnoreCase)
-                && string.Equals(a.Currency, toSymbol, System.StringComparison.OrdinalIgnoreCase));
+                && string.Equals(a.Currency, toSymbol, System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
     }
 }

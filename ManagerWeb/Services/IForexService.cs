@@ -1,10 +1,9 @@
-﻿using InfluxDbData;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ManagerWeb.Services
 {
     public interface IForexService
     {
-        Task<ForexData> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
+        Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
     }
 }

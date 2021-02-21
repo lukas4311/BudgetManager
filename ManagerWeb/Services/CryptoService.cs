@@ -1,5 +1,4 @@
-﻿using Data.DataModels;
-using InfluxDbData;
+﻿using InfluxDbData;
 using ManagerWeb.Extensions;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
@@ -50,11 +49,11 @@ namespace ManagerWeb.Services
                 .Single();
         }
 
-        public async Task<CryptoData> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
+        public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
             List<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
-            return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase));
+            return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
     }
 }

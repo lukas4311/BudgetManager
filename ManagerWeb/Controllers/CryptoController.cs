@@ -31,18 +31,10 @@ namespace ManagerWeb.Controllers
         [HttpGet("getExchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
-            ForexData forexData = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
-            double exhangeRate;
+            double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 
-            if (forexData is null)
-            {
-                CryptoData data = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency);
-                exhangeRate = data?.ClosePrice ?? 0;
-            }
-            else
-            {
-                exhangeRate = forexData.Price;
-            }
+            if (exhangeRate == 0)
+                exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency);
 
             return Ok(exhangeRate);
         }

@@ -11,6 +11,6 @@ namespace ManagerWeb.Services
 
         TradeHistory Get(int id);
 
-        Task<CryptoData> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
+        Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
     }
 }
