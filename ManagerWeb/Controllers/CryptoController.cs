@@ -29,7 +29,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("getExchangeRate/{fromCurrency}/{toCurrency}")]
-        public async Task<ActionResult> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
+        public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
             double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 

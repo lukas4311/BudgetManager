@@ -20,6 +20,11 @@ import {
     TradeHistoryToJSON,
 } from '../models';
 
+export interface CryptoGetExchangeRateFromCurrencyToCurrencyGetRequest {
+    fromCurrency: string | null;
+    toCurrency: string | null;
+}
+
 export interface CryptoGetGetRequest {
     id?: number;
 }
@@ -42,6 +47,20 @@ export interface CryptoApiInterface {
     /**
      */
     cryptoGetAllGet(): Promise<Array<TradeHistory>>;
+
+    /**
+     * 
+     * @param {string} fromCurrency 
+     * @param {string} toCurrency 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptoGetExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptoGetExchangeRateFromCurrencyToCurrencyGetRequest): Promise<runtime.ApiResponse<number>>;
+
+    /**
+     */
+    cryptoGetExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptoGetExchangeRateFromCurrencyToCurrencyGetRequest): Promise<number>;
 
     /**
      * 
@@ -84,6 +103,38 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
      */
     async cryptoGetAllGet(): Promise<Array<TradeHistory>> {
         const response = await this.cryptoGetAllGetRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async cryptoGetExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptoGetExchangeRateFromCurrencyToCurrencyGetRequest): Promise<runtime.ApiResponse<number>> {
+        if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
+            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling cryptoGetExchangeRateFromCurrencyToCurrencyGet.');
+        }
+
+        if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
+            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling cryptoGetExchangeRateFromCurrencyToCurrencyGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/crypto/getExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, encodeURIComponent(String(requestParameters.fromCurrency))).replace(`{${"toCurrency"}}`, encodeURIComponent(String(requestParameters.toCurrency))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async cryptoGetExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptoGetExchangeRateFromCurrencyToCurrencyGetRequest): Promise<number> {
+        const response = await this.cryptoGetExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
         return await response.value();
     }
 

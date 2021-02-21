@@ -3,23 +3,26 @@ import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
 import * as _ from "lodash"
 
+const usdSymbol = "USD";
+
 class CryptoSum {
     ticker: string;
     tradeSizeSum: number;
     tradeValueSum: number;
     valueTicker: string;
+    usdPrice: number;
+    usdPriceTrade: number;
 }
 
 class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
 }
-
 export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolioState> {
-    cryptoInterface: CryptoApiInterface;
+    cryptoApi: CryptoApiInterface;
 
     constructor(props: {}) {
         super(props);
-        this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
+        this.cryptoApi = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { allCryptoSum: undefined };
     }
 
@@ -27,19 +30,22 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
         this.load();
     }
 
-    private async load(): Promise<void> {
-        let trades: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
+    private load = async (): Promise<void> => {
+        let trades: TradeHistory[] = await this.cryptoApi.cryptoGetAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
+        let that = this;
 
-        _.forOwn(groupedTrades, function (value: TradeHistory[], key) {
-            console.log(key);
-            let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0)
-            let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0)
-            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, ValueTicker });
+        _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
+            let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+            let exhangeRateTrade: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+            
+            let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+            let exhangeRate: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+            
+            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+            that.setState({ allCryptoSum: cryptoSums });
         });
-
-        this.setState({ allCryptoSum: cryptoSums });
     }
 
     render() {
@@ -56,8 +62,8 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
                         {this.state.allCryptoSum.map(p =>
                             <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                 <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum}</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)}</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)}({p.usdPrice.toFixed(2)} USD)</p>
                             </div>
                         )}
                     </div>

@@ -420,6 +420,35 @@ class CryptoApi extends runtime.BaseAPI {
     }
     /**
      */
+    cryptoGetExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
+                throw new runtime.RequiredError('fromCurrency', 'Required parameter requestParameters.fromCurrency was null or undefined when calling cryptoGetExchangeRateFromCurrencyToCurrencyGet.');
+            }
+            if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
+                throw new runtime.RequiredError('toCurrency', 'Required parameter requestParameters.toCurrency was null or undefined when calling cryptoGetExchangeRateFromCurrencyToCurrencyGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            const response = yield this.request({
+                path: `/crypto/getExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, encodeURIComponent(String(requestParameters.fromCurrency))).replace(`{${"toCurrency"}}`, encodeURIComponent(String(requestParameters.toCurrency))),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.TextApiResponse(response);
+        });
+    }
+    /**
+     */
+    cryptoGetExchangeRateFromCurrencyToCurrencyGet(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.cryptoGetExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
+            return yield response.value();
+        });
+    }
+    /**
+     */
     cryptoGetGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -1951,6 +1980,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 const _ = __importStar(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+const usdSymbol = "USD";
 class CryptoSum {
 }
 class CryptoPortfolioState {
@@ -1958,25 +1988,27 @@ class CryptoPortfolioState {
 class CryptoPortfolio extends react_1.default.Component {
     constructor(props) {
         super(props);
-        this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
+        this.load = () => __awaiter(this, void 0, void 0, function* () {
+            let trades = yield this.cryptoApi.cryptoGetAllGet();
+            let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
+            let cryptoSums = [];
+            let that = this;
+            _.forOwn(groupedTrades, function (value, key) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+                    let exhangeRateTrade = yield that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+                    let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+                    let exhangeRate = yield that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+                    cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+                    that.setState({ allCryptoSum: cryptoSums });
+                });
+            });
+        });
+        this.cryptoApi = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { allCryptoSum: undefined };
     }
     componentDidMount() {
         this.load();
-    }
-    load() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let trades = yield this.cryptoInterface.cryptoGetAllGet();
-            let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
-            let cryptoSums = [];
-            _.forOwn(groupedTrades, function (value, key) {
-                console.log(key);
-                let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-                let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-                cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, ValueTicker });
-            });
-            this.setState({ allCryptoSum: cryptoSums });
-        });
     }
     render() {
         return (react_1.default.createElement("div", null,
@@ -1989,8 +2021,16 @@ class CryptoPortfolio extends react_1.default.Component {
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
                     this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker.toUpperCase()),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.tradeSizeSum),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.tradeValueSum.toFixed(2)))))
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                            p.tradeSizeSum.toFixed(3),
+                            "(",
+                            p.usdPriceTrade.toFixed(2),
+                            " USD)"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                            p.tradeValueSum.toFixed(2),
+                            "(",
+                            p.usdPrice.toFixed(2),
+                            " USD)"))))
                 : react_1.default.createElement("div", null,
                     react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED"))));
     }
