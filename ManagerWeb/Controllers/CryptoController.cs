@@ -34,7 +34,7 @@ namespace ManagerWeb.Controllers
             double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 
             if (exhangeRate == 0)
-                exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency);
+                exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 
             return Ok(exhangeRate);
         }
