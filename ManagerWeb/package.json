@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "@nivo/calendar": "^0.62.0",
     "@nivo/line": "^0.62.0",
     "@nivo/radar": "^0.62.0",
@@ -24,6 +26,7 @@
     "gulp-sass": "^4.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.15.4",
     "react-responsive": "^8.1.0",
     "react-transition-group": "^4.4.1",
     "source-map-loader": "^1.0.1",
