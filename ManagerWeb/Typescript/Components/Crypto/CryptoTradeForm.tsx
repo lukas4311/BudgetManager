@@ -1,16 +1,22 @@
 import * as React from 'react'
-import { useForm, Controller } from "react-hook-form";
-import { Button } from "@material-ui/core";
-
+import { useForm } from "react-hook-form";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Paper from '@material-ui/core/Paper';
 
 interface ICryptoTradeFormProps {
-    firstName: string;
-    lastName: string;
-    iceCreamType: string;
+    id: number;
+    tradeTimeStamp: Date;
+    cryptoTickerId: number;
+    cryptoTicker: string;
+    tradeSize: number;
+    tradeValue: number;
+    currencySymbolId: number;
+    currencySymbol: string;
 }
 
 const CryptoTradeForm = () => {
-    const { control, handleSubmit } = useForm<ICryptoTradeFormProps>();
+    const { register, control, handleSubmit } = useForm<ICryptoTradeFormProps>();
 
     const onSubmit = (data: ICryptoTradeFormProps) => {
         console.log(data)
@@ -18,8 +24,31 @@ const CryptoTradeForm = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <h1>Detail tradu</h1>
-            <Button type="submit" value="Uložit" />
+            <Paper className="p-8">
+                <h1 className="text-2xl mb-4" >Detail tradu</h1>
+
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <TextField
+                            id="date"
+                            label="Datum tradu"
+                            type="date"
+                            defaultValue="2017-05-24"
+                            inputRef={register}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <TextField inputRef={register} name="cryptoTicker" className="place-self-end" label="Crypto ticker"/>
+                    </div>
+                </div>
+
+                <Button type="submit" variant="contained" color="primary">Uložit</Button>
+            </Paper>
         </form>
     );
 };
+
+export { CryptoTradeForm }
