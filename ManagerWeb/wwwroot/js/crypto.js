@@ -2084,7 +2084,6 @@ const CryptoTradeForm = (props) => {
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
-        React.createElement("h1", { className: "text-2xl mb-4" }, "Detail tradu"),
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-4" },
             React.createElement("div", null,
                 React.createElement(TextField_1.default, { label: "Datum tradu", type: "date", name: "tradeTimeStamp", inputRef: register })),
@@ -2178,9 +2177,9 @@ class CryptoTrades extends react_1.default.Component {
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol))))
                     : react_1.default.createElement("div", null,
                         react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
-                react_1.default.createElement(Button_1.default, { variant: "outlined", color: "primary", onClick: this.handleClickOpen }, "Open form dialog"),
-                react_1.default.createElement(Dialog_1.default, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "form-dialog-title" },
-                    react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title" }, "Subscribe"),
+                react_1.default.createElement(Button_1.default, { variant: "contained", color: "primary", onClick: this.handleClickOpen }, "Open form dialog"),
+                react_1.default.createElement(Dialog_1.default, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                    react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title" }, "Detail transakce"),
                     react_1.default.createElement(DialogContent_1.default, null,
                         react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
                             react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, { tradeTimeStamp: moment_1.default(Date.now()).format("YYYY-MM-DD"), cryptoTicker: "A", currencySymbolId: 1, tradeSize: 20, id: 1, cryptoTickerId: 2, currencySymbol: "s", tradeValue: 222, onSave: (data) => console.log(data) })))))));

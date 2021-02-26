@@ -78,11 +78,11 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                             <p>Probíhá načátíní</p>
                         </div>
                     }
-                    <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                    <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
                         Open form dialog
                     </Button>
-                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce" maxWidth="md" fullWidth={true}>
+                        <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
                         <DialogContent>
                             <div className="p-2 overflow-y-auto">
                                 <CryptoTradeForm
