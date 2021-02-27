@@ -24,7 +24,7 @@ const CryptoTradeForm = (props: CryptoTradeFormModel) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div>
                     <TextField
                         label="Datum tradu"
@@ -38,7 +38,7 @@ const CryptoTradeForm = (props: CryptoTradeFormModel) => {
                 </div>
             </div>
 
-            <Button type="submit" variant="contained" color="primary">Uložit</Button>
+            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
         </form>
     );
 };

@@ -2086,12 +2086,12 @@ const CryptoTradeForm = (props) => {
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
-        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-4" },
+        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             React.createElement("div", null,
                 React.createElement(TextField_1.default, { label: "Datum tradu", type: "date", name: "tradeTimeStamp", inputRef: register })),
             React.createElement("div", null,
                 React.createElement(TextField_1.default, { inputRef: register, name: "cryptoTicker", className: "place-self-end", label: "Crypto ticker" }))),
-        React.createElement(Button_1.default, { type: "submit", variant: "contained", color: "primary" }, "Ulo\u017Eit")));
+        React.createElement(Button_1.default, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.CryptoTradeForm = CryptoTradeForm;
 
