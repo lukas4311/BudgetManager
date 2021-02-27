@@ -1,9 +1,11 @@
-﻿using InfluxDbData;
+﻿using Data.DataModels;
+using InfluxDbData;
 using ManagerWeb.Extensions;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,8 +31,7 @@ namespace ManagerWeb.Services
 
         public IEnumerable<TradeHistory> Get()
         {
-            string userName = this.httpContextAccessor.HttpContext.User.Identity.Name;
-            return this.userIdentityRepository.FindByCondition(u => u.Login == userName)
+            return this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
@@ -39,8 +40,7 @@ namespace ManagerWeb.Services
 
         public TradeHistory Get(int id)
         {
-            string userName = this.httpContextAccessor.HttpContext.User.Identity.Name;
-            return this.userIdentityRepository.FindByCondition(u => u.Login == userName)
+            return this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
@@ -49,11 +49,36 @@ namespace ManagerWeb.Services
                 .Single();
         }
 
+        public void Update(TradeHistory tradeHistory)
+        {
+            CryptoTradeHistory tradeHistoryRecord = this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
+                .SelectMany(a => a.CryptoTradesHistory)
+                .Include(s => s.CurrencySymbol)
+                .Include(s => s.CryptoTicker)
+                .Single(s => s.Id == tradeHistory.Id);
+
+            if(tradeHistoryRecord == null)
+                throw new Exception();
+
+            tradeHistoryRecord.CryptoTickerId = tradeHistory.CryptoTickerId;
+            tradeHistoryRecord.CurrencySymbolId = tradeHistory.CurrencySymbolId;
+            tradeHistoryRecord.TradeSize = tradeHistory.TradeSize;
+            tradeHistoryRecord.TradeTimeStamp = tradeHistory.TradeTimeStamp;
+            tradeHistoryRecord.TradeValue = tradeHistory.TradeValue;
+
+            this.cryptoTradeHistoryRepository.Update(tradeHistoryRecord);
+        }
+
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
             List<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
+        }
+
+        private string GetUserIdentity()
+        {
+            return this.httpContextAccessor.HttpContext.User.Identity.Name;
         }
     }
 }
