@@ -8,13 +8,14 @@ import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
-import { CryptoTradeForm } from "./CryptoTradeForm";
+import { CryptoTradeForm, CryptoTradeFormModel } from "./CryptoTradeForm";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 
 class CryptoTradesState {
     trades: TradeHistory[];
     openedForm: boolean;
+    selectedTrade: CryptoTradeFormModel;
 }
 
 const theme = createMuiTheme({
@@ -29,7 +30,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     constructor(props: {}) {
         super(props);
         this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
-        this.state = { trades: undefined, openedForm: false };
+        this.state = { trades: undefined, openedForm: false, selectedTrade: undefined };
     }
 
     public componentDidMount() {
@@ -42,8 +43,22 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
         this.setState({ trades });
     }
 
-    handleClickOpen = () => {
-        this.setState({ openedForm: true });
+    private saveTrade = (data: CryptoTradeFormModel): void => {
+    }
+
+    handleClickOpen = (tradeHistory: TradeHistory) => {
+        let model: CryptoTradeFormModel = new CryptoTradeFormModel();
+        model.cryptoTicker = tradeHistory.cryptoTicker;
+        model.cryptoTickerId = tradeHistory.cryptoTickerId;
+        model.currencySymbol = tradeHistory.currencySymbol;
+        model.currencySymbolId = tradeHistory.currencySymbolId;
+        model.id = tradeHistory.id;
+        model.tradeSize = tradeHistory.tradeSize;
+        model.tradeTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+        model.tradeValue = tradeHistory.tradeValue;
+        model.onSave = this.saveTrade;
+
+        this.setState({ selectedTrade: model, openedForm: true });
     };
 
     handleClose = () => {
@@ -65,7 +80,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                                 <p className="mx-6 my-1 w-1/10">Měna</p>
                             </div>
                             {this.state.trades.map(p =>
-                                <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                                <div key={p.id} onClick={_ => this.handleClickOpen(p)} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                     <p className="mx-6 my-1 w-1/10">{p.cryptoTicker.toUpperCase()}</p>
                                     <p className="mx-6 my-1 w-3/10">{p.tradeSize}</p>
                                     <p className="mx-6 my-1 w-2/10">{moment(p.tradeTimeStamp).format('DD.MM.YYYY')}</p>
@@ -78,23 +93,12 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                             <p>Probíhá načátíní</p>
                         </div>
                     }
-                    <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
-                        Open form dialog
-                    </Button>
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce" maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
                         <DialogContent>
                             <div className="p-2 overflow-y-auto">
                                 <CryptoTradeForm
-                                    tradeTimeStamp={moment(Date.now()).format("YYYY-MM-DD")}
-                                    cryptoTicker="A"
-                                    currencySymbolId={1}
-                                    tradeSize={20}
-                                    id={1}
-                                    cryptoTickerId={2}
-                                    currencySymbol={"s"}
-                                    tradeValue={222}
-                                    onSave={(data) => console.log(data)}
+                                    {...this.state.selectedTrade}
                                 ></CryptoTradeForm>
                             </div>
                         </DialogContent>

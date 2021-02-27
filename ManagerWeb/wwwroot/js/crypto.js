@@ -2072,15 +2072,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CryptoTradeForm = void 0;
+exports.CryptoTradeFormModel = exports.CryptoTradeForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const Button_1 = __importDefault(__webpack_require__(/*! @material-ui/core/Button */ "./node_modules/@material-ui/core/esm/Button/index.js"));
 const TextField_1 = __importDefault(__webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js"));
+class CryptoTradeFormModel {
+}
+exports.CryptoTradeFormModel = CryptoTradeFormModel;
 const CryptoTradeForm = (props) => {
     const { register, handleSubmit } = react_hook_form_1.useForm({ defaultValues: props });
     const onSubmit = (data) => {
-        console.log(data);
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
@@ -2118,7 +2120,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Button_1 = __importDefault(__webpack_require__(/*! @material-ui/core/Button */ "./node_modules/@material-ui/core/esm/Button/index.js"));
 const Dialog_1 = __importDefault(__webpack_require__(/*! @material-ui/core/Dialog */ "./node_modules/@material-ui/core/esm/Dialog/index.js"));
 const DialogContent_1 = __importDefault(__webpack_require__(/*! @material-ui/core/DialogContent */ "./node_modules/@material-ui/core/esm/DialogContent/index.js"));
 const DialogTitle_1 = __importDefault(__webpack_require__(/*! @material-ui/core/DialogTitle */ "./node_modules/@material-ui/core/esm/DialogTitle/index.js"));
@@ -2138,14 +2139,26 @@ const theme = styles_1.createMuiTheme({
 class CryptoTrades extends react_1.default.Component {
     constructor(props) {
         super(props);
-        this.handleClickOpen = () => {
-            this.setState({ openedForm: true });
+        this.saveTrade = (data) => {
+        };
+        this.handleClickOpen = (tradeHistory) => {
+            let model = new CryptoTradeForm_1.CryptoTradeFormModel();
+            model.cryptoTicker = tradeHistory.cryptoTicker;
+            model.cryptoTickerId = tradeHistory.cryptoTickerId;
+            model.currencySymbol = tradeHistory.currencySymbol;
+            model.currencySymbolId = tradeHistory.currencySymbolId;
+            model.id = tradeHistory.id;
+            model.tradeSize = tradeHistory.tradeSize;
+            model.tradeTimeStamp = moment_1.default(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+            model.tradeValue = tradeHistory.tradeValue;
+            model.onSave = this.saveTrade;
+            this.setState({ selectedTrade: model, openedForm: true });
         };
         this.handleClose = () => {
             this.setState({ openedForm: false });
         };
         this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
-        this.state = { trades: undefined, openedForm: false };
+        this.state = { trades: undefined, openedForm: false, selectedTrade: undefined };
     }
     componentDidMount() {
         this.load();
@@ -2169,7 +2182,7 @@ class CryptoTrades extends react_1.default.Component {
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")),
-                        this.state.trades.map(p => react_1.default.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        this.state.trades.map(p => react_1.default.createElement("div", { key: p.id, onClick: _ => this.handleClickOpen(p), className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, moment_1.default(p.tradeTimeStamp).format('DD.MM.YYYY')),
@@ -2177,12 +2190,11 @@ class CryptoTrades extends react_1.default.Component {
                             react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol))))
                     : react_1.default.createElement("div", null,
                         react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
-                react_1.default.createElement(Button_1.default, { variant: "contained", color: "primary", onClick: this.handleClickOpen }, "Open form dialog"),
                 react_1.default.createElement(Dialog_1.default, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title" }, "Detail transakce"),
                     react_1.default.createElement(DialogContent_1.default, null,
                         react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
-                            react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, { tradeTimeStamp: moment_1.default(Date.now()).format("YYYY-MM-DD"), cryptoTicker: "A", currencySymbolId: 1, tradeSize: 20, id: 1, cryptoTickerId: 2, currencySymbol: "s", tradeValue: 222, onSave: (data) => console.log(data) })))))));
+                            react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade))))))));
     }
 }
 exports.default = CryptoTrades;
