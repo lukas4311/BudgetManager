@@ -14,6 +14,7 @@
     "@material-ui/icons": "^4.11.2",
     "@nivo/calendar": "^0.62.0",
     "@nivo/line": "^0.62.0",
+    "@nivo/pie": "^0.67.0",
     "@nivo/radar": "^0.62.0",
     "@nivo/stream": "^0.62.0",
     "@types/lodash": "^4.14.168",
