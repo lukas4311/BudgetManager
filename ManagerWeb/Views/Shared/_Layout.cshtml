@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string devMaterial = "https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js";
+    string prodMaterial = "https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js";
+}
+
+<!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
     <meta charset="utf-8" />
@@ -11,11 +16,13 @@
         <!-- Dependencies -->
         <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="@devMaterial" crossorigin></script>
     </environment>
     <environment exclude="Development">
         <!-- Dependencies -->
         <script src="https://unpkg.com/react@16/umd/react.production.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.js" crossorigin></script>
+        <script src="@prodMaterial" crossorigin></script>
     </environment>
 </head>
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden">
