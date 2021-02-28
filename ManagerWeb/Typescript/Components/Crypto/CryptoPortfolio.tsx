@@ -1,7 +1,7 @@
-import moment from "moment";
 import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
 import * as _ from "lodash"
+import { PieChart, PieChartData } from "../Charts/PieChart";
 
 const usdSymbol = "USD";
 
@@ -17,6 +17,7 @@ class CryptoSum {
 class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
 }
+
 export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolioState> {
     cryptoApi: CryptoApiInterface;
 
@@ -39,13 +40,28 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
             let exhangeRateTrade: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
-            
+
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
             let exhangeRate: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
-            
+
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             that.setState({ allCryptoSum: cryptoSums });
         });
+    }
+
+    private renderChart = () => {
+        let element: JSX.Element;
+
+        if (this.state.allCryptoSum != undefined && this.state.allCryptoSum.length != 0) {
+            let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
+            element = (
+                <div className="h-96">
+                    <PieChart data={chartData}></PieChart>
+                </div>
+            )
+        }
+
+        return element;
     }
 
     render() {
@@ -71,6 +87,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
                         <p>Probíhá načátíní</p>
                     </div>
                 }
+                {this.renderChart()}
             </div>
         );
     }
