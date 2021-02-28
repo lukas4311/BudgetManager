@@ -41,7 +41,8 @@ module.exports = {
             // 'material-ui': 'window["material-ui"]'
             // '@material-ui/core': 'MaterialUI'
             // _: 'lodash'
-            "lodash": "_"
+            "lodash": "_",
+            'moment': 'moment'
         }
         // , /@material-ui\/core\/.*/
     ]
