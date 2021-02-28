@@ -1,10 +1,9 @@
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import moment from "moment";
 import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
 import { CryptoTradeForm, CryptoTradeFormModel } from "./CryptoTradeForm";
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 class CryptoTradesState {
     trades: TradeHistory[];
@@ -14,8 +13,8 @@ class CryptoTradesState {
 
 const theme = createMuiTheme({
     palette: {
-        type: "dark"
-    }
+        type: 'dark',
+      }
 });
 
 export default class CryptoTrades extends React.Component<{}, CryptoTradesState> {
@@ -87,7 +86,10 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                             <p>Probíhá načátíní</p>
                         </div>
                     }
-                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce" maxWidth="md" fullWidth={true}>
+                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
+                        maxWidth="md" fullWidth={true}
+                    // PaperProps={{classes: {root: 'bg-prussianBlue text-white'}}}
+                    >
                         <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
                         <DialogContent>
                             <div className="p-2 overflow-y-auto">

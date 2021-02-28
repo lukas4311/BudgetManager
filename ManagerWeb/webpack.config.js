@@ -39,7 +39,8 @@ module.exports = {
             "react": "React",
             "react-dom": "ReactDOM",
             // 'material-ui': 'window["material-ui"]'
-            // '@material-ui/core': 'MaterialUI'
+            '@material-ui/core': 'MaterialUI',
+            '@material-ui/core/styles': 'MaterialUI',
             // _: 'lodash'
             "lodash": "_",
             'moment': 'moment'
