@@ -36,9 +36,13 @@ module.exports = {
     },
     externals: [
         {
-        "react": "React",
-        "react-dom": "ReactDOM",
-        'material-ui': 'window["material-ui"]'
+            "react": "React",
+            "react-dom": "ReactDOM",
+            // 'material-ui': 'window["material-ui"]'
+            // '@material-ui/core': 'MaterialUI'
+            // _: 'lodash'
+            "lodash": "_"
         }
+        // , /@material-ui\/core\/.*/
     ]
 };

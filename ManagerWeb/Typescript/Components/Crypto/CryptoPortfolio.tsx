@@ -1,6 +1,6 @@
 import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
-import * as _ from "lodash"
+import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 
 const usdSymbol = "USD";
