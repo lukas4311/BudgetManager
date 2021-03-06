@@ -14,7 +14,7 @@ class CryptoTradesState {
 const theme = createMuiTheme({
     palette: {
         type: 'dark',
-      }
+    }
 });
 
 export default class CryptoTrades extends React.Component<{}, CryptoTradesState> {
@@ -87,9 +87,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                         </div>
                     }
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
-                        maxWidth="md" fullWidth={true}
-                    // PaperProps={{classes: {root: 'bg-prussianBlue text-white'}}}
-                    >
+                        maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
                         <DialogContent>
                             <div className="p-2 overflow-y-auto">

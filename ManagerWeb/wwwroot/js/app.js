@@ -765,6 +765,13 @@ const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataPro
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const theme = styles_1.createMuiTheme({
+    palette: {
+        type: 'dark',
+    }
+});
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -836,13 +843,21 @@ class PaymentsOverview extends React.Component {
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
-            payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
             filterDateTo: '', filterDateFrom: ''
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
+    }
+    componentDidMount() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.setState({ selectedFilter: this.filters[0] });
+            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), null);
+            this.setBankAccounts(bankAccounts);
+        });
     }
     getPaymentData(dateFrom, dateTo, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -883,56 +898,50 @@ class PaymentsOverview extends React.Component {
                 return "bg-blue-500";
         }
     }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), null);
-            this.setBankAccounts(bankAccounts);
-        });
-    }
     render() {
         let iconsData = new IconsEnum_1.IconsData();
-        return (React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
-            this.showErrorMessage(),
-            React.createElement("div", { className: "flex flex-row" },
-                React.createElement("div", { className: "w-2/5" },
-                    React.createElement("div", { className: "py-4 flex" },
-                        React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
-                        React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
-                            React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                                React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                                React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                    React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
-                        React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
-                        React.createElement("select", { className: "effect-11 py-1 w-1/3", onChange: this.bankAccountChange, value: this.state.selectedBankAccount }, this.state.bankAccounts.map((b, i) => {
-                            return React.createElement("option", { key: i, value: b.id }, b.code);
-                        }))),
-                    React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                        React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
-                        React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                    React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
-                        React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                        React.createElement("p", { className: "mx-6 my-1 w-1/5" },
-                            p.amount,
-                            ",-"),
-                        React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
-                        React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
-                        React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
-                React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
-                    React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
-            React.createElement("div", { className: "flex flex-row" },
-                React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64" },
-                    React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
-                    React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-            React.createElement("div", { className: "flex flex-row p-6" },
-                React.createElement("div", { className: "w-1/3" },
-                    React.createElement(BudgetComponent_1.default, null))),
-            React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                React.createElement(ErrorBoundry_1.default, null,
-                    React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))));
+        return (React.createElement(styles_1.ThemeProvider, { theme: theme },
+            React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
+                this.showErrorMessage(),
+                React.createElement("div", { className: "flex flex-row" },
+                    React.createElement("div", { className: "w-2/5" },
+                        React.createElement("div", { className: "py-4 flex" },
+                            React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
+                            React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
+                                React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                    React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                        React.createElement("div", { className: "flex flex-col mb-3 ml-6" },
+                            React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det"),
+                            React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
+                                return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
+                            }))),
+                        React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                            React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
+                            React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
+                        React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
+                            React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
+                            React.createElement("p", { className: "mx-6 my-1 w-1/5" },
+                                p.amount,
+                                ",-"),
+                            React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
+                            React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
+                            React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
+                    React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
+                        React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
+                React.createElement("div", { className: "flex flex-row" },
+                    React.createElement("div", { className: "w-1/3 h-64" },
+                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
+                    React.createElement("div", { className: "w-1/3 h-64" },
+                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                    React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
+                        React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                React.createElement("div", { className: "flex flex-row p-6" },
+                    React.createElement("div", { className: "w-1/3" },
+                        React.createElement(BudgetComponent_1.default, null))),
+                React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
+                    React.createElement(ErrorBoundry_1.default, null,
+                        React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))))));
     }
 }
 exports.default = PaymentsOverview;
@@ -41892,6 +41901,17 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+
+/***/ "@material-ui/core":
+/*!*****************************!*\
+  !*** external "MaterialUI" ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = MaterialUI;
 
 /***/ }),
 
