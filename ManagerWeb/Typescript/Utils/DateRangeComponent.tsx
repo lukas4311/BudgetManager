@@ -1,3 +1,4 @@
+import { TextField } from '@material-ui/core';
 import * as React from 'react'
 
 class DateRangeState {
@@ -32,10 +33,28 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
     render() {
         return (
             <div className="exactDates w-full flex flex-row text-white">
-                <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
-                    value={this.state.filterDateFrom} onChange={this.handleChangeDateFrom}></input>
-                <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"
-                    value={this.state.filterDateTo} onChange={this.handleChangeDateTo}></input>
+                <TextField
+                    id="dateFrom"
+                    label="Datum od"
+                    type="date"
+                    defaultValue={this.state.filterDateFrom}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    className="w-full mr-4"
+                    onChange={this.handleChangeDateFrom}
+                />
+                <TextField
+                    id="dateTo"
+                    label="Datum do"
+                    type="date"
+                    defaultValue={this.state.filterDateTo}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    className="w-full mr-4"
+                    onChange={this.handleChangeDateTo}
+                />
             </div>
         );
     }

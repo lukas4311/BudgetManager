@@ -919,7 +919,7 @@ class PaymentsOverview extends React.Component {
                                 return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
                             }))),
                         React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                            React.createElement("div", { className: "text-left mr-4" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white transition duration-700 hover:bg-vermilion text-sm", onClick: () => this.filterClick(f.key) }, f.caption))),
+                            React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8", onClick: () => this.filterClick(f.key) }, f.caption))),
                             React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                         React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                             React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
@@ -1629,6 +1629,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 class DateRangeState {
 }
@@ -1652,8 +1653,12 @@ class DateRangeComponent extends React.Component {
     }
     render() {
         return (React.createElement("div", { className: "exactDates w-full flex flex-row text-white" },
-            React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
-            React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo })));
+            React.createElement(core_1.TextField, { id: "dateFrom", label: "Datum od", type: "date", defaultValue: this.state.filterDateFrom, InputLabelProps: {
+                    shrink: true,
+                }, className: "w-full mr-4", onChange: this.handleChangeDateFrom }),
+            React.createElement(core_1.TextField, { id: "dateTo", label: "Datum do", type: "date", defaultValue: this.state.filterDateTo, InputLabelProps: {
+                    shrink: true,
+                }, className: "w-full mr-4", onChange: this.handleChangeDateTo })));
     }
 }
 exports.default = DateRangeComponent;

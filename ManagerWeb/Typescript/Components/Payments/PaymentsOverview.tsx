@@ -156,7 +156,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private getFilteredPaymentData(bankId: number) {
-        if(bankId == -1)
+        if (bankId == -1)
             bankId = null;
 
         if (this.state.selectedFilter != undefined) {
@@ -231,9 +231,9 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                 </Select>
                             </div>
                             <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
-                                <div className="text-left mr-4">
+                                <div className="text-left m-auto w-2/5">
                                     {this.filters.map((f) =>
-                                        <span key={f.key} className="px-4 bg-white transition duration-700 hover:bg-vermilion text-sm" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
+                                        <span key={f.key} className="px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
                                     )}
                                 </div>
                                 <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
