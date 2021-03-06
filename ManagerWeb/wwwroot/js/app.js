@@ -800,8 +800,7 @@ class PaymentsOverview extends React.Component {
         this.filterClick = (filterKey) => {
             let selectedFilter = this.filters.find(f => f.key == filterKey);
             if (this.state.selectedFilter != selectedFilter) {
-                this.setState({ selectedFilter: selectedFilter });
-                this.getPaymentData(moment_1.default(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+                this.setState({ selectedFilter: selectedFilter }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
             }
         };
         this.addNewPayment = () => {
@@ -817,12 +816,12 @@ class PaymentsOverview extends React.Component {
         };
         this.handleConfirmationClose = () => {
             this.hideModal();
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), this.state.selectedBankAccount);
+            this.getFilteredPaymentData(this.state.selectedBankAccount);
         };
         this.bankAccountChange = (e) => {
             let selectedbankId = parseInt(e.target.value);
             this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), selectedbankId);
+            this.getFilteredPaymentData(selectedbankId);
         };
         this.setBankAccounts = (data) => {
             if (data.success) {
@@ -832,8 +831,7 @@ class PaymentsOverview extends React.Component {
             }
         };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
-            this.getPaymentData(moment_1.default(dateFrom).toDate(), moment_1.default(dateTo).toDate(), this.state.selectedBankAccount);
-            this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
+            this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -841,7 +839,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: ''
+            filterDateTo: '', filterDateFrom: ''
         };
         this.dataLoader = new DataLoader_1.default();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
@@ -860,6 +858,14 @@ class PaymentsOverview extends React.Component {
     }
     paymentEdit(id) {
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
+    }
+    getFilteredPaymentData(bankId) {
+        if (this.state.selectedFilter != undefined) {
+            this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), bankId);
+        }
+        else {
+            this.getPaymentData(moment_1.default(this.state.filterDateFrom).toDate(), moment_1.default(this.state.filterDateTo).toDate(), bankId);
+        }
     }
     showErrorMessage() {
         let tag = React.createElement(React.Fragment, null);
@@ -1634,7 +1640,7 @@ class DateRangeComponent extends React.Component {
         this.state = { filterDateFrom: '', filterDateTo: '' };
     }
     render() {
-        return (React.createElement("div", { className: "exactDates w-1/3 flex flex-row text-white" },
+        return (React.createElement("div", { className: "exactDates w-full flex flex-row text-white" },
             React.createElement("input", { type: "date", className: "effect-11 w-full mr-4 h-8", placeholder: "Datum od", value: this.state.filterDateFrom, onChange: this.handleChangeDateFrom }),
             React.createElement("input", { type: "date", className: "effect-11 w-full h-8", placeholder: "Datum do", value: this.state.filterDateTo, onChange: this.handleChangeDateTo })));
     }

@@ -31,7 +31,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
 
     render() {
         return (
-            <div className="exactDates w-1/3 flex flex-row text-white">
+            <div className="exactDates w-full flex flex-row text-white">
                 <input type="date" className="effect-11 w-full mr-4 h-8" placeholder="Datum od"
                     value={this.state.filterDateFrom} onChange={this.handleChangeDateFrom}></input>
                 <input type="date" className="effect-11 w-full h-8" placeholder="Datum do"

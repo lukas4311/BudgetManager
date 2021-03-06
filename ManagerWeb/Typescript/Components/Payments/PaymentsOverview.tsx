@@ -22,6 +22,7 @@ import ErrorBoundary from '../../Utils/ErrorBoundry';
 interface PaymentsOverviewState {
     payments: Array<IPaymentInfo>,
     selectedFilter: DateFilter,
+    filterDateFrom: string,
     filterDateTo: string,
     showPaymentFormModal: boolean,
     bankAccounts: Array<BankAccount>
@@ -57,7 +58,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             payments: [], selectedFilter: this.filters[0], showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: ''
+            filterDateTo: '', filterDateFrom: ''
         };
 
         this.dataLoader = new DataLoader();
@@ -107,8 +108,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         let selectedFilter = this.filters.find(f => f.key == filterKey);
 
         if (this.state.selectedFilter != selectedFilter) {
-            this.setState({ selectedFilter: selectedFilter });
-            this.getPaymentData(moment(Date.now()).subtract(selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
+            this.setState({ selectedFilter: selectedFilter }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
         }
     }
 
@@ -131,13 +131,22 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private handleConfirmationClose = () => {
         this.hideModal();
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), this.state.selectedBankAccount);
+        this.getFilteredPaymentData(this.state.selectedBankAccount);
     }
 
     private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let selectedbankId: number = parseInt(e.target.value);
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), selectedbankId);
+        this.getFilteredPaymentData(selectedbankId);
+    }
+
+    private getFilteredPaymentData(bankId: number) {
+        if (this.state.selectedFilter != undefined) {
+            this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), bankId);
+        }
+        else {
+            this.getPaymentData(moment(this.state.filterDateFrom).toDate(), moment(this.state.filterDateTo).toDate(), bankId);
+        }
     }
 
     private showErrorMessage() {
@@ -175,8 +184,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private rangeDatesHandler = (dateFrom: string, dateTo: string): void => {
-        this.getPaymentData(moment(dateFrom).toDate(), moment(dateTo).toDate(), this.state.selectedBankAccount);
-        this.setState({ selectedFilter: undefined, filterDateTo: dateTo });
+        this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
     }
 
     public render() {
