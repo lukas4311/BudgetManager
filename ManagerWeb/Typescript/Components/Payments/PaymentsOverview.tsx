@@ -63,7 +63,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
-            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
             filterDateTo: '', filterDateFrom: ''
@@ -151,11 +151,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
 
     private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let selectedbankId: number = parseInt(e.target.value);
-        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
+        this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
         this.getFilteredPaymentData(selectedbankId);
     }
 
     private getFilteredPaymentData(bankId: number) {
+        if(bankId == -1)
+            bankId = null;
+
         if (this.state.selectedFilter != undefined) {
             this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), bankId);
         }
@@ -187,8 +190,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private setBankAccounts = (data: BankAccountReponse) => {
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-            this.setState({ bankAccounts: bankAccounts });
+            bankAccounts.unshift({ code: this.defaultBankOption, id: -1 });
+            this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
         }
     }
 
@@ -216,11 +219,6 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             </div>
                             <div className="flex flex-col mb-3 ml-6">
                                 <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
-                                {/* <select className="effect-11 py-1 w-1/3" onChange={this.bankAccountChange} value={this.state.selectedBankAccount}>
-                                    {this.state.bankAccounts.map((b, i) => {
-                                        return <option key={i} value={b.id}>{b.code}</option>
-                                    })}
-                                </select> */}
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"

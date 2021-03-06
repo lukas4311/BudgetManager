@@ -827,14 +827,14 @@ class PaymentsOverview extends React.Component {
         };
         this.bankAccountChange = (e) => {
             let selectedbankId = parseInt(e.target.value);
-            this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? undefined : selectedbankId) });
+            this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
             this.getFilteredPaymentData(selectedbankId);
         };
         this.setBankAccounts = (data) => {
             if (data.success) {
                 let bankAccounts = data.bankAccounts;
-                bankAccounts.unshift({ code: this.defaultBankOption, id: undefined });
-                this.setState({ bankAccounts: bankAccounts });
+                bankAccounts.unshift({ code: this.defaultBankOption, id: -1 });
+                this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
             }
         };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
@@ -843,7 +843,7 @@ class PaymentsOverview extends React.Component {
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
         this.state = {
-            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: undefined,
+            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
             filterDateTo: '', filterDateFrom: ''
@@ -875,6 +875,8 @@ class PaymentsOverview extends React.Component {
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
     getFilteredPaymentData(bankId) {
+        if (bankId == -1)
+            bankId = null;
         if (this.state.selectedFilter != undefined) {
             this.getPaymentData(moment_1.default(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment_1.default(Date.now()).toDate(), bankId);
         }
