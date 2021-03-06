@@ -172,7 +172,6 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         if (this.state.apiError != undefined)
             tag = <span className="errorMessage inline-block px-6 py-2 mt-2 bg-red-700 rounded-full w-2/3">{this.state.apiError}</span>
 
-
         return tag;
     }
 
@@ -233,7 +232,12 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
                                 <div className="text-left m-auto w-2/5">
                                     {this.filters.map((f) =>
-                                        <span key={f.key} className="px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8" onClick={() => this.filterClick(f.key)}>{f.caption}</span>
+                                        <span key={f.key}
+                                            className={"px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                                + (f.key == this.state.selectedFilter?.key ? "bg-vermilion" : "")}
+                                            onClick={() => this.filterClick(f.key)}>
+                                            {f.caption}
+                                        </span>
                                     )}
                                 </div>
                                 <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>

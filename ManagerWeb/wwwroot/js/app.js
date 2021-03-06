@@ -919,7 +919,11 @@ class PaymentsOverview extends React.Component {
                                 return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
                             }))),
                         React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                            React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8", onClick: () => this.filterClick(f.key) }, f.caption))),
+                            React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
+                                var _a;
+                                return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                        + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
+                            })),
                             React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                         React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
                             React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
