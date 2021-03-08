@@ -86,6 +86,53 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./Typescript/Components/BaseList.tsx":
+/*!********************************************!*\
+  !*** ./Typescript/Components/BaseList.tsx ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseList = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const BaseList = (props) => {
+    return (React.createElement("div", { className: "flex w-ful flex-col" },
+        React.createElement("div", { className: "py-4 flex w-full" },
+            React.createElement("h1", { className: "ml-6 text-xl" }, props.title),
+            props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: props.addItemHandler },
+                React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                    React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
+        React.createElement("div", { className: "text-center flex" }, props.header),
+        React.createElement("div", null, props.data.map(d => props.template(d)))));
+};
+exports.BaseList = BaseList;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Budget/BudgetComponent.tsx":
 /*!**********************************************************!*\
   !*** ./Typescript/Components/Budget/BudgetComponent.tsx ***!
@@ -131,6 +178,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx"));
 class BudgetComponent extends React.Component {
     constructor(props) {
@@ -141,7 +189,21 @@ class BudgetComponent extends React.Component {
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
         };
-        this.addNewBudget = () => {
+        this.renderTemplate = (budgetModel) => {
+            return (React.createElement("div", { key: budgetModel.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.budgetEdit(budgetModel.id) },
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateFrom).format('DD.MM.YYYY')),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateTo).format('DD.MM.YYYY')),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, budgetModel.amount),
+                React.createElement("p", { className: "mx-6 my-1 w-2/5" }, budgetModel.name)));
+        };
+        this.renderHeader = () => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Od"),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Do"),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "V\u00FD\u0161e"),
+                React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")));
+        };
+        this.addNewItem = () => {
             this.setState({ showBudgetFormModal: true });
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
@@ -161,23 +223,7 @@ class BudgetComponent extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "flex w-ful flex-col" },
-                React.createElement("div", { className: "py-4 flex w-full" },
-                    React.createElement("h1", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
-                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
-                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                React.createElement("div", { className: "text-center flex" },
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Od"),
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Do"),
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "V\u00FD\u0161e"),
-                    React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")),
-                React.createElement("div", null, this.state.budgets.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.budgetEdit(p.id) },
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.dateFrom).format('DD.MM.YYYY')),
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.dateTo).format('DD.MM.YYYY')),
-                    React.createElement("p", { className: "mx-6 my-1 w-1/5" }, p.amount),
-                    React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name))))),
+            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem }),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
                 React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: this.state.selectedBudgetId, handleClose: this.hideBudgetModal }))));
     }
