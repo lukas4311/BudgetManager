@@ -7,6 +7,7 @@ import { BaseList } from '../BaseList';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
 import BudgetForm from './BudgetForm';
+import { BudgetViewModel } from './BudgetViewModel';
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
     private dataLoader: DataLoader;
@@ -27,25 +28,26 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
 
     private async loadBudget(): Promise<void> {
         let budgets = await this.dataLoader.getAllBudgets();
-        this.setState({ budgets: budgets });
+        let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({ id: b.id, amount: b.amount, dateFrom: b.dateFrom, dateTo: b.dateTo, name: b.dateTo }));
+        this.setState({ budgets: budgetViewModels });
     }
 
-    private hideBudgetModal = () => {
-        this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
+    private hideBudgetModal = ():void => {
+        this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
     }
 
-    private budgetEdit(id: number) {
+    private budgetEdit = (id: number):void => {
         this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
     }
 
     private renderTemplate = (budgetModel: BudgetModel): JSX.Element => {
         return (
-            <div key={budgetModel.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.budgetEdit(budgetModel.id)}>
+            <>
                 <p className="mx-6 my-1 w-1/5">{moment(budgetModel.dateFrom).format('DD.MM.YYYY')}</p>
                 <p className="mx-6 my-1 w-1/5">{moment(budgetModel.dateTo).format('DD.MM.YYYY')}</p>
                 <p className="mx-6 my-1 w-1/5">{budgetModel.amount}</p>
                 <p className="mx-6 my-1 w-2/5">{budgetModel.name}</p>
-            </div>
+            </>
         );
     }
 
@@ -61,14 +63,14 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private addNewItem = (): void => {
-        this.setState({ budgetFormKey: Date.now(), showBudgetFormModal: true, selectedBudgetId: undefined });
+        this.setState({ showBudgetFormModal: true });
     }
 
     public render() {
         return (
             <React.Fragment>
-                <BaseList<BudgetModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
-                    header={this.renderHeader()} addItemHandler={this.addNewItem}>
+                <BaseList<BudgetViewModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
+                    header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit}>
                 </BaseList>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
                     <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal}></BudgetForm>

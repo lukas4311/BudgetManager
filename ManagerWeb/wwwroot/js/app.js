@@ -126,7 +126,9 @@ const BaseList = (props) => {
                     React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                     React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
         React.createElement("div", { className: "text-center flex" }, props.header),
-        React.createElement("div", null, props.data.map(d => props.template(d)))));
+        React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
+            props.template(d),
+            React.createElement("button", { className: "inline-block mx-4", onClick: () => alert("delete") }, "X")))))));
 };
 exports.BaseList = BaseList;
 
@@ -187,10 +189,13 @@ class BudgetComponent extends React.Component {
             yield this.loadBudget();
         });
         this.hideBudgetModal = () => {
-            this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now() });
+            this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
+        };
+        this.budgetEdit = (id) => {
+            this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
         };
         this.renderTemplate = (budgetModel) => {
-            return (React.createElement("div", { key: budgetModel.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.budgetEdit(budgetModel.id) },
+            return (React.createElement(React.Fragment, null,
                 React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateFrom).format('DD.MM.YYYY')),
                 React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateTo).format('DD.MM.YYYY')),
                 React.createElement("p", { className: "mx-6 my-1 w-1/5" }, budgetModel.amount),
@@ -204,7 +209,7 @@ class BudgetComponent extends React.Component {
                 React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")));
         };
         this.addNewItem = () => {
-            this.setState({ budgetFormKey: Date.now(), showBudgetFormModal: true, selectedBudgetId: undefined });
+            this.setState({ showBudgetFormModal: true });
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader_1.default();
@@ -215,15 +220,13 @@ class BudgetComponent extends React.Component {
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
             let budgets = yield this.dataLoader.getAllBudgets();
-            this.setState({ budgets: budgets });
+            let budgetViewModels = budgets.map(b => ({ id: b.id, amount: b.amount, dateFrom: b.dateFrom, dateTo: b.dateTo, name: b.dateTo }));
+            this.setState({ budgets: budgetViewModels });
         });
-    }
-    budgetEdit(id) {
-        this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem }),
+            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit }),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
                 React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: this.state.selectedBudgetId, handleClose: this.hideBudgetModal }))));
     }

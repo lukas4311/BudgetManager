@@ -1,8 +1,8 @@
-import { BudgetModel } from '../../Model/BudgetModel';
+import { BudgetViewModel } from './BudgetViewModel';
 
 export class BudgetComponentState {
     budgetFormKey: number;
     showBudgetFormModal: boolean;
-    budgets: BudgetModel[];
+    budgets: BudgetViewModel[];
     selectedBudgetId: number;
 }

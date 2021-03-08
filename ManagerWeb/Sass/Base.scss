@@ -2,6 +2,10 @@
 @import "_modal.scss";
 @import "_scroll.scss";
 
+*:focus {
+    outline: none !important;
+}
+
 #logo {
     transition: 1s;
     width: 60px;
@@ -54,7 +58,7 @@
 .effect-11 {
     border: 0;
     padding-bottom: 7px;
-    padding-top: 7px; 
+    padding-top: 7px;
     padding-left: 15px;
     padding-right: 15px;
     border: 1px solid #e03d15ff;
@@ -90,27 +94,27 @@
     visibility: collapse;
 }
 
-.categoryIcon svg{
+.categoryIcon svg {
     width: 1.5em;
     margin: auto;
 }
 
-.calendar text{
+.calendar text {
     fill: white !important;
 }
 
-.menu{
+.menu {
     transition: 2s;
 }
 
-.containerClosed{
+.containerClosed {
     right: -12em;
 }
 
-.containerOpen{
+.containerOpen {
     right: 0em;
 }
 
-.closeTag{
+.closeTag {
     font-size: 0.5em;
 }

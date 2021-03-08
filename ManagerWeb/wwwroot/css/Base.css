@@ -79,6 +79,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; }
 
+*:focus {
+  outline: none !important; }
+
 #logo {
   transition: 1s;
   width: 60px;

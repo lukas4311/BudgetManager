@@ -1,14 +1,18 @@
 import * as React from 'react'
 
-interface IBaseListProps<T> {
+interface IBaseModel {
+    id: number;
+}
+interface IBaseListProps<T extends IBaseModel> {
     data: T[];
     template: (T) => JSX.Element;
     title: string;
     header?: JSX.Element;
     addItemHandler?: () => void;
+    itemClickHandler?: (id: number) => void;
 }
 
-const BaseList = <T,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
+const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
     return (
         <div className="flex w-ful flex-col">
             <div className="py-4 flex w-full">
@@ -26,10 +30,15 @@ const BaseList = <T,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
                 {props.header}
             </div>
             <div>
-                {props.data.map(d => props.template(d))}
+                {props.data.map(d => (
+                    <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                        {props.template(d)}
+                        <button className="inline-block mx-4" onClick={() => alert("delete")}>X</button>
+                    </div>
+                ))}
             </div>
         </div>
     );
 }
 
-export { BaseList, IBaseListProps }
+export { BaseList, IBaseListProps, IBaseModel }
