@@ -61,7 +61,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private addNewItem = (): void => {
-        this.setState({ showBudgetFormModal: true });
+        this.setState({ budgetFormKey: Date.now(), showBudgetFormModal: true, selectedBudgetId: undefined });
     }
 
     public render() {

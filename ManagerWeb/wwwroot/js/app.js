@@ -204,7 +204,7 @@ class BudgetComponent extends React.Component {
                 React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")));
         };
         this.addNewItem = () => {
-            this.setState({ showBudgetFormModal: true });
+            this.setState({ budgetFormKey: Date.now(), showBudgetFormModal: true, selectedBudgetId: undefined });
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader_1.default();
@@ -322,6 +322,9 @@ class BudgetForm extends React.Component {
             if (this.props.id != null) {
                 const budgetModel = yield this.dataLoader.getBudget(this.props.id);
                 this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
+            }
+            else {
+                this.setState({ id: undefined, name: "", amount: 0, to: '', from: '' });
             }
         });
     }

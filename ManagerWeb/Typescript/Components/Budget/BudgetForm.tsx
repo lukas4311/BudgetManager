@@ -30,10 +30,13 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
-    async componentDidMount(){
-        if(this.props.id != null){
+    async componentDidMount() {
+        if (this.props.id != null) {
             const budgetModel = await this.dataLoader.getBudget(this.props.id);
-            this.setState({id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom});
+            this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
+        }
+        else {
+            this.setState({ id: undefined, name: "", amount: 0, to: '', from: '' });
         }
     }
 
@@ -82,7 +85,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
     }
 
     private handleChangeNumber = (e: React.ChangeEvent<HTMLInputElement>, propertyName: string) => {
-        let value:Number = Number.parseInt(e.target.value);
+        let value: Number = Number.parseInt(e.target.value);
         this.setState(prevState => ({ ...prevState, [propertyName]: value }));
     }
 
