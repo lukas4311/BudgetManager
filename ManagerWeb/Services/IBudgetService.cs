@@ -9,5 +9,6 @@ namespace ManagerWeb.Services
         IEnumerable<BudgetModel> Get();
         BudgetModel Get(int id);
         void Update(BudgetModel budgetModel);
+        void Delete(int id);
     }
 }

@@ -41,5 +41,11 @@ namespace ManagerWeb.Controllers
             this.budgetService.Update(budgetModel);
             return Ok();
         }
+
+        public IActionResult Delete([FromBody] int id)
+        {
+            this.budgetService.Delete(id);
+            return Ok();
+        }
     }
 }

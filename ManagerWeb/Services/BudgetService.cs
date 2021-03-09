@@ -30,14 +30,12 @@ namespace ManagerWeb.Services
 
         public BudgetModel Get(int id)
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
         }
 
         public void Add(BudgetModel budgetModel)
         {
-            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            int userId = this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
+            int userId = this.GetUserId();
 
             this.budgetRepository.Create(new Budget()
             {
@@ -58,6 +56,20 @@ namespace ManagerWeb.Services
 
             this.budgetRepository.Update(budget);
             this.budgetRepository.Save();
+        }
+
+        public void Delete(int id)
+        {
+            int userId = this.GetUserId();
+            Budget budget = this.budgetRepository.FindByCondition(a => a.Id == id).Single();
+            this.budgetRepository.Delete(budget);
+            this.budgetRepository.Save();
+        }
+
+        private int GetUserId()
+        {
+            string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            return this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
         }
     }
 }
