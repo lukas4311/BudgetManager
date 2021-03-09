@@ -32,11 +32,11 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ budgets: budgetViewModels });
     }
 
-    private hideBudgetModal = ():void => {
+    private hideBudgetModal = (): void => {
         this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
     }
 
-    private budgetEdit = (id: number):void => {
+    private budgetEdit = (id: number): void => {
         this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
     }
 
@@ -62,6 +62,10 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         );
     }
 
+    private deleteItem = (id: number): void => {
+        // TODO: call api to delete item
+    }
+
     private addNewItem = (): void => {
         this.setState({ showBudgetFormModal: true });
     }
@@ -70,7 +74,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         return (
             <React.Fragment>
                 <BaseList<BudgetViewModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
-                    header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit}>
+                    header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
                 </BaseList>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
                     <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal}></BudgetForm>

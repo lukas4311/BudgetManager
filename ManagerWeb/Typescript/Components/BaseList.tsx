@@ -10,6 +10,7 @@ interface IBaseListProps<T extends IBaseModel> {
     header?: JSX.Element;
     addItemHandler?: () => void;
     itemClickHandler?: (id: number) => void;
+    deleteItemHandler?: (id: number) => void;
 }
 
 const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
@@ -33,7 +34,11 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                 {props.data.map(d => (
                     <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
                         {props.template(d)}
-                        <button className="inline-block mx-4" onClick={() => alert("delete")}>X</button>
+                        {props.deleteItemHandler != undefined ?
+                            <button className="inline-block mx-4" onClick={(e) => {
+                                e.stopPropagation();
+                                props.deleteItemHandler(d.id);
+                            }}>X</button> : <></>}
                     </div>
                 ))}
             </div>

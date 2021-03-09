@@ -128,7 +128,11 @@ const BaseList = (props) => {
         React.createElement("div", { className: "text-center flex" }, props.header),
         React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
             props.template(d),
-            React.createElement("button", { className: "inline-block mx-4", onClick: () => alert("delete") }, "X")))))));
+            props.deleteItemHandler != undefined ?
+                React.createElement("button", { className: "inline-block mx-4", onClick: (e) => {
+                        e.stopPropagation();
+                        props.deleteItemHandler(d.id);
+                    } }, "X") : React.createElement(React.Fragment, null)))))));
 };
 exports.BaseList = BaseList;
 
@@ -208,6 +212,9 @@ class BudgetComponent extends React.Component {
                 React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "V\u00FD\u0161e"),
                 React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")));
         };
+        this.deleteItem = (id) => {
+            // TODO: call api to delete item
+        };
         this.addNewItem = () => {
             this.setState({ showBudgetFormModal: true });
         };
@@ -226,7 +233,7 @@ class BudgetComponent extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit }),
+            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, deleteItemHandler: this.deleteItem }),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
                 React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: this.state.selectedBudgetId, handleClose: this.hideBudgetModal }))));
     }
