@@ -24,6 +24,10 @@ export interface BudgetAddPostRequest {
     budgetModel?: BudgetModel;
 }
 
+export interface BudgetDeleteDeleteRequest {
+    body?: number;
+}
+
 export interface BudgetGetGetRequest {
     id?: number;
 }
@@ -51,6 +55,19 @@ export interface BudgetApiInterface {
     /**
      */
     budgetAddPost(requestParameters: BudgetAddPostRequest): Promise<void>;
+
+    /**
+     * 
+     * @param {number} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BudgetApiInterface
+     */
+    budgetDeleteDeleteRaw(requestParameters: BudgetDeleteDeleteRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    budgetDeleteDelete(requestParameters: BudgetDeleteDeleteRequest): Promise<void>;
 
     /**
      * 
@@ -121,6 +138,32 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
      */
     async budgetAddPost(requestParameters: BudgetAddPostRequest): Promise<void> {
         await this.budgetAddPostRaw(requestParameters);
+    }
+
+    /**
+     */
+    async budgetDeleteDeleteRaw(requestParameters: BudgetDeleteDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/budget/delete`,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body as any,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async budgetDeleteDelete(requestParameters: BudgetDeleteDeleteRequest): Promise<void> {
+        await this.budgetDeleteDeleteRaw(requestParameters);
     }
 
     /**

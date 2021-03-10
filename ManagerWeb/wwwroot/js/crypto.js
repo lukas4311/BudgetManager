@@ -260,6 +260,30 @@ class BudgetApi extends runtime.BaseAPI {
     }
     /**
      */
+    budgetDeleteDeleteRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/budget/delete`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    budgetDeleteDelete(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.budgetDeleteDeleteRaw(requestParameters);
+        });
+    }
+    /**
+     */
     budgetGetAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};

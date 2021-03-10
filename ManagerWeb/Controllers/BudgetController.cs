@@ -42,6 +42,7 @@ namespace ManagerWeb.Controllers
             return Ok();
         }
 
+        [HttpDelete("delete")]
         public IActionResult Delete([FromBody] int id)
         {
             this.budgetService.Delete(id);
