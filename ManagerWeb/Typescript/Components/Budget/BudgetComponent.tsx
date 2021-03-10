@@ -1,5 +1,6 @@
 import moment from 'moment';
 import * as React from 'react'
+import { BudgetApi } from '../../ApiClient';
 import { Modal } from '../../Modal';
 import { BudgetModel } from '../../Model/BudgetModel';
 import DataLoader from '../../Services/DataLoader';
@@ -11,11 +12,13 @@ import { BudgetViewModel } from './BudgetViewModel';
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
     private dataLoader: DataLoader;
+    private budgetApi: BudgetApi;
 
     constructor(props: BudgetComponentProps) {
         super(props);
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader();
+        this.budgetApi = new BudgetApi();
     }
 
     public componentDidMount() {
@@ -63,7 +66,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private deleteItem = (id: number): void => {
-        // TODO: call api to delete item
+        this.budgetApi.budgetDeleteDelete({ body: id });
     }
 
     private addNewItem = (): void => {
