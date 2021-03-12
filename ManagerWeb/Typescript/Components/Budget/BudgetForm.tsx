@@ -1,6 +1,7 @@
 import * as React from 'react'
 import DataLoader from '../../Services/DataLoader';
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
+import moment from 'moment';
 
 class BudgetFormState {
     id: number;
@@ -8,8 +9,8 @@ class BudgetFormState {
     disabledConfirm: boolean;
     name: string;
     amount: number;
-    to: string;
-    from: string;
+    to: Date;
+    from: Date;
     formErrors: {
         from: string;
         to: string;
@@ -31,16 +32,16 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         super(props);
         this.dataLoader = new DataLoader();
         this.budgetApi = new BudgetApi();
-        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
+        this.state = { id: undefined, name: '', amount: 0, to: undefined, from: undefined, errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
     async componentDidMount() {
         if (this.props.id != null) {
-            const budgetModel = await this.dataLoader.getBudget(this.props.id);
+            const budgetModel = await this.budgetApi.budgetGetGet({id: this.props.id});
             this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
         }
         else {
-            this.setState({ id: undefined, name: "", amount: 0, to: '', from: '' });
+            this.setState({ id: undefined, name: "", amount: 0, to: undefined, from: undefined });
         }
     }
 
@@ -117,14 +118,14 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("from")} placeholder="Datum od" value={this.state.from} onChange={e => this.handleChange(e, 'from')}></input>
+                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("from")} placeholder="Datum od" value={moment(this.state.from).format('YYYY-MM-DD')} onChange={e => this.handleChange(e, 'from')}></input>
                                 <span className="focus-bg"></span>
                             </div>
                             {this.generateErrorMessageIfError("from")}
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("to")} placeholder="Datum do" value={this.state.to} onChange={e => this.handleChange(e, 'to')}></input>
+                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("to")} placeholder="Datum do" value={moment(this.state.to).format('YYYY-MM-DD')} onChange={e => this.handleChange(e, 'to')}></input>
                                 <span className="focus-bg"></span>
                             </div>
                             {this.generateErrorMessageIfError("to")}

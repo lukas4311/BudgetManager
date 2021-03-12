@@ -2182,6 +2182,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 class BudgetFormState {
 }
 class BudgetFormProps {
@@ -2227,16 +2228,16 @@ class BudgetForm extends React.Component {
         };
         this.dataLoader = new DataLoader_1.default();
         this.budgetApi = new ApiClient_1.BudgetApi();
-        this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
+        this.state = { id: undefined, name: '', amount: 0, to: undefined, from: undefined, errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.props.id != null) {
-                const budgetModel = yield this.dataLoader.getBudget(this.props.id);
+                const budgetModel = yield this.budgetApi.budgetGetGet({ id: this.props.id });
                 this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
             }
             else {
-                this.setState({ id: undefined, name: "", amount: 0, to: '', from: '' });
+                this.setState({ id: undefined, name: "", amount: 0, to: undefined, from: undefined });
             }
         });
     }
@@ -2257,12 +2258,12 @@ class BudgetForm extends React.Component {
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("from"), placeholder: "Datum od", value: this.state.from, onChange: e => this.handleChange(e, 'from') }),
+                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("from"), placeholder: "Datum od", value: moment_1.default(this.state.from).format('YYYY-MM-DD'), onChange: e => this.handleChange(e, 'from') }),
                             React.createElement("span", { className: "focus-bg" })),
                         this.generateErrorMessageIfError("from")),
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("to"), placeholder: "Datum do", value: this.state.to, onChange: e => this.handleChange(e, 'to') }),
+                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("to"), placeholder: "Datum do", value: moment_1.default(this.state.to).format('YYYY-MM-DD'), onChange: e => this.handleChange(e, 'to') }),
                             React.createElement("span", { className: "focus-bg" })),
                         this.generateErrorMessageIfError("to"))),
                 React.createElement("div", { className: "flex mt-4" },
