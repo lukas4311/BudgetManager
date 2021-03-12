@@ -9,6 +9,7 @@ import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
 import BudgetForm from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
+import { useForm } from "react-hook-form";
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
     private dataLoader: DataLoader;
@@ -30,8 +31,11 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private async loadBudget(): Promise<void> {
-        let budgets = await this.dataLoader.getAllBudgets();
-        let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({ id: b.id, amount: b.amount, dateFrom: b.dateFrom, dateTo: b.dateTo, name: b.dateTo }));
+        let budgets = await this.budgetApi.budgetGetAllGet();
+        let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
+            id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).format('DD.MM.YYYY')
+            , dateTo: moment(b.dateTo).format('DD.MM.YYYY'), name: b.name
+        }));
         this.setState({ budgets: budgetViewModels });
     }
 
@@ -86,3 +90,31 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         );
     }
 }
+
+// const CryptoTradeForm = (props: CryptoTradeFormModel) => {
+//     const { register, handleSubmit } = useForm<CryptoTradeFormModel>({ defaultValues: props });
+
+//     const onSubmit = (data: CryptoTradeFormModel) => {
+//         props.onSave(data);
+//     };
+
+//     return (
+//         <form onSubmit={handleSubmit(onSubmit)}>
+//             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
+//                 <div>
+//                     <TextField
+//                         label="Datum tradu"
+//                         type="date"
+//                         name="tradeTimeStamp"
+//                         inputRef={register}
+//                     />
+//                 </div>
+//                 <div>
+//                     <TextField inputRef={register} name="cryptoTicker" className="place-self-end" label="Crypto ticker" />
+//                 </div>
+//             </div>
+
+//             <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
+//         </form>
+//     );
+// };

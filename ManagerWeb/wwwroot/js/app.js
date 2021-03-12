@@ -2121,8 +2121,11 @@ class BudgetComponent extends React.Component {
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
-            let budgets = yield this.dataLoader.getAllBudgets();
-            let budgetViewModels = budgets.map(b => ({ id: b.id, amount: b.amount, dateFrom: b.dateFrom, dateTo: b.dateTo, name: b.dateTo }));
+            let budgets = yield this.budgetApi.budgetGetAllGet();
+            let budgetViewModels = budgets.map(b => ({
+                id: b.id, amount: b.amount, dateFrom: moment_1.default(b.dateFrom).format('DD.MM.YYYY'),
+                dateTo: moment_1.default(b.dateTo).format('DD.MM.YYYY'), name: b.name
+            }));
             this.setState({ budgets: budgetViewModels });
         });
     }
@@ -2134,6 +2137,30 @@ class BudgetComponent extends React.Component {
     }
 }
 exports.default = BudgetComponent;
+// const CryptoTradeForm = (props: CryptoTradeFormModel) => {
+//     const { register, handleSubmit } = useForm<CryptoTradeFormModel>({ defaultValues: props });
+//     const onSubmit = (data: CryptoTradeFormModel) => {
+//         props.onSave(data);
+//     };
+//     return (
+//         <form onSubmit={handleSubmit(onSubmit)}>
+//             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
+//                 <div>
+//                     <TextField
+//                         label="Datum tradu"
+//                         type="date"
+//                         name="tradeTimeStamp"
+//                         inputRef={register}
+//                     />
+//                 </div>
+//                 <div>
+//                     <TextField inputRef={register} name="cryptoTicker" className="place-self-end" label="Crypto ticker" />
+//                 </div>
+//             </div>
+//             <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
+//         </form>
+//     );
+// };
 
 
 /***/ }),
