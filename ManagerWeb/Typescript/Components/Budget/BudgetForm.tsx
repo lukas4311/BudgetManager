@@ -83,7 +83,6 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
             };
 
             this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
-            // this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
         }
 
         this.props.handleClose();

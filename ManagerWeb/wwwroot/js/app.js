@@ -2213,7 +2213,6 @@ class BudgetForm extends React.Component {
                     dateTo: new Date(this.state.to), id: null, name: this.state.name
                 };
                 this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
-                // this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
             }
             this.props.handleClose();
         };
