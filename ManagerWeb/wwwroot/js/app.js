@@ -2204,14 +2204,15 @@ class BudgetForm extends React.Component {
         this.confirmBudget = (e) => {
             e.preventDefault();
             this.setState({ disabledConfirm: true });
+            let budgetModel = {
+                amount: this.state.amount, dateFrom: new Date(this.state.from),
+                dateTo: new Date(this.state.to), id: this.state.id, name: this.state.name
+            };
             if (this.state.id != undefined) {
-                this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
+                this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
             }
             else {
-                let budgetModel = {
-                    amount: this.state.amount, dateFrom: new Date(this.state.from),
-                    dateTo: new Date(this.state.to), id: null, name: this.state.name
-                };
+                budgetModel.id = null;
                 this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
             }
             this.props.handleClose();
