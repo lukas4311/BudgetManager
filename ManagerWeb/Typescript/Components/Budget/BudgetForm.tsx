@@ -2,6 +2,8 @@ import * as React from 'react'
 import DataLoader from '../../Services/DataLoader';
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
 import moment from 'moment';
+import { useForm } from "react-hook-form";
+import { Button, TextField } from '@material-ui/core';
 
 class BudgetFormState {
     id: number;
@@ -22,6 +24,7 @@ class BudgetFormState {
 class BudgetFormProps {
     id: number;
     handleClose: () => void;
+    onSave: (model: BudgetFormState) => void;
 }
 
 export default class BudgetForm extends React.Component<BudgetFormProps, BudgetFormState> {
@@ -37,7 +40,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
 
     async componentDidMount() {
         if (this.props.id != null) {
-            const budgetModel = await this.budgetApi.budgetGetGet({id: this.props.id});
+            const budgetModel = await this.budgetApi.budgetGetGet({ id: this.props.id });
             this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
         }
         else {
@@ -143,3 +146,61 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         );
     }
 }
+
+class BudgetFormModel {
+    id: number;
+    name: string;
+    amount: number;
+    to: Date;
+    from: Date;
+    onSave: (model: BudgetFormModel) => void;
+}
+
+const BudgetForm2 = (props: BudgetFormModel) => {
+    const { register, handleSubmit } = useForm<BudgetFormModel>({ defaultValues: props });
+
+    const onSubmit = (data: BudgetFormModel) => {
+        props.onSave(data);
+    };
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
+                <div>
+                    <TextField
+                        label="Název"
+                        type="text"
+                        name="name"
+                        inputRef={register}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        label="Velikost"
+                        type="text"
+                        name="amount"
+                        inputRef={register}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        label="Od"
+                        type="date"
+                        name="from"
+                        inputRef={register}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        label="Do"
+                        type="date"
+                        name="to"
+                        inputRef={register}
+                    />
+                </div>
+            </div>
+
+            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
+        </form>
+    );
+};

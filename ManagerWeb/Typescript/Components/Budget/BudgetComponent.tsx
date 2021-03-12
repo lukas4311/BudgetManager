@@ -9,16 +9,13 @@ import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
 import BudgetForm from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
-import { useForm } from "react-hook-form";
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
-    private dataLoader: DataLoader;
     private budgetApi: BudgetApi;
 
     constructor(props: BudgetComponentProps) {
         super(props);
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
-        this.dataLoader = new DataLoader();
         this.budgetApi = new BudgetApi();
     }
 
@@ -84,37 +81,9 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                     header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
                 </BaseList>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
-                    <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal}></BudgetForm>
+                    <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal} onSave={null}></BudgetForm>
                 </Modal>
             </React.Fragment>
         );
     }
 }
-
-// const CryptoTradeForm = (props: CryptoTradeFormModel) => {
-//     const { register, handleSubmit } = useForm<CryptoTradeFormModel>({ defaultValues: props });
-
-//     const onSubmit = (data: CryptoTradeFormModel) => {
-//         props.onSave(data);
-//     };
-
-//     return (
-//         <form onSubmit={handleSubmit(onSubmit)}>
-//             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
-//                 <div>
-//                     <TextField
-//                         label="Datum tradu"
-//                         type="date"
-//                         name="tradeTimeStamp"
-//                         inputRef={register}
-//                     />
-//                 </div>
-//                 <div>
-//                     <TextField inputRef={register} name="cryptoTicker" className="place-self-end" label="Crypto ticker" />
-//                 </div>
-//             </div>
-
-//             <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
-//         </form>
-//     );
-// };
