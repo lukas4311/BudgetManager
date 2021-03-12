@@ -1728,7 +1728,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextApiResponse = exports.BlobApiResponse = exports.VoidApiResponse = exports.JSONApiResponse = exports.canConsumeForm = exports.mapValues = exports.querystring = exports.exists = exports.Configuration = exports.COLLECTION_FORMATS = exports.RequiredError = exports.BaseAPI = exports.BASE_PATH = void 0;
-exports.BASE_PATH = "http://localhost".replace(/\/+$/, "");
+exports.BASE_PATH = "http://localhost:5001".replace(/\/+$/, "");
 const isBlob = (value) => typeof Blob !== 'undefined' && value instanceof Blob;
 /**
  * This is the base class for all generated API classes.

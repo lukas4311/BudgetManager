@@ -1728,7 +1728,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextApiResponse = exports.BlobApiResponse = exports.VoidApiResponse = exports.JSONApiResponse = exports.canConsumeForm = exports.mapValues = exports.querystring = exports.exists = exports.Configuration = exports.COLLECTION_FORMATS = exports.RequiredError = exports.BaseAPI = exports.BASE_PATH = void 0;
-exports.BASE_PATH = "http://localhost".replace(/\/+$/, "");
+exports.BASE_PATH = "http://localhost:5001".replace(/\/+$/, "");
 const isBlob = (value) => typeof Blob !== 'undefined' && value instanceof Blob;
 /**
  * This is the base class for all generated API classes.
@@ -2114,8 +2114,7 @@ class BudgetComponent extends React.Component {
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader_1.default();
-        let config = new ApiClient_1.Configuration({ basePath: "https://localhost:44386" });
-        this.budgetApi = new ApiClient_1.BudgetApi(config);
+        this.budgetApi = new ApiClient_1.BudgetApi();
     }
     componentDidMount() {
         this.loadData();
@@ -2227,8 +2226,7 @@ class BudgetForm extends React.Component {
             this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
         };
         this.dataLoader = new DataLoader_1.default();
-        let config = new ApiClient_1.Configuration({ basePath: "https://localhost:44386" });
-        this.budgetApi = new ApiClient_1.BudgetApi(config);
+        this.budgetApi = new ApiClient_1.BudgetApi();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
     }
     componentDidMount() {

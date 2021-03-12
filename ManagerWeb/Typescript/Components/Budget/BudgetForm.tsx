@@ -30,8 +30,7 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
     constructor(props: BudgetFormProps) {
         super(props);
         this.dataLoader = new DataLoader();
-        let config: Configuration = new Configuration({ basePath: "https://localhost:44386" });
-        this.budgetApi = new BudgetApi(config);
+        this.budgetApi = new BudgetApi();
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 

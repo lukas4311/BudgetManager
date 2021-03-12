@@ -18,8 +18,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         super(props);
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader();
-        let config: Configuration = new Configuration({ basePath: "https://localhost:44386" });
-        this.budgetApi = new BudgetApi(config);
+        this.budgetApi = new BudgetApi();
     }
 
     public componentDidMount() {
