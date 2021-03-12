@@ -1,5 +1,7 @@
 import * as React from 'react'
 import DataLoader from '../../Services/DataLoader';
+import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
+
 class BudgetFormState {
     id: number;
     errorMessage: string;
@@ -22,11 +24,14 @@ class BudgetFormProps {
 }
 
 export default class BudgetForm extends React.Component<BudgetFormProps, BudgetFormState> {
-    dataLoader: DataLoader;
+    private dataLoader: DataLoader;
+    private budgetApi: BudgetApi;
 
     constructor(props: BudgetFormProps) {
         super(props);
         this.dataLoader = new DataLoader();
+        let config: Configuration = new Configuration({ basePath: "https://localhost:44386" });
+        this.budgetApi = new BudgetApi(config);
         this.state = { id: undefined, name: '', amount: 0, to: '', from: '', errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
 
@@ -73,7 +78,13 @@ export default class BudgetForm extends React.Component<BudgetFormProps, BudgetF
         if (this.state.id != undefined) {
             this.dataLoader.updateBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: this.state.id });
         } else {
-            this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
+            let budgetModel: BudgetModel = {
+                amount: this.state.amount, dateFrom: new Date(this.state.from),
+                dateTo: new Date(this.state.to), id: null, name: this.state.name
+            };
+
+            this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
+            // this.dataLoader.addBudget({ name: this.state.name, amount: this.state.amount, dateFrom: this.state.from, dateTo: this.state.to, id: null });
         }
 
         this.props.handleClose();

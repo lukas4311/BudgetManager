@@ -1,6 +1,6 @@
 import moment from 'moment';
 import * as React from 'react'
-import { BudgetApi } from '../../ApiClient';
+import { BudgetApi, Configuration } from '../../ApiClient';
 import { Modal } from '../../Modal';
 import { BudgetModel } from '../../Model/BudgetModel';
 import DataLoader from '../../Services/DataLoader';
@@ -18,14 +18,15 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         super(props);
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
         this.dataLoader = new DataLoader();
-        this.budgetApi = new BudgetApi();
+        let config: Configuration = new Configuration({ basePath: "https://localhost:44386" });
+        this.budgetApi = new BudgetApi(config);
     }
 
     public componentDidMount() {
         this.loadData();
     }
 
-    public loadData = async () => {
+    public loadData = async (): Promise<void> => {
         await this.loadBudget();
     }
 
