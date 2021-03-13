@@ -2191,114 +2191,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BudgetForm2 = exports.BudgetFormModel = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
-const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-class BudgetFormState {
-}
-class BudgetFormProps {
-}
-class BudgetForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.generateErrorMessageIfError = (propertyName) => {
-            if (this.state.formErrors[propertyName].length > 0)
-                return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
-            return '';
-        };
-        this.generateInput = (propertyName, placeholder, handler) => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: e => handler(e, propertyName) }),
-                    React.createElement("span", { className: "focus-bg" })),
-                this.generateErrorMessageIfError(propertyName)));
-        };
-        this.confirmBudget = (e) => {
-            e.preventDefault();
-            this.setState({ disabledConfirm: true });
-            let budgetModel = {
-                amount: this.state.amount, dateFrom: new Date(this.state.from),
-                dateTo: new Date(this.state.to), id: this.state.id, name: this.state.name
-            };
-            if (this.state.id != undefined) {
-                this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
-            }
-            else {
-                budgetModel.id = null;
-                this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
-            }
-            this.props.handleClose();
-        };
-        this.handleChange = (e, propertyName) => {
-            let value = e.target.value;
-            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
-        };
-        this.handleChangeNumber = (e, propertyName) => {
-            let value = Number.parseInt(e.target.value);
-            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [propertyName]: value })));
-        };
-        this.budgetApi = new ApiClient_1.BudgetApi();
-        this.state = { id: undefined, name: '', amount: 0, to: undefined, from: undefined, errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } };
-    }
-    componentDidMount() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.props.id != null) {
-                const budgetModel = yield this.budgetApi.budgetGetGet({ id: this.props.id });
-                this.setState({ id: this.props.id, name: budgetModel.name, amount: budgetModel.amount, to: budgetModel.dateTo, from: budgetModel.dateFrom });
-            }
-            else {
-                this.setState({ id: undefined, name: "", amount: 0, to: undefined, from: undefined });
-            }
-        });
-    }
-    addErrorClassIfError(propertyName) {
-        if (this.state.formErrors[propertyName].length > 0)
-            return " inputError";
-        return '';
-    }
-    render() {
-        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
-            React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
-                React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
-            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail rozpo\u010Dtu"),
-            React.createElement("form", { onSubmit: this.confirmBudget },
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název rozpočtu", this.handleChange)),
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše rozpočtu", this.handleChangeNumber))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("from"), placeholder: "Datum od", value: moment_1.default(this.state.from).format('YYYY-MM-DD'), onChange: e => this.handleChange(e, 'from') }),
-                            React.createElement("span", { className: "focus-bg" })),
-                        this.generateErrorMessageIfError("from")),
-                    React.createElement("div", { className: "w-1/2" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("to"), placeholder: "Datum do", value: moment_1.default(this.state.to).format('YYYY-MM-DD'), onChange: e => this.handleChange(e, 'to') }),
-                            React.createElement("span", { className: "focus-bg" })),
-                        this.generateErrorMessageIfError("to"))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-full" },
-                        React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
-                            React.createElement("button", { type: "submit", disabled: this.state.disabledConfirm, className: "bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))))));
-    }
-}
-exports.default = BudgetForm;
 class BudgetFormModel {
 }
 exports.BudgetFormModel = BudgetFormModel;

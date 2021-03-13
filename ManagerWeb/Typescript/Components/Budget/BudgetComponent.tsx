@@ -2,11 +2,10 @@ import moment from 'moment';
 import * as React from 'react'
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
 import { Modal } from '../../Modal';
-import DataLoader from '../../Services/DataLoader';
 import { BaseList } from '../BaseList';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
-import BudgetForm, { BudgetForm2, BudgetFormModel } from './BudgetForm';
+import { BudgetForm2, BudgetFormModel } from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
@@ -101,7 +100,6 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                 </BaseList>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
                     <BudgetForm2 key={this.state.budgetFormKey} {...this.state.selectedBudget} ></BudgetForm2>
-                    {/* <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal} onSave={null}></BudgetForm> */}
                 </Modal>
             </React.Fragment>
         );
