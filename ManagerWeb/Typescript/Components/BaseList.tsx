@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
 import * as React from 'react'
+import { IconsData } from '../Enums/IconsEnum';
 
 interface IBaseModel {
     id: number;
@@ -27,9 +28,14 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
         setOpen(false);
     };
 
-    const onDeleteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+    const onDeleteClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: number) => {
         e.stopPropagation();
         handleClickOpen(id);
+    }
+
+    const renderBinIcon = (): JSX.Element => {
+        let iconsData: IconsData = new IconsData();
+        return iconsData.bin;
     }
 
     return (
@@ -60,8 +66,11 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                             </div>
                             <div className="w-2/10">
                                 {
-                                    props.deleteItemHandler != undefined ?
-                                        <button className="inline-block mx-4" onClick={(e) => onDeleteClick(e, d.id)}>X</button> : <></>
+                                    props.deleteItemHandler != undefined ? (
+                                        <div onClick={(e) => onDeleteClick(e, d.id)} className="w-8 m-auto">
+                                            {renderBinIcon()}
+                                        </div>
+                                    ) : <></>
                                 }
                             </div>
                         </div>
@@ -84,7 +93,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                     </Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

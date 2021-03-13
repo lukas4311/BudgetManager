@@ -1,8 +1,7 @@
 import moment from 'moment';
 import * as React from 'react'
-import { BudgetApi, Configuration } from '../../ApiClient';
+import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
 import { Modal } from '../../Modal';
-import { BudgetModel } from '../../Model/BudgetModel';
 import DataLoader from '../../Services/DataLoader';
 import { BaseList } from '../BaseList';
 import { BudgetComponentProps } from './BudgetComponentProps';
@@ -41,35 +40,28 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private budgetEdit = async (id: number): Promise<void> => {
-        const budgetModel = await this.budgetApi.budgetGetGet({ id: id });
+        const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
         let budgetFormModel: BudgetFormModel = {
-            amount: budgetModel.amount, from: budgetModel.dateFrom,
-            to: budgetModel.dateTo, id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
+            amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
+            to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
         };
         this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
     }
 
     private saveFormData = (model: BudgetFormModel) => {
+        let budgetModel: BudgetModel = {
+            amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
+            dateTo: new Date(model.to), id: model.id, name: model.name
+        };
 
+        if (model.id != undefined) {
+            this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
+        } else {
+            this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
+        }
+
+        this.hideBudgetModal();
     }
-
-    // private confirmBudget = (e: React.FormEvent<HTMLFormElement>): void => {
-    //     e.preventDefault();
-    //     this.setState({ disabledConfirm: true });
-    //     let budgetModel: BudgetModel = {
-    //         amount: this.state.amount, dateFrom: new Date(this.state.from),
-    //         dateTo: new Date(this.state.to), id: this.state.id, name: this.state.name
-    //     };
-
-    //     if (this.state.id != undefined) {
-    //         this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
-    //     } else {
-    //         budgetModel.id = null;
-    //         this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
-    //     }
-
-    //     this.props.handleClose();
-    // }
 
     private deleteItem = (id: number): void => {
         this.budgetApi.budgetDeleteDelete({ body: id });
@@ -79,7 +71,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ showBudgetFormModal: true });
     }
 
-    private renderTemplate = (budgetModel: BudgetModel): JSX.Element => {
+    private renderTemplate = (budgetModel: BudgetViewModel): JSX.Element => {
         return (
             <>
                 <p className="mx-6 my-1 w-3/10">{budgetModel.dateFrom}</p>

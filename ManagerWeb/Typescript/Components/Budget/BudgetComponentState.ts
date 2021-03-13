@@ -1,4 +1,3 @@
-import { BudgetModel } from '../../../wwwroot/js/app';
 import { BudgetFormModel } from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
 

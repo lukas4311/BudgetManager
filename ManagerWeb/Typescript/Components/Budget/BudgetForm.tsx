@@ -28,12 +28,10 @@ class BudgetFormProps {
 }
 
 export default class BudgetForm extends React.Component<BudgetFormProps, BudgetFormState> {
-    private dataLoader: DataLoader;
     private budgetApi: BudgetApi;
 
     constructor(props: BudgetFormProps) {
         super(props);
-        this.dataLoader = new DataLoader();
         this.budgetApi = new BudgetApi();
         this.state = { id: undefined, name: '', amount: 0, to: undefined, from: undefined, errorMessage: '', disabledConfirm: false, formErrors: { from: '', to: '', amount: '', name: '' } }
     }
@@ -151,8 +149,8 @@ class BudgetFormModel {
     id: number;
     name: string;
     amount: number;
-    to: Date;
-    from: Date;
+    to: string;
+    from: string;
     onSave: (model: BudgetFormModel) => void;
 }
 
@@ -160,42 +158,53 @@ const BudgetForm2 = (props: BudgetFormModel) => {
     const { register, handleSubmit } = useForm<BudgetFormModel>({ defaultValues: props });
 
     const onSubmit = (data: BudgetFormModel) => {
+        data.id = props.id;
         props.onSave(data);
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6">
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
-                <div>
+                <div className="w-3/5">
                     <TextField
                         label="Název"
                         type="text"
                         name="name"
                         inputRef={register}
+                        className="w-full"
                     />
                 </div>
-                <div>
+                <div className="w-3/5">
                     <TextField
                         label="Velikost"
                         type="text"
                         name="amount"
                         inputRef={register}
+                        className="w-full"
                     />
                 </div>
-                <div>
+                <div className="w-3/5">
                     <TextField
                         label="Od"
                         type="date"
                         name="from"
                         inputRef={register}
+                        className="w-full"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                 </div>
-                <div>
+                <div className="w-3/5">
                     <TextField
                         label="Do"
                         type="date"
                         name="to"
                         inputRef={register}
+                        className="w-full"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                 </div>
             </div>
