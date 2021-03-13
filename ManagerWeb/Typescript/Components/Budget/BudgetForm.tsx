@@ -204,3 +204,5 @@ const BudgetForm2 = (props: BudgetFormModel) => {
         </form>
     );
 };
+
+export { BudgetFormModel, BudgetForm2 }

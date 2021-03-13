@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions,  DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
 import * as React from 'react'
 
 interface IBaseModel {
@@ -27,6 +27,11 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
         setOpen(false);
     };
 
+    const onDeleteClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: number) => {
+        e.stopPropagation();
+        handleClickOpen(id);
+    }
+
     return (
         <React.Fragment>
 
@@ -43,17 +48,22 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                     ) : <></>}
                 </div>
                 <div className="text-center flex">
-                    {props.header}
+                    <div className="w-8/10 flex flex-row">
+                        {props.header}
+                    </div>
                 </div>
                 <div>
                     {props.data.map(d => (
-                        <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
-                            {props.template(d)}
-                            {props.deleteItemHandler != undefined ?
-                                <button className="inline-block mx-4" onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleClickOpen(d.id);
-                                }}>X</button> : <></>}
+                        <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                            <div className="w-8/10 flex flex-row">
+                                {props.template(d)}
+                            </div>
+                            <div className="w-2/10">
+                                {
+                                    props.deleteItemHandler != undefined ?
+                                        <button className="inline-block mx-4" onClick={(e) => onDeleteClick(e, d.id)}>X</button> : <></>
+                                }
+                            </div>
                         </div>
                     ))}
                 </div>

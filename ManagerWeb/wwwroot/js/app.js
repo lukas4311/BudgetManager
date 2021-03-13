@@ -2002,6 +2002,10 @@ const BaseList = (props) => {
     const handleClose = () => {
         setOpen(false);
     };
+    const onDeleteClick = (e, id) => {
+        e.stopPropagation();
+        handleClickOpen(id);
+    };
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex w-ful flex-col" },
             React.createElement("div", { className: "py-4 flex w-full" },
@@ -2010,14 +2014,12 @@ const BaseList = (props) => {
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
-            React.createElement("div", { className: "text-center flex" }, props.header),
-            React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
-                props.template(d),
-                props.deleteItemHandler != undefined ?
-                    React.createElement("button", { className: "inline-block mx-4", onClick: (e) => {
-                            e.stopPropagation();
-                            handleClickOpen(d.id);
-                        } }, "X") : React.createElement(React.Fragment, null)))))),
+            React.createElement("div", { className: "text-center flex" },
+                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.header)),
+            React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
+                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.template(d)),
+                React.createElement("div", { className: "w-2/10" }, props.deleteItemHandler != undefined ?
+                    React.createElement("button", { className: "inline-block mx-4", onClick: (e) => onDeleteClick(e, d.id) }, "X") : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -2078,7 +2080,7 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
-const BudgetForm_1 = __importDefault(__webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx"));
+const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -2088,30 +2090,52 @@ class BudgetComponent extends React.Component {
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
         };
-        this.budgetEdit = (id) => {
-            this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
+        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            const budgetModel = yield this.budgetApi.budgetGetGet({ id: id });
+            let budgetFormModel = {
+                amount: budgetModel.amount, from: budgetModel.dateFrom,
+                to: budgetModel.dateTo, id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
+            };
+            this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
+        });
+        this.saveFormData = (model) => {
         };
-        this.renderTemplate = (budgetModel) => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateFrom).format('DD.MM.YYYY')),
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(budgetModel.dateTo).format('DD.MM.YYYY')),
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, budgetModel.amount),
-                React.createElement("p", { className: "mx-6 my-1 w-2/5" }, budgetModel.name)));
-        };
-        this.renderHeader = () => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Od"),
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "Do"),
-                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, "V\u00FD\u0161e"),
-                React.createElement("p", { className: "mx-6 my-1 w-2/5" }, "N\u00E1zev")));
-        };
+        // private confirmBudget = (e: React.FormEvent<HTMLFormElement>): void => {
+        //     e.preventDefault();
+        //     this.setState({ disabledConfirm: true });
+        //     let budgetModel: BudgetModel = {
+        //         amount: this.state.amount, dateFrom: new Date(this.state.from),
+        //         dateTo: new Date(this.state.to), id: this.state.id, name: this.state.name
+        //     };
+        //     if (this.state.id != undefined) {
+        //         this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
+        //     } else {
+        //         budgetModel.id = null;
+        //         this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
+        //     }
+        //     this.props.handleClose();
+        // }
         this.deleteItem = (id) => {
             this.budgetApi.budgetDeleteDelete({ body: id });
         };
         this.addNewItem = () => {
             this.setState({ showBudgetFormModal: true });
         };
-        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
+        this.renderTemplate = (budgetModel) => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, budgetModel.dateFrom),
+                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, budgetModel.dateTo),
+                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.amount),
+                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.name)));
+        };
+        this.renderHeader = () => {
+            return (React.createElement(React.Fragment, null,
+                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Od"),
+                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Do"),
+                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, "V\u00FD\u0161e"),
+                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, "N\u00E1zev")));
+        };
+        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
         this.budgetApi = new ApiClient_1.BudgetApi();
     }
     componentDidMount() {
@@ -2131,7 +2155,7 @@ class BudgetComponent extends React.Component {
         return (React.createElement(React.Fragment, null,
             React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, deleteItemHandler: this.deleteItem }),
             React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
-                React.createElement(BudgetForm_1.default, { key: this.state.budgetFormKey, id: this.state.selectedBudgetId, handleClose: this.hideBudgetModal, onSave: null }))));
+                React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey }, this.state.selectedBudget)))));
     }
 }
 exports.default = BudgetComponent;
@@ -2180,6 +2204,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BudgetForm2 = exports.BudgetFormModel = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
@@ -2278,6 +2303,7 @@ class BudgetForm extends React.Component {
 exports.default = BudgetForm;
 class BudgetFormModel {
 }
+exports.BudgetFormModel = BudgetFormModel;
 const BudgetForm2 = (props) => {
     const { register, handleSubmit } = react_hook_form_1.useForm({ defaultValues: props });
     const onSubmit = (data) => {
@@ -2295,6 +2321,7 @@ const BudgetForm2 = (props) => {
                 React.createElement(core_1.TextField, { label: "Do", type: "date", name: "to", inputRef: register }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
+exports.BudgetForm2 = BudgetForm2;
 
 
 /***/ }),
@@ -2927,7 +2954,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                         React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
                 React.createElement("div", { className: "flex flex-row p-6" },
-                    React.createElement("div", { className: "w-1/3" },
+                    React.createElement("div", { className: "w-2/5" },
                         React.createElement(BudgetComponent_1.default, null))),
                 React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
                     React.createElement(ErrorBoundry_1.default, null,

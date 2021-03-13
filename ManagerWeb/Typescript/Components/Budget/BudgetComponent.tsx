@@ -7,7 +7,7 @@ import DataLoader from '../../Services/DataLoader';
 import { BaseList } from '../BaseList';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
-import BudgetForm from './BudgetForm';
+import BudgetForm, { BudgetForm2, BudgetFormModel } from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
@@ -15,7 +15,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
 
     constructor(props: BudgetComponentProps) {
         super(props);
-        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined };
+        this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
         this.budgetApi = new BudgetApi();
     }
 
@@ -40,31 +40,36 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
     }
 
-    private budgetEdit = (id: number): void => {
-        this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now() });
+    private budgetEdit = async (id: number): Promise<void> => {
+        const budgetModel = await this.budgetApi.budgetGetGet({ id: id });
+        let budgetFormModel: BudgetFormModel = {
+            amount: budgetModel.amount, from: budgetModel.dateFrom,
+            to: budgetModel.dateTo, id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
+        };
+        this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
     }
 
-    private renderTemplate = (budgetModel: BudgetModel): JSX.Element => {
-        return (
-            <>
-                <p className="mx-6 my-1 w-1/5">{moment(budgetModel.dateFrom).format('DD.MM.YYYY')}</p>
-                <p className="mx-6 my-1 w-1/5">{moment(budgetModel.dateTo).format('DD.MM.YYYY')}</p>
-                <p className="mx-6 my-1 w-1/5">{budgetModel.amount}</p>
-                <p className="mx-6 my-1 w-2/5">{budgetModel.name}</p>
-            </>
-        );
+    private saveFormData = (model: BudgetFormModel) => {
+
     }
 
-    private renderHeader = (): JSX.Element => {
-        return (
-            <>
-                <p className="mx-6 my-1 w-1/5">Od</p>
-                <p className="mx-6 my-1 w-1/5">Do</p>
-                <p className="mx-6 my-1 w-1/5">Výše</p>
-                <p className="mx-6 my-1 w-2/5">Název</p>
-            </>
-        );
-    }
+    // private confirmBudget = (e: React.FormEvent<HTMLFormElement>): void => {
+    //     e.preventDefault();
+    //     this.setState({ disabledConfirm: true });
+    //     let budgetModel: BudgetModel = {
+    //         amount: this.state.amount, dateFrom: new Date(this.state.from),
+    //         dateTo: new Date(this.state.to), id: this.state.id, name: this.state.name
+    //     };
+
+    //     if (this.state.id != undefined) {
+    //         this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
+    //     } else {
+    //         budgetModel.id = null;
+    //         this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
+    //     }
+
+    //     this.props.handleClose();
+    // }
 
     private deleteItem = (id: number): void => {
         this.budgetApi.budgetDeleteDelete({ body: id });
@@ -74,6 +79,28 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ showBudgetFormModal: true });
     }
 
+    private renderTemplate = (budgetModel: BudgetModel): JSX.Element => {
+        return (
+            <>
+                <p className="mx-6 my-1 w-3/10">{budgetModel.dateFrom}</p>
+                <p className="mx-6 my-1 w-3/10">{budgetModel.dateTo}</p>
+                <p className="mx-6 my-1 w-2/10">{budgetModel.amount}</p>
+                <p className="mx-6 my-1 w-2/10">{budgetModel.name}</p>
+            </>
+        );
+    }
+
+    private renderHeader = (): JSX.Element => {
+        return (
+            <>
+                <p className="mx-6 my-1 w-3/10">Od</p>
+                <p className="mx-6 my-1 w-3/10">Do</p>
+                <p className="mx-6 my-1 w-2/10">Výše</p>
+                <p className="mx-6 my-1 w-2/10">Název</p>
+            </>
+        );
+    }
+
     public render() {
         return (
             <React.Fragment>
@@ -81,7 +108,8 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                     header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
                 </BaseList>
                 <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
-                    <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal} onSave={null}></BudgetForm>
+                    <BudgetForm2 key={this.state.budgetFormKey} {...this.state.selectedBudget} ></BudgetForm2>
+                    {/* <BudgetForm key={this.state.budgetFormKey} id={this.state.selectedBudgetId} handleClose={this.hideBudgetModal} onSave={null}></BudgetForm> */}
                 </Modal>
             </React.Fragment>
         );

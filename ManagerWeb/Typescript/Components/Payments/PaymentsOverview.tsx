@@ -270,7 +270,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                         </div>
                     </div>
                     <div className="flex flex-row p-6">
-                        <div className="w-1/3">
+                        <div className="w-2/5">
                             <BudgetComponent></BudgetComponent>
                         </div>
                     </div>
