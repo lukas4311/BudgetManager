@@ -18,7 +18,7 @@ import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
 import BudgetComponent from '../Budget/BudgetComponent';
 import ErrorBoundary from '../../Utils/ErrorBoundry';
-import { Select, MenuItem } from '@material-ui/core';
+import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
 
@@ -281,11 +281,15 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             <BudgetComponent></BudgetComponent>
                         </div>
                     </div>
-                    <Modal show={this.state.showPaymentFormModal} handleClose={this.hideModal}>
-                        <ErrorBoundary>
-                            <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
-                        </ErrorBoundary>
-                    </Modal>
+                    <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Detail platby"
+                        maxWidth="md" fullWidth={true}>
+                        <DialogTitle id="form-dialog-title">Detail platby</DialogTitle>
+                        <DialogContent>
+                            <ErrorBoundary>
+                                <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
+                            </ErrorBoundary>
+                        </DialogContent>
+                    </Dialog>
                 </div >
             </ThemeProvider>
         )

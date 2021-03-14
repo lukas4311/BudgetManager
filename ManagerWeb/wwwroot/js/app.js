@@ -2584,10 +2584,9 @@ class PaymentForm extends React.Component {
         return '';
     }
     render() {
-        return (React.createElement("div", { className: "bg-prussianBlue text-white" },
+        return (React.createElement("div", { className: "text-white" },
             React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
                 React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
-            React.createElement("h2", { className: "text-2xl py-4 ml-6 text-left" }, "Detail platby"),
             React.createElement("form", { onSubmit: this.confirmPayment },
                 React.createElement(PaymentTagManager_1.default, { tags: this.state.tags, tagsChange: this.tagsChange }),
                 React.createElement("div", { className: "w-full" },
@@ -2668,7 +2667,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
-const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
 const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/Components/Payments/PaymentForm.tsx"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
@@ -2864,9 +2862,11 @@ class PaymentsOverview extends React.Component {
                 React.createElement("div", { className: "flex flex-row p-6" },
                     React.createElement("div", { className: "w-2/5" },
                         React.createElement(BudgetComponent_1.default, null))),
-                React.createElement(Modal_1.Modal, { show: this.state.showPaymentFormModal, handleClose: this.hideModal },
-                    React.createElement(ErrorBoundry_1.default, null,
-                        React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))))));
+                React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
+                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail platby"),
+                    React.createElement(core_1.DialogContent, null,
+                        React.createElement(ErrorBoundry_1.default, null,
+                            React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))))));
     }
 }
 exports.default = PaymentsOverview;
@@ -3134,49 +3134,6 @@ class IconsData {
     }
 }
 exports.IconsData = IconsData;
-
-
-/***/ }),
-
-/***/ "./Typescript/Modal.tsx":
-/*!******************************!*\
-  !*** ./Typescript/Modal.tsx ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Modal = void 0;
-const React = __importStar(__webpack_require__(/*! react */ "react"));
-exports.Modal = function (props) {
-    const showHideClassName = props.show ? "modal block" : "modal hidden";
-    return (React.createElement("div", { className: showHideClassName },
-        React.createElement("div", { className: "modal-main text-black flex flex-col w-1/3 bg-battleshipGrey" },
-            React.createElement("div", { className: "ml-auto mr-4" },
-                React.createElement("button", { onClick: props.handleClose }, "X")),
-            React.createElement("div", null, props.children))));
-};
 
 
 /***/ }),

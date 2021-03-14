@@ -6,6 +6,10 @@ import { IPaymentModel } from '../../Model/IPaymentModel';
 import { IPaymentResponseModel } from '../../Model/IPaymentResponseModel';
 import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
+import { useForm } from 'react-hook-form';
+import { Button, TextField } from '@material-ui/core';
+import { PaymentType } from '../../Model/PaymentType';
+import { PaymentCategory } from '../../Model/PaymentCategory';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -154,11 +158,10 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     public render() {
         return (
-            <div className="bg-prussianBlue text-white">
+            <div className="text-white">
                 <div className={"transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>
                     <span className="text-sm text-left text-white">{this.state.errorMessage}</span>
                 </div>
-                <h2 className="text-2xl py-4 ml-6 text-left">Detail platby</h2>
                 <form onSubmit={this.confirmPayment}>
                     <PaymentTagManager tags={this.state.tags} tagsChange={this.tagsChange} />
                     <div className="w-full">
