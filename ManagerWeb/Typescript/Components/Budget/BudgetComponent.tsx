@@ -1,3 +1,4 @@
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import moment from 'moment';
 import * as React from 'react'
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
@@ -98,9 +99,15 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                 <BaseList<BudgetViewModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
                     header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
                 </BaseList>
-                <Modal show={this.state.showBudgetFormModal} handleClose={this.hideBudgetModal}>
-                    <BudgetForm2 key={this.state.budgetFormKey} {...this.state.selectedBudget} ></BudgetForm2>
-                </Modal>
+                <Dialog open={this.state.showBudgetFormModal} onClose={this.hideBudgetModal} aria-labelledby="Detail rozpočtu"
+                    maxWidth="sm" fullWidth={true}>
+                    <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
+                    <DialogContent>
+                        <div className="p-2 overflow-y-auto">
+                            <BudgetForm2 key={this.state.budgetFormKey} {...this.state.selectedBudget} ></BudgetForm2>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </React.Fragment>
         );
     }

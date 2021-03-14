@@ -2079,10 +2079,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
-const Modal_1 = __webpack_require__(/*! ../../Modal */ "./Typescript/Modal.tsx");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 class BudgetComponent extends React.Component {
@@ -2154,8 +2154,11 @@ class BudgetComponent extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, deleteItemHandler: this.deleteItem }),
-            React.createElement(Modal_1.Modal, { show: this.state.showBudgetFormModal, handleClose: this.hideBudgetModal },
-                React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey }, this.state.selectedBudget)))));
+            React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
+                React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
+                React.createElement(core_1.DialogContent, null,
+                    React.createElement("div", { className: "p-2 overflow-y-auto" },
+                        React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey }, this.state.selectedBudget)))))));
     }
 }
 exports.default = BudgetComponent;
@@ -2205,7 +2208,7 @@ const BudgetForm2 = (props) => {
         data.id = props.id;
         props.onSave(data);
     };
-    return (React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "p-6" },
+    return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             React.createElement("div", { className: "w-3/5" },
                 React.createElement(core_1.TextField, { label: "N\u00E1zev", type: "text", name: "name", inputRef: register, className: "w-full" })),

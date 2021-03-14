@@ -20,7 +20,7 @@ const BudgetForm2 = (props: BudgetFormModel) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+        <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-3/5">
                     <TextField label="Název" type="text" name="name" inputRef={register} className="w-full"
