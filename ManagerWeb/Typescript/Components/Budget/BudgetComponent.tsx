@@ -39,6 +39,10 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
     }
 
+    private addNewItem = (): void => {
+        this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+    }
+
     private budgetEdit = async (id: number): Promise<void> => {
         const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
         let budgetFormModel: BudgetFormModel = {
@@ -46,6 +50,10 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
             to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
         };
         this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
+    }
+
+    private deleteItem = (id: number): void => {
+        this.budgetApi.budgetDeleteDelete({ body: id });
     }
 
     private saveFormData = (model: BudgetFormModel) => {
@@ -61,14 +69,6 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         }
 
         this.hideBudgetModal();
-    }
-
-    private deleteItem = (id: number): void => {
-        this.budgetApi.budgetDeleteDelete({ body: id });
-    }
-
-    private addNewItem = (): void => {
-        this.setState({ showBudgetFormModal: true });
     }
 
     private renderTemplate = (budgetModel: BudgetViewModel): JSX.Element => {
@@ -104,7 +104,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                     <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
                     <DialogContent>
                         <div className="p-2 overflow-y-auto">
-                            <BudgetForm2 key={this.state.budgetFormKey} {...this.state.selectedBudget} ></BudgetForm2>
+                            <BudgetForm2 key={this.state.budgetFormKey} onSave={this.saveFormData} {...this.state.selectedBudget} ></BudgetForm2>
                         </div>
                     </DialogContent>
                 </Dialog>

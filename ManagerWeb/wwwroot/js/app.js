@@ -2094,6 +2094,9 @@ class BudgetComponent extends React.Component {
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
         };
+        this.addNewItem = () => {
+            this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+        };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             const budgetModel = yield this.budgetApi.budgetGetGet({ id: id });
             let budgetFormModel = {
@@ -2102,6 +2105,9 @@ class BudgetComponent extends React.Component {
             };
             this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
         });
+        this.deleteItem = (id) => {
+            this.budgetApi.budgetDeleteDelete({ body: id });
+        };
         this.saveFormData = (model) => {
             let budgetModel = {
                 amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
@@ -2114,12 +2120,6 @@ class BudgetComponent extends React.Component {
                 this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
             }
             this.hideBudgetModal();
-        };
-        this.deleteItem = (id) => {
-            this.budgetApi.budgetDeleteDelete({ body: id });
-        };
-        this.addNewItem = () => {
-            this.setState({ showBudgetFormModal: true });
         };
         this.renderTemplate = (budgetModel) => {
             return (React.createElement(React.Fragment, null,
@@ -2158,7 +2158,7 @@ class BudgetComponent extends React.Component {
                 React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
                 React.createElement(core_1.DialogContent, null,
                     React.createElement("div", { className: "p-2 overflow-y-auto" },
-                        React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey }, this.state.selectedBudget)))))));
+                        React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget)))))));
     }
 }
 exports.default = BudgetComponent;
