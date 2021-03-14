@@ -8,7 +8,7 @@ interface IBaseModel {
 interface IBaseListProps<T extends IBaseModel> {
     data: T[];
     template: (model: T) => JSX.Element;
-    title: string;
+    title?: string;
     header?: JSX.Element;
     addItemHandler?: () => void;
     itemClickHandler?: (id: number) => void;
@@ -43,7 +43,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
 
             <div className="flex w-ful flex-col">
                 <div className="py-4 flex w-full">
-                    <h1 className="ml-6 text-xl">{props.title}</h1>
+                    {props.title != undefined ? (<h1 className="ml-6 text-xl">{props.title}</h1>) : <></>}
                     {props.addItemHandler != undefined ? (
                         <span className="inline-block ml-auto mr-5" onClick={props.addItemHandler}>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">

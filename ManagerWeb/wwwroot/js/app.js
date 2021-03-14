@@ -2014,7 +2014,7 @@ const BaseList = (props) => {
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex w-ful flex-col" },
             React.createElement("div", { className: "py-4 flex w-full" },
-                React.createElement("h1", { className: "ml-6 text-xl" }, props.title),
+                props.title != undefined ? (React.createElement("h1", { className: "ml-6 text-xl" }, props.title)) : React.createElement(React.Fragment, null),
                 props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: props.addItemHandler },
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
@@ -2681,6 +2681,7 @@ const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/Budg
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const theme = styles_1.createMuiTheme({
     palette: {
         type: 'dark',
@@ -2732,6 +2733,9 @@ class PaymentsOverview extends React.Component {
                 this.setState({ showBankAccountError: true });
             }
         };
+        this.paymentEdit = (id) => {
+            this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
+        };
         this.hideModal = () => {
             this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         };
@@ -2753,6 +2757,17 @@ class PaymentsOverview extends React.Component {
         };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
             this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
+        };
+        this.renderTemplate = (p) => {
+            let iconsData = new IconsEnum_1.IconsData();
+            return (React.createElement(React.Fragment, null,
+                React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" },
+                    p.amount,
+                    ",-"),
+                React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
+                React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
+                React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon])));
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -2785,9 +2800,6 @@ class PaymentsOverview extends React.Component {
             return yield this.dataLoader.getPayments(filterDate, moment_1.default(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
         });
     }
-    paymentEdit(id) {
-        this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
-    }
     getFilteredPaymentData(bankId) {
         if (bankId == -1)
             bankId = null;
@@ -2815,7 +2827,6 @@ class PaymentsOverview extends React.Component {
         }
     }
     render() {
-        let iconsData = new IconsEnum_1.IconsData();
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
             React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
                 this.showErrorMessage(),
@@ -2839,14 +2850,8 @@ class PaymentsOverview extends React.Component {
                                         + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
                             })),
                             React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                        React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll" }, this.state.payments.map(p => React.createElement("div", { key: p.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => this.paymentEdit(p.id) },
-                            React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                            React.createElement("p", { className: "mx-6 my-1 w-1/5" },
-                                p.amount,
-                                ",-"),
-                            React.createElement("p", { className: "mx-6 my-1 w-2/5" }, p.name),
-                            React.createElement("p", { className: "mx-6 my-1 w-1/5" }, moment_1.default(p.date).format('DD.MM.YYYY')),
-                            React.createElement("span", { className: "mx-6 my-1 w-1/5 categoryIcon" }, iconsData[p.paymentCategoryIcon]))))),
+                        React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                            React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
                     React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
                         React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
                 React.createElement("div", { className: "flex flex-row" },

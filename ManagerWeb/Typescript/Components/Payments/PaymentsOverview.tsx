@@ -20,9 +20,10 @@ import BudgetComponent from '../Budget/BudgetComponent';
 import ErrorBoundary from '../../Utils/ErrorBoundry';
 import { Select, MenuItem } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { BaseList } from '../BaseList';
 
 interface PaymentsOverviewState {
-    payments: Array<IPaymentInfo>,
+    payments: IPaymentInfo[],
     selectedFilter: DateFilter,
     filterDateFrom: string,
     filterDateTo: string,
@@ -136,7 +137,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private paymentEdit(id: number) {
+    private paymentEdit = (id: number): void => {
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
 
@@ -198,8 +199,22 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
     }
 
-    public render() {
+    private renderTemplate = (p: IPaymentInfo): JSX.Element => {
         let iconsData: IconsData = new IconsData();
+
+        return (
+            <>
+                <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
+                <p className="mx-6 my-1 w-1/5">{p.amount},-</p>
+                <p className="mx-6 my-1 w-2/5">{p.name}</p>
+                <p className="mx-6 my-1 w-1/5">{moment(p.date).format('DD.MM.YYYY')}</p>
+                <span className="mx-6 my-1 w-1/5 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
+            </>
+        );
+    }
+
+    public render() {
+
 
         return (
             <ThemeProvider theme={theme}>
@@ -242,16 +257,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                 </div>
                                 <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
                             </div>
-                            <div className="pb-10 h-64 overflow-y-scroll">
-                                {this.state.payments.map(p =>
-                                    <div key={p.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => this.paymentEdit(p.id)}>
-                                        <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                                        <p className="mx-6 my-1 w-1/5">{p.amount},-</p>
-                                        <p className="mx-6 my-1 w-2/5">{p.name}</p>
-                                        <p className="mx-6 my-1 w-1/5">{moment(p.date).format('DD.MM.YYYY')}</p>
-                                        <span className="mx-6 my-1 w-1/5 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
-                                    </div>
-                                )}
+                            <div className="pb-10 h-64 overflow-y-scroll pr-4">
+                                <BaseList<IPaymentInfo> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                             </div>
                         </div>
                         <div className="w-3/5 h-64 mt-auto calendar">
