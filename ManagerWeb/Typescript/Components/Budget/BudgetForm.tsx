@@ -1,6 +1,4 @@
 import * as React from 'react'
-import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
-import moment from 'moment';
 import { useForm } from "react-hook-form";
 import { Button, TextField } from '@material-ui/core';
 
@@ -25,42 +23,22 @@ const BudgetForm2 = (props: BudgetFormModel) => {
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-3/5">
-                    <TextField
-                        label="Název"
-                        type="text"
-                        name="name"
-                        inputRef={register}
-                        className="w-full"
+                    <TextField label="Název" type="text" name="name" inputRef={register} className="w-full"
                     />
                 </div>
                 <div className="w-3/5">
-                    <TextField
-                        label="Velikost"
-                        type="text"
-                        name="amount"
-                        inputRef={register}
-                        className="w-full"
+                    <TextField label="Velikost" type="text" name="amount" inputRef={register} className="w-full"
                     />
                 </div>
                 <div className="w-3/5">
-                    <TextField
-                        label="Od"
-                        type="date"
-                        name="from"
-                        inputRef={register}
-                        className="w-full"
+                    <TextField label="Od" type="date" name="from" inputRef={register} className="w-full"
                         InputLabelProps={{
                             shrink: true,
                         }}
                     />
                 </div>
                 <div className="w-3/5">
-                    <TextField
-                        label="Do"
-                        type="date"
-                        name="to"
-                        inputRef={register}
-                        className="w-full"
+                    <TextField label="Do" type="date" name="to" inputRef={register} className="w-full"
                         InputLabelProps={{
                             shrink: true,
                         }}

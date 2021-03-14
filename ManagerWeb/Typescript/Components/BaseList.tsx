@@ -64,10 +64,10 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                             <div className="w-8/10 flex flex-row">
                                 {props.template(d)}
                             </div>
-                            <div className="w-2/10">
+                            <div className="w-2/10 flex items-center">
                                 {
                                     props.deleteItemHandler != undefined ? (
-                                        <div onClick={(e) => onDeleteClick(e, d.id)} className="w-8 m-auto">
+                                        <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
                                             {renderBinIcon()}
                                         </div>
                                     ) : <></>
