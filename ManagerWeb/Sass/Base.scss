@@ -51,6 +51,19 @@
     }
 }
 
+.paymentForm #type .categoryIconSelectbox svg {
+    display: inline;
+    stroke: white;
+    fill: white;
+}
+
+.categoryIconSelectbox svg {
+    display: inline;
+    stroke: white;
+    fill: white;
+    width: 20px;
+}
+
 :focus {
     outline: none;
 }

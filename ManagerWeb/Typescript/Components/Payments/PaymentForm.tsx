@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { PaymentType } from '../../Model/PaymentType';
 import { PaymentCategory } from '../../Model/PaymentCategory';
+import { IconsData } from '../../Enums/IconsEnum';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -157,6 +158,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     public render() {
+        let iconsData = new IconsData();
+
         return (
             <div className="text-white">
                 <div className={"transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>
@@ -185,7 +188,10 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                                         onChange={this.changeCategory}
                                     >
                                         {this.state.paymentCategories.map(p => {
-                                            return <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>
+                                            return <MenuItem key={p.id} value={p.id}>
+                                                <span>{p.name}</span>
+                                                <span className="ml-6 w-5 categoryIconSelectbox">{iconsData[p.icon]}</span>
+                                            </MenuItem>
                                         })}
                                     </Select>
                                 </FormControl>

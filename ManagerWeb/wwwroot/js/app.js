@@ -2474,6 +2474,7 @@ const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/Data
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -2585,6 +2586,7 @@ class PaymentForm extends React.Component {
         return '';
     }
     render() {
+        let iconsData = new IconsEnum_1.IconsData();
         return (React.createElement("div", { className: "text-white" },
             React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
                 React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
@@ -2600,7 +2602,9 @@ class PaymentForm extends React.Component {
                             React.createElement(core_1.FormControl, { className: "w-full" },
                                 React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Kategorie"),
                                 React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "type", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
-                                    return React.createElement(core_1.MenuItem, { key: p.id, value: p.id }, p.name);
+                                    return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                        React.createElement("span", null, p.name),
+                                        React.createElement("span", { className: "ml-6 w-5 categoryIconSelectbox" }, iconsData[p.icon]));
                                 })))))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },

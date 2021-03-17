@@ -57,7 +57,8 @@ namespace ManagerWeb.Services
             return this.paymentCategoryRepository.FindAll().Select(p => new PaymentCategoryModel
             {
                 Id = p.Id,
-                Name = p.Name
+                Name = p.Name,
+                Icon = p.Icon
             }).ToList();
         }
 
