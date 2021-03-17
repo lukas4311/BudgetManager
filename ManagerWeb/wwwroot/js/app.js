@@ -2597,7 +2597,7 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement(core_1.FormControl, null,
+                            React.createElement(core_1.FormControl, { className: "w-full" },
                                 React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Kategorie"),
                                 React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "type", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
                                     return React.createElement(core_1.MenuItem, { key: p.id, value: p.id }, p.name);

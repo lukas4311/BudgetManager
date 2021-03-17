@@ -176,7 +176,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <FormControl>
+                                <FormControl className="w-full">
                                     <InputLabel id="demo-simple-select-label">Kategorie</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
@@ -197,13 +197,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                             <div className="relative inline-block float-left ml-6 w-2/3">
                                 <TextField label="Název" type="text" name="name" className="w-full" onChange={this.handleChangeName} value={this.state["name"]} />
                             </div>
-                            {/* {this.generateInput("name", "Název", this.handleChangeAmount)} */}
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
                                 <TextField label="Výše" type="text" name="amount" className="w-full" onChange={this.handleChangeAmount} value={this.state["amount"]} />
                             </div>
-                            {/* {this.generateInput("amount", "Výše výdaje", this.handleChangeAmount)} */}
                         </div>
                     </div>
                     <div className="flex mt-4">
