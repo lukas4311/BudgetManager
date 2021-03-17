@@ -49,6 +49,9 @@ interface DateFilter {
 const theme = createMuiTheme({
     palette: {
         type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
     }
 });
 
@@ -283,8 +286,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Detail platby"
                         maxWidth="md" fullWidth={true}>
-                        <DialogTitle id="form-dialog-title">Detail platby</DialogTitle>
-                        <DialogContent>
+                        <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail platby</DialogTitle>
+                        <DialogContent className="bg-prussianBlue">
                             <ErrorBoundary>
                                 <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
                             </ErrorBoundary>

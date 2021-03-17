@@ -2690,6 +2690,9 @@ const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Componen
 const theme = styles_1.createMuiTheme({
     palette: {
         type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
     }
 });
 class PaymentsOverview extends React.Component {
@@ -2870,8 +2873,8 @@ class PaymentsOverview extends React.Component {
                     React.createElement("div", { className: "w-2/5" },
                         React.createElement(BudgetComponent_1.default, null))),
                 React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
-                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail platby"),
-                    React.createElement(core_1.DialogContent, null,
+                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail platby"),
+                    React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                         React.createElement(ErrorBoundry_1.default, null,
                             React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))))));
     }
