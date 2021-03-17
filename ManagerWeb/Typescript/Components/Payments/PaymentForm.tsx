@@ -7,7 +7,7 @@ import { IPaymentResponseModel } from '../../Model/IPaymentResponseModel';
 import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
 import { useForm } from 'react-hook-form';
-import { Button, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { PaymentType } from '../../Model/PaymentType';
 import { PaymentCategory } from '../../Model/PaymentCategory';
 
@@ -162,10 +162,10 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                 <div className={"transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>
                     <span className="text-sm text-left text-white">{this.state.errorMessage}</span>
                 </div>
-                <form onSubmit={this.confirmPayment}>
+                <form onSubmit={this.confirmPayment} className="paymentForm">
                     <PaymentTagManager tags={this.state.tags} tagsChange={this.tagsChange} />
                     <div className="w-full">
-                        <div className="inline-flex w-11/12">
+                        <div className="flex w-10/12 m-auto">
                             {this.state.paymentTypes.map(p => {
                                 return <a key={p.id}
                                     className={"w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : "")}
@@ -176,27 +176,44 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <select name="type" id="type" className="effect-11 w-full" value={this.state.paymentCategoryId} onChange={this.changeCategory}>
-                                    {this.state.paymentCategories.map(p => {
-                                        return <option key={p.id} value={p.id}>{p.name}</option>
-                                    })}
-                                </select>
+                                <FormControl>
+                                    <InputLabel id="demo-simple-select-label">Kategorie</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="type"
+                                        value={this.state.paymentCategoryId}
+                                        onChange={this.changeCategory}
+                                    >
+                                        {this.state.paymentCategories.map(p => {
+                                            return <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>
+                                        })}
+                                    </Select>
+                                </FormControl>
                             </div>
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
-                            {this.generateInput("name", "Název výdaje", this.handleChangeName)}
+                            <div className="relative inline-block float-left ml-6 w-2/3">
+                                <TextField label="Název" type="text" name="name" className="w-full" onChange={this.handleChangeName} value={this.state["name"]} />
+                            </div>
+                            {/* {this.generateInput("name", "Název", this.handleChangeAmount)} */}
                         </div>
                         <div className="w-1/2">
-                            {this.generateInput("amount", "Výše výdaje", this.handleChangeAmount)}
+                            <div className="relative inline-block float-left ml-6 w-2/3">
+                                <TextField label="Výše" type="text" name="amount" className="w-full" onChange={this.handleChangeAmount} value={this.state["amount"]} />
+                            </div>
+                            {/* {this.generateInput("amount", "Výše výdaje", this.handleChangeAmount)} */}
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <input type="date" className={"effect-11 w-full" + this.addErrorClassIfError("date")} placeholder="Datum" value={this.state.date} onChange={this.handleChangeDate}></input>
-                                <span className="focus-bg"></span>
+                                <TextField label="Datum" type="date" name="date" className="w-full" value={this.state.date} onChange={this.handleChangeDate}
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
                             </div>
                             {this.generateErrorMessageIfError("date")}
                         </div>
@@ -204,8 +221,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex my-4">
                         <div className="w-full">
                             <div className="relative inline-block w-4/5 float-left ml-6">
-                                <input className={"effect-11 w-full" + this.addErrorClassIfError("description")} placeholder="Popis" value={this.state.description} onChange={this.handleChangeDescription}></input>
-                                <span className="focus-bg"></span>
+                                <TextField label="Popis" type="text" name="description" className="w-full" onChange={this.handleChangeDescription} value={this.state["description"]} />
                             </div>
                         </div>
                     </div>

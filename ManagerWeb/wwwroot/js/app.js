@@ -2202,7 +2202,7 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 class BudgetFormModel {
 }
 exports.BudgetFormModel = BudgetFormModel;
-const BudgetForm2 = (props) => {
+const BudgetForm = (props) => {
     const { register, handleSubmit } = react_hook_form_1.useForm({ defaultValues: props });
     const onSubmit = (data) => {
         data.id = props.id;
@@ -2224,7 +2224,7 @@ const BudgetForm2 = (props) => {
                     } }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
-exports.BudgetForm2 = BudgetForm2;
+exports.BudgetForm2 = BudgetForm;
 
 
 /***/ }),
@@ -2473,6 +2473,7 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -2587,32 +2588,38 @@ class PaymentForm extends React.Component {
         return (React.createElement("div", { className: "text-white" },
             React.createElement("div", { className: "transition-all ease-in-out duration-500 bg-rufous h-auto overflow-hidden" + (this.state.errorMessage != undefined ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') },
                 React.createElement("span", { className: "text-sm text-left text-white" }, this.state.errorMessage)),
-            React.createElement("form", { onSubmit: this.confirmPayment },
+            React.createElement("form", { onSubmit: this.confirmPayment, className: "paymentForm" },
                 React.createElement(PaymentTagManager_1.default, { tags: this.state.tags, tagsChange: this.tagsChange }),
                 React.createElement("div", { className: "w-full" },
-                    React.createElement("div", { className: "inline-flex w-11/12" }, this.state.paymentTypes.map(p => {
+                    React.createElement("div", { className: "flex w-10/12 m-auto" }, this.state.paymentTypes.map(p => {
                         return React.createElement("a", { key: p.id, className: "w-full bg-prussianBlue border-blueSapphire border-b-2 border-r-2 border-l-2 px-8 py-2 hover:bg-blueSapphire duration-500 cursor-pointer" + (this.state.paymentTypeId == p.id ? " activeType" : ""), onClick: (e) => this.changeType(e, p.id) }, p.name);
                     }))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("select", { name: "type", id: "type", className: "effect-11 w-full", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
-                                return React.createElement("option", { key: p.id, value: p.id }, p.name);
-                            }))))),
-                React.createElement("div", { className: "flex mt-4" },
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("name", "Název výdaje", this.handleChangeName)),
-                    React.createElement("div", { className: "w-1/2" }, this.generateInput("amount", "Výše výdaje", this.handleChangeAmount))),
+                            React.createElement(core_1.FormControl, null,
+                                React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Kategorie"),
+                                React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "type", value: this.state.paymentCategoryId, onChange: this.changeCategory }, this.state.paymentCategories.map(p => {
+                                    return React.createElement(core_1.MenuItem, { key: p.id, value: p.id }, p.name);
+                                })))))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement("input", { type: "date", className: "effect-11 w-full" + this.addErrorClassIfError("date"), placeholder: "Datum", value: this.state.date, onChange: this.handleChangeDate }),
-                            React.createElement("span", { className: "focus-bg" })),
+                            React.createElement(core_1.TextField, { label: "N\u00E1zev", type: "text", name: "name", className: "w-full", onChange: this.handleChangeName, value: this.state["name"] }))),
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement(core_1.TextField, { label: "V\u00FD\u0161e", type: "text", name: "amount", className: "w-full", onChange: this.handleChangeAmount, value: this.state["amount"] })))),
+                React.createElement("div", { className: "flex mt-4" },
+                    React.createElement("div", { className: "w-1/2" },
+                        React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
+                            React.createElement(core_1.TextField, { label: "Datum", type: "date", name: "date", className: "w-full", value: this.state.date, onChange: this.handleChangeDate, InputLabelProps: {
+                                    shrink: true,
+                                } })),
                         this.generateErrorMessageIfError("date"))),
                 React.createElement("div", { className: "flex my-4" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
-                            React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError("description"), placeholder: "Popis", value: this.state.description, onChange: this.handleChangeDescription }),
-                            React.createElement("span", { className: "focus-bg" })))),
+                            React.createElement(core_1.TextField, { label: "Popis", type: "text", name: "description", className: "w-full", onChange: this.handleChangeDescription, value: this.state["description"] })))),
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },

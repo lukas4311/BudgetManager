@@ -109,10 +109,10 @@
   .paymentRecord:hover {
     left: 10px; }
 
-.activeType {
+.paymentForm .activeType {
   background-color: #275068ff !important;
   outline: none; }
-  .activeType:focus {
+  .paymentForm .activeType:focus {
     outline: none; }
 
 :focus {

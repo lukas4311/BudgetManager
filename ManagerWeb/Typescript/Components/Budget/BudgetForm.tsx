@@ -11,7 +11,7 @@ class BudgetFormModel {
     onSave: (model: BudgetFormModel) => void;
 }
 
-const BudgetForm2 = (props: BudgetFormModel) => {
+const BudgetForm = (props: BudgetFormModel) => {
     const { register, handleSubmit } = useForm<BudgetFormModel>({ defaultValues: props });
 
     const onSubmit = (data: BudgetFormModel) => {
@@ -23,12 +23,10 @@ const BudgetForm2 = (props: BudgetFormModel) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-3/5">
-                    <TextField label="Název" type="text" name="name" inputRef={register} className="w-full"
-                    />
+                    <TextField label="Název" type="text" name="name" inputRef={register} className="w-full"/>
                 </div>
                 <div className="w-3/5">
-                    <TextField label="Velikost" type="text" name="amount" inputRef={register} className="w-full"
-                    />
+                    <TextField label="Velikost" type="text" name="amount" inputRef={register} className="w-full"/>
                 </div>
                 <div className="w-3/5">
                     <TextField label="Od" type="date" name="from" inputRef={register} className="w-full"
@@ -51,4 +49,4 @@ const BudgetForm2 = (props: BudgetFormModel) => {
     );
 };
 
-export { BudgetFormModel, BudgetForm2 }
+export { BudgetFormModel, BudgetForm as BudgetForm2 }
