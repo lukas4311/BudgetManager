@@ -70,9 +70,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         let dataJson = JSON.stringify(data);
 
         if (this.state.id != undefined) {
-            this.dataLoader.updatePayment(dataJson, this.onError)
+            // this.dataLoader.updatePayment(dataJson, this.onError)
+            console.log(data);
         } else {
-            this.dataLoader.addPayment(dataJson, this.onError)
+            console.log(data);
+            // this.dataLoader.addPayment(dataJson, this.onError)
         }
 
         this.props.handleClose();
@@ -82,47 +84,19 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
     }
 
-    private handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    private handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, property: string, isRequired: boolean = false): void => {
         let errorMessage = '';
-        this.setState({ name: e.target.value });
+        this.setState(prevState => ({
+            ...prevState,
+            [property]: e.target.value // No error here, but can't ensure that key is in StateKeys
+        }));
 
-        if (e.target.value == '' || e.target.value === undefined)
-            errorMessage = this.requiredMessage;
+        if (isRequired) {
+            if (e.target.value == '' || e.target.value === undefined)
+                errorMessage = this.requiredMessage;
 
-        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, name: errorMessage } }));
-    }
-
-    private handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        let errorMessage = '';
-        this.setState({ date: e.target.value });
-
-        if (e.target.value == '' || e.target.value === undefined)
-            errorMessage = this.requiredMessage;
-
-        this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, date: errorMessage } }));
-    }
-
-    private handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        this.setState({ description: e.target.value });
-    }
-
-    private handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        let parsed = parseInt(e.target.value);
-
-        if (isNaN(parsed)) {
-            this.setState({ amount: null })
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "Zadejte číselnou hodnotu." } }));
-        } else {
-            this.setState({ amount: parsed })
-            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, amount: "" } }));
+            this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, [property]: errorMessage } }));
         }
-    }
-
-    private addErrorClassIfError(propertyName: string): string {
-        if (this.state.formErrors[propertyName].length > 0)
-            return " inputError";
-
-        return '';
     }
 
     private generateErrorMessageIfError = (propertyName: string): JSX.Element | '' => {
@@ -130,18 +104,6 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
             return <span className="inline-block text-sm float-left ml-6">{this.state.formErrors[propertyName]}</span>;
 
         return '';
-    }
-
-    private generateInput = (propertyName: string, placeholder: string, handler: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
-        return (
-            <React.Fragment>
-                <div className="relative inline-block float-left ml-6 w-2/3">
-                    <input className={"effect-11 w-full" + this.addErrorClassIfError(propertyName)} placeholder={placeholder} value={this.state[propertyName]} onChange={handler}></input>
-                    <span className="focus-bg"></span>
-                </div>
-                {this.generateErrorMessageIfError(propertyName)}
-            </React.Fragment>
-        );
     }
 
     private changeType = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) => {
@@ -201,19 +163,19 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Název" type="text" name="name" className="w-full" onChange={this.handleChangeName} value={this.state["name"]} />
+                                <TextField label="Název" type="text" name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
                             </div>
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Výše" type="text" name="amount" className="w-full" onChange={this.handleChangeAmount} value={this.state["amount"]} />
+                                <TextField label="Výše" type="text" name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
                             </div>
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Datum" type="date" name="date" className="w-full" value={this.state.date} onChange={this.handleChangeDate}
+                                <TextField label="Datum" type="date" name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -225,7 +187,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                     <div className="flex my-4">
                         <div className="w-full">
                             <div className="relative inline-block w-4/5 float-left ml-6">
-                                <TextField label="Popis" type="text" name="description" className="w-full" onChange={this.handleChangeDescription} value={this.state["description"]} />
+                                <TextField label="Popis" type="text" name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
                             </div>
                         </div>
                     </div>

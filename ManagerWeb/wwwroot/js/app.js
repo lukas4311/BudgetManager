@@ -2501,55 +2501,32 @@ class PaymentForm extends React.Component {
             const data = this.state;
             let dataJson = JSON.stringify(data);
             if (this.state.id != undefined) {
-                this.dataLoader.updatePayment(dataJson, this.onError);
+                // this.dataLoader.updatePayment(dataJson, this.onError)
+                console.log(data);
             }
             else {
-                this.dataLoader.addPayment(dataJson, this.onError);
+                console.log(data);
+                // this.dataLoader.addPayment(dataJson, this.onError)
             }
             this.props.handleClose();
         };
         this.onError = () => {
             this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
         };
-        this.handleChangeName = (e) => {
+        this.handleChange = (e, property, isRequired = false) => {
             let errorMessage = '';
-            this.setState({ name: e.target.value });
-            if (e.target.value == '' || e.target.value === undefined)
-                errorMessage = this.requiredMessage;
-            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { name: errorMessage }) }));
-        };
-        this.handleChangeDate = (e) => {
-            let errorMessage = '';
-            this.setState({ date: e.target.value });
-            if (e.target.value == '' || e.target.value === undefined)
-                errorMessage = this.requiredMessage;
-            this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { date: errorMessage }) }));
-        };
-        this.handleChangeDescription = (e) => {
-            this.setState({ description: e.target.value });
-        };
-        this.handleChangeAmount = (e) => {
-            let parsed = parseInt(e.target.value);
-            if (isNaN(parsed)) {
-                this.setState({ amount: null });
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "Zadejte číselnou hodnotu." }) }));
-            }
-            else {
-                this.setState({ amount: parsed });
-                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { amount: "" }) }));
+            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [property]: e.target.value // No error here, but can't ensure that key is in StateKeys
+             })));
+            if (isRequired) {
+                if (e.target.value == '' || e.target.value === undefined)
+                    errorMessage = this.requiredMessage;
+                this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { [property]: errorMessage }) }));
             }
         };
         this.generateErrorMessageIfError = (propertyName) => {
             if (this.state.formErrors[propertyName].length > 0)
                 return React.createElement("span", { className: "inline-block text-sm float-left ml-6" }, this.state.formErrors[propertyName]);
             return '';
-        };
-        this.generateInput = (propertyName, placeholder, handler) => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                    React.createElement("input", { className: "effect-11 w-full" + this.addErrorClassIfError(propertyName), placeholder: placeholder, value: this.state[propertyName], onChange: handler }),
-                    React.createElement("span", { className: "focus-bg" })),
-                this.generateErrorMessageIfError(propertyName)));
         };
         this.changeType = (e, id) => {
             e.preventDefault();
@@ -2580,11 +2557,6 @@ class PaymentForm extends React.Component {
             }
         });
     }
-    addErrorClassIfError(propertyName) {
-        if (this.state.formErrors[propertyName].length > 0)
-            return " inputError";
-        return '';
-    }
     render() {
         let iconsData = new IconsEnum_1.IconsData();
         return (React.createElement("div", { className: "text-white" },
@@ -2609,21 +2581,21 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement(core_1.TextField, { label: "N\u00E1zev", type: "text", name: "name", className: "w-full", onChange: this.handleChangeName, value: this.state["name"] }))),
+                            React.createElement(core_1.TextField, { label: "N\u00E1zev", type: "text", name: "name", className: "w-full", onChange: (e) => this.handleChange(e, "name", true), value: this.state["name"] }))),
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement(core_1.TextField, { label: "V\u00FD\u0161e", type: "text", name: "amount", className: "w-full", onChange: this.handleChangeAmount, value: this.state["amount"] })))),
+                            React.createElement(core_1.TextField, { label: "V\u00FD\u0161e", type: "text", name: "amount", className: "w-full", onChange: (e) => this.handleChange(e, "amount", true), value: this.state["amount"] })))),
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement(core_1.TextField, { label: "Datum", type: "date", name: "date", className: "w-full", value: this.state.date, onChange: this.handleChangeDate, InputLabelProps: {
+                            React.createElement(core_1.TextField, { label: "Datum", type: "date", name: "date", className: "w-full", value: this.state.date, onChange: (e) => this.handleChange(e, "date", true), InputLabelProps: {
                                     shrink: true,
                                 } })),
                         this.generateErrorMessageIfError("date"))),
                 React.createElement("div", { className: "flex my-4" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block w-4/5 float-left ml-6" },
-                            React.createElement(core_1.TextField, { label: "Popis", type: "text", name: "description", className: "w-full", onChange: this.handleChangeDescription, value: this.state["description"] })))),
+                            React.createElement(core_1.TextField, { label: "Popis", type: "text", name: "description", className: "w-full", onChange: (e) => this.handleChange(e, "description"), value: this.state["description"] })))),
                 React.createElement("div", { className: "flex" },
                     React.createElement("div", { className: "w-full" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 mb-6" },
