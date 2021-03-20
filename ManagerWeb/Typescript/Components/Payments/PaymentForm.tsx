@@ -11,6 +11,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@m
 import { PaymentType } from '../../Model/PaymentType';
 import { PaymentCategory } from '../../Model/PaymentCategory';
 import { IconsData } from '../../Enums/IconsEnum';
+import { PaymentApi, PaymentViewModel } from '../../ApiClient';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -21,6 +22,7 @@ interface IPaymentFormProps {
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
     private requiredMessage: string = "Zadejte hodnotu.";
     private dataLoader: DataLoader;
+    private paymentApi: PaymentApi;
 
     constructor(props: IPaymentFormProps) {
         super(props);
@@ -30,6 +32,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
             tags: []
         };
         this.dataLoader = new DataLoader();
+        this.paymentApi = new PaymentApi();
     }
 
     private processPaymentTypesData = (data: PaymentTypeResponse) => {
@@ -66,15 +69,21 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         this.setState({ disabledConfirm: true });
-        const data = this.state;
-        let dataJson = JSON.stringify(data);
+        let dataModel = new PaymentViewModel();
+        dataModel.amount = parseInt(this.state.amount.toString());
+        dataModel.bankAccountId = this.state.bankAccountId;
+        dataModel.date = new Date(this.state.date);
+        dataModel.description = this.state.description;
+        dataModel.id = this.state.id;
+        dataModel.name = this.state.name;
+        dataModel.paymentCategoryId = this.state.paymentCategoryId;
+        dataModel.paymentTypeId = this.state.paymentTypeId;
+        dataModel.tags = this.state.tags;
 
         if (this.state.id != undefined) {
-            // this.dataLoader.updatePayment(dataJson, this.onError)
-            console.log(data);
+            this.paymentApi.paymentPut({ paymentViewModel: dataModel })
         } else {
-            console.log(data);
-            // this.dataLoader.addPayment(dataJson, this.onError)
+            this.paymentApi.paymentPost({ paymentViewModel: dataModel });
         }
 
         this.props.handleClose();
@@ -86,13 +95,14 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     private handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, property: string, isRequired: boolean = false): void => {
         let errorMessage = '';
+        let value = e.target.value;
         this.setState(prevState => ({
             ...prevState,
-            [property]: e.target.value // No error here, but can't ensure that key is in StateKeys
+            [property]: value
         }));
 
         if (isRequired) {
-            if (e.target.value == '' || e.target.value === undefined)
+            if (value == '' || value === undefined)
                 errorMessage = this.requiredMessage;
 
             this.setState((prevState) => ({ formErrors: { ...prevState.formErrors, [property]: errorMessage } }));

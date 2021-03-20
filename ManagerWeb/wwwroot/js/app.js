@@ -2475,6 +2475,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -2498,15 +2499,21 @@ class PaymentForm extends React.Component {
         this.confirmPayment = (e) => {
             e.preventDefault();
             this.setState({ disabledConfirm: true });
-            const data = this.state;
-            let dataJson = JSON.stringify(data);
+            let dataModel = new ApiClient_1.PaymentViewModel();
+            dataModel.amount = parseInt(this.state.amount.toString());
+            dataModel.bankAccountId = this.state.bankAccountId;
+            dataModel.date = new Date(this.state.date);
+            dataModel.description = this.state.description;
+            dataModel.id = this.state.id;
+            dataModel.name = this.state.name;
+            dataModel.paymentCategoryId = this.state.paymentCategoryId;
+            dataModel.paymentTypeId = this.state.paymentTypeId;
+            dataModel.tags = this.state.tags;
             if (this.state.id != undefined) {
-                // this.dataLoader.updatePayment(dataJson, this.onError)
-                console.log(data);
+                this.paymentApi.paymentPut({ paymentViewModel: dataModel });
             }
             else {
-                console.log(data);
-                // this.dataLoader.addPayment(dataJson, this.onError)
+                this.paymentApi.paymentPost({ paymentViewModel: dataModel });
             }
             this.props.handleClose();
         };
@@ -2515,10 +2522,10 @@ class PaymentForm extends React.Component {
         };
         this.handleChange = (e, property, isRequired = false) => {
             let errorMessage = '';
-            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [property]: e.target.value // No error here, but can't ensure that key is in StateKeys
-             })));
+            let value = e.target.value;
+            this.setState(prevState => (Object.assign(Object.assign({}, prevState), { [property]: value })));
             if (isRequired) {
-                if (e.target.value == '' || e.target.value === undefined)
+                if (value == '' || value === undefined)
                     errorMessage = this.requiredMessage;
                 this.setState((prevState) => ({ formErrors: Object.assign(Object.assign({}, prevState.formErrors), { [property]: errorMessage }) }));
             }
@@ -2544,6 +2551,7 @@ class PaymentForm extends React.Component {
             tags: []
         };
         this.dataLoader = new DataLoader_1.default();
+        this.paymentApi = new ApiClient_1.PaymentApi();
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
