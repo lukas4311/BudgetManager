@@ -69,6 +69,18 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         this.setState({ disabledConfirm: true });
+        let dataModel = this.mapViewModelToDatModel();
+
+        if (this.state.id != undefined) {
+            this.paymentApi.paymentPut({ paymentViewModel: dataModel })
+        } else {
+            this.paymentApi.paymentPost({ paymentViewModel: dataModel });
+        }
+
+        this.props.handleClose();
+    }
+
+    private mapViewModelToDatModel = (): PaymentViewModel => {
         let dataModel = new PaymentViewModel();
         dataModel.amount = parseInt(this.state.amount.toString());
         dataModel.bankAccountId = this.state.bankAccountId;
@@ -80,13 +92,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         dataModel.paymentTypeId = this.state.paymentTypeId;
         dataModel.tags = this.state.tags;
 
-        if (this.state.id != undefined) {
-            this.paymentApi.paymentPut({ paymentViewModel: dataModel })
-        } else {
-            this.paymentApi.paymentPost({ paymentViewModel: dataModel });
-        }
-
-        this.props.handleClose();
+        return dataModel;
     }
 
     private onError = () => {

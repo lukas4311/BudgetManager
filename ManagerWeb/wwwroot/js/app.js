@@ -2499,6 +2499,16 @@ class PaymentForm extends React.Component {
         this.confirmPayment = (e) => {
             e.preventDefault();
             this.setState({ disabledConfirm: true });
+            let dataModel = this.mapViewModelToDatModel();
+            if (this.state.id != undefined) {
+                this.paymentApi.paymentPut({ paymentViewModel: dataModel });
+            }
+            else {
+                this.paymentApi.paymentPost({ paymentViewModel: dataModel });
+            }
+            this.props.handleClose();
+        };
+        this.mapViewModelToDatModel = () => {
             let dataModel = new ApiClient_1.PaymentViewModel();
             dataModel.amount = parseInt(this.state.amount.toString());
             dataModel.bankAccountId = this.state.bankAccountId;
@@ -2509,13 +2519,7 @@ class PaymentForm extends React.Component {
             dataModel.paymentCategoryId = this.state.paymentCategoryId;
             dataModel.paymentTypeId = this.state.paymentTypeId;
             dataModel.tags = this.state.tags;
-            if (this.state.id != undefined) {
-                this.paymentApi.paymentPut({ paymentViewModel: dataModel });
-            }
-            else {
-                this.paymentApi.paymentPost({ paymentViewModel: dataModel });
-            }
-            this.props.handleClose();
+            return dataModel;
         };
         this.onError = () => {
             this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
