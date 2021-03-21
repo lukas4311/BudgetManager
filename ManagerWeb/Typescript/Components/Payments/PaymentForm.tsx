@@ -1,17 +1,11 @@
 import * as React from 'react'
 import DataLoader from '../../Services/DataLoader'
-import { PaymentTypeResponse } from '../../Model/PaymentTypeResponse';
-import { PaymentCategoryResponse } from '../../Model/PaymentCategoryResponse';
 import { IPaymentModel } from '../../Model/IPaymentModel';
-import { IPaymentResponseModel } from '../../Model/IPaymentResponseModel';
 import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
-import { useForm } from 'react-hook-form';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
-import { PaymentType } from '../../Model/PaymentType';
-import { PaymentCategory } from '../../Model/PaymentCategory';
+import {  FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { IconsData } from '../../Enums/IconsEnum';
-import { PaymentApi, PaymentViewModel } from '../../ApiClient';
+import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentViewModel } from '../../ApiClient';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -35,17 +29,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.paymentApi = new PaymentApi();
     }
 
-    private processPaymentTypesData = (data: PaymentTypeResponse) => {
-        if (data.success) {
-            this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types })
-        }
-    }
+    private processPaymentTypesData = (data: PaymentTypeModel[]) => this.setState({ paymentTypeId: data[0].id, paymentTypes: data })
 
-    private processPaymentCategoryData = (data: PaymentCategoryResponse) => {
-        if (data.success) {
-            this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories })
-        }
-    }
+
+    private processPaymentCategoryData = (data: PaymentCategoryModel[]) =>
+        this.setState({ paymentCategoryId: data[0].id, paymentCategories: data })
 
     private processPaymentData = (data: IPaymentModel) => {
         this.setState({
@@ -55,15 +43,15 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     public async componentDidMount() {
-        // const paymentReponse = await this.dataLoader.getPaymentTypes(this.onError);
-        // this.processPaymentTypesData(paymentReponse);
-        // const categories = await this.dataLoader.getPaymentCategories(this.onError);
-        // this.processPaymentCategoryData(categories);
+        const types: PaymentTypeModel[] = await this.paymentApi.paymentTypesGet();
+        const categories: PaymentCategoryModel[] = await this.paymentApi.paymentCategoriesGet();
+        this.processPaymentTypesData(types);
+        this.processPaymentCategoryData(categories);
 
-        // if (this.state.id != null) {
-        //     let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
-        //     this.processPaymentData(paymentResponse);
-        // }
+        if (this.state.id != null) {
+            let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
+            this.processPaymentData(paymentResponse);
+        }
     }
 
     private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {

@@ -738,14 +738,15 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
             });
-            return new runtime.VoidApiResponse(response);
+            return new runtime.JSONApiResponse(response, (jsonValue) => models_1.PaymentViewModelFromJSON(jsonValue));
         });
     }
     /**
      */
     paymentDetailGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentDetailGetRaw(requestParameters);
+            const response = yield this.paymentDetailGetRaw(requestParameters);
+            return yield response.value();
         });
     }
     /**

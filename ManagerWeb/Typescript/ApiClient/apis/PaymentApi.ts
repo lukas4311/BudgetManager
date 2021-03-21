@@ -97,11 +97,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentDetailGetRaw(requestParameters: PaymentDetailGetRequest): Promise<runtime.ApiResponse<void>>;
+    paymentDetailGetRaw(requestParameters: PaymentDetailGetRequest): Promise<runtime.ApiResponse<PaymentViewModel>>;
 
     /**
      */
-    paymentDetailGet(requestParameters: PaymentDetailGetRequest): Promise<void>;
+    paymentDetailGet(requestParameters: PaymentDetailGetRequest): Promise<PaymentViewModel>;
 
     /**
      * 
@@ -233,7 +233,7 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
 
     /**
      */
-    async paymentDetailGetRaw(requestParameters: PaymentDetailGetRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentDetailGetRaw(requestParameters: PaymentDetailGetRequest): Promise<runtime.ApiResponse<PaymentViewModel>> {
         const queryParameters: any = {};
 
         if (requestParameters.id !== undefined) {
@@ -249,13 +249,14 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaymentViewModelFromJSON(jsonValue));
     }
 
     /**
      */
-    async paymentDetailGet(requestParameters: PaymentDetailGetRequest): Promise<void> {
-        await this.paymentDetailGetRaw(requestParameters);
+    async paymentDetailGet(requestParameters: PaymentDetailGetRequest): Promise<PaymentViewModel> {
+        const response = await this.paymentDetailGetRaw(requestParameters);
+        return await response.value();
     }
 
     /**

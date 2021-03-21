@@ -738,14 +738,15 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
             });
-            return new runtime.VoidApiResponse(response);
+            return new runtime.JSONApiResponse(response, (jsonValue) => models_1.PaymentViewModelFromJSON(jsonValue));
         });
     }
     /**
      */
     paymentDetailGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentDetailGetRaw(requestParameters);
+            const response = yield this.paymentDetailGetRaw(requestParameters);
+            return yield response.value();
         });
     }
     /**
@@ -2614,16 +2615,8 @@ class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
         this.requiredMessage = "Zadejte hodnotu.";
-        this.processPaymentTypesData = (data) => {
-            if (data.success) {
-                this.setState({ paymentTypeId: data.types[0].id, paymentTypes: data.types });
-            }
-        };
-        this.processPaymentCategoryData = (data) => {
-            if (data.success) {
-                this.setState({ paymentCategoryId: data.categories[0].id, paymentCategories: data.categories });
-            }
-        };
+        this.processPaymentTypesData = (data) => this.setState({ paymentTypeId: data[0].id, paymentTypes: data });
+        this.processPaymentCategoryData = (data) => this.setState({ paymentCategoryId: data[0].id, paymentCategories: data });
         this.processPaymentData = (data) => {
             this.setState({
                 name: data.name, amount: data.amount, date: data.date, description: data.description || '',
@@ -2693,14 +2686,14 @@ class PaymentForm extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            // const paymentReponse = await this.dataLoader.getPaymentTypes(this.onError);
-            // this.processPaymentTypesData(paymentReponse);
-            // const categories = await this.dataLoader.getPaymentCategories(this.onError);
-            // this.processPaymentCategoryData(categories);
-            // if (this.state.id != null) {
-            //     let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
-            //     this.processPaymentData(paymentResponse);
-            // }
+            const types = yield this.paymentApi.paymentTypesGet();
+            const categories = yield this.paymentApi.paymentCategoriesGet();
+            this.processPaymentTypesData(types);
+            this.processPaymentCategoryData(categories);
+            if (this.state.id != null) {
+                let paymentResponse = yield this.dataLoader.getPayment(this.state.id, this.onError);
+                this.processPaymentData(paymentResponse);
+            }
         });
     }
     render() {

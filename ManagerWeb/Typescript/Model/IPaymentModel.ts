@@ -1,5 +1,6 @@
 import { PaymentType } from './PaymentType';
 import { PaymentCategory } from './PaymentCategory';
+import { PaymentCategoryModel, PaymentTypeModel } from '../ApiClient';
 
 export interface IPaymentModel {
     id?: number;
@@ -8,9 +9,9 @@ export interface IPaymentModel {
     date: string;
     description: string;
     paymentTypeId: number;
-    paymentTypes: Array<PaymentType>;
+    paymentTypes: PaymentTypeModel[];
     paymentCategoryId: number;
-    paymentCategories: Array<PaymentCategory>;
+    paymentCategories: PaymentCategoryModel[];
     bankAccountId: number;
     formErrors: {
         name: string;

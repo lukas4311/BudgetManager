@@ -66,7 +66,7 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("detail")]
-        public IActionResult GetPayment([FromQuery] int id)
+        public ActionResult<PaymentViewModel> GetPayment([FromQuery] int id)
         {
             PaymentViewModel payment = this.paymentService.GetPayment(id);
             return Ok(payment);
