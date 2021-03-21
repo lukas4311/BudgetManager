@@ -31,17 +31,15 @@ namespace ManagerWeb.Controllers
         }
 
         [HttpGet("types")]
-        public IActionResult GetPaymentTypes()
+        public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes()
         {
-            IEnumerable<PaymentTypeModel> paymentTypes = this.paymentService.GetPaymentTypes();
-            return Ok(new { success = true, types = paymentTypes });
+            return this.paymentService.GetPaymentTypes();
         }
 
         [HttpGet("categories")]
-        public IActionResult GetPaymentCategories()
+        public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories()
         {
-            IEnumerable<PaymentCategoryModel> paymentCategories = this.paymentService.GetPaymentCategories();
-            return Ok(new { success = true, categories = paymentCategories });
+            return this.paymentService.GetPaymentCategories();
         }
 
         [HttpGet("bankAccounts")]

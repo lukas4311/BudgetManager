@@ -55,15 +55,15 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     public async componentDidMount() {
-        const paymentReponse = await this.dataLoader.getPaymentTypes(this.onError);
-        this.processPaymentTypesData(paymentReponse);
-        const categories = await this.dataLoader.getPaymentCategories(this.onError);
-        this.processPaymentCategoryData(categories);
+        // const paymentReponse = await this.dataLoader.getPaymentTypes(this.onError);
+        // this.processPaymentTypesData(paymentReponse);
+        // const categories = await this.dataLoader.getPaymentCategories(this.onError);
+        // this.processPaymentCategoryData(categories);
 
-        if (this.state.id != null) {
-            let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
-            this.processPaymentData(paymentResponse);
-        }
+        // if (this.state.id != null) {
+        //     let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
+        //     this.processPaymentData(paymentResponse);
+        // }
     }
 
     private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {

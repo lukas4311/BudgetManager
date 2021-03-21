@@ -2,6 +2,8 @@ export * from './AddTagModel';
 export * from './BankBalanceModel';
 export * from './BudgetModel';
 export * from './InlineObject';
+export * from './PaymentCategoryModel';
+export * from './PaymentTypeModel';
 export * from './PaymentViewModel';
 export * from './TagModel';
 export * from './TradeHistory';

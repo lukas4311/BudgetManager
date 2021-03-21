@@ -15,6 +15,12 @@
 
 import * as runtime from '../runtime';
 import {
+    PaymentCategoryModel,
+    PaymentCategoryModelFromJSON,
+    PaymentCategoryModelToJSON,
+    PaymentTypeModel,
+    PaymentTypeModelFromJSON,
+    PaymentTypeModelToJSON,
     PaymentViewModel,
     PaymentViewModelFromJSON,
     PaymentViewModelToJSON,
@@ -63,11 +69,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentCategoriesGetRaw(): Promise<runtime.ApiResponse<void>>;
+    paymentCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>>;
 
     /**
      */
-    paymentCategoriesGet(): Promise<void>;
+    paymentCategoriesGet(): Promise<Array<PaymentCategoryModel>>;
 
     /**
      * 
@@ -129,11 +135,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentTypesGetRaw(): Promise<runtime.ApiResponse<void>>;
+    paymentTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>>;
 
     /**
      */
-    paymentTypesGet(): Promise<void>;
+    paymentTypesGet(): Promise<Array<PaymentTypeModel>>;
 
 }
 
@@ -167,7 +173,7 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
 
     /**
      */
-    async paymentCategoriesGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async paymentCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -179,13 +185,14 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentCategoryModelFromJSON));
     }
 
     /**
      */
-    async paymentCategoriesGet(): Promise<void> {
-        await this.paymentCategoriesGetRaw();
+    async paymentCategoriesGet(): Promise<Array<PaymentCategoryModel>> {
+        const response = await this.paymentCategoriesGetRaw();
+        return await response.value();
     }
 
     /**
@@ -305,7 +312,7 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
 
     /**
      */
-    async paymentTypesGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async paymentTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -317,13 +324,14 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentTypeModelFromJSON));
     }
 
     /**
      */
-    async paymentTypesGet(): Promise<void> {
-        await this.paymentTypesGetRaw();
+    async paymentTypesGet(): Promise<Array<PaymentTypeModel>> {
+        const response = await this.paymentTypesGetRaw();
+        return await response.value();
     }
 
 }

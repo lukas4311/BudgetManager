@@ -65,33 +65,33 @@ export default class DataLoader {
         }
     }
 
-    async getPaymentTypes(onRejected: () => void): Promise<PaymentTypeResponse> {
-        let response: PaymentTypeResponse;
+    // async getPaymentTypes(onRejected: () => void): Promise<PaymentTypeResponse> {
+    //     let response: PaymentTypeResponse;
 
-        try {
-            const res = await fetch("/payment/types");
-            response = await res.json();
-        }
-        catch (_) {
-            onRejected();
-        }
+    //     try {
+    //         const res = await fetch("/payment/types");
+    //         response = await res.json();
+    //     }
+    //     catch (_) {
+    //         onRejected();
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 
-    async getPaymentCategories(onRejected: () => void): Promise<PaymentCategoryResponse> {
-        let response: PaymentCategoryResponse;
+    // async getPaymentCategories(onRejected: () => void): Promise<PaymentCategoryResponse> {
+    //     let response: PaymentCategoryResponse;
 
-        try {
-            const res = await fetch("/payment/categories");
-            response = await res.json();
-        }
-        catch (_) {
-            onRejected();
-        }
+    //     try {
+    //         const res = await fetch("/payment/categories");
+    //         response = await res.json();
+    //     }
+    //     catch (_) {
+    //         onRejected();
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 
     async getPayment(id: number, onRejected: () => void): Promise<IPaymentModel> {
         let response: IPaymentModel;
