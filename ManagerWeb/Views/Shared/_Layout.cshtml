@@ -5,6 +5,7 @@
 
 <!DOCTYPE html>
 <html lang="en" class="h-full">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +19,8 @@
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
         <script src="@devMaterial" crossorigin></script>
         <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js" crossorigin></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" crossorigin></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"
+            crossorigin></script>
     </environment>
     <environment exclude="Development">
         <!-- Dependencies -->
@@ -26,9 +28,11 @@
         <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.js" crossorigin></script>
         <script src="@prodMaterial" crossorigin></script>
         <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js" crossorigin></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" crossorigin></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"
+            crossorigin></script>
     </environment>
 </head>
+
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden">
     <header class="bg-mainDarkBlue flex flex-row text-white p-4 px-12">
         <div>
@@ -36,19 +40,31 @@
                 <partial name="~/Views/IconsPartials/Logo.cshtml" />
             </a>
         </div>
-        <div id="navMenu" class="ml-auto">
-            @* <nav class="border-bottom box-shadow ">
-                    <div class="flex flex-col spin circle button justify-center w-12 h-12" onClick={this.menuClick}>
-                        <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
-                        <div class="w-3/5 bg-white mb-2 h-1 rounded-lg mx-auto"></div>
-                        <div class="w-3/5 bg-white h-1 rounded-lg mx-auto"></div>
-                    </div>
-                    <div class="containerClosed absolute text-white bg-black w-48"}>
-                        <a class="block">Home</a>
-                        <a class="block">Platby</a>
-                    </div>
-                </nav> *@
-        </div>
+        <nav id="navMenu"></nav>
+        @* <nav class="menu">
+            <input class="menu-toggler" id="menu-toggler" type="checkbox"></input>
+            <label for="menu-toggler"></label>
+            <ul>
+                <li class="menu-item">
+                    <a class="fa fa-facebook" href="https://www.facebook.com/" target="_blank"></a>
+                </li>
+                <li class="menu-item">
+                    <a class="fa fa-google" href="https://www.google.com/" target="_blank"></a>
+                </li>
+                <li class="menu-item">
+                    <a class="fa fa-dribbble" href="https://dribbble.com/" target="_blank"></a>
+                </li>
+                <li class="menu-item">
+                    <a class="fa fa-codepen" href="https://codepen.io/" target="_blank"></a>
+                </li>
+                <li class="menu-item">
+                    <a class="fa fa-linkedin" href="https://www.linkedin.com/" target="_blank"></a>
+                </li>
+                <li class="menu-item">
+                    <a class="fa fa-github" href="https://github.com/" target="_blank"></a>
+                </li>
+            </ul>
+        </nav> *@
     </header>
     <div class="baseContainer mx-auto w-11/12">
         <main role="main" class="pb-3 text-white">
@@ -63,4 +79,5 @@
     <script src="~/js/menu.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>
