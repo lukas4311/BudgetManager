@@ -160,28 +160,28 @@
   #navMenu .menu-toggler.checked:after {
     transform: rotate(-45deg); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item {
+#navMenu .openedMenuItems .menu-item {
   opacity: 1; }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(1) {
+#navMenu .openedMenuItems .menu-item:nth-child(1) {
   transform: rotate(0deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(2) {
+#navMenu .openedMenuItems .menu-item:nth-child(2) {
   transform: rotate(60deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(3) {
+#navMenu .openedMenuItems .menu-item:nth-child(3) {
   transform: rotate(120deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(4) {
+#navMenu .openedMenuItems .menu-item:nth-child(4) {
   transform: rotate(180deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(5) {
+#navMenu .openedMenuItems .menu-item:nth-child(5) {
   transform: rotate(240deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item:nth-child(6) {
+#navMenu .openedMenuItems .menu-item:nth-child(6) {
   transform: rotate(300deg) translateX(-90px); }
 
-#navMenu .menu-toggler.checked ~ ul .menu-item a {
+#navMenu .openedMenuItems .menu-item a {
   pointer-events: auto; }
 
 #navMenu .menu-item:nth-child(1) a {

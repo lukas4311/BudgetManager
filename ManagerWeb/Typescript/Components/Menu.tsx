@@ -27,7 +27,7 @@ class Menu extends React.Component<{}, MenuState> {
                 <a className="menuTogglerParent" onClick={this.menuClick}>
                     <span className={"menu-toggler " + (this.state.isClosed ? "" : "checked") } id="menu-toggler"></span>
                 </a>
-                <ul>
+                <ul className={(this.state.isClosed ? "" : "openedMenuItems")}>
                     <li className="menu-item">
                         <a className="fa fa-facebook" href="https://www.facebook.com/" target="_blank"></a>
                     </li>

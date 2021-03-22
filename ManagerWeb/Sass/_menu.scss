@@ -129,7 +129,7 @@
         }
     }
 
-    .menu-toggler.checked ~ ul {
+    .openedMenuItems {
         .menu-item {
             opacity: 1;
         }

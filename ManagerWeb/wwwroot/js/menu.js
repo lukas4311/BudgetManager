@@ -117,7 +117,7 @@ class Menu extends react_1.default.Component {
         return (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("a", { className: "menuTogglerParent", onClick: this.menuClick },
                 react_1.default.createElement("span", { className: "menu-toggler " + (this.state.isClosed ? "" : "checked"), id: "menu-toggler" })),
-            react_1.default.createElement("ul", null,
+            react_1.default.createElement("ul", { className: (this.state.isClosed ? "" : "openedMenuItems") },
                 react_1.default.createElement("li", { className: "menu-item" },
                     react_1.default.createElement("a", { className: "fa fa-facebook", href: "https://www.facebook.com/", target: "_blank" })),
                 react_1.default.createElement("li", { className: "menu-item" },
