@@ -1,6 +1,10 @@
 #navMenu {
     // helpers
 
+    position: absolute;
+    right: 20px;
+    top: 20px;
+
     $toggler-size: 30px;
     $toggler-color: white;
     $toggler-transition: transform 2s, top 2s;
@@ -25,6 +29,14 @@
         margin: auto;
     }
 
+    @mixin vertical-center {
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
     @mixin line {
         @include size($toggler-size, $toggler-size/10);
         display: block;
@@ -34,16 +46,13 @@
         transition: $toggler-transition;
     }
 
-    // .menu {
-    //     position: absolute;
-    //     top: 45px;
-    //     right: 60px;
-    // }
-
     .menu-toggler {
         @include absolute-center;
         @include size($toggler-size);
+        @include line;
+
         z-index: 2;
+        display: block;
         cursor: pointer;
         transition: 1s !important;
 
@@ -52,13 +61,6 @@
         &:hover:after {
             background: $toggler-color;
         }
-    }
-
-    .menu-toggler {
-        @include line;
-        @include absolute-center;
-        // position: relative !important;
-        display: block;
 
         &:before,
         &:after {
@@ -152,8 +154,9 @@
     }
 
     .menu-item {
-        @include absolute-center;
+        @include vertical-center;
         @include size($item-size);
+        right: -15px;
         display: block;
         opacity: 0;
         transition: $item-transition;
