@@ -23,7 +23,7 @@ class Menu extends React.Component<{}, MenuState> {
     public render() {
 
         return (
-            <>
+            <div className={"mainWrapper"+ (this.state.isClosed ? "" : " opened")}>
                 <a className="menuTogglerParent" onClick={this.menuClick}>
                     <span className={"menu-toggler " + (this.state.isClosed ? "" : "checked") } id="menu-toggler"></span>
                 </a>
@@ -47,7 +47,7 @@ class Menu extends React.Component<{}, MenuState> {
                         <a className="fa fa-github" href="https://github.com/" target="_blank"></a>
                     </li>
                 </ul>
-            </>
+            </div>
         );
     }
 }
