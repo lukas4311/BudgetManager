@@ -182,7 +182,7 @@
         text-decoration: none;
         font-size: $item-size/2;
         pointer-events: none;
-        transition: 0.6s;
+        transition: .6s;
 
         &:hover {
             box-shadow: 0 0 0 $item-size/40 rgba(white, 0.3);

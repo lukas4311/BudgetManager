@@ -1,15 +1,36 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { IconsData } from "../Enums/IconsEnum";
 
 interface MenuState {
     isClosed: boolean;
 }
 
+class MenuItemModel {
+    icon: JSX.Element;
+    linkUri: string;
+}
+
 class Menu extends React.Component<{}, MenuState> {
+    private menuItems: MenuItemModel[];
+
     constructor(props: {}) {
         super(props);
         this.menuClick = this.menuClick.bind(this);
         this.state = { isClosed: true };
+        this.renderMenuItems();
+    }
+
+    renderMenuItems() {
+        let icons = new IconsData();
+        this.menuItems = [
+            { icon: icons.home, linkUri: "" },
+            { icon: icons.payments, linkUri: "payments" },
+            { icon: icons.crypto, linkUri: "crypto-overview" },
+            { icon: icons.budget, linkUri: "budget" },
+            { icon: icons.debts, linkUri: "debts" },
+            { icon: icons.statistics, linkUri: "stats" },
+        ];
     }
 
     menuClick() {
@@ -20,32 +41,26 @@ class Menu extends React.Component<{}, MenuState> {
         window.location.href = '/' + link;
     }
 
-    public render() {
-
+    private renderMenuItem = (item: MenuItemModel): JSX.Element => {
         return (
-            <div className={"mainWrapper"+ (this.state.isClosed ? "" : " opened")}>
+            <li className="menu-item" key={item.linkUri}>
+                <a className="block cursor-pointer flex" onClick={_ => this.redirectToPage(item.linkUri)}>
+                    <span className="w-10 m-auto">
+                        {item.icon}
+                    </span>
+                </a>
+            </li>
+        );
+    }
+
+    public render() {
+        return (
+            <div className={"mainWrapper" + (this.state.isClosed ? "" : " opened")}>
                 <a className="menuTogglerParent" onClick={this.menuClick}>
-                    <span className={"menu-toggler " + (this.state.isClosed ? "" : "checked") } id="menu-toggler"></span>
+                    <span className={"menu-toggler " + (this.state.isClosed ? "" : "checked")} id="menu-toggler"></span>
                 </a>
                 <ul className={(this.state.isClosed ? "" : "openedMenuItems")}>
-                    <li className="menu-item">
-                        <a className="fa fa-facebook" href="https://www.facebook.com/" target="_blank"></a>
-                    </li>
-                    <li className="menu-item">
-                        <a className="fa fa-google" href="https://www.google.com/" target="_blank"></a>
-                    </li>
-                    <li className="menu-item">
-                        <a className="fa fa-dribbble" href="https://dribbble.com/" target="_blank"></a>
-                    </li>
-                    <li className="menu-item">
-                        <a className="fa fa-codepen" href="https://codepen.io/" target="_blank"></a>
-                    </li>
-                    <li className="menu-item">
-                        <a className="fa fa-linkedin" href="https://www.linkedin.com/" target="_blank"></a>
-                    </li>
-                    <li className="menu-item">
-                        <a className="fa fa-github" href="https://github.com/" target="_blank"></a>
-                    </li>
+                    {this.menuItems.map(m => this.renderMenuItem(m))}
                 </ul>
             </div>
         );
