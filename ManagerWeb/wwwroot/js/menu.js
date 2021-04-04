@@ -135,6 +135,7 @@ class Menu extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { className: "mainWrapper" + (this.state.isClosed ? "" : " opened") },
+            react_1.default.createElement("div", { className: "courtain" + (this.state.isClosed ? "" : " opened") }),
             react_1.default.createElement("a", { className: "menuTogglerParent", onClick: this.menuClick },
                 react_1.default.createElement("span", { className: "menu-toggler " + (this.state.isClosed ? "" : "checked"), id: "menu-toggler" })),
             react_1.default.createElement("ul", { className: (this.state.isClosed ? "" : "openedMenuItems") }, this.menuItems.map(m => this.renderMenuItem(m)))));

@@ -56,6 +56,7 @@ class Menu extends React.Component<{}, MenuState> {
     public render() {
         return (
             <div className={"mainWrapper" + (this.state.isClosed ? "" : " opened")}>
+                <div className={"courtain" + (this.state.isClosed ? "" : " opened")}></div>
                 <a className="menuTogglerParent" onClick={this.menuClick}>
                     <span className={"menu-toggler " + (this.state.isClosed ? "" : "checked")} id="menu-toggler"></span>
                 </a>

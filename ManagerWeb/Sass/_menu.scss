@@ -1,18 +1,6 @@
 #navMenu {
     $menuMoveTimig: 0.7s;
 
-    .mainWrapper {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        transition: $menuMoveTimig linear;
-    }
-
-    .mainWrapper.opened{
-        right: 140px;
-        top: 140px;
-    }
-
     $toggler-size: 30px;
     $toggler-color: white;
     $toggler-transition: transform 1s, top 1s;
@@ -53,6 +41,39 @@
         background: rgba($toggler-color, 0.7);
         transition: $toggler-transition;
     }
+
+    .mainWrapper {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        transition: $menuMoveTimig linear;
+    }
+
+    @media (max-width: 1024px) {
+        .mainWrapper.opened{
+            right: 50%;
+            top: 50%;
+        }
+        .courtain.opened{
+            position: fixed;
+            top: 0;
+            left:0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(black, 0.9)
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .mainWrapper.opened{
+            right: 140px;
+        top: 140px;
+        }
+
+        .courtain{
+            display: none;
+        }
+      }
 
     .menu-toggler {
         @include absolute-center;
@@ -169,6 +190,12 @@
         opacity: 0;
         transition: $item-transition ($menuMoveTimig - 0.2s);
     }
+
+    @media (max-width: 1024px) {
+        .menu-item svg{
+            fill: #e03d15ff;
+        }
+      }
 
     .menu-item a {
         display: block;
