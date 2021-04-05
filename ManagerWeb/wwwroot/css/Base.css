@@ -85,6 +85,9 @@
   top: 20px;
   transition: 0.7s linear; }
 
+#navMenu .courtain {
+  z-index: 5; }
+
 @media (max-width: 1024px) {
   #navMenu .mainWrapper.opened {
     right: 50%;
@@ -149,7 +152,8 @@
   width: 30px;
   display: block;
   position: relative;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 15; }
 
 #navMenu .menuTogglerParent:hover .menu-toggler {
   background: white; }
@@ -229,7 +233,8 @@
   right: -15px;
   display: block;
   opacity: 0;
-  transition: 0.5s 0.5s; }
+  transition: 0.5s 0.5s;
+  z-index: 10; }
 
 @media (max-width: 1024px) {
   #navMenu .menu-item svg {

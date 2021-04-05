@@ -49,6 +49,10 @@
         transition: $menuMoveTimig linear;
     }
 
+    .courtain{
+        z-index:5;
+    }
+
     @media (max-width: 1024px) {
         .mainWrapper.opened{
             right: 50%;
@@ -60,7 +64,7 @@
             left:0;
             width: 100%;
             height: 100%;
-            background-color: rgba(black, 0.9)
+            background-color: rgba(black, 0.9);
         }
       }
 
@@ -115,6 +119,7 @@
         display: block;
         position: relative;
         cursor: pointer;
+        z-index: 15;
     }
 
     .menuTogglerParent:hover .menu-toggler {
@@ -189,6 +194,7 @@
         display: block;
         opacity: 0;
         transition: $item-transition ($menuMoveTimig - 0.2s);
+        z-index: 10;
     }
 
     @media (max-width: 1024px) {
