@@ -2173,6 +2173,57 @@ exports.BaseList = BaseList;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Budget/ActualBudgetCard.tsx":
+/*!***********************************************************!*\
+  !*** ./Typescript/Components/Budget/ActualBudgetCard.tsx ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ActualBudgetCardProps = void 0;
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class ActualBudgetCardProps {
+}
+exports.ActualBudgetCardProps = ActualBudgetCardProps;
+function ActualBudgetCard(props) {
+    return (React.createElement("div", { className: "w-full bg-blueSapphire p-2 mt-2 budgetCard" },
+        React.createElement("div", { className: "flex" },
+            React.createElement("span", { className: "text-xs font-semibold" }, moment_1.default(props.from).format("YYYY.MM.DD")),
+            React.createElement("span", { className: "text-sm ml-auto" }, props.limit)),
+        React.createElement("div", { className: "w-full h-4 relative mt-2 bg-battleshipGrey shadow-lg mb-4" },
+            React.createElement("div", { className: "w-1/5 bg-vermilion h-full" }))));
+}
+exports.default = ActualBudgetCard;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Budget/BudgetComponent.tsx":
 /*!**********************************************************!*\
   !*** ./Typescript/Components/Budget/BudgetComponent.tsx ***!
@@ -2219,6 +2270,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 class BudgetComponent extends React.Component {
     constructor(props) {
@@ -2263,6 +2315,11 @@ class BudgetComponent extends React.Component {
                 React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.amount),
                 React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.name)));
         };
+        this.renderCard = (budgetModel) => {
+            let actualProps = { from: budgetModel.dateFrom, limit: budgetModel.amount, name: budgetModel.name, spent: 20 };
+            return (React.createElement("div", { className: "w-2/5 my-2" },
+                React.createElement(ActualBudgetCard_1.default, Object.assign({}, actualProps))));
+        };
         this.renderHeader = () => {
             return (React.createElement(React.Fragment, null,
                 React.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Od"),
@@ -2289,6 +2346,9 @@ class BudgetComponent extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, deleteItemHandler: this.deleteItem }),
+            React.createElement("div", { className: "flex flex-col mt-6" },
+                React.createElement("h2", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
+                React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
             React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
                 React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
                 React.createElement(core_1.DialogContent, null,

@@ -259,6 +259,12 @@
     background: rgba(255, 255, 255, 0.3);
     font-size: 33.33333px; }
 
+.budgetCard:hover {
+  transform: scale(1.1); }
+
+.budgetCard {
+  transition: 0.3s; }
+
 *:focus {
   outline: none !important; }
 

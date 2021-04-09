@@ -4,6 +4,7 @@ import * as React from 'react'
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
 import { Modal } from '../../Modal';
 import { BaseList } from '../BaseList';
+import ActualBudgetCard, { ActualBudgetCardProps } from './ActualBudgetCard';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
 import { BudgetForm2, BudgetFormModel } from './BudgetForm';
@@ -82,6 +83,15 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         );
     }
 
+    private renderCard = (budgetModel: BudgetViewModel): JSX.Element => {
+        let actualProps: ActualBudgetCardProps = { from: budgetModel.dateFrom, limit: budgetModel.amount, name: budgetModel.name, spent: 20 };
+        return (
+            <div className="w-2/5 my-2">
+                <ActualBudgetCard {...actualProps}></ActualBudgetCard>
+            </div>
+        );
+    }
+
     private renderHeader = (): JSX.Element => {
         return (
             <>
@@ -99,6 +109,12 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                 <BaseList<BudgetViewModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
                     header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
                 </BaseList>
+                <div className="flex flex-col mt-6">
+                    <h2 className="ml-6 text-xl">Rozpočty</h2>
+                    <div className="flex flex-row flex-wrap justify-around">
+                        {this.state.budgets.map(b => this.renderCard(b))}
+                    </div>
+                </div>
                 <Dialog open={this.state.showBudgetFormModal} onClose={this.hideBudgetModal} aria-labelledby="Detail rozpočtu"
                     maxWidth="sm" fullWidth={true}>
                     <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
