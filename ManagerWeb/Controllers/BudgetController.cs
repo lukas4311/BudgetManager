@@ -28,6 +28,12 @@ namespace ManagerWeb.Controllers
             return Ok(this.budgetService.Get(id));
         }
 
+        [HttpGet("getActual")]
+        public ActionResult<IEnumerable<BudgetModel>> GetActual()
+        {
+            return Ok(this.budgetService.GetActual());
+        }
+
         [HttpPost("add")]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {

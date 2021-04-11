@@ -1,4 +1,5 @@
 ﻿using ManagerWeb.Models.DTOs;
+using System;
 using System.Collections.Generic;
 
 namespace ManagerWeb.Services
@@ -10,5 +11,8 @@ namespace ManagerWeb.Services
         BudgetModel Get(int id);
         void Update(BudgetModel budgetModel);
         void Delete(int id);
+        IEnumerable<BudgetModel> GetActual();
+
+        IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate = DateTime.MaxValue);
     }
 }

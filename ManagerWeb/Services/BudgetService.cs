@@ -3,6 +3,7 @@ using ManagerWeb.Extensions;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -31,6 +32,18 @@ namespace ManagerWeb.Services
         public BudgetModel Get(int id)
         {
             return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
+        }
+
+        public IEnumerable<BudgetModel> GetActual()
+        {
+            int userId = this.GetUserId();
+            return this.budgetRepository.FindByCondition(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
+        }
+
+        public IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate)
+        {
+            toDate ??= DateTime.MaxValue;
+            return this.budgetRepository.FindByCondition(b => b.DateFrom >= fromDate && b.DateTo <= toDate).Select(b => b.MapToViewModel());
         }
 
         public void Add(BudgetModel budgetModel)
@@ -71,5 +84,7 @@ namespace ManagerWeb.Services
             string loggedUserLogin = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
             return this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
         }
+
+        private bool BudgetIsActual(Budget budget) => budget.DateFrom < DateTime.Now && budget.DateTo > DateTime.Now;
     }
 }
