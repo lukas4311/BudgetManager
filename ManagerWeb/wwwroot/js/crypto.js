@@ -2095,6 +2095,84 @@ exports.TextApiResponse = TextApiResponse;
 
 /***/ }),
 
+/***/ "./Typescript/Components/BaseList.tsx":
+/*!********************************************!*\
+  !*** ./Typescript/Components/BaseList.tsx ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseList = void 0;
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const IconsEnum_1 = __webpack_require__(/*! ../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const BaseList = (props) => {
+    const [open, setOpen] = React.useState(false);
+    const [id, setId] = React.useState(undefined);
+    const handleClickOpen = (id) => {
+        setOpen(true);
+        setId(id);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const onDeleteClick = (e, id) => {
+        e.stopPropagation();
+        handleClickOpen(id);
+    };
+    const renderBinIcon = () => {
+        let iconsData = new IconsEnum_1.IconsData();
+        return iconsData.bin;
+    };
+    return (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: "flex w-ful flex-col" },
+            React.createElement("div", { className: "py-4 flex w-full" },
+                props.title != undefined ? (React.createElement("h1", { className: "ml-6 text-xl" }, props.title)) : React.createElement(React.Fragment, null),
+                props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: props.addItemHandler },
+                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
+            React.createElement("div", { className: "text-center flex" },
+                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.header)),
+            React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
+                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.template(d)),
+                React.createElement("div", { className: "w-2/10 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+        React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
+            React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
+            React.createElement(core_1.DialogActions, null,
+                React.createElement(core_1.Button, { onClick: handleClose, variant: "contained", color: "primary" }, "Ne"),
+                React.createElement(core_1.Button, { onClick: (_) => {
+                        props.deleteItemHandler(id);
+                        handleClose();
+                    }, variant: "contained", color: "primary", autoFocus: true }, "Ano")))));
+};
+exports.BaseList = BaseList;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Charts/PieChart.tsx":
 /*!***************************************************!*\
   !*** ./Typescript/Components/Charts/PieChart.tsx ***!
@@ -2250,14 +2328,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CryptoTradeFormModel = exports.CryptoTradeForm = void 0;
+exports.CryptoTradeViewModel = exports.CryptoTradeForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-class CryptoTradeFormModel {
+class CryptoTradeViewModel {
 }
-exports.CryptoTradeFormModel = CryptoTradeFormModel;
+exports.CryptoTradeViewModel = CryptoTradeViewModel;
 const CryptoTradeForm = (props) => {
     const { register, handleSubmit } = react_hook_form_1.useForm({ defaultValues: props });
     const onSubmit = (data) => {
@@ -2304,6 +2382,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 class CryptoTradesState {
 }
 const theme = styles_1.createMuiTheme({
@@ -2315,9 +2394,10 @@ class CryptoTrades extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.saveTrade = (data) => {
+            console.log(`Saved ${data}`);
         };
         this.handleClickOpen = (tradeHistory) => {
-            let model = new CryptoTradeForm_1.CryptoTradeFormModel();
+            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
             model.cryptoTicker = tradeHistory.cryptoTicker;
             model.cryptoTickerId = tradeHistory.cryptoTickerId;
             model.currencySymbol = tradeHistory.currencySymbol;
@@ -2332,6 +2412,33 @@ class CryptoTrades extends react_1.default.Component {
         this.handleClose = () => {
             this.setState({ openedForm: false });
         };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")));
+        };
+        this.renderTemplate = (p) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, moment_1.default(p.tradeTimeStamp).format('DD.MM.YYYY')),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol)));
+        };
+        this.addNewItem = () => {
+            // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+        };
+        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
+            // let budgetFormModel: BudgetFormModel = {
+            //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
+            //     to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
+            // };
+            // this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
+        });
         this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: undefined, openedForm: false, selectedTrade: undefined };
     }
@@ -2340,7 +2447,12 @@ class CryptoTrades extends react_1.default.Component {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            let trades = yield this.cryptoInterface.cryptoGetAllGet();
+            let tradesData = yield this.cryptoInterface.cryptoGetAllGet();
+            let trades = tradesData.map(t => ({
+                cryptoTicker: t.cryptoTicker, cryptoTickerId: t.cryptoTickerId, currencySymbol: t.currencySymbol,
+                currencySymbolId: t.currencySymbolId, id: t.id, tradeSize: t.tradeSize, tradeTimeStamp: moment_1.default(t.tradeTimeStamp).format("YYYY-MM-DD"),
+                tradeValue: t.tradeValue, onSave: this.saveTrade
+            }));
             trades.sort((a, b) => moment_1.default(a.tradeTimeStamp).format("YYYY-MM-DD") > moment_1.default(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
             this.setState({ trades });
         });
@@ -2348,6 +2460,7 @@ class CryptoTrades extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                react_1.default.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.trades, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit }),
                 react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
                 this.state.trades != undefined ?
                     react_1.default.createElement("div", { className: "pb-10 max-h-96 overflow-x-auto" },
@@ -2408,6 +2521,302 @@ class CryptoComponent extends react_1.default.Component {
 }
 react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
     react_1.default.createElement(CryptoComponent, null)), document.getElementById('overview'));
+
+
+/***/ }),
+
+/***/ "./Typescript/Enums/IconsEnum.tsx":
+/*!****************************************!*\
+  !*** ./Typescript/Enums/IconsEnum.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.IconsData = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class IconsData {
+    constructor() {
+        this.bill = react_1.default.createElement("svg", { enableBackground: "new 0 0 480 480", viewBox: "0 0 480 480", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("path", { d: "m215 164c0 57.897 47.103 105 105 105s105-47.103 105-105-47.103-105-105-105-105 47.103-105 105zm194 0c0 49.075-39.925 89-89 89s-89-39.925-89-89 39.925-89 89-89 89 39.925 89 89zm-89-54c4.418 0 8 3.582 8 8v3.376c9.311 3.303 16 12.195 16 22.624 0 4.418-3.582 8-8 8s-8-3.582-8-8c0-4.411-3.589-8-8-8s-8 3.589-8 8v3.237c0 3.518 2.256 6.586 5.614 7.636l9.544 2.982c10.074 3.149 16.842 12.355 16.842 22.908v3.237c0 11.519-8.159 21.166-19 23.473v2.527c0 4.418-3.582 8-8 8s-8-3.582-8-8v-4.68c-7.714-3.996-13-12.05-13-21.32 0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.411 3.589 8 8 8s8-3.589 8-8v-3.237c0-3.518-2.256-6.586-5.614-7.636l-9.544-2.982c-10.074-3.149-16.842-12.355-16.842-22.908v-3.237c0-10.429 6.689-19.321 16-22.624v-3.376c0-4.418 3.582-8 8-8zm130 212v102c0 30.879-25.122 56-56 56h-308c-30.878 0-56-25.121-56-56v-392c0-17.645 14.355-32 32-32h260c17.645 0 32 14.355 32 32 0 4.418-3.582 8-8 8s-8-3.582-8-8c0-8.822-7.178-16-16-16h-260c-8.822 0-16 7.178-16 16v392c0 22.056 17.944 40 40 40h268.862c-10.395-10.172-16.862-24.342-16.862-40v-125c0-4.418 3.582-8 8-8s8 3.582 8 8v125c0 22.056 17.944 40 40 40s40-17.944 40-40v-102c0-8.822-7.178-16-16-16h-34c-4.418 0-8-3.582-8-8s3.582-8 8-8h34c17.645 0 32 14.355 32 32zm-350-107c0-4.418 3.582-8 8-8h68c4.418 0 8 3.582 8 8s-3.582 8-8 8h-68c-4.418 0-8-3.582-8-8zm0-90c0-4.418 3.582-8 8-8h68c4.418 0 8 3.582 8 8s-3.582 8-8 8h-68c-4.418 0-8-3.582-8-8zm184 180c0 4.418-3.582 8-8 8h-168c-4.418 0-8-3.582-8-8s3.582-8 8-8h168c4.418 0 8 3.582 8 8zm0 84c0 4.418-3.582 8-8 8h-168c-4.418 0-8-3.582-8-8s3.582-8 8-8h168c4.418 0 8 3.582 8 8z" }));
+        this.bus = react_1.default.createElement("svg", { viewBox: "0 -15 512.001 512", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("path", { d: "m496.449219 90.339844h-9.457031c-.269532-14.960938-12.515626-27.050782-27.539063-27.050782h-22.886719v-35.734374c0-15.191407-12.363281-27.554688-27.554687-27.554688h-306.023438c-15.195312 0-27.554687 12.363281-27.554687 27.554688v35.734374h-22.886719c-15.023437 0-27.269531 12.089844-27.539063 27.050782h-9.457031c-8.574219 0-15.550781 6.976562-15.550781 15.550781v80.109375c0 8.574219 6.976562 15.550781 15.550781 15.550781h33.917969c8.574219 0 15.550781-6.976562 15.550781-15.550781v-80.109375c0-8.574219-6.976562-15.550781-15.550781-15.550781h-9.417969c.265625-6.671875 5.761719-12.023438 12.496094-12.023438h22.886719v278.792969c0 4.152344 3.363281 7.515625 7.515625 7.515625 4.148437 0 7.515625-3.363281 7.515625-7.515625v-61.972656c3.757812 1.929687 8.015625 3.023437 12.523437 3.023437h306.023438c4.507812 0 8.765625-1.09375 12.523437-3.023437v121.324219c0 6.90625-5.617187 12.523437-12.523437 12.523437h-306.023438c-6.90625 0-12.523437-5.617187-12.523437-12.523437v-24.617188c0-4.148438-3.367188-7.515625-7.515625-7.515625-4.152344 0-7.515625 3.367187-7.515625 7.515625v24.617188c0 15.191406 12.359375 27.550781 27.554687 27.550781h7.816407v17.46875c0 11.601562 9.4375 21.042969 21.042968 21.042969h33.78125c11.601563 0 21.039063-9.441407 21.039063-21.042969v-17.46875h138.664062v17.46875c0 11.601562 9.4375 21.042969 21.039063 21.042969h33.78125c11.605468 0 21.042968-9.441407 21.042968-21.042969v-17.46875h7.816407c15.195312 0 27.554687-12.359375 27.554687-27.550781v-338.144532h22.886719c6.734375 0 12.230469 5.351563 12.5 12.023438h-9.417969c-8.574218 0-15.554687 6.976562-15.554687 15.550781v80.109375c0 8.574219 6.980469 15.550781 15.554687 15.550781h33.914063c8.574219 0 15.550781-6.976562 15.550781-15.550781v-80.109375c0-8.574219-6.976562-15.550781-15.550781-15.550781zm-446.980469 15.027344c.289062 0 .519531.234374.519531.523437v80.109375c0 .289062-.234375.523438-.519531.523438h-33.917969c-.289062 0-.523437-.234376-.523437-.523438v-80.109375c0-.289063.234375-.523437.523437-.523437zm122.171875 356.113281c0 3.3125-2.699219 6.011719-6.011719 6.011719h-33.78125c-3.316406 0-6.011718-2.699219-6.011718-6.011719v-17.46875h45.800781v17.46875zm214.523437 0c0 3.3125-2.695312 6.011719-6.011718 6.011719h-33.78125c-3.3125 0-6.011719-2.699219-6.011719-6.011719v-17.46875h45.804687zm35.371094-371.726563h-303.472656c-4.148438 0-7.511719 3.363282-7.511719 7.515625 0 4.148438 3.363281 7.515625 7.511719 7.515625h303.476562v142.351563h-49.644531c-4.152343 0-7.515625 3.363281-7.515625 7.515625s3.363282 7.515625 7.515625 7.515625h49.644531v8.441406c0 6.902344-5.617187 12.523437-12.523437 12.523437h-306.027344c-6.90625 0-12.523437-5.621093-12.523437-12.523437v-8.441406h246.359375c4.152343 0 7.515625-3.363281 7.515625-7.515625s-3.363282-7.515625-7.515625-7.515625h-73.910157l70.898438-59.265625c3.175781-2.65625 3.597656-7.386719.941406-10.566406-2.65625-3.175782-7.386718-3.601563-10.5625-.941407l-84.664062 70.773438h-32.269532l70.894532-59.265625c3.179687-2.65625 3.601562-7.386719.945312-10.5625-2.65625-3.179688-7.386718-3.605469-10.566406-.945313l-84.660156 70.777344h-93.40625v-181.433594h331.070312zm0-39.078125h-331.070312v-23.121093c0-6.90625 5.617187-12.523438 12.523437-12.523438h306.023438c6.90625 0 12.523437 5.617188 12.523437 12.523438zm75.4375 135.324219c0 .289062-.234375.523438-.523437.523438h-33.914063c-.289062 0-.523437-.234376-.523437-.523438v-80.109375c0-.289063.234375-.523437.523437-.523437h33.914063c.289062 0 .523437.234374.523437.523437zm0 0" }),
+            react_1.default.createElement("path", { d: "m185.613281 377.316406c6.90625 0 12.523438-5.621094 12.523438-12.527344v-12.023437c0-16.296875-13.257813-29.554687-29.558594-29.554687h-46.089844c-6.90625 0-12.523437 5.617187-12.523437 12.523437v12.023437c0 16.296876 13.257812 29.558594 29.558594 29.558594zm-60.621093-29.558594v-9.519531h43.585937c8.011719 0 14.527344 6.519531 14.527344 14.527344v9.519531h-43.582031c-8.011719 0-14.53125-6.519531-14.53125-14.527344zm0 0" }),
+            react_1.default.createElement("path", { d: "m372.476562 377.316406c16.300782 0 29.558594-13.261718 29.558594-29.558594v-12.023437c0-6.90625-5.617187-12.523437-12.523437-12.523437h-46.089844c-16.296875 0-29.558594 13.257812-29.558594 29.554687v12.023437c0 6.90625 5.617188 12.527344 12.523438 12.527344zm-43.585937-24.550781c0-8.011719 6.519531-14.527344 14.53125-14.527344h43.582031v9.519531c0 8.011719-6.515625 14.527344-14.527344 14.527344h-43.585937zm0 0" }),
+            react_1.default.createElement("path", { d: "m289.171875 417.726562c5.308594 0 9.625-4.316406 9.625-9.625v-19.824218c0-5.308594-4.316406-9.625-9.625-9.625h-66.34375c-5.308594 0-9.625 4.316406-9.625 9.625v19.824218c0 5.308594 4.316406 9.625 9.625 9.625zm-60.941406-24.046874h55.539062v9.019531h-55.539062zm0 0" }));
+        this.car = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 468 468" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("g", null,
+                    react_1.default.createElement("path", { d: "M450.1,187.5l-10.2-10.8l-35.8-96.5C398,63.9,382.4,53.1,365,53H109.3c-17.4,0-33,10.9-39.1,27.2l-35.3,95.3l-14.7,13.6 C7.4,200,0,216,0,232.8v140.6c0.1,23,18.8,41.6,41.8,41.6h26.4c23,0,41.7-18.6,41.8-41.6V353h248v20.4c0.1,23,18.8,41.6,41.8,41.6 h26.4c23,0,41.7-18.6,41.8-41.6V229.1C467.9,213.4,461.5,198.4,450.1,187.5z M89,87c3.2-8.5,11.3-14,20.3-14h255.8 c9,0,17.1,5.6,20.3,14l31.2,84h-23.3c-5.5-37.5-40.4-63.4-77.9-57.8c-29.9,4.4-53.4,27.9-57.8,57.8H57.8L89,87z M372.9,171h-95.1 c5.5-26.3,31.3-43.1,57.6-37.6C354.2,137.4,368.9,152.1,372.9,171z M90,373.4c-0.1,12-9.8,21.6-21.8,21.6H41.8 c-12,0-21.7-9.6-21.8-21.6v-26.2c6,3.9,13.9,5.8,21.8,5.8H90V373.4z M448,373.4c-0.1,12-9.8,21.6-21.8,21.6h-26.4 c-12,0-21.7-9.7-21.8-21.6V353h48.2c7.9,0,15.8-1.9,21.8-5.8V373.4z M426.2,333H41.8c-11.9,0.1-21.7-9.4-21.8-21.4v-78.8 c0-11,4.9-21.5,13.3-28.6c0.1-0.1,0.3-0.3,0.4-0.4L47.3,191H426l9.6,10.3c0.1,0.2,0.4,0.3,0.5,0.5c7.5,7.1,11.8,17,11.8,27.3v82.5 h0.1C447.9,323.5,438.1,333.1,426.2,333z" }))),
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("g", null,
+                    react_1.default.createElement("path", { d: "M132,231H57c-5.5,0-10,4.5-10,10v52c0,5.5,4.5,10,10,10h75c5.5,0,10-4.5,10-10v-52C142,235.5,137.5,231,132,231z M122,283 H67v-32h55V283z" }))),
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("g", null,
+                    react_1.default.createElement("path", { d: "M411,231h-75c-5.5,0-10,4.5-10,10v52c0,5.5,4.5,10,10,10h75c5.5,0,10-4.5,10-10v-52C421,235.5,416.5,231,411,231z M401,283h-55v-32h55V283z" }))),
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("g", null,
+                    react_1.default.createElement("path", { d: "M282.3,273h-96.6c-5.5,0-10,4.5-10,10s4.5,10,10,10h96.6c5.5,0,10-4.5,10-10S287.8,273,282.3,273z" }))),
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("g", null,
+                    react_1.default.createElement("path", { d: "M282.3,242h-96.6c-5.5,0-10,4.5-10,10s4.5,10,10,10h96.6c5.5,0,10-4.5,10-10S287.8,242,282.3,242z" }))));
+        this.cash = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 537.671 537.671" },
+            react_1.default.createElement("path", { d: "M259.698,193.234c0,4.591,1.972,11.353,19.023,17.036c7.242,2.414,29.28,9.76,29.28,31.267 c0,14.869-10.308,27.369-24.151,30.747v3.213c0,4.143-3.358,7.5-7.5,7.5s-7.5-3.357-7.5-7.5v-3.213 c-13.844-3.378-24.152-15.878-24.152-30.747c0-4.143,3.358-7.5,7.5-7.5s7.5,3.357,7.5,7.5c0,9.183,7.47,16.652,16.652,16.652 s16.651-7.47,16.651-16.652c0-5.289-2.26-11.449-19.023-17.036c-19.429-6.477-29.28-16.996-29.28-31.267 c0-14.868,10.308-27.368,24.152-30.746v-3.213c0-4.143,3.358-7.5,7.5-7.5s7.5,3.357,7.5,7.5v3.213 c13.843,3.378,24.151,15.878,24.151,30.746c0,4.143-3.358,7.5-7.5,7.5s-7.5-3.357-7.5-7.5c0-9.182-7.47-16.651-16.651-16.651 S259.698,184.052,259.698,193.234z M537.671,86.575v261.621c0,4.143-3.358,7.5-7.5,7.5h-7.529v42.903 c0,2.118-0.896,4.138-2.465,5.56c-1.386,1.254-3.183,1.94-5.034,1.94c-0.247,0-0.494-0.012-0.742-0.037l-21.816-2.166v47.2 c0,2.267-1.025,4.411-2.788,5.835c-1.346,1.087-3.013,1.665-4.712,1.665c-0.526,0-1.056-0.056-1.58-0.168L6.004,355.546 c-0.013-0.003-0.025-0.005-0.038-0.008l-0.045-0.01c-0.113-0.024-0.221-0.058-0.332-0.087c-0.085-0.022-0.172-0.041-0.256-0.066 c-0.103-0.031-0.203-0.069-0.305-0.104c-0.037-0.013-0.075-0.026-0.112-0.04c-0.075-0.027-0.151-0.05-0.225-0.08 c-0.018-0.007-0.035-0.015-0.053-0.022c-0.091-0.038-0.18-0.082-0.269-0.123c-0.094-0.043-0.189-0.082-0.281-0.129 c-0.023-0.012-0.045-0.026-0.068-0.039c-0.003-0.001-0.006-0.003-0.01-0.005c-0.085-0.045-0.167-0.093-0.25-0.141 c-0.083-0.048-0.167-0.092-0.247-0.143c-0.038-0.024-0.074-0.051-0.112-0.076c-0.073-0.047-0.144-0.098-0.215-0.147 c-0.071-0.05-0.144-0.099-0.213-0.152c-0.048-0.036-0.094-0.075-0.141-0.113c-0.063-0.05-0.125-0.101-0.186-0.153 c-0.059-0.051-0.119-0.101-0.177-0.153c-0.056-0.05-0.109-0.104-0.163-0.156c-0.054-0.052-0.108-0.102-0.16-0.155 c-0.047-0.049-0.093-0.098-0.139-0.147c-0.061-0.066-0.12-0.135-0.179-0.204c-0.046-0.053-0.094-0.103-0.138-0.157 c-0.036-0.044-0.069-0.09-0.104-0.135c-0.06-0.077-0.117-0.156-0.174-0.235c-0.039-0.055-0.082-0.106-0.12-0.162 c-0.03-0.045-0.056-0.092-0.086-0.138c-0.054-0.083-0.105-0.167-0.156-0.253c-0.036-0.061-0.075-0.121-0.109-0.184 c-0.031-0.057-0.06-0.114-0.09-0.171c-0.039-0.074-0.076-0.149-0.112-0.225c-0.034-0.07-0.067-0.141-0.099-0.212 c-0.03-0.067-0.059-0.135-0.087-0.203c-0.026-0.063-0.05-0.126-0.074-0.19c-0.031-0.083-0.059-0.166-0.087-0.25 c-0.026-0.076-0.052-0.151-0.075-0.229c-0.015-0.05-0.029-0.1-0.043-0.15c-0.028-0.099-0.05-0.2-0.073-0.301 c-0.019-0.081-0.041-0.161-0.057-0.243c-0.007-0.035-0.013-0.071-0.02-0.106c-0.023-0.127-0.039-0.257-0.055-0.387 c-0.01-0.076-0.024-0.15-0.032-0.227c-0.002-0.019-0.003-0.037-0.005-0.055C0.012,348.655,0,348.427,0,348.196V86.575 c0-4.143,3.358-7.5,7.5-7.5h522.671C534.313,79.075,537.671,82.432,537.671,86.575z M452.343,340.696 c3.552-37.141,33.187-66.776,70.328-70.328V164.402c-37.141-3.552-66.776-33.187-70.328-70.328H85.328 C81.776,131.216,52.141,160.851,15,164.402v105.966c37.141,3.552,66.776,33.187,70.328,70.328H452.343z M70.235,340.696 c-3.43-28.86-26.375-51.805-55.235-55.235v55.235H70.235z M70.235,94.075H15v55.235C43.86,145.879,66.805,122.935,70.235,94.075z M522.671,94.075h-55.235c3.43,28.86,26.375,51.805,55.235,55.235V94.075z M477.584,402.407L138.413,368.73l339.172,73.078V402.407z M507.642,355.696H158.943l348.699,34.622V355.696z M522.671,340.696v-55.235c-28.86,3.43-51.805,26.375-55.235,55.235h47.687 c0.006,0,0.013-0.001,0.019-0.001s0.013,0.001,0.019,0.001H522.671z M347.199,158.504c-3.389,2.383-4.204,7.061-1.822,10.449 c10.001,14.227,15.288,30.974,15.288,48.432c0,46.491-37.824,84.315-84.315,84.315c-46.492,0-84.316-37.824-84.316-84.315 s37.824-84.315,84.316-84.315c17.459,0,34.208,5.287,48.435,15.29c3.389,2.385,8.067,1.569,10.449-1.821 c2.382-3.388,1.567-8.066-1.821-10.449c-16.767-11.788-36.499-18.02-57.063-18.02c-54.763,0-99.316,44.553-99.316,99.315 s44.553,99.315,99.316,99.315c54.763,0,99.315-44.553,99.315-99.315c0-20.563-6.23-40.293-18.018-57.059 C355.267,156.938,350.588,156.124,347.199,158.504z" }));
+        this.food = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 480 480" },
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M339.904,161.776l-5.136-16.904c-6.524-19.202-27.379-29.479-46.581-22.955c-10.802,3.67-19.285,12.153-22.955,22.955 l-5.136,16.904c-4.322,14.256-5.229,29.329-2.648,44c2.354,12.352,10.196,22.964,21.312,28.84L273.008,363.2 c-0.77,7.177,1.558,14.342,6.4,19.696c10.413,11.39,28.089,12.182,39.479,1.769c0.616-0.563,1.206-1.153,1.769-1.769 c4.734-5.202,7.058-12.157,6.4-19.16L321.272,234.6c11.101-5.879,18.93-16.484,21.28-28.824 C345.133,191.105,344.226,176.032,339.904,161.776z M326.792,202.992c-1.732,8.874-8.056,16.155-16.6,19.112 c-3.243,1.219-5.332,4.387-5.176,7.848L311.096,365c0.28,2.649-0.594,5.29-2.4,7.248c-4.817,4.769-12.575,4.769-17.392,0 c-1.896-2.116-2.757-4.964-2.352-7.776l6.032-134.52c0.156-3.461-1.933-6.629-5.176-7.848c-8.544-2.957-14.868-10.238-16.6-19.112 c-2.14-12.18-1.386-24.693,2.2-36.528l5.136-16.912c3.974-10.745,15.906-16.234,26.652-12.26c5.681,2.101,10.159,6.58,12.26,12.26 l5.136,16.912C328.174,178.3,328.928,190.812,326.792,202.992z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M216,120c-4.418,0-8,3.582-8,8v68.688l-21.656,21.656c-1.602,1.596-2.454,3.797-2.344,6.056l7,140 c0.167,3.019-0.929,5.972-3.024,8.152c-4.379,4.418-11.511,4.45-15.93,0.07c-0.024-0.023-0.047-0.047-0.07-0.07 c-2.096-2.18-3.191-5.133-3.024-8.152l7.048-140c0.112-2.258-0.737-4.458-2.336-6.056L152,196.688V128c0-4.418-3.582-8-8-8 s-8,3.582-8,8v72c0,2.122,0.844,4.156,2.344,5.656l21.488,21.496l-6.824,136.472c-0.726,14.907,10.77,27.581,25.677,28.307 c14.907,0.726,27.581-10.77,28.307-25.677c0.043-0.876,0.043-1.753,0-2.629l-6.824-136.472l21.488-21.496 c1.5-1.5,2.344-3.534,2.344-5.656v-72C224,123.582,220.418,120,216,120z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M168,120c-4.418,0-8,3.582-8,8v64c0,4.418,3.582,8,8,8s8-3.582,8-8v-64C176,123.582,172.418,120,168,120z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M192,120c-4.418,0-8,3.582-8,8v64c0,4.418,3.582,8,8,8s8-3.582,8-8v-64C200,123.582,196.418,120,192,120z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M240,0C107.452,0,0,107.452,0,240s107.452,240,240,240s240-107.452,240-240C479.85,107.514,372.486,0.15,240,0z M240,464 C116.288,464,16,363.712,16,240S116.288,16,240,16s224,100.288,224,224C463.859,363.653,363.653,463.859,240,464z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M265.969,390.172c-0.429-4.397-4.342-7.614-8.74-7.185c-0.103,0.01-0.206,0.022-0.309,0.036l0.032-0.008 c-11.263,1.308-22.641,1.308-33.904,0c-4.39-0.515-8.365,2.626-8.88,7.016c-0.515,4.39,2.626,8.365,7.016,8.88 c12.491,1.459,25.109,1.459,37.6,0C263.181,398.483,266.398,394.57,265.969,390.172z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M362.4,136.912c-2.839-3.385-7.885-3.828-11.27-0.988c-0.011,0.009-0.022,0.019-0.034,0.028 c-3.377,2.848-3.807,7.894-0.96,11.272c48.235,57.26,44.545,141.929-8.488,194.776c-3.13,3.119-3.139,8.186-0.02,11.316 c3.119,3.13,8.186,3.139,11.316,0.02C411.881,294.623,415.991,200.541,362.4,136.912z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("g", null,
+                        " ",
+                        react_1.default.createElement("path", { d: "M186.392,105.744c-0.005,0-0.01-0.001-0.015-0.001c-0.008,0-0.016,0.001-0.025,0.001H186.392z" }),
+                        " ",
+                        react_1.default.createElement("path", { d: "M277.736,84.472c-31.265-7.493-64.055-5.479-94.168,5.784c-4.136,1.555-6.227,6.169-4.672,10.304 c1.172,3.117,4.152,5.18,7.481,5.183c0.957-0.005,1.905-0.18,2.799-0.519c27.118-10.141,56.646-11.952,84.8-5.2 c4.295,1.038,8.618-1.601,9.656-5.896C284.67,89.833,282.031,85.51,277.736,84.472z" }),
+                        " "),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M137.992,341.6C111.023,314.677,95.908,278.108,96,240c-0.079-30.446,9.565-60.122,27.528-84.704 c2.655-3.532,1.944-8.547-1.588-11.202s-8.547-1.944-11.202,1.588c-0.047,0.063-0.093,0.126-0.138,0.19 c-46.253,63.588-39.447,151.359,16.056,207.056c3.128,3.13,8.202,3.132,11.332,0.004C141.118,349.804,141.12,344.73,137.992,341.6 z" }),
+                    " "),
+                " "),
+            " ");
+        this.fun = react_1.default.createElement("svg", { viewBox: "0 0 513.188 513.188", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("path", { d: "m385.883 223.476h-202.38c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5h202.38c22.858 0 42.078-18.023 42.844-40.176.02-.569.03-1.143.03-1.72 0-27.105-22.244-49.161-49.602-49.202-.049.001-.099.001-.14.001-2.046 0-4.003-.836-5.418-2.314-1.414-1.478-2.164-3.47-2.075-5.514.032-.728.057-1.458.057-2.194 0-27.13-22.285-49.202-49.677-49.202-8.253 0-16.425 2.044-23.631 5.913-1.816.974-3.951 1.159-5.906.511-1.955-.647-3.558-2.071-4.432-3.935-12.5-26.661-38.633-44.115-68.2-45.552-21.925-1.065-42.817 6.708-58.841 21.888-15.786 14.955-24.543 34.982-24.661 56.393-.028 5.102.444 10.228 1.404 15.234.405 2.112-.116 4.296-1.431 5.997-1.315 1.702-3.297 2.757-5.442 2.898-25.98 1.71-46.332 23.267-46.332 49.077 0 .577.01 1.151.03 1.723.767 22.15 19.986 40.173 42.844 40.173h26.198c4.142 0 7.5 3.358 7.5 7.5s-3.358 7.5-7.5 7.5h-26.198c-14.94 0-29.15-5.597-40.011-15.76-10.981-10.276-17.312-24.09-17.824-38.898-.025-.745-.039-1.49-.039-2.238 0-30.967 22.404-57.242 52.311-63.01-.358-3.415-.529-6.851-.51-10.278.14-25.54 10.561-49.406 29.345-67.201 18.747-17.759 44.226-27.229 69.885-25.981 32.621 1.586 61.732 19.599 77.626 47.548 7.544-2.959 15.651-4.502 23.814-4.502 34.116 0 62.146 26.356 64.515 59.633 32.22 3.629 57.34 30.853 57.34 63.791 0 .749-.013 1.494-.039 2.235-.513 14.811-6.843 28.625-17.824 38.901-10.86 10.163-25.07 15.761-40.01 15.761z" }),
+                react_1.default.createElement("path", { d: "m366.312 513.188c-35.519.001-67.767-21.5-81.318-54.445h-56.801c-13.55 32.942-45.803 54.443-81.319 54.445-1.119 0-2.236-.021-3.361-.064-45.185-1.725-82.225-38.448-84.322-83.605-1.128-24.279 7.467-47.304 24.201-64.833 16.47-17.253 38.581-26.88 62.371-27.19.114-.005.228-.008.342-.008h12.704c4.142 0 7.5 3.358 7.5 7.5s-3.358 7.5-7.5 7.5h-11.864c-20.101 0-38.818 8.01-52.703 22.555-13.876 14.536-21.003 33.635-20.067 53.779 1.739 37.437 32.448 67.882 69.911 69.312 30.898 1.179 59.27-17.325 70.617-46.044 2.004-5.071 6.81-8.348 12.243-8.348h59.295c5.434 0 10.24 3.277 12.244 8.348 11.348 28.72 39.723 47.221 70.617 46.044 37.463-1.43 68.172-31.875 69.911-69.312.936-20.145-6.191-39.244-20.067-53.779-13.885-14.545-32.602-22.555-52.703-22.555h-177.434c-4.142 0-7.5-3.358-7.5-7.5s3.358-7.5 7.5-7.5h177.435c24.24 0 46.81 9.659 63.553 27.197 16.734 17.529 25.329 40.554 24.201 64.833-2.098 45.157-39.137 81.88-84.322 83.605-1.125.044-2.247.065-3.364.065z" }),
+                react_1.default.createElement("path", { d: "m155.189 460.714h-21.58c-5.449 0-9.882-4.433-9.882-9.882v-4.821h-4.821c-5.449 0-9.883-4.434-9.883-9.883v-21.579c0-5.449 4.434-9.882 9.883-9.882h4.821v-4.821c0-5.449 4.433-9.883 9.882-9.883h21.58c5.449 0 9.882 4.434 9.882 9.883v4.821h4.821c5.449 0 9.882 4.433 9.882 9.882v21.579c0 5.449-4.433 9.883-9.882 9.883h-4.821v4.821c.001 5.449-4.432 9.882-9.882 9.882zm-16.461-15h11.344v-4.821c0-5.449 4.434-9.882 9.883-9.882h4.82v-11.344h-4.82c-5.449 0-9.883-4.434-9.883-9.883v-4.821h-11.344v4.821c0 5.449-4.434 9.883-9.883 9.883h-4.821v11.344h4.821c5.449 0 9.883 4.433 9.883 9.882zm31.165-26.047h.01z" }),
+                react_1.default.createElement("path", { d: "m393.172 433.118c-2.083 0-4.179-.286-6.24-.864-5.907-1.658-10.814-5.516-13.819-10.865-3.004-5.349-3.746-11.547-2.088-17.454 1.657-5.906 5.516-10.814 10.865-13.818 5.348-3.004 11.547-3.745 17.454-2.089 12.193 3.422 19.329 16.126 15.906 28.319-1.657 5.906-5.516 10.814-10.865 13.818-3.482 1.956-7.325 2.953-11.213 2.953zm-.047-30.949c-1.349 0-2.682.346-3.89 1.024-1.855 1.042-3.194 2.745-3.769 4.794s-.318 4.2.724 6.055 2.745 3.194 4.793 3.769c2.049.576 4.2.318 6.055-.724s3.194-2.745 3.769-4.793c1.188-4.23-1.288-8.637-5.518-9.824-.713-.201-1.441-.301-2.164-.301z" }),
+                react_1.default.createElement("path", { d: "m340.9 464.9c-2.049 0-4.13-.276-6.198-.856-5.907-1.658-10.814-5.517-13.819-10.866-3.004-5.349-3.746-11.547-2.088-17.454 3.422-12.193 16.125-19.328 28.319-15.907 12.193 3.422 19.328 16.126 15.907 28.319-2.842 10.127-12.085 16.764-22.121 16.764zm.011-30.938c-3.482 0-6.688 2.303-7.674 5.816-1.187 4.23 1.289 8.637 5.518 9.824 4.228 1.186 8.637-1.288 9.825-5.518 1.187-4.229-1.289-8.637-5.518-9.824-.718-.201-1.44-.298-2.151-.298z" }),
+                react_1.default.createElement("path", { d: "m281.239 349.162c-4.142 0-7.5-3.358-7.5-7.5v-24.753c0-1.131-.92-2.052-2.051-2.052h-34.092c-1.131 0-2.051.921-2.051 2.052v23.588c0 4.142-3.358 7.5-7.5 7.5s-7.5-3.358-7.5-7.5v-23.588c0-9.402 7.649-17.052 17.051-17.052h34.092c9.402 0 17.051 7.649 17.051 17.052v24.753c0 4.142-3.358 7.5-7.5 7.5z" }),
+                react_1.default.createElement("path", { d: "m254.594 311.808c-4.142 0-7.5-3.358-7.5-7.5v-20.926c0-15.298 12.445-27.743 27.743-27.743 7.026 0 12.743-5.716 12.743-12.743v-26.921c0-4.142 3.358-7.5 7.5-7.5s7.5 3.358 7.5 7.5v26.921c0 15.297-12.445 27.743-27.743 27.743-7.027 0-12.743 5.717-12.743 12.743v20.926c0 4.142-3.358 7.5-7.5 7.5z" }),
+                react_1.default.createElement("path", { d: "m233.53 410.355c-1.919 0-3.839-.732-5.303-2.197-2.929-2.929-2.929-7.678 0-10.606l12.206-12.207c2.929-2.929 7.678-2.929 10.607 0s2.929 7.678 0 10.607l-12.207 12.206c-1.464 1.465-3.383 2.197-5.303 2.197z" }),
+                react_1.default.createElement("path", { d: "m267.451 410.355c-1.919 0-3.839-.732-5.303-2.197-2.929-2.929-2.929-7.678 0-10.606l12.207-12.207c2.929-2.929 7.678-2.929 10.606 0 2.929 2.929 2.929 7.678 0 10.607l-12.206 12.206c-1.465 1.465-3.385 2.197-5.304 2.197z" })));
+        this.mobile = react_1.default.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 25 25" },
+            react_1.default.createElement("path", { d: "M18.75,0H6.25A1.25,1.25,0,0,0,5,1.25v22.5A1.25,1.25,0,0,0,6.25,25h12.5A1.25,1.25,0,0,0,20,23.75V1.25A1.25,1.25,0,0,0,18.75,0ZM19,23.75a.25.25,0,0,1-.25.25H6.25A.25.25,0,0,1,6,23.75V20H19ZM19,19H6V5H19ZM19,4H6V1.25A.25.25,0,0,1,6.25,1h12.5a.25.25,0,0,1,.25.25ZM10,2h5V3H10Zm1.5,20a1,1,0,1,1,1,1A1,1,0,0,1,11.5,22Z" }));
+        this.net = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 512.001 512.001" },
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M430.893,423.342v-61.009H271v-36.229h99.965c63.883,0,115.855-51.972,115.855-115.855 c0-63.466-51.296-115.176-114.605-115.849C358.565,39.718,308.819,0,251.289,0c-68.721,0-124.63,55.909-124.63,124.63 c0,0.518,0.003,1.037,0.01,1.556c-0.508-0.008-1.015-0.012-1.523-0.012c-55.121,0-99.965,44.844-99.965,99.965 s44.844,99.965,99.965,99.965H241v36.229H81.107v61.009c-17.377,6.5-29.784,23.268-29.784,42.885 c0,25.239,20.534,45.773,45.773,45.773s45.773-20.534,45.773-45.773c0-20.353-13.356-37.638-31.762-43.571v-30.323H241v30.658 c-17.892,6.225-30.773,23.25-30.773,43.235c0,25.24,20.534,45.774,45.773,45.774s45.773-20.534,45.773-45.773 c0-19.986-12.881-37.01-30.773-43.235v-30.658h129.893v30.323c-18.405,5.933-31.762,23.218-31.762,43.571 c0,25.239,20.534,45.773,45.773,45.773s45.773-20.534,45.773-45.773C460.677,446.611,448.27,429.842,430.893,423.342z M112.869,466.227c0,8.697-7.075,15.773-15.773,15.773c-8.697,0-15.773-7.076-15.773-15.773s7.076-15.773,15.773-15.773 S112.869,457.53,112.869,466.227z M271.773,466.227c0,8.697-7.076,15.773-15.773,15.773s-15.773-7.076-15.773-15.773 s7.076-15.773,15.773-15.773C264.697,450.454,271.773,457.53,271.773,466.227z M125.144,296.103 c-38.578,0.001-69.964-31.385-69.964-69.964s31.386-69.965,69.965-69.965c4.97,0,9.982,0.54,14.897,1.605l21.681,4.699 l-3.716-21.872c-0.895-5.266-1.349-10.641-1.349-15.977c0-52.179,42.451-94.63,94.63-94.63c47.232,0,87.552,35.243,93.787,81.98 l1.936,14.51l14.553-1.582c3.139-0.341,6.301-0.514,9.4-0.514c47.341,0,85.855,38.515,85.855,85.855 c0,47.34-38.514,85.855-85.855,85.855H125.144z M414.904,482c-8.697,0-15.773-7.076-15.773-15.773s7.076-15.773,15.773-15.773 s15.773,7.076,15.773,15.773S423.601,482,414.904,482z" }),
+                    " "),
+                " "),
+            " ");
+        this.realestate = react_1.default.createElement("svg", { viewBox: "0 -31 400.5549 400" },
+            react_1.default.createElement("path", { d: "m9.609375 144.976562 44.320313-32.265624v163.054687c-6.042969 1.707031-11.003907 6.039063-13.503907 11.800781-2.503906 5.761719-2.289062 12.339844.585938 17.925782h-3.128907c-12.042968.015624-22.5 8.289062-25.292968 20h-2.234375c-3.3125 0-6 2.6875-6 6s2.6875 6 6 6h379.144531c3.316406 0 6-2.6875 6-6s-2.683594-6-6-6h-25.183594v-27.738282l11.273438-7.140625c6.371094 4.277344 14.878906 3.441407 20.292968-1.996093 5.414063-5.4375 6.21875-13.949219 1.910157-20.300782-4.304688-6.355468-12.507813-8.765625-19.5625-5.75-7.058594 3.015625-10.988281 10.609375-9.375 18.109375l-4.542969 2.875v-21.949219c11.714844-2.789062 19.984375-13.25 20-25.292968v-26.664063c0-14.359375-11.640625-26-26-26s-26 11.640625-26 26v26.664063c.015625 12.042968 8.289062 22.503906 20 25.292968v33.867188l-5.90625-4.21875c-2.699219-1.925781-6.445312-1.300781-8.371094 1.394531-1.925781 2.695313-1.300781 6.445313 1.394532 8.371094l12.882812 9.199219v15.277344h-26.382812v-212.78125l44.316406 32.265624c2.679687 1.898438 6.386718 1.292969 8.320312-1.363281 1.933594-2.652343 1.375-6.367187-1.253906-8.335937l-51.382812-37.40625v-75.746094c0-3.3125-2.6875-6-6-6h-35.015626c-3.3125 0-6 2.6875-6 6v41.515625l-85.453124-62.214844c-2.105469-1.53125-4.957032-1.53125-7.0625 0l-183.851563 133.851563c-1.769531 1.246094-2.734375 3.351562-2.515625 5.507812.214844 2.15625 1.578125 4.027344 3.5625 4.894532 1.984375.871093 4.285156.601562 6.015625-.703126zm374.890625 128.355469c2.210938 0 4 1.789063 4 4 0 2.207031-1.789062 4-4 4-2.207031 0-4-1.792969-4-4 0-2.210937 1.792969-4 4-4zm-40.183594-37.023437v-26.664063c0-7.734375 6.269532-14 14-14 7.734375 0 14 6.265625 14 14v26.664063c-.007812 5.402344-3.121094 10.316406-8 12.632812v-5c0-3.316406-2.6875-6-6-6s-6 2.683594-6 6v5c-4.878906-2.316406-7.992187-7.230468-8-12.632812zm-319.082031 89.183594c2.320313-4.882813 7.242187-7.996094 12.648437-8h85c5.40625.003906 10.324219 3.117187 12.644532 8zm69.457031-29.550782c0-4.96875 4.027344-9 9-9 4.96875 0 9 4.03125 9 9s-4.03125 9-9 9c-4.96875-.007812-8.996094-4.03125-9-9zm129.238282 29.550782h-48v-108h48zm66.988281-297.367188h23.011719v61.007812l-23.011719-16.753906zm-224.988281 75.851562 124-90.277343 124 90.277343v221.515626h-78v-114c0-3.3125-2.6875-6-6-6h-60c-3.3125 0-6 2.6875-6 6v114h-15.753907c-2.792969-11.710938-13.25-19.980469-25.292969-20h-.515624c4.539062-8.835938 2.269531-19.640626-5.445313-25.902344-7.710937-6.257813-18.753906-6.257813-26.46875 0-7.710937 6.261718-9.980469 17.066406-5.441406 25.902344h-6.644531c2.835937-5.507813 3.089843-11.992188.6875-17.707032-2.398438-5.710937-7.207032-10.070312-13.125-11.902344zm2.757812 191.964844c0 4.96875-4.027344 9-9 9-4.96875 0-9-4.03125-9-9s4.03125-9 9-9c4.96875.003906 8.996094 4.03125 9.003906 9zm0 0" }),
+            react_1.default.createElement("path", { d: "m189.929688 103.628906c14.359374 0 26-11.640625 26-26s-11.640626-26-26-26c-14.359376 0-26 11.640625-26 26 .015624 14.351563 11.648437 25.984375 26 26zm0-40c7.730468 0 14 6.265625 14 14 0 7.730469-6.269532 14-14 14-7.734376 0-14-6.269531-14-14 .007812-7.730468 6.269531-13.992187 14-14zm0 0" }));
+        this.salary = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 480.016 480.016" },
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M479.464,189.24c-0.096-0.248-0.216-0.472-0.336-0.712c-0.311-0.637-0.706-1.229-1.176-1.76 c-0.112-0.128-0.16-0.296-0.28-0.416L448,156.696V88.008c0-4.418-3.582-8-8-8h-68.688L320.4,29.096 c-13.469-13.548-31.8-21.142-50.904-21.088h-58.992c-19.104-0.054-37.435,7.54-50.904,21.088l-50.912,50.912H72 c-4.418,0-8,3.582-8,8v24H40c-4.418,0-8,3.582-8,8v36.688L2.344,186.352c-0.12,0.12-0.168,0.288-0.28,0.416 c-0.47,0.531-0.865,1.123-1.176,1.76c-0.12,0.24-0.24,0.464-0.336,0.712c-0.349,0.882-0.536,1.82-0.552,2.768v272 c0,0.104,0.056,0.184,0.056,0.288c0.018,0.951,0.204,1.891,0.552,2.776c0,0.064,0.08,0.12,0.112,0.184 c0.453,1.045,1.153,1.965,2.04,2.68c0.507,0.444,1.069,0.82,1.672,1.12c0.246,0.137,0.5,0.26,0.76,0.368 c0.893,0.362,1.844,0.56,2.808,0.584h464c0.957-0.018,1.902-0.208,2.792-0.56c0.273-0.109,0.54-0.232,0.8-0.368 c0.599-0.302,1.159-0.678,1.664-1.12c0.884-0.713,1.581-1.63,2.032-2.672c0-0.072,0.096-0.128,0.12-0.2 c0.351-0.884,0.538-1.825,0.552-2.776c0-0.104,0.056-0.184,0.056-0.288V192.008C480,191.06,479.813,190.122,479.464,189.24z M448,179.32l12.688,12.688L448,204.696V179.32z M170.912,40.408c10.478-10.534,24.734-16.44,39.592-16.4h58.992 c14.858-0.04,29.114,5.866,39.592,16.4l39.6,39.6H131.312L170.912,40.408z M80,96.008h352v124.688l-16,16V120.008 c0-4.418-3.582-8-8-8H80V96.008z M48,128.008h352v124.688l-35.312,35.312h-57.376l-16-16H344c4.418,0,8-3.582,8-8 c0-13.255,10.745-24,24-24c4.418,0,8-3.582,8-8v-48c0-4.418-3.582-8-8-8c-13.255,0-24-10.745-24-24c0-4.418-3.582-8-8-8H104 c-4.418,0-8,3.582-8,8c0,13.255-10.745,24-24,24c-4.418,0-8,3.582-8,8v48c0,4.418,3.582,8,8,8c13.255,0,24,10.745,24,24 c0,4.418,3.582,8,8,8h84.68l-16,16h-57.368L48,220.696V128.008z M348.688,304.008L336,316.696l-12.688-12.688H348.688z M216,246.536v8.192c-1.176,0.416-2.4,0.8-3.52,1.28H111.2c-3.23-15.701-15.499-27.97-31.2-31.2v-33.6 c15.701-3.23,27.97-15.499,31.2-31.2H216v9.472c-12.473,4.393-19.023,18.066-14.629,30.539 c3.38,9.596,12.455,16.009,22.629,15.989c4.418,0,8,3.582,8,8s-3.582,8-8,8s-8-3.582-8-8h-16 C200.042,234.142,206.445,243.158,216,246.536z M232,246.536c12.473-4.393,19.023-18.066,14.63-30.539 c-3.38-9.596-12.455-16.009-22.63-15.989c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8h16c-0.042-10.134-6.445-19.15-16-22.528 v-9.472h104.8c3.23,15.701,15.499,27.97,31.2,31.2v33.6c-15.701,3.23-27.97,15.499-31.2,31.2h-69.28 c-11.235-4.612-23.451-6.32-35.52-4.968V246.536z M156.688,304.008L144,316.696l-12.688-12.688H156.688z M32,179.32v25.376 l-12.688-12.688L32,179.32z M16,211.32l116.688,116.688L16,444.696V211.32z M27.312,456.008l122.336-122.336l50.736-50.736 c21.886-21.832,57.314-21.832,79.2,0l50.736,50.736l122.368,122.336H27.312z M464,444.696L347.312,328.008L464,211.32V444.696z" }),
+                    " "),
+                " "),
+            " ");
+        this.sale = react_1.default.createElement("svg", { enableBackground: "new 0 0 50 50", version: "1.1", viewBox: "0 0 50 50" },
+            react_1.default.createElement("rect", { fill: "none", height: "50", width: "50" }),
+            react_1.default.createElement("path", { d: "M48.533,28.494  L44.72,32.15l0.43,5.266c0.059,0.719-0.396,1.377-1.088,1.578l-5.075,1.463l-2.064,4.862c-0.283,0.664-0.995,1.042-1.697,0.892  l-5.179-1.061l-4.087,3.345c-0.279,0.228-0.618,0.342-0.959,0.342s-0.68-0.114-0.959-0.342l-4.086-3.345l-5.18,1.061  c-0.703,0.152-1.413-0.229-1.697-0.892l-2.064-4.862l-5.075-1.463c-0.69-0.201-1.146-0.859-1.088-1.578l0.43-5.266l-3.813-3.656  c-0.521-0.498-0.617-1.295-0.232-1.902l2.829-4.462l-1.68-5.01c-0.228-0.683,0.058-1.432,0.681-1.791l4.578-2.64l0.842-5.214  C8.602,6.763,9.201,6.232,9.92,6.203l5.279-0.208l3.168-4.227c0.434-0.575,1.213-0.768,1.862-0.458L25,3.58l4.771-2.27  c0.646-0.311,1.429-0.118,1.861,0.458l3.169,4.227l5.279,0.208c0.719,0.029,1.318,0.56,1.436,1.271l0.842,5.214l4.578,2.64  c0.623,0.359,0.907,1.108,0.681,1.791l-1.679,5.01l2.828,4.462C49.15,27.199,49.054,27.996,48.533,28.494z", fill: "none", stroke: "#000000" }),
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("path", { d: "M15.715,22.574c-0.179-0.569-0.239-0.898-0.239-3.054c0-2.156,0.061-2.485,0.239-3.054   c0.479-1.407,1.737-2.305,3.443-2.305s2.964,0.898,3.442,2.305c0.18,0.569,0.24,0.898,0.24,3.054c0,2.155-0.061,2.485-0.24,3.054   c-0.479,1.407-1.736,2.305-3.442,2.305S16.194,23.981,15.715,22.574z M20.774,22.095c0.09-0.299,0.15-0.719,0.15-2.575   s-0.061-2.275-0.15-2.575c-0.239-0.688-0.838-1.048-1.616-1.048s-1.377,0.359-1.616,1.048c-0.09,0.299-0.15,0.719-0.15,2.575   s0.061,2.275,0.15,2.575c0.239,0.688,0.838,1.048,1.616,1.048S20.535,22.784,20.774,22.095z M29.756,14.371   c0.12-0.209,0.239-0.299,0.479-0.299h1.437c0.18,0,0.239,0.15,0.15,0.299L19.996,34.789c-0.119,0.209-0.239,0.299-0.449,0.299   H18.11c-0.18,0-0.27-0.149-0.18-0.299L29.756,14.371z M26.912,29.67c0-2.156,0.06-2.485,0.239-3.055   c0.479-1.407,1.736-2.305,3.443-2.305c1.706,0,2.964,0.898,3.442,2.305c0.18,0.569,0.239,0.898,0.239,3.055   c0,2.154-0.06,2.484-0.239,3.053c-0.479,1.407-1.736,2.306-3.442,2.306c-1.707,0-2.964-0.898-3.443-2.306   C26.972,32.154,26.912,31.824,26.912,29.67z M30.595,33.292c0.778,0,1.377-0.359,1.616-1.048c0.09-0.299,0.149-0.719,0.149-2.574   c0-1.856-0.06-2.275-0.149-2.575c-0.239-0.688-0.838-1.048-1.616-1.048s-1.378,0.359-1.617,1.048   c-0.09,0.3-0.149,0.719-0.149,2.575c0,1.855,0.06,2.275,0.149,2.574C29.217,32.933,29.816,33.292,30.595,33.292z" })));
+        this.shop = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 512 512" },
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M488.468,448.903h-8.532V226.4C499.202,214.003,512,192.386,512,167.822c0-1.305-0.341-2.588-0.988-3.721L451.499,59.953 c-4.18-7.313-12.009-11.857-20.432-11.857H80.933c-8.423,0-16.252,4.543-20.432,11.857L0.988,164.101 C0.341,165.234,0,166.518,0,167.822c0,24.564,12.798,46.181,32.064,58.578v222.503h-8.532c-4.142,0-7.5,3.358-7.5,7.5 c0,4.142,3.358,7.5,7.5,7.5h464.936c4.143,0,7.5-3.358,7.5-7.5C495.968,452.261,492.61,448.903,488.468,448.903z M15.517,175.322 h24.044c4.142,0,7.5-3.358,7.5-7.5c0-4.142-3.358-7.5-7.5-7.5H20.424l53.101-92.927c1.516-2.652,4.354-4.299,7.408-4.299h350.134 c3.054,0,5.893,1.647,7.408,4.299l53.1,92.927h-19.141c-4.143,0-7.5,3.358-7.5,7.5c0,4.142,3.357,7.5,7.5,7.5h24.048 c-3.667,26.584-26.532,47.125-54.108,47.125c-27.575,0-50.429-20.543-54.097-47.125h52.096c4.143,0,7.5-3.358,7.5-7.5 c0-4.142-3.357-7.5-7.5-7.5H71.631c-4.142,0-7.5,3.358-7.5,7.5c0,4.142,3.358,7.5,7.5,7.5h52.091 c-3.668,26.582-26.523,47.125-54.097,47.125C42.049,222.447,19.184,201.906,15.517,175.322z M372.222,175.322 c-3.668,26.582-26.523,47.125-54.097,47.125c-27.575,0-50.429-20.543-54.097-47.125H372.222z M247.972,175.322 c-3.668,26.582-26.523,47.125-54.097,47.125c-27.574,0-50.429-20.543-54.097-47.125H247.972z M424.854,448.904h-81.193v-25.081 h81.193V448.904z M424.854,408.823h-81.193V271.516h81.193V408.823z M464.936,448.904h-25.081V264.016c0-4.142-3.357-7.5-7.5-7.5 h-96.193c-4.143,0-7.5,3.358-7.5,7.5v184.887H47.064V233.674c7.081,2.433,14.665,3.773,22.561,3.773 c27.095,0,50.624-15.556,62.125-38.207c11.501,22.65,35.03,38.207,62.125,38.207c27.095,0,50.624-15.556,62.125-38.207 c11.501,22.65,35.03,38.207,62.125,38.207c27.095,0,50.624-15.556,62.125-38.207c11.501,22.65,35.03,38.207,62.125,38.207 c7.896,0,15.48-1.34,22.561-3.772V448.904z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M296.081,256.516H79.645c-4.142,0-7.5,3.358-7.5,7.5v152.307c0,4.142,3.358,7.5,7.5,7.5h216.436 c4.143,0,7.5-3.358,7.5-7.5V264.016C303.581,259.873,300.224,256.516,296.081,256.516z M288.581,408.823H87.145V271.516h201.436 V408.823z" }),
+                    " "),
+                " "),
+            " ");
+        this.theater = react_1.default.createElement("svg", { version: "1.1", x: "0px", y: "0px", viewBox: "0 0 480.001 480.001" },
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M328.584,137.508l-5.2-1.304c-25.094-6.267-51.415,3.953-65.704,25.512c-2.333,3.752-1.184,8.685,2.568,11.018 c3.598,2.238,8.316,1.282,10.76-2.178c10.554-15.894,29.964-23.434,48.48-18.832l5.208,1.304c4.293,1.043,8.619-1.592,9.663-5.885 C335.391,142.893,332.819,138.601,328.584,137.508z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M412.221,229.736c-2.023-0.673-4.23-0.51-6.133,0.451h0.024c-36.956,18.472-80.452,18.472-117.408,0 c-3.943-1.993-8.756-0.412-10.749,3.531c-0.962,1.902-1.124,4.11-0.451,6.133l7.64,23.008 c11.293,34.383,48.321,53.101,82.704,41.808c19.789-6.5,35.309-22.02,41.808-41.808l7.632-23.008 C418.682,235.659,416.413,231.131,412.221,229.736z M394.48,257.828c-8.521,25.997-36.503,40.164-62.501,31.643 c-14.983-4.911-26.733-16.661-31.643-31.643l-2.056-6.2c31.792,11.2,66.456,11.2,98.248,0L394.48,257.828z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M447.771,165.01c-0.082-0.132-0.169-0.262-0.259-0.39c-14.3-21.536-40.605-31.743-65.688-25.488l-5.216,1.312 c-4.21,1.342-6.534,5.843-5.192,10.052c1.225,3.841,5.116,6.17,9.08,5.436l5.224-1.304c18.511-4.597,37.914,2.942,48.464,18.832 c2.333,3.752,7.267,4.902,11.018,2.568C448.954,173.695,450.104,168.762,447.771,165.01z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M474.536,64.66c-82.531-27.456-171.733-27.456-254.264,0c-3.259,1.093-5.456,4.146-5.456,7.584v59.584 c-67.823,14.924-138.424,11.167-204.28-10.872c-4.19-1.401-8.723,0.861-10.123,5.051C0.14,126.824,0,127.679,0,128.54v117.448 c-0.001,64.852,27.615,126.635,75.936,169.888c28.738,25.705,71.861,26.826,101.896,2.648l2.448-1.968 c33.037-26.464,57.949-61.701,71.88-101.672c10.829,16.629,23.805,31.757,38.592,44.992 c28.736,25.704,71.856,26.825,101.888,2.648l2.448-1.968c53.857-43.144,85.115-108.481,84.912-177.488V72.244 C479.999,68.804,477.798,65.75,474.536,64.66z M170.248,404.1l-2.4,1.968c-23.954,19.283-58.349,18.379-81.256-2.136 C41.668,363.721,15.995,306.28,16,245.988V139.492c64.473,19.634,132.861,22.661,198.816,8.8v41.728 c0,4.677,0.147,9.355,0.44,14.032c0.096,1.552,0.304,3.088,0.432,4.64c0.256,3.104,0.496,6.216,0.88,9.312 c0.24,1.88,0.584,3.736,0.864,5.6c0.416,2.752,0.8,5.512,1.312,8.248c0.368,1.984,0.856,3.952,1.28,5.928 c0.56,2.592,1.08,5.192,1.728,7.76c0.52,2.048,1.144,4.072,1.712,6.104c0.696,2.464,1.36,4.936,2.136,7.376 c0.656,2.064,1.408,4.096,2.12,6.136c0.8,2.4,1.64,4.76,2.552,7.112c0.8,2.048,1.672,4.056,2.52,6.072 c0.968,2.304,1.912,4.608,2.952,6.872c0.928,2.024,1.944,4,2.936,6.008c0.856,1.728,1.6,3.488,2.536,5.2 C229.449,338.873,204.62,376.546,170.248,404.1z M464,183.068c0.183,64.159-28.873,124.906-78.936,165.032l-2.448,1.968 c-23.944,19.259-58.31,18.355-81.208-2.136c-17.988-16.09-33.077-35.151-44.608-56.352c-12.723-23.332-20.972-48.837-24.32-75.2 c-1.107-8.757-1.662-17.574-1.664-26.4V78.052c75.878-23.984,157.306-23.984,233.184,0V183.068z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M96.336,205.26c-3.685-2.443-8.653-1.437-11.096,2.248l-3.472,5.256C72.501,226.791,56.812,235.229,40,235.228 c-4.418,0-8,3.582-8,8s3.582,8,8,8c22.176,0.007,42.874-11.117,55.104-29.616l3.48-5.256 C101.027,212.671,100.021,207.703,96.336,205.26z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M179.632,323.204h-0.04c-30.349-20.44-70.059-20.44-100.408,0c-12.835,8.625-16.248,26.022-7.623,38.857 c5.182,7.712,13.852,12.35,23.143,12.383c4.326-0.002,8.592-1.016,12.456-2.96c14.001-6.984,30.471-6.984,44.472,0 c13.777,6.965,30.592,1.444,37.557-12.333C195.595,346.48,191.485,331.02,179.632,323.204z M173.992,353.132 c-3.318,4.994-9.836,6.733-15.2,4.056c-18.525-9.252-40.323-9.252-58.848,0c-5.363,2.688-11.889,0.947-15.2-4.056 c-3.675-5.506-2.196-12.948,3.304-16.632c24.965-16.81,57.627-16.81,82.592,0C176.157,340.168,177.657,347.613,173.992,353.132z" }),
+                    " "),
+                " "),
+            " ",
+            react_1.default.createElement("g", null,
+                " ",
+                react_1.default.createElement("g", null,
+                    " ",
+                    react_1.default.createElement("path", { d: "M218.904,277.108L203.28,240.66l-0.08-0.136c-1.116-3.164-4.101-5.284-7.456-5.296 c-16.81,0.003-32.498-8.436-41.76-22.464l-3.488-5.256c-2.443-3.683-7.409-4.687-11.092-2.244 c-3.683,2.443-4.687,7.409-2.244,11.092l3.488,5.256c10.059,15.157,25.932,25.486,43.864,28.544l-11.56,26.952 c-5.442,12.689,0.433,27.388,13.122,32.83c12.689,5.442,27.388-0.433,32.83-13.122C221.603,290.524,221.603,283.4,218.904,277.108 z M203.44,291.932c-2.967,4.147-8.734,5.103-12.88,2.136c-0.824-0.59-1.546-1.311-2.136-2.136c-1.702-2.509-2.004-5.714-0.8-8.496 l8.272-19.304l8.272,19.304C205.398,286.206,205.123,289.412,203.44,291.932z" }),
+                    " "),
+                " "),
+            " ");
+        this.travel = react_1.default.createElement("svg", { enableBackground: "new 0 0 64 64", viewBox: "0 0 64 64" },
+            react_1.default.createElement("path", { d: "m63.317 16.523c-.869-2.348-3.465-3.754-5.928-3.129l-3.442-2.099c-1.3-.787-2.871-.941-4.309-.424l-12.592 4.582-10.34-14.611c-.26-.367-.737-.515-1.158-.362l-5.63 2.05c-.52.189-.787.762-.598 1.281l5.808 15.977-12.52 4.556-6.725-7.522c-.271-.304-.702-.414-1.087-.273l-3.759 1.368c-.52.188-.787.763-.598 1.281l5.471 15.034c.144.396.52.658.939.658h.013l21.19-.26c.112-.001.225-.022.33-.061l1.877-.685 5.473 15.036c.147.406.531.659.939.659.113 0 .229-.02.342-.061l5.639-2.053c.424-.154.692-.573.654-1.022l-1.395-16.797 18.42-6.708c1.967-.716 3.288-2.608 3.288-4.709.001-.568-.099-1.139-.302-1.706zm-41.776-12.455 3.974-1.447 9.584 13.54-8.092 2.944zm-16.146 22.901-2.735-7.514 2.184-.794 5.741 6.42zm31.875 20.328-6.841-18.794 9.106-3.314 1.716 20.66zm22.378-26.236-17.908 6.521-.321-3.863c-.025-.311-.194-.592-.457-.76s-.59-.202-.881-.098l-11.276 4.104c-.249.091-.452.277-.564.517-.112.241-.124.516-.033.765l1.368 3.758-1.718.627-20.311.25-1.466-4.033 44.238-16.097c.865-.312 1.811-.219 2.59.252l.958.584-2.936 1.069.684 1.88 4.438-1.615.677.413c.257.158.574.189.855.089 1.592-.567 3.303.294 3.853 1.783.121.34.183.684.183 1.024-.001 1.263-.794 2.4-1.973 2.83z" }),
+            react_1.default.createElement("path", { d: "m44.634 16.648h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -3.284 16.662)" }),
+            react_1.default.createElement("path", { d: "m40.875 18.016h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -3.978 15.459)" }),
+            react_1.default.createElement("path", { d: "m37.117 19.385h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -4.672 14.257)" }),
+            react_1.default.createElement("path", { d: "m33.358 20.753h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -5.366 13.054)" }),
+            react_1.default.createElement("path", { d: "m29.599 22.121h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -6.06 11.852)" }),
+            react_1.default.createElement("path", { d: "m25.84 23.489h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -6.754 10.65)" }),
+            react_1.default.createElement("path", { d: "m22.081 24.857h1.999v2h-1.999z", transform: "matrix(.94 -.342 .342 .94 -7.448 9.447)" }),
+            react_1.default.createElement("path", { d: "m18.323 26.225h2v2h-2z", transform: "matrix(.94 -.342 .342 .94 -8.151 8.257)" }),
+            react_1.default.createElement("path", { d: "m14.564 27.593h2v2h-2z", transform: "matrix(.94 -.342 .342 .94 -8.846 7.054)" }),
+            react_1.default.createElement("path", { d: "m19 44h6.184c.414 1.161 1.514 2 2.816 2 1.654 0 3-1.346 3-3s-1.346-3-3-3c-1.302 0-2.402.839-2.816 2h-6.184c-3.309 0-6 2.691-6 6s2.691 6 6 6h17v-2h-17c-2.206 0-4-1.794-4-4s1.794-4 4-4zm9-2c.552 0 1 .449 1 1s-.448 1-1 1-1-.449-1-1 .448-1 1-1z" }),
+            react_1.default.createElement("path", { d: "m38 52h2v2h-2z" }),
+            react_1.default.createElement("path", { d: "m50.5 52h-8.5v2h8.5c1.379 0 2.5 1.122 2.5 2.5s-1.121 2.5-2.5 2.5h-31.5v2h31.5c2.481 0 4.5-2.019 4.5-4.5s-2.019-4.5-4.5-4.5z" }),
+            react_1.default.createElement("path", { d: "m5 57c-1.654 0-3 1.346-3 3s1.346 3 3 3c1.302 0 2.402-.839 2.816-2h9.184v-2h-9.184c-.414-1.161-1.514-2-2.816-2zm0 4c-.552 0-1-.449-1-1s.448-1 1-1 1 .449 1 1-.448 1-1 1z" }));
+        this.bin = react_1.default.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24" },
+            react_1.default.createElement("path", { d: "M0 0h24v24H0V0z", fill: "none" }),
+            react_1.default.createElement("path", { d: "M8 9h8v10H8z", opacity: ".3" }),
+            react_1.default.createElement("path", { d: "M15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z" }));
+        this.home = react_1.default.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24" },
+            react_1.default.createElement("path", { d: "M0 0h24v24H0V0z", fill: "none" }),
+            react_1.default.createElement("path", { d: "M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" }));
+        this.payments = react_1.default.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24" },
+            react_1.default.createElement("path", { d: "M0 0h24v24H0V0z", fill: "none" }),
+            react_1.default.createElement("path", { d: "M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" }));
+        this.crypto = react_1.default.createElement("svg", { version: "1.1", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 34.466 34.465" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("path", { d: "M25.979,17.234c0-5.104-4.149-9.257-9.253-9.257s-9.258,4.153-9.258,9.257c0,5.104,4.153,9.257,9.258,9.257\t\tC21.829,26.491,25.979,22.338,25.979,17.234z M16.725,25.493c-4.562,0-8.259-3.697-8.259-8.259c0-4.561,3.697-8.259,8.259-8.259\t\tc4.558,0,8.255,3.698,8.255,8.259C24.98,21.795,21.283,25.493,16.725,25.493z M16.677,16.576h-0.759v-1.688h0.759\t\tc0.443,0,0.751,0.027,0.922,0.082c0.171,0.054,0.305,0.147,0.396,0.276c0.091,0.128,0.138,0.284,0.138,0.467\t\tc0,0.174-0.049,0.33-0.146,0.464c-0.097,0.133-0.237,0.233-0.428,0.3C17.37,16.543,17.074,16.576,16.677,16.576z M18.123,18.025\t\tc0.097,0.144,0.144,0.317,0.144,0.522c0,0.242-0.069,0.449-0.204,0.621c-0.135,0.172-0.298,0.283-0.492,0.34\t\tc-0.194,0.054-0.438,0.082-0.73,0.082h-0.506c-0.168,0-0.271-0.008-0.31-0.028c-0.037-0.017-0.065-0.05-0.082-0.097\t\tc-0.014-0.035-0.021-0.159-0.022-0.373v-1.5h0.896c0.393,0,0.685,0.037,0.877,0.109C17.884,17.776,18.025,17.883,18.123,18.025z\t\t M16.725,9.843c-4.083,0-7.392,3.31-7.392,7.391c0,4.083,3.309,7.392,7.392,7.392c4.08,0,7.388-3.309,7.388-7.392\t\tC24.113,13.153,20.804,9.843,16.725,9.843z M19.73,19.747c-0.221,0.311-0.533,0.545-0.938,0.707\t\tc-0.147,0.06-0.322,0.107-0.52,0.146v1.236h-1.173v-1.141c-0.029,0-0.057,0.001-0.086,0.001h-0.666v1.14h-1.174v-1.14h-1.79v-0.958\t\th0.272c0.185,0,0.306-0.016,0.37-0.047c0.063-0.031,0.109-0.076,0.137-0.134c0.027-0.06,0.04-0.188,0.04-0.39v-3.865\t\tc0-0.205-0.013-0.336-0.04-0.393c-0.026-0.055-0.072-0.101-0.137-0.134s-0.186-0.049-0.37-0.049h-0.272V13.77h1.79v-1.139h1.174\t\tv1.139h0.752v-1.139h1.173v1.222c0.173,0.034,0.332,0.074,0.466,0.129c0.345,0.141,0.61,0.342,0.793,0.605\t\tc0.185,0.264,0.275,0.553,0.275,0.868c0,0.227-0.049,0.445-0.146,0.65s-0.238,0.386-0.423,0.543s-0.428,0.287-0.73,0.39\t\tc0.325,0.081,0.574,0.174,0.745,0.273c0.249,0.14,0.442,0.333,0.591,0.584c0.146,0.25,0.221,0.527,0.221,0.835\t\tC20.064,19.098,19.951,19.437,19.73,19.747z M30.208,21.297v1.5c0,0.274-0.226,0.5-0.5,0.5c-0.276,0-0.5-0.226-0.5-0.5v-1.5\t\tc0-0.276,0.224-0.5,0.5-0.5C29.982,20.797,30.208,21.021,30.208,21.297z M4.308,27.51c0.104,0.256-0.02,0.547-0.276,0.649\t\tc-0.062,0.025-0.125,0.037-0.188,0.037c-0.198,0-0.385-0.116-0.463-0.312c-0.227-0.561-0.34-1.149-0.34-1.756v-1.363\t\tc0-0.276,0.224-0.5,0.5-0.5c0.275,0,0.5,0.224,0.5,0.5v1.363C4.042,26.608,4.13,27.072,4.308,27.51z M3.042,9.913V8.337\t\tc0-0.526,0.086-1.042,0.257-1.534c0.09-0.261,0.375-0.4,0.636-0.308c0.261,0.09,0.399,0.375,0.308,0.636\t\tC4.109,7.517,4.042,7.923,4.042,8.337v1.576c0,0.276-0.225,0.5-0.5,0.5C3.264,10.413,3.042,10.19,3.042,9.913z M3.042,15.855\t\tv-2.971c0-0.276,0.224-0.5,0.5-0.5c0.275,0,0.5,0.224,0.5,0.5v2.971c0,0.276-0.225,0.5-0.5,0.5\t\tC3.265,16.355,3.042,16.131,3.042,15.855z M3.042,21.795v-2.972c0-0.274,0.224-0.5,0.5-0.5c0.275,0,0.5,0.226,0.5,0.5v2.972\t\tc0,0.275-0.225,0.5-0.5,0.5C3.265,22.295,3.042,22.072,3.042,21.795z M10.957,4.151c0-0.276,0.224-0.5,0.5-0.5h2.971\t\tc0.276,0,0.5,0.224,0.5,0.5s-0.224,0.5-0.5,0.5h-2.971C11.18,4.651,10.957,4.427,10.957,4.151z M28.402,6.039\t\tc-0.172-0.216-0.137-0.531,0.08-0.703c0.215-0.172,0.529-0.137,0.703,0.079c0.658,0.826,1.021,1.864,1.021,2.922v0.151\t\tc0,0.276-0.225,0.5-0.5,0.5s-0.5-0.224-0.5-0.5V8.337C29.208,7.493,28.929,6.698,28.402,6.039z M22.839,4.151\t\tc0-0.276,0.224-0.5,0.5-0.5h2.183c0.293,0,0.588,0.027,0.875,0.082c0.271,0.051,0.451,0.313,0.398,0.584\t\tc-0.045,0.24-0.255,0.407-0.491,0.407c-0.03,0-0.062-0.003-0.093-0.009c-0.229-0.043-0.459-0.064-0.691-0.064h-2.182\t\tC23.062,4.651,22.839,4.427,22.839,4.151z M16.898,4.151c0-0.276,0.225-0.5,0.5-0.5h2.972c0.274,0,0.5,0.224,0.5,0.5\t\ts-0.226,0.5-0.5,0.5h-2.972C17.122,4.651,16.898,4.427,16.898,4.151z M5.617,5.221c-0.172,0-0.339-0.088-0.432-0.248\t\tC5.046,4.735,5.126,4.428,5.364,4.289C6.079,3.872,6.895,3.651,7.727,3.65h0.758c0.276,0,0.5,0.224,0.5,0.5s-0.224,0.5-0.5,0.5\t\tH7.727c-0.655,0-1.297,0.174-1.857,0.502C5.791,5.199,5.704,5.221,5.617,5.221z M21.08,30.317c0,0.275-0.225,0.5-0.5,0.5h-2.972\t\tc-0.275,0-0.5-0.225-0.5-0.5s0.225-0.5,0.5-0.5h2.972C20.855,29.817,21.08,30.042,21.08,30.317z M30.208,25.768v0.363\t\tc0,0.987-0.306,1.934-0.88,2.731c-0.1,0.138-0.252,0.208-0.406,0.208c-0.102,0-0.203-0.029-0.292-0.094\t\tc-0.226-0.161-0.274-0.475-0.114-0.698c0.452-0.628,0.691-1.372,0.691-2.147v-0.363c0-0.276,0.225-0.5,0.5-0.5\t\tS30.208,25.491,30.208,25.768z M26.998,30.081c0.064,0.271-0.102,0.539-0.368,0.604c-0.36,0.087-0.731,0.132-1.104,0.132\t\tc-0.002,0-0.004,0-0.006,0h-1.97c-0.276,0-0.5-0.225-0.5-0.5s0.224-0.5,0.5-0.5h1.972c0.295-0.042,0.586-0.034,0.871-0.104\t\tC26.658,29.646,26.932,29.813,26.998,30.081z M9.197,30.317c0,0.275-0.224,0.5-0.5,0.5H7.728c-0.75,0-1.495-0.182-2.156-0.523\t\tc-0.244-0.127-0.34-0.43-0.213-0.675s0.429-0.341,0.674-0.213c0.527,0.272,1.098,0.412,1.695,0.412h0.969\t\tC8.973,29.817,9.197,30.042,9.197,30.317z M15.138,30.317c0,0.275-0.224,0.5-0.5,0.5h-2.97c-0.276,0-0.5-0.225-0.5-0.5\t\ts0.224-0.5,0.5-0.5h2.97C14.915,29.817,15.138,30.042,15.138,30.317z M30.208,11.508v1.5c0,0.276-0.226,0.5-0.5,0.5\t\tc-0.276,0-0.5-0.224-0.5-0.5v-1.5c0-0.276,0.224-0.5,0.5-0.5C29.982,11.008,30.208,11.232,30.208,11.508z M34.459,17.234\t\tl0.003-0.442c0.013-0.966,0.021-1.8-0.515-2.343c-0.186-0.187-0.42-0.31-0.697-0.384V6.608c0-3.309-2.691-6-6-6H6\t\tc-3.31,0-6,2.691-6,6v21.25c0,3.309,2.69,6,6,6h21.25c3.309,0,6-2.691,6-6v-7.457c0.277-0.074,0.514-0.197,0.697-0.384\t\tc0.535-0.543,0.525-1.377,0.515-2.343L34.459,17.234z M27.25,31.859H6c-2.206,0-4-1.794-4-4V6.609c0-2.206,1.794-4,4-4h21.25\t\tc2.206,0,4,1.794,4,4v7.375h-1.375c-1.792,0-3.25,1.458-3.25,3.25s1.458,3.25,3.25,3.25h1.375v7.375\t\tC31.25,30.065,29.456,31.859,27.25,31.859z M33.461,17.689c0.009,0.71,0.018,1.381-0.227,1.627c-0.062,0.062-0.16,0.103-0.277,0.13\t\tc-0.182-0.182-0.434-0.295-0.709-0.295c-0.293,0-0.553,0.131-0.734,0.333h-1.641c-1.241,0-2.25-1.009-2.25-2.25\t\ts1.009-2.25,2.25-2.25h1.584c0.184,0.247,0.461,0.417,0.791,0.417c0.311,0,0.574-0.149,0.759-0.37\t\tc0.097,0.028,0.175,0.067,0.228,0.121c0.244,0.246,0.234,0.917,0.228,1.627l-0.004,0.455L33.461,17.689z M31.625,17.234\tc0,0.829-0.671,1.5-1.5,1.5s-1.5-0.671-1.5-1.5s0.671-1.5,1.5-1.5S31.625,16.405,31.625,17.234z" })));
+        this.budget = react_1.default.createElement("svg", { viewBox: "0 0 511.969 511.969", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("g", { id: "XMLID_1487_" },
+                react_1.default.createElement("g", { id: "XMLID_1153_" },
+                    react_1.default.createElement("path", { id: "XMLID_1329_", d: "m426.523 283.917-76.444-119.836c10.831-5.692 18.24-17.05 18.24-30.112 0-14.297-8.875-26.553-21.402-31.57l23.158-80.964c.999-3.493.025-7.252-2.543-9.821-15.405-15.404-40.469-15.404-55.874 0-3.685 3.685-8.584 5.714-13.795 5.714s-10.11-2.029-13.818-5.738l-.049-.049c-15.35-15.352-40.371-15.395-55.783-.091l-.287.286c-7.607 7.553-19.962 7.531-27.541-.049l-.073-.073c-15.405-15.404-40.469-15.404-55.874 0-2.57 2.571-3.543 6.333-2.542 9.828l23.208 80.938c-12.554 5.004-21.453 17.273-21.453 31.59 0 13.062 7.408 24.42 18.24 30.112l-76.445 119.835c-29.574 46.36-31.448 102.826-5.013 151.045s75.047 77.007 130.038 77.007h91.026c54.99 0 103.602-28.788 130.038-77.007 26.435-48.219 24.562-104.685-5.012-151.045zm-240.354-258.161.073.073c15.352 15.351 40.372 15.393 55.783.091l.287-.286c7.606-7.553 19.961-7.531 27.564.072l.049.049c15.405 15.404 40.469 15.404 55.874 0 6.268-6.268 15.775-7.371 23.183-3.309l-22.172 77.523h-141.59l-22.23-77.524c7.408-4.061 16.912-2.956 23.179 3.311zm227.829 399.592c-22.87 41.716-64.926 66.622-112.5 66.622h-91.026c-47.574 0-89.63-24.905-112.5-66.622-22.87-41.716-21.249-90.566 4.336-130.675l80.825-126.704h27.852c5.523 0 10-4.477 10-10s-4.477-10-10-10h-33.334c-7.72 0-14-6.28-14-14s6.28-14 14-14h.033 156.634c7.72 0 14 6.28 14 14s-6.28 14-14 14h-33.333c-5.523 0-10 4.477-10 10s4.477 10 10 10h27.851l80.826 126.704c25.585 40.108 27.206 88.958 4.336 130.675z" }),
+                    react_1.default.createElement("path", { id: "XMLID_1341_", d: "m273.615 326.579c-2.509-.887-5.07-1.81-7.63-2.769v-45.322c6.78 1.995 11.308 5.23 11.5 5.37 4.399 3.295 10.64 2.421 13.964-1.966 3.335-4.402 2.47-10.674-1.932-14.01-.587-.445-9.885-7.347-23.532-9.96v-9.952c0-5.523-4.477-10-10-10s-10 4.477-10 10v9.88c-1.694.325-3.411.736-5.151 1.259-14.074 4.229-24.594 16.265-27.455 31.411-2.611 13.83 1.82 27.169 11.564 34.811 5.288 4.147 11.895 7.934 21.042 11.956v57.996c-7.875-.498-13.143-2.29-21.925-8.035-4.621-3.025-10.82-1.728-13.843 2.894-3.024 4.622-1.728 10.819 2.894 13.843 12.806 8.377 21.477 10.75 32.874 11.311v10.341c0 5.523 4.477 10 10 10s10-4.477 10-10v-11.38c21.414-4.69 33.938-22.559 36.748-39.275 3.673-21.854-7.756-40.853-29.118-48.403zm-36.329-16.986c-3.844-3.015-5.474-8.902-4.254-15.363 1.122-5.942 5.12-13.107 12.953-15.758v36.623c-3.288-1.753-6.255-3.585-8.699-5.502zm45.723 62.072c-1.44 8.565-7.221 17.649-17.025 21.663v-48.239c.326.116.635.229.965.346 17.929 6.337 16.826 21.679 16.06 26.23z" }),
+                    react_1.default.createElement("path", { id: "XMLID_1343_", d: "m255.985 167.969c2.63 0 5.21-1.07 7.07-2.93s2.93-4.44 2.93-7.07-1.07-5.21-2.93-7.07-4.44-2.93-7.07-2.93-5.21 1.07-7.07 2.93-2.93 4.44-2.93 7.07 1.07 5.21 2.93 7.07 4.439 2.93 7.07 2.93z" }))));
+        this.debts = react_1.default.createElement("svg", { viewBox: "0 0 512 512", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("path", { d: "m369.071 62.929c-1.876-1.875-4.419-2.929-7.071-2.929h-102.013c-18.711-36.653-56.466-60-97.987-60-60.654 0-110 49.346-110 110s49.346 110 110 110c30.337 0 58.517-12.104 79.155-33.601 20.388 28.473 46.111 53.601 94.365 53.601h42.338l117.071 117.071c2.861 2.861 7.161 3.714 10.898 2.168 3.736-1.548 6.173-5.194 6.173-9.239v-140c0-2.652-1.054-5.195-2.929-7.071zm-207.071 137.071c-49.626 0-90-40.374-90-90s40.374-90 90-90c35.795 0 68.185 21.197 82.516 54.003 3.631 8.313 5.947 17.023 6.933 25.997h-29.449c-5.522 0-10 4.478-10 10 0 19.368 11.252 36.667 28.013 44.905-16.02 27.764-45.23 45.095-78.013 45.095zm330 125.857-86.5-86.5c3.794-1.42 6.5-5.068 6.5-9.358 0-5.522-4.478-10-10-10h-66.48c-41.75 0-62.286-22.104-81.385-49.905 2.14-3.274 4.102-6.663 5.879-10.145.661.026 1.323.05 1.986.05h16.734c11.483 24.192 36.074 40 63.266 40 5.522 0 10-4.478 10-10s-4.478-10-10-10c-21.157 0-40.11-13.396-47.162-33.334-1.413-3.995-5.19-6.666-9.428-6.666h-23.41c-12.877 0-24.065-8.158-28.275-20h108.275c5.522 0 10-4.478 10-10s-4.478-10-10-10h-70.454c-.609-6.796-1.84-13.475-3.689-20h90.001l134.142 134.144z" }),
+                react_1.default.createElement("path", { d: "m162.17 99.58c-5.514 0-10-4.486-10-10 0-5.47 4.446-9.955 9.9-10 .024 0 .049-.001.073-.001 3.561 0 7.309 1.807 10.843 5.227 3.968 3.843 10.301 3.739 14.14-.231 3.841-3.969 3.737-10.299-.231-14.14-5.13-4.965-10.269-7.757-14.895-9.263v-11.172c0-5.522-4.478-10-10-10s-10 4.478-10 10v11.368c-11.541 4.19-19.83 15.282-19.83 28.212 0 16.542 13.458 30 30 30 5.514 0 10 4.486 10 10 0 5.553-4.503 10.001-9.986 10.001-.03 0-.061 0-.092-.001-4.328-.039-8.788-2.651-12.897-7.554-3.549-4.234-9.854-4.788-14.088-1.239-4.232 3.548-4.788 9.854-1.24 14.087 5.287 6.307 11.518 10.723 18.134 12.979v12.147c0 5.522 4.478 10 10 10s10-4.478 10-10v-12.061c11.515-3.982 20.17-14.992 20.17-28.359-.001-16.542-13.459-30-30.001-30z" }),
+                react_1.default.createElement("path", { d: "m156 246c-5.522 0-10 4.478-10 10v41.857l-2.929-2.929c-3.906-3.904-10.236-3.904-14.143 0-3.905 3.905-3.905 10.237 0 14.143l20 20c1.954 1.952 4.512 2.929 7.072 2.929s5.118-.977 7.071-2.929l20-20c3.905-3.905 3.905-10.237 0-14.143-3.906-3.904-10.236-3.904-14.143 0l-2.928 2.929v-41.857c0-5.522-4.478-10-10-10z" }),
+                react_1.default.createElement("circle", { cx: "146", cy: "502", r: "10" }),
+                react_1.default.createElement("path", { d: "m72.748 392h-62.748c-5.522 0-10 4.478-10 10v100c0 5.522 4.478 10 10 10h91c5.522 0 10-4.478 10-10s-4.478-10-10-10h-81v-80.01h46.723c-.472 3.307-.723 6.644-.723 10.01 0 5.522 4.478 10 10 10s10-4.478 10-10c0-5.725.955-11.334 2.838-16.667 7.049-19.937 26.002-33.333 47.162-33.343h68.286c-4.127 11.651-15.249 20.01-28.286 20.01h-40c-5.522 0-10 4.478-10 10 0 27.57 22.43 50 50 49.99h95.276c.068.011.136.02.205.02 2.56 0 5.118-.977 7.071-2.929l48.3-48.3c.04-.039.073-.084.112-.124 9.485-9.165 23.638-10.811 34.807-4.966l-78.492 96.309h-92.279c-5.522 0-10 4.478-10 10s4.478 10 10 10h97.03c3.006 0 5.853-1.353 7.752-3.683l88.06-108.05c3.241-3.978 2.946-9.764-.684-13.391-17.137-17.13-43.901-19.168-63.332-6.067-19.47-13.399-46.394-11.466-63.688 5.828l-45.361 45.363h-34.777c-13.037 0-24.159-8.359-28.286-20h28.286c27.57 0 50-22.43 50-50 0-5.522-4.478-10-10-10h-80c-27.191 0-51.768 15.811-63.252 40zm197.533 8.781c9.209-9.212 22.977-11.166 34.129-5.862l-37.083 37.081h-28.265z" })));
+        this.statistics = react_1.default.createElement("svg", { viewBox: "0 0 512 512", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("circle", { cx: "296", cy: "256", r: "10" }),
+                react_1.default.createElement("circle", { cx: "296", cy: "296", r: "10" }),
+                react_1.default.createElement("path", { d: "m376.184 185.581c-.03 0-.061 0-.092-.001-4.329-.039-8.789-2.651-12.898-7.554-3.548-4.234-9.856-4.788-14.088-1.239-4.232 3.548-4.787 9.854-1.239 14.087 5.287 6.307 11.518 10.723 18.134 12.979v12.147c0 5.522 4.477 10 10 10s10-4.478 10-10v-12.061c11.516-3.982 20.17-14.993 20.17-28.359 0-16.542-13.458-30-30-30-5.514 0-10-4.486-10-10 0-5.47 4.446-9.955 9.9-10 .024 0 .049-.001.074-.001 3.561 0 7.308 1.807 10.842 5.227 3.969 3.842 10.299 3.738 14.141-.231 3.841-3.969 3.737-10.299-.231-14.14-5.13-4.965-10.269-7.757-14.895-9.263v-11.172c0-5.522-4.477-10-10-10s-10 4.478-10 10v11.368c-11.54 4.19-19.83 15.282-19.83 28.212 0 16.542 13.458 30 30 30 5.514 0 10 4.486 10 10-.002 5.539-4.49 10.001-9.988 10.001z" }),
+                react_1.default.createElement("path", { d: "m176 306c60.679 0 110-49.18 110-110 0-60.683-49.183-110-110-110-60.654 0-110 49.346-110 110s49.346 110 110 110zm90-110c0 20.679-6.939 40.277-19.688 56.169l-56.169-56.169 56.169-56.169c12.748 15.89 19.688 35.488 19.688 56.169zm-90-90c20.68 0 40.278 6.94 56.169 19.688l-60.311 60.312h-85.299c4.99-44.937 43.195-80 89.441-80zm-4.143 100 60.312 60.312c-15.891 12.748-35.489 19.688-56.169 19.688-46.246 0-84.451-35.063-89.441-80z" }),
+                react_1.default.createElement("path", { d: "m336 266h106c5.523 0 10-4.478 10-10s-4.477-10-10-10h-106c-5.523 0-10 4.478-10 10s4.477 10 10 10z" }),
+                react_1.default.createElement("path", { d: "m336 306h106c5.523 0 10-4.478 10-10s-4.477-10-10-10h-106c-5.523 0-10 4.478-10 10s4.477 10 10 10z" }),
+                react_1.default.createElement("circle", { cx: "256", cy: "10", r: "10" }),
+                react_1.default.createElement("path", { d: "m482 0h-181c-5.523 0-10 4.478-10 10s4.477 10 10 10h181c5.514 0 10 4.486 10 10v10c-22.191 0-446.007 0-472 0v-10c0-5.514 4.486-10 10-10h181c5.523 0 10-4.478 10-10s-4.477-10-10-10h-181c-16.542 0-30 13.458-30 30v20c0 5.522 4.477 10 10 10h10v266h-10c-5.523 0-10 4.478-10 10s4.477 10 10 10h156v30c0 5.522 4.477 10 10 10h70v31.857l-77.071 77.071c-3.905 3.905-3.905 10.237 0 14.143 3.905 3.904 10.237 3.904 14.143 0l62.928-62.928v55.857c0 5.522 4.477 10 10 10s10-4.478 10-10v-55.857l62.929 62.929c3.906 3.905 10.237 3.905 14.143 0 3.905-3.905 3.905-10.237 0-14.143l-77.072-77.072v-31.857h70c5.523 0 10-4.478 10-10v-30h156c5.523 0 10-4.478 10-10s-4.477-10-10-10h-10v-266h10c5.523 0 10-4.478 10-10v-20c0-16.542-13.458-30-30-30zm-156 366h-140v-20h140zm146-40h-432v-266h432z" })));
+    }
+}
+exports.IconsData = IconsData;
 
 
 /***/ }),
