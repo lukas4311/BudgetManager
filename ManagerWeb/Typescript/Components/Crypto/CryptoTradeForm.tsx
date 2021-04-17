@@ -2,8 +2,9 @@ import * as React from 'react'
 import { useForm } from "react-hook-form";
 import { Button } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
+import { IBaseModel } from '../BaseList';
 
-class CryptoTradeFormModel {
+class CryptoTradeViewModel implements IBaseModel {
     id: number;
     tradeTimeStamp: string;
     cryptoTickerId: number;
@@ -12,13 +13,13 @@ class CryptoTradeFormModel {
     tradeValue: number;
     currencySymbolId: number;
     currencySymbol: string;
-    onSave: (data: CryptoTradeFormModel) => void;
+    onSave: (data: CryptoTradeViewModel) => void;
 }
 
-const CryptoTradeForm = (props: CryptoTradeFormModel) => {
-    const { register, handleSubmit } = useForm<CryptoTradeFormModel>({ defaultValues: props });
+const CryptoTradeForm = (props: CryptoTradeViewModel) => {
+    const { register, handleSubmit } = useForm<CryptoTradeViewModel>({ defaultValues: props });
 
-    const onSubmit = (data: CryptoTradeFormModel) => {
+    const onSubmit = (data: CryptoTradeViewModel) => {
         props.onSave(data);
     };
 
@@ -43,4 +44,4 @@ const CryptoTradeForm = (props: CryptoTradeFormModel) => {
     );
 };
 
-export { CryptoTradeForm, CryptoTradeFormModel }
+export { CryptoTradeForm, CryptoTradeViewModel }

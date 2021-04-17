@@ -13,6 +13,7 @@ interface IBaseListProps<T extends IBaseModel> {
     addItemHandler?: () => void;
     itemClickHandler?: (id: number) => void;
     deleteItemHandler?: (id: number) => void;
+    dataAreaClass?: string;
 }
 
 const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
@@ -58,7 +59,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                         {props.header}
                     </div>
                 </div>
-                <div>
+                <div className={"pr-5 " + props.dataAreaClass}>
                     {props.data.map(d => (
                         <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
                             <div className="w-8/10 flex flex-row">
