@@ -2435,6 +2435,8 @@ class CryptoTrades extends react_1.default.Component {
             // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
         };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
+            this.setState({ selectedTrade: tradeHistory, openedForm: true });
             // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
             // let budgetFormModel: BudgetFormModel = {
             //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
@@ -2443,7 +2445,7 @@ class CryptoTrades extends react_1.default.Component {
             // this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
         });
         this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
-        this.state = { trades: undefined, openedForm: false, selectedTrade: undefined };
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined };
     }
     componentDidMount() {
         this.load();
@@ -2457,26 +2459,9 @@ class CryptoTrades extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", { className: "" },
+        return (react_1.default.createElement("div", { className: "pr-5 h-full" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-                react_1.default.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.trades, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit }),
-                react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Seznam plateb"),
-                this.state.trades != undefined ?
-                    react_1.default.createElement("div", { className: "pb-10 max-h-96 overflow-x-auto" },
-                        react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")),
-                        this.state.trades.map(p => react_1.default.createElement("div", { key: p.id, onClick: _ => this.handleClickOpen(p), className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, moment_1.default(p.tradeTimeStamp).format('DD.MM.YYYY')),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
-                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol))))
-                    : react_1.default.createElement("div", null,
-                        react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
+                react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit }),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
                     react_1.default.createElement(core_1.DialogContent, null,

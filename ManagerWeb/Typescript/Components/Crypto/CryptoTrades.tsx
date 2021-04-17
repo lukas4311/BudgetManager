@@ -24,7 +24,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     constructor(props: {}) {
         super(props);
         this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
-        this.state = { trades: undefined, openedForm: false, selectedTrade: undefined };
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined };
     }
 
     public componentDidMount() {
@@ -93,6 +93,8 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     }
 
     private budgetEdit = async (id: number): Promise<void> => {
+        let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
+        this.setState({ selectedTrade: tradeHistory, openedForm: true });
         // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
         // let budgetFormModel: BudgetFormModel = {
         //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
@@ -103,35 +105,11 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
 
     render() {
         return (
-            <div className="">
+            <div className="pr-5 h-full">
                 <ThemeProvider theme={theme}>
-                    <BaseList<CryptoTradeViewModel> title="Rozpočty" data={this.state.trades} template={this.renderTemplate}
+                    <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate}
                         header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit}>
                     </BaseList>
-                    <h2 className="text-xl ml-12 mb-10">Seznam plateb</h2>
-                    {this.state.trades != undefined ?
-                        <div className="pb-10 max-h-96 overflow-x-auto">
-                            <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
-                                <p className="mx-6 my-1 w-1/10">Ticker</p>
-                                <p className="mx-6 my-1 w-3/10">Velikost tradu</p>
-                                <p className="mx-6 my-1 w-2/10">Datum tradu</p>
-                                <p className="mx-6 my-1 w-3/10">Celkova hodnota</p>
-                                <p className="mx-6 my-1 w-1/10">Měna</p>
-                            </div>
-                            {this.state.trades.map(p =>
-                                <div key={p.id} onClick={_ => this.handleClickOpen(p)} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
-                                    <p className="mx-6 my-1 w-1/10">{p.cryptoTicker.toUpperCase()}</p>
-                                    <p className="mx-6 my-1 w-3/10">{p.tradeSize}</p>
-                                    <p className="mx-6 my-1 w-2/10">{moment(p.tradeTimeStamp).format('DD.MM.YYYY')}</p>
-                                    <p className="mx-6 my-1 w-3/10">{p.tradeValue.toFixed(2)}</p>
-                                    <p className="mx-6 my-1 w-1/10">{p.currencySymbol}</p>
-                                </div>
-                            )}
-                        </div>
-                        : <div>
-                            <p>Probíhá načátíní</p>
-                        </div>
-                    }
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                         maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
