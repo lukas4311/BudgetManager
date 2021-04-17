@@ -2156,7 +2156,7 @@ const BaseList = (props) => {
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
             React.createElement("div", { className: "text-center flex" },
                 React.createElement("div", { className: "w-8/10 flex flex-row" }, props.header)),
-            React.createElement("div", null, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
+            React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
                 React.createElement("div", { className: "w-8/10 flex flex-row" }, props.template(d)),
                 React.createElement("div", { className: "w-2/10 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },

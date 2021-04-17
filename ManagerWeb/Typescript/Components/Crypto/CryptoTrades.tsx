@@ -108,7 +108,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
             <div className="pr-5 h-full">
                 <ThemeProvider theme={theme}>
                     <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate}
-                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit}>
+                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
                     </BaseList>
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                         maxWidth="md" fullWidth={true}>
