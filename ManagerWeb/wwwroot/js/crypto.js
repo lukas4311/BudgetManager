@@ -2393,10 +2393,7 @@ const theme = styles_1.createMuiTheme({
 class CryptoTrades extends react_1.default.Component {
     constructor(props) {
         super(props);
-        this.saveTrade = (data) => {
-            console.log(`Saved ${data}`);
-        };
-        this.handleClickOpen = (tradeHistory) => {
+        this.mapDataModelToViewModel = (tradeHistory) => {
             let model = new CryptoTradeForm_1.CryptoTradeViewModel();
             model.cryptoTicker = tradeHistory.cryptoTicker;
             model.cryptoTickerId = tradeHistory.cryptoTickerId;
@@ -2407,7 +2404,13 @@ class CryptoTrades extends react_1.default.Component {
             model.tradeTimeStamp = moment_1.default(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
             model.tradeValue = tradeHistory.tradeValue;
             model.onSave = this.saveTrade;
-            this.setState({ selectedTrade: model, openedForm: true });
+            return model;
+        };
+        this.saveTrade = (data) => {
+            console.log(`Saved ${data}`);
+        };
+        this.handleClickOpen = (tradeHistory) => {
+            this.setState({ selectedTrade: tradeHistory, openedForm: true });
         };
         this.handleClose = () => {
             this.setState({ openedForm: false });
@@ -2448,11 +2451,7 @@ class CryptoTrades extends react_1.default.Component {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             let tradesData = yield this.cryptoInterface.cryptoGetAllGet();
-            let trades = tradesData.map(t => ({
-                cryptoTicker: t.cryptoTicker, cryptoTickerId: t.cryptoTickerId, currencySymbol: t.currencySymbol,
-                currencySymbolId: t.currencySymbolId, id: t.id, tradeSize: t.tradeSize, tradeTimeStamp: moment_1.default(t.tradeTimeStamp).format("YYYY-MM-DD"),
-                tradeValue: t.tradeValue, onSave: this.saveTrade
-            }));
+            let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
             trades.sort((a, b) => moment_1.default(a.tradeTimeStamp).format("YYYY-MM-DD") > moment_1.default(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
             this.setState({ trades });
         });

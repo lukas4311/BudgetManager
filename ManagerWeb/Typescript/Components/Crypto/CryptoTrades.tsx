@@ -33,20 +33,12 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
 
     private async load(): Promise<void> {
         let tradesData: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
-        let trades: CryptoTradeViewModel[] = tradesData.map(t => ({
-            cryptoTicker: t.cryptoTicker, cryptoTickerId: t.cryptoTickerId, currencySymbol: t.currencySymbol,
-            currencySymbolId: t.currencySymbolId, id: t.id, tradeSize: t.tradeSize, tradeTimeStamp: moment(t.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: t.tradeValue, onSave: this.saveTrade
-        }));
+        let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
         this.setState({ trades });
     }
 
-    private saveTrade = (data: CryptoTradeViewModel): void => {
-        console.log(`Saved ${data}`)
-    }
-
-    handleClickOpen = (tradeHistory: CryptoTradeViewModel) => {
+    private mapDataModelToViewModel = (tradeHistory: TradeHistory): CryptoTradeViewModel => {
         let model: CryptoTradeViewModel = new CryptoTradeViewModel();
         model.cryptoTicker = tradeHistory.cryptoTicker;
         model.cryptoTickerId = tradeHistory.cryptoTickerId;
@@ -57,11 +49,18 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
         model.tradeTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
         model.tradeValue = tradeHistory.tradeValue;
         model.onSave = this.saveTrade;
+        return model;
+    }
 
-        this.setState({ selectedTrade: model, openedForm: true });
+    private saveTrade = (data: CryptoTradeViewModel): void => {
+        console.log(`Saved ${data}`)
+    }
+
+    private handleClickOpen = (tradeHistory: CryptoTradeViewModel) => {
+        this.setState({ selectedTrade: tradeHistory, openedForm: true });
     };
 
-    handleClose = () => {
+    private handleClose = () => {
         this.setState({ openedForm: false });
     };
 
