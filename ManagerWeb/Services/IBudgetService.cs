@@ -13,6 +13,6 @@ namespace ManagerWeb.Services
         void Delete(int id);
         IEnumerable<BudgetModel> GetActual();
 
-        IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate = DateTime.MaxValue);
+        IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate);
     }
 }
