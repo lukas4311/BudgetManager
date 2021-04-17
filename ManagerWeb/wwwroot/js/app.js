@@ -3413,7 +3413,7 @@ class Overview extends React.Component {
     render() {
         return (React.createElement("div", { className: "" },
             React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
-            React.createElement("div", { className: "w-full p-4" },
+            React.createElement("div", { className: "w-full lg:p-4" },
                 React.createElement(PaymentsOverview_1.default, null))));
     }
 }
