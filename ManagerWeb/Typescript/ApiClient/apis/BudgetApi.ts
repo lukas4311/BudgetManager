@@ -75,6 +75,18 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
+    budgetGetActualGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
+
+    /**
+     */
+    budgetGetActualGet(): Promise<Array<BudgetModel>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BudgetApiInterface
+     */
     budgetGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
 
     /**
@@ -164,6 +176,30 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
      */
     async budgetDeleteDelete(requestParameters: BudgetDeleteDeleteRequest): Promise<void> {
         await this.budgetDeleteDeleteRaw(requestParameters);
+    }
+
+    /**
+     */
+    async budgetGetActualGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/budget/getActual`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BudgetModelFromJSON));
+    }
+
+    /**
+     */
+    async budgetGetActualGet(): Promise<Array<BudgetModel>> {
+        const response = await this.budgetGetActualGetRaw();
+        return await response.value();
     }
 
     /**
