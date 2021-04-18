@@ -26,7 +26,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private async loadBudget(): Promise<void> {
-        let budgets = await this.budgetApi.budgetGetAllGet();
+        let budgets = await this.budgetApi.budgetGetActualGet();
         let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
             id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).format('DD.MM.YYYY')
             , dateTo: moment(b.dateTo).format('DD.MM.YYYY'), name: b.name

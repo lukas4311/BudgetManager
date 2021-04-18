@@ -37,7 +37,7 @@ namespace ManagerWeb.Services
         public IEnumerable<BudgetModel> GetActual()
         {
             int userId = this.GetUserId();
-            return this.budgetRepository.FindByCondition(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
+            return this.budgetRepository.FindAll().ToList().Where(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
         }
 
         public IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate)

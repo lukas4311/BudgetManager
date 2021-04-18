@@ -2329,7 +2329,7 @@ class BudgetComponent extends React.Component {
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
-            let budgets = yield this.budgetApi.budgetGetAllGet();
+            let budgets = yield this.budgetApi.budgetGetActualGet();
             let budgetViewModels = budgets.map(b => ({
                 id: b.id, amount: b.amount, dateFrom: moment_1.default(b.dateFrom).format('DD.MM.YYYY'),
                 dateTo: moment_1.default(b.dateTo).format('DD.MM.YYYY'), name: b.name
