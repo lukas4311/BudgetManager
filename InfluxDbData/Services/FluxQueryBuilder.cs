@@ -80,23 +80,18 @@ namespace InfluxDbData.Services
         public string CreateQuery()
         {
             string query = this.fromClause;
-            query += " |> ";
-            query += this.range;
-            query += " |> ";
-            query += this.GetFilterQeuryPartToQuery();
-            query += " |> ";
-            query += pivotClause;
+            query += $" |> {this.range}";
+            query += $" |> {this.GetFilterQeuryPartToQuery()}";
+            query += $" |> {pivotClause}";
 
             if (!string.IsNullOrEmpty(this.sort))
             {
-                query += " |> ";
-                query += this.sort;
+                query += $" |> {this.sort}";
             }
 
             if (!string.IsNullOrEmpty(this.tail))
             {
-                query += " |> ";
-                query += this.tail;
+                query += $" |> {this.tail}";
             }
 
             return query;
