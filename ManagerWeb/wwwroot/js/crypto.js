@@ -284,6 +284,29 @@ class BudgetApi extends runtime.BaseAPI {
     }
     /**
      */
+    budgetGetActualGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            const response = yield this.request({
+                path: `/budget/getActual`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
+        });
+    }
+    /**
+     */
+    budgetGetActualGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.budgetGetActualGetRaw();
+            return yield response.value();
+        });
+    }
+    /**
+     */
     budgetGetAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};

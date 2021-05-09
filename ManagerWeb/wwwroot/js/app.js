@@ -284,6 +284,29 @@ class BudgetApi extends runtime.BaseAPI {
     }
     /**
      */
+    budgetGetActualGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            const response = yield this.request({
+                path: `/budget/getActual`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
+        });
+    }
+    /**
+     */
+    budgetGetActualGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.budgetGetActualGetRaw();
+            return yield response.value();
+        });
+    }
+    /**
+     */
     budgetGetAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -2269,7 +2292,6 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
-const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 class BudgetComponent extends React.Component {
@@ -2280,20 +2302,6 @@ class BudgetComponent extends React.Component {
         });
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
-        };
-        this.addNewItem = () => {
-            this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
-        };
-        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
-            const budgetModel = yield this.budgetApi.budgetGetGet({ id: id });
-            let budgetFormModel = {
-                amount: budgetModel.amount, from: moment_1.default(budgetModel.dateFrom).format("YYYY-MM-DD"),
-                to: moment_1.default(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
-            };
-            this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
-        });
-        this.deleteItem = (id) => {
-            this.budgetApi.budgetDeleteDelete({ body: id });
         };
         this.saveFormData = (model) => {
             let budgetModel = {
@@ -2308,24 +2316,10 @@ class BudgetComponent extends React.Component {
             }
             this.hideBudgetModal();
         };
-        this.renderTemplate = (budgetModel) => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, budgetModel.dateFrom),
-                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, budgetModel.dateTo),
-                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.amount),
-                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, budgetModel.name)));
-        };
         this.renderCard = (budgetModel) => {
             let actualProps = { from: budgetModel.dateFrom, limit: budgetModel.amount, name: budgetModel.name, spent: 20 };
-            return (React.createElement("div", { className: "w-2/5 my-2" },
+            return (React.createElement("div", { className: "w-2/5 my-2 cursor-pointer" },
                 React.createElement(ActualBudgetCard_1.default, Object.assign({}, actualProps))));
-        };
-        this.renderHeader = () => {
-            return (React.createElement(React.Fragment, null,
-                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Od"),
-                React.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Do"),
-                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, "V\u00FD\u0161e"),
-                React.createElement("p", { className: "mx-6 my-1 w-2/10" }, "N\u00E1zev")));
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
         this.budgetApi = new ApiClient_1.BudgetApi();
@@ -2335,7 +2329,7 @@ class BudgetComponent extends React.Component {
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
-            let budgets = yield this.budgetApi.budgetGetAllGet();
+            let budgets = yield this.budgetApi.budgetGetActualGet();
             let budgetViewModels = budgets.map(b => ({
                 id: b.id, amount: b.amount, dateFrom: moment_1.default(b.dateFrom).format('DD.MM.YYYY'),
                 dateTo: moment_1.default(b.dateTo).format('DD.MM.YYYY'), name: b.name
@@ -2345,9 +2339,8 @@ class BudgetComponent extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement(BaseList_1.BaseList, { title: "Rozpo\u010Dty", data: this.state.budgets, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, deleteItemHandler: this.deleteItem }),
             React.createElement("div", { className: "flex flex-col mt-6" },
-                React.createElement("h2", { className: "ml-6 text-xl" }, "Rozpo\u010Dty"),
+                React.createElement("h2", { className: "ml-6 text-xl" }, "Actual budgets"),
                 React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
             React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
                 React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),

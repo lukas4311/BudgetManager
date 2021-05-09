@@ -10,8 +10,8 @@ namespace InfluxDbData.Services
         private const string pivotClause = @"pivot(rowKey:[""_time""],columnKey: [""_field""],valueColumn: ""_value"")";
         private const string sortClause = @"sort(columns: [""_time""], desc: {0})";
         private const string tailClause = "tail(n: {0})";
-
         private string fromClause = "from(bucket:\"{0}\")";
+
         private string range = string.Empty;
         private string tail = string.Empty;
         private string sort = string.Empty;
@@ -80,23 +80,18 @@ namespace InfluxDbData.Services
         public string CreateQuery()
         {
             string query = this.fromClause;
-            query += " |> ";
-            query += this.range;
-            query += " |> ";
-            query += this.GetFilterQeuryPartToQuery();
-            query += " |> ";
-            query += pivotClause;
+            query += $" |> {this.range}";
+            query += $" |> {this.GetFilterQeuryPartToQuery()}";
+            query += $" |> {pivotClause}";
 
             if (!string.IsNullOrEmpty(this.sort))
             {
-                query += " |> ";
-                query += this.sort;
+                query += $" |> {this.sort}";
             }
 
             if (!string.IsNullOrEmpty(this.tail))
             {
-                query += " |> ";
-                query += this.tail;
+                query += $" |> {this.tail}";
             }
 
             return query;

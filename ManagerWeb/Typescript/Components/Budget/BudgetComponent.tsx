@@ -2,8 +2,6 @@ import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import moment from 'moment';
 import * as React from 'react'
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
-import { Modal } from '../../Modal';
-import { BaseList } from '../BaseList';
 import ActualBudgetCard, { ActualBudgetCardProps } from './ActualBudgetCard';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
@@ -28,7 +26,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private async loadBudget(): Promise<void> {
-        let budgets = await this.budgetApi.budgetGetAllGet();
+        let budgets = await this.budgetApi.budgetGetActualGet();
         let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
             id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).format('DD.MM.YYYY')
             , dateTo: moment(b.dateTo).format('DD.MM.YYYY'), name: b.name
@@ -38,23 +36,6 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
 
     private hideBudgetModal = (): void => {
         this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
-    }
-
-    private addNewItem = (): void => {
-        this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
-    }
-
-    private budgetEdit = async (id: number): Promise<void> => {
-        const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
-        let budgetFormModel: BudgetFormModel = {
-            amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
-            to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
-        };
-        this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
-    }
-
-    private deleteItem = (id: number): void => {
-        this.budgetApi.budgetDeleteDelete({ body: id });
     }
 
     private saveFormData = (model: BudgetFormModel) => {
@@ -72,45 +53,20 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.hideBudgetModal();
     }
 
-    private renderTemplate = (budgetModel: BudgetViewModel): JSX.Element => {
-        return (
-            <>
-                <p className="mx-6 my-1 w-3/10">{budgetModel.dateFrom}</p>
-                <p className="mx-6 my-1 w-3/10">{budgetModel.dateTo}</p>
-                <p className="mx-6 my-1 w-2/10">{budgetModel.amount}</p>
-                <p className="mx-6 my-1 w-2/10">{budgetModel.name}</p>
-            </>
-        );
-    }
-
     private renderCard = (budgetModel: BudgetViewModel): JSX.Element => {
         let actualProps: ActualBudgetCardProps = { from: budgetModel.dateFrom, limit: budgetModel.amount, name: budgetModel.name, spent: 20 };
         return (
-            <div className="w-2/5 my-2">
+            <div className="w-2/5 my-2 cursor-pointer">
                 <ActualBudgetCard {...actualProps}></ActualBudgetCard>
             </div>
-        );
-    }
-
-    private renderHeader = (): JSX.Element => {
-        return (
-            <>
-                <p className="mx-6 my-1 w-3/10">Od</p>
-                <p className="mx-6 my-1 w-3/10">Do</p>
-                <p className="mx-6 my-1 w-2/10">Výše</p>
-                <p className="mx-6 my-1 w-2/10">Název</p>
-            </>
         );
     }
 
     public render() {
         return (
             <React.Fragment>
-                <BaseList<BudgetViewModel> title="Rozpočty" data={this.state.budgets} template={this.renderTemplate}
-                    header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} deleteItemHandler={this.deleteItem}>
-                </BaseList>
                 <div className="flex flex-col mt-6">
-                    <h2 className="ml-6 text-xl">Rozpočty</h2>
+                    <h2 className="ml-6 text-xl">Actual budgets</h2>
                     <div className="flex flex-row flex-wrap justify-around">
                         {this.state.budgets.map(b => this.renderCard(b))}
                     </div>
