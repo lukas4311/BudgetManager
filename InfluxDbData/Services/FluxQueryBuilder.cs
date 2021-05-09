@@ -10,8 +10,8 @@ namespace InfluxDbData.Services
         private const string pivotClause = @"pivot(rowKey:[""_time""],columnKey: [""_field""],valueColumn: ""_value"")";
         private const string sortClause = @"sort(columns: [""_time""], desc: {0})";
         private const string tailClause = "tail(n: {0})";
-
         private string fromClause = "from(bucket:\"{0}\")";
+
         private string range = string.Empty;
         private string tail = string.Empty;
         private string sort = string.Empty;
