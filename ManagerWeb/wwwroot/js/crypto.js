@@ -2460,12 +2460,6 @@ class CryptoTrades extends react_1.default.Component {
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
             this.setState({ selectedTrade: tradeHistory, openedForm: true });
-            // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
-            // let budgetFormModel: BudgetFormModel = {
-            //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
-            //     to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
-            // };
-            // this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
         });
         this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: [], openedForm: false, selectedTrade: undefined };
