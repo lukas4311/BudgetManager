@@ -34,26 +34,10 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
         // this.setState({ bankAccounts: trades });
     }
 
-    private saveTrade = (data: BankAccountViewModel): void => {
-        console.log(`Saved ${data}`)
-    }
-
-    private handleClickOpen = (tradeHistory: BankAccountViewModel) => {
-        this.setState({ selectedBankAccount: tradeHistory, openedForm: true });
-    };
-
-    private handleClose = () => {
-        this.setState({ openedForm: false });
-    };
-
     private renderHeader = (): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-1/10">Ticker</p>
-                <p className="mx-6 my-1 w-3/10">Velikost tradu</p>
-                <p className="mx-6 my-1 w-2/10">Datum tradu</p>
-                <p className="mx-6 my-1 w-3/10">Celkova hodnota</p>
-                <p className="mx-6 my-1 w-1/10">Měna</p>
+                <p className="mx-6 my-1 w-1/10">Název účtu</p>
             </>
         );
     }
@@ -79,7 +63,7 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
         return (
             <div className="pr-5 h-full">
                 <ThemeProvider theme={theme}>
-                    <BaseList<BankAccountViewModel> title="Trade list" data={this.state.bankAccounts} template={this.renderTemplate}
+                    <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
                         header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
                     </BaseList>
                 </ThemeProvider>
