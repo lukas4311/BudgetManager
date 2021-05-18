@@ -2288,6 +2288,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ApiClient_1 = __webpack_require__(/*! ../../ApiClient */ "./Typescript/ApiClient/index.ts");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const BankAccountViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/BankAccountViewModel */ "./Typescript/Model/BankAccountViewModel.ts"));
 class BankAccountOverviewState {
 }
 const theme = styles_1.createMuiTheme({
@@ -2298,6 +2299,16 @@ const theme = styles_1.createMuiTheme({
 class BankAccountOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
+        this.getMappedViewModels = (bankAccountModels) => {
+            return bankAccountModels.map(b => this.mapDataModelToViewModel(b));
+        };
+        this.mapDataModelToViewModel = (bankAccountModels) => {
+            let viewModel = new BankAccountViewModel_1.default();
+            viewModel.code = bankAccountModels.code;
+            viewModel.id = bankAccountModels.id;
+            viewModel.openingBalance = bankAccountModels.openingBalance;
+            return viewModel;
+        };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "N\u00E1zev \u00FA\u010Dtu")));
@@ -2313,7 +2324,7 @@ class BankAccountOverview extends react_1.default.Component {
             let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
             this.setState({ selectedBankAccount: selectedBankAccount, openedForm: true });
         });
-        this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
+        this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], openedForm: false, selectedBankAccount: undefined };
     }
     componentDidMount() {
@@ -2321,8 +2332,9 @@ class BankAccountOverview extends react_1.default.Component {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            // let tradesData: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
-            // this.setState({ bankAccounts: trades });
+            let bankAccounts = yield this.bankAccountApi.bankAccountGetAllGet();
+            let bankViewModels = this.getMappedViewModels(bankAccounts);
+            this.setState({ bankAccounts: bankViewModels });
         });
     }
     render() {
@@ -2709,6 +2721,23 @@ class IconsData {
     }
 }
 exports.IconsData = IconsData;
+
+
+/***/ }),
+
+/***/ "./Typescript/Model/BankAccountViewModel.ts":
+/*!**************************************************!*\
+  !*** ./Typescript/Model/BankAccountViewModel.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class BankAccountViewModel {
+}
+exports.default = BankAccountViewModel;
 
 
 /***/ }),

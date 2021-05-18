@@ -1,8 +1,9 @@
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface } from "../../ApiClient";
+import { BankAccountApi, BankAccountApiInterface, Configuration, CryptoApi, CryptoApiInterface } from "../../ApiClient";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
+import { BankAccountModel } from "../../ApiClient/models/BankAccountModel";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
@@ -17,11 +18,11 @@ const theme = createMuiTheme({
 });
 
 export default class BankAccountOverview extends React.Component<{}, BankAccountOverviewState> {
-    cryptoInterface: CryptoApiInterface;
+    bankAccountApi: BankAccountApiInterface;
 
     constructor(props: {}) {
         super(props);
-        this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
+        this.bankAccountApi = new BankAccountApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], openedForm: false, selectedBankAccount: undefined };
     }
 
@@ -30,8 +31,22 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     }
 
     private async load(): Promise<void> {
-        // let tradesData: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
-        // this.setState({ bankAccounts: trades });
+        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountGetAllGet();
+        let bankViewModels: BankAccountViewModel[] = this.getMappedViewModels(bankAccounts);
+        this.setState({ bankAccounts: bankViewModels });
+    }
+
+    private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] => {
+        return bankAccountModels.map(b => this.mapDataModelToViewModel(b));
+    }
+
+    private mapDataModelToViewModel = (bankAccountModels: BankAccountModel): BankAccountViewModel => {
+        let viewModel = new BankAccountViewModel();
+        viewModel.code = bankAccountModels.code;
+        viewModel.id = bankAccountModels.id;
+        viewModel.openingBalance = bankAccountModels.openingBalance;
+
+        return viewModel;
     }
 
     private renderHeader = (): JSX.Element => {
