@@ -9,7 +9,7 @@ class BankAccounts extends React.Component<{}, {}>{
             <div className="">
                 <p className="text-3xl text-center mt-6">Přehled bankovních účtů</p>
                 <div className="flex">
-                    <div className="w-full p-4 overflow-y-auto"><BankAccountOverview></BankAccountOverview></div>
+                    <div className="w-full p-4 overflow-y-auto"><BankAccountOverview key="overviewBanks"/></div>
                 </div>
             </div>
         );

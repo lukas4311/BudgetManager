@@ -2253,7 +2253,7 @@ class BankAccounts extends react_1.default.Component {
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "P\u0159ehled bankovn\u00EDch \u00FA\u010Dt\u016F"),
             react_1.default.createElement("div", { className: "flex" },
                 react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
-                    react_1.default.createElement(BankAccountOverview_1.default, null)))));
+                    react_1.default.createElement(BankAccountOverview_1.default, { key: "overviewBanks" })))));
     }
 }
 react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
