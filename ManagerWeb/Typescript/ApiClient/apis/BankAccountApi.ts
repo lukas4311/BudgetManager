@@ -15,6 +15,9 @@
 
 import * as runtime from '../runtime';
 import {
+    BankAccountModel,
+    BankAccountModelFromJSON,
+    BankAccountModelToJSON,
     BankBalanceModel,
     BankBalanceModelFromJSON,
     BankBalanceModelToJSON,
@@ -43,6 +46,18 @@ export interface BankAccountApiInterface {
     /**
      */
     bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>>;
+
+    /**
+     */
+    bankAccountGetAllGet(): Promise<Array<BankAccountModel>>;
 
 }
 
@@ -76,6 +91,30 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
      */
     async bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>> {
         const response = await this.bankAccountGetAllAccountBalanceGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async bankAccountGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bankAccount/getAll`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BankAccountModelFromJSON));
+    }
+
+    /**
+     */
+    async bankAccountGetAllGet(): Promise<Array<BankAccountModel>> {
+        const response = await this.bankAccountGetAllGetRaw();
         return await response.value();
     }
 
