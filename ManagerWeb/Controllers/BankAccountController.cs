@@ -23,5 +23,11 @@ namespace ManagerWeb.Controllers
             IEnumerable<BankBalanceModel> bankInfo = this.bankAccountService.GetBankAccountsBalanceToDate(toDate);
             return Ok(new { success = true, bankAccountsBalance = bankInfo });
         }
+
+        [HttpGet("getAll")]
+        public ActionResult<IEnumerable<BankAccountModel>> GetAll()
+        {
+            return Ok(this.bankAccountService.GetAllBankAccounts());
+        }
     }
 }

@@ -2138,7 +2138,7 @@ const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoun
 class BankAccounts extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto p\u0159ehled"),
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "P\u0159ehled bankovn\u00EDch \u00FA\u010Dt\u016F"),
             react_1.default.createElement("div", { className: "flex" },
                 react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
                     react_1.default.createElement(BankAccountOverview_1.default, null)))));

@@ -14,11 +14,15 @@ namespace ManagerWeb.Services
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly IBankAccountRepository bankAccountRepository;
+
+        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository, 
+            IHttpContextAccessor httpContextAccessor, IBankAccountRepository bankAccountRepository)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.httpContextAccessor = httpContextAccessor;
+            this.bankAccountRepository = bankAccountRepository;
         }
 
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate)
@@ -51,6 +55,15 @@ namespace ManagerWeb.Services
                     x.Bank.Balance = y?.Sum ?? 0;
                     return x.Bank;
                 });
+        }
+
+        public IEnumerable<BankAccountModel> GetAllBankAccounts()
+        {
+            return bankAccountRepository.FindAll().Select(b => new BankAccountModel{
+                Code = b.Code,
+                Id = b.Id,
+                OpeningBalance = b.OpeningBalance
+            });
         }
     }
 }
