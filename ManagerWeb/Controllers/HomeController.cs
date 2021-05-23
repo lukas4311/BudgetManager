@@ -27,6 +27,12 @@ namespace ManagerWeb.Controllers
             return this.View();
         }
 
+        [HttpGet("bankaccount-overview")]
+        public IActionResult BankAccount()
+        {
+            return this.View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

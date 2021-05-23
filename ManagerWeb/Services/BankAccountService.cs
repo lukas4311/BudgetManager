@@ -1,10 +1,12 @@
-﻿using ManagerWeb.Models.DTOs;
+﻿using Data.DataModels;
+using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ManagerWeb.Services
 {
@@ -14,11 +16,15 @@ namespace ManagerWeb.Services
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly IBankAccountRepository bankAccountRepository;
+
+        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
+            IHttpContextAccessor httpContextAccessor, IBankAccountRepository bankAccountRepository)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.httpContextAccessor = httpContextAccessor;
+            this.bankAccountRepository = bankAccountRepository;
         }
 
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate)
@@ -51,6 +57,41 @@ namespace ManagerWeb.Services
                     x.Bank.Balance = y?.Sum ?? 0;
                     return x.Bank;
                 });
+        }
+
+        public IEnumerable<BankAccountModel> GetAllBankAccounts()
+        {
+            return bankAccountRepository.FindAll().Select(b => new BankAccountModel
+            {
+                Code = b.Code,
+                Id = b.Id,
+                OpeningBalance = b.OpeningBalance
+            });
+        }
+
+        public int AddBankAccount(BankAccountModel bankAccountViewModel)
+        {
+            BankAccount bankAccount = new BankAccount
+            {
+                Code = bankAccountViewModel.Code,
+                Id = bankAccountViewModel.Id,
+                OpeningBalance = bankAccountViewModel.OpeningBalance,
+                UserIdentityId = int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
+            };
+
+            this.bankAccountRepository.Create(bankAccount);
+            this.bankAccountRepository.Save();
+            return bankAccount.Id;
+        }
+
+        public void UpdateBankAccount(BankAccountModel bankAccountViewModel)
+        {
+            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id).Single();
+            bankAccount.Code = bankAccountViewModel.Code;
+            bankAccount.OpeningBalance = bankAccountViewModel.OpeningBalance;
+
+            this.bankAccountRepository.Update(bankAccount);
+            this.bankAccountRepository.Save();
         }
     }
 }

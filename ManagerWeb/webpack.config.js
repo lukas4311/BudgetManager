@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         app: './Typescript/Overview.tsx',
         menu: './Typescript/Components/Menu.tsx',
-        crypto: './Typescript/Crypto.tsx'
+        crypto: './Typescript/Crypto.tsx',
+        bankAccounts: './Typescript/BankAccounts.tsx'
     },
     output: {
         filename: "[name].js",

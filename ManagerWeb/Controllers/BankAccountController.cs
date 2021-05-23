@@ -23,5 +23,25 @@ namespace ManagerWeb.Controllers
             IEnumerable<BankBalanceModel> bankInfo = this.bankAccountService.GetBankAccountsBalanceToDate(toDate);
             return Ok(new { success = true, bankAccountsBalance = bankInfo });
         }
+
+        [HttpGet("getAll")]
+        public ActionResult<IEnumerable<BankAccountModel>> GetAll()
+        {
+            return Ok(this.bankAccountService.GetAllBankAccounts());
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
+        {
+            int paymentId = this.bankAccountService.AddBankAccount(bankAccountViewModel);
+            return Ok();
+        }
+
+        [HttpPut("update")]
+        public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
+        {
+            this.bankAccountService.UpdateBankAccount(bankAccountViewModel);
+            return Ok();
+        }
     }
 }
