@@ -3039,7 +3039,7 @@ class PaymentsOverview extends React.Component {
         this.setBankAccounts = (data) => {
             if (data.success) {
                 let bankAccounts = data.bankAccounts;
-                bankAccounts.unshift({ code: this.defaultBankOption, id: -1 });
+                bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
                 this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
             }
         };

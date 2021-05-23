@@ -52,7 +52,8 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     private renderHeader = (): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-1/10">Název účtu</p>
+                <p className="mx-6 my-1 w-2/3 text-left">Název účtu</p>
+                <p className="mx-6 my-1 w-1/3 text-left">Počáteční stav</p>
             </>
         );
     }
@@ -60,7 +61,8 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     private renderTemplate = (p: BankAccountViewModel): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-1/10">{p.code.toUpperCase()}</p>
+                <p className="mx-6 my-1 w-2/3">{p.code.toUpperCase()}</p>
+                <p className="mx-6 my-1 w-1/3">{p.openingBalance}</p>
             </>
         );
     }
@@ -76,11 +78,13 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
 
     render() {
         return (
-            <div className="pr-5 h-full">
+            <div className="h-full">
                 <ThemeProvider theme={theme}>
-                    <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
-                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
-                    </BaseList>
+                    <div className="w-full lg:w-1/2">
+                        <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
+                        </BaseList>
+                    </div>
                 </ThemeProvider>
             </div>
         );

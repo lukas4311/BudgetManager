@@ -9,5 +9,9 @@ namespace ManagerWeb.Services
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate);
 
         IEnumerable<BankAccountModel> GetAllBankAccounts();
+
+        int AddBankAccount(BankAccountModel bankAccountViewModel);
+
+        void UpdateBankAccount(BankAccountModel bankAccountViewModel);
     }
 }

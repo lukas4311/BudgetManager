@@ -2311,11 +2311,13 @@ class BankAccountOverview extends react_1.default.Component {
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "N\u00E1zev \u00FA\u010Dtu")));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3 text-left" }, "N\u00E1zev \u00FA\u010Dtu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3 text-left" }, "Po\u010D\u00E1te\u010Dn\u00ED stav")));
         };
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.code.toUpperCase())));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3" }, p.code.toUpperCase()),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.openingBalance)));
         };
         this.addNewItem = () => {
             // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
@@ -2338,9 +2340,10 @@ class BankAccountOverview extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", { className: "pr-5 h-full" },
+        return (react_1.default.createElement("div", { className: "h-full" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-                react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }))));
+                react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
+                    react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" })))));
     }
 }
 exports.default = BankAccountOverview;
