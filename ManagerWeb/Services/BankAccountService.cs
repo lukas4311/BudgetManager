@@ -76,7 +76,7 @@ namespace ManagerWeb.Services
                 Code = bankAccountViewModel.Code,
                 Id = bankAccountViewModel.Id,
                 OpeningBalance = bankAccountViewModel.OpeningBalance,
-                UserIdentityId = int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier))
+                UserIdentityId = this.GetLoggedUserId()
             };
 
             this.bankAccountRepository.Create(bankAccount);
@@ -86,12 +86,18 @@ namespace ManagerWeb.Services
 
         public void UpdateBankAccount(BankAccountModel bankAccountViewModel)
         {
-            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id).Single();
+            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id 
+                && p.UserIdentityId == this.GetLoggedUserId()).Single();
             bankAccount.Code = bankAccountViewModel.Code;
             bankAccount.OpeningBalance = bankAccountViewModel.OpeningBalance;
 
             this.bankAccountRepository.Update(bankAccount);
             this.bankAccountRepository.Save();
+        }
+
+        private int GetLoggedUserId()
+        {
+            return int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }
