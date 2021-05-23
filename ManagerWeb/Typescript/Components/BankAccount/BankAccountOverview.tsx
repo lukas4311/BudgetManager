@@ -4,11 +4,16 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
 import { BankAccountModel } from "../../ApiClient/models/BankAccountModel";
+import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { BankAccountForm, BankAccountFromViewModel } from "./BankAccountForm";
+import { BankAccount } from "../../Model/BankAccount";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
-    openedForm: boolean;
     selectedBankAccount: BankAccountViewModel;
+    selectedId: number;
+    showForm: boolean;
+    formKey: number;
 }
 
 const theme = createMuiTheme({
@@ -23,7 +28,7 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     constructor(props: {}) {
         super(props);
         this.bankAccountApi = new BankAccountApi(new Configuration({ basePath: "https://localhost:5001" }));
-        this.state = { bankAccounts: [], openedForm: false, selectedBankAccount: undefined };
+        this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
 
     public componentDidMount() {
@@ -68,12 +73,33 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     }
 
     private addNewItem = (): void => {
-        // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+        this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
     }
 
-    private budgetEdit = async (id: number): Promise<void> => {
+    private bankEdit = async (id: number): Promise<void> => {
         let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
-        this.setState({ selectedBankAccount: selectedBankAccount, openedForm: true });
+        this.setState({ showForm: true, selectedBankAccount: selectedBankAccount, selectedId: id });
+    }
+
+    private hideForm = (): void => {
+        this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
+    }
+
+    private saveFormData = async (model: BankAccountViewModel) => {
+        let bankModel: BankAccount = {
+            code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
+        };
+
+        try {
+            if (model.id != undefined)
+                await this.bankAccountApi.bankAccountUpdatePut({ bankAccountModel: bankModel });
+            else
+                await this.bankAccountApi.bankAccountAddPost({ bankAccountModel: bankModel });
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.hideForm();
     }
 
     render() {
@@ -82,9 +108,18 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
                 <ThemeProvider theme={theme}>
                     <div className="w-full lg:w-1/2">
                         <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
-                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit} dataAreaClass="h-70vh overflow-y-auto">
                         </BaseList>
                     </div>
+                    <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Detail rozpočtu"
+                        maxWidth="sm" fullWidth={true}>
+                        <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
+                        <DialogContent>
+                            <div className="p-2 overflow-y-auto">
+                                <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </ThemeProvider>
             </div>
         );

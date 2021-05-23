@@ -30,14 +30,14 @@ namespace ManagerWeb.Controllers
             return Ok(this.bankAccountService.GetAllBankAccounts());
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             int paymentId = this.bankAccountService.AddBankAccount(bankAccountViewModel);
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("update")]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             this.bankAccountService.UpdateBankAccount(bankAccountViewModel);

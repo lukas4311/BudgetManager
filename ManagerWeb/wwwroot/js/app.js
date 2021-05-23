@@ -146,6 +146,30 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/mo
 class BankAccountApi extends runtime.BaseAPI {
     /**
      */
+    bankAccountAddPostRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/add`,
+                method: 'POST',
+                headers: headerParameters,
+                query: queryParameters,
+                body: models_1.BankAccountModelToJSON(requestParameters.bankAccountModel),
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountAddPost(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountAddPostRaw(requestParameters);
+        });
+    }
+    /**
+     */
     bankAccountGetAllAccountBalanceGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -191,6 +215,30 @@ class BankAccountApi extends runtime.BaseAPI {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.bankAccountGetAllGetRaw();
             return yield response.value();
+        });
+    }
+    /**
+     */
+    bankAccountUpdatePutRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/update`,
+                method: 'PUT',
+                headers: headerParameters,
+                query: queryParameters,
+                body: models_1.BankAccountModelToJSON(requestParameters.bankAccountModel),
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountUpdatePut(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountUpdatePutRaw(requestParameters);
         });
     }
 }

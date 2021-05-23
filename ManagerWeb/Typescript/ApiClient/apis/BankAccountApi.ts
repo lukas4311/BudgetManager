@@ -23,8 +23,16 @@ import {
     BankBalanceModelToJSON,
 } from '../models';
 
+export interface BankAccountAddPostRequest {
+    bankAccountModel?: BankAccountModel;
+}
+
 export interface BankAccountGetAllAccountBalanceGetRequest {
     toDate?: Date | null;
+}
+
+export interface BankAccountUpdatePutRequest {
+    bankAccountModel?: BankAccountModel;
 }
 
 /**
@@ -34,6 +42,19 @@ export interface BankAccountGetAllAccountBalanceGetRequest {
  * @interface BankAccountApiInterface
  */
 export interface BankAccountApiInterface {
+    /**
+     * 
+     * @param {BankAccountModel} [bankAccountModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountAddPostRaw(requestParameters: BankAccountAddPostRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void>;
+
     /**
      * 
      * @param {Date} [toDate] 
@@ -59,12 +80,51 @@ export interface BankAccountApiInterface {
      */
     bankAccountGetAllGet(): Promise<Array<BankAccountModel>>;
 
+    /**
+     * 
+     * @param {BankAccountModel} [bankAccountModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountUpdatePutRaw(requestParameters: BankAccountUpdatePutRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountUpdatePut(requestParameters: BankAccountUpdatePutRequest): Promise<void>;
+
 }
 
 /**
  * 
  */
 export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInterface {
+
+    /**
+     */
+    async bankAccountAddPostRaw(requestParameters: BankAccountAddPostRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/add`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BankAccountModelToJSON(requestParameters.bankAccountModel),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void> {
+        await this.bankAccountAddPostRaw(requestParameters);
+    }
 
     /**
      */
@@ -116,6 +176,32 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
     async bankAccountGetAllGet(): Promise<Array<BankAccountModel>> {
         const response = await this.bankAccountGetAllGetRaw();
         return await response.value();
+    }
+
+    /**
+     */
+    async bankAccountUpdatePutRaw(requestParameters: BankAccountUpdatePutRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/update`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BankAccountModelToJSON(requestParameters.bankAccountModel),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountUpdatePut(requestParameters: BankAccountUpdatePutRequest): Promise<void> {
+        await this.bankAccountUpdatePutRaw(requestParameters);
     }
 
 }
