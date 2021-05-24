@@ -170,6 +170,30 @@ class BankAccountApi extends runtime.BaseAPI {
     }
     /**
      */
+    bankAccountDeleteDeleteRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/delete`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountDeleteDeleteRaw(requestParameters);
+        });
+    }
+    /**
+     */
     bankAccountGetAllAccountBalanceGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -2450,6 +2474,9 @@ class BankAccountOverview extends react_1.default.Component {
             }
             this.hideForm();
         });
+        this.deleteBank = (id) => {
+            this.bankAccountApi.bankAccountDeleteDelete({ body: id });
+        };
         this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
@@ -2467,7 +2494,7 @@ class BankAccountOverview extends react_1.default.Component {
         return (react_1.default.createElement("div", { className: "h-full" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                 react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
-                    react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, dataAreaClass: "h-70vh overflow-y-auto" })),
+                    react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
                     react_1.default.createElement(core_1.DialogContent, null,

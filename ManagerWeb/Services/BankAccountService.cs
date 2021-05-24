@@ -1,4 +1,5 @@
 ﻿using Data.DataModels;
+using ManagerWeb.Models;
 using ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +16,20 @@ namespace ManagerWeb.Services
         private readonly IPaymentRepository paymentRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
-
         private readonly IBankAccountRepository bankAccountRepository;
+        private readonly IPaymentTagRepository paymentTagRepository;
+        private readonly IInterestRateRepository interestRateRepository;
 
         public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            IHttpContextAccessor httpContextAccessor, IBankAccountRepository bankAccountRepository)
+            IHttpContextAccessor httpContextAccessor, IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository,
+            IInterestRateRepository interestRateRepository)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.httpContextAccessor = httpContextAccessor;
             this.bankAccountRepository = bankAccountRepository;
+            this.paymentTagRepository = paymentTagRepository;
+            this.interestRateRepository = interestRateRepository;
         }
 
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate)
@@ -92,6 +97,28 @@ namespace ManagerWeb.Services
             bankAccount.OpeningBalance = bankAccountViewModel.OpeningBalance;
 
             this.bankAccountRepository.Update(bankAccount);
+            this.bankAccountRepository.Save();
+        }
+
+        public void DeleteBankAccount(int id)
+        {
+            PaymentDeleteModel data = this.bankAccountRepository.FindAll().Where(b => b.Id == id && b.UserIdentityId == this.GetLoggedUserId())
+                    .Include(a => a.InterestRates)
+                    .Include(a => a.Payments)
+                    .ThenInclude(pt => pt.PaymentTags)
+                    .Select(b => new PaymentDeleteModel(b, b.InterestRates, b.Payments, b.Payments.SelectMany(a => a.PaymentTags)))
+                    .Single();
+
+            foreach (PaymentTag paymentTag in data.paymentTags)
+                this.paymentTagRepository.Delete(paymentTag);
+
+            foreach (Payment payment in data.payments)
+                this.paymentRepository.Delete(payment);
+
+            foreach (InterestRate interest in data.interests)
+                this.interestRateRepository.Delete(interest);
+
+            this.bankAccountRepository.Delete(data.bankAccount);
             this.bankAccountRepository.Save();
         }
 

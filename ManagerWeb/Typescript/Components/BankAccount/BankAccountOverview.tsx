@@ -102,13 +102,18 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
         this.hideForm();
     }
 
+    private deleteBank = (id: number) => {
+        this.bankAccountApi.bankAccountDeleteDelete({ body: id });
+    }
+
     render() {
         return (
             <div className="h-full">
                 <ThemeProvider theme={theme}>
                     <div className="w-full lg:w-1/2">
                         <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
-                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit} dataAreaClass="h-70vh overflow-y-auto">
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
+                            deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
                         </BaseList>
                     </div>
                     <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Detail rozpočtu"
