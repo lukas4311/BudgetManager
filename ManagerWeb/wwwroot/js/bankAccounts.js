@@ -170,6 +170,30 @@ class BankAccountApi extends runtime.BaseAPI {
     }
     /**
      */
+    bankAccountDeleteDeleteRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/delete`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountDeleteDeleteRaw(requestParameters);
+        });
+    }
+    /**
+     */
     bankAccountGetAllAccountBalanceGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -2451,9 +2475,9 @@ class BankAccountOverview extends react_1.default.Component {
             this.hideForm();
         });
         this.deleteBank = (id) => {
-            // TODO: delete bank by id
+            this.bankAccountApi.bankAccountDeleteDelete({ body: id });
         };
-        this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
+        this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:44386" }));
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
     componentDidMount() {

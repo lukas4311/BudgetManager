@@ -170,6 +170,30 @@ class BankAccountApi extends runtime.BaseAPI {
     }
     /**
      */
+    bankAccountDeleteDeleteRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/delete`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountDeleteDeleteRaw(requestParameters);
+        });
+    }
+    /**
+     */
     bankAccountGetAllAccountBalanceGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
