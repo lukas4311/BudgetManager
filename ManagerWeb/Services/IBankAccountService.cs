@@ -13,5 +13,7 @@ namespace ManagerWeb.Services
         int AddBankAccount(BankAccountModel bankAccountViewModel);
 
         void UpdateBankAccount(BankAccountModel bankAccountViewModel);
+
+        void DeleteBankAccount(int id);
     }
 }

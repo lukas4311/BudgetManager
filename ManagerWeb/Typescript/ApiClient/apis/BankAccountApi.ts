@@ -27,6 +27,10 @@ export interface BankAccountAddPostRequest {
     bankAccountModel?: BankAccountModel;
 }
 
+export interface BankAccountDeleteDeleteRequest {
+    body?: number;
+}
+
 export interface BankAccountGetAllAccountBalanceGetRequest {
     toDate?: Date | null;
 }
@@ -54,6 +58,19 @@ export interface BankAccountApiInterface {
     /**
      */
     bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void>;
+
+    /**
+     * 
+     * @param {number} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountDeleteDeleteRaw(requestParameters: BankAccountDeleteDeleteRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters: BankAccountDeleteDeleteRequest): Promise<void>;
 
     /**
      * 
@@ -124,6 +141,32 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
      */
     async bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void> {
         await this.bankAccountAddPostRaw(requestParameters);
+    }
+
+    /**
+     */
+    async bankAccountDeleteDeleteRaw(requestParameters: BankAccountDeleteDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/delete`,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body as any,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountDeleteDelete(requestParameters: BankAccountDeleteDeleteRequest): Promise<void> {
+        await this.bankAccountDeleteDeleteRaw(requestParameters);
     }
 
     /**

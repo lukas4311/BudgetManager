@@ -43,5 +43,12 @@ namespace ManagerWeb.Controllers
             this.bankAccountService.UpdateBankAccount(bankAccountViewModel);
             return Ok();
         }
+
+        [HttpDelete("delete")]
+        public IActionResult DeleteBankAccount([FromBody] int id)
+        {
+            this.bankAccountService.DeleteBankAccount(id);
+            return this.Ok();
+        }
     }
 }

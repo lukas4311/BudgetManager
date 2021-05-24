@@ -99,5 +99,15 @@ namespace ManagerWeb.Services
         {
             return int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
+
+        public void DeleteBankAccount(int id)
+        {
+            // TODO: search all interest rate, payments payment tag
+
+            var data = this.bankAccountRepository.FindAll().Where(b => b.Id == id)
+                    .Include(a => a.InterestRates)
+                    .Include(a => a.Payments)
+                    .ThenInclude(pt => pt.PaymentTags);
+        }
     }
 }
