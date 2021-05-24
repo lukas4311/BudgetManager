@@ -1,6 +1,8 @@
 ﻿using Data;
+using FinanceDataMining.Comodity;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System.Net.Http;
 using System.Threading.Tasks;
 using TestingConsole.Crypto;
 
@@ -12,9 +14,12 @@ namespace TestingConsole
         {
             ProcessManager processManager = new ProcessManager();
             //await processManager.DownloadAssets();
-            await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
             //SaveCoinbaseDataToDb();
+
+            GoldApi goldApi = new GoldApi(new HttpClient());
+            await goldApi.GetGoldData();
         }
 
         private static void SaveCoinbaseDataToDb()
