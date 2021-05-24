@@ -27,7 +27,7 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
 
     constructor(props: {}) {
         super(props);
-        this.bankAccountApi = new BankAccountApi(new Configuration({ basePath: "https://localhost:44386" }));
+        this.bankAccountApi = new BankAccountApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
 

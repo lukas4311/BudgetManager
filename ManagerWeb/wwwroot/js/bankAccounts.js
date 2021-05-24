@@ -2477,7 +2477,7 @@ class BankAccountOverview extends react_1.default.Component {
         this.deleteBank = (id) => {
             this.bankAccountApi.bankAccountDeleteDelete({ body: id });
         };
-        this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:44386" }));
+        this.bankAccountApi = new ApiClient_1.BankAccountApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
     componentDidMount() {
