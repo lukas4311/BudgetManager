@@ -37,7 +37,7 @@ namespace TestingConsole
                     Time = model.Date.ToUniversalTime(),
                     BaseCurrency = model.BaseCurrency,
                     Currency = currency,
-                    Price = value
+                    Price = (double)value
                 }, dataSourceIdentification);
             }
         }

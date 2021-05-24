@@ -100,14 +100,9 @@ namespace ManagerWeb.Services
             this.bankAccountRepository.Save();
         }
 
-        private int GetLoggedUserId()
-        {
-            return int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-        }
-
         public void DeleteBankAccount(int id)
         {
-            PaymentDeleteModel data = this.bankAccountRepository.FindAll().Where(b => b.Id == id)
+            PaymentDeleteModel data = this.bankAccountRepository.FindAll().Where(b => b.Id == id && b.UserIdentityId == this.GetLoggedUserId())
                     .Include(a => a.InterestRates)
                     .Include(a => a.Payments)
                     .ThenInclude(pt => pt.PaymentTags)
@@ -125,6 +120,11 @@ namespace ManagerWeb.Services
 
             this.bankAccountRepository.Delete(data.bankAccount);
             this.bankAccountRepository.Save();
+        }
+
+        private int GetLoggedUserId()
+        {
+            return int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
     }
 }

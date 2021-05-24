@@ -28,6 +28,7 @@ namespace ManagerWeb.Extensions
             services.AddTransient<ICryptoTradeHistoryRepository, CryptoTradeHistoryRepository>();
             services.AddTransient<ICryptoTickerRepository, CryptoTickerRepository>();
             services.AddTransient<ICurrencySymbolRepository, CurrencySymbolRepository>();
+            services.AddTransient<IInterestRateRepository, InterestRateRepository>();
         }
 
         internal static void ConfigureInfluxRepositories(this IServiceCollection services)
