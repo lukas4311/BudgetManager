@@ -20,22 +20,37 @@ namespace FinanceDataMining.Comodity
             this.httpClient = httpClient;
         }
 
-        public async Task GetGoldData()
+        public async Task<IEnumerable<(DateTime, decimal)>> GetGoldData()
+            => await this.GetGoldData(DateTime.MinValue);
+
+        public async Task<IEnumerable<(DateTime, decimal)>> GetGoldData(DateTime fromDate)
         {
-            string data = await this.httpClient.GetStringAsync(goldDataUrl);
-            DataseteWrapper goldPriceData = JsonSerializer.Deserialize<DataseteWrapper>(data);
+            DataseteWrapper goldPriceData = await this.ReqeuestGoldData(fromDate);
+            List<(DateTime, decimal)> goldData = new List<(DateTime, decimal)>();
             (int dateIndex, int usdIndex) = this.FindDataIndexes(goldPriceData.dataset);
 
             foreach (List<object> dataValues in goldPriceData.dataset.data)
-            {
-                var date = DateTime.Parse(dataValues[dateIndex].ToString());
-                var usdPrice = decimal.Parse(dataValues[usdIndex].ToString(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-            }
+                this.ProcessData(dateIndex, usdIndex, dataValues, goldData);
+
+            return goldData;
         }
 
-        private (int dateIndex, int usdIndex) FindDataIndexes(Dataset dataset)
+        private void ProcessData(int dateIndex, int usdIndex, List<object> dataValues, List<(DateTime, decimal)> goldData)
         {
-            return (dataset.column_names.IndexOf(dateColumn), dataset.column_names.IndexOf(usdColumn));
+            DateTime date = DateTime.Parse(dataValues[dateIndex].ToString());
+            decimal.TryParse(dataValues[usdIndex]?.ToString(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal usdPrice);
+
+            if (date != default && usdPrice != default)
+                goldData.Add((date, usdPrice));
         }
+
+        private async Task<DataseteWrapper> ReqeuestGoldData(DateTime from)
+        {
+            string data = await this.httpClient.GetStringAsync($"{goldDataUrl}?{from:yyyy-MM-dd}");
+            return JsonSerializer.Deserialize<DataseteWrapper>(data);
+        }
+
+        private (int dateIndex, int usdIndex) FindDataIndexes(Dataset dataset) =>
+            (dataset.column_names.IndexOf(dateColumn), dataset.column_names.IndexOf(usdColumn));
     }
 }

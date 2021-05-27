@@ -19,7 +19,7 @@ namespace TestingConsole
             //SaveCoinbaseDataToDb();
 
             GoldApi goldApi = new GoldApi(new HttpClient());
-            await goldApi.GetGoldData();
+            var data = await goldApi.GetGoldData();
         }
 
         private static void SaveCoinbaseDataToDb()
