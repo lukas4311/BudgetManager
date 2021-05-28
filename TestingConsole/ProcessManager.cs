@@ -1,4 +1,5 @@
 ﻿using Data;
+using FinanceDataMining.Comodity;
 using FinanceDataMining.CryproApi;
 using FinanceDataMining.Models;
 using InfluxDbData;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TestingConsole.Crypto;
 
 namespace TestingConsole
 {
@@ -16,6 +18,8 @@ namespace TestingConsole
         private const string organizationId = "8f46f33452affe4a";
         private const string bucketCrypto = "Crypto";
         private const string bucketForex = "Forex";
+        private const string buckerComodity = "Comodity";
+        private const string gold = "AU";
         private readonly ConfigManager configManager;
 
         public ProcessManager()
@@ -65,6 +69,38 @@ namespace TestingConsole
             }
 
             cryptoTickerRepository.Save();
+        }
+
+        public void SaveCoinbaseDataToDb()
+        {
+            DataContext dataContext = GetDataContext();
+            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(dataContext);
+            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(dataContext);
+            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(dataContext);
+            CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
+            coinbaseParser.ParseCoinbaseReport();
+        }
+
+        public async Task SaveGoldDataToDb()
+        {
+            InfluxConfig config = configManager.GetSecretToken();
+            GoldApi goldApi = new GoldApi(new HttpClient());
+            IEnumerable<ComodityData> data = (await goldApi.GetGoldData()).Select(g => new ComodityData
+            {
+                Price = (double)g.Item2,
+                Ticker = gold,
+                Time = g.Item1
+            });
+            InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
+            await repo.WriteAll(data, new DataSourceIdentification(organizationId, buckerComodity)).ConfigureAwait(false);
+        }
+
+        private DataContext GetDataContext()
+        {
+            ConfigManager configManager = new ConfigManager();
+            DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+            optionsBuilder.UseSqlServer(configManager.GetConnectionString());
+            return new DataContext(optionsBuilder.Options);
         }
     }
 }
