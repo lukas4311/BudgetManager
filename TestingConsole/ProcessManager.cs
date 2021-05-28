@@ -91,8 +91,11 @@ namespace TestingConsole
                 Ticker = gold,
                 Time = g.Item1
             });
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
-            await repo.WriteAll(data, new DataSourceIdentification(organizationId, buckerComodity)).ConfigureAwait(false);
+
+            foreach (ComodityData model in data)
+                await repo.Write(model, dataSourceIdentification);
         }
 
         private DataContext GetDataContext()
