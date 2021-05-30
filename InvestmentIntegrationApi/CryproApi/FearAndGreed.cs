@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using FinanceDataMining.Models;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FinanceDataMining.CryproApi
@@ -13,9 +15,11 @@ namespace FinanceDataMining.CryproApi
             this.httpClient = httpClient;
         }
 
-        public async Task GetActualFearAndGreed()
+        public async Task<FearAndGreedReponse> GetActualFearAndGreed()
         {
             string response = await this.httpClient.GetStringAsync(ApiUrl);
+            FearAndGreedReponse responseModel = JsonSerializer.Deserialize<FearAndGreedReponse>(response);
+            return responseModel;
         }
     }
 }
