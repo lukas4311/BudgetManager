@@ -10,7 +10,5 @@ namespace FinanceDataMining.Comodity
         {
             this.httpClient = httpClient;
         }
-
-        //https://www.quandl.com/api/v3/datasets/LBMA/GOLD
     }
 }
