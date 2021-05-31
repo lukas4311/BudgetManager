@@ -15,13 +15,28 @@
 
 import * as runtime from '../runtime';
 import {
+    BankAccountModel,
+    BankAccountModelFromJSON,
+    BankAccountModelToJSON,
     BankBalanceModel,
     BankBalanceModelFromJSON,
     BankBalanceModelToJSON,
 } from '../models';
 
+export interface BankAccountAddPostRequest {
+    bankAccountModel?: BankAccountModel;
+}
+
+export interface BankAccountDeleteDeleteRequest {
+    body?: number;
+}
+
 export interface BankAccountGetAllAccountBalanceGetRequest {
     toDate?: Date | null;
+}
+
+export interface BankAccountUpdatePutRequest {
+    bankAccountModel?: BankAccountModel;
 }
 
 /**
@@ -31,6 +46,32 @@ export interface BankAccountGetAllAccountBalanceGetRequest {
  * @interface BankAccountApiInterface
  */
 export interface BankAccountApiInterface {
+    /**
+     * 
+     * @param {BankAccountModel} [bankAccountModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountAddPostRaw(requestParameters: BankAccountAddPostRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void>;
+
+    /**
+     * 
+     * @param {number} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountDeleteDeleteRaw(requestParameters: BankAccountDeleteDeleteRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters: BankAccountDeleteDeleteRequest): Promise<void>;
+
     /**
      * 
      * @param {Date} [toDate] 
@@ -44,12 +85,89 @@ export interface BankAccountApiInterface {
      */
     bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>>;
 
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>>;
+
+    /**
+     */
+    bankAccountGetAllGet(): Promise<Array<BankAccountModel>>;
+
+    /**
+     * 
+     * @param {BankAccountModel} [bankAccountModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountUpdatePutRaw(requestParameters: BankAccountUpdatePutRequest): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountUpdatePut(requestParameters: BankAccountUpdatePutRequest): Promise<void>;
+
 }
 
 /**
  * 
  */
 export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInterface {
+
+    /**
+     */
+    async bankAccountAddPostRaw(requestParameters: BankAccountAddPostRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/add`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BankAccountModelToJSON(requestParameters.bankAccountModel),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountAddPost(requestParameters: BankAccountAddPostRequest): Promise<void> {
+        await this.bankAccountAddPostRaw(requestParameters);
+    }
+
+    /**
+     */
+    async bankAccountDeleteDeleteRaw(requestParameters: BankAccountDeleteDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/delete`,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body as any,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountDeleteDelete(requestParameters: BankAccountDeleteDeleteRequest): Promise<void> {
+        await this.bankAccountDeleteDeleteRaw(requestParameters);
+    }
 
     /**
      */
@@ -77,6 +195,56 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
     async bankAccountGetAllAccountBalanceGet(requestParameters: BankAccountGetAllAccountBalanceGetRequest): Promise<Array<BankBalanceModel>> {
         const response = await this.bankAccountGetAllAccountBalanceGetRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async bankAccountGetAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bankAccount/getAll`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BankAccountModelFromJSON));
+    }
+
+    /**
+     */
+    async bankAccountGetAllGet(): Promise<Array<BankAccountModel>> {
+        const response = await this.bankAccountGetAllGetRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async bankAccountUpdatePutRaw(requestParameters: BankAccountUpdatePutRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/bankAccount/update`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: BankAccountModelToJSON(requestParameters.bankAccountModel),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankAccountUpdatePut(requestParameters: BankAccountUpdatePutRequest): Promise<void> {
+        await this.bankAccountUpdatePutRaw(requestParameters);
     }
 
 }

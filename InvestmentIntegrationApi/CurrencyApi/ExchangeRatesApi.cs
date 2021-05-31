@@ -10,6 +10,7 @@ namespace FinanceDataMining.CurrencyApi
 {
     public class ExchangeRatesApi
     {
+        private const string ExchangeApiUrlBase = "https://api.exchangeratesapi.io";
         private readonly HttpClient httpClient;
 
         public ExchangeRatesApi(HttpClient httpClient)
@@ -19,7 +20,7 @@ namespace FinanceDataMining.CurrencyApi
 
         public async Task<List<CurrencyData>> GetCurrencyHistory(DateTime from, DateTime to, string currencyCode)
         {
-            string json = await httpClient.GetStringAsync($"https://api.exchangeratesapi.io/history?start_at={from.Date:yyyy-MM-dd}&end_at={to.Date:yyyy-MM-dd}&base={currencyCode}").ConfigureAwait(false);
+            string json = await httpClient.GetStringAsync($"{ExchangeApiUrlBase}/history?start_at={from.Date:yyyy-MM-dd}&end_at={to.Date:yyyy-MM-dd}&base={currencyCode}").ConfigureAwait(false);
 
             return this.ParseDonwloadedData(json, currencyCode);
         }

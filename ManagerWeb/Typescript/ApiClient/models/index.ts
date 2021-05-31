@@ -1,4 +1,5 @@
 export * from './AddTagModel';
+export * from './BankAccountModel';
 export * from './BankBalanceModel';
 export * from './BudgetModel';
 export * from './InlineObject';

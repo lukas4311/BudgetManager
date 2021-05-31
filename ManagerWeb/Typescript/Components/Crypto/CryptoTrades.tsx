@@ -95,12 +95,6 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     private budgetEdit = async (id: number): Promise<void> => {
         let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
         this.setState({ selectedTrade: tradeHistory, openedForm: true });
-        // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
-        // let budgetFormModel: BudgetFormModel = {
-        //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
-        //     to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
-        // };
-        // this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
     }
 
     render() {

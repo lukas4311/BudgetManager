@@ -193,7 +193,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private setBankAccounts = (data: BankAccountReponse) => {
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: -1 });
+            bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
         }
     }

@@ -37,7 +37,7 @@ namespace InfluxDbData
             await writeContext.WriteMeasurementAsync(dataSourceIdentification.Bucket, dataSourceIdentification.Organization, WritePrecision.Ns, model).ConfigureAwait(false);
         }
 
-        public async Task WriteAll(List<TModel> model, DataSourceIdentification dataSourceIdentification)
+        public async Task WriteAll(IEnumerable<TModel> model, DataSourceIdentification dataSourceIdentification)
         {
             if (model is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(model));

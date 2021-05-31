@@ -21,6 +21,6 @@ namespace InfluxDbData
 
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
 
-        Task WriteAll(List<TModel> model, DataSourceIdentification dataSourceIdentification);
+        Task WriteAll(IEnumerable<TModel> model, DataSourceIdentification dataSourceIdentification);
     }
 }

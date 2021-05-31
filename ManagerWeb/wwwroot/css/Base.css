@@ -187,19 +187,25 @@
   transform: rotate(0deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item:nth-child(2) {
-  transform: rotate(60deg) translateX(-90px); }
+  transform: rotate(45deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item:nth-child(3) {
-  transform: rotate(120deg) translateX(-90px); }
+  transform: rotate(90deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item:nth-child(4) {
-  transform: rotate(180deg) translateX(-90px); }
+  transform: rotate(135deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item:nth-child(5) {
-  transform: rotate(240deg) translateX(-90px); }
+  transform: rotate(180deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item:nth-child(6) {
-  transform: rotate(300deg) translateX(-90px); }
+  transform: rotate(225deg) translateX(-90px); }
+
+#navMenu .openedMenuItems .menu-item:nth-child(7) {
+  transform: rotate(270deg) translateX(-90px); }
+
+#navMenu .openedMenuItems .menu-item:nth-child(8) {
+  transform: rotate(315deg) translateX(-90px); }
 
 #navMenu .openedMenuItems .menu-item a {
   pointer-events: auto; }
@@ -208,19 +214,25 @@
   transform: rotate(0deg); }
 
 #navMenu .menu-item:nth-child(2) a {
-  transform: rotate(-60deg); }
+  transform: rotate(-45deg); }
 
 #navMenu .menu-item:nth-child(3) a {
-  transform: rotate(-120deg); }
+  transform: rotate(-90deg); }
 
 #navMenu .menu-item:nth-child(4) a {
-  transform: rotate(-180deg); }
+  transform: rotate(-135deg); }
 
 #navMenu .menu-item:nth-child(5) a {
-  transform: rotate(-240deg); }
+  transform: rotate(-180deg); }
 
 #navMenu .menu-item:nth-child(6) a {
-  transform: rotate(-300deg); }
+  transform: rotate(-225deg); }
+
+#navMenu .menu-item:nth-child(7) a {
+  transform: rotate(-270deg); }
+
+#navMenu .menu-item:nth-child(8) a {
+  transform: rotate(-315deg); }
 
 #navMenu .menu-item {
   position: absolute;

@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialDataProvider", "Fi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfluxDbData", "InfluxDbData\InfluxDbData.csproj", "{CF38C15D-89B8-48C6-9028-18A332B37A1B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{766BF606-B5CB-4D86-9A46-497F8B2CCE22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{E74A8A66-07C0-444E-91DA-04A2CA077430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +58,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{680BB8A0-5CDA-4B9B-B5F4-51E78EB7F329} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
+		{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
+		{943EC85F-4669-4452-AEAD-53FF786E629F} = {E74A8A66-07C0-444E-91DA-04A2CA077430}
+		{CF38C15D-89B8-48C6-9028-18A332B37A1B} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B1D0D492-7D14-450A-82BF-4483B63FE10E}

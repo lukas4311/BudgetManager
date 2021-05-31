@@ -28,6 +28,18 @@ export interface HomeApiInterface {
      * @throws {RequiredError}
      * @memberof HomeApiInterface
      */
+    bankaccountOverviewGetRaw(): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankaccountOverviewGet(): Promise<void>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HomeApiInterface
+     */
     cryptoOverviewGetRaw(): Promise<runtime.ApiResponse<void>>;
 
     /**
@@ -40,6 +52,29 @@ export interface HomeApiInterface {
  * 
  */
 export class HomeApi extends runtime.BaseAPI implements HomeApiInterface {
+
+    /**
+     */
+    async bankaccountOverviewGetRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/bankaccount-overview`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bankaccountOverviewGet(): Promise<void> {
+        await this.bankaccountOverviewGetRaw();
+    }
 
     /**
      */

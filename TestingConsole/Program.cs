@@ -2,8 +2,9 @@
 using FinanceDataMining.CryproApi;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+﻿using FinanceDataMining.Comodity;
+using System.Net.Http;
 using System.Threading.Tasks;
-using TestingConsole.Crypto;
 
 namespace TestingConsole
 {
@@ -14,6 +15,7 @@ namespace TestingConsole
             ProcessManager processManager = new ProcessManager();
             //await processManager.DownloadAssets();
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
+
 
             //SaveCoinbaseDataToDb();
             await processManager.DownloadFearAndGreed();
@@ -39,6 +41,7 @@ namespace TestingConsole
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(configManager.GetConnectionString());
             return new DataContext(optionsBuilder.Options);
+            await processManager.SaveGoldDataToDb();
         }
     }
 }

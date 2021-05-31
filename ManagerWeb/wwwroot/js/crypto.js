@@ -146,6 +146,54 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/mo
 class BankAccountApi extends runtime.BaseAPI {
     /**
      */
+    bankAccountAddPostRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/add`,
+                method: 'POST',
+                headers: headerParameters,
+                query: queryParameters,
+                body: models_1.BankAccountModelToJSON(requestParameters.bankAccountModel),
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountAddPost(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountAddPostRaw(requestParameters);
+        });
+    }
+    /**
+     */
+    bankAccountDeleteDeleteRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/delete`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountDeleteDelete(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountDeleteDeleteRaw(requestParameters);
+        });
+    }
+    /**
+     */
     bankAccountGetAllAccountBalanceGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -168,6 +216,53 @@ class BankAccountApi extends runtime.BaseAPI {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.bankAccountGetAllAccountBalanceGetRaw(requestParameters);
             return yield response.value();
+        });
+    }
+    /**
+     */
+    bankAccountGetAllGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            const response = yield this.request({
+                path: `/bankAccount/getAll`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankAccountModelFromJSON));
+        });
+    }
+    /**
+     */
+    bankAccountGetAllGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.bankAccountGetAllGetRaw();
+            return yield response.value();
+        });
+    }
+    /**
+     */
+    bankAccountUpdatePutRaw(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            const response = yield this.request({
+                path: `/bankAccount/update`,
+                method: 'PUT',
+                headers: headerParameters,
+                query: queryParameters,
+                body: models_1.BankAccountModelToJSON(requestParameters.bankAccountModel),
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankAccountUpdatePut(requestParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankAccountUpdatePutRaw(requestParameters);
         });
     }
 }
@@ -583,6 +678,28 @@ const runtime = __importStar(__webpack_require__(/*! ../runtime */ "./Typescript
  *
  */
 class HomeApi extends runtime.BaseAPI {
+    /**
+     */
+    bankaccountOverviewGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            const response = yield this.request({
+                path: `/bankaccount-overview`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    bankaccountOverviewGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.bankaccountOverviewGetRaw();
+        });
+    }
     /**
      */
     cryptoOverviewGetRaw() {
@@ -1267,6 +1384,72 @@ exports.AddTagModelToJSON = AddTagModelToJSON;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/models/BankAccountModel.ts":
+/*!*********************************************************!*\
+  !*** ./Typescript/ApiClient/models/BankAccountModel.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * ManagerWeb
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: 1.0
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BankAccountModelToJSON = exports.BankAccountModelFromJSONTyped = exports.BankAccountModelFromJSON = exports.BankAccountModel = void 0;
+const runtime_1 = __webpack_require__(/*! ../runtime */ "./Typescript/ApiClient/runtime.ts");
+/**
+ *
+ * @export
+ * @class BankAccountModel
+ */
+class BankAccountModel {
+}
+exports.BankAccountModel = BankAccountModel;
+function BankAccountModelFromJSON(json) {
+    return BankAccountModelFromJSONTyped(json, false);
+}
+exports.BankAccountModelFromJSON = BankAccountModelFromJSON;
+function BankAccountModelFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !runtime_1.exists(json, 'id') ? undefined : json['id'],
+        'code': !runtime_1.exists(json, 'code') ? undefined : json['code'],
+        'openingBalance': !runtime_1.exists(json, 'openingBalance') ? undefined : json['openingBalance'],
+    };
+}
+exports.BankAccountModelFromJSONTyped = BankAccountModelFromJSONTyped;
+function BankAccountModelToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'code': value.code,
+        'openingBalance': value.openingBalance,
+    };
+}
+exports.BankAccountModelToJSON = BankAccountModelToJSON;
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/models/BankBalanceModel.ts":
 /*!*********************************************************!*\
   !*** ./Typescript/ApiClient/models/BankBalanceModel.ts ***!
@@ -1841,6 +2024,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(__webpack_require__(/*! ./AddTagModel */ "./Typescript/ApiClient/models/AddTagModel.ts"), exports);
+__exportStar(__webpack_require__(/*! ./BankAccountModel */ "./Typescript/ApiClient/models/BankAccountModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankBalanceModel */ "./Typescript/ApiClient/models/BankBalanceModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BudgetModel */ "./Typescript/ApiClient/models/BudgetModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./InlineObject */ "./Typescript/ApiClient/models/InlineObject.ts"), exports);
@@ -2460,12 +2644,6 @@ class CryptoTrades extends react_1.default.Component {
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
             this.setState({ selectedTrade: tradeHistory, openedForm: true });
-            // const budgetModel: BudgetModel = await this.budgetApi.budgetGetGet({ id: id });
-            // let budgetFormModel: BudgetFormModel = {
-            //     amount: budgetModel.amount, from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"),
-            //     to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), id: budgetModel.id, name: budgetModel.name, onSave: this.saveFormData
-            // };
-            // this.setState({ selectedBudgetId: id, showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: budgetFormModel });
         });
         this.cryptoInterface = new ApiClient_1.CryptoApi(new ApiClient_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: [], openedForm: false, selectedTrade: undefined };
@@ -2821,6 +2999,9 @@ class IconsData {
                 react_1.default.createElement("path", { d: "m336 306h106c5.523 0 10-4.478 10-10s-4.477-10-10-10h-106c-5.523 0-10 4.478-10 10s4.477 10 10 10z" }),
                 react_1.default.createElement("circle", { cx: "256", cy: "10", r: "10" }),
                 react_1.default.createElement("path", { d: "m482 0h-181c-5.523 0-10 4.478-10 10s4.477 10 10 10h181c5.514 0 10 4.486 10 10v10c-22.191 0-446.007 0-472 0v-10c0-5.514 4.486-10 10-10h181c5.523 0 10-4.478 10-10s-4.477-10-10-10h-181c-16.542 0-30 13.458-30 30v20c0 5.522 4.477 10 10 10h10v266h-10c-5.523 0-10 4.478-10 10s4.477 10 10 10h156v30c0 5.522 4.477 10 10 10h70v31.857l-77.071 77.071c-3.905 3.905-3.905 10.237 0 14.143 3.905 3.904 10.237 3.904 14.143 0l62.928-62.928v55.857c0 5.522 4.477 10 10 10s10-4.478 10-10v-55.857l62.929 62.929c3.906 3.905 10.237 3.905 14.143 0 3.905-3.905 3.905-10.237 0-14.143l-77.072-77.072v-31.857h70c5.523 0 10-4.478 10-10v-30h156c5.523 0 10-4.478 10-10s-4.477-10-10-10h-10v-266h10c5.523 0 10-4.478 10-10v-20c0-16.542-13.458-30-30-30zm-156 366h-140v-20h140zm146-40h-432v-266h432z" })));
+        this.bank = react_1.default.createElement("svg", { "enable-background": "new 0 0 512.002 512.002", viewBox: "0 0 512.002 512.002", xmlns: "http://www.w3.org/2000/svg" },
+            react_1.default.createElement("g", null,
+                react_1.default.createElement("path", { d: "m271.293 297.106c0 4.142 3.357 7.5 7.5 7.5s7.5-3.358 7.5-7.5c0-13.488-10.491-23.568-22.792-22.885v-4.147c0-4.142-3.357-7.5-7.5-7.5-4.142 0-7.5 3.358-7.5 7.5v4.147c-12.37-.834-22.814 9.608-22.792 22.885v10.256c-.062 13.11 10.422 23.837 22.792 22.885v26.026c-4.259.514-7.792-2.679-7.792-7.885 0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5c0 13.109 10.422 23.838 22.792 22.885v4.148c0 4.142 3.358 7.5 7.5 7.5 4.143 0 7.5-3.358 7.5-7.5v-4.148c12.252.682 22.825-9.496 22.792-22.885v-10.257c.03-13.491-10.492-23.565-22.792-22.885v-26.025c4.131-.709 7.792 2.824 7.792 7.885zm-22.792 18.142c-4.258.515-7.786-2.68-7.792-7.885v-10.256c-.01-4.951 3.673-8.653 7.792-7.885zm22.792 22.884v10.257c-.063 4.924-3.615 8.675-7.792 7.885v-26.026c4.131-.712 7.8 2.824 7.792 7.884zm19.208-258.238c0-19.023-15.477-34.5-34.5-34.5s-34.5 15.477-34.5 34.5 15.477 34.5 34.5 34.5 34.5-15.477 34.5-34.5zm-54 0c0-10.752 8.748-19.5 19.5-19.5s19.5 8.748 19.5 19.5-8.748 19.5-19.5 19.5-19.5-8.748-19.5-19.5zm19.5 156.916c-47.386 0-85.938 38.552-85.938 85.938s38.552 85.938 85.938 85.938c47.387 0 85.938-38.552 85.938-85.938s-38.551-85.938-85.938-85.938zm0 156.876c-39.115 0-70.938-31.823-70.938-70.938s31.823-70.938 70.938-70.938 70.938 31.823 70.938 70.938-31.823 70.938-70.938 70.938zm222.372-200.09c17.359 1.086 33.776-11.537 33.628-30v-22.5c-.124-2.149-.831-4.872-3.94-6.602l-233.878-129.657c-11.384-6.312-24.979-6.312-36.364 0l-94.36 52.312c-3.623 2.008-4.932 6.573-2.923 10.196 2.008 3.623 6.574 4.933 10.196 2.923l94.36-52.312c6.832-3.787 14.988-3.786 21.819 0l208.594 115.64h-439.007l83.276-46.167c3.623-2.008 4.932-6.573 2.923-10.196-2.008-3.623-6.573-4.932-10.196-2.923l-108.558 60.183c-1.724 1.01-3.972 3.17-3.942 6.603v22.5c-.16 17.66 15.804 31.928 33.628 30l26.372 37.121v184.062l-26.372 37.12h-16.128c-9.649 0-17.5 7.851-17.5 17.5v25c0 9.649 7.851 17.5 17.5 17.5h477c9.649 0 17.5-7.851 17.5-17.5v-25c0-9.649-7.851-17.5-17.5-17.5h-16.128l-26.372-37.12v-184.062zm-448.372-15c-8.271 0-15-6.729-15-15v-15h482v15c0 8.271-6.729 15-15 15zm354.249 150.592c4.143 0 7.5-3.358 7.5-7.5v-85.864h45.251v173.848h-45.251v-52.984c0-4.142-3.357-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v58.091l-26.372 37.12h-188.753l-26.372-37.12v-184.062l26.372-37.121h188.754l26.372 37.121v90.971c-.001 4.142 3.357 7.5 7.499 7.5zm-332.22-135.592h91.195l-19.343 27.228h-52.509zm68.223 42.228v173.848h-45.252v-173.848zm-48.88 188.848h52.508l19.343 27.227h-91.194zm423.128 42.227c1.379 0 2.5 1.122 2.5 2.5v25c0 1.378-1.121 2.5-2.5 2.5h-477c-1.378 0-2.5-1.122-2.5-2.5v-25c0-1.378 1.122-2.5 2.5-2.5zm-34.528-15h-91.194l19.344-27.227h52.507zm-19.344-231.075h-52.507l-19.344-27.228h91.194z" })));
     }
 }
 exports.IconsData = IconsData;
