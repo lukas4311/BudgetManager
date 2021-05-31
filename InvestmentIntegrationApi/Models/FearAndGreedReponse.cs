@@ -9,7 +9,7 @@ namespace FinanceDataMining.Models
         public string Name { get; set; }
 
         [JsonPropertyName("data")]
-        public List<FearAndGreedData> Data { get; set; }
+        public List<FearAndGreedResponseData> Data { get; set; }
 
         [JsonPropertyName("metadata")]
         public FearAndGreedResponseMetadata Metadata { get; set; }

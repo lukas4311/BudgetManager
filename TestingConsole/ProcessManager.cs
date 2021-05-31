@@ -2,8 +2,10 @@
 using FinanceDataMining.CryproApi;
 using FinanceDataMining.Models;
 using InfluxDbData;
+using InfluxDbData.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +18,7 @@ namespace TestingConsole
         private const string organizationId = "8f46f33452affe4a";
         private const string bucketCrypto = "Crypto";
         private const string bucketForex = "Forex";
+        private const string bucketFearAndGreed = "CryptoFearAndGreed";
         private readonly ConfigManager configManager;
 
         public ProcessManager()
@@ -65,6 +68,22 @@ namespace TestingConsole
             }
 
             cryptoTickerRepository.Save();
+        }
+
+        public async Task DownloadFearAndGreed()
+        {
+            InfluxConfig config = configManager.GetSecretToken();
+            FearAndGreed fearApi = new FearAndGreed(new HttpClient());
+            IEnumerable<FearAndGreedData> data = (await fearApi.GetFearAndGreedFrom(new System.DateTime(2019,1,1))).Data.Select(g => new FearAndGreedData
+            {
+                Value = double.Parse(g.Value),
+                Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(g.Timestamp)).DateTime.ToUniversalTime()
+            });
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
+            InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
+
+            foreach (FearAndGreedData model in data)
+                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FinanceDataMining.Models
 {
-    public class FearAndGreedData
+    public class FearAndGreedResponseData
     {
         [JsonPropertyName("value")]
         public string Value { get; set; }
