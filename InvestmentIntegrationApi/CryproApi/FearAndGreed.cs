@@ -1,4 +1,5 @@
 ﻿using FinanceDataMining.Models;
+using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -15,11 +16,27 @@ namespace FinanceDataMining.CryproApi
             this.httpClient = httpClient;
         }
 
-        public async Task<FearAndGreedReponse> GetActualFearAndGreed()
+        public async Task<FearAndGreedReponse> GetActualFearAndGreed() => await this.GetFearAndGreedFrom();
+
+        public async Task<FearAndGreedReponse> GetFearAndGreedFrom(DateTime? from = null)
         {
-            string response = await this.httpClient.GetStringAsync(ApiUrl);
-            FearAndGreedReponse responseModel = JsonSerializer.Deserialize<FearAndGreedReponse>(response);
-            return responseModel;
+            string urlDateAppend = string.Empty;
+
+            if (from.HasValue)
+            {
+                TimeSpan duration = DateTime.Now - from.Value;
+                int durationInDays = duration.Days;
+                urlDateAppend = $"/?limit={durationInDays}";
+            }
+
+            string url = ApiUrl + urlDateAppend;
+            return await this.DoApiReqeust(url);
+        }
+
+        private async Task<FearAndGreedReponse> DoApiReqeust(string url)
+        {
+            string response = await this.httpClient.GetStringAsync(url);
+            return JsonSerializer.Deserialize<FearAndGreedReponse>(response);
         }
     }
 }

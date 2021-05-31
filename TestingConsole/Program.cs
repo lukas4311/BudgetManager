@@ -1,4 +1,5 @@
 ﻿using Data;
+using FinanceDataMining.CryproApi;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using System.Threading.Tasks;
@@ -12,9 +13,13 @@ namespace TestingConsole
         {
             ProcessManager processManager = new ProcessManager();
             //await processManager.DownloadAssets();
-            await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
             //SaveCoinbaseDataToDb();
+
+            FearAndGreed fearAndGreed = new FearAndGreed(new System.Net.Http.HttpClient());
+            var data = await fearAndGreed.GetActualFearAndGreed();
+            var dataOld = await fearAndGreed.GetFearAndGreedFrom(new System.DateTime(2021,1,1));
         }
 
         private static void SaveCoinbaseDataToDb()
