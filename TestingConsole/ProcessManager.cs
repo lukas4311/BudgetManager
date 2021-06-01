@@ -78,7 +78,7 @@ namespace TestingConsole
         {
             InfluxConfig config = configManager.GetSecretToken();
             FearAndGreed fearApi = new FearAndGreed(new HttpClient());
-            IEnumerable<FearAndGreedData> data = (await fearApi.GetFearAndGreedFrom(new System.DateTime(2019,1,1))).Data.Select(g => new FearAndGreedData
+            IEnumerable<FearAndGreedData> data = (await fearApi.GetFearAndGreedFrom(new System.DateTime(2018,3,1))).Data.Select(g => new FearAndGreedData
             {
                 Value = double.Parse(g.Value),
                 Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(g.Timestamp)).DateTime.ToUniversalTime()
@@ -108,7 +108,7 @@ namespace TestingConsole
             {
                 Price = (double)g.Item2,
                 Ticker = gold,
-                Time = g.Item1
+                Time = g.Item1.ToUniversalTime()
             });
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
