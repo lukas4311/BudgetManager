@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{766BF606-B5CB-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{E74A8A66-07C0-444E-91DA-04A2CA077430}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebScrapers", "WebScrapers\WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,8 @@ Global
 		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
