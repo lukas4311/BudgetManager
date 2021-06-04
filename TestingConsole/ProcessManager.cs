@@ -89,7 +89,7 @@ namespace TestingConsole
             foreach (FearAndGreedData model in data)
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
-  
+
         public void SaveCoinbaseDataToDb()
         {
             DataContext dataContext = GetDataContext();
