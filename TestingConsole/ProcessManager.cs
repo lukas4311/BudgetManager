@@ -104,7 +104,7 @@ namespace TestingConsole
         {
             InfluxConfig config = configManager.GetSecretToken();
             GoldApi goldApi = new GoldApi(new HttpClient());
-            IEnumerable<ComodityData> data = (await goldApi.GetGoldData()).Select(g => new ComodityData
+            IEnumerable<ComodityData> data = (await goldApi.GetGoldData().ConfigureAwait(false)).Select(g => new ComodityData
             {
                 Price = (double)g.Item2,
                 Ticker = gold,
@@ -114,7 +114,7 @@ namespace TestingConsole
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
 
             foreach (ComodityData model in data)
-                await repo.Write(model, dataSourceIdentification);
+                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         private DataContext GetDataContext()
