@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using BudgetManager.Core.Extensions;
+using Data;
 using FinanceDataMining.Comodity;
 using FinanceDataMining.CryproApi;
 using FinanceDataMining.Models;
@@ -81,15 +82,15 @@ namespace TestingConsole
             IEnumerable<FearAndGreedData> data = (await fearApi.GetFearAndGreedFrom(new System.DateTime(2018,3,1))).Data.Select(g => new FearAndGreedData
             {
                 Value = double.Parse(g.Value),
-                Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(g.Timestamp)).DateTime.ToUniversalTime()
-            });
+                Time = g.Timestamp.ParseToUtcDateTime()
+            });;
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
             InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
 
             foreach (FearAndGreedData model in data)
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
-  
+
         public void SaveCoinbaseDataToDb()
         {
             DataContext dataContext = GetDataContext();
@@ -104,7 +105,7 @@ namespace TestingConsole
         {
             InfluxConfig config = configManager.GetSecretToken();
             GoldApi goldApi = new GoldApi(new HttpClient());
-            IEnumerable<ComodityData> data = (await goldApi.GetGoldData()).Select(g => new ComodityData
+            IEnumerable<ComodityData> data = (await goldApi.GetGoldData().ConfigureAwait(false)).Select(g => new ComodityData
             {
                 Price = (double)g.Item2,
                 Ticker = gold,
@@ -114,7 +115,7 @@ namespace TestingConsole
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
 
             foreach (ComodityData model in data)
-                await repo.Write(model, dataSourceIdentification);
+                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         private DataContext GetDataContext()
