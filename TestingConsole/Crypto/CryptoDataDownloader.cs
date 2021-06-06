@@ -1,4 +1,5 @@
-﻿using FinanceDataMining.CryproApi;
+﻿using BudgetManager.Core.Extensions;
+using FinanceDataMining.CryproApi;
 using FinanceDataMining.Models;
 using InfluxDbData;
 using System;
@@ -32,7 +33,7 @@ namespace TestingConsole
                     LowPrice = model.Low,
                     OpenPrice = model.Open,
                     Ticker = tickerToDownload.ToString(),
-                    Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(model.DateTime)).DateTime.ToUniversalTime(),
+                    Time = model.DateTime.ParseToUtcDateTime(),
                     Volume = model.Volume
                 }, this.dataSourceIdentification).ConfigureAwait(false);
             }

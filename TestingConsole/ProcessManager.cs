@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using BudgetManager.Core.Extensions;
+using Data;
 using FinanceDataMining.Comodity;
 using FinanceDataMining.CryproApi;
 using FinanceDataMining.Models;
@@ -81,8 +82,8 @@ namespace TestingConsole
             IEnumerable<FearAndGreedData> data = (await fearApi.GetFearAndGreedFrom(new System.DateTime(2018,3,1))).Data.Select(g => new FearAndGreedData
             {
                 Value = double.Parse(g.Value),
-                Time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(g.Timestamp)).DateTime.ToUniversalTime()
-            });
+                Time = g.Timestamp.ParseToUtcDateTime()
+            });;
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
             InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
 

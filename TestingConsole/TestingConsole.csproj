@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetManager.Core\BudgetManager.Core.csproj" />
     <ProjectReference Include="..\InfluxDbData\InfluxDbData.csproj" />
     <ProjectReference Include="..\InvestmentIntegrationApi\FinanceDataMining.csproj" />
     <ProjectReference Include="..\Repositories\Repository.csproj" />
