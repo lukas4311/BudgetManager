@@ -1,7 +1,7 @@
-﻿using FinanceDataMining.StockApi.Models;
+﻿using BudgetManager.FinanceDataMining.StockApi.Models;
 using System.Threading.Tasks;
 
-namespace FinanceDataMining.StockApi
+namespace BudgetManager.FinanceDataMining.StockApi
 {
     public interface IFinnhubStockApi
     {

@@ -1,10 +1,10 @@
-﻿using FinanceDataMining.Models;
+﻿using BudgetManager.FinanceDataMining.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace FinanceDataMining.CryproApi
+namespace BudgetManager.FinanceDataMining.CryproApi
 {
     public class FearAndGreed
     {

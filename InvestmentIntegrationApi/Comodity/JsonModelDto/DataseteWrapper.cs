@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FinanceDataMining.Comodity.JsonModelDto
+namespace BudgetManager.FinanceDataMining.Comodity.JsonModelDto
 {
     internal class DataseteWrapper
     {

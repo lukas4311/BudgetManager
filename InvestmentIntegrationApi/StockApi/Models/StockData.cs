@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FinanceDataMining.StockApi.Models
+namespace BudgetManager.FinanceDataMining.StockApi.Models
 {
     public class StockData
     {

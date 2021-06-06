@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerWeb", "ManagerWeb\ManagerWeb.csproj", "{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanceDataMining", "InvestmentIntegrationApi\FinanceDataMining.csproj", "{3AF953B7-222B-4A6F-AF49-C87050124EBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinanceDataMining", "InvestmentIntegrationApi\BudgetManager.FinanceDataMining.csproj", "{3AF953B7-222B-4A6F-AF49-C87050124EBC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repositories\Repository.csproj", "{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA}"
 EndProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{E74A8A
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebScrapers", "WebScrapers\WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetManager.Core", "BudgetManager.Core\BudgetManager.Core.csproj", "{E0C43364-8446-47D2-A887-5267891106CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Core", "BudgetManager.Core\BudgetManager.Core.csproj", "{E0C43364-8446-47D2-A887-5267891106CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

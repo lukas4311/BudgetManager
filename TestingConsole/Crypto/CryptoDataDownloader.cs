@@ -1,6 +1,7 @@
 ﻿using BudgetManager.Core.Extensions;
-using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
+using BudgetManager.FinanceDataMining.Models;
+using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.Models;
 using InfluxDbData;
 using System;
 using System.Collections.Generic;

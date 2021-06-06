@@ -1,4 +1,4 @@
-using FinanceDataMining.StockApi;
+using BudgetManager.FinanceDataMining.StockApi;
 using FinancialDataProvider.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +29,6 @@ namespace FinancialDataProvider
             services.AddTransient<IFinnhubStockApi, FinnhubStockApi>();
 
             services.AddSwaggerGen();
-
             services.AddControllers();
         }
 

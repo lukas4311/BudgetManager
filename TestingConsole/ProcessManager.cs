@@ -1,8 +1,8 @@
 ﻿using BudgetManager.Core.Extensions;
 using Data;
-using FinanceDataMining.Comodity;
-using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
+using BudgetManager.FinanceDataMining.Comodity;
+using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.Models;
 using InfluxDbData;
 using InfluxDbData.Models;
 using Microsoft.EntityFrameworkCore;

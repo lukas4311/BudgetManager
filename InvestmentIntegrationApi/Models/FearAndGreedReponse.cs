@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace FinanceDataMining.Models
+namespace BudgetManager.FinanceDataMining.Models
 {
     public class FearAndGreedReponse
     {

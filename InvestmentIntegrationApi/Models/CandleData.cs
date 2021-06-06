@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace FinanceDataMining.Models
+namespace BudgetManager.FinanceDataMining.Models
 {
     public class CandleModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FinanceDataMining.Models
+namespace BudgetManager.FinanceDataMining.Models
 {
     public class FearAndGreedResponseData
     {

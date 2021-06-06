@@ -1,4 +1,4 @@
-﻿namespace FinanceDataMining.Enums
+﻿namespace BudgetManager.FinanceDataMining.Enums
 {
     public enum Setting
     {

@@ -1,7 +1,7 @@
-﻿using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
-using FinanceDataMining.StockApi;
-using FinanceDataMining.StockApi.Models;
+﻿using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.Models;
+using BudgetManager.FinanceDataMining.StockApi;
+using BudgetManager.FinanceDataMining.StockApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;

@@ -1,4 +1,4 @@
-﻿using FinanceDataMining.CurrencyApi;
+﻿using BudgetManager.FinanceDataMining.CurrencyApi;
 using InfluxDbData;
 using System;
 using System.Collections.Generic;

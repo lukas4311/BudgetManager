@@ -1,8 +1,8 @@
 ﻿using Data;
-using FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.CryproApi;
 using Microsoft.EntityFrameworkCore;
 using Repository;
-﻿using FinanceDataMining.Comodity;
+﻿using BudgetManager.FinanceDataMining.Comodity;
 using System.Net.Http;
 using System.Threading.Tasks;
 
