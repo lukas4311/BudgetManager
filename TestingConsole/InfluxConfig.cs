@@ -1,4 +1,4 @@
-﻿namespace TestingConsole
+﻿namespace BudgetManager.TestingConsole
 {
     public class InfluxConfig
     {

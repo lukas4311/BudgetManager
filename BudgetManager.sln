@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinanceDataMi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repositories\Repository.csproj", "{52367DF5-EBC0-4CE2-A52D-4F65A9AA1DDA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestingConsole", "TestingConsole\TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.TestingConsole", "TestingConsole\BudgetManager.TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialDataProvider", "FinancialDataProvider\FinancialDataProvider.csproj", "{943EC85F-4669-4452-AEAD-53FF786E629F}"
 EndProject
@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{766BF606-B5CB-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{E74A8A66-07C0-444E-91DA-04A2CA077430}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "WebScrapers", "WebScrapers\WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BudgetManager.WebScrapers", "WebScrapers\BudgetManager.WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Core", "BudgetManager.Core\BudgetManager.Core.csproj", "{E0C43364-8446-47D2-A887-5267891106CE}"
 EndProject

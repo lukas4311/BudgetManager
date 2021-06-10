@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using System;
 
-namespace TestingConsole.Crypto
+namespace BudgetManager.TestingConsole.Crypto
 {
 
     public class CoinbaseRecord

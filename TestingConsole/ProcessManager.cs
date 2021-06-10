@@ -12,9 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TestingConsole.Crypto;
+using BudgetManager.TestingConsole.Crypto;
 
-namespace TestingConsole
+namespace BudgetManager.TestingConsole
 {
     public class ProcessManager
     {

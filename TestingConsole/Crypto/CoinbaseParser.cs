@@ -7,7 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace TestingConsole.Crypto
+namespace BudgetManager.TestingConsole.Crypto
 {
     internal class CoinbaseParser
     {

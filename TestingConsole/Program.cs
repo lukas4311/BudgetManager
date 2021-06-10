@@ -6,7 +6,7 @@ using Repository;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace TestingConsole
+namespace BudgetManager.TestingConsole
 {
     class Program
     {
