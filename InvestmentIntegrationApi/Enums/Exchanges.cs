@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace FinanceDataMining.Enums
+namespace BudgetManager.FinanceDataMining.Enums
 {
     public enum Exchanges
     {

@@ -1,16 +1,16 @@
-﻿using Data.DataModels;
-using InfluxDbData;
-using ManagerWeb.Extensions;
-using ManagerWeb.Models.DTOs;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.InfluxDbData;
+using BudgetManager.ManagerWeb.Extensions;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Repository;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public class CryptoService : ICryptoService
     {

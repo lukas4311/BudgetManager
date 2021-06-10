@@ -1,4 +1,4 @@
-﻿namespace FinanceDataMining.StockApi
+﻿namespace BudgetManager.FinanceDataMining.StockApi
 {
     public class StockSetting
     {

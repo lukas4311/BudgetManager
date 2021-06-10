@@ -1,7 +1,7 @@
-﻿using Data.DataModels;
+﻿using BudgetManager.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data
+namespace BudgetManager.Data
 {
     public class DataContext : DbContext
     {

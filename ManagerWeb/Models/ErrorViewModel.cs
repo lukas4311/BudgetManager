@@ -1,6 +1,6 @@
 using System;
 
-namespace ManagerWeb.Models
+namespace BudgetManager.ManagerWeb.Models
 {
     public class ErrorViewModel
     {

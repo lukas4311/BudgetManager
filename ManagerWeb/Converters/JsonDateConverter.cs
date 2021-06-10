@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ManagerWeb.Converters
+namespace BudgetManager.ManagerWeb.Converters
 {
     internal class JsonDateConverter : JsonConverter<DateTime>
     {

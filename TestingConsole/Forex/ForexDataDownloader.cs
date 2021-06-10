@@ -1,11 +1,11 @@
-﻿using FinanceDataMining.CurrencyApi;
-using InfluxDbData;
+﻿using BudgetManager.FinanceDataMining.CurrencyApi;
+using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace TestingConsole
+namespace BudgetManager.TestingConsole
 {
     public class ForexDataDownloader
     {

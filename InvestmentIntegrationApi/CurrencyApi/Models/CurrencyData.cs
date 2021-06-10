@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FinanceDataMining.CurrencyApi
+namespace BudgetManager.FinanceDataMining.CurrencyApi
 {
     public class CurrencyData
     {

@@ -1,7 +1,7 @@
-﻿using Data.DataModels;
-using ManagerWeb.Models.DTOs;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.ManagerWeb.Models.DTOs;
 
-namespace ManagerWeb.Extensions
+namespace BudgetManager.ManagerWeb.Extensions
 {
     internal static class BudgetMapperExtension
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Models.SettingModels
+namespace BudgetManager.ManagerWeb.Models.SettingModels
 {
     public class Influxdb
     {

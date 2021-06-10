@@ -1,13 +1,14 @@
 ﻿using BudgetManager.Core.Extensions;
-using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
-using InfluxDbData;
+using BudgetManager.FinanceDataMining.Models;
+using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.Models;
+using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace TestingConsole
+namespace BudgetManager.TestingConsole
 {
     internal class CryptoDataDownloader
     {

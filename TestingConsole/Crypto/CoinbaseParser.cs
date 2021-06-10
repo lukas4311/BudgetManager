@@ -1,13 +1,13 @@
 ﻿using CsvHelper;
-using Data.DataModels;
-using Repository;
+using BudgetManager.Data.DataModels;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace TestingConsole.Crypto
+namespace BudgetManager.TestingConsole.Crypto
 {
     internal class CoinbaseParser
     {

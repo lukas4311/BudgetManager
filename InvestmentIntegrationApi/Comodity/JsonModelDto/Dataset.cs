@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FinanceDataMining.Comodity.JsonModelDto
+namespace BudgetManager.FinanceDataMining.Comodity.JsonModelDto
 {
     internal class Dataset
     {

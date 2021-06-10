@@ -1,12 +1,12 @@
-﻿using InfluxDbData;
-using ManagerWeb.Models.DTOs;
-using ManagerWeb.Services;
+﻿using BudgetManager.InfluxDbData;
+using BudgetManager.ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [Authorize]
     [ApiController]

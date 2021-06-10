@@ -1,7 +1,7 @@
-﻿using FinanceDataMining.Enums;
+﻿using BudgetManager.FinanceDataMining.Enums;
 using System.ComponentModel;
 
-namespace FinanceDataMining.Extensions
+namespace BudgetManager.FinanceDataMining.Extensions
 {
     internal static class ExchangesExtension
     {

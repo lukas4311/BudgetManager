@@ -1,10 +1,10 @@
-﻿using Data;
+﻿using BudgetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Repository
+namespace BudgetManager.Repository
 {
     public abstract class Repository<T> : IRepository<T> where T : class
     {

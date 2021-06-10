@@ -1,6 +1,6 @@
-using InfluxDbData;
-using ManagerWeb.Extensions;
-using ManagerWeb.Models.SettingModels;
+using BudgetManager.InfluxDbData;
+using BudgetManager.ManagerWeb.Extensions;
+using BudgetManager.ManagerWeb.Models.SettingModels;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ManagerWeb
+namespace BudgetManager.ManagerWeb
 {
     public class Startup
     {

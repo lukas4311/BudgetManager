@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Data.DataModels;
-using ManagerWeb.Models.DTOs;
-using ManagerWeb.Models.ViewModels;
-using ManagerWeb.Services;
+using BudgetManager.Data.DataModels;
+using BudgetManager.ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models.ViewModels;
+using BudgetManager.ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [ApiController]
     [Authorize]

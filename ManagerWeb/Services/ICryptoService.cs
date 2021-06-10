@@ -1,9 +1,9 @@
-﻿using InfluxDbData;
-using ManagerWeb.Models.DTOs;
+﻿using BudgetManager.InfluxDbData;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public interface ICryptoService
     {

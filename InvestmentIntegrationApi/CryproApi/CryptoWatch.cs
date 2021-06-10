@@ -1,13 +1,13 @@
-﻿using FinanceDataMining.Enums;
-using FinanceDataMining.Extensions;
-using FinanceDataMining.Models;
+﻿using BudgetManager.FinanceDataMining.Enums;
+using BudgetManager.FinanceDataMining.Extensions;
+using BudgetManager.FinanceDataMining.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace FinanceDataMining.CryproApi
+namespace BudgetManager.FinanceDataMining.CryproApi
 {
 
     /// <summary>

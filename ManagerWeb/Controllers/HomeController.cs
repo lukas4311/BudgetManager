@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ManagerWeb.Models;
+using BudgetManager.ManagerWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [Authorize]
     public class HomeController : Controller

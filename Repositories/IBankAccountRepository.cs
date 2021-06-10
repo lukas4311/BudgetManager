@@ -1,6 +1,6 @@
-﻿using Data.DataModels;
+﻿using BudgetManager.Data.DataModels;
 
-namespace Repository
+namespace BudgetManager.Repository
 {
     public interface IBankAccountRepository : IRepository<BankAccount>
     {

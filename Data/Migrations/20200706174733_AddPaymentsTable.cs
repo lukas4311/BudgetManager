@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Data.Migrations
+namespace BudgetManager.Data.Migrations
 {
     public partial class AddPaymentsTable : Migration
     {

@@ -1,9 +1,9 @@
-﻿using ManagerWeb.Converters;
+﻿using BudgetManager.ManagerWeb.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace ManagerWeb.Models.DTOs
+namespace BudgetManager.ManagerWeb.Models.DTOs
 {
     public class BudgetModel
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ManagerWeb.Models;
+using BudgetManager.ManagerWeb.Models;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public interface IUserService
     {

@@ -1,7 +1,7 @@
-﻿using Data;
-using Data.DataModels;
+﻿using BudgetManager.Data;
+using BudgetManager.Data.DataModels;
 
-namespace Repository
+namespace BudgetManager.Repository
 {
     public class CryptoTradeHistoryRepository : Repository<CryptoTradeHistory>, ICryptoTradeHistoryRepository
     {

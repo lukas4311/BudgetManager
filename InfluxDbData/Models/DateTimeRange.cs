@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InfluxDbData
+namespace BudgetManager.InfluxDbData
 {
     public class DateTimeRange
     {

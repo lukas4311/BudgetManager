@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using FinanceDataMining.Comodity.JsonModelDto;
+using BudgetManager.FinanceDataMining.Comodity.JsonModelDto;
 
-namespace FinanceDataMining.Comodity
+namespace BudgetManager.FinanceDataMining.Comodity
 {
     public class GoldApi
     {

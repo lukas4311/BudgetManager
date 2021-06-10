@@ -1,7 +1,7 @@
 ﻿using InfluxDB.Client.Core;
 using System;
 
-namespace InfluxDbData
+namespace BudgetManager.InfluxDbData
 {
     [Measurement("comodityData")]
     public class ComodityData : IInfluxModel

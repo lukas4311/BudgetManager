@@ -1,10 +1,10 @@
-﻿using Data.DataModels;
-using ManagerWeb.Models.DTOs;
-using ManagerWeb.Models.ViewModels;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public interface IPaymentService
     {

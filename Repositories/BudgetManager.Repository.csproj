@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="SystemWrappers\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace ManagerWeb.Services
+﻿namespace BudgetManager.ManagerWeb.Services
 {
     internal interface IHashManager
     {

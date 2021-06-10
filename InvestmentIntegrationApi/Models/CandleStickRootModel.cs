@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FinanceDataMining.Models
+namespace BudgetManager.FinanceDataMining.Models
 {
     internal class CandleStickRootModel
     {

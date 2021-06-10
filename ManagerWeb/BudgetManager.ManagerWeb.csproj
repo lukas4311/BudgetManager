@@ -29,9 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\InfluxDbData\InfluxDbData.csproj" />
-    <ProjectReference Include="..\Repositories\Repository.csproj" />
+    <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
+    <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
+    <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

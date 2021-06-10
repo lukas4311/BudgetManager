@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using ManagerWeb.Models.DTOs;
-using ManagerWeb.Services;
+using BudgetManager.ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [ApiController]
     [Route("bankAccount")]

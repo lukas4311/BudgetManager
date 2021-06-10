@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using ManagerWeb.Models;
-using ManagerWeb.Resources;
-using ManagerWeb.Services;
+using BudgetManager.ManagerWeb.Models;
+using BudgetManager.ManagerWeb.Resources;
+using BudgetManager.ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [Authorize]
     [ApiController]

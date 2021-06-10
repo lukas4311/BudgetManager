@@ -1,20 +1,20 @@
 ﻿using BudgetManager.Core.Extensions;
-using Data;
-using FinanceDataMining.Comodity;
-using FinanceDataMining.CryproApi;
-using FinanceDataMining.Models;
-using InfluxDbData;
-using InfluxDbData.Models;
+using BudgetManager.Data;
+using BudgetManager.FinanceDataMining.Comodity;
+using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.FinanceDataMining.Models;
+using BudgetManager.InfluxDbData;
+using BudgetManager.InfluxDbData.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using TestingConsole.Crypto;
+using BudgetManager.TestingConsole.Crypto;
 
-namespace TestingConsole
+namespace BudgetManager.TestingConsole
 {
     public class ProcessManager
     {
