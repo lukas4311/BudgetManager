@@ -1,4 +1,4 @@
-﻿namespace FinancialDataProvider.Settings
+﻿namespace BudgetManager.FinancialDataProvider.Settings
 {
     internal class StockOptions
     {

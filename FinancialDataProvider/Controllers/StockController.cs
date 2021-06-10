@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using SystemInterface;
 using SystemWrapper;
 
-namespace FinancialDataProvider.Controllers
+namespace BudgetManager.FinancialDataProvider.Controllers
 {
     [Route("stock")]
     [ApiController]

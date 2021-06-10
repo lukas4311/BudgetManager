@@ -1,5 +1,5 @@
 using BudgetManager.FinanceDataMining.StockApi;
-using FinancialDataProvider.Settings;
+using BudgetManager.FinancialDataProvider.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
 
-namespace FinancialDataProvider
+namespace BudgetManager.FinancialDataProvider
 {
     public class Startup
     {

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="SystemWrappers\" />
+    <Folder Include="Security\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
