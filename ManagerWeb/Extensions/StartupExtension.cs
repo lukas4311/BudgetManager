@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using BudgetManager.Data;
 using InfluxDbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Data.DataModels
+namespace BudgetManager.Data.DataModels
 {
     public class DataContextDesignTimeFactory : IDesignTimeDbContextFactory<DataContext>
     {

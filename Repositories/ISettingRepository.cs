@@ -1,4 +1,4 @@
-﻿using Data.DataModels;
+﻿using BudgetManager.Data.DataModels;
 
 namespace Repository
 {

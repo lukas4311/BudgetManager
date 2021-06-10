@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Data.DataModels
+namespace BudgetManager.Data.DataModels
 {
     public class InterestRate
     {

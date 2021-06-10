@@ -1,5 +1,5 @@
-﻿using Data;
-using Data.DataModels;
+﻿using BudgetManager.Data;
+using BudgetManager.Data.DataModels;
 
 namespace Repository
 {

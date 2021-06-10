@@ -1,4 +1,4 @@
-﻿using Data.DataModels;
+﻿using BudgetManager.Data.DataModels;
 using InfluxDbData;
 using BudgetManager.ManagerWeb.Extensions;
 using BudgetManager.ManagerWeb.Models.DTOs;

@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using BudgetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

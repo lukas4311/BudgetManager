@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using BudgetManager.Data;
 using BudgetManager.FinanceDataMining.CryproApi;
 using Microsoft.EntityFrameworkCore;
 using Repository;

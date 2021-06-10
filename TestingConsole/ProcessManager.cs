@@ -1,5 +1,5 @@
 ﻿using BudgetManager.Core.Extensions;
-using Data;
+using BudgetManager.Data;
 using BudgetManager.FinanceDataMining.Comodity;
 using BudgetManager.FinanceDataMining.CryproApi;
 using BudgetManager.FinanceDataMining.Models;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.DataModels.EntityConfiguration
+namespace BudgetManager.Data.DataModels.EntityConfiguration
 {
     public class SettingConfiguration : IEntityTypeConfiguration<Setting>
     {
