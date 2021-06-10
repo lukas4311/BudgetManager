@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Repository", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.TestingConsole", "TestingConsole\BudgetManager.TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialDataProvider", "FinancialDataProvider\FinancialDataProvider.csproj", "{943EC85F-4669-4452-AEAD-53FF786E629F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinancialDataProvider", "FinancialDataProvider\BudgetManager.FinancialDataProvider.csproj", "{943EC85F-4669-4452-AEAD-53FF786E629F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.InfluxDbData", "InfluxDbData\BudgetManager.InfluxDbData.csproj", "{CF38C15D-89B8-48C6-9028-18A332B37A1B}"
 EndProject

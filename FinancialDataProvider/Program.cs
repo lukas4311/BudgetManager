@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace FinancialDataProvider
+namespace BudgetManager.FinancialDataProvider
 {
     public class Program
     {
