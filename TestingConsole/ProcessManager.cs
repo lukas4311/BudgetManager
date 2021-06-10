@@ -6,7 +6,7 @@ using BudgetManager.FinanceDataMining.Models;
 using BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

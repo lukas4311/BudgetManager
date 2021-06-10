@@ -2,7 +2,7 @@
 using BudgetManager.InfluxDbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Repository;
+using BudgetManager.Repository;
 
 namespace BudgetManager.ManagerWeb.Extensions
 {

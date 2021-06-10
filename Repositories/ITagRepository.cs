@@ -1,6 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 
-namespace Repository
+namespace BudgetManager.Repository
 {
     public interface ITagRepository : IRepository<Tag>
     { }

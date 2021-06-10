@@ -3,7 +3,7 @@ using BudgetManager.ManagerWeb.Models;
 using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Repository;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

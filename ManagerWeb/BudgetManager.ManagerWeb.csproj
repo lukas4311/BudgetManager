@@ -31,7 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
     <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
-    <ProjectReference Include="..\Repositories\Repository.csproj" />
+    <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

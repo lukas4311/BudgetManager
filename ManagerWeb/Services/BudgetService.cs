@@ -2,7 +2,7 @@
 using BudgetManager.ManagerWeb.Extensions;
 using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
-using Repository;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

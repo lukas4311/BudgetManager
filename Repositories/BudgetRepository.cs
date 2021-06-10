@@ -1,7 +1,7 @@
 ﻿using BudgetManager.Data;
 using BudgetManager.Data.DataModels;
 
-namespace Repository
+namespace BudgetManager.Repository
 {
     public class BudgetRepository : Repository<Budget>, IBudgetRepository
     {
