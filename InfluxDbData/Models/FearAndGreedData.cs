@@ -1,7 +1,7 @@
 ﻿using InfluxDB.Client.Core;
 using System;
 
-namespace InfluxDbData.Models
+namespace BudgetManager.InfluxDbData.Models
 {
     [Measurement("fearAndGreed")]
     public class FearAndGreedData : IInfluxModel

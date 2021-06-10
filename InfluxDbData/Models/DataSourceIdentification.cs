@@ -1,4 +1,4 @@
-﻿namespace InfluxDbData
+﻿namespace BudgetManager.InfluxDbData
 {
     public class DataSourceIdentification
     {

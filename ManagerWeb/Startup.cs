@@ -1,4 +1,4 @@
-using InfluxDbData;
+using BudgetManager.InfluxDbData;
 using BudgetManager.ManagerWeb.Extensions;
 using BudgetManager.ManagerWeb.Models.SettingModels;
 using Microsoft.AspNetCore.Authentication.Cookies;

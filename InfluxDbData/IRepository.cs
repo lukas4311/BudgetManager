@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace InfluxDbData
+namespace BudgetManager.InfluxDbData
 {
     public interface IRepository<TModel> where TModel : IInfluxModel, new()
     {

@@ -1,5 +1,5 @@
 ﻿using BudgetManager.FinanceDataMining.CurrencyApi;
-using InfluxDbData;
+using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

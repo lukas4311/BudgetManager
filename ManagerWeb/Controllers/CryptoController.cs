@@ -1,4 +1,4 @@
-﻿using InfluxDbData;
+﻿using BudgetManager.InfluxDbData;
 using BudgetManager.ManagerWeb.Models.DTOs;
 using BudgetManager.ManagerWeb.Services;
 using Microsoft.AspNetCore.Authorization;

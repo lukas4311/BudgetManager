@@ -2,14 +2,14 @@
 using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core;
 using InfluxDB.Client.Core.Flux.Domain;
-using InfluxDbData.Services;
+using BudgetManager.InfluxDbData.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace InfluxDbData
+namespace BudgetManager.InfluxDbData
 {
     public class Repository<TModel> : IRepository<TModel> where TModel : IInfluxModel, new()
     {

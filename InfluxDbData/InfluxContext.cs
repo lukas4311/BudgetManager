@@ -1,6 +1,6 @@
 ﻿using InfluxDB.Client;
 
-namespace InfluxDbData
+namespace BudgetManager.InfluxDbData
 {
     public class InfluxContext : IInfluxContext
     {

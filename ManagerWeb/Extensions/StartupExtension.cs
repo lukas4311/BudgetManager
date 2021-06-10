@@ -1,5 +1,5 @@
 ﻿using BudgetManager.Data;
-using InfluxDbData;
+using BudgetManager.InfluxDbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;

@@ -1,5 +1,5 @@
 ﻿using BudgetManager.Data.DataModels;
-using InfluxDbData;
+using BudgetManager.InfluxDbData;
 using BudgetManager.ManagerWeb.Extensions;
 using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;

@@ -2,7 +2,7 @@
 using BudgetManager.FinanceDataMining.Models;
 using BudgetManager.FinanceDataMining.CryproApi;
 using BudgetManager.FinanceDataMining.Models;
-using InfluxDbData;
+using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
