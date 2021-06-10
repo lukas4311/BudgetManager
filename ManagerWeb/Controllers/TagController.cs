@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using System.Collections.Generic;
-using ManagerWeb.Services;
+using BudgetManager.ManagerWeb.Services;
 
-namespace ManagerWeb.Controllers
+namespace BudgetManager.ManagerWeb.Controllers
 {
     [Authorize]
     [ApiController]

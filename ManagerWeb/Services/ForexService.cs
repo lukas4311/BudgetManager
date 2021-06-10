@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public class ForexService : IForexService
     {

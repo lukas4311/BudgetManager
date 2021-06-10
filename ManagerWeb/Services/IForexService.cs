@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public interface IForexService
     {

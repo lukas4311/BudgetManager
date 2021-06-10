@@ -1,10 +1,10 @@
-﻿using ManagerWeb.Converters;
+﻿using BudgetManager.ManagerWeb.Converters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace ManagerWeb.Models.ViewModels
+namespace BudgetManager.ManagerWeb.Models.ViewModels
 {
     public class PaymentViewModel
     {

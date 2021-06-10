@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
 
-namespace ManagerWeb.Extensions
+namespace BudgetManager.ManagerWeb.Extensions
 {
     internal static class StartupExtension
     {

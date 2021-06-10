@@ -1,4 +1,4 @@
-﻿using ManagerWeb.Models;
+﻿using BudgetManager.ManagerWeb.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     internal class UserService : IUserService
     {

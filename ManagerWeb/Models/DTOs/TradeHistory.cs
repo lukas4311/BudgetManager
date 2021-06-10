@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ManagerWeb.Models.DTOs
+namespace BudgetManager.ManagerWeb.Models.DTOs
 {
     public class TradeHistory
     {

@@ -1,7 +1,7 @@
-﻿using ManagerWeb.Services;
+﻿using BudgetManager.ManagerWeb.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ManagerWeb.Extensions
+namespace BudgetManager.ManagerWeb.Extensions
 {
     public static class ServiceCollectionExtensions
     {

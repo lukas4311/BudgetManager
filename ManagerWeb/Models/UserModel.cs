@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ManagerWeb.Models
+namespace BudgetManager.ManagerWeb.Models
 {
     public class UserModel
     {

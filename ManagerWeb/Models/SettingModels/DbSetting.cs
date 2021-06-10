@@ -1,4 +1,4 @@
-﻿namespace ManagerWeb.Models.SettingModels
+﻿namespace BudgetManager.ManagerWeb.Models.SettingModels
 {
     public class DbSetting
     {

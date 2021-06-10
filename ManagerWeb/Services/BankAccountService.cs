@@ -1,6 +1,6 @@
 ﻿using Data.DataModels;
-using ManagerWeb.Models;
-using ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Repository;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     internal class BankAccountService : IBankAccountService
     {

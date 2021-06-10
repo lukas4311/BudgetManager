@@ -1,13 +1,13 @@
 ﻿using Data.DataModels;
-using ManagerWeb.Models.DTOs;
-using ManagerWeb.Models.ViewModels;
+using BudgetManager.ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     internal class PaymentService : IPaymentService
     {

@@ -1,8 +1,8 @@
-﻿using ManagerWeb.Models.DTOs;
+﻿using BudgetManager.ManagerWeb.Models.DTOs;
 using System;
 using System.Collections.Generic;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     public interface IBankAccountService
     {

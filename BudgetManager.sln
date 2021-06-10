@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{680BB8A0-5CDA-4B9B-B5F4-51E78EB7F329}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagerWeb", "ManagerWeb\ManagerWeb.csproj", "{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.ManagerWeb", "ManagerWeb\BudgetManager.ManagerWeb.csproj", "{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinanceDataMining", "InvestmentIntegrationApi\BudgetManager.FinanceDataMining.csproj", "{3AF953B7-222B-4A6F-AF49-C87050124EBC}"
 EndProject

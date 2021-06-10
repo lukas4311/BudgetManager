@@ -1,6 +1,6 @@
 ﻿using Data.DataModels;
-using ManagerWeb.Extensions;
-using ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Extensions;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Repository;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     internal class BudgetService : IBudgetService
     {

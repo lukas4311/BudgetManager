@@ -1,5 +1,5 @@
 ﻿using Data.DataModels;
-using ManagerWeb.Models.DTOs;
+using BudgetManager.ManagerWeb.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Repository;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ManagerWeb.Services
+namespace BudgetManager.ManagerWeb.Services
 {
     internal class TagService : ITagService
     {
