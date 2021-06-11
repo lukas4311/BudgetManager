@@ -1,9 +1,4 @@
-﻿using BudgetManager.Data;
-using BudgetManager.FinanceDataMining.CryproApi;
-using Microsoft.EntityFrameworkCore;
-using BudgetManager.Repository;
-﻿using BudgetManager.FinanceDataMining.Comodity;
-using System.Net.Http;
+﻿using BudgetManager.FinanceDataMining.CryproApi;
 using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole

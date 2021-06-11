@@ -40,9 +40,7 @@ namespace BudgetManager.TestingConsole.Crypto
             this.CacheCryptoTickers();
 
             foreach (CoinbaseRecord record in records)
-            {
                 this.MapCoinbaseRecordToDbRecord(record);
-            }
 
             this.cryptoTradeHistoryRepository.Save();
         }
@@ -52,7 +50,8 @@ namespace BudgetManager.TestingConsole.Crypto
             int crypto = this.cryptoTickers.Single(t => string.Equals(t.Ticker, coinbaseRecord.SizeUnit, StringComparison.OrdinalIgnoreCase)).Id;
             int currency = currencySymbols.Single(t => string.Equals(t.Symbol, coinbaseRecord.PriceFeeTotalUnit, StringComparison.OrdinalIgnoreCase)).Id;
 
-            CryptoTradeHistory cryptoTradeHistory = new CryptoTradeHistory {
+            CryptoTradeHistory cryptoTradeHistory = new CryptoTradeHistory
+            {
                 CryptoTickerId = crypto,
                 CurrencySymbolId = currency,
                 TradeValue = coinbaseRecord.Total * -1,
@@ -64,14 +63,8 @@ namespace BudgetManager.TestingConsole.Crypto
             this.cryptoTradeHistoryRepository.Create(cryptoTradeHistory);
         }
 
-        private void CacheCurrencySymbols()
-        {
-            this.currencySymbols = this.currencySymbolRepository.FindAll().ToList();
-        }
+        private void CacheCurrencySymbols() => this.currencySymbols = this.currencySymbolRepository.FindAll().ToList();
 
-        private void CacheCryptoTickers()
-        {
-            this.cryptoTickers = this.cryptoTickerRepository.FindAll().ToList();
-        }
+        private void CacheCryptoTickers() => this.cryptoTickers = this.cryptoTickerRepository.FindAll().ToList();
     }
 }

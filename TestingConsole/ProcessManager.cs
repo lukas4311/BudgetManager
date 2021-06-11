@@ -7,7 +7,6 @@ using BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using Microsoft.EntityFrameworkCore;
 using BudgetManager.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -25,17 +24,24 @@ namespace BudgetManager.TestingConsole
         private const string buckerComodity = "Comodity";
         private const string gold = "AU";
         private readonly ConfigManager configManager;
+        private readonly DataContext DataContext;
 
         public ProcessManager()
         {
             this.configManager = new ConfigManager();
+            this.DataContext = this.GetDataContext();
         }
 
+        /// <summary>
+        /// Download history values of crypto (from last updated value)
+        /// </summary>
+        /// <param name="cryptoTicker">Crypto ticker</param>
+        /// <returns>Task</returns>
         public async Task DownloadCryptoHistory(CryptoTicker cryptoTicker)
         {
-            InfluxConfig config = configManager.GetSecretToken();
+            InfluxConfig config = GetSecretToken();
 
-            InfluxDbData.Repository<CryptoData> repo = new InfluxDbData.Repository<CryptoData>(new InfluxContext(config.Url, config.Token));
+            InfluxDbData.Repository<CryptoData> repo = new(new InfluxContext(config.Url, config.Token));
             List<CryptoData> lastRecords = await repo.GetLastWrittenRecordsTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
             CryptoData lastTickerRecord = lastRecords.SingleOrDefault(r => r.Ticker == cryptoTicker.ToString());
 
@@ -45,9 +51,9 @@ namespace BudgetManager.TestingConsole
 
         public async Task DownloadForexHistory(ForexTicker forexTicker)
         {
-            InfluxConfig config = configManager.GetSecretToken();
+            InfluxConfig config = GetSecretToken();
 
-            InfluxDbData.Repository<ForexData> repo = new InfluxDbData.Repository<ForexData>(new InfluxContext(config.Url, config.Token));
+            InfluxDbData.Repository<ForexData> repo = new(new InfluxContext(config.Url, config.Token));
             ForexDataDownloader forexDataDownloader = new ForexDataDownloader(repo, new DataSourceIdentification(organizationId, bucketForex));
             await forexDataDownloader.ForexDownload(forexTicker).ConfigureAwait(false);
         }
@@ -56,21 +62,11 @@ namespace BudgetManager.TestingConsole
         {
             CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
             IEnumerable<CryptoAsset> assets = await cryptoWatch.GetAssets();
-
-            DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-            optionsBuilder.UseSqlServer(configManager.GetConnectionString());
-            DataContext dataContext = new DataContext(optionsBuilder.Options);
-
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(dataContext);
+            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            assets = this.FilterNotSavedAssets(assets);
 
             foreach (CryptoAsset asset in assets)
-            {
-                cryptoTickerRepository.Create(new Data.DataModels.CryptoTicker
-                {
-                    Name = asset.Name,
-                    Ticker = asset.Symbol
-                });
-            }
+                this.CreateTickerEntity(asset, cryptoTickerRepository);
 
             cryptoTickerRepository.Save();
         }
@@ -86,17 +82,17 @@ namespace BudgetManager.TestingConsole
             });;
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
             InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
+            FearAndGreedData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
 
-            foreach (FearAndGreedData model in data)
+            foreach (FearAndGreedData model in data.Where(f => f.Time > lastRecord.Time))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         public void SaveCoinbaseDataToDb()
         {
-            DataContext dataContext = GetDataContext();
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(dataContext);
-            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(dataContext);
-            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(dataContext);
+            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);
+            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(this.DataContext);
             CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
             coinbaseParser.ParseCoinbaseReport();
         }
@@ -113,17 +109,35 @@ namespace BudgetManager.TestingConsole
             });
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
+            ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
 
-            foreach (ComodityData model in data)
+            foreach (ComodityData model in data.Where(g => g.Time > lastRecord.Time))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         private DataContext GetDataContext()
         {
-            ConfigManager configManager = new ConfigManager();
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-            optionsBuilder.UseSqlServer(configManager.GetConnectionString());
+            optionsBuilder.UseSqlServer(this.configManager.GetConnectionString());
             return new DataContext(optionsBuilder.Options);
         }
+
+        private IEnumerable<CryptoAsset> FilterNotSavedAssets(IEnumerable<CryptoAsset> allAssets)
+        {
+            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            IQueryable<Data.DataModels.CryptoTicker> existingAssets = cryptoTickerRepository.FindAll();
+            return allAssets.Where(a => existingAssets.Any(ea => string.Compare(ea.Ticker, a.Symbol, true) == 0));
+        }
+
+        private void CreateTickerEntity(CryptoAsset cryptoAsset, ICryptoTickerRepository cryptoTickerRepository)
+        {
+            cryptoTickerRepository.Create(new Data.DataModels.CryptoTicker
+            {
+                Name = cryptoAsset.Name,
+                Ticker = cryptoAsset.Symbol
+            });
+        }
+
+        private InfluxConfig GetSecretToken() => configManager.GetSecretToken();
     }
 }
