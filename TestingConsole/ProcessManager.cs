@@ -58,6 +58,10 @@ namespace BudgetManager.TestingConsole
             await forexDataDownloader.ForexDownload(forexTicker).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Download all assets to SQL database
+        /// </summary>
+        /// <returns>List of all assets</returns>
         public async Task DownloadAssets()
         {
             CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
@@ -125,8 +129,8 @@ namespace BudgetManager.TestingConsole
         private IEnumerable<CryptoAsset> FilterNotSavedAssets(IEnumerable<CryptoAsset> allAssets)
         {
             ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
-            IQueryable<Data.DataModels.CryptoTicker> existingAssets = cryptoTickerRepository.FindAll();
-            return allAssets.Where(a => existingAssets.Any(ea => string.Compare(ea.Ticker, a.Symbol, true) == 0));
+            List<Data.DataModels.CryptoTicker> existingAssets = cryptoTickerRepository.FindAll().ToList();
+            return allAssets.Where(a => !existingAssets.Any(ea => string.Compare(ea.Ticker, a.Symbol, true) == 0));
         }
 
         private void CreateTickerEntity(CryptoAsset cryptoAsset, ICryptoTickerRepository cryptoTickerRepository)

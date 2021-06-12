@@ -8,7 +8,10 @@ namespace BudgetManager.TestingConsole
         static async Task Main(string[] args)
         {
             ProcessManager processManager = new ProcessManager();
-            //await processManager.DownloadAssets();
+
+            // download all assets
+            await processManager.DownloadAssets();
+
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
 
