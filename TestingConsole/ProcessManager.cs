@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BudgetManager.TestingConsole.Crypto;
+using System;
 
 namespace BudgetManager.TestingConsole
 {
@@ -83,12 +84,12 @@ namespace BudgetManager.TestingConsole
             {
                 Value = double.Parse(g.Value),
                 Time = g.Timestamp.ParseToUtcDateTime()
-            });;
+            });
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
             InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
             FearAndGreedData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
 
-            foreach (FearAndGreedData model in data.Where(f => f.Time > lastRecord.Time))
+            foreach (FearAndGreedData model in data.Where(f => f.Time > (lastRecord?.Time ?? DateTime.MinValue)))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
