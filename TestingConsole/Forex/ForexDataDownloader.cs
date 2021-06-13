@@ -2,6 +2,7 @@
 using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,10 +22,12 @@ namespace BudgetManager.TestingConsole
         public async Task ForexDownload(ForexTicker currency)
         {
             ExchangeRatesApi exchangeRatesApi = new ExchangeRatesApi(new HttpClient());
+            DateTime lastRecordTime = (await this.influxRepo.GetLastWrittenRecordsTime(this.dataSourceIdentification))
+                .SingleOrDefault(r => string.Compare(r.Currency, currency.ToString(), true) == 0).Time;
 
             List<CurrencyData> data = await exchangeRatesApi.GetCurrencyHistory(new DateTime(2019, 1, 1), DateTime.Now, currency.ToString()).ConfigureAwait(false);
 
-            foreach (CurrencyData model in data)
+            foreach (CurrencyData model in data.Where(d => d.Date > lastRecordTime))
                 await this.SaveDataToInflux(model).ConfigureAwait(false);
         }
 
