@@ -10,10 +10,13 @@ namespace BudgetManager.TestingConsole
             ProcessManager processManager = new ProcessManager();
 
             // download all assets
-            //await processManager.DownloadAssets();
+            //await processManager.DownloadAssets(); - DONE
 
             // download fear and greed
-            await processManager.DownloadFearAndGreed();
+            //await processManager.DownloadFearAndGreed(); - DONE
+
+            //download gold data
+            await processManager.SaveGoldDataToDb();
 
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 

@@ -95,6 +95,9 @@ namespace BudgetManager.TestingConsole
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Download data and save them to Influx
+        /// </summary>
         public async Task SaveGoldDataToDb()
         {
             InfluxConfig config = configManager.GetSecretToken();
@@ -109,7 +112,7 @@ namespace BudgetManager.TestingConsole
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
             ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
 
-            foreach (ComodityData model in data.Where(g => g.Time > lastRecord.Time))
+            foreach (ComodityData model in data.Where(g => g.Time > (lastRecord?.Time ?? DateTime.MinValue)))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
