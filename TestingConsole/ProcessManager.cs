@@ -62,7 +62,6 @@ namespace BudgetManager.TestingConsole
         /// <summary>
         /// Download all assets to SQL database
         /// </summary>
-        /// <returns>List of all assets</returns>
         public async Task DownloadAssets()
         {
             CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
@@ -76,6 +75,9 @@ namespace BudgetManager.TestingConsole
             cryptoTickerRepository.Save();
         }
 
+        /// <summary>
+        /// Download data about fear and greed on crypto market and save it to Influx
+        /// </summary>
         public async Task DownloadFearAndGreed()
         {
             InfluxConfig config = configManager.GetSecretToken();
@@ -91,15 +93,6 @@ namespace BudgetManager.TestingConsole
 
             foreach (FearAndGreedData model in data.Where(f => f.Time > (lastRecord?.Time ?? DateTime.MinValue)))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
-        }
-
-        public void SaveCoinbaseDataToDb()
-        {
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
-            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);
-            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(this.DataContext);
-            CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
-            coinbaseParser.ParseCoinbaseReport();
         }
 
         public async Task SaveGoldDataToDb()
@@ -118,6 +111,15 @@ namespace BudgetManager.TestingConsole
 
             foreach (ComodityData model in data.Where(g => g.Time > lastRecord.Time))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
+        }
+
+        public void SaveCoinbaseDataToDb()
+        {
+            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);
+            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(this.DataContext);
+            CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
+            coinbaseParser.ParseCoinbaseReport();
         }
 
         private DataContext GetDataContext()
