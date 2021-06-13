@@ -110,7 +110,8 @@ namespace BudgetManager.TestingConsole
             });
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
-            ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
+            ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification))
+                .SingleOrDefault(t => string.Compare(t.Ticker, gold, true) == 1);
 
             foreach (ComodityData model in data.Where(g => g.Time > (lastRecord?.Time ?? DateTime.MinValue)))
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
