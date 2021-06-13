@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BudgetManager.FinanceDataMining.CurrencyApi;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Dynamic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BudgetManager.FinanceDataMining.CurrencyApi
+namespace FinanceDataMining.CurrencyApi
 {
     public class ExchangeRatesApi
     {

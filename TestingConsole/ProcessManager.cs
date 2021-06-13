@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BudgetManager.TestingConsole.Crypto;
 using System;
+using FinanceDataMining.Comodity;
 
 namespace BudgetManager.TestingConsole
 {

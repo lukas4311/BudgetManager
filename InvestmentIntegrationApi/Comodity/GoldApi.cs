@@ -10,16 +10,14 @@ namespace BudgetManager.FinanceDataMining.Comodity
 {
     public class GoldApi
     {
-        private const string goldDataUrl = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?api_key=";
+        private const string goldDataUrl = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json";
         private const string dateColumn = "Date";
         private const string usdColumn = "USD (AM)";
         private readonly HttpClient httpClient;
-        private readonly string apiKey;
 
-        public GoldApi(HttpClient httpClient, string apiKey)
+        public GoldApi(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.apiKey = apiKey;
         }
 
         public async Task<IEnumerable<(DateTime, decimal)>> GetGoldData()
@@ -48,7 +46,7 @@ namespace BudgetManager.FinanceDataMining.Comodity
 
         private async Task<DataseteWrapper> ReqeuestGoldData(DateTime from)
         {
-            string data = await this.httpClient.GetStringAsync($"{goldDataUrl}{this.apiKey}&{from:yyyy-MM-dd}");
+            string data = await this.httpClient.GetStringAsync($"{goldDataUrl}?{from:yyyy-MM-dd}");
             return JsonSerializer.Deserialize<DataseteWrapper>(data);
         }
 
