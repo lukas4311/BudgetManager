@@ -6,7 +6,7 @@ using BudgetManager.FinanceDataMining.Extensions;
 using BudgetManager.FinanceDataMining.StockApi.JsonModelDto;
 using System;
 
-namespace BudgetManager.FinanceDataMining.CryproApi
+namespace FinanceDataMining.CryproApi
 {
     [Obsolete]
     public partial class FinnhubApi

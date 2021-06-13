@@ -33,8 +33,8 @@ namespace BudgetManager.ManagerWeb.Extensions
 
         internal static void ConfigureInfluxRepositories(this IServiceCollection services)
         {
-            services.AddTransient<InfluxDbData.IRepository<ForexData>, InfluxDbData.Repository<ForexData>>();
-            services.AddTransient<InfluxDbData.IRepository<CryptoData>, InfluxDbData.Repository<CryptoData>>();
+            services.AddTransient<InfluxDbData.IRepository<ForexData>, BudgetManager.InfluxDbData.Repository<ForexData>>();
+            services.AddTransient<InfluxDbData.IRepository<CryptoData>, BudgetManager.InfluxDbData.Repository<CryptoData>>();
         }
     }
 }
