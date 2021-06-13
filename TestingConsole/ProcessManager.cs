@@ -101,7 +101,7 @@ namespace BudgetManager.TestingConsole
         public async Task SaveGoldDataToDb()
         {
             InfluxConfig config = configManager.GetSecretToken();
-            GoldApi goldApi = new GoldApi(new HttpClient());
+            GoldApi goldApi = new GoldApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
             IEnumerable<ComodityData> data = (await goldApi.GetGoldData().ConfigureAwait(false)).Select(g => new ComodityData
             {
                 Price = (double)g.Item2,
