@@ -15,9 +15,9 @@ class M2Model:
 
     def save(self):
         bucket = "FinancialIndicators"
-        client = InfluxDBClient(url="http://localhost:8086", token="##TOKEN##", org="8f46f33452affe4a")
+        client = InfluxDBClient(url="http://localhost:8086", token="14HjZx_tCQ0dksMwet66eSvKUmG9BBTjmlFMmWo28SvisishIf-A1FXQvwXvqdm09annuHX0iqrYZlOELK-Ciw==", org="8f46f33452affe4a")
         write_api = client.write_api(write_options=SYNCHRONOUS)
-        p = Point("financialIndicators").field("value", float(self.value)).tag("indicator", "M2").tag("state", "CZ").time(self.date.astimezone(pytz.utc), WritePrecision.NS)
+        p = Point("M2").field("value", float(self.value)).tag("state", "CZ").time(self.date.astimezone(pytz.utc), WritePrecision.NS)
         write_api.write(bucket=bucket, record=p)
 
 
@@ -34,7 +34,8 @@ for tableRow in tableOfValues:
 
     date = datetime.datetime(int(rawDate[index + 1:]), int(rawDate[:index]), 1)
     num = float(value.replace(",", "."))
-    m2Models.append(M2Model(date, value))
+    m2Models.append(M2Model(num, date))
 
 for m2 in m2Models:
    m2.save()
+   #  print(m2.value)
