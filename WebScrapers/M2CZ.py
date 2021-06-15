@@ -25,8 +25,12 @@ for tableRow in tableOfValues:
     num = float(value.replace(",", "."))
     m2Models.append(MoneySupplyModel(num, date))
 
-for m2 in m2Models:
-    point = Point("M2").field("value", float(m2.value)).time(m2.date.astimezone(pytz.utc), WritePrecision.NS)
-    influx_repository.add(point)
+minDate = influx_repository.find_last("M2", "cz")
 
-influx_repository.save()
+# TODO: need to filter all data older than last record
+
+# for m2 in m2Models:
+#     point = Point("M2").field("value", float(m2.value)).time(m2.date.astimezone(pytz.utc), WritePrecision.NS).tag("state", "cz")
+#     influx_repository.add(point)
+#
+# influx_repository.save()

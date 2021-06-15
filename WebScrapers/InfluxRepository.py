@@ -11,6 +11,7 @@ class InfluxRepository:
     def __init__(self, influxUrl: str, bucket: str, token: str, organization: str):
         self.__client = InfluxDBClient(url=influxUrl, token=token, org=organization)
         self.__bucket = bucket
+        self.__entities = []
 
     def add(self, point: Point):
         self.__entities.append(point)
@@ -23,24 +24,26 @@ class InfluxRepository:
 
         for entity in self.__entities:
             write_api.write(bucket=self.__bucket, record=entity)
+            # print(entity.to_line_protocol())
 
-    def find_last(self, measurement: str):
+    def find_last(self, measurement: str, tag: str):
         query_api = self.__client.query_api()
         p = {"_start": datetime.MINYEAR,
              "_bucket": self.__bucket,
-             "_desc": True,
              "_measurement": measurement,
-             "_every": datetime.timedelta(minutes=5)
+             "_tag": tag,
+             "_desc": True
              }
 
         tables = query_api.query('''
             from(bucket:_bucket) |> range(start: _start)
-                |> filter(fn: (r) => r["_measurement"] == "_measurement")
+                |> filter(fn: (r) => r["_measurement"] == _measurement)
+                |> filter(fn: (r) => r["state"] == _tag)
                 |> sort(columns: ["_time"], desc: _desc)
-                |> top(1)
+                |> top(n:1)
         ''', params=p)
 
-        for table in tables:
-            print(table)
-            for record in table.records:
-                print(str(record["_time"]))
+        if len(tables) != 0:
+            return tables[0].records[0]["_time"]
+        else:
+            return datetime.MINYEAR
