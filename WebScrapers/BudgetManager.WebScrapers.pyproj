@@ -22,8 +22,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="configManager.py" />
     <Compile Include="FearAndGreedStocks.py" />
+    <Compile Include="InfluxRepository.py" />
     <Compile Include="M2CZ.py" />
+    <Compile Include="MoneySupplyModel.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

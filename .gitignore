@@ -342,3 +342,4 @@ healthchecksdb
 /ManagerWeb/appsettings.json
 /FinancialDataProvider/appsettings.Development.json
 /FinancialDataProvider/appsettings.json
+/WebScrapers/configManager.py
