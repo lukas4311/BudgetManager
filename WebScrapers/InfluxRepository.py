@@ -24,7 +24,6 @@ class InfluxRepository:
 
         for entity in self.__entities:
             write_api.write(bucket=self.__bucket, record=entity)
-            # print(entity.to_line_protocol())
 
     def find_last(self, measurement: str, tag: str):
         query_api = self.__client.query_api()

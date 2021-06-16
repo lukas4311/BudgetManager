@@ -3,7 +3,9 @@ import pytz
 import requests
 from bs4 import BeautifulSoup
 import datetime
+
 from influxdb_client import Point, WritePrecision
+
 from InfluxRepository import InfluxRepository
 from MoneySupplyModel import MoneySupplyModel
 from configManager import token
@@ -26,11 +28,10 @@ for tableRow in tableOfValues:
     m2Models.append(MoneySupplyModel(num, date))
 
 minDate = influx_repository.find_last("M2", "cz")
+filtered = list(filter(lambda number: number.date.astimezone(pytz.utc) > minDate, m2Models))
 
-# TODO: need to filter all data older than last record
+for m2 in filtered:
+    point = Point("M2").field("value", float(m2.value)).time(m2.date.astimezone(pytz.utc), WritePrecision.NS).tag("state", "cz")
+    influx_repository.add(point)
 
-# for m2 in m2Models:
-#     point = Point("M2").field("value", float(m2.value)).time(m2.date.astimezone(pytz.utc), WritePrecision.NS).tag("state", "cz")
-#     influx_repository.add(point)
-#
-# influx_repository.save()
+influx_repository.save()
