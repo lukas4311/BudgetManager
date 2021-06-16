@@ -1,3 +1,4 @@
+import pytz
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import datetime
@@ -45,4 +46,4 @@ class InfluxRepository:
         if len(tables) != 0:
             return tables[0].records[0]["_time"]
         else:
-            return datetime.MINYEAR
+            return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)

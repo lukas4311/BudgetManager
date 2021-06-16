@@ -6,8 +6,8 @@ import datetime
 
 from influxdb_client import Point, WritePrecision
 
-from InfluxRepository import InfluxRepository
-from MoneySupplyModel import MoneySupplyModel
+from Services.InfluxRepository import InfluxRepository
+from Models.MoneySupplyModel import MoneySupplyModel
 from configManager import token
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, "8f46f33452affe4a")
