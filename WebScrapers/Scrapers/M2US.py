@@ -1,3 +1,5 @@
+import datetime
+
 import requests
 from Services.InfluxRepository import InfluxRepository
 from configManager import token
@@ -12,5 +14,7 @@ for m2Data in values:
     splitValues = m2Data.split()
 
     if len(splitValues) == 2:
-        print(splitValues[0])
-        print(splitValues[1])
+        dateString = splitValues[0].split("-")
+        date = datetime.datetime(int(dateString[0]), int(dateString[1]), int(dateString[2]))
+        print(date)
+        print(float(splitValues[1]))
