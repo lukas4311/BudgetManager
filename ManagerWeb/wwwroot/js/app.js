@@ -3086,7 +3086,7 @@ class PaymentsOverview extends React.Component {
             }
         };
         this.addNewPayment = () => {
-            if (this.state.selectedBankAccount != undefined) {
+            if (this.state.selectedBankAccount != -1) {
                 this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
             }
             else {
