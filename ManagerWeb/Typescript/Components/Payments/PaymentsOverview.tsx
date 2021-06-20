@@ -55,6 +55,8 @@ const theme = createMuiTheme({
     }
 });
 
+const defaultSelectedBankAccount = -1;
+
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
     private defaultBankOption: string = "Vše";
     private filters: DateFilter[];
@@ -132,7 +134,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private addNewPayment = () => {
-        if (this.state.selectedBankAccount != -1) {
+        if (this.state.selectedBankAccount != defaultSelectedBankAccount) {
             this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
         }
         else {
@@ -194,7 +196,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         if (data.success) {
             let bankAccounts: Array<BankAccount> = data.bankAccounts;
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-            this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
+            this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         }
     }
 

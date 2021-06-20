@@ -3047,6 +3047,7 @@ const theme = styles_1.createMuiTheme({
         }
     }
 });
+const defaultSelectedBankAccount = -1;
 class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
@@ -3086,7 +3087,7 @@ class PaymentsOverview extends React.Component {
             }
         };
         this.addNewPayment = () => {
-            if (this.state.selectedBankAccount != -1) {
+            if (this.state.selectedBankAccount != defaultSelectedBankAccount) {
                 this.setState({ showPaymentFormModal: true, showBankAccountError: false, paymentId: null, formKey: Date.now() });
             }
             else {
@@ -3112,7 +3113,7 @@ class PaymentsOverview extends React.Component {
             if (data.success) {
                 let bankAccounts = data.bankAccounts;
                 bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-                this.setState({ bankAccounts: bankAccounts, selectedBankAccount: -1 });
+                this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             }
         };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
