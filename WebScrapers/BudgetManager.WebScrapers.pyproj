@@ -5,7 +5,8 @@
     <ProjectGuid>4fcab9c9-7727-450b-ab5b-c9aea2bec023</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>FearAndGreedStocks.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,10 +24,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="configManager.py" />
-    <Compile Include="FearAndGreedStocks.py" />
-    <Compile Include="InfluxRepository.py" />
-    <Compile Include="M2CZ.py" />
-    <Compile Include="MoneySupplyModel.py" />
+    <Compile Include="Models\InflationAradModel.py" />
+    <Compile Include="Models\MoneySupplyModel.py" />
+    <Compile Include="Scrapers\FearAndGreedStocks.py" />
+    <Compile Include="Scrapers\InflationCZ.py" />
+    <Compile Include="Scrapers\M1CZ.py" />
+    <Compile Include="Scrapers\M1US.py" />
+    <Compile Include="Scrapers\M2CZ.py" />
+    <Compile Include="Scrapers\M2US.py" />
+    <Compile Include="Services\DatetimeService.py" />
+    <Compile Include="Services\InfluxRepository.py" />
+    <Compile Include="Services\MoneySupplyUsService.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Models\__pycache__\" />
+    <Folder Include="Scrapers\" />
+    <Folder Include="Services\" />
+    <Folder Include="Services\__pycache__\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\__pycache__\InflationAradModel.cpython-39.pyc" />
+    <Content Include="Models\__pycache__\MoneySupplyModel.cpython-39.pyc" />
+    <Content Include="Services\__pycache__\DatetimeService.cpython-39.pyc" />
+    <Content Include="Services\__pycache__\InfluxRepository.cpython-39.pyc" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
