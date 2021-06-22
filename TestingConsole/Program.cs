@@ -16,7 +16,7 @@ namespace BudgetManager.TestingConsole
             //await processManager.DownloadFearAndGreed(); - DONE
 
             //download gold data
-            await processManager.SaveGoldDataToDb();
+            //await processManager.SaveGoldDataToDb();
 
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
