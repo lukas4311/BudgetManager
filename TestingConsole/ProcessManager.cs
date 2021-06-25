@@ -38,7 +38,7 @@ namespace BudgetManager.TestingConsole
         /// </summary>
         /// <param name="cryptoTicker">Crypto ticker</param>
         /// <returns>Task</returns>
-        public async Task DownloadCryptoHistory(CryptoTicker cryptoTicker)
+        internal async Task DownloadCryptoHistory(CryptoTicker cryptoTicker)
         {
             InfluxConfig config = GetSecretToken();
 
@@ -50,7 +50,7 @@ namespace BudgetManager.TestingConsole
             await dataDownloader.CryptoDownload(cryptoTicker, lastTickerRecord.Time).ConfigureAwait(false);
         }
 
-        public async Task DownloadForexHistory(ForexTicker forexTicker)
+        internal async Task DownloadForexHistory(ForexTicker forexTicker)
         {
             InfluxConfig config = GetSecretToken();
 
@@ -62,7 +62,7 @@ namespace BudgetManager.TestingConsole
         /// <summary>
         /// Download all assets to SQL database
         /// </summary>
-        public async Task DownloadAssets()
+        internal async Task DownloadAssets()
         {
             CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
             IEnumerable<CryptoAsset> assets = await cryptoWatch.GetAssets();
@@ -78,7 +78,7 @@ namespace BudgetManager.TestingConsole
         /// <summary>
         /// Download data about fear and greed on crypto market and save it to Influx
         /// </summary>
-        public async Task DownloadFearAndGreed()
+        internal async Task DownloadFearAndGreed()
         {
             InfluxConfig config = configManager.GetSecretToken();
             FearAndGreed fearApi = new FearAndGreed(new HttpClient());
@@ -98,7 +98,7 @@ namespace BudgetManager.TestingConsole
         /// <summary>
         /// Download data and save them to Influx
         /// </summary>
-        public async Task SaveGoldDataToDb()
+        internal async Task SaveGoldDataToDb()
         {
             InfluxConfig config = configManager.GetSecretToken();
             GoldApi goldApi = new GoldApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
@@ -117,7 +117,16 @@ namespace BudgetManager.TestingConsole
                 await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
-        public void SaveCoinbaseDataToDb()
+        internal async Task DownloadHashRate()
+        {
+            InfluxConfig config = configManager.GetSecretToken();
+            QuandlApi quandlApi = new QuandlApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
+            Task<IEnumerable<(DateTime, decimal)>> data = quandlApi.GetHashRateData(DateTime.Now);
+
+            throw new NotImplementedException();
+        }
+
+        internal void SaveCoinbaseDataToDb()
         {
             ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
             ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);

@@ -20,6 +20,9 @@ namespace BudgetManager.TestingConsole
 
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
+            //download hash rate
+            await processManager.DownloadHashRate();
+
 
             //SaveCoinbaseDataToDb();
             //await processManager.DownloadFearAndGreed();

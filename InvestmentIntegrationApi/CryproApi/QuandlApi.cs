@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace BudgetManager.FinanceDataMining.CryproApi
 {
-    class QuandlApi
+    public class QuandlApi
     {
         private const string hashRateDataUrl = "https://www.quandl.com/api/v3/datasets/BCHAIN/HRATE.json?api_key=";
         private readonly HttpClient httpClient;
