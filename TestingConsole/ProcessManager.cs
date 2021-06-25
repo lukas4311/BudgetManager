@@ -121,7 +121,7 @@ namespace BudgetManager.TestingConsole
         {
             InfluxConfig config = configManager.GetSecretToken();
             QuandlApi quandlApi = new QuandlApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
-            Task<IEnumerable<(DateTime, decimal)>> data = quandlApi.GetHashRateData(DateTime.Now);
+            IEnumerable<(DateTime, decimal)> data = await quandlApi.GetHashRateData(DateTime.Now);
 
             throw new NotImplementedException();
         }
