@@ -23,6 +23,7 @@ namespace BudgetManager.TestingConsole
         private const string bucketForex = "Forex";
         private const string bucketFearAndGreed = "CryptoFearAndGreed";
         private const string buckerComodity = "Comodity";
+        private const string bucketHashRate = "bucketHashRate";
         private const string gold = "AU";
         private readonly ConfigManager configManager;
         private readonly DataContext DataContext;
@@ -121,9 +122,18 @@ namespace BudgetManager.TestingConsole
         {
             InfluxConfig config = configManager.GetSecretToken();
             QuandlApi quandlApi = new QuandlApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
-            IEnumerable<(DateTime, decimal)> data = await quandlApi.GetHashRateData(DateTime.Now);
+            IEnumerable<HashRate> data = (await quandlApi.GetHashRateData(DateTime.Now).ConfigureAwait(false))
+                .Select(a => new HashRate {
+                    Time = a.Item1,
+                    Value = (double) a.Item2
+                });
 
-            throw new NotImplementedException();
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketHashRate);
+            InfluxDbData.Repository<HashRate> repo = new InfluxDbData.Repository<HashRate>(new InfluxContext(config.Url, config.Token));
+            HashRate lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false)).SingleOrDefault();
+
+            foreach (HashRate model in data.Where(g => g.Time > (lastRecord?.Time ?? DateTime.MinValue)))
+                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         internal void SaveCoinbaseDataToDb()
