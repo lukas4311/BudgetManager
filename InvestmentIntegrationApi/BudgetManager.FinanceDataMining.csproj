@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
