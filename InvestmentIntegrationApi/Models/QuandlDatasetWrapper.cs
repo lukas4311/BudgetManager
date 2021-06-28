@@ -3,9 +3,9 @@ using BudgetManager.FinanceDataMining.Comodity.JsonModelDto;
 
 namespace BudgetManager.FinanceDataMining.Models
 {
-    internal class QuandlDataseteWrapper
+    internal class QuandlDatasetWrapper
     {
         [JsonPropertyName("dataset")]
-        public Dataset Dataset { get; set; }
+        public QuandlDataset Dataset { get; set; }
     }
 }

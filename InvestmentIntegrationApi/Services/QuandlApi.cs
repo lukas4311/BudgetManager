@@ -4,10 +4,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using BudgetManager.FinanceDataMining.Models;
+using System.Linq;
+using System.Reflection;
+using BudgetManager.FinanceDataMining.Attributes;
 
 namespace BudgetManager.FinanceDataMining.Services
 {
-    internal class QuandlApi
+    public class QuandlApi
     {
         private readonly HttpClient httpClient;
         private readonly string apiKey;
@@ -18,48 +21,59 @@ namespace BudgetManager.FinanceDataMining.Services
             this.apiKey = apiKey;
         }
 
-        public async Task<IEnumerable<T>> GetData<T>(string quandlUrl, DateTime from)
+        public async Task<IEnumerable<T>> GetData<T>(string quandlUrl) where T : IQuandlData, new()
+            => await this.GetData<T>(quandlUrl, DateTime.MinValue);
+
+        public async Task<IEnumerable<T>> GetData<T>(string quandlUrl, DateTime from) where T : IQuandlData, new()
         {
-            throw new NotImplementedException();
+            QuandlDatasetWrapper quandlData = await this.ReqeuestData<T>(quandlUrl, from);
+            List<(string column, int index)> indexesWithColumnNames = this.GetColumnNamesWithIndexes<T>(quandlData);
+            List<T> models = new List<T>();
+
+            foreach (List<object> dataValues in quandlData.Dataset.Data)
+            {
+                T model = new T();
+                this.ProcessAllColumnValues(indexesWithColumnNames, model, dataValues);
+                models.Add(model);
+            }
+
+            return models;
         }
 
-        private async Task<QuandlDataseteWrapper> ReqeuestData(string dataUrl, DateTime from)
+        private void ProcessAllColumnValues<T>(List<(string column, int index)> indexesWithColumnNames, T model, List<object> dataValues) where T : IQuandlData, new()
         {
-            string data = await this.httpClient.GetStringAsync($"{dataUrl}?api_key={this.apiKey}&{from:yyyy-MM-dd}");
-            return JsonSerializer.Deserialize<QuandlDataseteWrapper>(data);
+            foreach ((string columnName, int index) in indexesWithColumnNames)
+            {
+                object value = dataValues[index];
+
+                if (model.PropertySetters.TryGetValue(columnName, out Action<object> propertySetter))
+                    propertySetter.Invoke(value);
+            }
         }
 
-        //public async Task<IEnumerable<(DateTime, decimal)>> GetGoldData()
-        //    => await this.GetGoldData(DateTime.MinValue);
+        private List<(string column, int index)> GetColumnNamesWithIndexes<T>(QuandlDatasetWrapper quandlData) where T : IQuandlData
+        {
+            IEnumerable<string> columns = this.FindDataColumnNames<T>();
+            List<(string column, int index)> indexesWithColumnNames = new(columns.Count());
 
-        //public async Task<IEnumerable<(DateTime, decimal)>> GetGoldData(DateTime fromDate)
-        //{
-        //    DataseteWrapper goldPriceData = await this.ReqeuestGoldData(fromDate);
-        //    List<(DateTime, decimal)> goldData = new List<(DateTime, decimal)>();
-        //    (int dateIndex, int usdIndex) = this.FindDataIndexes(goldPriceData.dataset);
+            for (int i = 0; i < columns.Count(); i++)
+                indexesWithColumnNames.Add((columns.ElementAt(i), quandlData.Dataset.ColumnNames.IndexOf(columns.ElementAt(i))));
 
-        //    foreach (List<object> dataValues in goldPriceData.dataset.data)
-        //        this.ProcessData(dateIndex, usdIndex, dataValues, goldData);
+            return indexesWithColumnNames;
+        }
 
-        //    return goldData;
-        //}
+        private async Task<QuandlDatasetWrapper> ReqeuestData<T>(string dataUrl, DateTime from) where T : IQuandlData, new()
+        {
+            string rawData = await this.httpClient.GetStringAsync($"{dataUrl}?api_key={this.apiKey}&{from:yyyy-MM-dd}");
+            return JsonSerializer.Deserialize<QuandlDatasetWrapper>(rawData);
+        }
 
-        //private void ProcessData(int dateIndex, int usdIndex, List<object> dataValues, List<(DateTime, decimal)> goldData)
-        //{
-        //    DateTime date = DateTime.Parse(dataValues[dateIndex].ToString());
-        //    decimal.TryParse(dataValues[usdIndex]?.ToString(), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out decimal usdPrice);
-
-        //    if (date != default && usdPrice != default)
-        //        goldData.Add((date, usdPrice));
-        //}
-
-        //private async Task<DataseteWrapper> ReqeuestGoldData(DateTime from)
-        //{
-        //    string data = await this.httpClient.GetStringAsync($"{goldDataUrl}{this.apiKey}&{from:yyyy-MM-dd}");
-        //        return JsonSerializer.Deserialize<DataseteWrapper>(data);
-        //}
-
-        //private (int dateIndex, int usdIndex) FindDataIndexes(Dataset dataset) =>
-        //    (dataset.column_names.IndexOf(dateColumn), dataset.column_names.IndexOf(usdColumn));
+        private IEnumerable<string> FindDataColumnNames<T>() where T : IQuandlData
+        {
+            return typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                   .SelectMany(p => p.GetCustomAttributes(false))
+                   .Where(o => o is DataColumnDescriptionAttribute)
+                   .Select(a => ((DataColumnDescriptionAttribute)a).Description);
+        }
     }
 }

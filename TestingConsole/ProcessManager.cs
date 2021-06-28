@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BudgetManager.TestingConsole.Crypto;
 using System;
+using BudgetManager.FinanceDataMining.Services;
 
 namespace BudgetManager.TestingConsole
 {
@@ -120,16 +121,16 @@ namespace BudgetManager.TestingConsole
 
         internal async Task DownloadHashRate()
         {
-            InfluxConfig config = configManager.GetSecretToken();
-            QuandlApi quandlApi = new QuandlApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
-            IEnumerable<HashRate> data = (await quandlApi.GetHashRateData(DateTime.Now).ConfigureAwait(false))
-                .Select(a => new HashRate {
-                    Time = a.Item1,
-                    Value = (double) a.Item2
-                });
+            InfluxConfig configSecrets = configManager.GetSecretToken();
+            BudgetManager.FinanceDataMining.Services.QuandlApi quandlApi = new BudgetManager.FinanceDataMining.Services.QuandlApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
+            IEnumerable<HashRate> data = (await quandlApi.GetData<HashRateDataModel>("https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json")).Select(g => new HashRate
+            {
+                Value = (double)g.HashRate,
+                Time = g.Date.ToUniversalTime()
+            });
 
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketHashRate);
-            InfluxDbData.Repository<HashRate> repo = new InfluxDbData.Repository<HashRate>(new InfluxContext(config.Url, config.Token));
+            InfluxDbData.Repository<HashRate> repo = new InfluxDbData.Repository<HashRate>(new InfluxContext(configSecrets.Url, configSecrets.Token));
             HashRate lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false)).SingleOrDefault();
 
             foreach (HashRate model in data.Where(g => g.Time > (lastRecord?.Time ?? DateTime.MinValue)))
