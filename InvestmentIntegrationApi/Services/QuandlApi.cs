@@ -10,7 +10,7 @@ using BudgetManager.FinanceDataMining.Attributes;
 
 namespace BudgetManager.FinanceDataMining.Services
 {
-    public class QuandlApi
+    internal class QuandlApi
     {
         private readonly HttpClient httpClient;
         private readonly string apiKey;
