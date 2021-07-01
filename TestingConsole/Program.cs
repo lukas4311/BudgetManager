@@ -1,5 +1,4 @@
-﻿using BudgetManager.FinanceDataMining.CryproApi;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole
 {
@@ -16,13 +15,12 @@ namespace BudgetManager.TestingConsole
             //await processManager.DownloadFearAndGreed(); - DONE
 
             //download gold data
-            //await processManager.SaveGoldDataToDb();
+            //await processManager.SaveGoldDataToDb(); - DONE
 
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
             //download hash rate
-            await processManager.DownloadHashRate();
-
+            //await processManager.DownloadHashRate();
 
             //SaveCoinbaseDataToDb();
             //await processManager.DownloadFearAndGreed();

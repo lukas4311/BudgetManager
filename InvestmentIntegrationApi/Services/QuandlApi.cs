@@ -64,7 +64,7 @@ namespace BudgetManager.FinanceDataMining.Services
 
         private async Task<QuandlDatasetWrapper> ReqeuestData<T>(string dataUrl, DateTime from) where T : IQuandlData, new()
         {
-            string rawData = await this.httpClient.GetStringAsync($"{dataUrl}?api_key={this.apiKey}&{from:yyyy-MM-dd}");
+            string rawData = await this.httpClient.GetStringAsync($"{dataUrl}?api_key={this.apiKey}&start_date={from.AddDays(1):yyyy-MM-dd}");
             return JsonSerializer.Deserialize<QuandlDatasetWrapper>(rawData);
         }
 

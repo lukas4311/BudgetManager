@@ -107,7 +107,7 @@ namespace BudgetManager.TestingConsole
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
             InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
             ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification))
-                .SingleOrDefault(t => string.Compare(t.Ticker, gold, true) == 1);
+                .SingleOrDefault(t => string.Compare(t.Ticker, gold, true) == 0);
 
             IEnumerable<ComodityData> data = (await goldApi.GetData(lastRecord?.Time ?? DateTime.MinValue).ConfigureAwait(false)).Select(g => new ComodityData
             {

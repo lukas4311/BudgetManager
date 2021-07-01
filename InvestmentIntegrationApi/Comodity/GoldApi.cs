@@ -13,7 +13,7 @@ namespace BudgetManager.FinanceDataMining.Comodity
 {
     public class GoldApi
     {
-        private const string goldDataUrl = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?api_key=";
+        private const string goldDataUrl = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json";
         private readonly QuandlApi QuandlApi;
 
         public GoldApi(HttpClient httpClient, string apiKey)
