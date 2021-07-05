@@ -17,10 +17,10 @@ namespace BudgetManager.TestingConsole
             //download gold data
             //await processManager.SaveGoldDataToDb(); - DONE
 
-            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
-
             //download hash rate
-            //await processManager.DownloadHashRate();
+            //await processManager.DownloadHashRate(); - DONE
+
+            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
             //SaveCoinbaseDataToDb();
             //await processManager.DownloadFearAndGreed();

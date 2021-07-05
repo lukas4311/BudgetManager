@@ -24,7 +24,7 @@ namespace BudgetManager.TestingConsole
         private const string bucketForex = "Forex";
         private const string bucketFearAndGreed = "CryptoFearAndGreed";
         private const string buckerComodity = "Comodity";
-        private const string bucketHashRate = "bucketHashRate";
+        private const string bucketHashRate = "HashRate";
         private const string gold = "AU";
         private readonly ConfigManager configManager;
         private readonly DataContext DataContext;
