@@ -14,11 +14,14 @@ namespace BudgetManager.TestingConsole
             // download fear and greed
             //await processManager.DownloadFearAndGreed(); - DONE
 
-            //download gold data
+            // download gold data
             //await processManager.SaveGoldDataToDb(); - DONE
 
-            //download hash rate
+            // download hash rate
             //await processManager.DownloadHashRate(); - DONE
+
+            // download fear and greed crypto
+            //await processManager.DownloadFearAndGreed(); - DONE
 
             //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
 
