@@ -40,7 +40,7 @@ class InfluxRepository:
                 |> filter(fn: (r) => r["_measurement"] == _measurement)
                 |> filter(fn: (r) => r["state"] == _tag)
                 |> sort(columns: ["_time"], desc: _desc)
-                |> top(n:1)
+                |> top(n:1, columns: ["_time"])
         ''', params=p)
 
         if len(tables) != 0:
