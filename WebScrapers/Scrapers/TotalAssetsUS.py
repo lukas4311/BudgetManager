@@ -34,15 +34,9 @@ for assets_data in assets_total:
         date = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         m_models.append(AssetsModel(float(split_values[1]), date))
 
-
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, "8f46f33452affe4a")
 min_date = influx_repository.find_last("TotalAssets", state)
-utc = pytz.UTC
-
-# NYC = pytz.timezone('Europe/Berlin')
-# test = utc.localize(datetime.datetime(2021, 7, 7, tzinfo=NYC))
-
-filtered = list(filter(lambda m: utc.localize(m.date) > min_date, m_models))
+filtered = list(filter(lambda m: m.date.astimezone(pytz.utc) > min_date, m_models))
 
 for moneySupply in filtered:
     point = Point("TotalAssets").field("value", float(moneySupply.value)).time(
