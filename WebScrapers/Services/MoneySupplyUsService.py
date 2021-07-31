@@ -24,7 +24,7 @@ class MoneySupplyUsService:
         utc = pytz.UTC
         filtered = list(filter(lambda m: utc.localize(m.date) > min_date, m_models))
 
-        self.add_all_to_repository(measurement, filtered)
+        self.__add_all_to_repository(measurement, filtered)
         self.influx_repository.save()
 
     def __parse_data_from_string_array_to_money_supply_model(self, m_models, split_values):

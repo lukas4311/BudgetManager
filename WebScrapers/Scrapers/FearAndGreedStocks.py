@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 from datetime import datetime
+from configManager import token
 
 page = requests.get("https://money.cnn.com/data/fear-and-greed/")
 soup = BeautifulSoup(page.content, 'html.parser')
@@ -20,7 +21,7 @@ fearAndGreedStocks = todayValue[startIndex:startIndex + 2]
 print(fearAndGreedStocks)
 
 bucket = "StockFearAndGreed"
-client = InfluxDBClient(url="http://localhost:8086", token="##TOKEN##", org="8f46f33452affe4a")
+client = InfluxDBClient(url="http://localhost:8086", token=token, org="8f46f33452affe4a")
 
 write_api = client.write_api(write_options=SYNCHRONOUS)
 p = Point("fearAndGreed").field("value", float(fearAndGreedStocks)).time(datetime.utcnow(), WritePrecision.NS)
