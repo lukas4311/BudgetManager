@@ -204,16 +204,24 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
     }
 
+    private clonePayment = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
+        // TODO: call client with method clone
+        console.log("clone: " + id);
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     private renderTemplate = (p: IPaymentInfo): JSX.Element => {
         let iconsData: IconsData = new IconsData();
 
         return (
             <>
                 <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                <p className="mx-6 my-1 w-1/5">{p.amount},-</p>
-                <p className="mx-6 my-1 w-2/5">{p.name}</p>
-                <p className="mx-6 my-1 w-1/5">{moment(p.date).format('DD.MM.YYYY')}</p>
-                <span className="mx-6 my-1 w-1/5 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
+                <p className="mx-6 my-1 w-2/7">{p.amount},-</p>
+                <p className="mx-6 my-1 w-2/7">{p.name}</p>
+                <p className="mx-6 my-1 w-1/7">{moment(p.date).format('DD.MM.YYYY')}</p>
+                <span className="mx-6 my-1 w-1/7 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
+                <span className="ml-auto my-1 w-1/7 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
             </>
         );
     }
