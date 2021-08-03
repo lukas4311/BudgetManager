@@ -116,12 +116,13 @@ namespace BudgetManager.ManagerWeb.Services
             .Single();
         }
 
-        public void ClonePayment(int id)
+        public int ClonePayment(int id)
         {
             Payment paymentToClone = this.paymentRepository.FindByCondition(p => p.Id == id).Single();
             paymentToClone.Id = default;
             this.paymentRepository.Create(paymentToClone);
             this.paymentRepository.Save();
+            return paymentToClone.Id;
         }
     }
 }

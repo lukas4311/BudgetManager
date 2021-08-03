@@ -22,6 +22,6 @@ namespace BudgetManager.ManagerWeb.Services
 
         void UpdatePayment(PaymentViewModel paymentViewModel);
 
-        void ClonePayment(int id);
+        int ClonePayment(int id);
     }
 }

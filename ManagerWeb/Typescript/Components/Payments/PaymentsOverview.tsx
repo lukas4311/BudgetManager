@@ -205,10 +205,10 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private clonePayment = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
-        // TODO: call client with method clone
         console.log("clone: " + id);
         e.preventDefault();
         e.stopPropagation();
+        // TODO: call client with method clone and open detail with cloned item
     }
 
     private renderTemplate = (p: IPaymentInfo): JSX.Element => {

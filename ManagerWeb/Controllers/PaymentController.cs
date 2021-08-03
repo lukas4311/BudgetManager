@@ -72,7 +72,7 @@ namespace BudgetManager.ManagerWeb.Controllers
             return Ok(payment);
         }
 
-        [HttpGet("clone")]
+        [HttpPost("clone")]
         public IActionResult ClonePayment([FromBody] PaymentViewModel paymentViewModel)
         {
             this.paymentService.ClonePayment(paymentViewModel.Id.Value);
