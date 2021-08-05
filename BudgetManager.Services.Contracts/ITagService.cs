@@ -1,4 +1,4 @@
-﻿using BudgetManager.ManagerWeb.Models.DTOs;
+﻿using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts

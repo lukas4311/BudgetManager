@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetManager.Services.Contracts\BudgetManager.Services.Contracts.csproj" />
+    <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
   </ItemGroup>
 
 </Project>
