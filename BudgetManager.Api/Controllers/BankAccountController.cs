@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetManager.Domain.DTOs;
+using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.Api.Controllers
