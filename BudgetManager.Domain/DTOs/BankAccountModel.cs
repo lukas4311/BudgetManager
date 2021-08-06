@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace BudgetManager.Domain.DTOs
 {
     public class BankAccountModel

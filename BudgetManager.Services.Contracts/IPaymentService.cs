@@ -1,26 +1,24 @@
-﻿using BudgetManager.Data.DataModels;
-using BudgetManager.ManagerWeb.Models.DTOs;
-using BudgetManager.ManagerWeb.Models.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Services.Contracts
 {
     public interface IPaymentService
     {
-        int AddPayment(PaymentViewModel paymentViewModel);
+        int AddPayment(PaymentModel paymentViewModel);
 
-        List<BankAccount> GetBankAccounts();
+        List<BankAccountModel> GetBankAccounts();
 
-        PaymentViewModel GetPayment(int id);
+        PaymentModel GetPayment(int id);
 
         List<PaymentCategoryModel> GetPaymentCategories();
 
-        List<PaymentViewModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId);
+        List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId);
 
         List<PaymentTypeModel> GetPaymentTypes();
 
-        void UpdatePayment(PaymentViewModel paymentViewModel);
+        void UpdatePayment(PaymentModel paymentViewModel);
 
         int ClonePayment(int id);
     }

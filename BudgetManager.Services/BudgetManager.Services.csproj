@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
