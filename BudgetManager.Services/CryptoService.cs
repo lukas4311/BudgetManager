@@ -16,12 +16,12 @@ namespace BudgetManager.Services
     {
         private const string bucketForex = "Crypto";
         private const string organizationId = "8f46f33452affe4a";
-        private readonly UserIdentification userIdentification;
+        private readonly IUserDataProviderService userIdentification;
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;
 
-        public CryptoService(UserIdentification userIdentification, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
+        public CryptoService(IUserDataProviderService userIdentification, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
         {
             this.userIdentification = userIdentification;
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
@@ -76,6 +76,6 @@ namespace BudgetManager.Services
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
-        private string GetUserIdentity() => this.userIdentification.UserName;
+        private string GetUserIdentity() => this.userIdentification.GetUserIdentification().UserName;
     }
 }

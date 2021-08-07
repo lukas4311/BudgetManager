@@ -9,17 +9,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Services
 {
-    internal class BankAccountService : IBankAccountService
+    public class BankAccountService : IBankAccountService
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly UserIdentification userIdentification;
+        private readonly IUserDataProviderService userIdentification;
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IInterestRateRepository interestRateRepository;
 
         public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            UserIdentification userIdentification, IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository,
+            IUserDataProviderService userIdentification, IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository,
             IInterestRateRepository interestRateRepository)
         {
             this.paymentRepository = paymentRepository;
@@ -34,7 +34,7 @@ namespace BudgetManager.Services
         {
             toDate ??= DateTime.MinValue;
 
-            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.userIdentification.UserName)
+            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.userIdentification.GetUserIdentification().UserName)
                 .AsNoTracking()
                 .Include(b => b.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
@@ -120,6 +120,6 @@ namespace BudgetManager.Services
             this.bankAccountRepository.Save();
         }
 
-        private int GetLoggedUserId() => this.userIdentification.UserId;
+        private int GetLoggedUserId() => this.userIdentification.GetUserIdentification().UserId;
     }
 }

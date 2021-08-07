@@ -15,9 +15,9 @@ namespace BudgetManager.Services
         private readonly ITagRepository tagRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly UserIdentification userIdentification;
+        private readonly IUserDataProviderService userIdentification;
 
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, UserIdentification userIdentification)
+        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IUserDataProviderService userIdentification)
         {
             this.tagRepository = tagRepository;
             this.paymentTagRepository = paymentTagRepository;
@@ -27,7 +27,7 @@ namespace BudgetManager.Services
 
         public IEnumerable<TagModel> GetPaymentTags()
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == this.userIdentification.UserName)
+            return this.userIdentityRepository.FindByCondition(u => u.Login == this.userIdentification.GetUserIdentification().UserName)
                 .Include(p => p.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .SelectMany(t => t.Payments)

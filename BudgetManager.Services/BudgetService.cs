@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
@@ -14,9 +13,9 @@ namespace BudgetManager.Services
     {
         private readonly IBudgetRepository budgetRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly UserIdentification userIdentification;
+        private readonly IUserDataProviderService userIdentification;
 
-        public BudgetService(IBudgetRepository budgetRepository, IUserIdentityRepository userIdentityRepository, UserIdentification userIdentification)
+        public BudgetService(IBudgetRepository budgetRepository, IUserIdentityRepository userIdentityRepository, IUserDataProviderService userIdentification)
         {
             this.budgetRepository = budgetRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -25,7 +24,7 @@ namespace BudgetManager.Services
 
         public IEnumerable<BudgetModel> Get()
         {
-            string loggedUserLogin = this.userIdentification.UserName;
+            string loggedUserLogin = this.userIdentification.GetUserIdentification().UserName;
             return this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => b.MapToViewModel()).ToList();
         }
 
@@ -81,7 +80,7 @@ namespace BudgetManager.Services
 
         private int GetUserId()
         {
-            string loggedUserLogin = this.userIdentification.UserName;
+            string loggedUserLogin = this.userIdentification.GetUserIdentification().UserName;
             return this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
         }
 
