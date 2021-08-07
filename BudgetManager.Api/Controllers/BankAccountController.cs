@@ -34,7 +34,7 @@ namespace BudgetManager.Api.Controllers
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             int paymentId = this.bankAccountService.AddBankAccount(bankAccountViewModel);
-            return Ok();
+            return Ok(paymentId);
         }
 
         [HttpPut("update")]
