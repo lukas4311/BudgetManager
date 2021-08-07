@@ -1,5 +1,6 @@
 using Autofac;
 using BudgetManager.Api.Services;
+using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,7 @@ namespace BudgetManager.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<UserDataProviderService>().As<IUserDataProviderService>();
+            builder.RegisterRepositories();
             builder.RegisterServices();
         }
 
