@@ -1,5 +1,4 @@
-﻿using BudgetManager.InfluxDbData;
-using BudgetManager.ManagerWeb.Models.DTOs;
+﻿using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +11,7 @@ namespace BudgetManager.Services.Contracts
         TradeHistory Get(int id);
 
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
+
+        void Update(TradeHistory tradeHistory);
     }
 }
