@@ -8,6 +8,7 @@ using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,8 @@ namespace BudgetManager.Api
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
-{
+        {
+            builder.Register<IHttpContextAccessor>(a => new HttpContextAccessor());
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             builder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
