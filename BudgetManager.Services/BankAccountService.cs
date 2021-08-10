@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BudgetManager.Services
 {
@@ -30,41 +32,15 @@ namespace BudgetManager.Services
             this.interestRateRepository = interestRateRepository;
         }
 
-        public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate)
-        {
-            toDate ??= DateTime.MinValue;
+        public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate)
+            => this.FilterBankAccountsForUser(a => a.Login == userLogin, toDate);
 
-            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(a => a.Login == this.userIdentification.GetUserIdentification().UserName)
-                .AsNoTracking()
-                .Include(b => b.BankAccounts)
-                .SelectMany(a => a.BankAccounts)
-                .AsEnumerable()
-                .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
-                .ToList();
-
-            List<BankPaymentSumModel> bankAccountsBalance = this.paymentRepository
-                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date > toDate)
-                .AsNoTracking()
-                .GroupBy(a => a.BankAccountId)
-                .Select(g => new BankPaymentSumModel
-                {
-                    BankAccountId = g.Key,
-                    Sum = g.Sum(a => a.Amount)
-                })
-                .ToList();
-
-            return bankAccounts
-                .GroupJoin(bankAccountsBalance, bank => bank.Id, balance => balance.BankAccountId, (x, y) => new { Bank = x, BankBalance = y })
-                .SelectMany(x => x.BankBalance.DefaultIfEmpty(), (x, y) =>
-                {
-                    x.Bank.Balance = y?.Sum ?? 0;
-                    return x.Bank;
-                });
-        }
+        public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate)
+            => this.FilterBankAccountsForUser(a => a.Id == userId, toDate);
 
         public IEnumerable<BankAccountModel> GetAllBankAccounts()
         {
-            return bankAccountRepository.FindAll().Select(b => new BankAccountModel
+            return bankAccountRepository.FindByCondition(b => b.UserIdentityId == this.GetLoggedUserId()).Select(b => new BankAccountModel
             {
                 Code = b.Code,
                 Id = b.Id,
@@ -118,6 +94,38 @@ namespace BudgetManager.Services
 
             this.bankAccountRepository.Delete(data.bankAccount);
             this.bankAccountRepository.Save();
+        }
+
+        private IEnumerable<BankBalanceModel> FilterBankAccountsForUser(Expression<Func<UserIdentity, bool>> userPredicate, DateTime? toDate)
+        {
+            toDate ??= DateTime.MinValue;
+
+            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(userPredicate)
+                .AsNoTracking()
+                .Include(b => b.BankAccounts)
+                .SelectMany(a => a.BankAccounts)
+                .AsEnumerable()
+                .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
+                .ToList();
+
+            List<BankPaymentSumModel> bankAccountsBalance = this.paymentRepository
+                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date > toDate)
+                .AsNoTracking()
+                .GroupBy(a => a.BankAccountId)
+                .Select(g => new BankPaymentSumModel
+                {
+                    BankAccountId = g.Key,
+                    Sum = g.Sum(a => a.Amount)
+                })
+                .ToList();
+
+            return bankAccounts
+                .GroupJoin(bankAccountsBalance, bank => bank.Id, balance => balance.BankAccountId, (x, y) => new { Bank = x, BankBalance = y })
+                .SelectMany(x => x.BankBalance.DefaultIfEmpty(), (x, y) =>
+                {
+                    x.Bank.Balance = y?.Sum ?? 0;
+                    return x.Bank;
+                });
         }
 
         private int GetLoggedUserId() => this.userIdentification.GetUserIdentification().UserId;

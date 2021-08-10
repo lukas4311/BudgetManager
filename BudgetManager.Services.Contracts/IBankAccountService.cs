@@ -6,7 +6,9 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IBankAccountService
     {
-        IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(DateTime? toDate);
+        IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate);
+
+        IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate);
 
         IEnumerable<BankAccountModel> GetAllBankAccounts();
 
