@@ -9,5 +9,7 @@ namespace BudgetManager.Domain.DTOs
         public string Code { get; set; }
 
         public int OpeningBalance { get; set; }
+
+        public int UserIdentityId { get; set; }
     }
 }

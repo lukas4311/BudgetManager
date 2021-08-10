@@ -7,7 +7,6 @@ using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BudgetManager.Services
 {
@@ -15,18 +14,15 @@ namespace BudgetManager.Services
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IUserDataProviderService userIdentification;
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IInterestRateRepository interestRateRepository;
 
         public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            IUserDataProviderService userIdentification, IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository,
-            IInterestRateRepository interestRateRepository)
+            IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository, IInterestRateRepository interestRateRepository)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
-            this.userIdentification = userIdentification;
             this.bankAccountRepository = bankAccountRepository;
             this.paymentTagRepository = paymentTagRepository;
             this.interestRateRepository = interestRateRepository;
@@ -38,9 +34,9 @@ namespace BudgetManager.Services
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate)
             => this.FilterBankAccountsForUser(a => a.Id == userId, toDate);
 
-        public IEnumerable<BankAccountModel> GetAllBankAccounts()
+        public IEnumerable<BankAccountModel> GetAllBankAccounts(int userId)
         {
-            return bankAccountRepository.FindByCondition(b => b.UserIdentityId == this.GetLoggedUserId()).Select(b => new BankAccountModel
+            return bankAccountRepository.FindByCondition(b => b.UserIdentityId == userId).Select(b => new BankAccountModel
             {
                 Code = b.Code,
                 Id = b.Id,
@@ -55,7 +51,7 @@ namespace BudgetManager.Services
                 Code = bankAccountViewModel.Code,
                 Id = bankAccountViewModel.Id,
                 OpeningBalance = bankAccountViewModel.OpeningBalance,
-                UserIdentityId = this.GetLoggedUserId()
+                UserIdentityId = bankAccountViewModel.UserIdentityId
             };
 
             this.bankAccountRepository.Create(bankAccount);
@@ -65,8 +61,7 @@ namespace BudgetManager.Services
 
         public void UpdateBankAccount(BankAccountModel bankAccountViewModel)
         {
-            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id
-                && p.UserIdentityId == this.GetLoggedUserId()).Single();
+            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id).Single();
             bankAccount.Code = bankAccountViewModel.Code;
             bankAccount.OpeningBalance = bankAccountViewModel.OpeningBalance;
 
@@ -76,7 +71,7 @@ namespace BudgetManager.Services
 
         public void DeleteBankAccount(int id)
         {
-            PaymentDeleteModel data = this.bankAccountRepository.FindAll().Where(b => b.Id == id && b.UserIdentityId == this.GetLoggedUserId())
+            PaymentDeleteModel data = this.bankAccountRepository.FindByCondition(b => b.Id == id)
                     .Include(a => a.InterestRates)
                     .Include(a => a.Payments)
                     .ThenInclude(pt => pt.PaymentTags)
@@ -127,7 +122,5 @@ namespace BudgetManager.Services
                     return x.Bank;
                 });
         }
-
-        private int GetLoggedUserId() => this.userIdentification.GetUserIdentification().UserId;
     }
 }
