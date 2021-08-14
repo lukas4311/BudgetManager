@@ -15,10 +15,9 @@ namespace BudgetManager.Services
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IUserDataProviderService userIdentification;
 
-        public BudgetService(IBudgetRepository budgetRepository, IUserIdentityRepository userIdentityRepository, IUserDataProviderService userIdentification)
+        public BudgetService(IBudgetRepository budgetRepository, IUserDataProviderService userIdentification)
         {
             this.budgetRepository = budgetRepository;
-            this.userIdentityRepository = userIdentityRepository;
             this.userIdentification = userIdentification;
         }
 

@@ -34,6 +34,28 @@ namespace BudgetManager.Services
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate)
             => this.FilterBankAccountsForUser(a => a.Id == userId, toDate);
 
+        public BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate)
+        {
+            toDate ??= DateTime.MinValue;
+
+            BankBalanceModel bankAccount = this.bankAccountRepository.FindByCondition(b => b.Id == bankAccountId)
+                .AsNoTracking()
+                .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
+                .Single();
+
+            decimal bankAccountsBalance = this.paymentRepository
+                .FindByCondition(p => bankAccount.Id == p.BankAccountId && p.Date > toDate)
+                .AsNoTracking()
+                .Sum(a => a.Amount);
+
+            return new BankBalanceModel
+            {
+                Balance = bankAccountsBalance,
+                Id = bankAccount.Id,
+                OpeningBalance = bankAccount.OpeningBalance
+            };
+        }
+
         public IEnumerable<BankAccountModel> GetAllBankAccounts(int userId)
         {
             return bankAccountRepository.FindByCondition(b => b.UserIdentityId == userId).Select(b => new BankAccountModel
