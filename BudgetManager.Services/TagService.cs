@@ -79,7 +79,7 @@ namespace BudgetManager.Services
         {
             Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
 
-            if (tag == null)
+            if (tag is null)
                 throw new ArgumentException(DoesntExists);
 
             foreach (PaymentTag paymentTag in this.paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))

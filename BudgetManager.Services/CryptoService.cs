@@ -57,7 +57,7 @@ namespace BudgetManager.Services
                 .Include(s => s.CryptoTicker)
                 .Single(s => s.Id == tradeHistory.Id);
 
-            if (tradeHistoryRecord == null)
+            if (tradeHistoryRecord is null)
                 throw new Exception();
 
             tradeHistoryRecord.CryptoTickerId = tradeHistory.CryptoTickerId;
