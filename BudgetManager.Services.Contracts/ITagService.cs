@@ -7,7 +7,7 @@ namespace BudgetManager.Services.Contracts
     {
         void AddTagToPayment(AddTagModel tagModel);
 
-        void DeleteTag(int tagId);
+        void Delete(int tagId);
 
         IEnumerable<TagModel> GetPaymentTags();
 

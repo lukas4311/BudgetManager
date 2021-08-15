@@ -13,5 +13,7 @@ namespace BudgetManager.Domain.DTOs
         public int Amount { get; set; }
 
         public string Name { get; set; }
+
+        public int UserIdentityId { get; set; }
     }
 }

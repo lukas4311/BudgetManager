@@ -12,29 +12,20 @@ namespace BudgetManager.Services
     internal class BudgetService : IBudgetService
     {
         private readonly IBudgetRepository budgetRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IUserDataProviderService userIdentification;
 
-        public BudgetService(IBudgetRepository budgetRepository, IUserDataProviderService userIdentification)
+        public BudgetService(IBudgetRepository budgetRepository)
         {
             this.budgetRepository = budgetRepository;
-            this.userIdentification = userIdentification;
         }
 
-        public IEnumerable<BudgetModel> Get()
-        {
-            string loggedUserLogin = this.userIdentification.GetUserIdentification().UserName;
-            return this.budgetRepository.FindByCondition(a => a.UserIdentity.Login == loggedUserLogin).Select(b => b.MapToViewModel()).ToList();
-        }
+        public IEnumerable<BudgetModel> Get() => this.budgetRepository.FindAll().Select(b => b.MapToViewModel()).ToList();
 
-        public BudgetModel Get(int id)
-        {
-            return this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
-        }
+        public BudgetModel Get(int id) => this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
+
+        public IEnumerable<BudgetModel> GetByUserId(int userId) => this.budgetRepository.FindByCondition(a => a.UserIdentityId == userId).Select(b => b.MapToViewModel()).ToList();
 
         public IEnumerable<BudgetModel> GetActual()
         {
-            int userId = this.GetUserId();
             return this.budgetRepository.FindAll().ToList().Where(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
         }
 
@@ -46,14 +37,12 @@ namespace BudgetManager.Services
 
         public void Add(BudgetModel budgetModel)
         {
-            int userId = this.GetUserId();
-
             this.budgetRepository.Create(new Budget()
             {
                 Amount = budgetModel.Amount,
                 DateFrom = budgetModel.DateFrom,
                 DateTo = budgetModel.DateTo,
-                UserIdentityId = userId,
+                UserIdentityId = budgetModel.UserIdentityId,
                 Name = budgetModel.Name
             });
 
@@ -71,16 +60,9 @@ namespace BudgetManager.Services
 
         public void Delete(int id)
         {
-            int userId = this.GetUserId();
             Budget budget = this.budgetRepository.FindByCondition(a => a.Id == id).Single();
             this.budgetRepository.Delete(budget);
             this.budgetRepository.Save();
-        }
-
-        private int GetUserId()
-        {
-            string loggedUserLogin = this.userIdentification.GetUserIdentification().UserName;
-            return this.userIdentityRepository.FindByCondition(a => a.Login == loggedUserLogin).Select(u => u.Id).Single();
         }
 
         private bool BudgetIsActual(Budget budget) => budget.DateFrom < DateTime.Now && budget.DateTo > DateTime.Now;

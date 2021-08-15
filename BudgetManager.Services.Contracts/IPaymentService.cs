@@ -6,11 +6,9 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IPaymentService
     {
-        int AddPayment(PaymentModel paymentViewModel);
-
         List<BankAccountModel> GetBankAccounts();
 
-        PaymentModel GetPayment(int id);
+        PaymentModel Get(int id);
 
         List<PaymentCategoryModel> GetPaymentCategories();
 
@@ -18,7 +16,9 @@ namespace BudgetManager.Services.Contracts
 
         List<PaymentTypeModel> GetPaymentTypes();
 
-        void UpdatePayment(PaymentModel paymentViewModel);
+        int Add(PaymentModel paymentViewModel);
+
+        void Update(PaymentModel paymentViewModel);
 
         int ClonePayment(int id);
     }

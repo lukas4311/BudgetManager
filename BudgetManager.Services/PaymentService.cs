@@ -72,7 +72,7 @@ namespace BudgetManager.Services
             }).ToList();
         }
 
-        public int AddPayment(PaymentModel paymentViewModel)
+        public int Add(PaymentModel paymentViewModel)
         {
             Payment payment = new Payment
             {
@@ -90,7 +90,7 @@ namespace BudgetManager.Services
             return payment.Id;
         }
 
-        public void UpdatePayment(PaymentModel paymentViewModel)
+        public void Update(PaymentModel paymentViewModel)
         {
             Payment payment = this.paymentRepository.FindByCondition(p => p.Id == paymentViewModel.Id).Single();
             payment.Amount = paymentViewModel.Amount;
@@ -105,7 +105,7 @@ namespace BudgetManager.Services
             this.paymentRepository.Save();
         }
 
-        public PaymentModel GetPayment(int id)
+        public PaymentModel Get(int id)
         {
             return this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentModel
             {

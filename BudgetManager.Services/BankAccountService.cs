@@ -66,7 +66,7 @@ namespace BudgetManager.Services
             });
         }
 
-        public int AddBankAccount(BankAccountModel bankAccountViewModel)
+        public int Add(BankAccountModel bankAccountViewModel)
         {
             BankAccount bankAccount = new BankAccount
             {
@@ -81,7 +81,7 @@ namespace BudgetManager.Services
             return bankAccount.Id;
         }
 
-        public void UpdateBankAccount(BankAccountModel bankAccountViewModel)
+        public void Update(BankAccountModel bankAccountViewModel)
         {
             BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id).Single();
             bankAccount.Code = bankAccountViewModel.Code;
@@ -91,7 +91,7 @@ namespace BudgetManager.Services
             this.bankAccountRepository.Save();
         }
 
-        public void DeleteBankAccount(int id)
+        public void Delete(int id)
         {
             PaymentDeleteModel data = this.bankAccountRepository.FindByCondition(b => b.Id == id)
                     .Include(a => a.InterestRates)

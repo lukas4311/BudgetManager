@@ -10,12 +10,14 @@ namespace BudgetManager.Services.Contracts
 
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate);
 
+        BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate);
+
         IEnumerable<BankAccountModel> GetAllBankAccounts(int userId);
 
-        int AddBankAccount(BankAccountModel bankAccountViewModel);
+        int Add(BankAccountModel bankAccountViewModel);
 
-        void UpdateBankAccount(BankAccountModel bankAccountViewModel);
+        void Update(BankAccountModel bankAccountViewModel);
 
-        void DeleteBankAccount(int id);
+        void Delete(int id);
     }
 }

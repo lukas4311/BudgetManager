@@ -75,7 +75,7 @@ namespace BudgetManager.Services
             this.paymentTagRepository.Save();
         }
 
-        public void DeleteTag(int tagId)
+        public void Delete(int tagId)
         {
             Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
 
