@@ -17,37 +17,42 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet("getAllAccountBalance")]
-        public ActionResult<IEnumerable<BankBalanceModel>> GetBankAccountsBalanceToDate([FromQuery] DateTime? toDate = null)
+        [HttpGet("allAccountBalance/{userId}/{toDate}")]
+        public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(int userId,  DateTime? toDate = null)
         {
-            IEnumerable<BankBalanceModel> bankInfo = this.bankAccountService.GetBankAccountsBalanceToDate(toDate);
-            return Ok(new { success = true, bankAccountsBalance = bankInfo });
+            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(userId, toDate));
         }
 
-        [HttpGet("getAll")]
-        public ActionResult<IEnumerable<BankAccountModel>> GetAll()
+        [HttpGet("balance/{bankAccountId}/{toDate}")]
+        public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
-            return Ok(this.bankAccountService.GetAllBankAccounts());
+            return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
 
-        [HttpPost("add")]
+        [HttpGet("allAccounts/{userId}")]
+        public ActionResult<IEnumerable<BankAccountModel>> All(int userId)
+        {
+            return Ok(this.bankAccountService.GetAllBankAccounts(userId));
+        }
+
+        [HttpPost]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            int paymentId = this.bankAccountService.AddBankAccount(bankAccountViewModel);
+            int paymentId = this.bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            this.bankAccountService.UpdateBankAccount(bankAccountViewModel);
+            this.bankAccountService.Update(bankAccountViewModel);
             return Ok();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete]
         public IActionResult DeleteBankAccount([FromBody] int id)
         {
-            this.bankAccountService.DeleteBankAccount(id);
+            this.bankAccountService.Delete(id);
             return this.Ok();
         }
     }
