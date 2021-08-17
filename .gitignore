@@ -343,3 +343,6 @@ healthchecksdb
 /FinancialDataProvider/appsettings.Development.json
 /FinancialDataProvider/appsettings.json
 /WebScrapers/configManager.py
+
+appsettings.json
+appsettings.Development.json

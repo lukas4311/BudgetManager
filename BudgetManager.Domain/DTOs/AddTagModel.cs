@@ -1,0 +1,9 @@
+﻿namespace BudgetManager.Domain.DTOs
+{
+    public class AddTagModel
+    {
+        public string Code { get; set; }
+
+        public int PaymentId { get; set; }
+    }
+}
