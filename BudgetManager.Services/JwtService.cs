@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetManager.Services
 {
-    public record JwtSetting(string SecretKey, string SecurityAlgorithm, int ExpireMinutes);
+    public record JwtSetting(string SecretKey, int ExpireMinutes);
 
     public class JwtService : IJwtService
     {
@@ -33,7 +33,7 @@ namespace BudgetManager.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt32(this.jwtSetting.ExpireMinutes)),
-                SigningCredentials = new SigningCredentials(GetSymmetricSecurityKey(), this.jwtSetting.SecurityAlgorithm)
+                SigningCredentials = new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha512)
             };
 
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
