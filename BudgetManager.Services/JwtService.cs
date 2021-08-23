@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Exceptions;
 using BudgetManager.Services.Contracts;
 using Microsoft.IdentityModel.Tokens;
 
@@ -55,7 +56,7 @@ namespace BudgetManager.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new InvalidToken("Token is not valid.", ex);
             }
         }
 
