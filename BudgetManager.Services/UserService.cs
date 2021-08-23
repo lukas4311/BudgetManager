@@ -1,4 +1,5 @@
-﻿using BudgetManager.Repository;
+﻿using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using System.Linq;
 
@@ -15,7 +16,11 @@ namespace BudgetManager.Services
             this.hashManager = hashManager;
         }
 
-        public bool Authenticate(string username, string password) => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == this.hashManager.HashPasswordToSha512(password)).Count() == 1;
+        public UserIdentification Authenticate(string username, string password) => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == this.hashManager.HashPasswordToSha512(password)).Select(u => new UserIdentification
+        {
+            UserId = u.Id,
+            UserName = u.Login
+        }).SingleOrDefault();
 
         public int GetUserId(string userLogin) => this.userIdentityRepository.FindByCondition(a => a.Login == userLogin).Single().Id;
     }
