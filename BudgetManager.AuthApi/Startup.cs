@@ -1,6 +1,8 @@
 using Autofac;
 using BudgetManager.AuthApi.Models;
 using BudgetManager.Data;
+using BudgetManager.Repository.Extensions;
+using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +39,8 @@ namespace BudgetManager.AuthApi
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             builder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
+            builder.RegisterRepositories();
+            builder.RegisterServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
