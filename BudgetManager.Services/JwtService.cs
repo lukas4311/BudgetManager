@@ -13,15 +13,14 @@ namespace BudgetManager.Services
 
     public class JwtService : IJwtService
     {
-        private readonly JwtSetting jwtSetting;
+        private JwtSetting jwtSetting;
 
-        public JwtService(JwtSetting jwtSetting)
-        {
-            this.jwtSetting = jwtSetting;
-        }
+        public void SetUp(JwtSetting jwtSetting) => this.jwtSetting = jwtSetting;
 
         public string GenerateToken(UserIdentification model)
         {
+            this.CheckSettingIsSettedUp();
+
             if (model is null)
                 throw new ArgumentException("Arguments to create token are not valid.");
 
@@ -43,6 +42,8 @@ namespace BudgetManager.Services
 
         public IEnumerable<Claim> GetTokenClaims(string token)
         {
+            this.CheckSettingIsSettedUp();
+
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentException("Given token is null or empty.");
 
@@ -62,6 +63,8 @@ namespace BudgetManager.Services
 
         public bool IsTokenValid(string token)
         {
+            this.CheckSettingIsSettedUp();
+
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentException("Given token is null or empty.");
 
@@ -83,6 +86,12 @@ namespace BudgetManager.Services
         {
             byte[] symmetricKey = Convert.FromBase64String(this.jwtSetting.SecretKey);
             return new SymmetricSecurityKey(symmetricKey);
+        }
+
+        private void CheckSettingIsSettedUp()
+        {
+            if (this.jwtSetting is null)
+                throw new NotSettedUpException();
         }
 
         private TokenValidationParameters GetTokenValidationParameters() =>
