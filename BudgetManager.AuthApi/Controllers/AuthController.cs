@@ -31,5 +31,15 @@ namespace BudgetManager.AuthApi.Controllers
             string token = this.jwtService.GenerateToken(userInfo);
             return Ok(token);
         }
+
+        [HttpPost("validate")] 
+        public IActionResult Validate(TokenModel tokenModel)
+        {
+            if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
+                return BadRequest(new { message = "Token is required" });
+
+            bool isValid = this.jwtService.IsTokenValid(tokenModel.Token);
+            return Ok(isValid);
+        }
     }
 }
