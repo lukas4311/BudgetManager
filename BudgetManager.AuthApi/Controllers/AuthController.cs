@@ -1,7 +1,9 @@
 ﻿using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BudgetManager.AuthApi.Controllers
 {
@@ -11,10 +13,11 @@ namespace BudgetManager.AuthApi.Controllers
         private readonly IUserService userService;
         private readonly IJwtService jwtService;
 
-        public AuthController(IUserService userService, IJwtService jwtService)
+        public AuthController(IUserService userService, IJwtService jwtService, IOptions<JwtSettingOption> options)
         {
             this.userService = userService;
             this.jwtService = jwtService;
+            this.jwtService.SetUp(new JwtSetting(options.Value.Secret, options.Value.Expiration));
         }
 
         [HttpPost("authenticate")]
