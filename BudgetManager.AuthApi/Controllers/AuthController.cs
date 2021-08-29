@@ -29,10 +29,10 @@ namespace BudgetManager.AuthApi.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             string token = this.jwtService.GenerateToken(userInfo);
-            return Ok(token);
+            return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
         }
 
-        [HttpPost("validate")] 
+        [HttpPost("validate")]
         public IActionResult Validate(TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
