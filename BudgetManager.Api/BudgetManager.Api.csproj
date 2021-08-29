@@ -16,8 +16,4 @@
     <ProjectReference Include="..\BudgetManager.Services\BudgetManager.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

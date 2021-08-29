@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Core;
+using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Data;
@@ -31,7 +32,8 @@ namespace BudgetManager.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();            
+            services.AddControllers();
+            services.Configure<AuthApiSetting>(Configuration.GetSection(nameof(AuthApiSetting)));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });
