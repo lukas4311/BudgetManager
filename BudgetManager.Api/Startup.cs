@@ -1,11 +1,13 @@
 using Autofac;
 using Autofac.Core;
+using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Data;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +33,7 @@ namespace BudgetManager.Api
         {
 
             services.AddControllers();
+            services.Configure<AuthApiSetting>(Configuration.GetSection(nameof(AuthApiSetting)));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });
@@ -42,7 +45,7 @@ namespace BudgetManager.Api
             builder.Register<IHttpContextAccessor>(a => new HttpContextAccessor());
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
-            builder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
+            builder.Register(_ => new DataContext(optionsBuilder.Options));
             builder.RegisterType<UserDataProviderService>().As<IUserDataProviderService>();
             builder.RegisterRepositories();
             builder.RegisterServices();

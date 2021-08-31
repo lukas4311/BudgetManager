@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Models;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -11,5 +12,7 @@ namespace BudgetManager.Services.Contracts
         string GenerateToken(UserIdentification model);
 
         IEnumerable<Claim> GetTokenClaims(string token);
+
+        void SetUp(JwtSetting jwtSetting);
     }
 }

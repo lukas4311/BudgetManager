@@ -2,6 +2,7 @@ using Autofac;
 using BudgetManager.AuthApi.Models;
 using BudgetManager.Data;
 using BudgetManager.Repository.Extensions;
+using BudgetManager.Services;
 using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ namespace BudgetManager.AuthApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<JwtSettingOption>(Configuration.GetSection(nameof(JwtSettingOption)));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v1" });

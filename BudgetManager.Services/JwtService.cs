@@ -4,13 +4,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Exceptions;
+using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetManager.Services
 {
-    public record JwtSetting(string SecretKey, int ExpireMinutes);
-
     public class JwtService : IJwtService
     {
         private JwtSetting jwtSetting;
