@@ -1,4 +1,5 @@
-﻿using BudgetManager.AuthApi.Models;
+﻿using System.Linq;
+using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
@@ -40,6 +41,16 @@ namespace BudgetManager.AuthApi.Controllers
 
             bool isValid = this.jwtService.IsTokenValid(tokenModel.Token);
             return Ok(isValid);
+        }
+
+        [HttpGet("tokenData")]
+        public IActionResult GetTokenData([FromQuery]string token)
+        {
+            if(string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            UserIdentification userIdentification = this.jwtService.GetUserIdentification(token);
+            return Ok(userIdentification);
         }
     }
 }

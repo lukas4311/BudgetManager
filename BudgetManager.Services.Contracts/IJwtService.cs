@@ -13,6 +13,8 @@ namespace BudgetManager.Services.Contracts
 
         IEnumerable<Claim> GetTokenClaims(string token);
 
+        UserIdentification GetUserIdentification(string token);
+
         void SetUp(JwtSetting jwtSetting);
     }
 }
