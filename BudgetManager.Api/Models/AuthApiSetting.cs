@@ -2,6 +2,8 @@
 {
     public class AuthApiSetting
     {
-        public string Url { get; set; }
+        public string ValidateUrl { get; set; }
+
+        public string DataUrl { get; set; }
     }
 }
