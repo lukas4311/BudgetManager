@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -53,7 +54,7 @@ namespace BudgetManager.Api.Middlewares
                     context.Items["User"] = userData;
                 }
             }
-            catch
+            catch(Exception e)
             {
             }
         }

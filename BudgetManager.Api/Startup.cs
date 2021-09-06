@@ -1,5 +1,5 @@
 using Autofac;
-using Autofac.Core;
+using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
@@ -7,7 +7,6 @@ using BudgetManager.Data;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -82,6 +81,7 @@ namespace BudgetManager.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
 
