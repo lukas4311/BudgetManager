@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -27,12 +28,19 @@ namespace BudgetManager.Api.Middlewares
             string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                await attachUserToContext(context, userService, token);
+            {
+                await attachUserToContext(context, token);
+            }
+            else
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Unauthorized");
+            }
 
             await next(context);
         }
 
-        private async Task attachUserToContext(HttpContext context, IUserService userService, string token)
+        private async Task attachUserToContext(HttpContext context, string token)
         {
             try
             {
@@ -55,7 +63,7 @@ namespace BudgetManager.Api.Middlewares
                     context.Items["User"] = userData;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
             }
         }
