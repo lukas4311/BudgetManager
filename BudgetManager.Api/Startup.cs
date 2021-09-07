@@ -32,7 +32,7 @@ namespace BudgetManager.Api
         {
 
             services.AddControllers();
-            services.Configure<AuthApiSetting>(Configuration.GetSection(nameof(AuthApiSetting)));
+            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });

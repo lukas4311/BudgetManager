@@ -22,7 +22,7 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(UserModel model)
+        public IActionResult Authenticate([FromBody] UserModel model)
         {
             UserIdentification userInfo = this.userService.Authenticate(model.UserName, model.Password);
 
@@ -34,7 +34,7 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpPost("validate")]
-        public IActionResult Validate(TokenModel tokenModel)
+        public IActionResult Validate([FromBody] TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
                 return BadRequest(new { message = "Token is required" });

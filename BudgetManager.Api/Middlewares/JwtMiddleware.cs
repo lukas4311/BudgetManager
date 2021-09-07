@@ -37,7 +37,8 @@ namespace BudgetManager.Api.Middlewares
             try
             {
                 HttpClient client = new HttpClient();
-                StringContent data = new StringContent(JsonSerializer.Serialize(new { Token = token }), Encoding.UTF8, "application/json");
+                string bodyData = JsonSerializer.Serialize(new { Token = token });
+                StringContent data = new StringContent(bodyData, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(this.appSettings.ValidateUrl, data);
                 bool isValid = false;
 
@@ -49,7 +50,7 @@ namespace BudgetManager.Api.Middlewares
 
                 if (isValid)
                 {
-                    string responseUserData = await client.GetStringAsync(this.appSettings.DataUrl);
+                    string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
                     UserDataModel userData = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
                     context.Items["User"] = userData;
                 }
