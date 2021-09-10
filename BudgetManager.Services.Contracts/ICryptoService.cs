@@ -6,9 +6,9 @@ namespace BudgetManager.Services.Contracts
 {
     public interface ICryptoService
     {
-        IEnumerable<TradeHistory> Get();
+        IEnumerable<TradeHistory> GetByUser(string userLogin);
 
-        TradeHistory Get(int id);
+        TradeHistory Get(int id, int userId);
 
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
 

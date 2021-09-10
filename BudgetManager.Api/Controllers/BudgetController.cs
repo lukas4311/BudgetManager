@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
     [Route("budget")]
-    public class BudgetController : ControllerBase
+    public class BudgetController : BaseController
     {
         private readonly IBudgetService budgetService;
 
-        public BudgetController(IBudgetService budgetService)
+        public BudgetController(IBudgetService budgetService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             this.budgetService = budgetService;
         }
@@ -31,7 +32,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("getActual")]
         public ActionResult<IEnumerable<BudgetModel>> GetActual()
         {
-            return Ok(this.budgetService.GetActual());
+            return Ok(this.budgetService.GetActual(this.GetUserId()));
         }
 
         [HttpPost("add")]

@@ -16,31 +16,38 @@ namespace BudgetManager.Services
     {
         private const string bucketForex = "Crypto";
         private const string organizationId = "8f46f33452affe4a";
-        private readonly IUserDataProviderService userIdentification;
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;
 
-        public CryptoService(IUserDataProviderService userIdentification, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
+        public CryptoService(ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
         {
-            this.userIdentification = userIdentification;
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.cryptoRepository = cryptoRepository;
         }
 
-        public IEnumerable<TradeHistory> Get()
+        public IEnumerable<TradeHistory> GetByUser(string userLogin)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
+            return this.userIdentityRepository.FindByCondition(u => u.Login == userLogin)
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
                 .Select(e => e.MapToOverViewViewModel());
         }
 
-        public TradeHistory Get(int id)
+        public IEnumerable<TradeHistory> GetByUser(int userId)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
+            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
+                .SelectMany(a => a.CryptoTradesHistory)
+                .Include(s => s.CurrencySymbol)
+                .Include(s => s.CryptoTicker)
+                .Select(e => e.MapToOverViewViewModel());
+        }
+
+        public TradeHistory Get(int id, int userId)
+        {
+            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
@@ -51,11 +58,11 @@ namespace BudgetManager.Services
 
         public void Update(TradeHistory tradeHistory)
         {
-            CryptoTradeHistory tradeHistoryRecord = this.userIdentityRepository.FindByCondition(u => u.Login == this.GetUserIdentity())
+            CryptoTradeHistory tradeHistoryRecord = this.userIdentityRepository.FindByCondition(u => u.Id == tradeHistory.Id)
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
-                .Single(s => s.Id == tradeHistory.Id);
+                .Single();
 
             if (tradeHistoryRecord is null)
                 throw new Exception();
@@ -75,7 +82,5 @@ namespace BudgetManager.Services
             List<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
-
-        private string GetUserIdentity() => this.userIdentification.GetUserIdentification().UserName;
     }
 }
