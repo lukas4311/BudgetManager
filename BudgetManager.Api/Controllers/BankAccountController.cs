@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using BudgetManager.Api.Extensions;
-using BudgetManager.Api.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -12,21 +10,19 @@ namespace BudgetManager.Api.Controllers
 {
     [ApiController]
     [Route("bankAccount")]
-    public partial class BankAccountController : ControllerBase
+    public partial class BankAccountController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor)
+        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor) : base (httpContextAccessor)
         {
             this.bankAccountService = bankAccountService;
-            this.httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet("allAccountBalance/{toDate}")]
         public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
-            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.httpContextAccessor.HttpContext.GetUserId(), toDate));
+            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.GetUserId(), toDate));
         }
 
         [HttpGet("balance/{bankAccountId}/{toDate}")]
@@ -36,14 +32,17 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("allAccounts/{userId}")]
-        public ActionResult<IEnumerable<BankAccountModel>> All(int userId)
+        public ActionResult<IEnumerable<BankAccountModel>> All()
         {
-            return Ok(this.bankAccountService.GetAllBankAccounts(userId));
+            return Ok(this.bankAccountService.GetAllBankAccounts(this.GetUserId()));
         }
 
         [HttpPost]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
+            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
+                return StatusCode(401);
+
             int paymentId = this.bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
         }
@@ -51,6 +50,9 @@ namespace BudgetManager.Api.Controllers
         [HttpPut]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
+            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
+                return StatusCode(401);
+
             this.bankAccountService.Update(bankAccountViewModel);
             return Ok();
         }
@@ -58,6 +60,9 @@ namespace BudgetManager.Api.Controllers
         [HttpDelete]
         public IActionResult DeleteBankAccount([FromBody] int id)
         {
+            if(!this.bankAccountService.UserHasRightToBankAccount(id, this.GetUserId()))
+                return StatusCode(401);
+
             this.bankAccountService.Delete(id);
             return this.Ok();
         }
