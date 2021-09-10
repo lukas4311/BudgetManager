@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BudgetManager.Api.Models;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -23,7 +27,7 @@ namespace BudgetManager.Api.Middlewares
             this.appSettings = appSettings.Value;
         }
 
-        public async Task Invoke(HttpContext context, IUserService userService)
+        public async Task Invoke(HttpContext context)
         {
             string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
@@ -59,13 +63,26 @@ namespace BudgetManager.Api.Middlewares
                 if (isValid)
                 {
                     string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
-                    UserDataModel userData = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
-                    context.Items["User"] = userData;
+                    UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
+                    await this.SignIn(context, user.userName, user.userId).ConfigureAwait(false);
                 }
             }
             catch (Exception e)
             {
             }
+        }
+
+        private async Task SignIn(HttpContext context, string login, int userId)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Name, login)
+            };
+
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            await context.SignInAsync(principal).ConfigureAwait(false);
         }
     }
 }

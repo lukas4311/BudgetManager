@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using BudgetManager.Api.Extensions;
+using BudgetManager.Api.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.Api.Controllers
@@ -11,16 +15,18 @@ namespace BudgetManager.Api.Controllers
     public partial class BankAccountController : ControllerBase
     {
         private readonly IBankAccountService bankAccountService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public BankAccountController(IBankAccountService bankAccountService)
+        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor)
         {
             this.bankAccountService = bankAccountService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpGet("allAccountBalance/{userId}/{toDate}")]
-        public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(int userId,  DateTime? toDate = null)
+        [HttpGet("allAccountBalance/{toDate}")]
+        public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
-            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(userId, toDate));
+            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.httpContextAccessor.HttpContext.GetUserId(), toDate));
         }
 
         [HttpGet("balance/{bankAccountId}/{toDate}")]
