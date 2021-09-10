@@ -81,8 +81,7 @@ namespace BudgetManager.Api.Middlewares
             };
 
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
-            await context.SignInAsync(principal).ConfigureAwait(false);
+            context.User = new ClaimsPrincipal(identity);
         }
     }
 }
