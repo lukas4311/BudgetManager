@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BudgetManager.Api.Extensions;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -28,10 +27,13 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("balance/{bankAccountId}/{toDate}")]
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
+            if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+                return StatusCode(401);
+
             return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
 
-        [HttpGet("allAccounts/{userId}")]
+        [HttpGet("allAccounts")]
         public ActionResult<IEnumerable<BankAccountModel>> All()
         {
             return Ok(this.bankAccountService.GetAllBankAccounts(this.GetUserId()));
@@ -58,12 +60,12 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteBankAccount([FromBody] int id)
+        public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
-            if(!this.bankAccountService.UserHasRightToBankAccount(id, this.GetUserId()))
+            if(!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
                 return StatusCode(401);
 
-            this.bankAccountService.Delete(id);
+            this.bankAccountService.Delete(bankAccountId);
             return this.Ok();
         }
     }

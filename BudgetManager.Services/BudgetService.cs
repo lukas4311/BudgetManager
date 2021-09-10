@@ -24,15 +24,15 @@ namespace BudgetManager.Services
 
         public IEnumerable<BudgetModel> GetByUserId(int userId) => this.budgetRepository.FindByCondition(a => a.UserIdentityId == userId).Select(b => b.MapToViewModel()).ToList();
 
-        public IEnumerable<BudgetModel> GetActual()
+        public IEnumerable<BudgetModel> GetActual(int userId)
         {
-            return this.budgetRepository.FindAll().ToList().Where(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
+            return this.budgetRepository.FindByCondition(s => s.UserIdentityId == userId).ToList().Where(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
         }
 
-        public IEnumerable<BudgetModel> Get(DateTime fromDate, DateTime? toDate)
+        public IEnumerable<BudgetModel> Get(int userId, DateTime fromDate, DateTime? toDate)
         {
             toDate ??= DateTime.MaxValue;
-            return this.budgetRepository.FindByCondition(b => b.DateFrom >= fromDate && b.DateTo <= toDate).Select(b => b.MapToViewModel());
+            return this.budgetRepository.FindByCondition(b => b.UserIdentityId == userId && b.DateFrom >= fromDate && b.DateTo <= toDate).Select(b => b.MapToViewModel());
         }
 
         public void Add(BudgetModel budgetModel)
