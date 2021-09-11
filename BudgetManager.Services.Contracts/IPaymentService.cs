@@ -12,7 +12,7 @@ namespace BudgetManager.Services.Contracts
 
         List<PaymentCategoryModel> GetPaymentCategories();
 
-        List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId);
+        List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int userId, int? bankAccountId);
 
         List<PaymentTypeModel> GetPaymentTypes();
 
