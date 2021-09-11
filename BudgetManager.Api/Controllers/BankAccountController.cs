@@ -28,7 +28,7 @@ namespace BudgetManager.Api.Controllers
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
             if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
-                return StatusCode(401);
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
             return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
@@ -43,7 +43,7 @@ namespace BudgetManager.Api.Controllers
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             if (bankAccountViewModel.UserIdentityId != this.GetUserId())
-                return StatusCode(401);
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
             int paymentId = this.bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
@@ -53,7 +53,7 @@ namespace BudgetManager.Api.Controllers
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             if (bankAccountViewModel.UserIdentityId != this.GetUserId())
-                return StatusCode(401);
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.bankAccountService.Update(bankAccountViewModel);
             return Ok();
@@ -63,7 +63,7 @@ namespace BudgetManager.Api.Controllers
         public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
             if(!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
-                return StatusCode(401);
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.bankAccountService.Delete(bankAccountId);
             return this.Ok();

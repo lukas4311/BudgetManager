@@ -22,6 +22,9 @@ namespace BudgetManager.Services
 
         public BudgetModel Get(int id) => this.budgetRepository.FindByCondition(a => a.Id == id).Select(b => b.MapToViewModel()).Single();
 
+        public bool UserHasRightToBudget(int budgetId, int userId)
+            => this.budgetRepository.FindByCondition(a => a.Id == budgetId && a.UserIdentityId == userId).Count() == 1;
+
         public IEnumerable<BudgetModel> GetByUserId(int userId) => this.budgetRepository.FindByCondition(a => a.UserIdentityId == userId).Select(b => b.MapToViewModel()).ToList();
 
         public IEnumerable<BudgetModel> GetActual(int userId)

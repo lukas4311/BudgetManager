@@ -20,12 +20,15 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("getAll")]
         public ActionResult<IEnumerable<BudgetModel>> Get()
         {
-            return Ok(this.budgetService.Get());
+            return Ok(this.budgetService.GetByUserId(this.GetUserId()));
         }
 
         [HttpGet("get")]
         public ActionResult<BudgetModel> Get(int id)
         {
+            if (!this.budgetService.UserHasRightToBudget(id, this.GetUserId()))
+                return this.StatusCode(StatusCodes.Status401Unauthorized);
+
             return Ok(this.budgetService.Get(id));
         }
 

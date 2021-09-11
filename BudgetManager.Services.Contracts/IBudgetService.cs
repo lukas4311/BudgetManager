@@ -21,5 +21,7 @@ namespace BudgetManager.Services.Contracts
         IEnumerable<BudgetModel> GetByUserId(int userId);
 
         void Update(BudgetModel budgetModel);
+
+        bool UserHasRightToBudget(int budgetId, int userId);
     }
 }
