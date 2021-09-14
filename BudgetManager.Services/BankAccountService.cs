@@ -56,6 +56,9 @@ namespace BudgetManager.Services
             };
         }
 
+        public bool UserHasRightToBankAccount(int bankAccountId, int userId)
+            => this.bankAccountRepository.FindByCondition(a => a.Id == bankAccountId && a.UserIdentityId == userId).Count() == 1;
+
         public IEnumerable<BankAccountModel> GetAllBankAccounts(int userId)
         {
             return bankAccountRepository.FindByCondition(b => b.UserIdentityId == userId).Select(b => new BankAccountModel

@@ -24,9 +24,9 @@ namespace BudgetManager.Services
             this.bankAccountRepository = bankAccountRepository;
         }
 
-        public List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int? bankAccountId)
+        public List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int userId, int? bankAccountId)
         {
-            return this.paymentRepository.FindAll().Where(a => a.Date > (fromDate ?? DateTime.MinValue) && a.Date < (toDate ?? DateTime.MaxValue)
+            return this.paymentRepository.FindAll().Where(a => a.BankAccount.UserIdentityId == userId && a.Date > (fromDate ?? DateTime.MinValue) && a.Date < (toDate ?? DateTime.MaxValue)
                 && (!bankAccountId.HasValue || a.BankAccountId == bankAccountId))
             .Include(a => a.PaymentType)
             .Include(a => a.PaymentCategory)

@@ -19,5 +19,7 @@ namespace BudgetManager.Services.Contracts
         void Update(BankAccountModel bankAccountViewModel);
 
         void Delete(int id);
+
+        bool UserHasRightToBankAccount(int bankAccountId, int userId);
     }
 }

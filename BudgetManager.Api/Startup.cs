@@ -1,5 +1,5 @@
 using Autofac;
-using Autofac.Core;
+using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
@@ -7,7 +7,6 @@ using BudgetManager.Data;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,10 +32,30 @@ namespace BudgetManager.Api
         {
 
             services.AddControllers();
-            services.Configure<AuthApiSetting>(Configuration.GetSection(nameof(AuthApiSetting)));
+            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                   {
+                     new OpenApiSecurityScheme
+                     {
+                       Reference = new OpenApiReference
+                       {
+                         Type = ReferenceType.SecurityScheme,
+                         Id = "Bearer"
+                       }
+                      },
+                      new string[] { }
+                    }
+                });
             });
         }
 
@@ -62,6 +81,7 @@ namespace BudgetManager.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
 

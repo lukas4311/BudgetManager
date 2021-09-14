@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Exceptions;
@@ -58,6 +59,16 @@ namespace BudgetManager.Services
             {
                 throw new InvalidToken("Token is not valid.", ex);
             }
+        }
+
+        public UserIdentification GetUserIdentification(string token)
+        {
+            IEnumerable<Claim> claims = this.GetTokenClaims(token);
+
+            return new UserIdentification() {
+                UserId = int.Parse(claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value),
+                UserName = claims.Single(c => c.Type == ClaimTypes.Name).Value
+            };
         }
 
         public bool IsTokenValid(string token)

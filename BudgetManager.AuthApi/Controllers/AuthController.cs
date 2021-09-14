@@ -1,4 +1,5 @@
-﻿using BudgetManager.AuthApi.Models;
+﻿using System.Linq;
+using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
@@ -21,7 +22,7 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(UserModel model)
+        public IActionResult Authenticate([FromBody] UserModel model)
         {
             UserIdentification userInfo = this.userService.Authenticate(model.UserName, model.Password);
 
@@ -33,13 +34,23 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpPost("validate")]
-        public IActionResult Validate(TokenModel tokenModel)
+        public IActionResult Validate([FromBody] TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
                 return BadRequest(new { message = "Token is required" });
 
             bool isValid = this.jwtService.IsTokenValid(tokenModel.Token);
             return Ok(isValid);
+        }
+
+        [HttpGet("tokenData")]
+        public IActionResult GetTokenData([FromQuery]string token)
+        {
+            if(string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            UserIdentification userIdentification = this.jwtService.GetUserIdentification(token);
+            return Ok(userIdentification);
         }
     }
 }

@@ -2,42 +2,49 @@
 using System.Collections.Generic;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
     [Route("bankAccount")]
-    public partial class BankAccountController : ControllerBase
+    public partial class BankAccountController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
 
-        public BankAccountController(IBankAccountService bankAccountService)
+        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor) : base (httpContextAccessor)
         {
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet("allAccountBalance/{userId}/{toDate}")]
-        public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(int userId,  DateTime? toDate = null)
+        [HttpGet("allAccountBalance/{toDate}")]
+        public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
-            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(userId, toDate));
+            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.GetUserId(), toDate));
         }
 
         [HttpGet("balance/{bankAccountId}/{toDate}")]
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
+            if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
             return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
 
-        [HttpGet("allAccounts/{userId}")]
-        public ActionResult<IEnumerable<BankAccountModel>> All(int userId)
+        [HttpGet("allAccounts")]
+        public ActionResult<IEnumerable<BankAccountModel>> All()
         {
-            return Ok(this.bankAccountService.GetAllBankAccounts(userId));
+            return Ok(this.bankAccountService.GetAllBankAccounts(this.GetUserId()));
         }
 
         [HttpPost]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
+            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
             int paymentId = this.bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
         }
@@ -45,14 +52,20 @@ namespace BudgetManager.Api.Controllers
         [HttpPut]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
+            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
             this.bankAccountService.Update(bankAccountViewModel);
             return Ok();
         }
 
         [HttpDelete]
-        public IActionResult DeleteBankAccount([FromBody] int id)
+        public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
-            this.bankAccountService.Delete(id);
+            if(!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.bankAccountService.Delete(bankAccountId);
             return this.Ok();
         }
     }
