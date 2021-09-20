@@ -8,6 +8,8 @@ namespace BudgetManager.Services.Contracts
     {
         IEnumerable<TradeHistory> GetByUser(string userLogin);
 
+        IEnumerable<TradeHistory> GetByUser(int userId);
+
         TradeHistory Get(int id, int userId);
 
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
