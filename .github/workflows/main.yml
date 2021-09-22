@@ -28,4 +28,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: dotnet build BudgetManager.Api.csproj --configuration Release 
+        run: dotnet build BudgetManager.Api/BudgetManager.Api.csproj --configuration Release 
