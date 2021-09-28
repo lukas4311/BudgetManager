@@ -97,9 +97,7 @@ namespace BudgetManager.Services
                 throw new ArgumentException(DoesntExists);
 
             foreach (PaymentTag paymentTag in this.paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))
-            {
                 this.paymentTagRepository.Delete(paymentTag);
-            }
 
             this.tagRepository.Delete(tag);
             this.tagRepository.Save();
@@ -113,14 +111,10 @@ namespace BudgetManager.Services
             IEnumerable<string> toAdd = tags.Where(t => !tagsOnPayment.Exists(a => a.tag == t));
 
             foreach ((string tag, int tagId) in toDelete)
-            {
                 this.RemoveTagFromPayment(tagId, paymentId);
-            }
 
             foreach (string tag in toAdd)
-            {
                 this.AddTagToPayment(new AddTagModel { Code = tag, PaymentId = paymentId });
-            }
         }
     }
 }
