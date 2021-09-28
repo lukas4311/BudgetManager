@@ -17,17 +17,31 @@ namespace BudgetManager.Services
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IUserDataProviderService userIdentification;
 
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IUserDataProviderService userIdentification)
+        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository)
         {
             this.tagRepository = tagRepository;
             this.paymentTagRepository = paymentTagRepository;
             this.userIdentityRepository = userIdentityRepository;
-            this.userIdentification = userIdentification;
         }
 
         public IEnumerable<TagModel> GetPaymentTags()
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == this.userIdentification.GetUserIdentification().UserName)
+            return this.userIdentityRepository.FindAll()
+                .Include(p => p.BankAccounts)
+                .SelectMany(a => a.BankAccounts)
+                .SelectMany(t => t.Payments)
+                .SelectMany(p => p.PaymentTags)
+                .Select(t => new TagModel
+                {
+                    Code = t.Tag.Code,
+                    Id = t.Id
+                })
+                .Distinct();
+        }
+
+        public IEnumerable<TagModel> GetPaymentTags(int userId)
+        {
+            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
                 .Include(p => p.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .SelectMany(t => t.Payments)

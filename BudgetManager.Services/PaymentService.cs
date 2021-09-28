@@ -129,5 +129,7 @@ namespace BudgetManager.Services
             this.paymentRepository.Save();
             return paymentToClone.Id;
         }
+
+        public bool UserHasRightToPayment(int paymentId, int userId) => this.paymentRepository.FindByCondition(a => a.Id == paymentId && a.BankAccount.UserIdentityId == userId).Count() == 1;
     }
 }

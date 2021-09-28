@@ -11,6 +11,8 @@ namespace BudgetManager.Services.Contracts
 
         IEnumerable<TagModel> GetPaymentTags();
 
+        IEnumerable<TagModel> GetPaymentTags(int userId);
+
         void RemoveTagFromPayment(int tagId, int paymentId);
 
         void UpdateAllTags(List<string> tags, int paymentId);

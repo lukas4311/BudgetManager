@@ -21,5 +21,7 @@ namespace BudgetManager.Services.Contracts
         void Update(PaymentModel paymentViewModel);
 
         int ClonePayment(int id);
+
+        bool UserHasRightToPayment(int paymentId, int userId);
     }
 }
