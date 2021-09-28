@@ -34,10 +34,16 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("types")]
-        public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes() => this.paymentService.GetPaymentTypes();
+        public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes()
+        {
+            return this.paymentService.GetPaymentTypes();
+        }
 
         [HttpGet("categories")]
-        public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => this.paymentService.GetPaymentCategories();
+        public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories()
+        {
+            return this.paymentService.GetPaymentCategories();
+        }
 
         [HttpGet("bankAccounts")]
         public IActionResult GetBankAccounts()
