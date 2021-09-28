@@ -15,7 +15,6 @@ namespace BudgetManager.Services
         private readonly ITagRepository tagRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IUserDataProviderService userIdentification;
 
         public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository)
         {
