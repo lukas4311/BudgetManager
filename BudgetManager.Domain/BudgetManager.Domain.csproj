@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
     <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
   </ItemGroup>
 

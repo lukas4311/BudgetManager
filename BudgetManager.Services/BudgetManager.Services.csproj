@@ -10,6 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
+    <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />
     <ProjectReference Include="..\BudgetManager.Services.Contracts\BudgetManager.Services.Contracts.csproj" />
     <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
