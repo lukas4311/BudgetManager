@@ -64,7 +64,7 @@ namespace BudgetManager.Api.Middlewares
                 {
                     string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
                     UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
-                    await this.SignIn(context, user.userName, user.userId).ConfigureAwait(false);
+                    this.SignIn(context, user.userName, user.userId).ConfigureAwait(false);
                 }
             }
             catch (Exception e)
@@ -72,7 +72,7 @@ namespace BudgetManager.Api.Middlewares
             }
         }
 
-        private async Task SignIn(HttpContext context, string login, int userId)
+        private void SignIn(HttpContext context, string login, int userId)
         {
             List<Claim> claims = new List<Claim>
             {
