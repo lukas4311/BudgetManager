@@ -15,19 +15,32 @@ namespace BudgetManager.Services
         private readonly ITagRepository tagRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IUserDataProviderService userIdentification;
 
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IUserDataProviderService userIdentification)
+        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository)
         {
             this.tagRepository = tagRepository;
             this.paymentTagRepository = paymentTagRepository;
             this.userIdentityRepository = userIdentityRepository;
-            this.userIdentification = userIdentification;
         }
 
         public IEnumerable<TagModel> GetPaymentTags()
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == this.userIdentification.GetUserIdentification().UserName)
+            return this.userIdentityRepository.FindAll()
+                .Include(p => p.BankAccounts)
+                .SelectMany(a => a.BankAccounts)
+                .SelectMany(t => t.Payments)
+                .SelectMany(p => p.PaymentTags)
+                .Select(t => new TagModel
+                {
+                    Code = t.Tag.Code,
+                    Id = t.Id
+                })
+                .Distinct();
+        }
+
+        public IEnumerable<TagModel> GetPaymentTags(int userId)
+        {
+            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
                 .Include(p => p.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .SelectMany(t => t.Payments)
@@ -83,9 +96,7 @@ namespace BudgetManager.Services
                 throw new ArgumentException(DoesntExists);
 
             foreach (PaymentTag paymentTag in this.paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))
-            {
                 this.paymentTagRepository.Delete(paymentTag);
-            }
 
             this.tagRepository.Delete(tag);
             this.tagRepository.Save();
@@ -99,14 +110,10 @@ namespace BudgetManager.Services
             IEnumerable<string> toAdd = tags.Where(t => !tagsOnPayment.Exists(a => a.tag == t));
 
             foreach ((string tag, int tagId) in toDelete)
-            {
                 this.RemoveTagFromPayment(tagId, paymentId);
-            }
 
             foreach (string tag in toAdd)
-            {
                 this.AddTagToPayment(new AddTagModel { Code = tag, PaymentId = paymentId });
-            }
         }
     }
 }

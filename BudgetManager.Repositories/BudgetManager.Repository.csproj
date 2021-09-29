@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\BudgetManager.Data.csproj" />
+    <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
   </ItemGroup>
 
 </Project>
