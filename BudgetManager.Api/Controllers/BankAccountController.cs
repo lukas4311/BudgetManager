@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("bankAccount")]
+    [Route("bankAccounts")]
     public partial class BankAccountController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
@@ -18,13 +18,13 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet("allAccountBalance/{toDate}")]
+        [HttpGet("all/balance/{toDate}")]
         public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
             return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.GetUserId(), toDate));
         }
 
-        [HttpGet("balance/{bankAccountId}/{toDate}")]
+        [HttpGet("{bankAccountId}/balance/{toDate}")]
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
             if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
@@ -33,7 +33,7 @@ namespace BudgetManager.Api.Controllers
             return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
 
-        [HttpGet("allAccounts")]
+        [HttpGet("all")]
         public ActionResult<IEnumerable<BankAccountModel>> All()
         {
             return Ok(this.bankAccountService.GetAllBankAccounts(this.GetUserId()));

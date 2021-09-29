@@ -38,7 +38,7 @@ namespace BudgetManager.Services
                 .Distinct();
         }
 
-        public IEnumerable<TagModel> GetPaymentTags(int userId)
+        public IEnumerable<TagModel> GetPaymentsTags(int userId)
         {
             return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
                 .Include(p => p.BankAccounts)
