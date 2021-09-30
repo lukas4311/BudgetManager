@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("tag")]
+    [Route("tags")]
     public class TagController : BaseController
     {
         private readonly ITagService tagService;
@@ -21,10 +21,10 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet]
-        [Route("payment/all")]
-        public ActionResult<IEnumerable<TagModel>> GetPaymentTags()
+        [Route("allUsed")]
+        public ActionResult<IEnumerable<TagModel>> GetPaymentsTags()
         {
-            IEnumerable<TagModel> tags = this.tagService.GetPaymentTags(this.GetUserId());
+            IEnumerable<TagModel> tags = this.tagService.GetPaymentsTags(this.GetUserId());
             return Ok(tags);
         }
 
@@ -35,17 +35,6 @@ namespace BudgetManager.Api.Controllers
                 return this.StatusCode(StatusCodes.Status401Unauthorized);
 
             this.tagService.AddTagToPayment(tagModel);
-            return Ok();
-        }
-
-        [HttpDelete]
-        [Route("payment")]
-        public IActionResult RemoveTagFromPayment([FromBody] int tagId, int paymentId)
-        {
-            if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
-                return this.StatusCode(StatusCodes.Status401Unauthorized);
-
-            this.tagService.RemoveTagFromPayment(tagId, paymentId);
             return Ok();
         }
 

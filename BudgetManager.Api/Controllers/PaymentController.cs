@@ -9,7 +9,7 @@ using BudgetManager.Domain.DTOs;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("payment")]
+    [Route("payments")]
     public class PaymentController : BaseController
     {
         private readonly IPaymentService paymentService;
@@ -69,7 +69,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("detail")]
-        public ActionResult<PaymentModel> GetPayment([FromQuery] int id)
+        public ActionResult<PaymentModel> GetPayment(int id)
         {
             PaymentModel payment = this.paymentService.Get(id);
 
@@ -86,6 +86,17 @@ namespace BudgetManager.Api.Controllers
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.paymentService.ClonePayment(paymentViewModel.Id.Value);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{paymentId}/tag/{tagId}")]
+        public IActionResult RemoveTagFromPayment([FromBody] int tagId, int paymentId)
+        {
+            if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
+                return this.StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.tagService.RemoveTagFromPayment(tagId, paymentId);
             return Ok();
         }
     }

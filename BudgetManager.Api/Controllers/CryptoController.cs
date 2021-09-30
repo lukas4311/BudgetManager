@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("crypto")]
+    [Route("cryptos")]
     public class CryptoController : BaseController
     {
         private readonly ICryptoService cryptoService;
@@ -20,13 +20,13 @@ namespace BudgetManager.Api.Controllers
             this.forexService = forexService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("all")]
         public ActionResult<IEnumerable<TradeHistory>> Get()
         {
             return Ok(this.cryptoService.GetByUser(this.GetUserId()));
         }
 
-        [HttpGet("getExchangeRate/{fromCurrency}/{toCurrency}")]
+        [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
             double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
@@ -37,7 +37,7 @@ namespace BudgetManager.Api.Controllers
             return Ok(exhangeRate);
         }
 
-        [HttpGet("get")]
+        [HttpGet]
         public ActionResult<TradeHistory> Get(int id)
         {
             return Ok(this.cryptoService.Get(id, this.GetUserId()));
