@@ -64,7 +64,7 @@ namespace BudgetManager.Api.Middlewares
                 {
                     string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
                     UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
-                    this.SignIn(context, user.userName, user.userId).ConfigureAwait(false);
+                    this.SignIn(context, user.userName, user.userId);
                 }
             }
             catch (Exception e)
