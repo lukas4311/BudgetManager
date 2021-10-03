@@ -75,7 +75,6 @@ namespace BudgetManager.Services
             BankAccount bankAccount = new BankAccount
             {
                 Code = bankAccountViewModel.Code,
-                Id = bankAccountViewModel.Id,
                 OpeningBalance = bankAccountViewModel.OpeningBalance,
                 UserIdentityId = bankAccountViewModel.UserIdentityId
             };
