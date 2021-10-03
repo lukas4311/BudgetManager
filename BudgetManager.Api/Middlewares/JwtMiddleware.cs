@@ -8,8 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BudgetManager.Api.Models;
-using BudgetManager.Services.Contracts;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

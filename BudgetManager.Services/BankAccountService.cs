@@ -65,7 +65,8 @@ namespace BudgetManager.Services
             {
                 Code = b.Code,
                 Id = b.Id,
-                OpeningBalance = b.OpeningBalance
+                OpeningBalance = b.OpeningBalance,
+                UserIdentityId = b.UserIdentityId
             });
         }
 
