@@ -65,7 +65,8 @@ namespace BudgetManager.Services
             {
                 Code = b.Code,
                 Id = b.Id,
-                OpeningBalance = b.OpeningBalance
+                OpeningBalance = b.OpeningBalance,
+                UserIdentityId = b.UserIdentityId
             });
         }
 
@@ -74,7 +75,6 @@ namespace BudgetManager.Services
             BankAccount bankAccount = new BankAccount
             {
                 Code = bankAccountViewModel.Code,
-                Id = bankAccountViewModel.Id,
                 OpeningBalance = bankAccountViewModel.OpeningBalance,
                 UserIdentityId = bankAccountViewModel.UserIdentityId
             };
