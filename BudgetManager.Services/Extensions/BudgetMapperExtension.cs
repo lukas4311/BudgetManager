@@ -13,7 +13,8 @@ namespace BudgetManager.Services.Extensions
                 DateFrom = budget.DateFrom,
                 DateTo = budget.DateTo,
                 Id = budget.Id,
-                Name = budget.Name
+                Name = budget.Name,
+                UserIdentityId = budget.UserIdentityId
             };
         }
 
@@ -23,6 +24,7 @@ namespace BudgetManager.Services.Extensions
             budget.DateFrom = budgetModel.DateFrom;
             budget.DateTo = budgetModel.DateTo;
             budget.Name = budgetModel.Name;
+            budget.UserIdentityId = budgetModel.UserIdentityId;
 
             return budget;
         }
