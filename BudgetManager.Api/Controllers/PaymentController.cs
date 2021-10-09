@@ -72,9 +72,9 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpPost("clone/{id}")]
-        public IActionResult ClonePayment([FromBody] int id)
+        public IActionResult ClonePayment(int id)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(id, this.GetUserId()))
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.paymentService.ClonePayment(id);
@@ -83,7 +83,7 @@ namespace BudgetManager.Api.Controllers
 
         [HttpDelete]
         [Route("{paymentId}/tag/{tagId}")]
-        public IActionResult RemoveTagFromPayment([FromBody] int tagId, int paymentId)
+        public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
         {
             if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
                 return this.StatusCode(StatusCodes.Status401Unauthorized);
