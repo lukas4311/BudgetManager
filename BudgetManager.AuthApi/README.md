@@ -1,5 +1,7 @@
 ﻿# Authentication API for receiveing user token
 
+### Project setting
+```json
 {
   "Logging": {
     "LogLevel": {
@@ -17,3 +19,4 @@
     "Expiration": MINUTES_TO_EXPIRATION
   }
 }
+```

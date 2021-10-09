@@ -71,13 +71,13 @@ namespace BudgetManager.Api.Controllers
             return Ok(payment);
         }
 
-        [HttpPost("clone")]
-        public IActionResult ClonePayment([FromBody] PaymentModel paymentViewModel)
+        [HttpPost("clone/{id}")]
+        public IActionResult ClonePayment([FromBody] int id)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, this.GetUserId()))
+            if (!this.bankAccountService.UserHasRightToBankAccount(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.ClonePayment(paymentViewModel.Id.Value);
+            this.paymentService.ClonePayment(id);
             return Ok();
         }
 
