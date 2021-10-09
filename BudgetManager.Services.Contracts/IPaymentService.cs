@@ -6,8 +6,6 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IPaymentService
     {
-        List<BankAccountModel> GetBankAccounts();
-
         PaymentModel Get(int id);
 
         List<PaymentCategoryModel> GetPaymentCategories();

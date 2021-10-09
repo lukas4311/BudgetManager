@@ -62,16 +62,6 @@ namespace BudgetManager.Services
             }).ToList();
         }
 
-        public List<BankAccountModel> GetBankAccounts()
-        {
-            return this.bankAccountRepository.FindAll().Select(p => new BankAccountModel
-            {
-                Code = p.Code,
-                Id = p.Id,
-                OpeningBalance = p.OpeningBalance
-            }).ToList();
-        }
-
         public int Add(PaymentModel paymentViewModel)
         {
             Payment payment = new Payment
