@@ -1,10 +1,9 @@
-﻿using BudgetManager.Data.DataModels;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -23,10 +22,10 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet("data")]
+        [HttpGet]
         public ActionResult<IEnumerable<PaymentModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
-            if(bankAccountId.HasValue && !this.bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, this.GetUserId()))
+            if (bankAccountId.HasValue && !this.bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             IEnumerable<PaymentModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, this.GetUserId(), bankAccountId);
@@ -39,13 +38,6 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("categories")]
         public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => this.paymentService.GetPaymentCategories();
 
-        [HttpGet("bankAccounts")]
-        public IActionResult GetBankAccounts()
-        {
-            IEnumerable<BankAccountModel> bankAccounts = this.paymentService.GetBankAccounts();
-            return Ok(new { success = true, bankAccounts });
-        }
-
         [HttpPost]
         public IActionResult AddPayment([FromBody] PaymentModel paymentViewModel)
         {
@@ -54,7 +46,7 @@ namespace BudgetManager.Api.Controllers
 
             int paymentId = this.paymentService.Add(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
-            return Ok(new { success = true });
+            return Ok();
         }
 
         [HttpPut]
@@ -65,7 +57,7 @@ namespace BudgetManager.Api.Controllers
 
             this.paymentService.Update(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
-            return Ok(new { success = true });
+            return Ok();
         }
 
         [HttpGet("detail")]

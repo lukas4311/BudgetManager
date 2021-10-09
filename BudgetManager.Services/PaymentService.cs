@@ -39,7 +39,10 @@ namespace BudgetManager.Services
                 Description = a.Description,
                 PaymentTypeCode = a.PaymentType.Code,
                 PaymentCategoryIcon = a.PaymentCategory.Icon,
-                PaymentCategoryCode = a.PaymentCategory.Code
+                PaymentCategoryCode = a.PaymentCategory.Code,
+                BankAccountId = a.BankAccountId,
+                PaymentCategoryId = a.PaymentCategoryId,
+                PaymentTypeId = a.PaymentTypeId
             }).ToList();
         }
 
@@ -59,16 +62,6 @@ namespace BudgetManager.Services
                 Id = p.Id,
                 Name = p.Name,
                 Icon = p.Icon
-            }).ToList();
-        }
-
-        public List<BankAccountModel> GetBankAccounts()
-        {
-            return this.bankAccountRepository.FindAll().Select(p => new BankAccountModel
-            {
-                Code = p.Code,
-                Id = p.Id,
-                OpeningBalance = p.OpeningBalance
             }).ToList();
         }
 
@@ -102,6 +95,13 @@ namespace BudgetManager.Services
             payment.BankAccountId = paymentViewModel.BankAccountId.Value;
 
             this.paymentRepository.Update(payment);
+            this.paymentRepository.Save();
+        }
+
+        public void Delete(int paymentId)
+        {
+            Payment payment = this.paymentRepository.FindByCondition(a => a.Id == paymentId).Single();
+            this.paymentRepository.Delete(payment);
             this.paymentRepository.Save();
         }
 

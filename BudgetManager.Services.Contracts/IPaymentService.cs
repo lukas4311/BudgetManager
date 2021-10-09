@@ -6,8 +6,6 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IPaymentService
     {
-        List<BankAccountModel> GetBankAccounts();
-
         PaymentModel Get(int id);
 
         List<PaymentCategoryModel> GetPaymentCategories();
@@ -23,5 +21,7 @@ namespace BudgetManager.Services.Contracts
         int ClonePayment(int id);
 
         bool UserHasRightToPayment(int paymentId, int userId);
+
+        void Delete(int paymentId);
     }
 }

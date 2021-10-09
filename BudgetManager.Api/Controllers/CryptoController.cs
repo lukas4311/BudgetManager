@@ -26,7 +26,7 @@ namespace BudgetManager.Api.Controllers
             return Ok(this.cryptoService.GetByUser(this.GetUserId()));
         }
 
-        [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}")]
+        [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
             double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
@@ -37,7 +37,7 @@ namespace BudgetManager.Api.Controllers
             return Ok(exhangeRate);
         }
 
-        [HttpGet]
+        [HttpGet("tradeDetail/{tradeId}")]
         public ActionResult<TradeHistory> Get(int id)
         {
             return Ok(this.cryptoService.Get(id, this.GetUserId()));

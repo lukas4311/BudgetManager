@@ -13,7 +13,7 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly IBankAccountService bankAccountService;
 
-        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor) : base (httpContextAccessor)
+        public BankAccountController(IBankAccountService bankAccountService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             this.bankAccountService = bankAccountService;
         }
@@ -62,7 +62,7 @@ namespace BudgetManager.Api.Controllers
         [HttpDelete]
         public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
-            if(!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+            if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.bankAccountService.Delete(bankAccountId);
