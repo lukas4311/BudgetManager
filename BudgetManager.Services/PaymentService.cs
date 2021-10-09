@@ -39,7 +39,10 @@ namespace BudgetManager.Services
                 Description = a.Description,
                 PaymentTypeCode = a.PaymentType.Code,
                 PaymentCategoryIcon = a.PaymentCategory.Icon,
-                PaymentCategoryCode = a.PaymentCategory.Code
+                PaymentCategoryCode = a.PaymentCategory.Code,
+                BankAccountId = a.BankAccountId,
+                PaymentCategoryId = a.PaymentCategoryId,
+                PaymentTypeId = a.PaymentTypeId
             }).ToList();
         }
 

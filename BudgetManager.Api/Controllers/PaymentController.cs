@@ -46,7 +46,7 @@ namespace BudgetManager.Api.Controllers
 
             int paymentId = this.paymentService.Add(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
-            return Ok(new { success = true });
+            return Ok();
         }
 
         [HttpPut]
@@ -57,7 +57,7 @@ namespace BudgetManager.Api.Controllers
 
             this.paymentService.Update(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
-            return Ok(new { success = true });
+            return Ok();
         }
 
         [HttpGet("detail")]
