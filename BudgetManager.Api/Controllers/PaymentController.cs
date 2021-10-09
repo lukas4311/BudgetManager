@@ -82,6 +82,16 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpDelete]
+        public IActionResult DeletePayment(int id)
+        {
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.paymentService.Delete(id);
+            return Ok();
+        }
+
+        [HttpDelete]
         [Route("{paymentId}/tag/{tagId}")]
         public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
         {
