@@ -98,6 +98,13 @@ namespace BudgetManager.Services
             this.paymentRepository.Save();
         }
 
+        public void Delete(int paymentId)
+        {
+            Payment payment = this.paymentRepository.FindByCondition(a => a.Id == paymentId).Single();
+            this.paymentRepository.Delete(payment);
+            this.paymentRepository.Save();
+        }
+
         public PaymentModel Get(int id)
         {
             return this.paymentRepository.FindAll().Where(p => p.Id == id).Select(a => new PaymentModel
