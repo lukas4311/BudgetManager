@@ -71,19 +71,29 @@ namespace BudgetManager.Api.Controllers
             return Ok(payment);
         }
 
-        [HttpPost("clone")]
-        public IActionResult ClonePayment([FromBody] PaymentModel paymentViewModel)
+        [HttpPost("clone/{id}")]
+        public IActionResult ClonePayment(int id)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, this.GetUserId()))
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.ClonePayment(paymentViewModel.Id.Value);
+            this.paymentService.ClonePayment(id);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult DeletePayment(int id)
+        {
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.paymentService.Delete(id);
             return Ok();
         }
 
         [HttpDelete]
         [Route("{paymentId}/tag/{tagId}")]
-        public IActionResult RemoveTagFromPayment([FromBody] int tagId, int paymentId)
+        public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
         {
             if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
                 return this.StatusCode(StatusCodes.Status401Unauthorized);
