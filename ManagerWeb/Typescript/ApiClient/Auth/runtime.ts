@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-
+ declare type GlobalFetch = WindowOrWorkerGlobalScope
 export const BASE_PATH = "http://localhost".replace(/\/+$/, "");
 
 const isBlob = (value: any) => typeof Blob !== 'undefined' && value instanceof Blob;

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import moment from 'moment';
 import * as React from 'react'
-import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient';
+import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient/Main';
 import ActualBudgetCard, { ActualBudgetCardProps } from './ActualBudgetCard';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
@@ -26,7 +26,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private async loadBudget(): Promise<void> {
-        let budgets = await this.budgetApi.budgetGetActualGet();
+        let budgets = await this.budgetApi.budgetsActualGet();
         let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
             id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).format('DD.MM.YYYY')
             , dateTo: moment(b.dateTo).format('DD.MM.YYYY'), name: b.name
@@ -45,9 +45,9 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         };
 
         if (model.id != undefined) {
-            this.budgetApi.budgetUpdatePut({ budgetModel: budgetModel });
+            this.budgetApi.budgetsPut({ budgetModel: budgetModel });
         } else {
-            this.budgetApi.budgetAddPost({ budgetModel: budgetModel });
+            this.budgetApi.budgetsPost({ budgetModel: budgetModel });
         }
 
         this.hideBudgetModal();

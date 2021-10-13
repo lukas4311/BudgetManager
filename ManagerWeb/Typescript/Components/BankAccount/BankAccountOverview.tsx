@@ -1,9 +1,9 @@
 import React from "react";
-import { BankAccountApi, BankAccountApiInterface, Configuration, CryptoApi, CryptoApiInterface } from "../../ApiClient";
+import { BankAccountApi, BankAccountApiInterface, Configuration, CryptoApi, CryptoApiInterface } from "../../ApiClient/Main";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
-import { BankAccountModel } from "../../ApiClient/models/BankAccountModel";
+import { BankAccountModel } from "../../ApiClient/Main/models/BankAccountModel";
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import { BankAccountForm, BankAccountFromViewModel } from "./BankAccountForm";
 import { BankAccount } from "../../Model/BankAccount";
@@ -36,7 +36,7 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     }
 
     private async load(): Promise<void> {
-        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountGetAllGet();
+        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountsAllGet();
         let bankViewModels: BankAccountViewModel[] = this.getMappedViewModels(bankAccounts);
         this.setState({ bankAccounts: bankViewModels });
     }
@@ -92,9 +92,9 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
 
         try {
             if (model.id != undefined)
-                await this.bankAccountApi.bankAccountUpdatePut({ bankAccountModel: bankModel });
+                await this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
             else
-                await this.bankAccountApi.bankAccountAddPost({ bankAccountModel: bankModel });
+                await this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
         } catch (error) {
             console.log(error);
         }
@@ -103,7 +103,7 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
     }
 
     private deleteBank = (id: number) => {
-        this.bankAccountApi.bankAccountDeleteDelete({ body: id });
+        this.bankAccountApi.bankAccountsDelete({ body: id });
     }
 
     render() {

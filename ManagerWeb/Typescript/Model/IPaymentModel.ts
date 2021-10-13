@@ -1,6 +1,4 @@
-import { PaymentType } from './PaymentType';
-import { PaymentCategory } from './PaymentCategory';
-import { PaymentCategoryModel, PaymentTypeModel } from '../ApiClient';
+import { PaymentCategoryModel, PaymentTypeModel } from '../ApiClient/Main';
 
 export interface IPaymentModel {
     id?: number;

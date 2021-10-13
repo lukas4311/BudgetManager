@@ -1,6 +1,6 @@
 ﻿import React from "react";
 import ReactDOM from "react-dom";
-import { AuthApi } from "../../ApiClient/Auth";
+import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
 
 class AuthState {
     login: string;
