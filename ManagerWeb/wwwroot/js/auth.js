@@ -823,18 +823,19 @@ class Auth extends react_1.default.Component {
         this.render = () => {
             return (react_1.default.createElement("div", { className: "m-auto text-center" },
                 react_1.default.createElement("h1", { className: "text-2xl" }, "P\u0159ihl\u00E1\u0161en\u00ED"),
-                react_1.default.createElement("div", { "asp-validation-summary": "All", className: "text-red-600 mb-4" }),
-                react_1.default.createElement("div", { className: "flex" },
-                    react_1.default.createElement("div", { className: "w-1/2" },
-                        react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
-                            react_1.default.createElement("input", { className: "effect-11 w-full", placeholder: "Login", value: this.state.login, onChange: e => this.onChangeLogin(e) }),
-                            react_1.default.createElement("span", { className: "focus-bg" }))),
-                    react_1.default.createElement("div", { className: "w-1/2" },
-                        react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
-                            react_1.default.createElement("input", { type: "password", className: "effect-11 w-full", placeholder: "Heslo", value: this.state.password, onChange: (e) => this.onChangePassword(e) }),
-                            react_1.default.createElement("span", { className: "focus-bg" })))),
-                react_1.default.createElement("div", { className: "flex mt-8" },
-                    react_1.default.createElement("button", { onClick: this.login, className: "m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit"))));
+                react_1.default.createElement("div", { className: "flex flex-col w-2/5 m-auto mt-8" },
+                    react_1.default.createElement("div", { "asp-validation-summary": "All", className: "text-red-600 mb-4" }),
+                    react_1.default.createElement("div", { className: "flex" },
+                        react_1.default.createElement("div", { className: "w-1/2" },
+                            react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
+                                react_1.default.createElement("input", { className: "effect-11 w-full", placeholder: "Login", value: this.state.login, onChange: e => this.onChangeLogin(e) }),
+                                react_1.default.createElement("span", { className: "focus-bg" }))),
+                        react_1.default.createElement("div", { className: "w-1/2" },
+                            react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
+                                react_1.default.createElement("input", { type: "password", className: "effect-11 w-full", placeholder: "Heslo", value: this.state.password, onChange: (e) => this.onChangePassword(e) }),
+                                react_1.default.createElement("span", { className: "focus-bg" })))),
+                    react_1.default.createElement("div", { className: "flex mt-8" },
+                        react_1.default.createElement("button", { onClick: this.login, className: "m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))));
         };
         this.state = { login: '', password: '' };
     }
