@@ -5,7 +5,7 @@ import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
 import {  FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { IconsData } from '../../Enums/IconsEnum';
-import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentViewModel } from '../../ApiClient';
+import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentModel } from '../../ApiClient/Main';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -43,8 +43,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     public async componentDidMount() {
-        const types: PaymentTypeModel[] = await this.paymentApi.paymentTypesGet();
-        const categories: PaymentCategoryModel[] = await this.paymentApi.paymentCategoriesGet();
+        const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
+        const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
         this.processPaymentTypesData(types);
         this.processPaymentCategoryData(categories);
 
@@ -60,16 +60,16 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         let dataModel = this.mapViewModelToDatModel();
 
         if (this.state.id != undefined) {
-            this.paymentApi.paymentPut({ paymentViewModel: dataModel })
+            this.paymentApi.paymentsPut({ paymentModel: dataModel })
         } else {
-            this.paymentApi.paymentPost({ paymentViewModel: dataModel });
+            this.paymentApi.paymentsPost({ paymentModel: dataModel });
         }
 
         this.props.handleClose();
     }
 
-    private mapViewModelToDatModel = (): PaymentViewModel => {
-        let dataModel = new PaymentViewModel();
+    private mapViewModelToDatModel = (): PaymentModel => {
+        let dataModel = new PaymentModel();
         dataModel.amount = parseInt(this.state.amount.toString());
         dataModel.bankAccountId = this.state.bankAccountId;
         dataModel.date = new Date(this.state.date);

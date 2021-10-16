@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @class TokenModel
+ * @class UserIdentification
  */
-export class TokenModel {
+export class UserIdentification {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserIdentification
+     */
+    userId?: number;
     /**
      * 
      * @type {string}
-     * @memberof TokenModel
+     * @memberof UserIdentification
      */
-    token?: string | null;
+    userName?: string | null;
 }
 
-export function TokenModelFromJSON(json: any): TokenModel {
-    return TokenModelFromJSONTyped(json, false);
+export function UserIdentificationFromJSON(json: any): UserIdentification {
+    return UserIdentificationFromJSONTyped(json, false);
 }
 
-export function TokenModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): TokenModel {
+export function UserIdentificationFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserIdentification {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'token': !exists(json, 'token') ? undefined : json['token'],
+        'userId': !exists(json, 'userId') ? undefined : json['userId'],
+        'userName': !exists(json, 'userName') ? undefined : json['userName'],
     };
 }
 
-export function TokenModelToJSON(value?: TokenModel | null): any {
+export function UserIdentificationToJSON(value?: UserIdentification | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function TokenModelToJSON(value?: TokenModel | null): any {
     }
     return {
         
-        'token': value.token,
+        'userId': value.userId,
+        'userName': value.userName,
     };
 }
 

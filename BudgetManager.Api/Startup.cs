@@ -35,7 +35,17 @@ namespace BudgetManager.Api
         {
 
             services.AddControllers();
-            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));            
+            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));    
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44386")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });        
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });
@@ -92,7 +102,7 @@ namespace BudgetManager.Api
             app.UseMiddleware<JwtMiddleware>();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

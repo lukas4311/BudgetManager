@@ -1,5 +1,5 @@
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
+import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
 import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 
@@ -32,17 +32,17 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
     }
 
     private load = async (): Promise<void> => {
-        let trades: TradeHistory[] = await this.cryptoApi.cryptoGetAllGet();
+        let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
         let that = this;
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-            let exhangeRateTrade: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+            let exhangeRateTrade: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
 
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let exhangeRate: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+            let exhangeRate: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             that.setState({ allCryptoSum: cryptoSums });

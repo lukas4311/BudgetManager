@@ -16,39 +16,46 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @class UserModel
+ * @class AuthResponseModel
  */
-export class UserModel {
+export class AuthResponseModel {
     /**
      * 
      * @type {string}
-     * @memberof UserModel
+     * @memberof AuthResponseModel
+     */
+    token?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof AuthResponseModel
+     */
+    userId?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthResponseModel
      */
     userName?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserModel
-     */
-    password?: string | null;
 }
 
-export function UserModelFromJSON(json: any): UserModel {
-    return UserModelFromJSONTyped(json, false);
+export function AuthResponseModelFromJSON(json: any): AuthResponseModel {
+    return AuthResponseModelFromJSONTyped(json, false);
 }
 
-export function UserModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserModel {
+export function AuthResponseModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): AuthResponseModel {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
+        'token': !exists(json, 'token') ? undefined : json['token'],
+        'userId': !exists(json, 'userId') ? undefined : json['userId'],
         'userName': !exists(json, 'userName') ? undefined : json['userName'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
     };
 }
 
-export function UserModelToJSON(value?: UserModel | null): any {
+export function AuthResponseModelToJSON(value?: AuthResponseModel | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,8 +64,9 @@ export function UserModelToJSON(value?: UserModel | null): any {
     }
     return {
         
+        'token': value.token,
+        'userId': value.userId,
         'userName': value.userName,
-        'password': value.password,
     };
 }
 

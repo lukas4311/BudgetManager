@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import moment from "moment";
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
+import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList, IBaseModel } from "../BaseList";
@@ -32,7 +32,7 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     }
 
     private async load(): Promise<void> {
-        let tradesData: TradeHistory[] = await this.cryptoInterface.cryptoGetAllGet();
+        let tradesData: TradeHistory[] = await this.cryptoInterface.cryptosAllGet();
         let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
         this.setState({ trades });

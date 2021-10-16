@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -37,6 +38,7 @@ namespace BudgetManager.Api.Middlewares
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 await context.Response.WriteAsync("Unauthorized");
+                return;
             }
 
             await next(context);
