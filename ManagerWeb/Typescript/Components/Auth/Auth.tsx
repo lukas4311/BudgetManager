@@ -2,7 +2,6 @@
 import ReactDOM from "react-dom";
 import { AuthResponseModel } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
-import { BankAccountApi } from "../../ApiClient/Main";
 
 class AuthState {
     login: string;
@@ -18,13 +17,13 @@ class Auth extends React.Component<{}, AuthState>{
 
     private login = async () => {
         let authApi: AuthApi = new AuthApi();
+
         try {
             let authModel: AuthResponseModel = await authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
+            localStorage.setItem("user", JSON.stringify(authModel));
         } catch (error) {
             console.log(error);
         }
-
-        console.log("LOGIN SUCCESS");
     }
 
     private onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -29,6 +29,16 @@ namespace BudgetManager.AuthApi
         {
             services.AddControllers();
             services.Configure<JwtSettingOption>(Configuration.GetSection(nameof(JwtSettingOption)));
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44386")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v1" });
@@ -58,7 +68,7 @@ namespace BudgetManager.AuthApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

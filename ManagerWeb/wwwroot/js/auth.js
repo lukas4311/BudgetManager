@@ -806,11 +806,11 @@ class Auth extends react_1.default.Component {
             let authApi = new AuthApi_1.AuthApi();
             try {
                 let authModel = yield authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
+                localStorage.setItem("user", JSON.stringify(authModel));
             }
             catch (error) {
                 console.log(error);
             }
-            console.log("LOGIN SUCCESS");
         });
         this.onChangeLogin = (e) => {
             let login = e.target.value;
