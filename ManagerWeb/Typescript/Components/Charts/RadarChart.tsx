@@ -2,7 +2,7 @@ import { ResponsiveRadar } from '@nivo/radar'
 import React from 'react'
 import { RadarChartProps } from '../../Model/RadarChartProps';
 
-function RadarChart({ dataSets }: RadarChartProps) {
+function RadarChart({ dataSets }: any) {
   return (
     <ResponsiveRadar
       data={dataSets}
@@ -28,15 +28,15 @@ function RadarChart({ dataSets }: RadarChartProps) {
       fillOpacity={0.75}
       blendMode="normal"
       animate={true}
-      motionStiffness={85}
-      motionDamping={15}
+      // motionStiffness={85}
+      // motionDamping={15}
       isInteractive={true}
       legends={[]}
-      tooltipFormat={value =>
-        `${Number(value).toLocaleString('cs-CZ', {
-          minimumFractionDigits: 0,
-        })} Kč`
-      }
+      // tooltipFormat={value =>
+      //   `${Number(value).toLocaleString('cs-CZ', {
+      //     minimumFractionDigits: 0,
+      //   })} Kč`
+      // }
     />
   )
 }

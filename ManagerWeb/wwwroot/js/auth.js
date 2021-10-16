@@ -123,7 +123,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -156,9 +156,9 @@ class AuthApi extends runtime.BaseAPI {
                 method: 'POST',
                 headers: headerParameters,
                 query: queryParameters,
-                body: models_1.UserModelToJSON(requestParameters.userModel),
+                body: (0, models_1.UserModelToJSON)(requestParameters.userModel),
             });
-            return new runtime.JSONApiResponse(response, (jsonValue) => models_1.AuthResponseModelFromJSON(jsonValue));
+            return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.AuthResponseModelFromJSON)(jsonValue));
         });
     }
     /**
@@ -184,7 +184,7 @@ class AuthApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
             });
-            return new runtime.JSONApiResponse(response, (jsonValue) => models_1.UserIdentificationFromJSON(jsonValue));
+            return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.UserIdentificationFromJSON)(jsonValue));
         });
     }
     /**
@@ -207,7 +207,7 @@ class AuthApi extends runtime.BaseAPI {
                 method: 'POST',
                 headers: headerParameters,
                 query: queryParameters,
-                body: models_1.TokenModelToJSON(requestParameters.tokenModel),
+                body: (0, models_1.TokenModelToJSON)(requestParameters.tokenModel),
             });
             return new runtime.TextApiResponse(response);
         });
@@ -268,9 +268,9 @@ function AuthResponseModelFromJSONTyped(json, ignoreDiscriminator) {
         return json;
     }
     return {
-        'token': !runtime_1.exists(json, 'token') ? undefined : json['token'],
-        'userId': !runtime_1.exists(json, 'userId') ? undefined : json['userId'],
-        'userName': !runtime_1.exists(json, 'userName') ? undefined : json['userName'],
+        'token': !(0, runtime_1.exists)(json, 'token') ? undefined : json['token'],
+        'userId': !(0, runtime_1.exists)(json, 'userId') ? undefined : json['userId'],
+        'userName': !(0, runtime_1.exists)(json, 'userName') ? undefined : json['userName'],
     };
 }
 exports.AuthResponseModelFromJSONTyped = AuthResponseModelFromJSONTyped;
@@ -334,7 +334,7 @@ function TokenModelFromJSONTyped(json, ignoreDiscriminator) {
         return json;
     }
     return {
-        'token': !runtime_1.exists(json, 'token') ? undefined : json['token'],
+        'token': !(0, runtime_1.exists)(json, 'token') ? undefined : json['token'],
     };
 }
 exports.TokenModelFromJSONTyped = TokenModelFromJSONTyped;
@@ -396,8 +396,8 @@ function UserIdentificationFromJSONTyped(json, ignoreDiscriminator) {
         return json;
     }
     return {
-        'userId': !runtime_1.exists(json, 'userId') ? undefined : json['userId'],
-        'userName': !runtime_1.exists(json, 'userName') ? undefined : json['userName'],
+        'userId': !(0, runtime_1.exists)(json, 'userId') ? undefined : json['userId'],
+        'userName': !(0, runtime_1.exists)(json, 'userName') ? undefined : json['userName'],
     };
 }
 exports.UserIdentificationFromJSONTyped = UserIdentificationFromJSONTyped;
@@ -460,8 +460,8 @@ function UserModelFromJSONTyped(json, ignoreDiscriminator) {
         return json;
     }
     return {
-        'userName': !runtime_1.exists(json, 'userName') ? undefined : json['userName'],
-        'password': !runtime_1.exists(json, 'password') ? undefined : json['password'],
+        'userName': !(0, runtime_1.exists)(json, 'userName') ? undefined : json['userName'],
+        'password': !(0, runtime_1.exists)(json, 'password') ? undefined : json['password'],
     };
 }
 exports.UserModelFromJSONTyped = UserModelFromJSONTyped;
@@ -499,7 +499,7 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     o[k2] = m[k];
 }));
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(__webpack_require__(/*! ./AuthResponseModel */ "./Typescript/ApiClient/Auth/models/AuthResponseModel.ts"), exports);

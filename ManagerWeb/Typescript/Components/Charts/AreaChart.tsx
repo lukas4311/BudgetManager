@@ -10,7 +10,7 @@ function AreaChart(props) {
             axisTop={null}
             axisRight={null}
             axisBottom={{
-                orient: 'bottom',
+                // orient: 'bottom',
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
@@ -35,7 +35,7 @@ function AreaChart(props) {
                     }
                 }
             }}
-            axisLeft={{ orient: 'left', tickSize: 5, tickPadding: 5, tickRotation: 0, legend: '', legendOffset: -40 }}
+            axisLeft={{ tickSize: 5, tickPadding: 5, tickRotation: 0, legend: '', legendOffset: -40 }}
             enableGridY={true}
             curve="linear"
             offsetType="none"
@@ -47,8 +47,8 @@ function AreaChart(props) {
             dotBorderWidth={2}
             dotBorderColor={{ from: 'color', modifiers: [['darker', 0.7]] }}
             animate={true}
-            motionStiffness={90}
-            motionDamping={15}
+            // motionStiffness={90}
+            // motionDamping={15}
             legends={[
                 {
                     "anchor": "top-right",
