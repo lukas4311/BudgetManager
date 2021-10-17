@@ -34,7 +34,8 @@
 </head>
 
 <body class="bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden">
-    <header class="bg-mainDarkBlue flex flex-row text-white p-4 px-12">
+    @RenderBody()
+    @* <header class="bg-mainDarkBlue flex flex-row text-white p-4 px-12">
         <div>
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                 <partial name="~/Views/IconsPartials/Logo.cshtml" />
@@ -44,16 +45,17 @@
     </header>
     <div class="baseContainer mx-auto lg:w-11/12 w-full">
         <main role="main" class="pb-3 text-white">
-            @RenderBody()
+            
         </main>
     </div>
 
     <footer class="text-center  m-4 text-white">
         <span class="m-auto">@DateTime.Now.Year - Budget&Investment</span>
-    </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/menu.js"></script>
-    @RenderSection("Scripts", required: false)
+    </footer> *@
 </body>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+@* <script src="~/js/menu.js"></script> *@
+@RenderSection("Scripts", required: false)
 
 </html>

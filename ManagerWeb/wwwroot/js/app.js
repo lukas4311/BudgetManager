@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./Typescript/Overview.tsx");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./Typescript/App.tsx");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -2142,6 +2142,61 @@ exports.TextApiResponse = TextApiResponse;
 
 /***/ }),
 
+/***/ "./Typescript/App.tsx":
+/*!****************************!*\
+  !*** ./Typescript/App.tsx ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-dom"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+const Menu_1 = __importDefault(__webpack_require__(/*! ./Components/Menu */ "./Typescript/Components/Menu.tsx"));
+const Overview_1 = __importDefault(__webpack_require__(/*! ./Overview */ "./Typescript/Overview.tsx"));
+const Crypto_1 = __importDefault(__webpack_require__(/*! ./Crypto */ "./Typescript/Crypto.tsx"));
+const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
+const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
+const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
+const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+function App() {
+    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
+        react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
+            react_1.default.createElement("header", { className: "bg-mainDarkBlue flex flex-row text-white p-4 px-12" },
+                react_1.default.createElement("div", null,
+                    new IconsEnum_1.IconsData().logo,
+                    react_1.default.createElement("nav", { id: "navMenu" },
+                        react_1.default.createElement(Menu_1.default, null))),
+                react_1.default.createElement("nav", { id: "navMenu" })),
+            react_1.default.createElement("div", { className: "baseContainer mx-auto lg:w-11/12 w-full" },
+                react_1.default.createElement("main", { role: "main", className: "pb-3 text-white" },
+                    react_1.default.createElement(react_router_dom_1.Switch, null,
+                        react_1.default.createElement(react_router_dom_1.Route, { path: "/payments" },
+                            react_1.default.createElement(PaymentsOverview_1.default, null)),
+                        react_1.default.createElement(react_router_dom_1.Route, { path: "/crypto-overview" },
+                            react_1.default.createElement(Crypto_1.default, null)),
+                        react_1.default.createElement(react_router_dom_1.Route, { path: "/budget" },
+                            react_1.default.createElement(BudgetComponent_1.default, null)),
+                        react_1.default.createElement(react_router_dom_1.Route, { path: "/" },
+                            react_1.default.createElement(Overview_1.default, null))))),
+            react_1.default.createElement("footer", { className: "text-center  m-4 text-white" }, "FOOTER"),
+            react_1.default.createElement("script", { src: "~/js/site.js", "asp-append-version": "true" }),
+            react_1.default.createElement("script", { src: "~/js/menu.js" }),
+            "@RenderSection(\"Scripts\", required: false)")));
+}
+exports.default = App;
+react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
+    react_1.default.createElement(App, null)), document.getElementById('app'));
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/BaseList.tsx":
 /*!********************************************!*\
   !*** ./Typescript/Components/BaseList.tsx ***!
@@ -2559,6 +2614,41 @@ exports.LineChart = LineChart;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Charts/PieChart.tsx":
+/*!***************************************************!*\
+  !*** ./Typescript/Components/Charts/PieChart.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PieChartData = exports.PieChart = void 0;
+const pie_1 = __webpack_require__(/*! @nivo/pie */ "./node_modules/@nivo/pie/dist/nivo-pie.es.js");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class PieChartData {
+}
+exports.PieChartData = PieChartData;
+class PieChartProps {
+}
+function PieChart(props) {
+    var _a;
+    return (react_1.default.createElement(pie_1.ResponsivePieCanvas, { data: ((_a = props.data) !== null && _a !== void 0 ? _a : []), margin: { top: 40, right: 200, bottom: 40, left: 80 }, innerRadius: 0.6, padAngle: 0, isInteractive: true, cornerRadius: 0, colors: { scheme: 'paired' }, borderColor: { from: 'color', modifiers: [['darker', 0.6]] }, 
+        // enableRadialLabels={true}
+        // radialLabel={d => `${d.id} (${d.formattedValue})`}
+        // radialLabelsTextColor="#ffffff"
+        // radialLabelsLinkColor={{ from: 'color' }}
+        sortByValue: true }));
+}
+exports.PieChart = PieChart;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Charts/RadarChart.tsx":
 /*!*****************************************************!*\
   !*** ./Typescript/Components/Charts/RadarChart.tsx ***!
@@ -2582,6 +2672,334 @@ function RadarChart({ dataSets }) {
         isInteractive: true, legends: [] }));
 }
 exports.RadarChart = RadarChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Crypto/CryptoPortfolio.tsx":
+/*!**********************************************************!*\
+  !*** ./Typescript/Components/Crypto/CryptoPortfolio.tsx ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const PieChart_1 = __webpack_require__(/*! ../Charts/PieChart */ "./Typescript/Components/Charts/PieChart.tsx");
+const usdSymbol = "USD";
+class CryptoSum {
+}
+class CryptoPortfolioState {
+}
+class CryptoPortfolio extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.load = () => __awaiter(this, void 0, void 0, function* () {
+            let trades = yield this.cryptoApi.cryptosAllGet();
+            let groupedTrades = lodash_1.default.groupBy(trades, t => t.cryptoTicker);
+            let cryptoSums = [];
+            let that = this;
+            lodash_1.default.forOwn(groupedTrades, function (value, key) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+                    let exhangeRateTrade = yield that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+                    let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+                    let exhangeRate = yield that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+                    cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+                    that.setState({ allCryptoSum: cryptoSums });
+                });
+            });
+        });
+        this.renderChart = () => {
+            let element;
+            if (this.state.allCryptoSum != undefined && this.state.allCryptoSum.length != 0) {
+                let chartData = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
+                element = (react_1.default.createElement("div", { className: "h-96" },
+                    react_1.default.createElement(PieChart_1.PieChart, { data: chartData })));
+            }
+            return element;
+        };
+        this.cryptoApi = new Main_1.CryptoApi(new Main_1.Configuration({ basePath: "https://localhost:5001" }));
+        this.state = { allCryptoSum: undefined };
+    }
+    componentDidMount() {
+        this.load();
+    }
+    render() {
+        return (react_1.default.createElement("div", null,
+            react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Portfolio"),
+            this.state.allCryptoSum != undefined ?
+                react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
+                    react_1.default.createElement("div", { className: "font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
+                    this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker.toUpperCase()),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                            p.tradeSizeSum.toFixed(3),
+                            "(",
+                            p.usdPriceTrade.toFixed(2),
+                            " USD)"),
+                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                            p.tradeValueSum.toFixed(2),
+                            "(",
+                            p.usdPrice.toFixed(2),
+                            " USD)"))))
+                : react_1.default.createElement("div", null,
+                    react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
+            this.renderChart()));
+    }
+}
+exports.default = CryptoPortfolio;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Crypto/CryptoTradeForm.tsx":
+/*!**********************************************************!*\
+  !*** ./Typescript/Components/Crypto/CryptoTradeForm.tsx ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CryptoTradeViewModel = exports.CryptoTradeForm = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+class CryptoTradeViewModel {
+}
+exports.CryptoTradeViewModel = CryptoTradeViewModel;
+const CryptoTradeForm = (props) => {
+    const { register, handleSubmit } = (0, react_hook_form_1.useForm)({ defaultValues: props });
+    const onSubmit = (data) => {
+        props.onSave(data);
+    };
+    return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            React.createElement("div", null,
+                React.createElement(core_2.TextField, { label: "Datum tradu", type: "date", name: "tradeTimeStamp", inputRef: register })),
+            React.createElement("div", null,
+                React.createElement(core_2.TextField, { inputRef: register, name: "cryptoTicker", className: "place-self-end", label: "Crypto ticker" }))),
+        React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
+};
+exports.CryptoTradeForm = CryptoTradeForm;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Crypto/CryptoTrades.tsx":
+/*!*******************************************************!*\
+  !*** ./Typescript/Components/Crypto/CryptoTrades.tsx ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+class CryptoTradesState {
+}
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+    }
+});
+class CryptoTrades extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.mapDataModelToViewModel = (tradeHistory) => {
+            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
+            model.cryptoTicker = tradeHistory.cryptoTicker;
+            model.cryptoTickerId = tradeHistory.cryptoTickerId;
+            model.currencySymbol = tradeHistory.currencySymbol;
+            model.currencySymbolId = tradeHistory.currencySymbolId;
+            model.id = tradeHistory.id;
+            model.tradeSize = tradeHistory.tradeSize;
+            model.tradeTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+            model.tradeValue = tradeHistory.tradeValue;
+            model.onSave = this.saveTrade;
+            return model;
+        };
+        this.saveTrade = (data) => {
+            console.log(`Saved ${data}`);
+        };
+        this.handleClickOpen = (tradeHistory) => {
+            this.setState({ selectedTrade: tradeHistory, openedForm: true });
+        };
+        this.handleClose = () => {
+            this.setState({ openedForm: false });
+        };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")));
+        };
+        this.renderTemplate = (p) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, (0, moment_1.default)(p.tradeTimeStamp).format('DD.MM.YYYY')),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol)));
+        };
+        this.addNewItem = () => {
+            // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+        };
+        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
+            this.setState({ selectedTrade: tradeHistory, openedForm: true });
+        });
+        this.cryptoInterface = new Main_1.CryptoApi(new Main_1.Configuration({ basePath: "https://localhost:5001" }));
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined };
+    }
+    componentDidMount() {
+        this.load();
+    }
+    load() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tradesData = yield this.cryptoInterface.cryptosAllGet();
+            let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
+            trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
+            this.setState({ trades });
+        });
+    }
+    render() {
+        return (react_1.default.createElement("div", { className: "pr-5 h-full" },
+            react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
+                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
+                    react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
+                            react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade))))))));
+    }
+}
+exports.default = CryptoTrades;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Menu.tsx":
+/*!****************************************!*\
+  !*** ./Typescript/Components/Menu.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+const IconsEnum_1 = __webpack_require__(/*! ../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+class MenuItemModel {
+}
+class Menu extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.redirectToPage = (link) => {
+            window.location.href = '/' + link;
+        };
+        this.renderMenuItem = (item) => {
+            return (react_1.default.createElement("li", { className: "menu-item", key: item.linkUri },
+                react_1.default.createElement(react_router_dom_1.Link, { to: "/" + item.linkUri, className: "block cursor-pointer flex" },
+                    react_1.default.createElement("span", { className: "w-10 m-auto" }, item.icon))));
+        };
+        this.menuClick = this.menuClick.bind(this);
+        this.state = { isClosed: true };
+        this.renderMenuItems();
+    }
+    renderMenuItems() {
+        let icons = new IconsEnum_1.IconsData();
+        this.menuItems = [
+            { icon: icons.home, linkUri: "" },
+            { icon: icons.payments, linkUri: "payments" },
+            { icon: icons.crypto, linkUri: "crypto-overview" },
+            { icon: icons.budget, linkUri: "budget" },
+            { icon: icons.debts, linkUri: "debts" },
+            { icon: icons.statistics, linkUri: "stats" },
+            { icon: icons.budget, linkUri: "bankaccount-overview" },
+            // { icon: icons.budget, linkUri: "bankaccount-overview" },
+        ];
+    }
+    menuClick() {
+        this.setState((prev) => ({ isClosed: !prev.isClosed }));
+    }
+    render() {
+        return (react_1.default.createElement("div", { className: "mainWrapper" + (this.state.isClosed ? "" : " opened") },
+            react_1.default.createElement("div", { className: "courtain" + (this.state.isClosed ? "" : " opened") }),
+            react_1.default.createElement("a", { className: "menuTogglerParent", onClick: this.menuClick },
+                react_1.default.createElement("span", { className: "menu-toggler " + (this.state.isClosed ? "" : "checked"), id: "menu-toggler" })),
+            react_1.default.createElement("ul", { className: (this.state.isClosed ? "" : "openedMenuItems") }, this.menuItems.map(m => this.renderMenuItem(m)))));
+    }
+}
+exports.default = Menu;
+// ReactDOM.render(<Menu />, document.getElementById('navMenu'));
 
 
 /***/ }),
@@ -3085,6 +3503,39 @@ exports.default = PaymentsOverview;
 
 /***/ }),
 
+/***/ "./Typescript/Crypto.tsx":
+/*!*******************************!*\
+  !*** ./Typescript/Crypto.tsx ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const CryptoPortfolio_1 = __importDefault(__webpack_require__(/*! ./Components/Crypto/CryptoPortfolio */ "./Typescript/Components/Crypto/CryptoPortfolio.tsx"));
+const CryptoTrades_1 = __importDefault(__webpack_require__(/*! ./Components/Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx"));
+class Crypto extends react_1.default.Component {
+    render() {
+        return (react_1.default.createElement("div", { className: "" },
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto p\u0159ehled"),
+            react_1.default.createElement("div", { className: "flex" },
+                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
+                    react_1.default.createElement(CryptoTrades_1.default, null)),
+                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
+                    react_1.default.createElement(CryptoPortfolio_1.default, null)))));
+    }
+}
+exports.default = Crypto;
+// ReactDOM.render(<ErrorBoundary><CryptoComponent /></ErrorBoundary>, document.getElementById('overview'));
+
+
+/***/ }),
+
 /***/ "./Typescript/Enums/IconsEnum.tsx":
 /*!****************************************!*\
   !*** ./Typescript/Enums/IconsEnum.tsx ***!
@@ -3390,6 +3841,13 @@ class IconsData {
                     react_1.default.createElement("path", { id: "Shape", d: "m38 28h-15c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h15c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z" }),
                     react_1.default.createElement("path", { id: "Shape", d: "m55 4h-9.1c-.4784327-2.3264168-2.5248992-3.99700171-4.9-4h-27c-.2651948.00005664-.5195073.10545063-.707.293l-13 13c-.18754937.1874927-.29294336.4418052-.293.707v37c.00330612 2.7600532 2.23994685 4.9966939 5 5h9.1c.4784327 2.3264168 2.5248992 3.9970017 4.9 4h36c2.7600532-.0033061 4.9966939-2.2399468 5-5v-46c-.0033061-2.76005315-2.2399468-4.99669388-5-5zm-13 44v-.5c0-.8284271-.6715729-1.5-1.5-1.5h-10.5v-4h10.5c.8284271 0 1.5-.6715729 1.5-1.5v-.5l5.334 4zm-29-44.586v6.586c0 1.6568542-1.3431458 3-3 3h-6.586zm-11 47.586v-36h8c2.7600532-.0033061 4.9966939-2.2399468 5-5v-8h26c1.6568542 0 3 1.34314575 3 3v34l-1.6-1.2c-.4545265-.3408949-1.0626444-.3957288-1.5708204-.1416408s-.8291796.7734827-.8291796 1.3416408v1h-10.5c-.8284271 0-1.5.6715729-1.5 1.5v5c0 .8284271.6715729 1.5 1.5 1.5h10.5v1c0 .5681581.3210036 1.0875528.8291796 1.3416408s1.1162939.1992541 1.5708204-.1416408l1.6-1.2v2c0 1.6568542-1.3431458 3-3 3h-36c-1.65685425 0-3-1.3431458-3-3zm56 4c0 1.6568542-1.3431458 3-3 3h-36c-1.2667854-.0052514-2.3937454-.8056491-2.816-2h24.816c2.7600532-.0033061 4.9966939-2.2399468 5-5v-3.5l3.067-2.3c.3777088-.2832816.6-.727864.6-1.2s-.2222912-.9167184-.6-1.2l-3.067-2.3v-6.5h6c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1h-6v-3h6c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1h-6v-3h6c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1h-6v-12h3c.5522847 0 1-.44771525 1-1s-.4477153-1-1-1h-3v-2h9c1.6568542 0 3 1.34314575 3 3z" }),
                     react_1.default.createElement("path", { id: "Shape", d: "m55 8h-2c-.5522847 0-1 .44771525-1 1s.4477153 1 1 1h2c.5522847 0 1-.44771525 1-1s-.4477153-1-1-1z" }))));
+        this.logo = react_1.default.createElement("svg", { id: "logo", xmlns: "http://www.w3.org/2000/svg", x: "0px", y: "0px", viewBox: "0 0 312.9 304.6" },
+            react_1.default.createElement("g", { id: "XMLID_11_" },
+                react_1.default.createElement("path", { id: "XMLID_12_", className: "st0", d: "M4,304.6V294h21.6V10.7H4V0.1h97.8c17.6-0.3,34.4,0.4,50.4,2.1c16,1.7,29.9,5.2,41.5,10.5\r\n       c24.1,11,36.1,28.3,36.1,51.9c0,25.7-4.6,44.7-13.8,57.1c-4.9,6.8-13.7,13.2-26.4,19.3c17.9,5.6,32.2,14.5,42.8,26.6\r\n       c11.4,13.3,17.1,29.1,17.1,47.6c0,11.8-3.8,23.7-11.2,35.7c-6.8,10.7-15.2,19.8-25.3,27.3c-20.2,16.6-52.9,25.5-98.2,26.6H4z\r\n        M71.5,143.3c50.6-6.5,80.5-11.8,89.8-15.8c9.5-3.7,16.6-8.9,21.2-15.4c6.2-8.2,9.3-21.8,9.3-40.7c0-21.6-8.6-38.1-25.7-49.5\r\n       c-12.8-8.5-26.8-12.8-42-12.8c-2.3,0-19.8-0.1-52.6-0.4V143.3z M181.4,270.4c19.8-13.1,29.6-32.1,29.6-56.9\r\n       c0-20-3.5-34.8-10.4-44.1c-10.5-14.3-31.3-21.4-62.3-21.4c-4.6,0-26.9,2.1-66.8,6.3v131.5C123.3,288.3,159.9,283.1,181.4,270.4z" })),
+            react_1.default.createElement("g", { id: "XMLID_7_" },
+                react_1.default.createElement("path", { id: "XMLID_8_", className: "st1", d: "M283.8,287.5c-3.9,0-8.8-0.9-14.6-2.6c-5.8-1.8-11-5.5-15.4-11.1c-3.2,3.5-8.5,6.9-15.9,10.3\r\n           c-7.4,3.4-15.6,5.1-24.7,5.1c-15.7,0-28.5-5.1-38.4-15.3c-9.9-10.2-14.8-23.2-14.8-39c0-10.8,2.6-19.8,7.8-27.1\r\n           c5.2-7.2,12-12.1,20.5-14.7c-1.9-2.8-3.5-6.1-4.9-9.8c-1.4-3.7-2.1-7.5-2.1-11.4c0-7.2,2.7-14.1,8.1-20.5\r\n           c5.4-6.4,11.9-9.7,19.6-9.7c4.9,0,10,1.4,15.3,4.2l0.3,0.2c0.3,0,0.9-1.5,1.9-4.4h8.2l10.7,31.3H236c-3.8-9-8.6-14.9-14.6-17.6\r\n           c-5.1-2.3-9.3-3.4-12.6-3.4c-3.4,0-6.2,1.3-8.5,3.8c-2.3,2.5-3.4,5.9-3.4,10.2c0,8.2,3.2,16.6,9.6,25.1l49.6,62.6\r\n           c4.9-7.4,8.1-14.1,9.6-20.3c1.1-5,1.7-9.1,1.7-12.4c0-5-1.2-7.5-3.6-7.5h-11.2v-8.8h48.1v8.8h-11.2c-4.8,0-8.7,6.8-11.7,20.5\r\n           c-2.1,8.9-7,18.3-14.7,28.2c6.1,7.6,13.2,11.3,21.4,11.3h1.4c8.3-1,14-5.1,17.3-12.5l9.9,0.2l-11.7,26.4H283.8z M247.3,266.4\r\n           l-52.4-64.7c-5.9,0-10.7,2.6-14.4,7.7c-3.6,5.1-5.5,11.3-5.5,18.7c0,5.7,1.1,11.4,3.4,17.1c2.2,5.7,5.4,10.9,9.5,15.6\r\n           c4.5,5.1,9.6,9.1,15.3,11.8c5.7,2.7,11.7,4.1,17.8,4.1c5.3,0,10.5-1,15.4-3C241.4,271.5,245,269.1,247.3,266.4z" })),
+            react_1.default.createElement("g", { id: "XMLID_4_" },
+                react_1.default.createElement("path", { id: "XMLID_5_", className: "st1", d: "M121,161.4h-8.2v-4.1H146v4.1h-8.4v108.1h8.4v4.1h-33.2v-4.1h8.2V161.4z" })));
     }
 }
 exports.IconsData = IconsData;
@@ -3443,24 +3901,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "react-dom"));
-const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
-const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 class Overview extends React.Component {
     render() {
         return (React.createElement("div", { className: "" },
-            React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
-            React.createElement("div", { className: "w-full lg:p-4" },
-                React.createElement(PaymentsOverview_1.default, null))));
+            React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled")));
     }
 }
-ReactDOM.render(React.createElement(ErrorBoundry_1.default, null,
-    React.createElement(Overview, null)), document.getElementById('overview'));
+exports.default = Overview;
+// ReactDOM.render(<ErrorBoundary><Overview /></ErrorBoundary>, document.getElementById('overview'));
 
 
 /***/ }),
@@ -3836,6 +4286,1197 @@ class ErrorBoundary extends react_1.default.Component {
     }
 }
 exports.default = ErrorBoundary;
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/arcs/dist/nivo-arcs.es.js":
+/*!******************************************************!*\
+  !*** ./node_modules/@nivo/arcs/dist/nivo-arcs.es.js ***!
+  \******************************************************/
+/*! exports provided: ArcLabelsLayer, ArcLine, ArcLinkLabelsLayer, ArcShape, ArcsLayer, arcTransitionModeById, arcTransitionModes, computeArcBoundingBox, computeArcCenter, computeArcLink, computeArcLinkTextAnchor, drawCanvasArcLabels, drawCanvasArcLinkLabels, findArcUnderCursor, interpolateArc, interpolateArcCenter, isCursorInRing, useAnimatedArc, useArcCenters, useArcCentersTransition, useArcGenerator, useArcLabels, useArcLinkLabels, useArcLinkLabelsTransition, useArcLinks, useArcTransitionMode, useArcsTransition */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArcLabelsLayer", function() { return ArcLabelsLayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArcLine", function() { return ArcLine; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArcLinkLabelsLayer", function() { return ArcLinkLabelsLayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArcShape", function() { return ArcShape; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArcsLayer", function() { return ArcsLayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arcTransitionModeById", function() { return arcTransitionModeById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arcTransitionModes", function() { return arcTransitionModes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeArcBoundingBox", function() { return computeArcBoundingBox; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeArcCenter", function() { return computeArcCenter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeArcLink", function() { return computeArcLink; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeArcLinkTextAnchor", function() { return computeArcLinkTextAnchor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawCanvasArcLabels", function() { return drawCanvasArcLabels; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawCanvasArcLinkLabels", function() { return drawCanvasArcLinkLabels; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findArcUnderCursor", function() { return findArcUnderCursor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "interpolateArc", function() { return interpolateArc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "interpolateArcCenter", function() { return interpolateArcCenter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCursorInRing", function() { return isCursorInRing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useAnimatedArc", function() { return useAnimatedArc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcCenters", function() { return useArcCenters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcCentersTransition", function() { return useArcCentersTransition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcGenerator", function() { return useArcGenerator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcLabels", function() { return useArcLabels; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcLinkLabels", function() { return useArcLinkLabels; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcLinkLabelsTransition", function() { return useArcLinkLabelsTransition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcLinks", function() { return useArcLinks; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcTransitionMode", function() { return useArcTransitionMode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArcsTransition", function() { return useArcsTransition; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
+/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
+/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
+
+
+
+
+
+
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+
+var getNormalizedAngle = function getNormalizedAngle(angle) {
+  var normalizedAngle = angle % (Math.PI * 2);
+
+  if (normalizedAngle < 0) {
+    normalizedAngle += Math.PI * 2;
+  }
+
+  return normalizedAngle;
+};
+var filterDataBySkipAngle = function filterDataBySkipAngle(data, skipAngle) {
+  return data.filter(function (datum) {
+    return Math.abs(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(datum.arc.endAngle - datum.arc.startAngle)) >= skipAngle;
+  });
+};
+var useFilteredDataBySkipAngle = function useFilteredDataBySkipAngle(data, skipAngle) {
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return filterDataBySkipAngle(data, skipAngle);
+  }, [data, skipAngle]);
+};
+var svgEllipticalArcCommand = function svgEllipticalArcCommand(radius, largeArcFlag, sweepFlag, x, y) {
+  return ['A', radius, radius, 0, largeArcFlag, sweepFlag, x, y].join(' ');
+};
+var generateSvgArc = function generateSvgArc(radius, originalStartAngle, originalEndAngle) {
+  var startAngle = Math.min(originalStartAngle, originalEndAngle);
+  var endAngle = Math.max(originalStartAngle, originalEndAngle);
+  var start = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(endAngle), radius);
+  var end = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(startAngle), radius);
+
+  if (endAngle - startAngle >= 360) {
+    var mid = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(startAngle + 180), radius);
+    return ["M ".concat(start.x, " ").concat(start.y), svgEllipticalArcCommand(radius, 1, 1, mid.x, mid.y), "M ".concat(start.x, " ").concat(start.y), svgEllipticalArcCommand(radius, 1, 0, mid.x, mid.y)].join(' ');
+  }
+
+  var largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+  return ["M ".concat(start.x, " ").concat(start.y), svgEllipticalArcCommand(radius, largeArcFlag, 0, end.x, end.y)].join(' ');
+};
+
+var arcTransitionModes = ['startAngle', 'middleAngle', 'endAngle', 'innerRadius', 'centerRadius', 'outerRadius', 'pushIn', 'pushOut'];
+var arcTransitionModeById = {
+  startAngle: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        endAngle: arc.startAngle
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        startAngle: arc.endAngle
+      });
+    }
+  },
+  middleAngle: {
+    enter: function enter(arc) {
+      var middleAngle = arc.startAngle + (arc.endAngle - arc.startAngle) / 2;
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        startAngle: middleAngle,
+        endAngle: middleAngle
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      var middleAngle = arc.startAngle + (arc.endAngle - arc.startAngle) / 2;
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        startAngle: middleAngle,
+        endAngle: middleAngle
+      });
+    }
+  },
+  endAngle: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        startAngle: arc.endAngle
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        endAngle: arc.startAngle
+      });
+    }
+  },
+  innerRadius: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        outerRadius: arc.innerRadius
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.outerRadius
+      });
+    }
+  },
+  centerRadius: {
+    enter: function enter(arc) {
+      var centerRadius = arc.innerRadius + (arc.outerRadius - arc.innerRadius) / 2;
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: centerRadius,
+        outerRadius: centerRadius
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      var centerRadius = arc.innerRadius + (arc.outerRadius - arc.innerRadius) / 2;
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: centerRadius,
+        outerRadius: centerRadius
+      });
+    }
+  },
+  outerRadius: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.outerRadius
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        outerRadius: arc.innerRadius
+      });
+    }
+  },
+  pushIn: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.innerRadius - arc.outerRadius + arc.innerRadius,
+        outerRadius: arc.innerRadius
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.outerRadius,
+        outerRadius: arc.outerRadius + arc.outerRadius - arc.innerRadius
+      });
+    }
+  },
+  pushOut: {
+    enter: function enter(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.outerRadius,
+        outerRadius: arc.outerRadius + arc.outerRadius - arc.innerRadius
+      });
+    },
+    update: function update(arc) {
+      return arc;
+    },
+    leave: function leave(arc) {
+      return _objectSpread2(_objectSpread2({}, arc), {}, {
+        innerRadius: arc.innerRadius - arc.outerRadius + arc.innerRadius,
+        outerRadius: arc.innerRadius
+      });
+    }
+  }
+};
+var useArcTransitionMode = function useArcTransitionMode(mode, extraTransition) {
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var transitionMode = arcTransitionModeById[mode];
+    return {
+      enter: function enter(datum) {
+        return _objectSpread2(_objectSpread2({
+          progress: 0
+        }, transitionMode.enter(datum.arc)), extraTransition ? extraTransition.enter(datum) : {});
+      },
+      update: function update(datum) {
+        return _objectSpread2(_objectSpread2({
+          progress: 1
+        }, transitionMode.update(datum.arc)), extraTransition ? extraTransition.update(datum) : {});
+      },
+      leave: function leave(datum) {
+        return _objectSpread2(_objectSpread2({
+          progress: 0
+        }, transitionMode.leave(datum.arc)), extraTransition ? extraTransition.leave(datum) : {});
+      }
+    };
+  }, [mode, extraTransition]);
+};
+
+var computeArcCenter = function computeArcCenter(arc, offset) {
+  var angle = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["midAngle"])(arc) - Math.PI / 2;
+  var radius = arc.innerRadius + (arc.outerRadius - arc.innerRadius) * offset;
+  return Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(angle, radius);
+};
+var interpolateArcCenter = function interpolateArcCenter(offset) {
+  return function (startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue) {
+    return Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue], function (startAngle, endAngle, innerRadius, outerRadius) {
+      var centroid = computeArcCenter({
+        startAngle: startAngle,
+        endAngle: endAngle,
+        innerRadius: innerRadius,
+        outerRadius: outerRadius
+      }, offset);
+      return "translate(".concat(centroid.x, ",").concat(centroid.y, ")");
+    });
+  };
+};
+var useArcCentersTransition = function useArcCentersTransition(data) {
+  var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
+  var mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'innerRadius';
+  var extra = arguments.length > 3 ? arguments[3] : undefined;
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var phases = useArcTransitionMode(mode, extra);
+  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useTransition"])(data, {
+    keys: function keys(datum) {
+      return datum.id;
+    },
+    initial: phases.update,
+    from: phases.enter,
+    enter: phases.update,
+    update: phases.update,
+    leave: phases.leave,
+    config: springConfig,
+    immediate: !animate
+  });
+  return {
+    transition: transition,
+    interpolate: interpolateArcCenter(offset)
+  };
+};
+var useArcCenters = function useArcCenters(_ref) {
+  var data = _ref.data,
+      _ref$offset = _ref.offset,
+      offset = _ref$offset === void 0 ? 0.5 : _ref$offset,
+      _ref$skipAngle = _ref.skipAngle,
+      skipAngle = _ref$skipAngle === void 0 ? 0 : _ref$skipAngle,
+      _ref$computeExtraProp = _ref.computeExtraProps,
+      computeExtraProps = _ref$computeExtraProp === void 0 ? function () {
+    return {};
+  } : _ref$computeExtraProp;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return filterDataBySkipAngle(data, skipAngle).map(function (datum) {
+      var position = computeArcCenter(datum.arc, offset);
+      return _objectSpread2(_objectSpread2({}, computeExtraProps(datum)), {}, {
+        x: position.x,
+        y: position.y,
+        data: datum
+      });
+    });
+  }, [data, offset, skipAngle, computeExtraProps]);
+};
+
+var staticStyle = {
+  pointerEvents: 'none'
+};
+var ArcLabel = function ArcLabel(_ref) {
+  var label = _ref.label,
+      style = _ref.style;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].g, {
+    transform: style.transform,
+    opacity: style.progress,
+    style: staticStyle,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].text, {
+      textAnchor: "middle",
+      dominantBaseline: "central",
+      style: _objectSpread2(_objectSpread2({}, theme.labels.text), {}, {
+        fill: style.textColor
+      }),
+      children: label
+    })
+  });
+};
+
+var ArcLabelsLayer = function ArcLabelsLayer(_ref) {
+  var center = _ref.center,
+      data = _ref.data,
+      transitionMode = _ref.transitionMode,
+      labelAccessor = _ref.label,
+      radiusOffset = _ref.radiusOffset,
+      skipAngle = _ref.skipAngle,
+      textColor = _ref.textColor,
+      _ref$component = _ref.component,
+      component = _ref$component === void 0 ? ArcLabel : _ref$component;
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(labelAccessor);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  var getTextColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(textColor, theme);
+  var filteredData = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return data.filter(function (datum) {
+      return Math.abs(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(datum.arc.endAngle - datum.arc.startAngle)) >= skipAngle;
+    });
+  }, [data, skipAngle]);
+
+  var _useArcCentersTransit = useArcCentersTransition(filteredData, radiusOffset, transitionMode),
+      transition = _useArcCentersTransit.transition,
+      interpolate = _useArcCentersTransit.interpolate;
+
+  var Label = component;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("g", {
+    transform: "translate(".concat(center[0], ",").concat(center[1], ")"),
+    children: transition(function (transitionProps, datum) {
+      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(Label, {
+        key: datum.id,
+        datum: datum,
+        label: getLabel(datum),
+        style: _objectSpread2(_objectSpread2({}, transitionProps), {}, {
+          transform: interpolate(transitionProps.startAngle, transitionProps.endAngle, transitionProps.innerRadius, transitionProps.outerRadius),
+          textColor: getTextColor(datum)
+        })
+      });
+    })
+  });
+};
+
+var drawCanvasArcLabels = function drawCanvasArcLabels(ctx, labels, theme) {
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = "".concat(theme.labels.text.fontSize, "px ").concat(theme.labels.text.fontFamily);
+  labels.forEach(function (label) {
+    ctx.fillStyle = label.textColor;
+    ctx.fillText("".concat(label.label), label.x, label.y);
+  });
+};
+
+var useArcLabels = function useArcLabels(_ref) {
+  var data = _ref.data,
+      offset = _ref.offset,
+      skipAngle = _ref.skipAngle,
+      label = _ref.label,
+      textColor = _ref.textColor;
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(label);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  var getTextColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(textColor, theme);
+  var computeExtraProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (datum) {
+    return {
+      label: getLabel(datum),
+      textColor: getTextColor(datum)
+    };
+  }, [getLabel, getTextColor]);
+  return useArcCenters({
+    data: data,
+    offset: offset,
+    skipAngle: skipAngle,
+    computeExtraProps: computeExtraProps
+  });
+};
+
+var computeArcLinkTextAnchor = function computeArcLinkTextAnchor(arc) {
+  var centerAngle = getNormalizedAngle(arc.startAngle + (arc.endAngle - arc.startAngle) / 2 - Math.PI / 2);
+
+  if (centerAngle < Math.PI / 2 || centerAngle > Math.PI * 1.5) {
+    return 'start';
+  }
+
+  return 'end';
+};
+var computeArcLink = function computeArcLink(arc, offset, diagonalLength, straightLength) {
+  var centerAngle = getNormalizedAngle(arc.startAngle + (arc.endAngle - arc.startAngle) / 2 - Math.PI / 2);
+  var point0 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(centerAngle, arc.outerRadius + offset);
+  var point1 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(centerAngle, arc.outerRadius + offset + diagonalLength);
+  var side;
+  var point2;
+
+  if (centerAngle < Math.PI / 2 || centerAngle > Math.PI * 1.5) {
+    side = 'after';
+    point2 = {
+      x: point1.x + straightLength,
+      y: point1.y
+    };
+  } else {
+    side = 'before';
+    point2 = {
+      x: point1.x - straightLength,
+      y: point1.y
+    };
+  }
+
+  return {
+    side: side,
+    points: [point0, point1, point2]
+  };
+};
+
+var lineGenerator = Object(d3_shape__WEBPACK_IMPORTED_MODULE_5__["line"])().x(function (d) {
+  return d.x;
+}).y(function (d) {
+  return d.y;
+});
+
+var useTransitionPhases = function useTransitionPhases(_ref) {
+  var offset = _ref.offset,
+      diagonalLength = _ref.diagonalLength,
+      straightLength = _ref.straightLength,
+      textOffset = _ref.textOffset,
+      getLinkColor = _ref.getLinkColor,
+      getTextColor = _ref.getTextColor;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return {
+      enter: function enter(datum) {
+        return {
+          startAngle: datum.arc.startAngle,
+          endAngle: datum.arc.endAngle,
+          innerRadius: datum.arc.innerRadius,
+          outerRadius: datum.arc.outerRadius,
+          offset: offset,
+          diagonalLength: 0,
+          straightLength: 0,
+          textOffset: textOffset,
+          linkColor: getLinkColor(datum),
+          textColor: getTextColor(datum),
+          opacity: 0
+        };
+      },
+      update: function update(d) {
+        return {
+          startAngle: d.arc.startAngle,
+          endAngle: d.arc.endAngle,
+          innerRadius: d.arc.innerRadius,
+          outerRadius: d.arc.outerRadius,
+          offset: offset,
+          diagonalLength: diagonalLength,
+          straightLength: straightLength,
+          textOffset: textOffset,
+          linkColor: getLinkColor(d),
+          textColor: getTextColor(d),
+          opacity: 1
+        };
+      },
+      leave: function leave(d) {
+        return {
+          startAngle: d.arc.startAngle,
+          endAngle: d.arc.endAngle,
+          innerRadius: d.arc.innerRadius,
+          outerRadius: d.arc.outerRadius,
+          offset: offset,
+          diagonalLength: 0,
+          straightLength: 0,
+          textOffset: textOffset,
+          linkColor: getLinkColor(d),
+          textColor: getTextColor(d),
+          opacity: 0
+        };
+      }
+    };
+  }, [diagonalLength, straightLength, textOffset, getLinkColor, getTextColor]);
+};
+
+var interpolateLink = function interpolateLink(startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue, offsetValue, diagonalLengthValue, straightLengthValue) {
+  return Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue, offsetValue, diagonalLengthValue, straightLengthValue], function (startAngle, endAngle, innerRadius, outerRadius, offset, diagonalLengthAnimated, straightLengthAnimated) {
+    var _computeArcLink = computeArcLink({
+      startAngle: startAngle,
+      endAngle: endAngle,
+      innerRadius: innerRadius,
+      outerRadius: outerRadius
+    }, offset, diagonalLengthAnimated, straightLengthAnimated),
+        points = _computeArcLink.points;
+
+    return lineGenerator(points);
+  });
+};
+
+var interpolateTextAnchor = function interpolateTextAnchor(startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue) {
+  return Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue], function (startAngle, endAngle, innerRadius, outerRadius) {
+    return computeArcLinkTextAnchor({
+      startAngle: startAngle,
+      endAngle: endAngle,
+      innerRadius: innerRadius,
+      outerRadius: outerRadius
+    });
+  });
+};
+
+var interpolateTextPosition = function interpolateTextPosition(startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue, offsetValue, diagonalLengthValue, straightLengthValue, textOffsetValue) {
+  return Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue, offsetValue, diagonalLengthValue, straightLengthValue, textOffsetValue], function (startAngle, endAngle, innerRadius, outerRadius, offset, diagonalLengthAnimated, straightLengthAnimated, textOffset) {
+    var _computeArcLink2 = computeArcLink({
+      startAngle: startAngle,
+      endAngle: endAngle,
+      innerRadius: innerRadius,
+      outerRadius: outerRadius
+    }, offset, diagonalLengthAnimated, straightLengthAnimated),
+        points = _computeArcLink2.points,
+        side = _computeArcLink2.side;
+
+    var position = points[2];
+
+    if (side === 'before') {
+      position.x -= textOffset;
+    } else {
+      position.x += textOffset;
+    }
+
+    return "translate(".concat(position.x, ",").concat(position.y, ")");
+  });
+};
+
+var useArcLinkLabelsTransition = function useArcLinkLabelsTransition(_ref2) {
+  var data = _ref2.data,
+      _ref2$offset = _ref2.offset,
+      offset = _ref2$offset === void 0 ? 0 : _ref2$offset,
+      diagonalLength = _ref2.diagonalLength,
+      straightLength = _ref2.straightLength,
+      _ref2$skipAngle = _ref2.skipAngle,
+      skipAngle = _ref2$skipAngle === void 0 ? 0 : _ref2$skipAngle,
+      textOffset = _ref2.textOffset,
+      linkColor = _ref2.linkColor,
+      textColor = _ref2.textColor;
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  var getLinkColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(linkColor, theme);
+  var getTextColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(textColor, theme);
+  var filteredData = useFilteredDataBySkipAngle(data, skipAngle);
+  var transitionPhases = useTransitionPhases({
+    offset: offset,
+    diagonalLength: diagonalLength,
+    straightLength: straightLength,
+    textOffset: textOffset,
+    getLinkColor: getLinkColor,
+    getTextColor: getTextColor
+  });
+  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useTransition"])(filteredData, {
+    keys: function keys(datum) {
+      return datum.id;
+    },
+    initial: transitionPhases.update,
+    from: transitionPhases.enter,
+    enter: transitionPhases.update,
+    update: transitionPhases.update,
+    leave: transitionPhases.leave,
+    config: springConfig,
+    immediate: !animate
+  });
+  return {
+    transition: transition,
+    interpolateLink: interpolateLink,
+    interpolateTextAnchor: interpolateTextAnchor,
+    interpolateTextPosition: interpolateTextPosition
+  };
+};
+
+var ArcLinkLabel = function ArcLinkLabel(_ref) {
+  var label = _ref.label,
+      style = _ref.style;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsxs"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].g, {
+    opacity: style.opacity,
+    children: [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].path, {
+      fill: "none",
+      stroke: style.linkColor,
+      strokeWidth: style.thickness,
+      d: style.path
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].text, {
+      transform: style.textPosition,
+      textAnchor: style.textAnchor,
+      dominantBaseline: "central",
+      style: _objectSpread2(_objectSpread2({}, theme.labels.text), {}, {
+        fill: style.textColor
+      }),
+      children: label
+    })]
+  });
+};
+
+var ArcLinkLabelsLayer = function ArcLinkLabelsLayer(_ref) {
+  var center = _ref.center,
+      data = _ref.data,
+      labelAccessor = _ref.label,
+      skipAngle = _ref.skipAngle,
+      offset = _ref.offset,
+      diagonalLength = _ref.diagonalLength,
+      straightLength = _ref.straightLength,
+      strokeWidth = _ref.strokeWidth,
+      textOffset = _ref.textOffset,
+      textColor = _ref.textColor,
+      linkColor = _ref.linkColor,
+      _ref$component = _ref.component,
+      component = _ref$component === void 0 ? ArcLinkLabel : _ref$component;
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(labelAccessor);
+
+  var _useArcLinkLabelsTran = useArcLinkLabelsTransition({
+    data: data,
+    skipAngle: skipAngle,
+    offset: offset,
+    diagonalLength: diagonalLength,
+    straightLength: straightLength,
+    textOffset: textOffset,
+    linkColor: linkColor,
+    textColor: textColor
+  }),
+      transition = _useArcLinkLabelsTran.transition,
+      interpolateLink = _useArcLinkLabelsTran.interpolateLink,
+      interpolateTextAnchor = _useArcLinkLabelsTran.interpolateTextAnchor,
+      interpolateTextPosition = _useArcLinkLabelsTran.interpolateTextPosition;
+
+  var Label = component;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("g", {
+    transform: "translate(".concat(center[0], ",").concat(center[1], ")"),
+    children: transition(function (transitionProps, datum) {
+      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(Label, {
+        key: datum.id,
+        datum: datum,
+        label: getLabel(datum),
+        style: _objectSpread2(_objectSpread2({}, transitionProps), {}, {
+          thickness: strokeWidth,
+          path: interpolateLink(transitionProps.startAngle, transitionProps.endAngle, transitionProps.innerRadius, transitionProps.outerRadius, transitionProps.offset, transitionProps.diagonalLength, transitionProps.straightLength),
+          textAnchor: interpolateTextAnchor(transitionProps.startAngle, transitionProps.endAngle, transitionProps.innerRadius, transitionProps.outerRadius),
+          textPosition: interpolateTextPosition(transitionProps.startAngle, transitionProps.endAngle, transitionProps.innerRadius, transitionProps.outerRadius, transitionProps.offset, transitionProps.diagonalLength, transitionProps.straightLength, transitionProps.textOffset)
+        })
+      });
+    })
+  });
+};
+
+var drawCanvasArcLinkLabels = function drawCanvasArcLinkLabels(ctx, labels, theme, strokeWidth) {
+  ctx.textBaseline = 'middle';
+  ctx.font = "".concat(theme.labels.text.fontSize, "px ").concat(theme.labels.text.fontFamily);
+  labels.forEach(function (label) {
+    ctx.fillStyle = label.textColor;
+    ctx.textAlign = _nivo_core__WEBPACK_IMPORTED_MODULE_1__["textPropsByEngine"].canvas.align[label.textAnchor];
+    ctx.fillText("".concat(label.label), label.x, label.y);
+    ctx.beginPath();
+    ctx.strokeStyle = label.linkColor;
+    ctx.lineWidth = strokeWidth;
+    label.points.forEach(function (point, index) {
+      if (index === 0) ctx.moveTo(point.x, point.y);else ctx.lineTo(point.x, point.y);
+    });
+    ctx.stroke();
+  });
+};
+
+var useArcLinks = function useArcLinks(_ref) {
+  var data = _ref.data,
+      _ref$skipAngle = _ref.skipAngle,
+      skipAngle = _ref$skipAngle === void 0 ? 0 : _ref$skipAngle,
+      _ref$offset = _ref.offset,
+      offset = _ref$offset === void 0 ? 0.5 : _ref$offset,
+      diagonalLength = _ref.diagonalLength,
+      straightLength = _ref.straightLength,
+      _ref$computeExtraProp = _ref.computeExtraProps,
+      computeExtraProps = _ref$computeExtraProp === void 0 ? function () {
+    return {};
+  } : _ref$computeExtraProp;
+  var links = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return data.filter(function (datum) {
+      return Math.abs(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(datum.arc.endAngle - datum.arc.startAngle)) >= skipAngle;
+    }).map(function (datum) {
+      return _objectSpread2(_objectSpread2({}, computeArcLink(datum.arc, offset, diagonalLength, straightLength)), {}, {
+        data: datum
+      });
+    });
+  }, [data, skipAngle, offset, diagonalLength, straightLength]);
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return links.map(function (link) {
+      return _objectSpread2(_objectSpread2({}, computeExtraProps(link)), link);
+    });
+  }, [links, computeExtraProps]);
+};
+
+var useArcLinkLabels = function useArcLinkLabels(_ref) {
+  var data = _ref.data,
+      skipAngle = _ref.skipAngle,
+      offset = _ref.offset,
+      diagonalLength = _ref.diagonalLength,
+      straightLength = _ref.straightLength,
+      _ref$textOffset = _ref.textOffset,
+      textOffset = _ref$textOffset === void 0 ? 0 : _ref$textOffset,
+      label = _ref.label,
+      linkColor = _ref.linkColor,
+      textColor = _ref.textColor;
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(label);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  var getLinkColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(linkColor, theme);
+  var getTextColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(textColor, theme);
+  var computeExtraProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (link) {
+    var position = {
+      x: link.points[2].x,
+      y: link.points[2].y
+    };
+    var textAnchor;
+
+    if (link.side === 'before') {
+      position.x -= textOffset;
+      textAnchor = 'end';
+    } else {
+      position.x += textOffset;
+      textAnchor = 'start';
+    }
+
+    return _objectSpread2(_objectSpread2({}, position), {}, {
+      label: getLabel(link.data),
+      linkColor: getLinkColor(link.data),
+      textAnchor: textAnchor,
+      textColor: getTextColor(link.data)
+    });
+  }, [getLabel, getLinkColor, getTextColor, textOffset]);
+  return useArcLinks({
+    data: data,
+    skipAngle: skipAngle,
+    offset: offset,
+    diagonalLength: diagonalLength,
+    straightLength: straightLength,
+    computeExtraProps: computeExtraProps
+  });
+};
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+var ArcLine = function ArcLine(_ref) {
+  var animatedProps = _ref.animated,
+      rest = _objectWithoutProperties(_ref, ["animated"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].path, _objectSpread2({
+    d: Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([animatedProps.radius, animatedProps.startAngle, animatedProps.endAngle], function (radius, start, end) {
+      return generateSvgArc(radius, start, end);
+    })
+  }, rest));
+};
+
+var ArcShape = function ArcShape(_ref) {
+  var datum = _ref.datum,
+      style = _ref.style,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave;
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    return onClick === null || onClick === void 0 ? void 0 : onClick(datum, event);
+  }, [onClick, datum]);
+  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    return onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(datum, event);
+  }, [onMouseEnter, datum]);
+  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    return onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(datum, event);
+  }, [onMouseMove, datum]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
+    return onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(datum, event);
+  }, [onMouseLeave, datum]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].path, {
+    d: style.path,
+    opacity: style.opacity,
+    fill: datum.fill || style.color,
+    stroke: style.borderColor,
+    strokeWidth: style.borderWidth,
+    onClick: onClick ? handleClick : undefined,
+    onMouseEnter: onMouseEnter ? handleMouseEnter : undefined,
+    onMouseMove: onMouseMove ? handleMouseMove : undefined,
+    onMouseLeave: onMouseLeave ? handleMouseLeave : undefined
+  });
+};
+
+var interpolateArc = function interpolateArc(startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue, arcGenerator) {
+  return Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])([startAngleValue, endAngleValue, innerRadiusValue, outerRadiusValue], function (startAngle, endAngle, innerRadius, outerRadius) {
+    return arcGenerator({
+      startAngle: startAngle,
+      endAngle: endAngle,
+      innerRadius: Math.max(0, innerRadius),
+      outerRadius: Math.max(0, outerRadius)
+    });
+  });
+};
+
+var useArcsTransition = function useArcsTransition(data) {
+  var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'innerRadius';
+  var extra = arguments.length > 2 ? arguments[2] : undefined;
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var phases = useArcTransitionMode(mode, extra);
+  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useTransition"])(data, {
+    keys: function keys(datum) {
+      return datum.id;
+    },
+    initial: phases.update,
+    from: phases.enter,
+    enter: phases.update,
+    update: phases.update,
+    leave: phases.leave,
+    config: springConfig,
+    immediate: !animate
+  });
+  return {
+    transition: transition,
+    interpolate: interpolateArc
+  };
+};
+
+var ArcsLayer = function ArcsLayer(_ref) {
+  var center = _ref.center,
+      data = _ref.data,
+      arcGenerator = _ref.arcGenerator,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave,
+      transitionMode = _ref.transitionMode,
+      _ref$component = _ref.component,
+      component = _ref$component === void 0 ? ArcShape : _ref$component;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+  var getBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(borderColor, theme);
+
+  var _useArcsTransition = useArcsTransition(data, transitionMode, {
+    enter: function enter(datum) {
+      return {
+        opacity: 0,
+        color: datum.color,
+        borderColor: getBorderColor(datum)
+      };
+    },
+    update: function update(datum) {
+      return {
+        opacity: 1,
+        color: datum.color,
+        borderColor: getBorderColor(datum)
+      };
+    },
+    leave: function leave(datum) {
+      return {
+        opacity: 0,
+        color: datum.color,
+        borderColor: getBorderColor(datum)
+      };
+    }
+  }),
+      transition = _useArcsTransition.transition,
+      interpolate = _useArcsTransition.interpolate;
+
+  var Arc = component;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("g", {
+    transform: "translate(".concat(center[0], ",").concat(center[1], ")"),
+    children: transition(function (transitionProps, datum) {
+      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(Arc, {
+        key: datum.id,
+        datum: datum,
+        style: _objectSpread2(_objectSpread2({}, transitionProps), {}, {
+          borderWidth: borderWidth,
+          path: interpolate(transitionProps.startAngle, transitionProps.endAngle, transitionProps.innerRadius, transitionProps.outerRadius, arcGenerator)
+        }),
+        onClick: onClick,
+        onMouseEnter: onMouseEnter,
+        onMouseMove: onMouseMove,
+        onMouseLeave: onMouseLeave
+      });
+    })
+  });
+};
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+  return _arr;
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+var computeArcBoundingBox = function computeArcBoundingBox(centerX, centerY, radius, startAngle, endAngle) {
+  var includeCenter = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
+  var points = [];
+  var p0 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(startAngle), radius);
+  points.push([p0.x, p0.y]);
+  var p1 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(endAngle), radius);
+  points.push([p1.x, p1.y]);
+
+  for (var angle = Math.round(Math.min(startAngle, endAngle)); angle <= Math.round(Math.max(startAngle, endAngle)); angle++) {
+    if (angle % 90 === 0) {
+      var p = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(angle), radius);
+      points.push([p.x, p.y]);
+    }
+  }
+
+  points = points.map(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        x = _ref2[0],
+        y = _ref2[1];
+
+    return [centerX + x, centerY + y];
+  });
+
+  if (includeCenter) {
+    points.push([centerX, centerY]);
+  }
+
+  var xs = points.map(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 1),
+        x = _ref4[0];
+
+    return x;
+  });
+  var ys = points.map(function (_ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        y = _ref6[1];
+
+    return y;
+  });
+  var x0 = Math.min.apply(Math, _toConsumableArray(xs));
+  var x1 = Math.max.apply(Math, _toConsumableArray(xs));
+  var y0 = Math.min.apply(Math, _toConsumableArray(ys));
+  var y1 = Math.max.apply(Math, _toConsumableArray(ys));
+  return {
+    points: points,
+    x: x0,
+    y: y0,
+    width: x1 - x0,
+    height: y1 - y0
+  };
+};
+
+var isCursorInRing = function isCursorInRing(centerX, centerY, radius, innerRadius, cursorX, cursorY) {
+  var distance = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getDistance"])(cursorX, cursorY, centerX, centerY);
+  return distance < radius && distance > innerRadius;
+};
+var findArcUnderCursor = function findArcUnderCursor(centerX, centerY, radius, innerRadius, arcs, cursorX, cursorY) {
+  if (!isCursorInRing(centerX, centerY, radius, innerRadius, cursorX, cursorY)) {
+    return undefined;
+  }
+
+  var cursorAngle = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getAngle"])(cursorX, cursorY, centerX, centerY);
+  return arcs.find(function (_ref) {
+    var startAngle = _ref.startAngle,
+        endAngle = _ref.endAngle;
+    return cursorAngle >= startAngle && cursorAngle < endAngle;
+  });
+};
+
+var useAnimatedArc = function useAnimatedArc(datumWithArc, arcGenerator) {
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var animatedValues = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useSpring"])({
+    startAngle: datumWithArc.arc.startAngle,
+    endAngle: datumWithArc.arc.endAngle,
+    innerRadius: datumWithArc.arc.innerRadius,
+    outerRadius: datumWithArc.arc.outerRadius,
+    config: springConfig,
+    immediate: !animate
+  });
+  return _objectSpread2(_objectSpread2({}, animatedValues), {}, {
+    path: interpolateArc(animatedValues.startAngle, animatedValues.endAngle, animatedValues.innerRadius, animatedValues.outerRadius, arcGenerator)
+  });
+};
+
+var useArcGenerator = function useArcGenerator() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$cornerRadius = _ref.cornerRadius,
+      cornerRadius = _ref$cornerRadius === void 0 ? 0 : _ref$cornerRadius,
+      _ref$padAngle = _ref.padAngle,
+      padAngle = _ref$padAngle === void 0 ? 0 : _ref$padAngle;
+
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_5__["arc"])().innerRadius(function (arc) {
+      return arc.innerRadius;
+    }).outerRadius(function (arc) {
+      return arc.outerRadius;
+    }).cornerRadius(cornerRadius).padAngle(padAngle);
+  }, [cornerRadius, padAngle]);
+};
+
+
 
 
 /***/ }),
@@ -12955,6 +14596,1143 @@ var ResponsiveLineCanvas = function ResponsiveLineCanvas(props, ref) {
   });
 };
 var ResponsiveLineCanvas$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(ResponsiveLineCanvas);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/pie/dist/nivo-pie.es.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@nivo/pie/dist/nivo-pie.es.js ***!
+  \****************************************************/
+/*! exports provided: Pie, PieCanvas, ResponsivePie, ResponsivePieCanvas, defaultProps, useNormalizedData, usePie, usePieArcs, usePieFromBox, usePieLayerContext */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Pie", function() { return Pie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PieCanvas", function() { return PieCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsivePie", function() { return ResponsivePie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsivePieCanvas", function() { return ResponsivePieCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultProps", function() { return defaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useNormalizedData", function() { return useNormalizedData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePie", function() { return usePie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePieArcs", function() { return usePieArcs; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePieFromBox", function() { return usePieFromBox; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePieLayerContext", function() { return usePieLayerContext; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
+/* harmony import */ var _nivo_arcs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/arcs */ "./node_modules/@nivo/arcs/dist/nivo-arcs.es.js");
+/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
+/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
+/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
+
+
+
+
+
+
+
+
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+var PieLegends = function PieLegends(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      legends = _ref.legends,
+      data = _ref.data,
+      toggleSerie = _ref.toggleSerie;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["Fragment"], {
+    children: legends.map(function (legend, i) {
+      var _legend$data;
+
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
+        containerWidth: width,
+        containerHeight: height,
+        data: (_legend$data = legend.data) !== null && _legend$data !== void 0 ? _legend$data : data,
+        toggleSerie: legend.toggleSerie ? toggleSerie : undefined
+      }), i);
+    })
+  });
+};
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+  return _arr;
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+var PieTooltip = function PieTooltip(_ref) {
+  var datum = _ref.datum;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["BasicTooltip"], {
+    id: datum.id,
+    value: datum.formattedValue,
+    enableChip: true,
+    color: datum.color
+  });
+};
+
+var _window$devicePixelRa;
+var defaultProps = {
+  id: 'id',
+  value: 'value',
+  sortByValue: false,
+  innerRadius: 0,
+  padAngle: 0,
+  cornerRadius: 0,
+  layers: ['arcLinkLabels', 'arcs', 'arcLabels', 'legends'],
+  startAngle: 0,
+  endAngle: 360,
+  fit: true,
+  activeInnerRadiusOffset: 0,
+  activeOuterRadiusOffset: 0,
+  borderWidth: 0,
+  borderColor: {
+    from: 'color',
+    modifiers: [['darker', 1]]
+  },
+  enableArcLabels: true,
+  arcLabel: 'formattedValue',
+  arcLabelsSkipAngle: 0,
+  arcLabelsRadiusOffset: 0.5,
+  arcLabelsTextColor: {
+    theme: 'labels.text.fill'
+  },
+  enableArcLinkLabels: true,
+  arcLinkLabel: 'id',
+  arcLinkLabelsSkipAngle: 0,
+  arcLinkLabelsOffset: 0,
+  arcLinkLabelsDiagonalLength: 16,
+  arcLinkLabelsStraightLength: 24,
+  arcLinkLabelsThickness: 1,
+  arcLinkLabelsTextOffset: 6,
+  arcLinkLabelsTextColor: {
+    theme: 'labels.text.fill'
+  },
+  arcLinkLabelsColor: {
+    theme: 'axis.ticks.line.stroke'
+  },
+  colors: {
+    scheme: 'nivo'
+  },
+  defs: [],
+  fill: [],
+  isInteractive: true,
+  animate: true,
+  motionConfig: 'gentle',
+  transitionMode: 'innerRadius',
+  tooltip: PieTooltip,
+  legends: [],
+  role: 'img',
+  pixelRatio: typeof window !== 'undefined' ? (_window$devicePixelRa = window.devicePixelRatio) !== null && _window$devicePixelRa !== void 0 ? _window$devicePixelRa : 1 : 1
+};
+
+var useNormalizedData = function useNormalizedData(_ref) {
+  var data = _ref.data,
+      _ref$id = _ref.id,
+      id = _ref$id === void 0 ? defaultProps.id : _ref$id,
+      _ref$value = _ref.value,
+      value = _ref$value === void 0 ? defaultProps.value : _ref$value,
+      valueFormat = _ref.valueFormat,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? defaultProps.colors : _ref$colors;
+  var getId = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(id);
+  var getValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(value);
+  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useValueFormatter"])(valueFormat);
+  var getColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_6__["useOrdinalColorScale"])(colors, 'id');
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return data.map(function (datum) {
+      var _datum$label;
+
+      var datumId = getId(datum);
+      var datumValue = getValue(datum);
+      var normalizedDatum = {
+        id: datumId,
+        label: (_datum$label = datum.label) !== null && _datum$label !== void 0 ? _datum$label : datumId,
+        hidden: false,
+        value: datumValue,
+        formattedValue: formatValue(datumValue),
+        data: datum
+      };
+      return _objectSpread2(_objectSpread2({}, normalizedDatum), {}, {
+        color: getColor(normalizedDatum)
+      });
+    });
+  }, [data, getId, getValue, formatValue, getColor]);
+};
+var usePieArcs = function usePieArcs(_ref2) {
+  var data = _ref2.data,
+      startAngle = _ref2.startAngle,
+      endAngle = _ref2.endAngle,
+      innerRadius = _ref2.innerRadius,
+      outerRadius = _ref2.outerRadius,
+      padAngle = _ref2.padAngle,
+      sortByValue = _ref2.sortByValue,
+      activeId = _ref2.activeId,
+      activeInnerRadiusOffset = _ref2.activeInnerRadiusOffset,
+      activeOuterRadiusOffset = _ref2.activeOuterRadiusOffset,
+      hiddenIds = _ref2.hiddenIds;
+  var pie$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var innerPie = Object(d3_shape__WEBPACK_IMPORTED_MODULE_5__["pie"])().value(function (d) {
+      return d.value;
+    }).startAngle(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(startAngle)).endAngle(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(endAngle)).padAngle(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(padAngle));
+
+    if (!sortByValue) {
+      innerPie.sortValues(null);
+    }
+
+    return innerPie;
+  }, [startAngle, endAngle, padAngle, sortByValue]);
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var hiddenData = data.filter(function (item) {
+      return !hiddenIds.includes(item.id);
+    });
+    var dataWithArc = pie$1(hiddenData).map(function (arc) {
+      var angle = Math.abs(arc.endAngle - arc.startAngle);
+      return _objectSpread2(_objectSpread2({}, arc.data), {}, {
+        arc: {
+          index: arc.index,
+          startAngle: arc.startAngle,
+          endAngle: arc.endAngle,
+          innerRadius: activeId === arc.data.id ? innerRadius - activeInnerRadiusOffset : innerRadius,
+          outerRadius: activeId === arc.data.id ? outerRadius + activeOuterRadiusOffset : outerRadius,
+          thickness: outerRadius - innerRadius,
+          padAngle: arc.padAngle,
+          angle: angle,
+          angleDeg: Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(angle)
+        }
+      });
+    });
+    var legendData = data.map(function (item) {
+      return _objectSpread2(_objectSpread2({}, item), {}, {
+        hidden: hiddenIds.includes(item.id)
+      });
+    });
+    return {
+      dataWithArc: dataWithArc,
+      legendData: legendData
+    };
+  }, [pie$1, data, hiddenIds, activeId, innerRadius, activeInnerRadiusOffset, outerRadius, activeOuterRadiusOffset]);
+};
+var usePie = function usePie(_ref3) {
+  var data = _ref3.data,
+      radius = _ref3.radius,
+      innerRadius = _ref3.innerRadius,
+      _ref3$startAngle = _ref3.startAngle,
+      startAngle = _ref3$startAngle === void 0 ? defaultProps.startAngle : _ref3$startAngle,
+      _ref3$endAngle = _ref3.endAngle,
+      endAngle = _ref3$endAngle === void 0 ? defaultProps.endAngle : _ref3$endAngle,
+      _ref3$padAngle = _ref3.padAngle,
+      padAngle = _ref3$padAngle === void 0 ? defaultProps.padAngle : _ref3$padAngle,
+      _ref3$sortByValue = _ref3.sortByValue,
+      sortByValue = _ref3$sortByValue === void 0 ? defaultProps.sortByValue : _ref3$sortByValue,
+      _ref3$cornerRadius = _ref3.cornerRadius,
+      cornerRadius = _ref3$cornerRadius === void 0 ? defaultProps.cornerRadius : _ref3$cornerRadius,
+      _ref3$activeInnerRadi = _ref3.activeInnerRadiusOffset,
+      activeInnerRadiusOffset = _ref3$activeInnerRadi === void 0 ? defaultProps.activeInnerRadiusOffset : _ref3$activeInnerRadi,
+      _ref3$activeOuterRadi = _ref3.activeOuterRadiusOffset,
+      activeOuterRadiusOffset = _ref3$activeOuterRadi === void 0 ? defaultProps.activeOuterRadiusOffset : _ref3$activeOuterRadi;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState2 = _slicedToArray(_useState, 2),
+      activeId = _useState2[0],
+      setActiveId = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      hiddenIds = _useState4[0],
+      setHiddenIds = _useState4[1];
+
+  var pieArcs = usePieArcs({
+    data: data,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    innerRadius: innerRadius,
+    outerRadius: radius,
+    padAngle: padAngle,
+    sortByValue: sortByValue,
+    activeId: activeId,
+    activeInnerRadiusOffset: activeInnerRadiusOffset,
+    activeOuterRadiusOffset: activeOuterRadiusOffset,
+    hiddenIds: hiddenIds
+  });
+  var toggleSerie = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (id) {
+    setHiddenIds(function (state) {
+      return state.indexOf(id) > -1 ? state.filter(function (item) {
+        return item !== id;
+      }) : [].concat(_toConsumableArray(state), [id]);
+    });
+  }, []);
+  var arcGenerator = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["useArcGenerator"])({
+    cornerRadius: cornerRadius,
+    padAngle: Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(padAngle)
+  });
+  return _objectSpread2(_objectSpread2({}, pieArcs), {}, {
+    arcGenerator: arcGenerator,
+    setActiveId: setActiveId,
+    toggleSerie: toggleSerie
+  });
+};
+var usePieFromBox = function usePieFromBox(_ref4) {
+  var data = _ref4.data,
+      width = _ref4.width,
+      height = _ref4.height,
+      _ref4$innerRadius = _ref4.innerRadius,
+      innerRadiusRatio = _ref4$innerRadius === void 0 ? defaultProps.innerRadius : _ref4$innerRadius,
+      _ref4$startAngle = _ref4.startAngle,
+      startAngle = _ref4$startAngle === void 0 ? defaultProps.startAngle : _ref4$startAngle,
+      _ref4$endAngle = _ref4.endAngle,
+      endAngle = _ref4$endAngle === void 0 ? defaultProps.endAngle : _ref4$endAngle,
+      _ref4$padAngle = _ref4.padAngle,
+      padAngle = _ref4$padAngle === void 0 ? defaultProps.padAngle : _ref4$padAngle,
+      _ref4$sortByValue = _ref4.sortByValue,
+      sortByValue = _ref4$sortByValue === void 0 ? defaultProps.sortByValue : _ref4$sortByValue,
+      _ref4$cornerRadius = _ref4.cornerRadius,
+      cornerRadius = _ref4$cornerRadius === void 0 ? defaultProps.cornerRadius : _ref4$cornerRadius,
+      _ref4$fit = _ref4.fit,
+      fit = _ref4$fit === void 0 ? defaultProps.fit : _ref4$fit,
+      _ref4$activeInnerRadi = _ref4.activeInnerRadiusOffset,
+      activeInnerRadiusOffset = _ref4$activeInnerRadi === void 0 ? defaultProps.activeInnerRadiusOffset : _ref4$activeInnerRadi,
+      _ref4$activeOuterRadi = _ref4.activeOuterRadiusOffset,
+      activeOuterRadiusOffset = _ref4$activeOuterRadi === void 0 ? defaultProps.activeOuterRadiusOffset : _ref4$activeOuterRadi;
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState6 = _slicedToArray(_useState5, 2),
+      activeId = _useState6[0],
+      setActiveId = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState8 = _slicedToArray(_useState7, 2),
+      hiddenIds = _useState8[0],
+      setHiddenIds = _useState8[1];
+
+  var computedProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var radius = Math.min(width, height) / 2;
+    var innerRadius = radius * Math.min(innerRadiusRatio, 1);
+    var centerX = width / 2;
+    var centerY = height / 2;
+    var boundingBox;
+
+    if (fit) {
+      var _computeArcBoundingBo = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["computeArcBoundingBox"])(centerX, centerY, radius, startAngle - 90, endAngle - 90),
+          points = _computeArcBoundingBo.points,
+          box = _objectWithoutProperties(_computeArcBoundingBo, ["points"]);
+
+      var ratio = Math.min(width / box.width, height / box.height);
+      var adjustedBox = {
+        width: box.width * ratio,
+        height: box.height * ratio
+      };
+      adjustedBox.x = (width - adjustedBox.width) / 2;
+      adjustedBox.y = (height - adjustedBox.height) / 2;
+      centerX = (centerX - box.x) / box.width * box.width * ratio + adjustedBox.x;
+      centerY = (centerY - box.y) / box.height * box.height * ratio + adjustedBox.y;
+      boundingBox = {
+        box: box,
+        ratio: ratio,
+        points: points
+      };
+      radius = radius * ratio;
+      innerRadius = innerRadius * ratio;
+    }
+
+    return {
+      centerX: centerX,
+      centerY: centerY,
+      radius: radius,
+      innerRadius: innerRadius,
+      debug: boundingBox
+    };
+  }, [width, height, innerRadiusRatio, startAngle, endAngle, fit, cornerRadius]);
+  var pieArcs = usePieArcs({
+    data: data,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    innerRadius: computedProps.innerRadius,
+    outerRadius: computedProps.radius,
+    padAngle: padAngle,
+    sortByValue: sortByValue,
+    activeId: activeId,
+    activeInnerRadiusOffset: activeInnerRadiusOffset,
+    activeOuterRadiusOffset: activeOuterRadiusOffset,
+    hiddenIds: hiddenIds
+  });
+  var toggleSerie = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (id) {
+    setHiddenIds(function (state) {
+      return state.indexOf(id) > -1 ? state.filter(function (item) {
+        return item !== id;
+      }) : [].concat(_toConsumableArray(state), [id]);
+    });
+  }, []);
+  var arcGenerator = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["useArcGenerator"])({
+    cornerRadius: cornerRadius,
+    padAngle: Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["degreesToRadians"])(padAngle)
+  });
+  return _objectSpread2(_objectSpread2({
+    arcGenerator: arcGenerator,
+    setActiveId: setActiveId,
+    toggleSerie: toggleSerie
+  }, pieArcs), computedProps);
+};
+var usePieLayerContext = function usePieLayerContext(_ref5) {
+  var dataWithArc = _ref5.dataWithArc,
+      arcGenerator = _ref5.arcGenerator,
+      centerX = _ref5.centerX,
+      centerY = _ref5.centerY,
+      radius = _ref5.radius,
+      innerRadius = _ref5.innerRadius;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return {
+      dataWithArc: dataWithArc,
+      arcGenerator: arcGenerator,
+      centerX: centerX,
+      centerY: centerY,
+      radius: radius,
+      innerRadius: innerRadius
+    };
+  }, [dataWithArc, arcGenerator, centerX, centerY, radius, innerRadius]);
+};
+
+var Arcs = function Arcs(_ref) {
+  var center = _ref.center,
+      data = _ref.data,
+      arcGenerator = _ref.arcGenerator,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      isInteractive = _ref.isInteractive,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave,
+      setActiveId = _ref.setActiveId,
+      tooltip = _ref.tooltip,
+      transitionMode = _ref.transitionMode;
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    if (!isInteractive) return undefined;
+    return function (datum, event) {
+      onClick === null || onClick === void 0 ? void 0 : onClick(datum, event);
+    };
+  }, [isInteractive, onClick]);
+  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    if (!isInteractive) return undefined;
+    return function (datum, event) {
+      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
+        datum: datum
+      }), event);
+      setActiveId(datum.id);
+      onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(datum, event);
+    };
+  }, [isInteractive, showTooltipFromEvent, setActiveId, onMouseEnter]);
+  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    if (!isInteractive) return undefined;
+    return function (datum, event) {
+      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
+        datum: datum
+      }), event);
+      onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(datum, event);
+    };
+  }, [isInteractive, showTooltipFromEvent, onMouseMove]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    if (!isInteractive) return undefined;
+    return function (datum, event) {
+      hideTooltip();
+      setActiveId(null);
+      onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(datum, event);
+    };
+  }, [isInteractive, hideTooltip, setActiveId, onMouseLeave]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["ArcsLayer"], {
+    center: center,
+    data: data,
+    arcGenerator: arcGenerator,
+    borderWidth: borderWidth,
+    borderColor: borderColor,
+    transitionMode: transitionMode,
+    onClick: handleClick,
+    onMouseEnter: handleMouseEnter,
+    onMouseMove: handleMouseMove,
+    onMouseLeave: handleMouseLeave
+  });
+};
+
+var InnerPie = function InnerPie(_ref) {
+  var data = _ref.data,
+      _ref$id = _ref.id,
+      id = _ref$id === void 0 ? defaultProps.id : _ref$id,
+      _ref$value = _ref.value,
+      value = _ref$value === void 0 ? defaultProps.value : _ref$value,
+      valueFormat = _ref.valueFormat,
+      _ref$sortByValue = _ref.sortByValue,
+      sortByValue = _ref$sortByValue === void 0 ? defaultProps.sortByValue : _ref$sortByValue,
+      _ref$layers = _ref.layers,
+      layers = _ref$layers === void 0 ? defaultProps.layers : _ref$layers,
+      _ref$startAngle = _ref.startAngle,
+      startAngle = _ref$startAngle === void 0 ? defaultProps.startAngle : _ref$startAngle,
+      _ref$endAngle = _ref.endAngle,
+      endAngle = _ref$endAngle === void 0 ? defaultProps.endAngle : _ref$endAngle,
+      _ref$padAngle = _ref.padAngle,
+      padAngle = _ref$padAngle === void 0 ? defaultProps.padAngle : _ref$padAngle,
+      _ref$fit = _ref.fit,
+      fit = _ref$fit === void 0 ? defaultProps.fit : _ref$fit,
+      _ref$innerRadius = _ref.innerRadius,
+      innerRadiusRatio = _ref$innerRadius === void 0 ? defaultProps.innerRadius : _ref$innerRadius,
+      _ref$cornerRadius = _ref.cornerRadius,
+      cornerRadius = _ref$cornerRadius === void 0 ? defaultProps.cornerRadius : _ref$cornerRadius,
+      _ref$activeInnerRadiu = _ref.activeInnerRadiusOffset,
+      activeInnerRadiusOffset = _ref$activeInnerRadiu === void 0 ? defaultProps.activeInnerRadiusOffset : _ref$activeInnerRadiu,
+      _ref$activeOuterRadiu = _ref.activeOuterRadiusOffset,
+      activeOuterRadiusOffset = _ref$activeOuterRadiu === void 0 ? defaultProps.activeOuterRadiusOffset : _ref$activeOuterRadiu,
+      width = _ref.width,
+      height = _ref.height,
+      partialMargin = _ref.margin,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? defaultProps.colors : _ref$colors,
+      _ref$borderWidth = _ref.borderWidth,
+      borderWidth = _ref$borderWidth === void 0 ? defaultProps.borderWidth : _ref$borderWidth,
+      _ref$borderColor = _ref.borderColor,
+      borderColor = _ref$borderColor === void 0 ? defaultProps.borderColor : _ref$borderColor,
+      _ref$enableArcLabels = _ref.enableArcLabels,
+      enableArcLabels = _ref$enableArcLabels === void 0 ? defaultProps.enableArcLabels : _ref$enableArcLabels,
+      _ref$arcLabel = _ref.arcLabel,
+      arcLabel = _ref$arcLabel === void 0 ? defaultProps.arcLabel : _ref$arcLabel,
+      _ref$arcLabelsSkipAng = _ref.arcLabelsSkipAngle,
+      arcLabelsSkipAngle = _ref$arcLabelsSkipAng === void 0 ? defaultProps.arcLabelsSkipAngle : _ref$arcLabelsSkipAng,
+      _ref$arcLabelsTextCol = _ref.arcLabelsTextColor,
+      arcLabelsTextColor = _ref$arcLabelsTextCol === void 0 ? defaultProps.arcLabelsTextColor : _ref$arcLabelsTextCol,
+      _ref$arcLabelsRadiusO = _ref.arcLabelsRadiusOffset,
+      arcLabelsRadiusOffset = _ref$arcLabelsRadiusO === void 0 ? defaultProps.arcLabelsRadiusOffset : _ref$arcLabelsRadiusO,
+      arcLabelsComponent = _ref.arcLabelsComponent,
+      _ref$enableArcLinkLab = _ref.enableArcLinkLabels,
+      enableArcLinkLabels = _ref$enableArcLinkLab === void 0 ? defaultProps.enableArcLinkLabels : _ref$enableArcLinkLab,
+      _ref$arcLinkLabel = _ref.arcLinkLabel,
+      arcLinkLabel = _ref$arcLinkLabel === void 0 ? defaultProps.arcLinkLabel : _ref$arcLinkLabel,
+      _ref$arcLinkLabelsSki = _ref.arcLinkLabelsSkipAngle,
+      arcLinkLabelsSkipAngle = _ref$arcLinkLabelsSki === void 0 ? defaultProps.arcLinkLabelsSkipAngle : _ref$arcLinkLabelsSki,
+      _ref$arcLinkLabelsOff = _ref.arcLinkLabelsOffset,
+      arcLinkLabelsOffset = _ref$arcLinkLabelsOff === void 0 ? defaultProps.arcLinkLabelsOffset : _ref$arcLinkLabelsOff,
+      _ref$arcLinkLabelsDia = _ref.arcLinkLabelsDiagonalLength,
+      arcLinkLabelsDiagonalLength = _ref$arcLinkLabelsDia === void 0 ? defaultProps.arcLinkLabelsDiagonalLength : _ref$arcLinkLabelsDia,
+      _ref$arcLinkLabelsStr = _ref.arcLinkLabelsStraightLength,
+      arcLinkLabelsStraightLength = _ref$arcLinkLabelsStr === void 0 ? defaultProps.arcLinkLabelsStraightLength : _ref$arcLinkLabelsStr,
+      _ref$arcLinkLabelsThi = _ref.arcLinkLabelsThickness,
+      arcLinkLabelsThickness = _ref$arcLinkLabelsThi === void 0 ? defaultProps.arcLinkLabelsThickness : _ref$arcLinkLabelsThi,
+      _ref$arcLinkLabelsTex = _ref.arcLinkLabelsTextOffset,
+      arcLinkLabelsTextOffset = _ref$arcLinkLabelsTex === void 0 ? defaultProps.arcLinkLabelsTextOffset : _ref$arcLinkLabelsTex,
+      _ref$arcLinkLabelsTex2 = _ref.arcLinkLabelsTextColor,
+      arcLinkLabelsTextColor = _ref$arcLinkLabelsTex2 === void 0 ? defaultProps.arcLinkLabelsTextColor : _ref$arcLinkLabelsTex2,
+      _ref$arcLinkLabelsCol = _ref.arcLinkLabelsColor,
+      arcLinkLabelsColor = _ref$arcLinkLabelsCol === void 0 ? defaultProps.arcLinkLabelsColor : _ref$arcLinkLabelsCol,
+      arcLinkLabelComponent = _ref.arcLinkLabelComponent,
+      _ref$defs = _ref.defs,
+      defs = _ref$defs === void 0 ? defaultProps.defs : _ref$defs,
+      _ref$fill = _ref.fill,
+      fill = _ref$fill === void 0 ? defaultProps.fill : _ref$fill,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? defaultProps.isInteractive : _ref$isInteractive,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? defaultProps.tooltip : _ref$tooltip,
+      _ref$transitionMode = _ref.transitionMode,
+      transitionMode = _ref$transitionMode === void 0 ? defaultProps.transitionMode : _ref$transitionMode,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? defaultProps.legends : _ref$legends,
+      _ref$role = _ref.role,
+      role = _ref$role === void 0 ? defaultProps.role : _ref$role;
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight,
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight;
+
+  var normalizedData = useNormalizedData({
+    data: data,
+    id: id,
+    value: value,
+    valueFormat: valueFormat,
+    colors: colors
+  });
+
+  var _usePieFromBox = usePieFromBox({
+    data: normalizedData,
+    width: innerWidth,
+    height: innerHeight,
+    fit: fit,
+    innerRadius: innerRadiusRatio,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    padAngle: padAngle,
+    sortByValue: sortByValue,
+    cornerRadius: cornerRadius,
+    activeInnerRadiusOffset: activeInnerRadiusOffset,
+    activeOuterRadiusOffset: activeOuterRadiusOffset
+  }),
+      dataWithArc = _usePieFromBox.dataWithArc,
+      legendData = _usePieFromBox.legendData,
+      arcGenerator = _usePieFromBox.arcGenerator,
+      centerX = _usePieFromBox.centerX,
+      centerY = _usePieFromBox.centerY,
+      radius = _usePieFromBox.radius,
+      innerRadius = _usePieFromBox.innerRadius,
+      setActiveId = _usePieFromBox.setActiveId,
+      toggleSerie = _usePieFromBox.toggleSerie;
+
+  var boundDefs = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["bindDefs"])(defs, dataWithArc, fill);
+  var layerById = {
+    arcLinkLabels: null,
+    arcs: null,
+    arcLabels: null,
+    legends: null
+  };
+
+  if (enableArcLinkLabels && layers.includes('arcLinkLabels')) {
+    layerById.arcLinkLabels = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["ArcLinkLabelsLayer"], {
+      center: [centerX, centerY],
+      data: dataWithArc,
+      label: arcLinkLabel,
+      skipAngle: arcLinkLabelsSkipAngle,
+      offset: arcLinkLabelsOffset,
+      diagonalLength: arcLinkLabelsDiagonalLength,
+      straightLength: arcLinkLabelsStraightLength,
+      strokeWidth: arcLinkLabelsThickness,
+      textOffset: arcLinkLabelsTextOffset,
+      textColor: arcLinkLabelsTextColor,
+      linkColor: arcLinkLabelsColor,
+      component: arcLinkLabelComponent
+    }, "arcLinkLabels");
+  }
+
+  if (layers.includes('arcs')) {
+    layerById.arcs = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(Arcs, {
+      center: [centerX, centerY],
+      data: dataWithArc,
+      arcGenerator: arcGenerator,
+      borderWidth: borderWidth,
+      borderColor: borderColor,
+      isInteractive: isInteractive,
+      onClick: onClick,
+      onMouseEnter: onMouseEnter,
+      onMouseMove: onMouseMove,
+      onMouseLeave: onMouseLeave,
+      setActiveId: setActiveId,
+      tooltip: tooltip,
+      transitionMode: transitionMode
+    }, "arcs");
+  }
+
+  if (enableArcLabels && layers.includes('arcLabels')) {
+    layerById.arcLabels = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["ArcLabelsLayer"], {
+      center: [centerX, centerY],
+      data: dataWithArc,
+      label: arcLabel,
+      radiusOffset: arcLabelsRadiusOffset,
+      skipAngle: arcLabelsSkipAngle,
+      textColor: arcLabelsTextColor,
+      transitionMode: transitionMode,
+      component: arcLabelsComponent
+    }, "arcLabels");
+  }
+
+  if (legends.length > 0 && layers.includes('legends')) {
+    layerById.legends = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(PieLegends, {
+      width: innerWidth,
+      height: innerHeight,
+      data: legendData,
+      legends: legends,
+      toggleSerie: toggleSerie
+    }, "legends");
+  }
+
+  var layerContext = usePieLayerContext({
+    dataWithArc: dataWithArc,
+    arcGenerator: arcGenerator,
+    centerX: centerX,
+    centerY: centerY,
+    radius: radius,
+    innerRadius: innerRadius
+  });
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["SvgWrapper"], {
+    width: outerWidth,
+    height: outerHeight,
+    margin: margin,
+    defs: boundDefs,
+    role: role,
+    children: layers.map(function (layer, i) {
+      if (layerById[layer] !== undefined) {
+        return layerById[layer];
+      }
+
+      if (typeof layer === 'function') {
+        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
+          children: Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(layer, layerContext)
+        }, i);
+      }
+
+      return null;
+    })
+  });
+};
+
+var Pie = function Pie(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? defaultProps.isInteractive : _ref2$isInteractive,
+      _ref2$animate = _ref2.animate,
+      animate = _ref2$animate === void 0 ? defaultProps.animate : _ref2$animate,
+      _ref2$motionConfig = _ref2.motionConfig,
+      motionConfig = _ref2$motionConfig === void 0 ? defaultProps.motionConfig : _ref2$motionConfig,
+      theme = _ref2.theme,
+      renderWrapper = _ref2.renderWrapper,
+      otherProps = _objectWithoutProperties(_ref2, ["isInteractive", "animate", "motionConfig", "theme", "renderWrapper"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+    animate: animate,
+    isInteractive: isInteractive,
+    motionConfig: motionConfig,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(InnerPie, _objectSpread2({
+      isInteractive: isInteractive
+    }, otherProps))
+  });
+};
+
+var ResponsivePie = function ResponsivePie(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(Pie, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
+};
+
+var InnerPieCanvas = function InnerPieCanvas(_ref) {
+  var data = _ref.data,
+      _ref$id = _ref.id,
+      id = _ref$id === void 0 ? defaultProps.id : _ref$id,
+      _ref$value = _ref.value,
+      value = _ref$value === void 0 ? defaultProps.value : _ref$value,
+      valueFormat = _ref.valueFormat,
+      _ref$sortByValue = _ref.sortByValue,
+      sortByValue = _ref$sortByValue === void 0 ? defaultProps.sortByValue : _ref$sortByValue,
+      _ref$startAngle = _ref.startAngle,
+      startAngle = _ref$startAngle === void 0 ? defaultProps.startAngle : _ref$startAngle,
+      _ref$endAngle = _ref.endAngle,
+      endAngle = _ref$endAngle === void 0 ? defaultProps.endAngle : _ref$endAngle,
+      _ref$padAngle = _ref.padAngle,
+      padAngle = _ref$padAngle === void 0 ? defaultProps.padAngle : _ref$padAngle,
+      _ref$fit = _ref.fit,
+      fit = _ref$fit === void 0 ? defaultProps.fit : _ref$fit,
+      _ref$innerRadius = _ref.innerRadius,
+      innerRadiusRatio = _ref$innerRadius === void 0 ? defaultProps.innerRadius : _ref$innerRadius,
+      _ref$cornerRadius = _ref.cornerRadius,
+      cornerRadius = _ref$cornerRadius === void 0 ? defaultProps.cornerRadius : _ref$cornerRadius,
+      _ref$activeInnerRadiu = _ref.activeInnerRadiusOffset,
+      activeInnerRadiusOffset = _ref$activeInnerRadiu === void 0 ? defaultProps.activeInnerRadiusOffset : _ref$activeInnerRadiu,
+      _ref$activeOuterRadiu = _ref.activeOuterRadiusOffset,
+      activeOuterRadiusOffset = _ref$activeOuterRadiu === void 0 ? defaultProps.activeOuterRadiusOffset : _ref$activeOuterRadiu,
+      width = _ref.width,
+      height = _ref.height,
+      partialMargin = _ref.margin,
+      _ref$pixelRatio = _ref.pixelRatio,
+      pixelRatio = _ref$pixelRatio === void 0 ? 1 : _ref$pixelRatio,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? defaultProps.colors : _ref$colors,
+      _ref$borderWidth = _ref.borderWidth,
+      borderWidth = _ref$borderWidth === void 0 ? defaultProps.borderWidth : _ref$borderWidth,
+      _ref$borderColor = _ref.borderColor,
+      borderColor = _ref$borderColor === void 0 ? defaultProps.borderColor : _ref$borderColor,
+      _ref$enableArcLabels = _ref.enableArcLabels,
+      enableArcLabels = _ref$enableArcLabels === void 0 ? defaultProps.enableArcLabels : _ref$enableArcLabels,
+      _ref$arcLabel = _ref.arcLabel,
+      arcLabel = _ref$arcLabel === void 0 ? defaultProps.arcLabel : _ref$arcLabel,
+      _ref$arcLabelsSkipAng = _ref.arcLabelsSkipAngle,
+      arcLabelsSkipAngle = _ref$arcLabelsSkipAng === void 0 ? defaultProps.arcLabelsSkipAngle : _ref$arcLabelsSkipAng,
+      _ref$arcLabelsTextCol = _ref.arcLabelsTextColor,
+      arcLabelsTextColor = _ref$arcLabelsTextCol === void 0 ? defaultProps.arcLabelsTextColor : _ref$arcLabelsTextCol,
+      _ref$arcLabelsRadiusO = _ref.arcLabelsRadiusOffset,
+      arcLabelsRadiusOffset = _ref$arcLabelsRadiusO === void 0 ? defaultProps.arcLabelsRadiusOffset : _ref$arcLabelsRadiusO,
+      _ref$enableArcLinkLab = _ref.enableArcLinkLabels,
+      enableArcLinkLabels = _ref$enableArcLinkLab === void 0 ? defaultProps.enableArcLinkLabels : _ref$enableArcLinkLab,
+      _ref$arcLinkLabel = _ref.arcLinkLabel,
+      arcLinkLabel = _ref$arcLinkLabel === void 0 ? defaultProps.arcLinkLabel : _ref$arcLinkLabel,
+      _ref$arcLinkLabelsSki = _ref.arcLinkLabelsSkipAngle,
+      arcLinkLabelsSkipAngle = _ref$arcLinkLabelsSki === void 0 ? defaultProps.arcLinkLabelsSkipAngle : _ref$arcLinkLabelsSki,
+      _ref$arcLinkLabelsOff = _ref.arcLinkLabelsOffset,
+      arcLinkLabelsOffset = _ref$arcLinkLabelsOff === void 0 ? defaultProps.arcLinkLabelsOffset : _ref$arcLinkLabelsOff,
+      _ref$arcLinkLabelsDia = _ref.arcLinkLabelsDiagonalLength,
+      arcLinkLabelsDiagonalLength = _ref$arcLinkLabelsDia === void 0 ? defaultProps.arcLinkLabelsDiagonalLength : _ref$arcLinkLabelsDia,
+      _ref$arcLinkLabelsStr = _ref.arcLinkLabelsStraightLength,
+      arcLinkLabelsStraightLength = _ref$arcLinkLabelsStr === void 0 ? defaultProps.arcLinkLabelsStraightLength : _ref$arcLinkLabelsStr,
+      _ref$arcLinkLabelsThi = _ref.arcLinkLabelsThickness,
+      arcLinkLabelsThickness = _ref$arcLinkLabelsThi === void 0 ? defaultProps.arcLinkLabelsThickness : _ref$arcLinkLabelsThi,
+      _ref$arcLinkLabelsTex = _ref.arcLinkLabelsTextOffset,
+      arcLinkLabelsTextOffset = _ref$arcLinkLabelsTex === void 0 ? defaultProps.arcLinkLabelsTextOffset : _ref$arcLinkLabelsTex,
+      _ref$arcLinkLabelsTex2 = _ref.arcLinkLabelsTextColor,
+      arcLinkLabelsTextColor = _ref$arcLinkLabelsTex2 === void 0 ? defaultProps.arcLinkLabelsTextColor : _ref$arcLinkLabelsTex2,
+      _ref$arcLinkLabelsCol = _ref.arcLinkLabelsColor,
+      arcLinkLabelsColor = _ref$arcLinkLabelsCol === void 0 ? defaultProps.arcLinkLabelsColor : _ref$arcLinkLabelsCol,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? defaultProps.isInteractive : _ref$isInteractive,
+      onClick = _ref.onClick,
+      onMouseMove = _ref.onMouseMove,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? defaultProps.tooltip : _ref$tooltip,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? defaultProps.legends : _ref$legends;
+  var canvasEl = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight;
+
+  var normalizedData = useNormalizedData({
+    data: data,
+    id: id,
+    value: value,
+    valueFormat: valueFormat,
+    colors: colors
+  });
+
+  var _usePieFromBox = usePieFromBox({
+    data: normalizedData,
+    width: innerWidth,
+    height: innerHeight,
+    fit: fit,
+    innerRadius: innerRadiusRatio,
+    startAngle: startAngle,
+    endAngle: endAngle,
+    padAngle: padAngle,
+    sortByValue: sortByValue,
+    cornerRadius: cornerRadius,
+    activeInnerRadiusOffset: activeInnerRadiusOffset,
+    activeOuterRadiusOffset: activeOuterRadiusOffset
+  }),
+      dataWithArc = _usePieFromBox.dataWithArc,
+      arcGenerator = _usePieFromBox.arcGenerator,
+      centerX = _usePieFromBox.centerX,
+      centerY = _usePieFromBox.centerY,
+      radius = _usePieFromBox.radius,
+      innerRadius = _usePieFromBox.innerRadius,
+      setActiveId = _usePieFromBox.setActiveId;
+
+  var getBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_6__["useInheritedColor"])(borderColor, theme);
+  var arcLabels = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["useArcLabels"])({
+    data: dataWithArc,
+    label: arcLabel,
+    skipAngle: arcLabelsSkipAngle,
+    offset: arcLabelsRadiusOffset,
+    textColor: arcLabelsTextColor
+  });
+  var arcLinkLabels = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["useArcLinkLabels"])({
+    data: dataWithArc,
+    skipAngle: arcLinkLabelsSkipAngle,
+    offset: arcLinkLabelsOffset,
+    diagonalLength: arcLinkLabelsDiagonalLength,
+    straightLength: arcLinkLabelsStraightLength,
+    label: arcLinkLabel,
+    linkColor: arcLinkLabelsColor,
+    textOffset: arcLinkLabelsTextOffset,
+    textColor: arcLinkLabelsTextColor
+  });
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (!canvasEl.current) return;
+    canvasEl.current.width = outerWidth * pixelRatio;
+    canvasEl.current.height = outerHeight * pixelRatio;
+    var ctx = canvasEl.current.getContext('2d');
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.fillStyle = theme.background;
+    ctx.fillRect(0, 0, outerWidth, outerHeight);
+    ctx.save();
+    ctx.translate(margin.left, margin.top);
+    arcGenerator.context(ctx);
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    dataWithArc.forEach(function (arc) {
+      ctx.beginPath();
+      ctx.fillStyle = arc.color;
+      ctx.strokeStyle = getBorderColor(arc);
+      ctx.lineWidth = borderWidth;
+      arcGenerator(arc.arc);
+      ctx.fill();
+
+      if (borderWidth > 0) {
+        ctx.stroke();
+      }
+    });
+
+    if (enableArcLinkLabels === true) {
+      Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["drawCanvasArcLinkLabels"])(ctx, arcLinkLabels, theme, arcLinkLabelsThickness);
+    }
+
+    if (enableArcLabels === true) {
+      Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["drawCanvasArcLabels"])(ctx, arcLabels, theme);
+    }
+
+    ctx.restore();
+    legends.forEach(function (legend) {
+      Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["renderLegendToCanvas"])(ctx, _objectSpread2(_objectSpread2({}, legend), {}, {
+        data: dataWithArc,
+        containerWidth: innerWidth,
+        containerHeight: innerHeight,
+        theme: theme
+      }));
+    });
+  }, [canvasEl, innerWidth, innerHeight, outerWidth, outerHeight, margin.top, margin.left, pixelRatio, centerX, centerY, arcGenerator, dataWithArc, getBorderColor, enableArcLabels, arcLabels, enableArcLinkLabels, arcLinkLabels, arcLinkLabelsThickness, legends, theme]);
+  var arcs = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return dataWithArc.map(function (datum) {
+      return _objectSpread2({
+        id: datum.id
+      }, datum.arc);
+    });
+  }, [dataWithArc]);
+
+  var getArcFromMouse = function getArcFromMouse(event) {
+    if (!canvasEl.current) return null;
+
+    var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getRelativeCursor"])(canvasEl.current, event),
+        _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
+        x = _getRelativeCursor2[0],
+        y = _getRelativeCursor2[1];
+
+    var hoveredArc = Object(_nivo_arcs__WEBPACK_IMPORTED_MODULE_2__["findArcUnderCursor"])(margin.left + centerX, margin.top + centerY, radius, innerRadius, arcs, x, y);
+    if (!hoveredArc) return null;
+    return dataWithArc.find(function (datum) {
+      return datum.id === hoveredArc.id;
+    });
+  };
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var handleMouseHover = function handleMouseHover(event) {
+    var datum = getArcFromMouse(event);
+
+    if (datum) {
+      onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(datum, event);
+      setActiveId(datum.id);
+      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
+        datum: datum
+      }), event);
+    } else {
+      setActiveId(null);
+      hideTooltip();
+    }
+  };
+
+  var handleMouseLeave = function handleMouseLeave() {
+    hideTooltip();
+  };
+
+  var handleClick = function handleClick(event) {
+    if (!onClick) return;
+    var arc = getArcFromMouse(event);
+
+    if (arc) {
+      onClick(arc, event);
+    }
+  };
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("canvas", {
+    ref: canvasEl,
+    width: outerWidth * pixelRatio,
+    height: outerHeight * pixelRatio,
+    style: {
+      width: outerWidth,
+      height: outerHeight,
+      cursor: isInteractive ? 'auto' : 'normal'
+    },
+    onMouseEnter: isInteractive ? handleMouseHover : undefined,
+    onMouseMove: isInteractive ? handleMouseHover : undefined,
+    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+    onClick: isInteractive ? handleClick : undefined
+  });
+};
+
+var PieCanvas = function PieCanvas(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? defaultProps.isInteractive : _ref2$isInteractive,
+      theme = _ref2.theme,
+      renderWrapper = _ref2.renderWrapper,
+      otherProps = _objectWithoutProperties(_ref2, ["isInteractive", "theme", "renderWrapper"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+    isInteractive: isInteractive,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(InnerPieCanvas, _objectSpread2({
+      isInteractive: isInteractive
+    }, otherProps))
+  });
+};
+
+var ResponsivePieCanvas = function ResponsivePieCanvas(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(PieCanvas, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
+};
 
 
 
@@ -36865,6 +39643,1065 @@ function defaultGetY(p) {
 
 /***/ }),
 
+/***/ "./node_modules/history/esm/history.js":
+/*!*********************************************!*\
+  !*** ./node_modules/history/esm/history.js ***!
+  \*********************************************/
+/*! exports provided: createBrowserHistory, createHashHistory, createMemoryHistory, createLocation, locationsAreEqual, parsePath, createPath */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBrowserHistory", function() { return createBrowserHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createHashHistory", function() { return createHashHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMemoryHistory", function() { return createMemoryHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLocation", function() { return createLocation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationsAreEqual", function() { return locationsAreEqual; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parsePath", function() { return parsePath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPath", function() { return createPath; });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var resolve_pathname__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! resolve-pathname */ "./node_modules/resolve-pathname/esm/resolve-pathname.js");
+/* harmony import */ var value_equal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! value-equal */ "./node_modules/value-equal/esm/value-equal.js");
+/* harmony import */ var tiny_warning__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tiny-warning */ "./node_modules/tiny-warning/dist/tiny-warning.esm.js");
+/* harmony import */ var tiny_invariant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tiny-invariant */ "./node_modules/tiny-invariant/dist/tiny-invariant.esm.js");
+
+
+
+
+
+
+function addLeadingSlash(path) {
+  return path.charAt(0) === '/' ? path : '/' + path;
+}
+function stripLeadingSlash(path) {
+  return path.charAt(0) === '/' ? path.substr(1) : path;
+}
+function hasBasename(path, prefix) {
+  return path.toLowerCase().indexOf(prefix.toLowerCase()) === 0 && '/?#'.indexOf(path.charAt(prefix.length)) !== -1;
+}
+function stripBasename(path, prefix) {
+  return hasBasename(path, prefix) ? path.substr(prefix.length) : path;
+}
+function stripTrailingSlash(path) {
+  return path.charAt(path.length - 1) === '/' ? path.slice(0, -1) : path;
+}
+function parsePath(path) {
+  var pathname = path || '/';
+  var search = '';
+  var hash = '';
+  var hashIndex = pathname.indexOf('#');
+
+  if (hashIndex !== -1) {
+    hash = pathname.substr(hashIndex);
+    pathname = pathname.substr(0, hashIndex);
+  }
+
+  var searchIndex = pathname.indexOf('?');
+
+  if (searchIndex !== -1) {
+    search = pathname.substr(searchIndex);
+    pathname = pathname.substr(0, searchIndex);
+  }
+
+  return {
+    pathname: pathname,
+    search: search === '?' ? '' : search,
+    hash: hash === '#' ? '' : hash
+  };
+}
+function createPath(location) {
+  var pathname = location.pathname,
+      search = location.search,
+      hash = location.hash;
+  var path = pathname || '/';
+  if (search && search !== '?') path += search.charAt(0) === '?' ? search : "?" + search;
+  if (hash && hash !== '#') path += hash.charAt(0) === '#' ? hash : "#" + hash;
+  return path;
+}
+
+function createLocation(path, state, key, currentLocation) {
+  var location;
+
+  if (typeof path === 'string') {
+    // Two-arg form: push(path, state)
+    location = parsePath(path);
+    location.state = state;
+  } else {
+    // One-arg form: push(location)
+    location = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, path);
+    if (location.pathname === undefined) location.pathname = '';
+
+    if (location.search) {
+      if (location.search.charAt(0) !== '?') location.search = '?' + location.search;
+    } else {
+      location.search = '';
+    }
+
+    if (location.hash) {
+      if (location.hash.charAt(0) !== '#') location.hash = '#' + location.hash;
+    } else {
+      location.hash = '';
+    }
+
+    if (state !== undefined && location.state === undefined) location.state = state;
+  }
+
+  try {
+    location.pathname = decodeURI(location.pathname);
+  } catch (e) {
+    if (e instanceof URIError) {
+      throw new URIError('Pathname "' + location.pathname + '" could not be decoded. ' + 'This is likely caused by an invalid percent-encoding.');
+    } else {
+      throw e;
+    }
+  }
+
+  if (key) location.key = key;
+
+  if (currentLocation) {
+    // Resolve incomplete/relative pathname relative to current location.
+    if (!location.pathname) {
+      location.pathname = currentLocation.pathname;
+    } else if (location.pathname.charAt(0) !== '/') {
+      location.pathname = Object(resolve_pathname__WEBPACK_IMPORTED_MODULE_1__["default"])(location.pathname, currentLocation.pathname);
+    }
+  } else {
+    // When there is no prior location and pathname is empty, set it to /
+    if (!location.pathname) {
+      location.pathname = '/';
+    }
+  }
+
+  return location;
+}
+function locationsAreEqual(a, b) {
+  return a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && a.key === b.key && Object(value_equal__WEBPACK_IMPORTED_MODULE_2__["default"])(a.state, b.state);
+}
+
+function createTransitionManager() {
+  var prompt = null;
+
+  function setPrompt(nextPrompt) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(prompt == null, 'A history supports only one prompt at a time') : undefined;
+    prompt = nextPrompt;
+    return function () {
+      if (prompt === nextPrompt) prompt = null;
+    };
+  }
+
+  function confirmTransitionTo(location, action, getUserConfirmation, callback) {
+    // TODO: If another transition starts while we're still confirming
+    // the previous one, we may end up in a weird state. Figure out the
+    // best way to handle this.
+    if (prompt != null) {
+      var result = typeof prompt === 'function' ? prompt(location, action) : prompt;
+
+      if (typeof result === 'string') {
+        if (typeof getUserConfirmation === 'function') {
+          getUserConfirmation(result, callback);
+        } else {
+           true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(false, 'A history needs a getUserConfirmation function in order to use a prompt message') : undefined;
+          callback(true);
+        }
+      } else {
+        // Return false from a transition hook to cancel the transition.
+        callback(result !== false);
+      }
+    } else {
+      callback(true);
+    }
+  }
+
+  var listeners = [];
+
+  function appendListener(fn) {
+    var isActive = true;
+
+    function listener() {
+      if (isActive) fn.apply(void 0, arguments);
+    }
+
+    listeners.push(listener);
+    return function () {
+      isActive = false;
+      listeners = listeners.filter(function (item) {
+        return item !== listener;
+      });
+    };
+  }
+
+  function notifyListeners() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    listeners.forEach(function (listener) {
+      return listener.apply(void 0, args);
+    });
+  }
+
+  return {
+    setPrompt: setPrompt,
+    confirmTransitionTo: confirmTransitionTo,
+    appendListener: appendListener,
+    notifyListeners: notifyListeners
+  };
+}
+
+var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+function getConfirmation(message, callback) {
+  callback(window.confirm(message)); // eslint-disable-line no-alert
+}
+/**
+ * Returns true if the HTML5 history API is supported. Taken from Modernizr.
+ *
+ * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
+ * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
+ * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
+ */
+
+function supportsHistory() {
+  var ua = window.navigator.userAgent;
+  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) && ua.indexOf('Mobile Safari') !== -1 && ua.indexOf('Chrome') === -1 && ua.indexOf('Windows Phone') === -1) return false;
+  return window.history && 'pushState' in window.history;
+}
+/**
+ * Returns true if browser fires popstate on hash change.
+ * IE10 and IE11 do not.
+ */
+
+function supportsPopStateOnHashChange() {
+  return window.navigator.userAgent.indexOf('Trident') === -1;
+}
+/**
+ * Returns false if using go(n) with hash history causes a full page reload.
+ */
+
+function supportsGoWithoutReloadUsingHash() {
+  return window.navigator.userAgent.indexOf('Firefox') === -1;
+}
+/**
+ * Returns true if a given popstate event is an extraneous WebKit event.
+ * Accounts for the fact that Chrome on iOS fires real popstate events
+ * containing undefined state when pressing the back button.
+ */
+
+function isExtraneousPopstateEvent(event) {
+  return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1;
+}
+
+var PopStateEvent = 'popstate';
+var HashChangeEvent = 'hashchange';
+
+function getHistoryState() {
+  try {
+    return window.history.state || {};
+  } catch (e) {
+    // IE 11 sometimes throws when accessing window.history.state
+    // See https://github.com/ReactTraining/history/pull/289
+    return {};
+  }
+}
+/**
+ * Creates a history object that uses the HTML5 history API including
+ * pushState, replaceState, and the popstate event.
+ */
+
+
+function createBrowserHistory(props) {
+  if (props === void 0) {
+    props = {};
+  }
+
+  !canUseDOM ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_4__["default"])(false, 'Browser history needs a DOM') : undefined : void 0;
+  var globalHistory = window.history;
+  var canUseHistory = supportsHistory();
+  var needsHashChangeListener = !supportsPopStateOnHashChange();
+  var _props = props,
+      _props$forceRefresh = _props.forceRefresh,
+      forceRefresh = _props$forceRefresh === void 0 ? false : _props$forceRefresh,
+      _props$getUserConfirm = _props.getUserConfirmation,
+      getUserConfirmation = _props$getUserConfirm === void 0 ? getConfirmation : _props$getUserConfirm,
+      _props$keyLength = _props.keyLength,
+      keyLength = _props$keyLength === void 0 ? 6 : _props$keyLength;
+  var basename = props.basename ? stripTrailingSlash(addLeadingSlash(props.basename)) : '';
+
+  function getDOMLocation(historyState) {
+    var _ref = historyState || {},
+        key = _ref.key,
+        state = _ref.state;
+
+    var _window$location = window.location,
+        pathname = _window$location.pathname,
+        search = _window$location.search,
+        hash = _window$location.hash;
+    var path = pathname + search + hash;
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : undefined;
+    if (basename) path = stripBasename(path, basename);
+    return createLocation(path, state, key);
+  }
+
+  function createKey() {
+    return Math.random().toString(36).substr(2, keyLength);
+  }
+
+  var transitionManager = createTransitionManager();
+
+  function setState(nextState) {
+    Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])(history, nextState);
+
+    history.length = globalHistory.length;
+    transitionManager.notifyListeners(history.location, history.action);
+  }
+
+  function handlePopState(event) {
+    // Ignore extraneous popstate events in WebKit.
+    if (isExtraneousPopstateEvent(event)) return;
+    handlePop(getDOMLocation(event.state));
+  }
+
+  function handleHashChange() {
+    handlePop(getDOMLocation(getHistoryState()));
+  }
+
+  var forceNextPop = false;
+
+  function handlePop(location) {
+    if (forceNextPop) {
+      forceNextPop = false;
+      setState();
+    } else {
+      var action = 'POP';
+      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+        if (ok) {
+          setState({
+            action: action,
+            location: location
+          });
+        } else {
+          revertPop(location);
+        }
+      });
+    }
+  }
+
+  function revertPop(fromLocation) {
+    var toLocation = history.location; // TODO: We could probably make this more reliable by
+    // keeping a list of keys we've seen in sessionStorage.
+    // Instead, we just default to 0 for keys we don't know.
+
+    var toIndex = allKeys.indexOf(toLocation.key);
+    if (toIndex === -1) toIndex = 0;
+    var fromIndex = allKeys.indexOf(fromLocation.key);
+    if (fromIndex === -1) fromIndex = 0;
+    var delta = toIndex - fromIndex;
+
+    if (delta) {
+      forceNextPop = true;
+      go(delta);
+    }
+  }
+
+  var initialLocation = getDOMLocation(getHistoryState());
+  var allKeys = [initialLocation.key]; // Public interface
+
+  function createHref(location) {
+    return basename + createPath(location);
+  }
+
+  function push(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : undefined;
+    var action = 'PUSH';
+    var location = createLocation(path, state, createKey(), history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      var href = createHref(location);
+      var key = location.key,
+          state = location.state;
+
+      if (canUseHistory) {
+        globalHistory.pushState({
+          key: key,
+          state: state
+        }, null, href);
+
+        if (forceRefresh) {
+          window.location.href = href;
+        } else {
+          var prevIndex = allKeys.indexOf(history.location.key);
+          var nextKeys = allKeys.slice(0, prevIndex + 1);
+          nextKeys.push(location.key);
+          allKeys = nextKeys;
+          setState({
+            action: action,
+            location: location
+          });
+        }
+      } else {
+         true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(state === undefined, 'Browser history cannot push state in browsers that do not support HTML5 history') : undefined;
+        window.location.href = href;
+      }
+    });
+  }
+
+  function replace(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : undefined;
+    var action = 'REPLACE';
+    var location = createLocation(path, state, createKey(), history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      var href = createHref(location);
+      var key = location.key,
+          state = location.state;
+
+      if (canUseHistory) {
+        globalHistory.replaceState({
+          key: key,
+          state: state
+        }, null, href);
+
+        if (forceRefresh) {
+          window.location.replace(href);
+        } else {
+          var prevIndex = allKeys.indexOf(history.location.key);
+          if (prevIndex !== -1) allKeys[prevIndex] = location.key;
+          setState({
+            action: action,
+            location: location
+          });
+        }
+      } else {
+         true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(state === undefined, 'Browser history cannot replace state in browsers that do not support HTML5 history') : undefined;
+        window.location.replace(href);
+      }
+    });
+  }
+
+  function go(n) {
+    globalHistory.go(n);
+  }
+
+  function goBack() {
+    go(-1);
+  }
+
+  function goForward() {
+    go(1);
+  }
+
+  var listenerCount = 0;
+
+  function checkDOMListeners(delta) {
+    listenerCount += delta;
+
+    if (listenerCount === 1 && delta === 1) {
+      window.addEventListener(PopStateEvent, handlePopState);
+      if (needsHashChangeListener) window.addEventListener(HashChangeEvent, handleHashChange);
+    } else if (listenerCount === 0) {
+      window.removeEventListener(PopStateEvent, handlePopState);
+      if (needsHashChangeListener) window.removeEventListener(HashChangeEvent, handleHashChange);
+    }
+  }
+
+  var isBlocked = false;
+
+  function block(prompt) {
+    if (prompt === void 0) {
+      prompt = false;
+    }
+
+    var unblock = transitionManager.setPrompt(prompt);
+
+    if (!isBlocked) {
+      checkDOMListeners(1);
+      isBlocked = true;
+    }
+
+    return function () {
+      if (isBlocked) {
+        isBlocked = false;
+        checkDOMListeners(-1);
+      }
+
+      return unblock();
+    };
+  }
+
+  function listen(listener) {
+    var unlisten = transitionManager.appendListener(listener);
+    checkDOMListeners(1);
+    return function () {
+      checkDOMListeners(-1);
+      unlisten();
+    };
+  }
+
+  var history = {
+    length: globalHistory.length,
+    action: 'POP',
+    location: initialLocation,
+    createHref: createHref,
+    push: push,
+    replace: replace,
+    go: go,
+    goBack: goBack,
+    goForward: goForward,
+    block: block,
+    listen: listen
+  };
+  return history;
+}
+
+var HashChangeEvent$1 = 'hashchange';
+var HashPathCoders = {
+  hashbang: {
+    encodePath: function encodePath(path) {
+      return path.charAt(0) === '!' ? path : '!/' + stripLeadingSlash(path);
+    },
+    decodePath: function decodePath(path) {
+      return path.charAt(0) === '!' ? path.substr(1) : path;
+    }
+  },
+  noslash: {
+    encodePath: stripLeadingSlash,
+    decodePath: addLeadingSlash
+  },
+  slash: {
+    encodePath: addLeadingSlash,
+    decodePath: addLeadingSlash
+  }
+};
+
+function stripHash(url) {
+  var hashIndex = url.indexOf('#');
+  return hashIndex === -1 ? url : url.slice(0, hashIndex);
+}
+
+function getHashPath() {
+  // We can't use window.location.hash here because it's not
+  // consistent across browsers - Firefox will pre-decode it!
+  var href = window.location.href;
+  var hashIndex = href.indexOf('#');
+  return hashIndex === -1 ? '' : href.substring(hashIndex + 1);
+}
+
+function pushHashPath(path) {
+  window.location.hash = path;
+}
+
+function replaceHashPath(path) {
+  window.location.replace(stripHash(window.location.href) + '#' + path);
+}
+
+function createHashHistory(props) {
+  if (props === void 0) {
+    props = {};
+  }
+
+  !canUseDOM ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_4__["default"])(false, 'Hash history needs a DOM') : undefined : void 0;
+  var globalHistory = window.history;
+  var canGoWithoutReload = supportsGoWithoutReloadUsingHash();
+  var _props = props,
+      _props$getUserConfirm = _props.getUserConfirmation,
+      getUserConfirmation = _props$getUserConfirm === void 0 ? getConfirmation : _props$getUserConfirm,
+      _props$hashType = _props.hashType,
+      hashType = _props$hashType === void 0 ? 'slash' : _props$hashType;
+  var basename = props.basename ? stripTrailingSlash(addLeadingSlash(props.basename)) : '';
+  var _HashPathCoders$hashT = HashPathCoders[hashType],
+      encodePath = _HashPathCoders$hashT.encodePath,
+      decodePath = _HashPathCoders$hashT.decodePath;
+
+  function getDOMLocation() {
+    var path = decodePath(getHashPath());
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : undefined;
+    if (basename) path = stripBasename(path, basename);
+    return createLocation(path);
+  }
+
+  var transitionManager = createTransitionManager();
+
+  function setState(nextState) {
+    Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])(history, nextState);
+
+    history.length = globalHistory.length;
+    transitionManager.notifyListeners(history.location, history.action);
+  }
+
+  var forceNextPop = false;
+  var ignorePath = null;
+
+  function locationsAreEqual$$1(a, b) {
+    return a.pathname === b.pathname && a.search === b.search && a.hash === b.hash;
+  }
+
+  function handleHashChange() {
+    var path = getHashPath();
+    var encodedPath = encodePath(path);
+
+    if (path !== encodedPath) {
+      // Ensure we always have a properly-encoded hash.
+      replaceHashPath(encodedPath);
+    } else {
+      var location = getDOMLocation();
+      var prevLocation = history.location;
+      if (!forceNextPop && locationsAreEqual$$1(prevLocation, location)) return; // A hashchange doesn't always == location change.
+
+      if (ignorePath === createPath(location)) return; // Ignore this change; we already setState in push/replace.
+
+      ignorePath = null;
+      handlePop(location);
+    }
+  }
+
+  function handlePop(location) {
+    if (forceNextPop) {
+      forceNextPop = false;
+      setState();
+    } else {
+      var action = 'POP';
+      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+        if (ok) {
+          setState({
+            action: action,
+            location: location
+          });
+        } else {
+          revertPop(location);
+        }
+      });
+    }
+  }
+
+  function revertPop(fromLocation) {
+    var toLocation = history.location; // TODO: We could probably make this more reliable by
+    // keeping a list of paths we've seen in sessionStorage.
+    // Instead, we just default to 0 for paths we don't know.
+
+    var toIndex = allPaths.lastIndexOf(createPath(toLocation));
+    if (toIndex === -1) toIndex = 0;
+    var fromIndex = allPaths.lastIndexOf(createPath(fromLocation));
+    if (fromIndex === -1) fromIndex = 0;
+    var delta = toIndex - fromIndex;
+
+    if (delta) {
+      forceNextPop = true;
+      go(delta);
+    }
+  } // Ensure the hash is encoded properly before doing anything else.
+
+
+  var path = getHashPath();
+  var encodedPath = encodePath(path);
+  if (path !== encodedPath) replaceHashPath(encodedPath);
+  var initialLocation = getDOMLocation();
+  var allPaths = [createPath(initialLocation)]; // Public interface
+
+  function createHref(location) {
+    var baseTag = document.querySelector('base');
+    var href = '';
+
+    if (baseTag && baseTag.getAttribute('href')) {
+      href = stripHash(window.location.href);
+    }
+
+    return href + '#' + encodePath(basename + createPath(location));
+  }
+
+  function push(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(state === undefined, 'Hash history cannot push state; it is ignored') : undefined;
+    var action = 'PUSH';
+    var location = createLocation(path, undefined, undefined, history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      var path = createPath(location);
+      var encodedPath = encodePath(basename + path);
+      var hashChanged = getHashPath() !== encodedPath;
+
+      if (hashChanged) {
+        // We cannot tell if a hashchange was caused by a PUSH, so we'd
+        // rather setState here and ignore the hashchange. The caveat here
+        // is that other hash histories in the page will consider it a POP.
+        ignorePath = path;
+        pushHashPath(encodedPath);
+        var prevIndex = allPaths.lastIndexOf(createPath(history.location));
+        var nextPaths = allPaths.slice(0, prevIndex + 1);
+        nextPaths.push(path);
+        allPaths = nextPaths;
+        setState({
+          action: action,
+          location: location
+        });
+      } else {
+         true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(false, 'Hash history cannot PUSH the same path; a new entry will not be added to the history stack') : undefined;
+        setState();
+      }
+    });
+  }
+
+  function replace(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(state === undefined, 'Hash history cannot replace state; it is ignored') : undefined;
+    var action = 'REPLACE';
+    var location = createLocation(path, undefined, undefined, history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      var path = createPath(location);
+      var encodedPath = encodePath(basename + path);
+      var hashChanged = getHashPath() !== encodedPath;
+
+      if (hashChanged) {
+        // We cannot tell if a hashchange was caused by a REPLACE, so we'd
+        // rather setState here and ignore the hashchange. The caveat here
+        // is that other hash histories in the page will consider it a POP.
+        ignorePath = path;
+        replaceHashPath(encodedPath);
+      }
+
+      var prevIndex = allPaths.indexOf(createPath(history.location));
+      if (prevIndex !== -1) allPaths[prevIndex] = path;
+      setState({
+        action: action,
+        location: location
+      });
+    });
+  }
+
+  function go(n) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(canGoWithoutReload, 'Hash history go(n) causes a full page reload in this browser') : undefined;
+    globalHistory.go(n);
+  }
+
+  function goBack() {
+    go(-1);
+  }
+
+  function goForward() {
+    go(1);
+  }
+
+  var listenerCount = 0;
+
+  function checkDOMListeners(delta) {
+    listenerCount += delta;
+
+    if (listenerCount === 1 && delta === 1) {
+      window.addEventListener(HashChangeEvent$1, handleHashChange);
+    } else if (listenerCount === 0) {
+      window.removeEventListener(HashChangeEvent$1, handleHashChange);
+    }
+  }
+
+  var isBlocked = false;
+
+  function block(prompt) {
+    if (prompt === void 0) {
+      prompt = false;
+    }
+
+    var unblock = transitionManager.setPrompt(prompt);
+
+    if (!isBlocked) {
+      checkDOMListeners(1);
+      isBlocked = true;
+    }
+
+    return function () {
+      if (isBlocked) {
+        isBlocked = false;
+        checkDOMListeners(-1);
+      }
+
+      return unblock();
+    };
+  }
+
+  function listen(listener) {
+    var unlisten = transitionManager.appendListener(listener);
+    checkDOMListeners(1);
+    return function () {
+      checkDOMListeners(-1);
+      unlisten();
+    };
+  }
+
+  var history = {
+    length: globalHistory.length,
+    action: 'POP',
+    location: initialLocation,
+    createHref: createHref,
+    push: push,
+    replace: replace,
+    go: go,
+    goBack: goBack,
+    goForward: goForward,
+    block: block,
+    listen: listen
+  };
+  return history;
+}
+
+function clamp(n, lowerBound, upperBound) {
+  return Math.min(Math.max(n, lowerBound), upperBound);
+}
+/**
+ * Creates a history object that stores locations in memory.
+ */
+
+
+function createMemoryHistory(props) {
+  if (props === void 0) {
+    props = {};
+  }
+
+  var _props = props,
+      getUserConfirmation = _props.getUserConfirmation,
+      _props$initialEntries = _props.initialEntries,
+      initialEntries = _props$initialEntries === void 0 ? ['/'] : _props$initialEntries,
+      _props$initialIndex = _props.initialIndex,
+      initialIndex = _props$initialIndex === void 0 ? 0 : _props$initialIndex,
+      _props$keyLength = _props.keyLength,
+      keyLength = _props$keyLength === void 0 ? 6 : _props$keyLength;
+  var transitionManager = createTransitionManager();
+
+  function setState(nextState) {
+    Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])(history, nextState);
+
+    history.length = history.entries.length;
+    transitionManager.notifyListeners(history.location, history.action);
+  }
+
+  function createKey() {
+    return Math.random().toString(36).substr(2, keyLength);
+  }
+
+  var index = clamp(initialIndex, 0, initialEntries.length - 1);
+  var entries = initialEntries.map(function (entry) {
+    return typeof entry === 'string' ? createLocation(entry, undefined, createKey()) : createLocation(entry, undefined, entry.key || createKey());
+  }); // Public interface
+
+  var createHref = createPath;
+
+  function push(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : undefined;
+    var action = 'PUSH';
+    var location = createLocation(path, state, createKey(), history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      var prevIndex = history.index;
+      var nextIndex = prevIndex + 1;
+      var nextEntries = history.entries.slice(0);
+
+      if (nextEntries.length > nextIndex) {
+        nextEntries.splice(nextIndex, nextEntries.length - nextIndex, location);
+      } else {
+        nextEntries.push(location);
+      }
+
+      setState({
+        action: action,
+        location: location,
+        index: nextIndex,
+        entries: nextEntries
+      });
+    });
+  }
+
+  function replace(path, state) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : undefined;
+    var action = 'REPLACE';
+    var location = createLocation(path, state, createKey(), history.location);
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (!ok) return;
+      history.entries[history.index] = location;
+      setState({
+        action: action,
+        location: location
+      });
+    });
+  }
+
+  function go(n) {
+    var nextIndex = clamp(history.index + n, 0, history.entries.length - 1);
+    var action = 'POP';
+    var location = history.entries[nextIndex];
+    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+      if (ok) {
+        setState({
+          action: action,
+          location: location,
+          index: nextIndex
+        });
+      } else {
+        // Mimic the behavior of DOM histories by
+        // causing a render after a cancelled POP.
+        setState();
+      }
+    });
+  }
+
+  function goBack() {
+    go(-1);
+  }
+
+  function goForward() {
+    go(1);
+  }
+
+  function canGo(n) {
+    var nextIndex = history.index + n;
+    return nextIndex >= 0 && nextIndex < history.entries.length;
+  }
+
+  function block(prompt) {
+    if (prompt === void 0) {
+      prompt = false;
+    }
+
+    return transitionManager.setPrompt(prompt);
+  }
+
+  function listen(listener) {
+    return transitionManager.appendListener(listener);
+  }
+
+  var history = {
+    length: entries.length,
+    action: 'POP',
+    location: entries[index],
+    index: index,
+    entries: entries,
+    createHref: createHref,
+    push: push,
+    replace: replace,
+    go: go,
+    goBack: goBack,
+    goForward: goForward,
+    canGo: canGo,
+    block: block,
+    listen: listen
+  };
+  return history;
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
+  \**********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var reactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
+/**
+ * Copyright 2015, Yahoo! Inc.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+var REACT_STATICS = {
+  childContextTypes: true,
+  contextType: true,
+  contextTypes: true,
+  defaultProps: true,
+  displayName: true,
+  getDefaultProps: true,
+  getDerivedStateFromError: true,
+  getDerivedStateFromProps: true,
+  mixins: true,
+  propTypes: true,
+  type: true
+};
+var KNOWN_STATICS = {
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
+};
+var FORWARD_REF_STATICS = {
+  '$$typeof': true,
+  render: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true
+};
+var MEMO_STATICS = {
+  '$$typeof': true,
+  compare: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true,
+  type: true
+};
+var TYPE_STATICS = {};
+TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
+TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
+
+function getStatics(component) {
+  // React v16.11 and below
+  if (reactIs.isMemo(component)) {
+    return MEMO_STATICS;
+  } // React v16.12 and above
+
+
+  return TYPE_STATICS[component['$$typeof']] || REACT_STATICS;
+}
+
+var defineProperty = Object.defineProperty;
+var getOwnPropertyNames = Object.getOwnPropertyNames;
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var getPrototypeOf = Object.getPrototypeOf;
+var objectPrototype = Object.prototype;
+function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+  if (typeof sourceComponent !== 'string') {
+    // don't hoist over string (html) components
+    if (objectPrototype) {
+      var inheritedComponent = getPrototypeOf(sourceComponent);
+
+      if (inheritedComponent && inheritedComponent !== objectPrototype) {
+        hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
+      }
+    }
+
+    var keys = getOwnPropertyNames(sourceComponent);
+
+    if (getOwnPropertySymbols) {
+      keys = keys.concat(getOwnPropertySymbols(sourceComponent));
+    }
+
+    var targetStatics = getStatics(targetComponent);
+    var sourceStatics = getStatics(sourceComponent);
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      if (!KNOWN_STATICS[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
+        var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
+
+        try {
+          // Avoid failures from read-only properties
+          defineProperty(targetComponent, key, descriptor);
+        } catch (e) {}
+      }
+    }
+  }
+
+  return targetComponent;
+}
+
+module.exports = hoistNonReactStatics;
+
+
+/***/ }),
+
 /***/ "./node_modules/internmap/src/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/internmap/src/index.js ***!
@@ -44298,6 +48135,243 @@ module.exports = without;
 
 /***/ }),
 
+/***/ "./node_modules/mini-create-react-context/dist/esm/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/mini-create-react-context/dist/esm/index.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var tiny_warning__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tiny-warning */ "./node_modules/tiny-warning/dist/tiny-warning.esm.js");
+
+
+
+
+
+var MAX_SIGNED_31_BIT_INT = 1073741823;
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
+
+function getUniqueId() {
+  var key = '__global_unique_id__';
+  return commonjsGlobal[key] = (commonjsGlobal[key] || 0) + 1;
+}
+
+function objectIs(x, y) {
+  if (x === y) {
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
+  }
+}
+
+function createEventEmitter(value) {
+  var handlers = [];
+  return {
+    on: function on(handler) {
+      handlers.push(handler);
+    },
+    off: function off(handler) {
+      handlers = handlers.filter(function (h) {
+        return h !== handler;
+      });
+    },
+    get: function get() {
+      return value;
+    },
+    set: function set(newValue, changedBits) {
+      value = newValue;
+      handlers.forEach(function (handler) {
+        return handler(value, changedBits);
+      });
+    }
+  };
+}
+
+function onlyChild(children) {
+  return Array.isArray(children) ? children[0] : children;
+}
+
+function createReactContext(defaultValue, calculateChangedBits) {
+  var _Provider$childContex, _Consumer$contextType;
+
+  var contextProp = '__create-react-context-' + getUniqueId() + '__';
+
+  var Provider = /*#__PURE__*/function (_Component) {
+    Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(Provider, _Component);
+
+    function Provider() {
+      var _this;
+
+      _this = _Component.apply(this, arguments) || this;
+      _this.emitter = createEventEmitter(_this.props.value);
+      return _this;
+    }
+
+    var _proto = Provider.prototype;
+
+    _proto.getChildContext = function getChildContext() {
+      var _ref;
+
+      return _ref = {}, _ref[contextProp] = this.emitter, _ref;
+    };
+
+    _proto.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if (this.props.value !== nextProps.value) {
+        var oldValue = this.props.value;
+        var newValue = nextProps.value;
+        var changedBits;
+
+        if (objectIs(oldValue, newValue)) {
+          changedBits = 0;
+        } else {
+          changedBits = typeof calculateChangedBits === 'function' ? calculateChangedBits(oldValue, newValue) : MAX_SIGNED_31_BIT_INT;
+
+          if (true) {
+            Object(tiny_warning__WEBPACK_IMPORTED_MODULE_3__["default"])((changedBits & MAX_SIGNED_31_BIT_INT) === changedBits, 'calculateChangedBits: Expected the return value to be a ' + '31-bit integer. Instead received: ' + changedBits);
+          }
+
+          changedBits |= 0;
+
+          if (changedBits !== 0) {
+            this.emitter.set(nextProps.value, changedBits);
+          }
+        }
+      }
+    };
+
+    _proto.render = function render() {
+      return this.props.children;
+    };
+
+    return Provider;
+  }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+  Provider.childContextTypes = (_Provider$childContex = {}, _Provider$childContex[contextProp] = prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object.isRequired, _Provider$childContex);
+
+  var Consumer = /*#__PURE__*/function (_Component2) {
+    Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(Consumer, _Component2);
+
+    function Consumer() {
+      var _this2;
+
+      _this2 = _Component2.apply(this, arguments) || this;
+      _this2.state = {
+        value: _this2.getValue()
+      };
+
+      _this2.onUpdate = function (newValue, changedBits) {
+        var observedBits = _this2.observedBits | 0;
+
+        if ((observedBits & changedBits) !== 0) {
+          _this2.setState({
+            value: _this2.getValue()
+          });
+        }
+      };
+
+      return _this2;
+    }
+
+    var _proto2 = Consumer.prototype;
+
+    _proto2.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var observedBits = nextProps.observedBits;
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT : observedBits;
+    };
+
+    _proto2.componentDidMount = function componentDidMount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].on(this.onUpdate);
+      }
+
+      var observedBits = this.props.observedBits;
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT : observedBits;
+    };
+
+    _proto2.componentWillUnmount = function componentWillUnmount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].off(this.onUpdate);
+      }
+    };
+
+    _proto2.getValue = function getValue() {
+      if (this.context[contextProp]) {
+        return this.context[contextProp].get();
+      } else {
+        return defaultValue;
+      }
+    };
+
+    _proto2.render = function render() {
+      return onlyChild(this.props.children)(this.state.value);
+    };
+
+    return Consumer;
+  }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+  Consumer.contextTypes = (_Consumer$contextType = {}, _Consumer$contextType[contextProp] = prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object, _Consumer$contextType);
+  return {
+    Provider: Provider,
+    Consumer: Consumer
+  };
+}
+
+var index = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext || createReactContext;
+
+/* harmony default export */ __webpack_exports__["default"] = (index);
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":
+/*!*********************************************************************************************************!*\
+  !*** ./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
+  \*********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _inheritsLoose; });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  Object(_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
+/***/ "./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!**********************************************************************************************************!*\
+  !*** ./node_modules/mini-create-react-context/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \**********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _setPrototypeOf; });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
 /***/ "./node_modules/object-assign/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
@@ -44395,6 +48469,457 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	}
 
 	return to;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/path-to-regexp/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/path-to-regexp/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isarray = __webpack_require__(/*! isarray */ "./node_modules/path-to-regexp/node_modules/isarray/index.js")
+
+/**
+ * Expose `pathToRegexp`.
+ */
+module.exports = pathToRegexp
+module.exports.parse = parse
+module.exports.compile = compile
+module.exports.tokensToFunction = tokensToFunction
+module.exports.tokensToRegExp = tokensToRegExp
+
+/**
+ * The main path matching regexp utility.
+ *
+ * @type {RegExp}
+ */
+var PATH_REGEXP = new RegExp([
+  // Match escaped characters that would otherwise appear in future matches.
+  // This allows the user to escape special characters that won't transform.
+  '(\\\\.)',
+  // Match Express-style parameters and un-named parameters with a prefix
+  // and optional suffixes. Matches appear as:
+  //
+  // "/:test(\\d+)?" => ["/", "test", "\d+", undefined, "?", undefined]
+  // "/route(\\d+)"  => [undefined, undefined, undefined, "\d+", undefined, undefined]
+  // "/*"            => ["/", undefined, undefined, undefined, undefined, "*"]
+  '([\\/.])?(?:(?:\\:(\\w+)(?:\\(((?:\\\\.|[^\\\\()])+)\\))?|\\(((?:\\\\.|[^\\\\()])+)\\))([+*?])?|(\\*))'
+].join('|'), 'g')
+
+/**
+ * Parse a string for the raw tokens.
+ *
+ * @param  {string}  str
+ * @param  {Object=} options
+ * @return {!Array}
+ */
+function parse (str, options) {
+  var tokens = []
+  var key = 0
+  var index = 0
+  var path = ''
+  var defaultDelimiter = options && options.delimiter || '/'
+  var res
+
+  while ((res = PATH_REGEXP.exec(str)) != null) {
+    var m = res[0]
+    var escaped = res[1]
+    var offset = res.index
+    path += str.slice(index, offset)
+    index = offset + m.length
+
+    // Ignore already escaped sequences.
+    if (escaped) {
+      path += escaped[1]
+      continue
+    }
+
+    var next = str[index]
+    var prefix = res[2]
+    var name = res[3]
+    var capture = res[4]
+    var group = res[5]
+    var modifier = res[6]
+    var asterisk = res[7]
+
+    // Push the current path onto the tokens.
+    if (path) {
+      tokens.push(path)
+      path = ''
+    }
+
+    var partial = prefix != null && next != null && next !== prefix
+    var repeat = modifier === '+' || modifier === '*'
+    var optional = modifier === '?' || modifier === '*'
+    var delimiter = res[2] || defaultDelimiter
+    var pattern = capture || group
+
+    tokens.push({
+      name: name || key++,
+      prefix: prefix || '',
+      delimiter: delimiter,
+      optional: optional,
+      repeat: repeat,
+      partial: partial,
+      asterisk: !!asterisk,
+      pattern: pattern ? escapeGroup(pattern) : (asterisk ? '.*' : '[^' + escapeString(delimiter) + ']+?')
+    })
+  }
+
+  // Match any characters still remaining.
+  if (index < str.length) {
+    path += str.substr(index)
+  }
+
+  // If the path exists, push it onto the end.
+  if (path) {
+    tokens.push(path)
+  }
+
+  return tokens
+}
+
+/**
+ * Compile a string to a template function for the path.
+ *
+ * @param  {string}             str
+ * @param  {Object=}            options
+ * @return {!function(Object=, Object=)}
+ */
+function compile (str, options) {
+  return tokensToFunction(parse(str, options), options)
+}
+
+/**
+ * Prettier encoding of URI path segments.
+ *
+ * @param  {string}
+ * @return {string}
+ */
+function encodeURIComponentPretty (str) {
+  return encodeURI(str).replace(/[\/?#]/g, function (c) {
+    return '%' + c.charCodeAt(0).toString(16).toUpperCase()
+  })
+}
+
+/**
+ * Encode the asterisk parameter. Similar to `pretty`, but allows slashes.
+ *
+ * @param  {string}
+ * @return {string}
+ */
+function encodeAsterisk (str) {
+  return encodeURI(str).replace(/[?#]/g, function (c) {
+    return '%' + c.charCodeAt(0).toString(16).toUpperCase()
+  })
+}
+
+/**
+ * Expose a method for transforming tokens into the path function.
+ */
+function tokensToFunction (tokens, options) {
+  // Compile all the tokens into regexps.
+  var matches = new Array(tokens.length)
+
+  // Compile all the patterns before compilation.
+  for (var i = 0; i < tokens.length; i++) {
+    if (typeof tokens[i] === 'object') {
+      matches[i] = new RegExp('^(?:' + tokens[i].pattern + ')$', flags(options))
+    }
+  }
+
+  return function (obj, opts) {
+    var path = ''
+    var data = obj || {}
+    var options = opts || {}
+    var encode = options.pretty ? encodeURIComponentPretty : encodeURIComponent
+
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i]
+
+      if (typeof token === 'string') {
+        path += token
+
+        continue
+      }
+
+      var value = data[token.name]
+      var segment
+
+      if (value == null) {
+        if (token.optional) {
+          // Prepend partial segment prefixes.
+          if (token.partial) {
+            path += token.prefix
+          }
+
+          continue
+        } else {
+          throw new TypeError('Expected "' + token.name + '" to be defined')
+        }
+      }
+
+      if (isarray(value)) {
+        if (!token.repeat) {
+          throw new TypeError('Expected "' + token.name + '" to not repeat, but received `' + JSON.stringify(value) + '`')
+        }
+
+        if (value.length === 0) {
+          if (token.optional) {
+            continue
+          } else {
+            throw new TypeError('Expected "' + token.name + '" to not be empty')
+          }
+        }
+
+        for (var j = 0; j < value.length; j++) {
+          segment = encode(value[j])
+
+          if (!matches[i].test(segment)) {
+            throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '", but received `' + JSON.stringify(segment) + '`')
+          }
+
+          path += (j === 0 ? token.prefix : token.delimiter) + segment
+        }
+
+        continue
+      }
+
+      segment = token.asterisk ? encodeAsterisk(value) : encode(value)
+
+      if (!matches[i].test(segment)) {
+        throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"')
+      }
+
+      path += token.prefix + segment
+    }
+
+    return path
+  }
+}
+
+/**
+ * Escape a regular expression string.
+ *
+ * @param  {string} str
+ * @return {string}
+ */
+function escapeString (str) {
+  return str.replace(/([.+*?=^!:${}()[\]|\/\\])/g, '\\$1')
+}
+
+/**
+ * Escape the capturing group by escaping special characters and meaning.
+ *
+ * @param  {string} group
+ * @return {string}
+ */
+function escapeGroup (group) {
+  return group.replace(/([=!:$\/()])/g, '\\$1')
+}
+
+/**
+ * Attach the keys as a property of the regexp.
+ *
+ * @param  {!RegExp} re
+ * @param  {Array}   keys
+ * @return {!RegExp}
+ */
+function attachKeys (re, keys) {
+  re.keys = keys
+  return re
+}
+
+/**
+ * Get the flags for a regexp from the options.
+ *
+ * @param  {Object} options
+ * @return {string}
+ */
+function flags (options) {
+  return options && options.sensitive ? '' : 'i'
+}
+
+/**
+ * Pull out keys from a regexp.
+ *
+ * @param  {!RegExp} path
+ * @param  {!Array}  keys
+ * @return {!RegExp}
+ */
+function regexpToRegexp (path, keys) {
+  // Use a negative lookahead to match only capturing groups.
+  var groups = path.source.match(/\((?!\?)/g)
+
+  if (groups) {
+    for (var i = 0; i < groups.length; i++) {
+      keys.push({
+        name: i,
+        prefix: null,
+        delimiter: null,
+        optional: false,
+        repeat: false,
+        partial: false,
+        asterisk: false,
+        pattern: null
+      })
+    }
+  }
+
+  return attachKeys(path, keys)
+}
+
+/**
+ * Transform an array into a regexp.
+ *
+ * @param  {!Array}  path
+ * @param  {Array}   keys
+ * @param  {!Object} options
+ * @return {!RegExp}
+ */
+function arrayToRegexp (path, keys, options) {
+  var parts = []
+
+  for (var i = 0; i < path.length; i++) {
+    parts.push(pathToRegexp(path[i], keys, options).source)
+  }
+
+  var regexp = new RegExp('(?:' + parts.join('|') + ')', flags(options))
+
+  return attachKeys(regexp, keys)
+}
+
+/**
+ * Create a path regexp from string input.
+ *
+ * @param  {string}  path
+ * @param  {!Array}  keys
+ * @param  {!Object} options
+ * @return {!RegExp}
+ */
+function stringToRegexp (path, keys, options) {
+  return tokensToRegExp(parse(path, options), keys, options)
+}
+
+/**
+ * Expose a function for taking tokens and returning a RegExp.
+ *
+ * @param  {!Array}          tokens
+ * @param  {(Array|Object)=} keys
+ * @param  {Object=}         options
+ * @return {!RegExp}
+ */
+function tokensToRegExp (tokens, keys, options) {
+  if (!isarray(keys)) {
+    options = /** @type {!Object} */ (keys || options)
+    keys = []
+  }
+
+  options = options || {}
+
+  var strict = options.strict
+  var end = options.end !== false
+  var route = ''
+
+  // Iterate over the tokens and create our regexp string.
+  for (var i = 0; i < tokens.length; i++) {
+    var token = tokens[i]
+
+    if (typeof token === 'string') {
+      route += escapeString(token)
+    } else {
+      var prefix = escapeString(token.prefix)
+      var capture = '(?:' + token.pattern + ')'
+
+      keys.push(token)
+
+      if (token.repeat) {
+        capture += '(?:' + prefix + capture + ')*'
+      }
+
+      if (token.optional) {
+        if (!token.partial) {
+          capture = '(?:' + prefix + '(' + capture + '))?'
+        } else {
+          capture = prefix + '(' + capture + ')?'
+        }
+      } else {
+        capture = prefix + '(' + capture + ')'
+      }
+
+      route += capture
+    }
+  }
+
+  var delimiter = escapeString(options.delimiter || '/')
+  var endsWithDelimiter = route.slice(-delimiter.length) === delimiter
+
+  // In non-strict mode we allow a slash at the end of match. If the path to
+  // match already ends with a slash, we remove it for consistency. The slash
+  // is valid at the end of a path match, not in the middle. This is important
+  // in non-ending mode, where "/test/" shouldn't match "/test//route".
+  if (!strict) {
+    route = (endsWithDelimiter ? route.slice(0, -delimiter.length) : route) + '(?:' + delimiter + '(?=$))?'
+  }
+
+  if (end) {
+    route += '$'
+  } else {
+    // In non-ending mode, we need the capturing groups to match as much as
+    // possible by using a positive lookahead to the end or next path segment.
+    route += strict && endsWithDelimiter ? '' : '(?=' + delimiter + '|$)'
+  }
+
+  return attachKeys(new RegExp('^' + route, flags(options)), keys)
+}
+
+/**
+ * Normalize the given path string, returning a regular expression.
+ *
+ * An empty array can be passed in for the keys, which will hold the
+ * placeholder key descriptions. For example, using `/user/:id`, `keys` will
+ * contain `[{ name: 'id', delimiter: '/', optional: false, repeat: false }]`.
+ *
+ * @param  {(string|RegExp|Array)} path
+ * @param  {(Array|Object)=}       keys
+ * @param  {Object=}               options
+ * @return {!RegExp}
+ */
+function pathToRegexp (path, keys, options) {
+  if (!isarray(keys)) {
+    options = /** @type {!Object} */ (keys || options)
+    keys = []
+  }
+
+  options = options || {}
+
+  if (path instanceof RegExp) {
+    return regexpToRegexp(path, /** @type {!Array} */ (keys))
+  }
+
+  if (isarray(path)) {
+    return arrayToRegexp(/** @type {!Array} */ (path), /** @type {!Array} */ (keys), options)
+  }
+
+  return stringToRegexp(/** @type {string} */ (path), /** @type {!Array} */ (keys), options)
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/path-to-regexp/node_modules/isarray/index.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/path-to-regexp/node_modules/isarray/index.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Array.isArray || function (arr) {
+  return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
 
@@ -49265,6 +53790,1371 @@ module.exports = exports['default'];
 
 /***/ }),
 
+/***/ "./node_modules/react-router-dom/esm/react-router-dom.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
+  \***************************************************************/
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserRouter", function() { return BrowserRouter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HashRouter", function() { return HashRouter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Link", function() { return Link; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavLink", function() { return NavLink; });
+/* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-router */ "./node_modules/react-router/esm/react-router.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MemoryRouter", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["MemoryRouter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Prompt", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["Prompt"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Redirect", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["Redirect"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Route", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["Route"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["Router"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "StaticRouter", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["StaticRouter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Switch", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["Switch"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "generatePath", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["generatePath"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "matchPath", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["matchPath"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useHistory", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["useHistory"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useLocation", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["useLocation"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useParams", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["useParams"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useRouteMatch", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["useRouteMatch"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "withRouter", function() { return react_router__WEBPACK_IMPORTED_MODULE_0__["withRouter"]; });
+
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var tiny_warning__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tiny-warning */ "./node_modules/tiny-warning/dist/tiny-warning.esm.js");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var tiny_invariant__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! tiny-invariant */ "./node_modules/tiny-invariant/dist/tiny-invariant.esm.js");
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * The public API for a <Router> that uses HTML5 history.
+ */
+
+var BrowserRouter = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(BrowserRouter, _React$Component);
+
+  function BrowserRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = Object(history__WEBPACK_IMPORTED_MODULE_3__["createBrowserHistory"])(_this.props);
+    return _this;
+  }
+
+  var _proto = BrowserRouter.prototype;
+
+  _proto.render = function render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_0__["Router"], {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return BrowserRouter;
+}(react__WEBPACK_IMPORTED_MODULE_2___default.a.Component);
+
+if (true) {
+  BrowserRouter.propTypes = {
+    basename: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string,
+    children: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.node,
+    forceRefresh: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+    getUserConfirmation: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+    keyLength: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.number
+  };
+
+  BrowserRouter.prototype.componentDidMount = function () {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_5__["default"])(!this.props.history, "<BrowserRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { BrowserRouter as Router }`.") : undefined;
+  };
+}
+
+/**
+ * The public API for a <Router> that uses window.location.hash.
+ */
+
+var HashRouter = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(HashRouter, _React$Component);
+
+  function HashRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = Object(history__WEBPACK_IMPORTED_MODULE_3__["createHashHistory"])(_this.props);
+    return _this;
+  }
+
+  var _proto = HashRouter.prototype;
+
+  _proto.render = function render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_0__["Router"], {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return HashRouter;
+}(react__WEBPACK_IMPORTED_MODULE_2___default.a.Component);
+
+if (true) {
+  HashRouter.propTypes = {
+    basename: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string,
+    children: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.node,
+    getUserConfirmation: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+    hashType: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(["hashbang", "noslash", "slash"])
+  };
+
+  HashRouter.prototype.componentDidMount = function () {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_5__["default"])(!this.props.history, "<HashRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { HashRouter as Router }`.") : undefined;
+  };
+}
+
+var resolveToLocation = function resolveToLocation(to, currentLocation) {
+  return typeof to === "function" ? to(currentLocation) : to;
+};
+var normalizeToLocation = function normalizeToLocation(to, currentLocation) {
+  return typeof to === "string" ? Object(history__WEBPACK_IMPORTED_MODULE_3__["createLocation"])(to, null, null, currentLocation) : to;
+};
+
+var forwardRefShim = function forwardRefShim(C) {
+  return C;
+};
+
+var forwardRef = react__WEBPACK_IMPORTED_MODULE_2___default.a.forwardRef;
+
+if (typeof forwardRef === "undefined") {
+  forwardRef = forwardRefShim;
+}
+
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
+
+var LinkAnchor = forwardRef(function (_ref, forwardedRef) {
+  var innerRef = _ref.innerRef,
+      navigate = _ref.navigate,
+      _onClick = _ref.onClick,
+      rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_7__["default"])(_ref, ["innerRef", "navigate", "onClick"]);
+
+  var target = rest.target;
+
+  var props = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__["default"])({}, rest, {
+    onClick: function onClick(event) {
+      try {
+        if (_onClick) _onClick(event);
+      } catch (ex) {
+        event.preventDefault();
+        throw ex;
+      }
+
+      if (!event.defaultPrevented && // onClick prevented default
+      event.button === 0 && ( // ignore everything but left clicks
+      !target || target === "_self") && // let browser handle "target=_blank" etc.
+      !isModifiedEvent(event) // ignore clicks with modifier keys
+      ) {
+          event.preventDefault();
+          navigate();
+        }
+    }
+  }); // React 15 compat
+
+
+  if (forwardRefShim !== forwardRef) {
+    props.ref = forwardedRef || innerRef;
+  } else {
+    props.ref = innerRef;
+  }
+  /* eslint-disable-next-line jsx-a11y/anchor-has-content */
+
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("a", props);
+});
+
+if (true) {
+  LinkAnchor.displayName = "LinkAnchor";
+}
+/**
+ * The public API for rendering a history-aware <a>.
+ */
+
+
+var Link = forwardRef(function (_ref2, forwardedRef) {
+  var _ref2$component = _ref2.component,
+      component = _ref2$component === void 0 ? LinkAnchor : _ref2$component,
+      replace = _ref2.replace,
+      to = _ref2.to,
+      innerRef = _ref2.innerRef,
+      rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_7__["default"])(_ref2, ["component", "replace", "to", "innerRef"]);
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_0__["__RouterContext"].Consumer, null, function (context) {
+    !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_8__["default"])(false, "You should not use <Link> outside a <Router>") : undefined : void 0;
+    var history = context.history;
+    var location = normalizeToLocation(resolveToLocation(to, context.location), context.location);
+    var href = location ? history.createHref(location) : "";
+
+    var props = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__["default"])({}, rest, {
+      href: href,
+      navigate: function navigate() {
+        var location = resolveToLocation(to, context.location);
+        var isDuplicateNavigation = Object(history__WEBPACK_IMPORTED_MODULE_3__["createPath"])(context.location) === Object(history__WEBPACK_IMPORTED_MODULE_3__["createPath"])(normalizeToLocation(location));
+        var method = replace || isDuplicateNavigation ? history.replace : history.push;
+        method(location);
+      }
+    }); // React 15 compat
+
+
+    if (forwardRefShim !== forwardRef) {
+      props.ref = forwardedRef || innerRef;
+    } else {
+      props.innerRef = innerRef;
+    }
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(component, props);
+  });
+});
+
+if (true) {
+  var toType = prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func]);
+  var refType = prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.shape({
+    current: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.any
+  })]);
+  Link.displayName = "Link";
+  Link.propTypes = {
+    innerRef: refType,
+    onClick: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+    replace: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+    target: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string,
+    to: toType.isRequired
+  };
+}
+
+var forwardRefShim$1 = function forwardRefShim(C) {
+  return C;
+};
+
+var forwardRef$1 = react__WEBPACK_IMPORTED_MODULE_2___default.a.forwardRef;
+
+if (typeof forwardRef$1 === "undefined") {
+  forwardRef$1 = forwardRefShim$1;
+}
+
+function joinClassnames() {
+  for (var _len = arguments.length, classnames = new Array(_len), _key = 0; _key < _len; _key++) {
+    classnames[_key] = arguments[_key];
+  }
+
+  return classnames.filter(function (i) {
+    return i;
+  }).join(" ");
+}
+/**
+ * A <Link> wrapper that knows if it's "active" or not.
+ */
+
+
+var NavLink = forwardRef$1(function (_ref, forwardedRef) {
+  var _ref$ariaCurrent = _ref["aria-current"],
+      ariaCurrent = _ref$ariaCurrent === void 0 ? "page" : _ref$ariaCurrent,
+      _ref$activeClassName = _ref.activeClassName,
+      activeClassName = _ref$activeClassName === void 0 ? "active" : _ref$activeClassName,
+      activeStyle = _ref.activeStyle,
+      classNameProp = _ref.className,
+      exact = _ref.exact,
+      isActiveProp = _ref.isActive,
+      locationProp = _ref.location,
+      sensitive = _ref.sensitive,
+      strict = _ref.strict,
+      styleProp = _ref.style,
+      to = _ref.to,
+      innerRef = _ref.innerRef,
+      rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_7__["default"])(_ref, ["aria-current", "activeClassName", "activeStyle", "className", "exact", "isActive", "location", "sensitive", "strict", "style", "to", "innerRef"]);
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_0__["__RouterContext"].Consumer, null, function (context) {
+    !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_8__["default"])(false, "You should not use <NavLink> outside a <Router>") : undefined : void 0;
+    var currentLocation = locationProp || context.location;
+    var toLocation = normalizeToLocation(resolveToLocation(to, currentLocation), currentLocation);
+    var path = toLocation.pathname; // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
+
+    var escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
+    var match = escapedPath ? Object(react_router__WEBPACK_IMPORTED_MODULE_0__["matchPath"])(currentLocation.pathname, {
+      path: escapedPath,
+      exact: exact,
+      sensitive: sensitive,
+      strict: strict
+    }) : null;
+    var isActive = !!(isActiveProp ? isActiveProp(match, currentLocation) : match);
+    var className = typeof classNameProp === "function" ? classNameProp(isActive) : classNameProp;
+    var style = typeof styleProp === "function" ? styleProp(isActive) : styleProp;
+
+    if (isActive) {
+      className = joinClassnames(className, activeClassName);
+      style = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__["default"])({}, style, activeStyle);
+    }
+
+    var props = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__["default"])({
+      "aria-current": isActive && ariaCurrent || null,
+      className: className,
+      style: style,
+      to: toLocation
+    }, rest); // React 15 compat
+
+
+    if (forwardRefShim$1 !== forwardRef$1) {
+      props.ref = forwardedRef || innerRef;
+    } else {
+      props.innerRef = innerRef;
+    }
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Link, props);
+  });
+});
+
+if (true) {
+  NavLink.displayName = "NavLink";
+  var ariaCurrentType = prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOf(["page", "step", "location", "date", "time", "true", "false"]);
+  NavLink.propTypes = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_6__["default"])({}, Link.propTypes, {
+    "aria-current": ariaCurrentType,
+    activeClassName: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string,
+    activeStyle: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object,
+    className: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func]),
+    exact: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+    isActive: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func,
+    location: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object,
+    sensitive: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+    strict: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.bool,
+    style: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func])
+  });
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":
+/*!************************************************************************************************!*\
+  !*** ./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _inheritsLoose; });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  Object(_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!***************************************************************************************************************!*\
+  !*** ./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \***************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _objectWithoutPropertiesLoose; });
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*************************************************************************************************!*\
+  !*** ./node_modules/react-router-dom/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _setPrototypeOf; });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router/esm/react-router.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-router/esm/react-router.js ***!
+  \*******************************************************/
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __HistoryContext, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MemoryRouter", function() { return MemoryRouter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Prompt", function() { return Prompt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Redirect", function() { return Redirect; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Route", function() { return Route; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return Router; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StaticRouter", function() { return StaticRouter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Switch", function() { return Switch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__HistoryContext", function() { return historyContext; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__RouterContext", function() { return context; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generatePath", function() { return generatePath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "matchPath", function() { return matchPath; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useHistory", function() { return useHistory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLocation", function() { return useLocation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useParams", function() { return useParams; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useRouteMatch", function() { return useRouteMatch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withRouter", function() { return withRouter; });
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var history__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! history */ "./node_modules/history/esm/history.js");
+/* harmony import */ var tiny_warning__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tiny-warning */ "./node_modules/tiny-warning/dist/tiny-warning.esm.js");
+/* harmony import */ var mini_create_react_context__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! mini-create-react-context */ "./node_modules/mini-create-react-context/dist/esm/index.js");
+/* harmony import */ var tiny_invariant__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tiny-invariant */ "./node_modules/tiny-invariant/dist/tiny-invariant.esm.js");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var path_to_regexp__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! path-to-regexp */ "./node_modules/path-to-regexp/index.js");
+/* harmony import */ var path_to_regexp__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(path_to_regexp__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react_is__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+/* harmony import */ var react_is__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_is__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! hoist-non-react-statics */ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_11__);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// TODO: Replace with React.createContext once we can assume React 16+
+
+var createNamedContext = function createNamedContext(name) {
+  var context = Object(mini_create_react_context__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  context.displayName = name;
+  return context;
+};
+
+var historyContext = /*#__PURE__*/createNamedContext("Router-History");
+
+var context = /*#__PURE__*/createNamedContext("Router");
+
+/**
+ * The public API for putting history on context.
+ */
+
+var Router = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(Router, _React$Component);
+
+  Router.computeRootMatch = function computeRootMatch(pathname) {
+    return {
+      path: "/",
+      url: "/",
+      params: {},
+      isExact: pathname === "/"
+    };
+  };
+
+  function Router(props) {
+    var _this;
+
+    _this = _React$Component.call(this, props) || this;
+    _this.state = {
+      location: props.history.location
+    }; // This is a bit of a hack. We have to start listening for location
+    // changes here in the constructor in case there are any <Redirect>s
+    // on the initial render. If there are, they will replace/push when
+    // they mount and since cDM fires in children before parents, we may
+    // get a new location before the <Router> is mounted.
+
+    _this._isMounted = false;
+    _this._pendingLocation = null;
+
+    if (!props.staticContext) {
+      _this.unlisten = props.history.listen(function (location) {
+        if (_this._isMounted) {
+          _this.setState({
+            location: location
+          });
+        } else {
+          _this._pendingLocation = location;
+        }
+      });
+    }
+
+    return _this;
+  }
+
+  var _proto = Router.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    this._isMounted = true;
+
+    if (this._pendingLocation) {
+      this.setState({
+        location: this._pendingLocation
+      });
+    }
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    if (this.unlisten) {
+      this.unlisten();
+      this._isMounted = false;
+      this._pendingLocation = null;
+    }
+  };
+
+  _proto.render = function render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Provider, {
+      value: {
+        history: this.props.history,
+        location: this.state.location,
+        match: Router.computeRootMatch(this.state.location.pathname),
+        staticContext: this.props.staticContext
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(historyContext.Provider, {
+      children: this.props.children || null,
+      value: this.props.history
+    }));
+  };
+
+  return Router;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+if (true) {
+  Router.propTypes = {
+    children: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.node,
+    history: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object.isRequired,
+    staticContext: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object
+  };
+
+  Router.prototype.componentDidUpdate = function (prevProps) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(prevProps.history === this.props.history, "You cannot change <Router history>") : undefined;
+  };
+}
+
+/**
+ * The public API for a <Router> that stores location in memory.
+ */
+
+var MemoryRouter = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(MemoryRouter, _React$Component);
+
+  function MemoryRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = Object(history__WEBPACK_IMPORTED_MODULE_3__["createMemoryHistory"])(_this.props);
+    return _this;
+  }
+
+  var _proto = MemoryRouter.prototype;
+
+  _proto.render = function render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Router, {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return MemoryRouter;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+if (true) {
+  MemoryRouter.propTypes = {
+    initialEntries: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.array,
+    initialIndex: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+    getUserConfirmation: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func,
+    keyLength: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.number,
+    children: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.node
+  };
+
+  MemoryRouter.prototype.componentDidMount = function () {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!this.props.history, "<MemoryRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { MemoryRouter as Router }`.") : undefined;
+  };
+}
+
+var Lifecycle = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(Lifecycle, _React$Component);
+
+  function Lifecycle() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Lifecycle.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    if (this.props.onMount) this.props.onMount.call(this, this);
+  };
+
+  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+    if (this.props.onUpdate) this.props.onUpdate.call(this, this, prevProps);
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    if (this.props.onUnmount) this.props.onUnmount.call(this, this);
+  };
+
+  _proto.render = function render() {
+    return null;
+  };
+
+  return Lifecycle;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+/**
+ * The public API for prompting the user before navigating away from a screen.
+ */
+
+function Prompt(_ref) {
+  var message = _ref.message,
+      _ref$when = _ref.when,
+      when = _ref$when === void 0 ? true : _ref$when;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Consumer, null, function (context) {
+    !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You should not use <Prompt> outside a <Router>") : undefined : void 0;
+    if (!when || context.staticContext) return null;
+    var method = context.history.block;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Lifecycle, {
+      onMount: function onMount(self) {
+        self.release = method(message);
+      },
+      onUpdate: function onUpdate(self, prevProps) {
+        if (prevProps.message !== message) {
+          self.release();
+          self.release = method(message);
+        }
+      },
+      onUnmount: function onUnmount(self) {
+        self.release();
+      },
+      message: message
+    });
+  });
+}
+
+if (true) {
+  var messageType = prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string]);
+  Prompt.propTypes = {
+    when: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+    message: messageType.isRequired
+  };
+}
+
+var cache = {};
+var cacheLimit = 10000;
+var cacheCount = 0;
+
+function compilePath(path) {
+  if (cache[path]) return cache[path];
+  var generator = path_to_regexp__WEBPACK_IMPORTED_MODULE_8___default.a.compile(path);
+
+  if (cacheCount < cacheLimit) {
+    cache[path] = generator;
+    cacheCount++;
+  }
+
+  return generator;
+}
+/**
+ * Public API for generating a URL pathname from a path and parameters.
+ */
+
+
+function generatePath(path, params) {
+  if (path === void 0) {
+    path = "/";
+  }
+
+  if (params === void 0) {
+    params = {};
+  }
+
+  return path === "/" ? path : compilePath(path)(params, {
+    pretty: true
+  });
+}
+
+/**
+ * The public API for navigating programmatically with a component.
+ */
+
+function Redirect(_ref) {
+  var computedMatch = _ref.computedMatch,
+      to = _ref.to,
+      _ref$push = _ref.push,
+      push = _ref$push === void 0 ? false : _ref$push;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Consumer, null, function (context) {
+    !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You should not use <Redirect> outside a <Router>") : undefined : void 0;
+    var history = context.history,
+        staticContext = context.staticContext;
+    var method = push ? history.push : history.replace;
+    var location = Object(history__WEBPACK_IMPORTED_MODULE_3__["createLocation"])(computedMatch ? typeof to === "string" ? generatePath(to, computedMatch.params) : Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, to, {
+      pathname: generatePath(to.pathname, computedMatch.params)
+    }) : to); // When rendering in a static context,
+    // set the new location immediately.
+
+    if (staticContext) {
+      method(location);
+      return null;
+    }
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Lifecycle, {
+      onMount: function onMount() {
+        method(location);
+      },
+      onUpdate: function onUpdate(self, prevProps) {
+        var prevLocation = Object(history__WEBPACK_IMPORTED_MODULE_3__["createLocation"])(prevProps.to);
+
+        if (!Object(history__WEBPACK_IMPORTED_MODULE_3__["locationsAreEqual"])(prevLocation, Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, location, {
+          key: prevLocation.key
+        }))) {
+          method(location);
+        }
+      },
+      to: to
+    });
+  });
+}
+
+if (true) {
+  Redirect.propTypes = {
+    push: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+    from: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
+    to: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object]).isRequired
+  };
+}
+
+var cache$1 = {};
+var cacheLimit$1 = 10000;
+var cacheCount$1 = 0;
+
+function compilePath$1(path, options) {
+  var cacheKey = "" + options.end + options.strict + options.sensitive;
+  var pathCache = cache$1[cacheKey] || (cache$1[cacheKey] = {});
+  if (pathCache[path]) return pathCache[path];
+  var keys = [];
+  var regexp = path_to_regexp__WEBPACK_IMPORTED_MODULE_8___default()(path, keys, options);
+  var result = {
+    regexp: regexp,
+    keys: keys
+  };
+
+  if (cacheCount$1 < cacheLimit$1) {
+    pathCache[path] = result;
+    cacheCount$1++;
+  }
+
+  return result;
+}
+/**
+ * Public API for matching a URL pathname to a path.
+ */
+
+
+function matchPath(pathname, options) {
+  if (options === void 0) {
+    options = {};
+  }
+
+  if (typeof options === "string" || Array.isArray(options)) {
+    options = {
+      path: options
+    };
+  }
+
+  var _options = options,
+      path = _options.path,
+      _options$exact = _options.exact,
+      exact = _options$exact === void 0 ? false : _options$exact,
+      _options$strict = _options.strict,
+      strict = _options$strict === void 0 ? false : _options$strict,
+      _options$sensitive = _options.sensitive,
+      sensitive = _options$sensitive === void 0 ? false : _options$sensitive;
+  var paths = [].concat(path);
+  return paths.reduce(function (matched, path) {
+    if (!path && path !== "") return null;
+    if (matched) return matched;
+
+    var _compilePath = compilePath$1(path, {
+      end: exact,
+      strict: strict,
+      sensitive: sensitive
+    }),
+        regexp = _compilePath.regexp,
+        keys = _compilePath.keys;
+
+    var match = regexp.exec(pathname);
+    if (!match) return null;
+    var url = match[0],
+        values = match.slice(1);
+    var isExact = pathname === url;
+    if (exact && !isExact) return null;
+    return {
+      path: path,
+      // the path used to match
+      url: path === "/" && url === "" ? "/" : url,
+      // the matched portion of the URL
+      isExact: isExact,
+      // whether or not we matched exactly
+      params: keys.reduce(function (memo, key, index) {
+        memo[key.name] = values[index];
+        return memo;
+      }, {})
+    };
+  }, null);
+}
+
+function isEmptyChildren(children) {
+  return react__WEBPACK_IMPORTED_MODULE_1___default.a.Children.count(children) === 0;
+}
+
+function evalChildrenDev(children, props, path) {
+  var value = children(props);
+   true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(value !== undefined, "You returned `undefined` from the `children` function of " + ("<Route" + (path ? " path=\"" + path + "\"" : "") + ">, but you ") + "should have returned a React element or `null`") : undefined;
+  return value || null;
+}
+/**
+ * The public API for matching a single path and rendering.
+ */
+
+
+var Route = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(Route, _React$Component);
+
+  function Route() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Route.prototype;
+
+  _proto.render = function render() {
+    var _this = this;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Consumer, null, function (context$1) {
+      !context$1 ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You should not use <Route> outside a <Router>") : undefined : void 0;
+      var location = _this.props.location || context$1.location;
+      var match = _this.props.computedMatch ? _this.props.computedMatch // <Switch> already computed the match for us
+      : _this.props.path ? matchPath(location.pathname, _this.props) : context$1.match;
+
+      var props = Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, context$1, {
+        location: location,
+        match: match
+      });
+
+      var _this$props = _this.props,
+          children = _this$props.children,
+          component = _this$props.component,
+          render = _this$props.render; // Preact uses an empty array as children by
+      // default, so use null if that's the case.
+
+      if (Array.isArray(children) && isEmptyChildren(children)) {
+        children = null;
+      }
+
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Provider, {
+        value: props
+      }, props.match ? children ? typeof children === "function" ?  true ? evalChildrenDev(children, props, _this.props.path) : undefined : children : component ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(component, props) : render ? render(props) : null : typeof children === "function" ?  true ? evalChildrenDev(children, props, _this.props.path) : undefined : null);
+    });
+  };
+
+  return Route;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+if (true) {
+  Route.propTypes = {
+    children: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.node]),
+    component: function component(props, propName) {
+      if (props[propName] && !Object(react_is__WEBPACK_IMPORTED_MODULE_9__["isValidElementType"])(props[propName])) {
+        return new Error("Invalid prop 'component' supplied to 'Route': the prop is not a valid React component");
+      }
+    },
+    exact: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+    location: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object,
+    path: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string)]),
+    render: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func,
+    sensitive: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool,
+    strict: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.bool
+  };
+
+  Route.prototype.componentDidMount = function () {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(this.props.children && !isEmptyChildren(this.props.children) && this.props.component), "You should not use <Route component> and <Route children> in the same route; <Route component> will be ignored") : undefined;
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(this.props.children && !isEmptyChildren(this.props.children) && this.props.render), "You should not use <Route render> and <Route children> in the same route; <Route render> will be ignored") : undefined;
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(this.props.component && this.props.render), "You should not use <Route component> and <Route render> in the same route; <Route render> will be ignored") : undefined;
+  };
+
+  Route.prototype.componentDidUpdate = function (prevProps) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(this.props.location && !prevProps.location), '<Route> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.') : undefined;
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(!this.props.location && prevProps.location), '<Route> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.') : undefined;
+  };
+}
+
+function addLeadingSlash(path) {
+  return path.charAt(0) === "/" ? path : "/" + path;
+}
+
+function addBasename(basename, location) {
+  if (!basename) return location;
+  return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, location, {
+    pathname: addLeadingSlash(basename) + location.pathname
+  });
+}
+
+function stripBasename(basename, location) {
+  if (!basename) return location;
+  var base = addLeadingSlash(basename);
+  if (location.pathname.indexOf(base) !== 0) return location;
+  return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, location, {
+    pathname: location.pathname.substr(base.length)
+  });
+}
+
+function createURL(location) {
+  return typeof location === "string" ? location : Object(history__WEBPACK_IMPORTED_MODULE_3__["createPath"])(location);
+}
+
+function staticHandler(methodName) {
+  return function () {
+      true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You cannot %s with <StaticRouter>", methodName) : undefined ;
+  };
+}
+
+function noop() {}
+/**
+ * The public top-level API for a "static" <Router>, so-called because it
+ * can't actually change the current location. Instead, it just records
+ * location changes in a context object. Useful mainly in testing and
+ * server-rendering scenarios.
+ */
+
+
+var StaticRouter = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(StaticRouter, _React$Component);
+
+  function StaticRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+
+    _this.handlePush = function (location) {
+      return _this.navigateTo(location, "PUSH");
+    };
+
+    _this.handleReplace = function (location) {
+      return _this.navigateTo(location, "REPLACE");
+    };
+
+    _this.handleListen = function () {
+      return noop;
+    };
+
+    _this.handleBlock = function () {
+      return noop;
+    };
+
+    return _this;
+  }
+
+  var _proto = StaticRouter.prototype;
+
+  _proto.navigateTo = function navigateTo(location, action) {
+    var _this$props = this.props,
+        _this$props$basename = _this$props.basename,
+        basename = _this$props$basename === void 0 ? "" : _this$props$basename,
+        _this$props$context = _this$props.context,
+        context = _this$props$context === void 0 ? {} : _this$props$context;
+    context.action = action;
+    context.location = addBasename(basename, Object(history__WEBPACK_IMPORTED_MODULE_3__["createLocation"])(location));
+    context.url = createURL(context.location);
+  };
+
+  _proto.render = function render() {
+    var _this$props2 = this.props,
+        _this$props2$basename = _this$props2.basename,
+        basename = _this$props2$basename === void 0 ? "" : _this$props2$basename,
+        _this$props2$context = _this$props2.context,
+        context = _this$props2$context === void 0 ? {} : _this$props2$context,
+        _this$props2$location = _this$props2.location,
+        location = _this$props2$location === void 0 ? "/" : _this$props2$location,
+        rest = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_10__["default"])(_this$props2, ["basename", "context", "location"]);
+
+    var history = {
+      createHref: function createHref(path) {
+        return addLeadingSlash(basename + createURL(path));
+      },
+      action: "POP",
+      location: stripBasename(basename, Object(history__WEBPACK_IMPORTED_MODULE_3__["createLocation"])(location)),
+      push: this.handlePush,
+      replace: this.handleReplace,
+      go: staticHandler("go"),
+      goBack: staticHandler("goBack"),
+      goForward: staticHandler("goForward"),
+      listen: this.handleListen,
+      block: this.handleBlock
+    };
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Router, Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, rest, {
+      history: history,
+      staticContext: context
+    }));
+  };
+
+  return StaticRouter;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+if (true) {
+  StaticRouter.propTypes = {
+    basename: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string,
+    context: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object,
+    location: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object])
+  };
+
+  StaticRouter.prototype.componentDidMount = function () {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!this.props.history, "<StaticRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { StaticRouter as Router }`.") : undefined;
+  };
+}
+
+/**
+ * The public API for rendering the first <Route> that matches.
+ */
+
+var Switch = /*#__PURE__*/function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(Switch, _React$Component);
+
+  function Switch() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Switch.prototype;
+
+  _proto.render = function render() {
+    var _this = this;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Consumer, null, function (context) {
+      !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You should not use <Switch> outside a <Router>") : undefined : void 0;
+      var location = _this.props.location || context.location;
+      var element, match; // We use React.Children.forEach instead of React.Children.toArray().find()
+      // here because toArray adds keys to all child elements and we do not want
+      // to trigger an unmount/remount for two <Route>s that render the same
+      // component at different URLs.
+
+      react__WEBPACK_IMPORTED_MODULE_1___default.a.Children.forEach(_this.props.children, function (child) {
+        if (match == null && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.isValidElement(child)) {
+          element = child;
+          var path = child.props.path || child.props.from;
+          match = path ? matchPath(location.pathname, Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, child.props, {
+            path: path
+          })) : context.match;
+        }
+      });
+      return match ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.cloneElement(element, {
+        location: location,
+        computedMatch: match
+      }) : null;
+    });
+  };
+
+  return Switch;
+}(react__WEBPACK_IMPORTED_MODULE_1___default.a.Component);
+
+if (true) {
+  Switch.propTypes = {
+    children: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.node,
+    location: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object
+  };
+
+  Switch.prototype.componentDidUpdate = function (prevProps) {
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(this.props.location && !prevProps.location), '<Switch> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.') : undefined;
+     true ? Object(tiny_warning__WEBPACK_IMPORTED_MODULE_4__["default"])(!(!this.props.location && prevProps.location), '<Switch> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.') : undefined;
+  };
+}
+
+/**
+ * A public higher-order component to access the imperative API
+ */
+
+function withRouter(Component) {
+  var displayName = "withRouter(" + (Component.displayName || Component.name) + ")";
+
+  var C = function C(props) {
+    var wrappedComponentRef = props.wrappedComponentRef,
+        remainingProps = Object(_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_10__["default"])(props, ["wrappedComponentRef"]);
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(context.Consumer, null, function (context) {
+      !context ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You should not use <" + displayName + " /> outside a <Router>") : undefined : void 0;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(Component, Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_7__["default"])({}, remainingProps, context, {
+        ref: wrappedComponentRef
+      }));
+    });
+  };
+
+  C.displayName = displayName;
+  C.WrappedComponent = Component;
+
+  if (true) {
+    C.propTypes = {
+      wrappedComponentRef: prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_2___default.a.object])
+    };
+  }
+
+  return hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_11___default()(C, Component);
+}
+
+var useContext = react__WEBPACK_IMPORTED_MODULE_1___default.a.useContext;
+function useHistory() {
+  if (true) {
+    !(typeof useContext === "function") ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You must use React >= 16.8 in order to use useHistory()") : undefined : void 0;
+  }
+
+  return useContext(historyContext);
+}
+function useLocation() {
+  if (true) {
+    !(typeof useContext === "function") ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You must use React >= 16.8 in order to use useLocation()") : undefined : void 0;
+  }
+
+  return useContext(context).location;
+}
+function useParams() {
+  if (true) {
+    !(typeof useContext === "function") ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You must use React >= 16.8 in order to use useParams()") : undefined : void 0;
+  }
+
+  var match = useContext(context).match;
+  return match ? match.params : {};
+}
+function useRouteMatch(path) {
+  if (true) {
+    !(typeof useContext === "function") ?  true ? Object(tiny_invariant__WEBPACK_IMPORTED_MODULE_6__["default"])(false, "You must use React >= 16.8 in order to use useRouteMatch()") : undefined : void 0;
+  }
+
+  var location = useLocation();
+  var match = useContext(context).match;
+  return path ? matchPath(location.pathname, path) : match;
+}
+
+if (true) {
+  if (typeof window !== "undefined") {
+    var global = window;
+    var key = "__react_router_build__";
+    var buildNames = {
+      cjs: "CommonJS",
+      esm: "ES modules",
+      umd: "UMD"
+    };
+
+    if (global[key] && global[key] !== "esm") {
+      var initialBuildName = buildNames[global[key]];
+      var secondaryBuildName = buildNames["esm"]; // TODO: Add link to article that explains in detail how to avoid
+      // loading 2 different builds.
+
+      throw new Error("You are loading the " + secondaryBuildName + " build of React Router " + ("on a page that is already running the " + initialBuildName + " ") + "build, so things won't work right.");
+    }
+
+    global[key] = "esm";
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/extends.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/extends.js ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/inheritsLoose.js ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _inheritsLoose; });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  Object(_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!***********************************************************************************************************!*\
+  !*** ./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \***********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _objectWithoutPropertiesLoose; });
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*********************************************************************************************!*\
+  !*** ./node_modules/react-router/node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _setPrototypeOf; });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
 /***/ "./node_modules/react/cjs/react-jsx-runtime.development.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/react/cjs/react-jsx-runtime.development.js ***!
@@ -50515,6 +56405,202 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/resolve-pathname/esm/resolve-pathname.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/resolve-pathname/esm/resolve-pathname.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function isAbsolute(pathname) {
+  return pathname.charAt(0) === '/';
+}
+
+// About 1.5x faster than the two-arg version of Array#splice()
+function spliceOne(list, index) {
+  for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1) {
+    list[i] = list[k];
+  }
+
+  list.pop();
+}
+
+// This implementation is based heavily on node's url.parse
+function resolvePathname(to, from) {
+  if (from === undefined) from = '';
+
+  var toParts = (to && to.split('/')) || [];
+  var fromParts = (from && from.split('/')) || [];
+
+  var isToAbs = to && isAbsolute(to);
+  var isFromAbs = from && isAbsolute(from);
+  var mustEndAbs = isToAbs || isFromAbs;
+
+  if (to && isAbsolute(to)) {
+    // to is absolute
+    fromParts = toParts;
+  } else if (toParts.length) {
+    // to is relative, drop the filename
+    fromParts.pop();
+    fromParts = fromParts.concat(toParts);
+  }
+
+  if (!fromParts.length) return '/';
+
+  var hasTrailingSlash;
+  if (fromParts.length) {
+    var last = fromParts[fromParts.length - 1];
+    hasTrailingSlash = last === '.' || last === '..' || last === '';
+  } else {
+    hasTrailingSlash = false;
+  }
+
+  var up = 0;
+  for (var i = fromParts.length; i >= 0; i--) {
+    var part = fromParts[i];
+
+    if (part === '.') {
+      spliceOne(fromParts, i);
+    } else if (part === '..') {
+      spliceOne(fromParts, i);
+      up++;
+    } else if (up) {
+      spliceOne(fromParts, i);
+      up--;
+    }
+  }
+
+  if (!mustEndAbs) for (; up--; up) fromParts.unshift('..');
+
+  if (
+    mustEndAbs &&
+    fromParts[0] !== '' &&
+    (!fromParts[0] || !isAbsolute(fromParts[0]))
+  )
+    fromParts.unshift('');
+
+  var result = fromParts.join('/');
+
+  if (hasTrailingSlash && result.substr(-1) !== '/') result += '/';
+
+  return result;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (resolvePathname);
+
+
+/***/ }),
+
+/***/ "./node_modules/tiny-invariant/dist/tiny-invariant.esm.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tiny-invariant/dist/tiny-invariant.esm.js ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var isProduction = "development" === 'production';
+var prefix = 'Invariant failed';
+function invariant(condition, message) {
+    if (condition) {
+        return;
+    }
+    if (isProduction) {
+        throw new Error(prefix);
+    }
+    throw new Error(prefix + ": " + (message || ''));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (invariant);
+
+
+/***/ }),
+
+/***/ "./node_modules/tiny-warning/dist/tiny-warning.esm.js":
+/*!************************************************************!*\
+  !*** ./node_modules/tiny-warning/dist/tiny-warning.esm.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var isProduction = "development" === 'production';
+function warning(condition, message) {
+  if (!isProduction) {
+    if (condition) {
+      return;
+    }
+
+    var text = "Warning: " + message;
+
+    if (typeof console !== 'undefined') {
+      console.warn(text);
+    }
+
+    try {
+      throw Error(text);
+    } catch (x) {}
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (warning);
+
+
+/***/ }),
+
+/***/ "./node_modules/value-equal/esm/value-equal.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/value-equal/esm/value-equal.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function valueOf(obj) {
+  return obj.valueOf ? obj.valueOf() : Object.prototype.valueOf.call(obj);
+}
+
+function valueEqual(a, b) {
+  // Test for strict equality first.
+  if (a === b) return true;
+
+  // Otherwise, if either of them == null they are not equal.
+  if (a == null || b == null) return false;
+
+  if (Array.isArray(a)) {
+    return (
+      Array.isArray(b) &&
+      a.length === b.length &&
+      a.every(function(item, index) {
+        return valueEqual(item, b[index]);
+      })
+    );
+  }
+
+  if (typeof a === 'object' || typeof b === 'object') {
+    var aValue = valueOf(a);
+    var bValue = valueOf(b);
+
+    if (aValue !== a || bValue !== b) return valueEqual(aValue, bValue);
+
+    return Object.keys(Object.assign({}, a, b)).every(function(key) {
+      return valueEqual(a[key], b[key]);
+    });
+  }
+
+  return false;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (valueEqual);
+
+
+/***/ }),
+
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -50587,6 +56673,17 @@ module.exports = function(module) {
 /***/ (function(module, exports) {
 
 module.exports = MaterialUI;
+
+/***/ }),
+
+/***/ "lodash":
+/*!********************!*\
+  !*** external "_" ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = _;
 
 /***/ }),
 
