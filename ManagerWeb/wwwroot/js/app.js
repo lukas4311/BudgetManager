@@ -2165,6 +2165,7 @@ const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoun
 const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
 const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
@@ -2185,10 +2186,10 @@ function App() {
                             react_1.default.createElement(BudgetComponent_1.default, null)),
                         react_1.default.createElement(react_router_dom_1.Route, { path: "/" },
                             react_1.default.createElement(Overview_1.default, null))))),
-            react_1.default.createElement("footer", { className: "text-center  m-4 text-white" }, "FOOTER"),
+            react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
+                react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
             react_1.default.createElement("script", { src: "~/js/site.js", "asp-append-version": "true" }),
-            react_1.default.createElement("script", { src: "~/js/menu.js" }),
-            "@RenderSection(\"Scripts\", required: false)")));
+            react_1.default.createElement("script", { src: "~/js/menu.js" }))));
 }
 exports.default = App;
 react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
