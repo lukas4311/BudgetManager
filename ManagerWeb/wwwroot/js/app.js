@@ -2906,7 +2906,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-dom"));
 const AuthApi_1 = __webpack_require__(/*! ../../ApiClient/Auth/apis/AuthApi */ "./Typescript/ApiClient/Auth/apis/AuthApi.ts");
 class AuthState {
 }
@@ -2952,7 +2951,6 @@ class Auth extends react_1.default.Component {
     }
 }
 exports.default = Auth;
-react_dom_1.default.render(react_1.default.createElement(Auth, null), document.getElementById('auth'));
 
 
 /***/ }),

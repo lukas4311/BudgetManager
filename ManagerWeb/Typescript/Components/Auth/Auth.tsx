@@ -64,5 +64,3 @@ export default class Auth extends React.Component<{}, AuthState>{
         );
     }
 }
-
-ReactDOM.render(<Auth />, document.getElementById('auth'));
