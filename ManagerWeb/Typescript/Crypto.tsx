@@ -4,7 +4,7 @@ import CryptoPortfolio from "./Components/Crypto/CryptoPortfolio";
 import CryptoPayments from "./Components/Crypto/CryptoTrades";
 import ErrorBoundary from "./Utils/ErrorBoundry";
 
-class CryptoComponent extends React.Component<{}, {}>{
+export default class Crypto extends React.Component<{}, {}>{
     render() {
         return (
             <div className="">
@@ -18,4 +18,4 @@ class CryptoComponent extends React.Component<{}, {}>{
     }
 }
 
-ReactDOM.render(<ErrorBoundary><CryptoComponent /></ErrorBoundary>, document.getElementById('overview'));
+// ReactDOM.render(<ErrorBoundary><CryptoComponent /></ErrorBoundary>, document.getElementById('overview'));

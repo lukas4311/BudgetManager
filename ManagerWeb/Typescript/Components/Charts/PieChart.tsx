@@ -22,10 +22,10 @@ function PieChart(props: PieChartProps) {
             cornerRadius={0}
             colors={{ scheme: 'paired' }}
             borderColor={{ from: 'color', modifiers: [['darker', 0.6]] }}
-            enableRadialLabels={true}
-            radialLabel={d => `${d.id} (${d.formattedValue})`}
-            radialLabelsTextColor="#ffffff"
-            radialLabelsLinkColor={{ from: 'color' }}
+            // enableRadialLabels={true}
+            // radialLabel={d => `${d.id} (${d.formattedValue})`}
+            // radialLabelsTextColor="#ffffff"
+            // radialLabelsLinkColor={{ from: 'color' }}
             sortByValue={true}
         />
     )

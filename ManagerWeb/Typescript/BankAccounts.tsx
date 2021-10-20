@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import BankAccountOverview from "./Components/BankAccount/BankAccountOverview";
 import ErrorBoundary from "./Utils/ErrorBoundry";
 
-class BankAccounts extends React.Component<{}, {}>{
+export default class BankAccounts extends React.Component<{}, {}>{
     render() {
         return (
             <div className="">
@@ -16,4 +16,4 @@ class BankAccounts extends React.Component<{}, {}>{
     }
 }
 
-ReactDOM.render(<ErrorBoundary><BankAccounts /></ErrorBoundary>, document.getElementById('overview'));
+// ReactDOM.render(<ErrorBoundary><BankAccounts /></ErrorBoundary>, document.getElementById('overview'));
