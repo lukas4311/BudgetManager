@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Menu from "./Components/Menu";
 import Overview from './Overview';
 import Crypto from './Crypto';
@@ -9,6 +9,8 @@ import PaymentsOverview from "./Components/Payments/PaymentsOverview";
 import BudgetComponent from "./Components/Budget/BudgetComponent";
 import { IconsData } from "./Enums/IconsEnum";
 import moment from "moment";
+import Auth from "./Components/Auth/Auth";
+import PrivateRoute from "./Utils/PrivateRoute";
 
 
 export default function App() {
@@ -27,18 +29,11 @@ export default function App() {
                 <div className="baseContainer mx-auto lg:w-11/12 w-full">
                     <main role="main" className="pb-3 text-white">
                         <Switch>
-                            <Route path="/payments">
-                                <PaymentsOverview />
-                            </Route>
-                            <Route path="/crypto-overview">
-                                <Crypto />
-                            </Route>
-                            <Route path="/budget">
-                                <BudgetComponent />
-                            </Route>
-                            <Route path="/">
-                                <Overview />
-                            </Route>
+                            <Route path="/login" component={Auth} />
+                            <PrivateRoute path="/payments" component={PaymentsOverview} />
+                            <PrivateRoute path="/crypto-overview" component={Crypto} />
+                            <PrivateRoute path="/budget" component={BudgetComponent} />
+                            <PrivateRoute path="/" component={Overview} />
                         </Switch>
                     </main>
                 </div>
