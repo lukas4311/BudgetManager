@@ -8,7 +8,7 @@ class AuthState {
     password: string;
 }
 
-class Auth extends React.Component<{}, AuthState>{
+export default class Auth extends React.Component<{}, AuthState>{
 
     constructor(state: AuthState) {
         super(state);
@@ -64,5 +64,3 @@ class Auth extends React.Component<{}, AuthState>{
         );
     }
 }
-
-ReactDOM.render(<Auth />, document.getElementById('auth'));
