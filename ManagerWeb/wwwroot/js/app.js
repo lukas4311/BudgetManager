@@ -3808,6 +3808,7 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         this.defaultBankOption = "Vše";
+        // private dataLoader: DataLoader;
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
         this.onRejected = () => {
             this.setState({ apiError: this.apiErrorMessage });
@@ -3824,7 +3825,7 @@ class PaymentsOverview extends React.Component {
                 else {
                     dateTo = this.state.filterDateTo;
                 }
-                let bankAccountBalanceResponse = yield this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected);
+                let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(dateTo) });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
@@ -3865,13 +3866,6 @@ class PaymentsOverview extends React.Component {
             this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
             this.getFilteredPaymentData(selectedbankId);
         };
-        this.setBankAccounts = (data) => {
-            if (data.success) {
-                let bankAccounts = data.bankAccounts;
-                bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-                this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
-            }
-        };
         this.rangeDatesHandler = (dateFrom, dateTo) => {
             this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
         };
@@ -3901,17 +3895,18 @@ class PaymentsOverview extends React.Component {
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
             filterDateTo: '', filterDateFrom: ''
         };
-        // this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default();
             this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
+            this.paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
             this.setState({ selectedFilter: this.filters[0] });
-            const bankAccounts = yield this.dataLoader.getBankAccounts(this.onRejected);
+            const bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
+            bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+            this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
-            this.setBankAccounts(bankAccounts);
         });
     }
     getPaymentData(dateFrom, dateTo, bankAccountId) {
@@ -3922,8 +3917,7 @@ class PaymentsOverview extends React.Component {
     }
     getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
-            let filterDate = (0, moment_1.default)(dateFrom).format("YYYY-MM-DD");
-            return yield this.dataLoader.getPayments(filterDate, (0, moment_1.default)(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
+            return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
         });
     }
     getFilteredPaymentData(bankId) {
@@ -4400,12 +4394,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 class Overview extends React.Component {
     render() {
         return (React.createElement("div", { className: "" },
-            React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled")));
+            React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
+            React.createElement("div", { className: "w-full lg:p-4" },
+                React.createElement(PaymentsOverview_1.default, null))));
     }
 }
 exports.default = Overview;
@@ -4447,13 +4447,13 @@ class ChartDataProcessor {
     prepareCalendarCharData(payments) {
         let calendarChartData = [];
         payments.filter(p => p.paymentTypeCode == "Expense").forEach(payment => {
-            let paymentDay = calendarChartData.find(p => p.day == payment.date);
+            let paymentDay = calendarChartData.find(p => p.day == (0, moment_1.default)(payment.date).format("YYYY-MM-DD"));
             if (paymentDay) {
                 paymentDay.value += payment.amount;
             }
             else {
                 let data = new CalendarChartData_1.CalendarChartData();
-                data.day = payment.date;
+                data.day = (0, moment_1.default)(payment.date).format("YYYY-MM-DD");
                 data.value = payment.amount;
                 calendarChartData.push(data);
             }
@@ -4467,27 +4467,27 @@ class ChartDataProcessor {
             .sort((a, b) => (0, moment_1.default)(a.date).format("YYYY-MM-DD") > (0, moment_1.default)(b.date).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
             expenseSum += a.amount;
-            expenses.push({ x: a.date, y: expenseSum });
+            expenses.push({ x: (0, moment_1.default)(a.date).format("YYYY-MM-DD"), y: expenseSum });
         });
         return expenses;
     }
-    prepareBalanceChartData(payments, accountBalance, selectedBankAccount) {
+    prepareBalanceChartData(payments, accountsBalance, selectedBankAccount) {
         return __awaiter(this, void 0, void 0, function* () {
             let balance = 0;
             if (selectedBankAccount != undefined && selectedBankAccount != null) {
-                const bankInfo = accountBalance.bankAccountsBalance.filter(b => b.id == selectedBankAccount)[0];
+                const bankInfo = accountsBalance.filter(b => b.id == selectedBankAccount)[0];
                 if (bankInfo != undefined)
                     balance = bankInfo.openingBalance + bankInfo.balance;
             }
             else {
-                accountBalance.bankAccountsBalance.forEach(v => balance += v.openingBalance + v.balance);
+                accountsBalance.forEach(v => balance += v.openingBalance + v.balance);
             }
             let paymentChartData = [];
             payments
                 .sort((a, b) => (0, moment_1.default)(a.date).format("YYYY-MM-DD") > (0, moment_1.default)(b.date).format("YYYY-MM-DD") ? 1 : -1)
                 .forEach(a => {
                 balance += a.amount * (a.paymentTypeCode == 'Revenue' ? 1 : -1);
-                paymentChartData.push({ x: a.date, y: balance });
+                paymentChartData.push({ x: (0, moment_1.default)(a.date).format("YYYY-MM-DD"), y: balance });
             });
             return paymentChartData;
         });

@@ -3,7 +3,7 @@ import * as React from 'react'
 import { IconsData } from '../Enums/IconsEnum';
 
 interface IBaseModel {
-    id: number;
+    id?: number;
 }
 interface IBaseListProps<T extends IBaseModel> {
     data: T[];

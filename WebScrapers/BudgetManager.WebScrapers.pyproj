@@ -28,12 +28,17 @@
     <Compile Include="Models\MoneySupplyModel.py" />
     <Compile Include="Scrapers\FearAndGreedStocks.py" />
     <Compile Include="Scrapers\InflationCZ.py" />
+    <Compile Include="Scrapers\InterstRatesUS.py" />
     <Compile Include="Scrapers\M1CZ.py" />
     <Compile Include="Scrapers\M1US.py" />
     <Compile Include="Scrapers\M2CZ.py" />
     <Compile Include="Scrapers\M2US.py" />
+    <Compile Include="Scrapers\MoneyVelocityUS.py" />
+    <Compile Include="Scrapers\RepoCZ.py" />
+    <Compile Include="Scrapers\TotalAssetsUS.py" />
     <Compile Include="Services\DatetimeService.py" />
     <Compile Include="Services\InfluxRepository.py" />
+    <Compile Include="Services\MoneySupplyCz.py" />
     <Compile Include="Services\MoneySupplyUsService.py" />
   </ItemGroup>
   <ItemGroup>

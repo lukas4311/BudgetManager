@@ -8,7 +8,7 @@ export default class Overview extends React.Component {
         return (
             <div className="">
                 <p className="text-3xl text-center mt-6">Základní přehled</p>
-                {/* <div className="w-full lg:p-4"><PaymentsOverview /></div> */}
+                <div className="w-full lg:p-4"><PaymentsOverview /></div>
             </div>
         )
     }
