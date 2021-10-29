@@ -21,6 +21,8 @@ import ErrorBoundary from '../../Utils/ErrorBoundry';
 import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
+import ApiClientFactory from '../../Utils/ApiClientFactory'
+import { BankAccountApi, BankAccountApiInterface } from '../../ApiClient/Main';
 
 interface PaymentsOverviewState {
     payments: IPaymentInfo[],
@@ -63,6 +65,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private dataLoader: DataLoader;
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartDataProcessor: ChartDataProcessor;
+    private bankAccountApi: BankAccountApiInterface;
 
     constructor(props: {}) {
         super(props);
@@ -75,11 +78,13 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
             filterDateTo: '', filterDateFrom: ''
         };
 
-        this.dataLoader = new DataLoader();
+        // this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor();
     }
 
     public async componentDidMount() {
+        const apiFactory = new ApiClientFactory();
+        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         this.setState({ selectedFilter: this.filters[0] });
         const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
         this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
@@ -155,8 +160,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.getFilteredPaymentData(this.state.selectedBankAccount);
     }
 
-    private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        let selectedbankId: number = parseInt(e.target.value);
+    private bankAccountChange = (e: React.ChangeEvent<{ name?: string; value: unknown; }>) => {
+        let selectedbankId: number = parseInt(e.target.value.toString());
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
         this.getFilteredPaymentData(selectedbankId);
     }
