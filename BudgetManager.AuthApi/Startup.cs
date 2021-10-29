@@ -34,7 +34,7 @@ namespace BudgetManager.AuthApi
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44386")
+                        builder.WithOrigins("https://localhost:44386", "https://localhost:5001")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
