@@ -226,6 +226,58 @@ exports.AuthApi = AuthApi;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/Auth/apis/index.ts":
+/*!*************************************************!*\
+  !*** ./Typescript/ApiClient/Auth/apis/index.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ./AuthApi */ "./Typescript/ApiClient/Auth/apis/AuthApi.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Auth/index.ts":
+/*!********************************************!*\
+  !*** ./Typescript/ApiClient/Auth/index.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ../runtime */ "./Typescript/ApiClient/runtime.ts"), exports);
+__exportStar(__webpack_require__(/*! ./apis */ "./Typescript/ApiClient/Auth/apis/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./models */ "./Typescript/ApiClient/Auth/models/index.ts"), exports);
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/Auth/models/AuthResponseModel.ts":
 /*!***************************************************************!*\
   !*** ./Typescript/ApiClient/Auth/models/AuthResponseModel.ts ***!
@@ -2645,16 +2697,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const AuthApi_1 = __webpack_require__(/*! ../../ApiClient/Auth/apis/AuthApi */ "./Typescript/ApiClient/Auth/apis/AuthApi.ts");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 class AuthState {
 }
 class Auth extends react_1.default.Component {
     constructor(state) {
         super(state);
+        this.initServies = () => __awaiter(this, void 0, void 0, function* () {
+            this.apiFactory = new ApiClientFactory_1.default();
+        });
         this.login = () => __awaiter(this, void 0, void 0, function* () {
-            let authApi = new AuthApi_1.AuthApi();
+            let authApi = yield this.apiFactory.getAuthClient(AuthApi_1.AuthApi);
             try {
                 let authModel = yield authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
                 localStorage.setItem("user", JSON.stringify(authModel));
+                this.props.history.push("/");
             }
             catch (error) {
                 console.log(error);
@@ -2686,6 +2743,9 @@ class Auth extends react_1.default.Component {
                         react_1.default.createElement("button", { onClick: this.login, className: "m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))));
         };
         this.state = { login: '', password: '' };
+    }
+    componentDidMount() {
+        this.initServies();
     }
 }
 exports.default = Auth;
@@ -4530,12 +4590,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 class DataLoader {
+    getSetting() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const res = yield fetch(`/setting/apiRoutes`);
+            let responseData = yield res.json();
+            // let apiUrls: ApiUrls = JSON.parse(responseData);
+            return responseData;
+        });
+    }
     getPayments(fromDate, toDate, bankAccountId, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             let url = '/payment/data';
             try {
-                // const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
                 const res = yield fetch(`/payment/data?${this.queryParams({ fromDate: fromDate, toDate: toDate, bankAccountId: bankAccountId })}`);
                 response = yield res.json();
             }
@@ -4586,28 +4653,6 @@ class DataLoader {
             }
         });
     }
-    // async getPaymentTypes(onRejected: () => void): Promise<PaymentTypeResponse> {
-    //     let response: PaymentTypeResponse;
-    //     try {
-    //         const res = await fetch("/payment/types");
-    //         response = await res.json();
-    //     }
-    //     catch (_) {
-    //         onRejected();
-    //     }
-    //     return response;
-    // }
-    // async getPaymentCategories(onRejected: () => void): Promise<PaymentCategoryResponse> {
-    //     let response: PaymentCategoryResponse;
-    //     try {
-    //         const res = await fetch("/payment/categories");
-    //         response = await res.json();
-    //     }
-    //     catch (_) {
-    //         onRejected();
-    //     }
-    //     return response;
-    // }
     getPayment(id, onRejected) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
@@ -4706,17 +4751,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const Auth_1 = __webpack_require__(/*! ../ApiClient/Auth */ "./Typescript/ApiClient/Auth/index.ts");
 const Main_1 = __webpack_require__(/*! ../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 class ApiClientFactory {
     constructor() {
-        //private getSetting = async (): Promise<ApiSetting> => {
-        //    if (this.setting == undefined) {
-        //        let settingLoader = new SettingLoader();
-        //        this.setting = await settingLoader.getApiSetting();
-        //    }
-        //    return this.setting;
-        //}
+        this.setting = undefined;
+        this.getApiUrls = () => __awaiter(this, void 0, void 0, function* () {
+            if (this.setting == undefined) {
+                let settingLoader = new DataLoader_1.default();
+                this.setting = yield settingLoader.getSetting();
+            }
+            return this.setting;
+        });
         this.getAuthHeader = (authHeader) => {
             let token = sessionStorage.getItem("user");
             if (token != null) {
@@ -4729,10 +4780,24 @@ class ApiClientFactory {
     }
     getClient(type) {
         return __awaiter(this, void 0, void 0, function* () {
-            //let setting = await this.getSetting();
+            let setting = yield this.getApiUrls();
+            let apiUrl = setting.mainApi;
             let authHeader = null;
             authHeader = this.getAuthHeader(authHeader);
-            let apiConfiguration = new Main_1.Configuration({ headers: authHeader });
+            if (type instanceof Auth_1.AuthApi)
+                apiUrl = setting.authApi;
+            let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: apiUrl });
+            let client = new type(apiConfiguration);
+            return client;
+        });
+    }
+    getAuthClient(type) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let setting = yield this.getApiUrls();
+            let apiUrl = setting.authApi;
+            let authHeader = null;
+            authHeader = this.getAuthHeader(authHeader);
+            let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: apiUrl });
             let client = new type(apiConfiguration);
             return client;
         });
@@ -4877,7 +4942,7 @@ const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 const PrivateRoute = (props) => {
     const getUserData = () => {
-        const tokenString = sessionStorage.getItem('user');
+        const tokenString = localStorage.getItem('user');
         const userData = JSON.parse(tokenString);
         return userData;
     };

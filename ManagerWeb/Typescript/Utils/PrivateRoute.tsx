@@ -4,7 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 
 const PrivateRoute = (props: any) => {
     const getUserData = (): AuthResponseModel => {
-        const tokenString = sessionStorage.getItem('user');
+        const tokenString = localStorage.getItem('user');
         const userData: AuthResponseModel = JSON.parse(tokenString);
         return userData;
     };

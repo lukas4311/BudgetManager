@@ -1,26 +1,38 @@
 ﻿import React from "react";
 import ReactDOM from "react-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { AuthResponseModel } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
 
 class AuthState {
     login: string;
     password: string;
 }
 
-export default class Auth extends React.Component<{}, AuthState>{
+export default class Auth extends React.Component<RouteComponentProps, AuthState>{
+    apiFactory: ApiClientFactory;
 
-    constructor(state: AuthState) {
+    constructor(state: RouteComponentProps) {
         super(state);
         this.state = { login: '', password: '' };
     }
 
+    componentDidMount(){
+        this.initServies();
+    }
+
+    private initServies = async () => {
+        this.apiFactory = new ApiClientFactory();
+    }
+
     private login = async () => {
-        let authApi: AuthApi = new AuthApi();
+        let authApi: AuthApi = await this.apiFactory.getAuthClient(AuthApi);
 
         try {
             let authModel: AuthResponseModel = await authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
             localStorage.setItem("user", JSON.stringify(authModel));
+            this.props.history.push("/");
         } catch (error) {
             console.log(error);
         }
