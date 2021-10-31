@@ -44,7 +44,7 @@ export default class ApiClientFactory {
     }
 
     private getAuthHeader = (authHeader: { [key: string]: string }): { [key: string]: string } => {
-        let token: string = sessionStorage.getItem("user");
+        let token: string = localStorage.getItem("user");
 
         if (token != null) {
             let tokenModel: AuthResponseModel = JSON.parse(token);

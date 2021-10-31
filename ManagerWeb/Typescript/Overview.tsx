@@ -1,6 +1,4 @@
 ﻿import * as React from 'react'
-import * as ReactDOM from 'react-dom';
-import ErrorBoundary from './Utils/ErrorBoundry';
 import PaymentsOverview from './Components/Payments/PaymentsOverview'
 
 export default class Overview extends React.Component {
@@ -13,5 +11,3 @@ export default class Overview extends React.Component {
         )
     }
 }
-
-// ReactDOM.render(<ErrorBoundary><Overview /></ErrorBoundary>, document.getElementById('overview'));

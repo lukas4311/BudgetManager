@@ -99,10 +99,9 @@ namespace BudgetManager.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseMiddleware<JwtMiddleware>();
-
             app.UseRouting();
             app.UseCors();
+            app.UseMiddleware<JwtMiddleware>();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -3848,7 +3848,6 @@ const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Ty
 const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
-const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
@@ -3868,7 +3867,6 @@ class PaymentsOverview extends React.Component {
     constructor(props) {
         super(props);
         this.defaultBankOption = "Vše";
-        // private dataLoader: DataLoader;
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
         this.onRejected = () => {
             this.setState({ apiError: this.apiErrorMessage });
@@ -4042,8 +4040,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                         React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
                 React.createElement("div", { className: "flex flex-row p-6" },
-                    React.createElement("div", { className: "w-2/5" },
-                        React.createElement(BudgetComponent_1.default, null))),
+                    React.createElement("div", { className: "w-2/5" })),
                 React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
                     React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail platby"),
                     React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -4469,7 +4466,6 @@ class Overview extends React.Component {
     }
 }
 exports.default = Overview;
-// ReactDOM.render(<ErrorBoundary><Overview /></ErrorBoundary>, document.getElementById('overview'));
 
 
 /***/ }),
@@ -4769,7 +4765,7 @@ class ApiClientFactory {
             return this.setting;
         });
         this.getAuthHeader = (authHeader) => {
-            let token = sessionStorage.getItem("user");
+            let token = localStorage.getItem("user");
             if (token != null) {
                 let tokenModel = JSON.parse(token);
                 authHeader = {};

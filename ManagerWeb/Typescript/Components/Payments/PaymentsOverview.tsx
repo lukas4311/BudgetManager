@@ -1,14 +1,8 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
-import { Modal } from '../../Modal'
 import PaymentForm from './PaymentForm'
-import DataLoader from '../../Services/DataLoader';
-import { IPaymentInfo } from "../../Model/IPaymentInfo"
-import { BankAccount } from '../../Model/BankAccount';
-import { BankAccountReponse } from '../../Model/BankAccountReponse';
 import { IconsData } from '../../Enums/IconsEnum';
 import { LineChart } from '../Charts/LineChart';
-import { IBankAccountBalanceResponseModel } from '../../Model/IBankAccountBalanceResponseModel';
 import { LineChartProps } from '../../Model/LineChartProps';
 import { CalendarChartProps } from '../../Model/CalendarChartProps';
 import { CalendarChart } from '../Charts/CalendarChart';
@@ -62,7 +56,6 @@ const defaultSelectedBankAccount = -1;
 export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
     private defaultBankOption: string = "Vše";
     private filters: DateFilter[];
-    // private dataLoader: DataLoader;
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
@@ -288,7 +281,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <div className="flex flex-row p-6">
                         <div className="w-2/5">
-                            <BudgetComponent></BudgetComponent>
+                            {/* <BudgetComponent></BudgetComponent> */}
                         </div>
                     </div>
                     <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Detail platby"
