@@ -3768,7 +3768,6 @@ const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript
 const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
-const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
@@ -3964,8 +3963,7 @@ class PaymentsOverview extends React.Component {
                 React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
                     React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail platby"),
                     React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                        React.createElement(ErrorBoundry_1.default, null,
-                            React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose })))))));
+                        React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose }))))));
     }
 }
 exports.default = PaymentsOverview;
@@ -4820,9 +4818,8 @@ class ErrorBoundary extends react_1.default.Component {
         console.log(error);
     }
     render() {
-        if (this.state.hasError) {
+        if (this.state.hasError)
             return react_1.default.createElement("h1", null, "Something went wrong.");
-        }
         return this.props.children;
     }
 }

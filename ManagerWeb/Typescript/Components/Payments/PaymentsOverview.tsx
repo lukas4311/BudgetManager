@@ -291,9 +291,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail platby</DialogTitle>
                         <DialogContent className="bg-prussianBlue">
-                            <ErrorBoundary>
-                                <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
-                            </ErrorBoundary>
+                            <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
                         </DialogContent>
                     </Dialog>
                 </div >
