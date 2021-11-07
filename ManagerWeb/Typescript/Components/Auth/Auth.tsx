@@ -13,8 +13,8 @@ class AuthState {
 export default class Auth extends React.Component<RouteComponentProps, AuthState>{
     apiFactory: ApiClientFactory;
 
-    constructor(state: RouteComponentProps) {
-        super(state);
+    constructor(props: RouteComponentProps) {
+        super(props);
         this.state = { login: '', password: '' };
     }
 
@@ -23,7 +23,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
     }
 
     private initServies = async () => {
-        this.apiFactory = new ApiClientFactory();
+        this.apiFactory = new ApiClientFactory(this.props.history);
     }
 
     private login = async () => {

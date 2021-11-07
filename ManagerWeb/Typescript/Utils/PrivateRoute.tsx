@@ -12,11 +12,9 @@ const PrivateRoute = (props: any) => {
     const [userData, _] = useState<AuthResponseModel>(getUserData());
 
     return (
-        <Route {...props.rest} render={() => {
-            return userData != undefined
-                ? <props.component {...props} />
-                : <Redirect to='/login' />
-        }} />
+        userData != undefined && userData != null ?
+            <Route {...props.rest} component={props.component} /> :
+            <Redirect to='/login' />
     );
 }
 

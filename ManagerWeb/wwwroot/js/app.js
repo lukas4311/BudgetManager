@@ -226,58 +226,6 @@ exports.AuthApi = AuthApi;
 
 /***/ }),
 
-/***/ "./Typescript/ApiClient/Auth/apis/index.ts":
-/*!*************************************************!*\
-  !*** ./Typescript/ApiClient/Auth/apis/index.ts ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(__webpack_require__(/*! ./AuthApi */ "./Typescript/ApiClient/Auth/apis/AuthApi.ts"), exports);
-
-
-/***/ }),
-
-/***/ "./Typescript/ApiClient/Auth/index.ts":
-/*!********************************************!*\
-  !*** ./Typescript/ApiClient/Auth/index.ts ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(__webpack_require__(/*! ../runtime */ "./Typescript/ApiClient/runtime.ts"), exports);
-__exportStar(__webpack_require__(/*! ./apis */ "./Typescript/ApiClient/Auth/apis/index.ts"), exports);
-__exportStar(__webpack_require__(/*! ./models */ "./Typescript/ApiClient/Auth/models/index.ts"), exports);
-
-
-/***/ }),
-
 /***/ "./Typescript/ApiClient/Auth/models/AuthResponseModel.ts":
 /*!***************************************************************!*\
   !*** ./Typescript/ApiClient/Auth/models/AuthResponseModel.ts ***!
@@ -2701,10 +2649,10 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 class AuthState {
 }
 class Auth extends react_1.default.Component {
-    constructor(state) {
-        super(state);
+    constructor(props) {
+        super(props);
         this.initServies = () => __awaiter(this, void 0, void 0, function* () {
-            this.apiFactory = new ApiClientFactory_1.default();
+            this.apiFactory = new ApiClientFactory_1.default(this.props.history);
         });
         this.login = () => __awaiter(this, void 0, void 0, function* () {
             let authApi = yield this.apiFactory.getAuthClient(AuthApi_1.AuthApi);
@@ -3201,33 +3149,6 @@ function PieChart(props) {
         sortByValue: true }));
 }
 exports.PieChart = PieChart;
-
-
-/***/ }),
-
-/***/ "./Typescript/Components/Charts/RadarChart.tsx":
-/*!*****************************************************!*\
-  !*** ./Typescript/Components/Charts/RadarChart.tsx ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RadarChart = void 0;
-const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.es.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function RadarChart({ dataSets }) {
-    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: 40, right: 40, bottom: 40, left: 40 }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: true, 
-        // motionStiffness={85}
-        // motionDamping={15}
-        isInteractive: true, legends: [] }));
-}
-exports.RadarChart = RadarChart;
 
 
 /***/ }),
@@ -3845,7 +3766,6 @@ const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
-const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ../../Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
@@ -3957,11 +3877,12 @@ class PaymentsOverview extends React.Component {
     }
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
-            const apiFactory = new ApiClientFactory_1.default();
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
             this.paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
             this.setState({ selectedFilter: this.filters[0] });
-            const bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
+            let bankAccounts = [];
+            bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
@@ -4037,8 +3958,7 @@ class PaymentsOverview extends React.Component {
                         React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
                     React.createElement("div", { className: "w-1/3 h-64" },
                         React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                    React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
-                        React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                    React.createElement("div", { className: "w-1/3 h-64 calendar text-black" })),
                 React.createElement("div", { className: "flex flex-row p-6" },
                     React.createElement("div", { className: "w-2/5" })),
                 React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
@@ -4458,11 +4378,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 class Overview extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (React.createElement("div", { className: "" },
             React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
             React.createElement("div", { className: "w-full lg:p-4" },
-                React.createElement(PaymentsOverview_1.default, null))));
+                React.createElement(PaymentsOverview_1.default, Object.assign({}, this.props)))));
     }
 }
 exports.default = Overview;
@@ -4751,12 +4674,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Auth_1 = __webpack_require__(/*! ../ApiClient/Auth */ "./Typescript/ApiClient/Auth/index.ts");
 const Main_1 = __webpack_require__(/*! ../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ../Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const UnauthorizedMiddleware_1 = __importDefault(__webpack_require__(/*! ./UnauthorizedMiddleware */ "./Typescript/Utils/UnauthorizedMiddleware.tsx"));
 class ApiClientFactory {
-    constructor() {
+    constructor(history) {
         this.setting = undefined;
+        this.getApiConfiguration = (baseUrl) => __awaiter(this, void 0, void 0, function* () {
+            let authHeader = null;
+            authHeader = this.getAuthHeader(authHeader);
+            let unauthorizedMiddleware = new UnauthorizedMiddleware_1.default(this.history);
+            let middleware = [unauthorizedMiddleware];
+            let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: baseUrl, middleware: middleware });
+            return apiConfiguration;
+        });
         this.getApiUrls = () => __awaiter(this, void 0, void 0, function* () {
             if (this.setting == undefined) {
                 let settingLoader = new DataLoader_1.default();
@@ -4773,16 +4704,13 @@ class ApiClientFactory {
             }
             return authHeader;
         };
+        this.history = history;
     }
     getClient(type) {
         return __awaiter(this, void 0, void 0, function* () {
             let setting = yield this.getApiUrls();
             let apiUrl = setting.mainApi;
-            let authHeader = null;
-            authHeader = this.getAuthHeader(authHeader);
-            if (type instanceof Auth_1.AuthApi)
-                apiUrl = setting.authApi;
-            let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: apiUrl });
+            let apiConfiguration = yield this.getApiConfiguration(apiUrl);
             let client = new type(apiConfiguration);
             return client;
         });
@@ -4791,9 +4719,7 @@ class ApiClientFactory {
         return __awaiter(this, void 0, void 0, function* () {
             let setting = yield this.getApiUrls();
             let apiUrl = setting.authApi;
-            let authHeader = null;
-            authHeader = this.getAuthHeader(authHeader);
-            let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: apiUrl });
+            let apiConfiguration = yield this.getApiConfiguration(apiUrl);
             let client = new type(apiConfiguration);
             return client;
         });
@@ -4943,13 +4869,41 @@ const PrivateRoute = (props) => {
         return userData;
     };
     const [userData, _] = (0, react_1.useState)(getUserData());
-    return (react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, props.rest, { render: () => {
-            return userData != undefined
-                ? react_1.default.createElement(props.component, Object.assign({}, props))
-                : react_1.default.createElement(react_router_dom_1.Redirect, { to: '/login' });
-        } })));
+    return (userData != undefined && userData != null ?
+        react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, props.rest, { component: props.component })) :
+        react_1.default.createElement(react_router_dom_1.Redirect, { to: '/login' }));
 };
 exports.default = PrivateRoute;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/UnauthorizedMiddleware.tsx":
+/*!*****************************************************!*\
+  !*** ./Typescript/Utils/UnauthorizedMiddleware.tsx ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class UnauthorizedMiddleware {
+    constructor(history) {
+        this.post = (context) => {
+            if (context.response.status == 401) {
+                localStorage.removeItem("user");
+                this.history.push("/login");
+            }
+            return new Promise((resolve, reject) => {
+                resolve(context.response);
+                reject(new Error('Unauthorized middlware failed'));
+            });
+        };
+        this.history = history;
+    }
+}
+exports.default = UnauthorizedMiddleware;
 
 
 /***/ }),
@@ -16391,1000 +16345,6 @@ var ResponsivePieCanvas = function ResponsivePieCanvas(props) {
       var width = _ref.width,
           height = _ref.height;
       return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(PieCanvas, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
-};
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/radar/dist/nivo-radar.es.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@nivo/radar/dist/nivo-radar.es.js ***!
-  \********************************************************/
-/*! exports provided: Radar, RadarDots, ResponsiveRadar, svgDefaultProps */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Radar", function() { return Radar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadarDots", function() { return RadarDots; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveRadar", function() { return ResponsiveRadar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svgDefaultProps", function() { return svgDefaultProps; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
-/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
-/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
-/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
-
-
-
-
-
-
-
-
-
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-  var target = _objectWithoutPropertiesLoose(source, excluded);
-  var key, i;
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-var RadarLayer = function RadarLayer(_ref) {
-  var data = _ref.data,
-      key = _ref.item,
-      colorByKey = _ref.colorByKey,
-      radiusScale = _ref.radiusScale,
-      angleStep = _ref.angleStep,
-      curveFactory = _ref.curveFactory,
-      borderWidth = _ref.borderWidth,
-      borderColor = _ref.borderColor,
-      fillOpacity = _ref.fillOpacity,
-      blendMode = _ref.blendMode;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var getBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_5__["useInheritedColor"])(borderColor, theme);
-  var lineGenerator = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_4__["lineRadial"])().radius(function (d) {
-      return radiusScale(d);
-    }).angle(function (_, i) {
-      return i * angleStep;
-    }).curve(curveFactory);
-  }, [radiusScale, angleStep, curveFactory]);
-
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-
-  var animatedPath = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useAnimatedPath"])(lineGenerator(data.map(function (d) {
-    return d[key];
-  })));
-  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useSpring"])({
-    fill: colorByKey[key],
-    stroke: getBorderColor({
-      key: key,
-      color: colorByKey[key]
-    }),
-    config: springConfig,
-    immediate: !animate
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].path, {
-    d: animatedPath,
-    fill: animatedProps.fill,
-    fillOpacity: fillOpacity,
-    stroke: animatedProps.stroke,
-    strokeWidth: borderWidth,
-    style: {
-      mixBlendMode: blendMode
-    }
-  }, key);
-};
-
-var textAnchorFromAngle = function textAnchorFromAngle(_angle) {
-  var angle = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(_angle) + 90;
-  if (angle <= 10 || angle >= 350 || angle >= 170 && angle <= 190) return 'middle';
-  if (angle > 180) return 'end';
-  return 'start';
-};
-
-var RadarGridLabels = function RadarGridLabels(_ref) {
-  var radius = _ref.radius,
-      angles = _ref.angles,
-      indices = _ref.indices,
-      labelComponent = _ref.label,
-      labelOffset = _ref.labelOffset;
-
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-
-  var labels = indices.map(function (index, i) {
-    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(angles[i], radius + labelOffset);
-    var textAnchor = textAnchorFromAngle(angles[i]);
-    return _objectSpread2({
-      id: index,
-      angle: Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["radiansToDegrees"])(angles[i]),
-      anchor: textAnchor
-    }, position);
-  });
-  var springs = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useSprings"])(labels.length, labels.map(function (label) {
-    return {
-      transform: "translate(".concat(label.x, ", ").concat(label.y, ")"),
-      config: springConfig,
-      immediate: !animate
-    };
-  }));
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: springs.map(function (animatedProps, index) {
-      var label = labels[index];
-      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(labelComponent, {
-        key: label.id,
-        id: label.id,
-        anchor: label.anchor,
-        angle: label.angle,
-        x: label.x,
-        y: label.y,
-        animated: animatedProps
-      });
-    })
-  });
-};
-
-var RadarGridLevelCircular = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
-  var radius = _ref.radius;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-
-  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["useSpring"])({
-    radius: radius,
-    config: springConfig,
-    immediate: !animate
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].circle, _objectSpread2({
-    fill: "none",
-    r: Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["to"])(animatedProps.radius, function (value) {
-      return Math.max(value, 0);
-    })
-  }, theme.grid.line));
-});
-
-var RadarGridLevelLinear = function RadarGridLevelLinear(_ref2) {
-  var radius = _ref2.radius,
-      angleStep = _ref2.angleStep,
-      dataLength = _ref2.dataLength;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var radarLineGenerator = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_4__["lineRadial"])().angle(function (i) {
-      return i * angleStep;
-    }).radius(radius).curve(d3_shape__WEBPACK_IMPORTED_MODULE_4__["curveLinearClosed"]);
-  }, [angleStep, radius]);
-  var points = Array.from({
-    length: dataLength
-  }, function (_, i) {
-    return i;
-  });
-  var animatedPath = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useAnimatedPath"])(radarLineGenerator(points));
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].path, _objectSpread2({
-    fill: "none",
-    d: animatedPath
-  }, theme.grid.line));
-};
-
-var RadarGridLevels = function RadarGridLevels(_ref3) {
-  var shape = _ref3.shape,
-      props = _objectWithoutProperties(_ref3, ["shape"]);
-
-  return shape === 'circular' ? Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarGridLevelCircular, {
-    radius: props.radius
-  }) : Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarGridLevelLinear, _objectSpread2({}, props));
-};
-
-var RadarGrid = function RadarGrid(_ref) {
-  var indices = _ref.indices,
-      levels = _ref.levels,
-      shape = _ref.shape,
-      radius = _ref.radius,
-      angleStep = _ref.angleStep,
-      label = _ref.label,
-      labelOffset = _ref.labelOffset;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-
-  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return {
-      radii: Array.from({
-        length: levels
-      }).map(function (_, i) {
-        return radius / levels * (i + 1);
-      }).reverse(),
-      angles: Array.from({
-        length: indices.length
-      }, function (_, i) {
-        return i * angleStep - Math.PI / 2;
-      })
-    };
-  }, [indices, levels, radius, angleStep]),
-      radii = _useMemo.radii,
-      angles = _useMemo.angles;
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: [angles.map(function (angle, i) {
-      var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(angle, radius);
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("line", _objectSpread2({
-        x1: 0,
-        y1: 0,
-        x2: position.x,
-        y2: position.y
-      }, theme.grid.line), "axis.".concat(i));
-    }), radii.map(function (radius, i) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarGridLevels, {
-        shape: shape,
-        radius: radius,
-        angleStep: angleStep,
-        dataLength: indices.length
-      }, "level.".concat(i));
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarGridLabels, {
-      radius: radius,
-      angles: angles,
-      indices: indices,
-      labelOffset: labelOffset,
-      label: label
-    })]
-  });
-};
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-  return arr2;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-var RadarSlice = function RadarSlice(_ref) {
-  var datum = _ref.datum,
-      keys = _ref.keys,
-      index = _ref.index,
-      formatValue = _ref.formatValue,
-      colorByKey = _ref.colorByKey,
-      radius = _ref.radius,
-      startAngle = _ref.startAngle,
-      endAngle = _ref.endAngle,
-      arcGenerator = _ref.arcGenerator,
-      tooltip = _ref.tooltip;
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
-      _useState2 = _slicedToArray(_useState, 2),
-      isHover = _useState2[0],
-      setIsHover = _useState2[1];
-
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-
-  var tooltipData = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var data = keys.map(function (key) {
-      return {
-        color: colorByKey[key],
-        id: key,
-        value: datum[key],
-        formattedValue: formatValue(datum[key], key)
-      };
-    });
-    data.sort(function (a, b) {
-      return a.value - b.value;
-    });
-    data.reverse();
-    return data;
-  }, [datum, keys, formatValue, colorByKey]);
-  var showItemTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    setIsHover(true);
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-      index: index,
-      data: tooltipData
-    }), event);
-  }, [showTooltipFromEvent, tooltip, index, tooltipData]);
-  var hideItemTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
-    setIsHover(false);
-    hideTooltip();
-  }, [hideTooltip, setIsHover]);
-
-  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(startAngle + (endAngle - startAngle) * 0.5 - Math.PI / 2, radius);
-    return {
-      path: arcGenerator({
-        startAngle: startAngle,
-        endAngle: endAngle
-      }),
-      tipX: position.x,
-      tipY: position.y
-    };
-  }, [startAngle, endAngle, radius, arcGenerator]),
-      path = _useMemo.path,
-      tipX = _useMemo.tipX,
-      tipY = _useMemo.tipY;
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: [isHover && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("line", {
-      x1: 0,
-      y1: 0,
-      x2: tipX,
-      y2: tipY,
-      style: theme.crosshair.line
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("path", {
-      d: path,
-      fill: "#F00",
-      fillOpacity: 0,
-      onMouseEnter: showItemTooltip,
-      onMouseMove: showItemTooltip,
-      onMouseLeave: hideItemTooltip
-    })]
-  });
-};
-
-var RadarSlices = function RadarSlices(_ref) {
-  var data = _ref.data,
-      keys = _ref.keys,
-      getIndex = _ref.getIndex,
-      formatValue = _ref.formatValue,
-      colorByKey = _ref.colorByKey,
-      radius = _ref.radius,
-      angleStep = _ref.angleStep,
-      tooltip = _ref.tooltip;
-  var arc$1 = Object(d3_shape__WEBPACK_IMPORTED_MODULE_4__["arc"])().outerRadius(radius).innerRadius(0);
-  var halfAngleStep = angleStep * 0.5;
-  var rootStartAngle = -halfAngleStep;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: data.map(function (d) {
-      var index = getIndex(d);
-      var startAngle = rootStartAngle;
-      var endAngle = startAngle + angleStep;
-      rootStartAngle += angleStep;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarSlice, {
-        datum: d,
-        keys: keys,
-        index: index,
-        formatValue: formatValue,
-        colorByKey: colorByKey,
-        startAngle: startAngle,
-        endAngle: endAngle,
-        radius: radius,
-        arcGenerator: arc$1,
-        tooltip: tooltip
-      }, index);
-    })
-  });
-};
-
-var RadarDots = function RadarDots(_ref) {
-  var data = _ref.data,
-      keys = _ref.keys,
-      getIndex = _ref.getIndex,
-      colorByKey = _ref.colorByKey,
-      radiusScale = _ref.radiusScale,
-      angleStep = _ref.angleStep,
-      symbol = _ref.symbol,
-      _ref$size = _ref.size,
-      size = _ref$size === void 0 ? 6 : _ref$size,
-      _ref$color = _ref.color,
-      color = _ref$color === void 0 ? {
-    from: 'color'
-  } : _ref$color,
-      _ref$borderWidth = _ref.borderWidth,
-      borderWidth = _ref$borderWidth === void 0 ? 0 : _ref$borderWidth,
-      _ref$borderColor = _ref.borderColor,
-      borderColor = _ref$borderColor === void 0 ? {
-    from: 'color'
-  } : _ref$borderColor,
-      _ref$enableLabel = _ref.enableLabel,
-      enableLabel = _ref$enableLabel === void 0 ? false : _ref$enableLabel,
-      _ref$label = _ref.label,
-      label = _ref$label === void 0 ? 'value' : _ref$label,
-      formatValue = _ref.formatValue,
-      labelYOffset = _ref.labelYOffset;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var fillColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_5__["getInheritedColorGenerator"])(color, theme);
-  var strokeColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_5__["getInheritedColorGenerator"])(borderColor, theme);
-  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(label);
-  var points = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return data.reduce(function (acc, datum, i) {
-      var index = getIndex(datum);
-      keys.forEach(function (key) {
-        var value = datum[key];
-        var pointData = {
-          index: index,
-          key: key,
-          value: value,
-          formattedValue: formatValue(value, key),
-          color: colorByKey[key]
-        };
-        acc.push({
-          key: "".concat(key, ".").concat(index),
-          label: enableLabel ? getLabel(pointData) : undefined,
-          style: _objectSpread2({
-            fill: fillColor(pointData),
-            stroke: strokeColor(pointData)
-          }, Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["positionFromAngle"])(angleStep * i - Math.PI / 2, radiusScale(datum[key]))),
-          data: pointData
-        });
-      });
-      return acc;
-    }, []);
-  }, [data, keys, getIndex, colorByKey, enableLabel, getLabel, formatValue, fillColor, strokeColor, angleStep, radiusScale]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: points.map(function (point) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["DotsItem"], {
-        x: point.style.x,
-        y: point.style.y,
-        symbol: symbol,
-        size: size,
-        color: point.style.fill,
-        borderWidth: borderWidth,
-        borderColor: point.style.stroke,
-        label: point.label,
-        labelYOffset: labelYOffset,
-        datum: point.data
-      }, point.key);
-    })
-  });
-};
-
-var RadarGridLabel = function RadarGridLabel(_ref) {
-  var id = _ref.id,
-      anchor = _ref.anchor,
-      animatedProps = _ref.animated;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__["animated"].g, {
-    transform: animatedProps.transform,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("text", {
-      style: theme.axis.ticks.text,
-      dominantBaseline: "central",
-      textAnchor: anchor,
-      children: id
-    })
-  });
-};
-
-var RadarSliceTooltip = function RadarSliceTooltip(_ref) {
-  var index = _ref.index,
-      data = _ref.data;
-  var rows = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return data.map(function (datum) {
-      return [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["Chip"], {
-        color: datum.color
-      }, datum.id), datum.id, datum.formattedValue];
-    });
-  }, [data]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["TableTooltip"], {
-    title: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("strong", {
-      children: index
-    }),
-    rows: rows
-  });
-};
-
-var svgDefaultProps = {
-  layers: ['grid', 'layers', 'slices', 'dots', 'legends'],
-  maxValue: 'auto',
-  curve: 'linearClosed',
-  borderWidth: 2,
-  borderColor: {
-    from: 'color'
-  },
-  gridLevels: 5,
-  gridShape: 'circular',
-  gridLabelOffset: 16,
-  gridLabel: RadarGridLabel,
-  enableDots: true,
-  dotSize: 6,
-  dotColor: {
-    from: 'color'
-  },
-  dotBorderWidth: 0,
-  dotBorderColor: {
-    from: 'color'
-  },
-  enableDotLabel: false,
-  dotLabel: 'formattedValue',
-  dotLabelYOffset: -12,
-  colors: {
-    scheme: 'nivo'
-  },
-  fillOpacity: 0.25,
-  blendMode: 'normal',
-  isInteractive: true,
-  sliceTooltip: RadarSliceTooltip,
-  legends: [],
-  role: 'img',
-  animate: true,
-  motionConfig: 'gentle'
-};
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-var useRadar = function useRadar(_ref) {
-  var data = _ref.data,
-      keys = _ref.keys,
-      indexBy = _ref.indexBy,
-      maxValue = _ref.maxValue,
-      valueFormat = _ref.valueFormat,
-      curve = _ref.curve,
-      width = _ref.width,
-      height = _ref.height,
-      _ref$colors = _ref.colors,
-      colors = _ref$colors === void 0 ? svgDefaultProps.colors : _ref$colors,
-      legends = _ref.legends;
-  var getIndex = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["usePropertyAccessor"])(indexBy);
-  var indices = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return data.map(getIndex);
-  }, [data, getIndex]);
-  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useValueFormatter"])(valueFormat);
-  var getColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_5__["useOrdinalColorScale"])(colors, 'key');
-  var colorByKey = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return keys.reduce(function (mapping, key, index) {
-      mapping[key] = getColor({
-        key: key,
-        index: index
-      });
-      return mapping;
-    }, {});
-  }, [keys, getColor]);
-
-  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var allValues = data.reduce(function (acc, d) {
-      return [].concat(_toConsumableArray(acc), _toConsumableArray(keys.map(function (key) {
-        return d[key];
-      })));
-    }, []);
-    var computedMaxValue = maxValue !== 'auto' ? maxValue : Math.max.apply(Math, _toConsumableArray(allValues));
-    var radius = Math.min(width, height) / 2;
-    var radiusScale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_8__["scaleLinear"])().range([0, radius]).domain([0, computedMaxValue]);
-    return {
-      radius: radius,
-      radiusScale: radiusScale,
-      centerX: width / 2,
-      centerY: height / 2,
-      angleStep: Math.PI * 2 / data.length
-    };
-  }, [keys, data, maxValue, width, height]),
-      radius = _useMemo.radius,
-      radiusScale = _useMemo.radiusScale,
-      centerX = _useMemo.centerX,
-      centerY = _useMemo.centerY,
-      angleStep = _useMemo.angleStep;
-
-  var curveFactory = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useCurveInterpolation"])(curve);
-  var customLayerProps = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return {
-      data: data,
-      keys: keys,
-      indices: indices,
-      colorByKey: colorByKey,
-      centerX: centerX,
-      centerY: centerY,
-      radiusScale: radiusScale,
-      angleStep: angleStep
-    };
-  }, [data, keys, indices, colorByKey, centerX, centerY, radiusScale, angleStep]);
-  var legendData = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return keys.map(function (key) {
-      return {
-        id: key,
-        label: key,
-        color: colorByKey[key]
-      };
-    });
-  }, [keys, colorByKey]);
-  var boundLegends = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return legends.map(function (_ref2) {
-      var customData = _ref2.data,
-          legend = _objectWithoutProperties(_ref2, ["data"]);
-
-      var boundData = customData === null || customData === void 0 ? void 0 : customData.map(function (cd) {
-        var findData = legendData.find(function (ld) {
-          return ld.id === cd.id;
-        }) || {};
-        return _objectSpread2(_objectSpread2({}, findData), cd);
-      });
-      return _objectSpread2(_objectSpread2({}, legend), {}, {
-        data: boundData || legendData
-      });
-    });
-  }, [legends, legendData]);
-  return {
-    getIndex: getIndex,
-    indices: indices,
-    formatValue: formatValue,
-    colorByKey: colorByKey,
-    radius: radius,
-    radiusScale: radiusScale,
-    centerX: centerX,
-    centerY: centerY,
-    angleStep: angleStep,
-    curveFactory: curveFactory,
-    legendData: legendData,
-    boundLegends: boundLegends,
-    customLayerProps: customLayerProps
-  };
-};
-
-var InnerRadar = function InnerRadar(_ref) {
-  var data = _ref.data,
-      keys = _ref.keys,
-      indexBy = _ref.indexBy,
-      _ref$layers = _ref.layers,
-      layers = _ref$layers === void 0 ? svgDefaultProps.layers : _ref$layers,
-      _ref$maxValue = _ref.maxValue,
-      maxValue = _ref$maxValue === void 0 ? svgDefaultProps.maxValue : _ref$maxValue,
-      valueFormat = _ref.valueFormat,
-      _ref$curve = _ref.curve,
-      curve = _ref$curve === void 0 ? svgDefaultProps.curve : _ref$curve,
-      partialMargin = _ref.margin,
-      width = _ref.width,
-      height = _ref.height,
-      _ref$borderWidth = _ref.borderWidth,
-      borderWidth = _ref$borderWidth === void 0 ? svgDefaultProps.borderWidth : _ref$borderWidth,
-      _ref$borderColor = _ref.borderColor,
-      borderColor = _ref$borderColor === void 0 ? svgDefaultProps.borderColor : _ref$borderColor,
-      _ref$gridLevels = _ref.gridLevels,
-      gridLevels = _ref$gridLevels === void 0 ? svgDefaultProps.gridLevels : _ref$gridLevels,
-      _ref$gridShape = _ref.gridShape,
-      gridShape = _ref$gridShape === void 0 ? svgDefaultProps.gridShape : _ref$gridShape,
-      _ref$gridLabel = _ref.gridLabel,
-      gridLabel = _ref$gridLabel === void 0 ? svgDefaultProps.gridLabel : _ref$gridLabel,
-      _ref$gridLabelOffset = _ref.gridLabelOffset,
-      gridLabelOffset = _ref$gridLabelOffset === void 0 ? svgDefaultProps.gridLabelOffset : _ref$gridLabelOffset,
-      _ref$enableDots = _ref.enableDots,
-      enableDots = _ref$enableDots === void 0 ? svgDefaultProps.enableDots : _ref$enableDots,
-      dotSymbol = _ref.dotSymbol,
-      _ref$dotSize = _ref.dotSize,
-      dotSize = _ref$dotSize === void 0 ? svgDefaultProps.dotSize : _ref$dotSize,
-      _ref$dotColor = _ref.dotColor,
-      dotColor = _ref$dotColor === void 0 ? svgDefaultProps.dotColor : _ref$dotColor,
-      _ref$dotBorderWidth = _ref.dotBorderWidth,
-      dotBorderWidth = _ref$dotBorderWidth === void 0 ? svgDefaultProps.dotBorderWidth : _ref$dotBorderWidth,
-      _ref$dotBorderColor = _ref.dotBorderColor,
-      dotBorderColor = _ref$dotBorderColor === void 0 ? svgDefaultProps.dotBorderColor : _ref$dotBorderColor,
-      _ref$enableDotLabel = _ref.enableDotLabel,
-      enableDotLabel = _ref$enableDotLabel === void 0 ? svgDefaultProps.enableDotLabel : _ref$enableDotLabel,
-      _ref$dotLabel = _ref.dotLabel,
-      dotLabel = _ref$dotLabel === void 0 ? svgDefaultProps.dotLabel : _ref$dotLabel,
-      _ref$dotLabelYOffset = _ref.dotLabelYOffset,
-      dotLabelYOffset = _ref$dotLabelYOffset === void 0 ? svgDefaultProps.dotLabelYOffset : _ref$dotLabelYOffset,
-      _ref$colors = _ref.colors,
-      colors = _ref$colors === void 0 ? svgDefaultProps.colors : _ref$colors,
-      _ref$fillOpacity = _ref.fillOpacity,
-      fillOpacity = _ref$fillOpacity === void 0 ? svgDefaultProps.fillOpacity : _ref$fillOpacity,
-      _ref$blendMode = _ref.blendMode,
-      blendMode = _ref$blendMode === void 0 ? svgDefaultProps.blendMode : _ref$blendMode,
-      _ref$isInteractive = _ref.isInteractive,
-      isInteractive = _ref$isInteractive === void 0 ? svgDefaultProps.isInteractive : _ref$isInteractive,
-      _ref$sliceTooltip = _ref.sliceTooltip,
-      sliceTooltip = _ref$sliceTooltip === void 0 ? svgDefaultProps.sliceTooltip : _ref$sliceTooltip,
-      _ref$legends = _ref.legends,
-      legends = _ref$legends === void 0 ? svgDefaultProps.legends : _ref$legends,
-      role = _ref.role,
-      ariaLabel = _ref.ariaLabel,
-      ariaLabelledBy = _ref.ariaLabelledBy,
-      ariaDescribedBy = _ref.ariaDescribedBy;
-
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight;
-
-  var _useRadar = useRadar({
-    data: data,
-    keys: keys,
-    indexBy: indexBy,
-    maxValue: maxValue,
-    valueFormat: valueFormat,
-    curve: curve,
-    width: innerWidth,
-    height: innerHeight,
-    colors: colors,
-    legends: legends
-  }),
-      getIndex = _useRadar.getIndex,
-      indices = _useRadar.indices,
-      formatValue = _useRadar.formatValue,
-      colorByKey = _useRadar.colorByKey,
-      radius = _useRadar.radius,
-      radiusScale = _useRadar.radiusScale,
-      centerX = _useRadar.centerX,
-      centerY = _useRadar.centerY,
-      angleStep = _useRadar.angleStep,
-      curveFactory = _useRadar.curveFactory,
-      boundLegends = _useRadar.boundLegends,
-      customLayerProps = _useRadar.customLayerProps;
-
-  var layerById = {
-    grid: null,
-    layers: null,
-    slices: null,
-    dots: null,
-    legends: null
-  };
-
-  if (layers.includes('grid')) {
-    layerById.grid = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("g", {
-      transform: "translate(".concat(centerX, ", ").concat(centerY, ")"),
-      children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarGrid, {
-        levels: gridLevels,
-        shape: gridShape,
-        radius: radius,
-        angleStep: angleStep,
-        indices: indices,
-        label: gridLabel,
-        labelOffset: gridLabelOffset
-      })
-    }, "grid");
-  }
-
-  if (layers.includes('layers')) {
-    layerById.layers = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("g", {
-      transform: "translate(".concat(centerX, ", ").concat(centerY, ")"),
-      children: keys.map(function (key) {
-        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarLayer, {
-          data: data,
-          item: key,
-          colorByKey: colorByKey,
-          radiusScale: radiusScale,
-          angleStep: angleStep,
-          curveFactory: curveFactory,
-          borderWidth: borderWidth,
-          borderColor: borderColor,
-          fillOpacity: fillOpacity,
-          blendMode: blendMode
-        }, key);
-      })
-    }, "layers");
-  }
-
-  if (layers.includes('slices') && isInteractive) {
-    layerById.slices = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("g", {
-      transform: "translate(".concat(centerX, ", ").concat(centerY, ")"),
-      children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarSlices, {
-        data: data,
-        keys: keys,
-        getIndex: getIndex,
-        formatValue: formatValue,
-        colorByKey: colorByKey,
-        radius: radius,
-        angleStep: angleStep,
-        tooltip: sliceTooltip
-      })
-    }, "slices");
-  }
-
-  if (layers.includes('dots') && enableDots) {
-    layerById.dots = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("g", {
-      transform: "translate(".concat(centerX, ", ").concat(centerY, ")"),
-      children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RadarDots, {
-        data: data,
-        keys: keys,
-        getIndex: getIndex,
-        radiusScale: radiusScale,
-        angleStep: angleStep,
-        symbol: dotSymbol,
-        size: dotSize,
-        colorByKey: colorByKey,
-        color: dotColor,
-        borderWidth: dotBorderWidth,
-        borderColor: dotBorderColor,
-        enableLabel: enableDotLabel,
-        label: dotLabel,
-        formatValue: formatValue,
-        labelYOffset: dotLabelYOffset
-      })
-    }, "dots");
-  }
-
-  if (layers.includes('legends')) {
-    layerById.legends = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
-      children: boundLegends.map(function (legend, i) {
-        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_2__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
-          containerWidth: width,
-          containerHeight: height
-        }), i);
-      })
-    }, "legends");
-  }
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["SvgWrapper"], {
-    width: outerWidth,
-    height: outerHeight,
-    margin: margin,
-    role: role,
-    ariaLabel: ariaLabel,
-    ariaLabelledBy: ariaLabelledBy,
-    ariaDescribedBy: ariaDescribedBy,
-    children: layers.map(function (layer, i) {
-      var _layerById$layer;
-
-      if (typeof layer === 'function') {
-        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
-          children: Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(layer, customLayerProps)
-        }, i);
-      }
-
-      return (_layerById$layer = layerById === null || layerById === void 0 ? void 0 : layerById[layer]) !== null && _layerById$layer !== void 0 ? _layerById$layer : null;
-    })
-  });
-};
-
-var Radar = function Radar(_ref2) {
-  var _ref2$isInteractive = _ref2.isInteractive,
-      isInteractive = _ref2$isInteractive === void 0 ? svgDefaultProps.isInteractive : _ref2$isInteractive,
-      _ref2$animate = _ref2.animate,
-      animate = _ref2$animate === void 0 ? svgDefaultProps.animate : _ref2$animate,
-      _ref2$motionConfig = _ref2.motionConfig,
-      motionConfig = _ref2$motionConfig === void 0 ? svgDefaultProps.motionConfig : _ref2$motionConfig,
-      theme = _ref2.theme,
-      renderWrapper = _ref2.renderWrapper,
-      otherProps = _objectWithoutProperties(_ref2, ["isInteractive", "animate", "motionConfig", "theme", "renderWrapper"]);
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["Container"], {
-    animate: animate,
-    isInteractive: isInteractive,
-    motionConfig: motionConfig,
-    renderWrapper: renderWrapper,
-    theme: theme,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(InnerRadar, _objectSpread2({
-      isInteractive: isInteractive
-    }, otherProps))
-  });
-};
-
-var ResponsiveRadar = function ResponsiveRadar(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(Radar, _objectSpread2({
         width: width,
         height: height
       }, props));

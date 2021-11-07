@@ -17,6 +17,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { RouteComponentProps } from 'react-router-dom';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[],
@@ -53,7 +54,7 @@ const theme = createMuiTheme({
 
 const defaultSelectedBankAccount = -1;
 
-export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
+export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewState>{
     private defaultBankOption: string = "Vše";
     private filters: DateFilter[];
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
@@ -61,7 +62,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     private bankAccountApi: BankAccountApiInterface;
     private paymentApi: PaymentApi;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
@@ -76,12 +77,14 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     public async componentDidMount() {
-        const apiFactory = new ApiClientFactory();
+        const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         this.paymentApi = await apiFactory.getClient(PaymentApi);
 
         this.setState({ selectedFilter: this.filters[0] });
-        const bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountsAllGet();
+        let bankAccounts: BankAccountModel[] = [];
+        bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
+
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
@@ -93,7 +96,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
     }
 
     private async getExactDateRangeDaysPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> {
-        return await this.paymentApi.paymentsGet({fromDate: dateFrom, toDate: dateTo, bankAccountId});
+        return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
     }
 
     private onRejected = () => {
@@ -113,7 +116,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 dateTo = this.state.filterDateTo;
             }
 
-            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({toDate: new Date(dateTo)});
+            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(dateTo) });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
@@ -276,7 +279,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                             <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
                         </div>
                         <div className="w-1/3 h-64 calendar text-black">
-                            <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
+                            {/* <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart> problem with error  */}
                         </div>
                     </div>
                     <div className="flex flex-row p-6">
