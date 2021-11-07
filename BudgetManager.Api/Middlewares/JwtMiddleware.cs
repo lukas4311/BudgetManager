@@ -78,20 +78,6 @@ namespace BudgetManager.Api.Middlewares
             try
             {
                 HttpClient client = new HttpClient();
-                //string bodyData = JsonSerializer.Serialize(new { Token = token });
-                //StringContent data = new StringContent(bodyData, Encoding.UTF8, "application/json");
-                //HttpResponseMessage response = await client.PostAsync(this.appSettings.ValidateUrl, data);
-                //bool isValid = false;
-
-                //if (response.IsSuccessStatusCode)
-                //{
-                //    string result = response.Content.ReadAsStringAsync().Result;
-                //    isValid = JsonSerializer.Deserialize<bool>(result);
-                //}
-
-                //if (!isValid)
-                //    return;
-
                 string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
                 UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
                 this.SignIn(context, user.userName, user.userId);
