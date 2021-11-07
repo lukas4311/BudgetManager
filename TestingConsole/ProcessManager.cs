@@ -13,13 +13,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BudgetManager.TestingConsole.Crypto;
 using System;
-using BudgetManager.FinanceDataMining.Services;
 
 namespace BudgetManager.TestingConsole
 {
     public class ProcessManager
     {
-        private const string organizationId = "8f46f33452affe4a";
+        private const string organizationId = "f209a688c8dcfff3";
         private const string bucketCrypto = "Crypto";
         private const string bucketForex = "Forex";
         private const string bucketFearAndGreed = "CryptoFearAndGreed";
@@ -49,7 +48,7 @@ namespace BudgetManager.TestingConsole
             CryptoData lastTickerRecord = lastRecords.SingleOrDefault(r => r.Ticker == cryptoTicker.ToString());
 
             CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
-            await dataDownloader.CryptoDownload(cryptoTicker, lastTickerRecord.Time).ConfigureAwait(false);
+            await dataDownloader.CryptoDownload(cryptoTicker, lastTickerRecord?.Time).ConfigureAwait(false);
         }
 
         internal async Task DownloadForexHistory(ForexTicker forexTicker)

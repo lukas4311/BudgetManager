@@ -18,7 +18,6 @@
     <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />
     <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\InvestmentIntegrationApi\BudgetManager.FinanceDataMining.csproj" />
-    <ProjectReference Include="..\Repositories\BudgetManager.Repository.csproj" />
   </ItemGroup>
 
 </Project>
