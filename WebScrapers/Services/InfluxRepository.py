@@ -2,12 +2,13 @@ import pytz
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import datetime
+from typing import List
 
 
 class InfluxRepository:
     __client: InfluxDBClient
     __bucket: str
-    __entities: list[Point]
+    __entities: List[Point]
 
     def __init__(self, influxUrl: str, bucket: str, token: str, organization: str):
         self.__client = InfluxDBClient(url=influxUrl, token=token, org=organization)
@@ -17,7 +18,7 @@ class InfluxRepository:
     def add(self, point: Point):
         self.__entities.append(point)
 
-    def add_range(self, points: list[Point]):
+    def add_range(self, points: List[Point]):
         self.__entities.extend(points)
 
     def save(self):

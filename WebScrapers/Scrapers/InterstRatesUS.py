@@ -4,7 +4,7 @@ import pytz
 from influxdb_client import Point, WritePrecision
 
 from Services.InfluxRepository import InfluxRepository
-from configManager import token
+from configManager import token, organizaiton
 
 
 class InterestRateModel:
@@ -35,7 +35,7 @@ for interest_rate in interest_rates:
         dateParsed = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         m_models.append(InterestRateModel(float(split_values[1]), dateParsed))
 
-influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, "8f46f33452affe4a")
+influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
 min_date = influx_repository.find_last(measurement, state)
 
 filtered = []
