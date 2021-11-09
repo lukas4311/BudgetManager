@@ -4,6 +4,7 @@ import requests
 from influxdb_client import Point, WritePrecision
 from Models.MoneySupplyModel import MoneySupplyModel
 from Services.InfluxRepository import InfluxRepository
+from typing import List
 
 
 class MoneySupplyUsService:
@@ -40,7 +41,7 @@ class MoneySupplyUsService:
         values = list(data_string[start_index + len("VALUE\\r\\n"):].split("\\r\\n"))
         return values
 
-    def __add_all_to_repository(self, measurement: str, filtered: list[MoneySupplyModel]):
+    def __add_all_to_repository(self, measurement: str, filtered: List[MoneySupplyModel]):
         for moneySupply in filtered:
             point = Point(measurement).field("value", float(moneySupply.value)).time(
                 moneySupply.date.astimezone(pytz.utc), WritePrecision.NS).tag("state", self.state)
