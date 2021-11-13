@@ -70,11 +70,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>>;
+    paymentsCategoriesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>>;
 
     /**
      */
-    paymentsCategoriesGet(): Promise<Array<PaymentCategoryModel>>;
+    paymentsCategoriesGet(initOverrides?: RequestInit): Promise<Array<PaymentCategoryModel>>;
 
     /**
      * 
@@ -83,24 +83,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest): Promise<runtime.ApiResponse<void>>;
+    paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest): Promise<void>;
-
-    /**
-     * 
-     * @param {number} [id] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PaymentApiInterface
-     */
-    paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     */
-    paymentsDelete(requestParameters: PaymentsDeleteRequest): Promise<void>;
+    paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -109,11 +96,24 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest): Promise<runtime.ApiResponse<PaymentModel>>;
+    paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    paymentsDetailGet(requestParameters: PaymentsDetailGetRequest): Promise<PaymentModel>;
+    paymentsDelete(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {number} [id] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PaymentApiInterface
+     */
+    paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PaymentModel>>;
+
+    /**
+     */
+    paymentsDetailGet(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<PaymentModel>;
 
     /**
      * 
@@ -124,11 +124,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsGetRaw(requestParameters: PaymentsGetRequest): Promise<runtime.ApiResponse<Array<PaymentModel>>>;
+    paymentsGetRaw(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>>;
 
     /**
      */
-    paymentsGet(requestParameters: PaymentsGetRequest): Promise<Array<PaymentModel>>;
+    paymentsGet(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>>;
 
     /**
      * 
@@ -138,24 +138,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<runtime.ApiResponse<void>>;
+    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<void>;
-
-    /**
-     * 
-     * @param {PaymentModel} [paymentModel] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PaymentApiInterface
-     */
-    paymentsPostRaw(requestParameters: PaymentsPostRequest): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     */
-    paymentsPost(requestParameters: PaymentsPostRequest): Promise<void>;
+    paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -164,11 +151,24 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsPutRaw(requestParameters: PaymentsPutRequest): Promise<runtime.ApiResponse<void>>;
+    paymentsPostRaw(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    paymentsPut(requestParameters: PaymentsPutRequest): Promise<void>;
+    paymentsPost(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {PaymentModel} [paymentModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PaymentApiInterface
+     */
+    paymentsPutRaw(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    paymentsPut(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -176,11 +176,11 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>>;
+    paymentsTypesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>>;
 
     /**
      */
-    paymentsTypesGet(): Promise<Array<PaymentTypeModel>>;
+    paymentsTypesGet(initOverrides?: RequestInit): Promise<Array<PaymentTypeModel>>;
 
 }
 
@@ -188,10 +188,16 @@ export interface PaymentApiInterface {
  * 
  */
 export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
+    processPathParam(param: any): string {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+
+        return encodeURIComponent(String(param));
+    }
 
     /**
      */
-    async paymentsCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>> {
+    async paymentsCategoriesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -205,21 +211,21 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentCategoryModelFromJSON));
     }
 
     /**
      */
-    async paymentsCategoriesGet(): Promise<Array<PaymentCategoryModel>> {
-        const response = await this.paymentsCategoriesGetRaw();
+    async paymentsCategoriesGet(initOverrides?: RequestInit): Promise<Array<PaymentCategoryModel>> {
+        const response = await this.paymentsCategoriesGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
         }
@@ -233,24 +239,24 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
         }
 
         const response = await this.request({
-            path: `/payments/clone/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/payments/clone/{id}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest): Promise<void> {
-        await this.paymentsCloneIdPostRaw(requestParameters);
+    async paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.paymentsCloneIdPostRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         if (requestParameters.id !== undefined) {
@@ -268,20 +274,20 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async paymentsDelete(requestParameters: PaymentsDeleteRequest): Promise<void> {
-        await this.paymentsDeleteRaw(requestParameters);
+    async paymentsDelete(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.paymentsDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest): Promise<runtime.ApiResponse<PaymentModel>> {
+    async paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PaymentModel>> {
         const queryParameters: any = {};
 
         if (requestParameters.id !== undefined) {
@@ -299,21 +305,21 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PaymentModelFromJSON(jsonValue));
     }
 
     /**
      */
-    async paymentsDetailGet(requestParameters: PaymentsDetailGetRequest): Promise<PaymentModel> {
-        const response = await this.paymentsDetailGetRaw(requestParameters);
+    async paymentsDetailGet(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<PaymentModel> {
+        const response = await this.paymentsDetailGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async paymentsGetRaw(requestParameters: PaymentsGetRequest): Promise<runtime.ApiResponse<Array<PaymentModel>>> {
+    async paymentsGetRaw(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>> {
         const queryParameters: any = {};
 
         if (requestParameters.fromDate !== undefined) {
@@ -339,21 +345,21 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentModelFromJSON));
     }
 
     /**
      */
-    async paymentsGet(requestParameters: PaymentsGetRequest): Promise<Array<PaymentModel>> {
-        const response = await this.paymentsGetRaw(requestParameters);
+    async paymentsGet(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>> {
+        const response = await this.paymentsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
             throw new runtime.RequiredError('tagId','Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
         }
@@ -371,24 +377,24 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
         }
 
         const response = await this.request({
-            path: `/payments/{paymentId}/tag/{tagId}`.replace(`{${"tagId"}}`, encodeURIComponent(String(requestParameters.tagId))).replace(`{${"paymentId"}}`, encodeURIComponent(String(requestParameters.paymentId))),
+            path: `/payments/{paymentId}/tag/{tagId}`.replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)).replace(`{${"paymentId"}}`, this.processPathParam(requestParameters.paymentId)),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<void> {
-        await this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters);
+    async paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async paymentsPostRaw(requestParameters: PaymentsPostRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentsPostRaw(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -405,20 +411,20 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             headers: headerParameters,
             query: queryParameters,
             body: PaymentModelToJSON(requestParameters.paymentModel),
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async paymentsPost(requestParameters: PaymentsPostRequest): Promise<void> {
-        await this.paymentsPostRaw(requestParameters);
+    async paymentsPost(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.paymentsPostRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async paymentsPutRaw(requestParameters: PaymentsPutRequest): Promise<runtime.ApiResponse<void>> {
+    async paymentsPutRaw(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -435,20 +441,20 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             headers: headerParameters,
             query: queryParameters,
             body: PaymentModelToJSON(requestParameters.paymentModel),
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async paymentsPut(requestParameters: PaymentsPutRequest): Promise<void> {
-        await this.paymentsPutRaw(requestParameters);
+    async paymentsPut(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.paymentsPutRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async paymentsTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>> {
+    async paymentsTypesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -462,15 +468,15 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentTypeModelFromJSON));
     }
 
     /**
      */
-    async paymentsTypesGet(): Promise<Array<PaymentTypeModel>> {
-        const response = await this.paymentsTypesGetRaw();
+    async paymentsTypesGet(initOverrides?: RequestInit): Promise<Array<PaymentTypeModel>> {
+        const response = await this.paymentsTypesGetRaw(initOverrides);
         return await response.value();
     }
 

@@ -58,11 +58,11 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountsAllBalanceToDateGetRaw(requestParameters: BankAccountsAllBalanceToDateGetRequest): Promise<runtime.ApiResponse<Array<BankBalanceModel>>>;
+    bankAccountsAllBalanceToDateGetRaw(requestParameters: BankAccountsAllBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BankBalanceModel>>>;
 
     /**
      */
-    bankAccountsAllBalanceToDateGet(requestParameters: BankAccountsAllBalanceToDateGetRequest): Promise<Array<BankBalanceModel>>;
+    bankAccountsAllBalanceToDateGet(requestParameters: BankAccountsAllBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<Array<BankBalanceModel>>;
 
     /**
      * 
@@ -70,11 +70,11 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountsAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>>;
+    bankAccountsAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BankAccountModel>>>;
 
     /**
      */
-    bankAccountsAllGet(): Promise<Array<BankAccountModel>>;
+    bankAccountsAllGet(initOverrides?: RequestInit): Promise<Array<BankAccountModel>>;
 
     /**
      * 
@@ -84,11 +84,11 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest): Promise<runtime.ApiResponse<BankBalanceModel>>;
+    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<BankBalanceModel>>;
 
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGet(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest): Promise<BankBalanceModel>;
+    bankAccountsBankAccountIdBalanceToDateGet(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<BankBalanceModel>;
 
     /**
      * 
@@ -97,24 +97,11 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountsDeleteRaw(requestParameters: BankAccountsDeleteRequest): Promise<runtime.ApiResponse<void>>;
+    bankAccountsDeleteRaw(requestParameters: BankAccountsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    bankAccountsDelete(requestParameters: BankAccountsDeleteRequest): Promise<void>;
-
-    /**
-     * 
-     * @param {BankAccountModel} [bankAccountModel] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BankAccountApiInterface
-     */
-    bankAccountsPostRaw(requestParameters: BankAccountsPostRequest): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     */
-    bankAccountsPost(requestParameters: BankAccountsPostRequest): Promise<void>;
+    bankAccountsDelete(requestParameters: BankAccountsDeleteRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -123,11 +110,24 @@ export interface BankAccountApiInterface {
      * @throws {RequiredError}
      * @memberof BankAccountApiInterface
      */
-    bankAccountsPutRaw(requestParameters: BankAccountsPutRequest): Promise<runtime.ApiResponse<void>>;
+    bankAccountsPostRaw(requestParameters: BankAccountsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    bankAccountsPut(requestParameters: BankAccountsPutRequest): Promise<void>;
+    bankAccountsPost(requestParameters: BankAccountsPostRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {BankAccountModel} [bankAccountModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BankAccountApiInterface
+     */
+    bankAccountsPutRaw(requestParameters: BankAccountsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    bankAccountsPut(requestParameters: BankAccountsPutRequest, initOverrides?: RequestInit): Promise<void>;
 
 }
 
@@ -135,10 +135,16 @@ export interface BankAccountApiInterface {
  * 
  */
 export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInterface {
+    processPathParam(param: any): string {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+
+        return encodeURIComponent(String(param));
+    }
 
     /**
      */
-    async bankAccountsAllBalanceToDateGetRaw(requestParameters: BankAccountsAllBalanceToDateGetRequest): Promise<runtime.ApiResponse<Array<BankBalanceModel>>> {
+    async bankAccountsAllBalanceToDateGetRaw(requestParameters: BankAccountsAllBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BankBalanceModel>>> {
         if (requestParameters.toDate === null || requestParameters.toDate === undefined) {
             throw new runtime.RequiredError('toDate','Required parameter requestParameters.toDate was null or undefined when calling bankAccountsAllBalanceToDateGet.');
         }
@@ -152,25 +158,25 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
         }
 
         const response = await this.request({
-            path: `/bankAccounts/all/balance/{toDate}`.replace(`{${"toDate"}}`, encodeURIComponent(String(requestParameters.toDate))),
+            path: `/bankAccounts/all/balance/{toDate}`.replace(`{${"toDate"}}`, this.processPathParam(requestParameters.toDate)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BankBalanceModelFromJSON));
     }
 
     /**
      */
-    async bankAccountsAllBalanceToDateGet(requestParameters: BankAccountsAllBalanceToDateGetRequest): Promise<Array<BankBalanceModel>> {
-        const response = await this.bankAccountsAllBalanceToDateGetRaw(requestParameters);
+    async bankAccountsAllBalanceToDateGet(requestParameters: BankAccountsAllBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<Array<BankBalanceModel>> {
+        const response = await this.bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async bankAccountsAllGetRaw(): Promise<runtime.ApiResponse<Array<BankAccountModel>>> {
+    async bankAccountsAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BankAccountModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -184,21 +190,21 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BankAccountModelFromJSON));
     }
 
     /**
      */
-    async bankAccountsAllGet(): Promise<Array<BankAccountModel>> {
-        const response = await this.bankAccountsAllGetRaw();
+    async bankAccountsAllGet(initOverrides?: RequestInit): Promise<Array<BankAccountModel>> {
+        const response = await this.bankAccountsAllGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest): Promise<runtime.ApiResponse<BankBalanceModel>> {
+    async bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<BankBalanceModel>> {
         if (requestParameters.bankAccountId === null || requestParameters.bankAccountId === undefined) {
             throw new runtime.RequiredError('bankAccountId','Required parameter requestParameters.bankAccountId was null or undefined when calling bankAccountsBankAccountIdBalanceToDateGet.');
         }
@@ -216,25 +222,25 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
         }
 
         const response = await this.request({
-            path: `/bankAccounts/{bankAccountId}/balance/{toDate}`.replace(`{${"bankAccountId"}}`, encodeURIComponent(String(requestParameters.bankAccountId))).replace(`{${"toDate"}}`, encodeURIComponent(String(requestParameters.toDate))),
+            path: `/bankAccounts/{bankAccountId}/balance/{toDate}`.replace(`{${"bankAccountId"}}`, this.processPathParam(requestParameters.bankAccountId)).replace(`{${"toDate"}}`, this.processPathParam(requestParameters.toDate)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => BankBalanceModelFromJSON(jsonValue));
     }
 
     /**
      */
-    async bankAccountsBankAccountIdBalanceToDateGet(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest): Promise<BankBalanceModel> {
-        const response = await this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters);
+    async bankAccountsBankAccountIdBalanceToDateGet(requestParameters: BankAccountsBankAccountIdBalanceToDateGetRequest, initOverrides?: RequestInit): Promise<BankBalanceModel> {
+        const response = await this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async bankAccountsDeleteRaw(requestParameters: BankAccountsDeleteRequest): Promise<runtime.ApiResponse<void>> {
+    async bankAccountsDeleteRaw(requestParameters: BankAccountsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -251,20 +257,20 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
             headers: headerParameters,
             query: queryParameters,
             body: requestParameters.body as any,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async bankAccountsDelete(requestParameters: BankAccountsDeleteRequest): Promise<void> {
-        await this.bankAccountsDeleteRaw(requestParameters);
+    async bankAccountsDelete(requestParameters: BankAccountsDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.bankAccountsDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async bankAccountsPostRaw(requestParameters: BankAccountsPostRequest): Promise<runtime.ApiResponse<void>> {
+    async bankAccountsPostRaw(requestParameters: BankAccountsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -281,20 +287,20 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
             headers: headerParameters,
             query: queryParameters,
             body: BankAccountModelToJSON(requestParameters.bankAccountModel),
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async bankAccountsPost(requestParameters: BankAccountsPostRequest): Promise<void> {
-        await this.bankAccountsPostRaw(requestParameters);
+    async bankAccountsPost(requestParameters: BankAccountsPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.bankAccountsPostRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async bankAccountsPutRaw(requestParameters: BankAccountsPutRequest): Promise<runtime.ApiResponse<void>> {
+    async bankAccountsPutRaw(requestParameters: BankAccountsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -311,15 +317,15 @@ export class BankAccountApi extends runtime.BaseAPI implements BankAccountApiInt
             headers: headerParameters,
             query: queryParameters,
             body: BankAccountModelToJSON(requestParameters.bankAccountModel),
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async bankAccountsPut(requestParameters: BankAccountsPutRequest): Promise<void> {
-        await this.bankAccountsPutRaw(requestParameters);
+    async bankAccountsPut(requestParameters: BankAccountsPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.bankAccountsPutRaw(requestParameters, initOverrides);
     }
 
 }

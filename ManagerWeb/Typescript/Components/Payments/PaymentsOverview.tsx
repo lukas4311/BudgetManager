@@ -116,7 +116,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 dateTo = this.state.filterDateTo;
             }
 
-            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(dateTo) });
+            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
@@ -268,15 +268,15 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                             </div>
                         </div>
                         <div className="w-3/5 h-64 mt-auto calendar">
-                            <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart>
+                            {/* <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart> */}
                         </div>
                     </div>
                     <div className="flex flex-row">
                         <div className="w-1/3 h-64">
-                            <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
+                            {/* <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart> */}
                         </div>
                         <div className="w-1/3 h-64">
-                            <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
+                            {/* <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart> */}
                         </div>
                         <div className="w-1/3 h-64 calendar text-black">
                             {/* <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart> problem with error  */}

@@ -94,4 +94,3 @@ export function BudgetModelToJSON(value?: BudgetModel | null): any {
     };
 }
 
-

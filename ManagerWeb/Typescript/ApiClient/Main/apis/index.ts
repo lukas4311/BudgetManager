@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 export * from './BankAccountApi';
 export * from './BudgetApi';
 export * from './CryptoApi';

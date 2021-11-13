@@ -78,4 +78,3 @@ export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
     };
 }
 
-

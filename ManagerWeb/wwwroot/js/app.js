@@ -568,9 +568,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Ma
  *
  */
 class BankAccountApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    bankAccountsAllBalanceToDateGetRaw(requestParameters) {
+    bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.toDate === null || requestParameters.toDate === undefined) {
                 throw new runtime.RequiredError('toDate', 'Required parameter requestParameters.toDate was null or undefined when calling bankAccountsAllBalanceToDateGet.');
@@ -581,25 +586,25 @@ class BankAccountApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/bankAccounts/all/balance/{toDate}`.replace(`{${"toDate"}}`, encodeURIComponent(String(requestParameters.toDate))),
+                path: `/bankAccounts/all/balance/{toDate}`.replace(`{${"toDate"}}`, this.processPathParam(requestParameters.toDate)),
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankBalanceModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllBalanceToDateGet(requestParameters) {
+    bankAccountsAllBalanceToDateGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters);
+            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsAllGetRaw() {
+    bankAccountsAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -611,21 +616,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankAccountModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllGet() {
+    bankAccountsAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllGetRaw();
+            const response = yield this.bankAccountsAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters) {
+    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.bankAccountId === null || requestParameters.bankAccountId === undefined) {
                 throw new runtime.RequiredError('bankAccountId', 'Required parameter requestParameters.bankAccountId was null or undefined when calling bankAccountsBankAccountIdBalanceToDateGet.');
@@ -639,25 +644,25 @@ class BankAccountApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/bankAccounts/{bankAccountId}/balance/{toDate}`.replace(`{${"bankAccountId"}}`, encodeURIComponent(String(requestParameters.bankAccountId))).replace(`{${"toDate"}}`, encodeURIComponent(String(requestParameters.toDate))),
+                path: `/bankAccounts/{bankAccountId}/balance/{toDate}`.replace(`{${"bankAccountId"}}`, this.processPathParam(requestParameters.bankAccountId)).replace(`{${"toDate"}}`, this.processPathParam(requestParameters.toDate)),
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BankBalanceModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGet(requestParameters) {
+    bankAccountsBankAccountIdBalanceToDateGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters);
+            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsDeleteRaw(requestParameters) {
+    bankAccountsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -671,20 +676,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsDelete(requestParameters) {
+    bankAccountsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsDeleteRaw(requestParameters);
+            yield this.bankAccountsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    bankAccountsPostRaw(requestParameters) {
+    bankAccountsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -698,20 +703,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPost(requestParameters) {
+    bankAccountsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPostRaw(requestParameters);
+            yield this.bankAccountsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    bankAccountsPutRaw(requestParameters) {
+    bankAccountsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -725,15 +730,15 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPut(requestParameters) {
+    bankAccountsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPutRaw(requestParameters);
+            yield this.bankAccountsPutRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -800,9 +805,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Ma
  *
  */
 class BudgetApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    budgetsActualGetRaw() {
+    budgetsActualGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -814,21 +824,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsActualGet() {
+    budgetsActualGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsActualGetRaw();
+            const response = yield this.budgetsActualGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsAllGetRaw() {
+    budgetsAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -840,21 +850,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsAllGet() {
+    budgetsAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsAllGetRaw();
+            const response = yield this.budgetsAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsDeleteRaw(requestParameters) {
+    budgetsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -868,20 +878,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsDelete(requestParameters) {
+    budgetsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsDeleteRaw(requestParameters);
+            yield this.budgetsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    budgetsGetRaw(requestParameters) {
+    budgetsGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -896,21 +906,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BudgetModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    budgetsGet(requestParameters) {
+    budgetsGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsGetRaw(requestParameters);
+            const response = yield this.budgetsGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsPostRaw(requestParameters) {
+    budgetsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -924,20 +934,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPost(requestParameters) {
+    budgetsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPostRaw(requestParameters);
+            yield this.budgetsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    budgetsPutRaw(requestParameters) {
+    budgetsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -951,15 +961,15 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPut(requestParameters) {
+    budgetsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPutRaw(requestParameters);
+            yield this.budgetsPutRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -1026,9 +1036,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Ma
  *
  */
 class CryptoApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
                 throw new runtime.RequiredError('fromCurrency', 'Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
@@ -1042,25 +1057,25 @@ class CryptoApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, encodeURIComponent(String(requestParameters.fromCurrency))).replace(`{${"toCurrency"}}`, encodeURIComponent(String(requestParameters.toCurrency))),
+                path: `/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)),
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.TextApiResponse(response);
         });
     }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
+            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosAllGetRaw() {
+    cryptosAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1072,21 +1087,21 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TradeHistoryFromJSON));
         });
     }
     /**
      */
-    cryptosAllGet() {
+    cryptosAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosAllGetRaw();
+            const response = yield this.cryptosAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGetRaw(requestParameters) {
+    cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tradeId === null || requestParameters.tradeId === undefined) {
                 throw new runtime.RequiredError('tradeId', 'Required parameter requestParameters.tradeId was null or undefined when calling cryptosTradeDetailTradeIdGet.');
@@ -1100,19 +1115,19 @@ class CryptoApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/cryptos/tradeDetail/{tradeId}`.replace(`{${"tradeId"}}`, encodeURIComponent(String(requestParameters.tradeId))),
+                path: `/cryptos/tradeDetail/{tradeId}`.replace(`{${"tradeId"}}`, this.processPathParam(requestParameters.tradeId)),
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.TradeHistoryFromJSON)(jsonValue));
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGet(requestParameters) {
+    cryptosTradeDetailTradeIdGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters);
+            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
@@ -1180,9 +1195,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Ma
  *
  */
 class PaymentApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    paymentsCategoriesGetRaw() {
+    paymentsCategoriesGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1194,21 +1214,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentCategoryModelFromJSON));
         });
     }
     /**
      */
-    paymentsCategoriesGet() {
+    paymentsCategoriesGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsCategoriesGetRaw();
+            const response = yield this.paymentsCategoriesGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsCloneIdPostRaw(requestParameters) {
+    paymentsCloneIdPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.id === null || requestParameters.id === undefined) {
                 throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
@@ -1219,24 +1239,24 @@ class PaymentApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/payments/clone/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+                path: `/payments/clone/{id}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
                 method: 'POST',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsCloneIdPost(requestParameters) {
+    paymentsCloneIdPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsCloneIdPostRaw(requestParameters);
+            yield this.paymentsCloneIdPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsDeleteRaw(requestParameters) {
+    paymentsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1251,20 +1271,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsDelete(requestParameters) {
+    paymentsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsDeleteRaw(requestParameters);
+            yield this.paymentsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsDetailGetRaw(requestParameters) {
+    paymentsDetailGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1279,21 +1299,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.PaymentModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    paymentsDetailGet(requestParameters) {
+    paymentsDetailGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsDetailGetRaw(requestParameters);
+            const response = yield this.paymentsDetailGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsGetRaw(requestParameters) {
+    paymentsGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.fromDate !== undefined) {
@@ -1314,21 +1334,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentModelFromJSON));
         });
     }
     /**
      */
-    paymentsGet(requestParameters) {
+    paymentsGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsGetRaw(requestParameters);
+            const response = yield this.paymentsGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters) {
+    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
                 throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
@@ -1342,24 +1362,24 @@ class PaymentApi extends runtime.BaseAPI {
                 headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
             }
             const response = yield this.request({
-                path: `/payments/{paymentId}/tag/{tagId}`.replace(`{${"tagId"}}`, encodeURIComponent(String(requestParameters.tagId))).replace(`{${"paymentId"}}`, encodeURIComponent(String(requestParameters.paymentId))),
+                path: `/payments/{paymentId}/tag/{tagId}`.replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)).replace(`{${"paymentId"}}`, this.processPathParam(requestParameters.paymentId)),
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDelete(requestParameters) {
+    paymentsPaymentIdTagTagIdDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters);
+            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsPostRaw(requestParameters) {
+    paymentsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1373,20 +1393,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPost(requestParameters) {
+    paymentsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPostRaw(requestParameters);
+            yield this.paymentsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsPutRaw(requestParameters) {
+    paymentsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1400,20 +1420,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPut(requestParameters) {
+    paymentsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPutRaw(requestParameters);
+            yield this.paymentsPutRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsTypesGetRaw() {
+    paymentsTypesGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1425,15 +1445,15 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentTypeModelFromJSON));
         });
     }
     /**
      */
-    paymentsTypesGet() {
+    paymentsTypesGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsTypesGetRaw();
+            const response = yield this.paymentsTypesGetRaw(initOverrides);
             return yield response.value();
         });
     }
@@ -1501,9 +1521,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Ma
  *
  */
 class TagApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    tagsAllUsedGetRaw() {
+    tagsAllUsedGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1515,21 +1540,21 @@ class TagApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TagModelFromJSON));
         });
     }
     /**
      */
-    tagsAllUsedGet() {
+    tagsAllUsedGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.tagsAllUsedGetRaw();
+            const response = yield this.tagsAllUsedGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    tagsDeleteRaw(requestParameters) {
+    tagsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.tagId !== undefined) {
@@ -1544,20 +1569,20 @@ class TagApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsDelete(requestParameters) {
+    tagsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsDeleteRaw(requestParameters);
+            yield this.tagsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    tagsPostRaw(requestParameters) {
+    tagsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1571,15 +1596,15 @@ class TagApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.AddTagModelToJSON)(requestParameters.addTagModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsPost(requestParameters) {
+    tagsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsPostRaw(requestParameters);
+            yield this.tagsPostRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -1608,6 +1633,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./BankAccountApi */ "./Typescript/ApiClient/Main/apis/BankAccountApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BudgetApi */ "./Typescript/ApiClient/Main/apis/BudgetApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./CryptoApi */ "./Typescript/ApiClient/Main/apis/CryptoApi.ts"), exports);
@@ -2288,6 +2315,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./AddTagModel */ "./Typescript/ApiClient/Main/models/AddTagModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankAccountModel */ "./Typescript/ApiClient/Main/models/BankAccountModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankBalanceModel */ "./Typescript/ApiClient/Main/models/BankBalanceModel.ts"), exports);
@@ -2334,7 +2363,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TextApiResponse = exports.BlobApiResponse = exports.VoidApiResponse = exports.JSONApiResponse = exports.canConsumeForm = exports.mapValues = exports.querystring = exports.exists = exports.Configuration = exports.COLLECTION_FORMATS = exports.RequiredError = exports.BaseAPI = exports.BASE_PATH = void 0;
-exports.BASE_PATH = "https://localhost:44303".replace(/\/+$/, "");
+exports.BASE_PATH = "http://localhost".replace(/\/+$/, "");
 const isBlob = (value) => typeof Blob !== 'undefined' && value instanceof Blob;
 /**
  * This is the base class for all generated API classes.
@@ -2349,13 +2378,13 @@ class BaseAPI {
                     fetchParams = (yield middleware.pre(Object.assign({ fetch: this.fetchApi }, fetchParams))) || fetchParams;
                 }
             }
-            let response = yield this.configuration.fetchApi(fetchParams.url, fetchParams.init);
+            let response = yield (this.configuration.fetchApi || fetch)(fetchParams.url, fetchParams.init);
             for (const middleware of this.middleware) {
                 if (middleware.post) {
                     response = (yield middleware.post({
                         fetch: this.fetchApi,
-                        url,
-                        init,
+                        url: fetchParams.url,
+                        init: fetchParams.init,
                         response: response.clone(),
                     })) || response;
                 }
@@ -2377,9 +2406,9 @@ class BaseAPI {
         const middlewares = postMiddlewares.map((post) => ({ post }));
         return this.withMiddleware(...middlewares);
     }
-    request(context) {
+    request(context, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { url, init } = this.createFetchParams(context);
+            const { url, init } = this.createFetchParams(context, initOverrides);
             const response = yield this.fetchApi(url, init);
             if (response.status >= 200 && response.status < 300) {
                 return response;
@@ -2387,7 +2416,7 @@ class BaseAPI {
             throw response;
         });
     }
-    createFetchParams(context) {
+    createFetchParams(context, initOverrides) {
         let url = this.configuration.basePath + context.path;
         if (context.query !== undefined && Object.keys(context.query).length !== 0) {
             // only add the querystring to the URL if there are query parameters.
@@ -2399,12 +2428,7 @@ class BaseAPI {
             ? context.body
             : JSON.stringify(context.body);
         const headers = Object.assign({}, this.configuration.headers, context.headers);
-        const init = {
-            method: context.method,
-            headers: headers,
-            body,
-            credentials: this.configuration.credentials
-        };
+        const init = Object.assign({ method: context.method, headers: headers, body, credentials: this.configuration.credentials }, initOverrides);
         return { url, init };
     }
     /**
@@ -2442,7 +2466,7 @@ class Configuration {
         return this.configuration.basePath != null ? this.configuration.basePath : exports.BASE_PATH;
     }
     get fetchApi() {
-        return this.configuration.fetchApi || window.fetch.bind(window);
+        return this.configuration.fetchApi;
     }
     get middleware() {
         return this.configuration.middleware || [];
@@ -2466,7 +2490,7 @@ class Configuration {
     get accessToken() {
         const accessToken = this.configuration.accessToken;
         if (accessToken) {
-            return typeof accessToken === 'function' ? accessToken : () => accessToken;
+            return typeof accessToken === 'function' ? accessToken : () => __awaiter(this, void 0, void 0, function* () { return accessToken; });
         }
         return undefined;
     }
@@ -2493,8 +2517,12 @@ function querystring(params, prefix = '') {
                 .join(`&${encodeURIComponent(fullKey)}=`);
             return `${encodeURIComponent(fullKey)}=${multiValue}`;
         }
-        if (value == null || value == undefined)
+        if (value instanceof Date) {
+            return `${encodeURIComponent(fullKey)}=${encodeURIComponent(value.toISOString())}`;
+        }
+        if (value == null || value == undefined) {
             return "";
+        }
         if (value instanceof Object) {
             return querystring(value, fullKey);
         }
@@ -3002,124 +3030,6 @@ exports.BudgetForm2 = BudgetForm;
 
 /***/ }),
 
-/***/ "./Typescript/Components/Charts/CalendarChart.tsx":
-/*!********************************************************!*\
-  !*** ./Typescript/Components/Charts/CalendarChart.tsx ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CalendarChart = void 0;
-const calendar_1 = __webpack_require__(/*! @nivo/calendar */ "./node_modules/@nivo/calendar/dist/nivo-calendar.es.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function CalendarChart(props) {
-    const czechMonths = [
-        'Leden',
-        'Únor',
-        'Březen',
-        'Duben',
-        'Květen',
-        'Ćerven',
-        'Červenec',
-        'Srpen',
-        'Září',
-        'Říjen',
-        'Listopad',
-        'Prosinec',
-    ];
-    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: "2020-01-01", to: "2020-12-31", emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 10, monthBorderColor: "#000000", dayBorderWidth: 2, dayBorderColor: "#000000", isInteractive: true, monthLegend: (year, month) => czechMonths[month], tooltip: ({ day, value, color }) => (react_1.default.createElement("strong", { style: { color } },
-            day,
-            ": ",
-            value)), theme: {
-            tooltip: {
-                container: {
-                    background: '#333',
-                },
-            }
-        } }));
-}
-exports.CalendarChart = CalendarChart;
-
-
-/***/ }),
-
-/***/ "./Typescript/Components/Charts/LineChart.tsx":
-/*!****************************************************!*\
-  !*** ./Typescript/Components/Charts/LineChart.tsx ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LineChart = void 0;
-const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.es.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function LineChart({ dataSets }) {
-    let allYData = [];
-    dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
-    let minY = Math.min(...allYData);
-    let maxY = Math.max(...allYData);
-    let yScale = (minY / 100);
-    if (yScale < 1000)
-        yScale = 1000;
-    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
-            type: 'time',
-            format: '%Y-%m-%d',
-            useUTC: false,
-            precision: 'day',
-        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - yScale, max: maxY + yScale }, axisLeft: {
-            legend: 'linear scale',
-            legendOffset: 12,
-            tickValues: 6,
-            tickPadding: 15
-        }, axisBottom: {
-            format: '%Y-%m-%d',
-            tickValues: 'every 1 month',
-            legend: 'time scale',
-            legendOffset: -12,
-        }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
-            return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
-                react_1.default.createElement("span", null, point.data.xFormatted),
-                react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
-        }, theme: {
-            axis: {
-                ticks: {
-                    line: {
-                        stroke: "white"
-                    },
-                    text: {
-                        fill: "white"
-                    }
-                }
-            },
-            grid: {
-                line: {
-                    stroke: "white",
-                }
-            },
-            dots: {
-                text: {
-                    fill: 'white',
-                }
-            }
-        } }));
-}
-exports.LineChart = LineChart;
-
-
-/***/ }),
-
 /***/ "./Typescript/Components/Charts/PieChart.tsx":
 /*!***************************************************!*\
   !*** ./Typescript/Components/Charts/PieChart.tsx ***!
@@ -3527,8 +3437,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
-const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
-const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
@@ -3565,7 +3473,7 @@ class PaymentsOverview extends React.Component {
                 else {
                     dateTo = this.state.filterDateTo;
                 }
-                let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(dateTo) });
+                let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
@@ -3713,13 +3621,10 @@ class PaymentsOverview extends React.Component {
                             React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                         React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                             React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                    React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" },
-                        React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets }))),
+                    React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" })),
                 React.createElement("div", { className: "flex flex-row" },
-                    React.createElement("div", { className: "w-1/3 h-64" },
-                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                    React.createElement("div", { className: "w-1/3 h-64" },
-                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                    React.createElement("div", { className: "w-1/3 h-64" }),
+                    React.createElement("div", { className: "w-1/3 h-64" }),
                     React.createElement("div", { className: "w-1/3 h-64 calendar text-black" })),
                 React.createElement("div", { className: "flex flex-row p-6" },
                     React.createElement("div", { className: "w-2/5" })),
@@ -5851,3178 +5756,6 @@ var useArcGenerator = function useArcGenerator() {
       return arc.outerRadius;
     }).cornerRadius(cornerRadius).padAngle(padAngle);
   }, [cornerRadius, padAngle]);
-};
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/dist/nivo-axes.es.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@nivo/axes/dist/nivo-axes.es.js ***!
-  \******************************************************/
-/*! exports provided: Axes, Axis, AxisTick, Grid, GridLine, GridLines, axisPropType, axisPropTypes, positions, renderAxesToCanvas, renderAxisToCanvas, renderGridLinesToCanvas */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Axes", function() { return Axes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Axis", function() { return memoizedAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AxisTick", function() { return memoizedAxisTick; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Grid", function() { return Grid; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GridLine", function() { return GridLine; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GridLines", function() { return GridLines; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "axisPropType", function() { return axisPropType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "axisPropTypes", function() { return axisPropTypes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "positions", function() { return positions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderAxesToCanvas", function() { return renderAxesToCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderAxisToCanvas", function() { return renderAxisToCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderGridLinesToCanvas", function() { return renderGridLinesToCanvas; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var d3_time_format__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-time-format */ "./node_modules/d3-time-format/src/index.js");
-/* harmony import */ var d3_format__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3-format */ "./node_modules/@nivo/axes/node_modules/d3-format/src/index.js");
-/* harmony import */ var _nivo_scales__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @nivo/scales */ "./node_modules/@nivo/scales/dist/nivo-scales.es.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_7__);
-
-
-
-
-
-
-
-
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-var isArray = function isArray(value) {
-  return Array.isArray(value);
-};
-
-var computeCartesianTicks = function computeCartesianTicks(_ref) {
-  var axis = _ref.axis,
-      scale = _ref.scale,
-      ticksPosition = _ref.ticksPosition,
-      tickValues = _ref.tickValues,
-      tickSize = _ref.tickSize,
-      tickPadding = _ref.tickPadding,
-      tickRotation = _ref.tickRotation,
-      _ref$engine = _ref.engine,
-      engine = _ref$engine === void 0 ? 'svg' : _ref$engine;
-  var values = Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_5__["getScaleTicks"])(scale, tickValues);
-  var textProps = _nivo_core__WEBPACK_IMPORTED_MODULE_2__["textPropsByEngine"][engine];
-  var position = 'bandwidth' in scale ? Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_5__["centerScale"])(scale) : scale;
-  var line = {
-    lineX: 0,
-    lineY: 0
-  };
-  var text = {
-    textX: 0,
-    textY: 0
-  };
-  var isRTL = typeof document === 'object' ? document.dir === 'rtl' : false;
-  var translate;
-  var textAlign = textProps.align.center;
-  var textBaseline = textProps.baseline.center;
-
-  if (axis === 'x') {
-    translate = function translate(d) {
-      var _position;
-
-      return {
-        x: (_position = position(d)) !== null && _position !== void 0 ? _position : 0,
-        y: 0
-      };
-    };
-
-    line.lineY = tickSize * (ticksPosition === 'after' ? 1 : -1);
-    text.textY = (tickSize + tickPadding) * (ticksPosition === 'after' ? 1 : -1);
-
-    if (ticksPosition === 'after') {
-      textBaseline = textProps.baseline.top;
-    } else {
-      textBaseline = textProps.baseline.bottom;
-    }
-
-    if (tickRotation === 0) {
-      textAlign = textProps.align.center;
-    } else if (ticksPosition === 'after' && tickRotation < 0 || ticksPosition === 'before' && tickRotation > 0) {
-      textAlign = textProps.align[isRTL ? 'left' : 'right'];
-      textBaseline = textProps.baseline.center;
-    } else if (ticksPosition === 'after' && tickRotation > 0 || ticksPosition === 'before' && tickRotation < 0) {
-      textAlign = textProps.align[isRTL ? 'right' : 'left'];
-      textBaseline = textProps.baseline.center;
-    }
-  } else {
-    translate = function translate(d) {
-      var _position2;
-
-      return {
-        x: 0,
-        y: (_position2 = position(d)) !== null && _position2 !== void 0 ? _position2 : 0
-      };
-    };
-
-    line.lineX = tickSize * (ticksPosition === 'after' ? 1 : -1);
-    text.textX = (tickSize + tickPadding) * (ticksPosition === 'after' ? 1 : -1);
-
-    if (ticksPosition === 'after') {
-      textAlign = textProps.align.left;
-    } else {
-      textAlign = textProps.align.right;
-    }
-  }
-
-  var ticks = values.map(function (value) {
-    return _objectSpread2(_objectSpread2(_objectSpread2({
-      key: typeof value === 'number' || typeof value === 'string' ? value : "".concat(value),
-      value: value
-    }, translate(value)), line), text);
-  });
-  return {
-    ticks: ticks,
-    textAlign: textAlign,
-    textBaseline: textBaseline
-  };
-};
-var getFormatter = function getFormatter(format$1, scale) {
-  if (typeof format$1 === 'undefined' || typeof format$1 === 'function') return format$1;
-
-  if (scale.type === 'time') {
-    var formatter = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_3__["timeFormat"])(format$1);
-    return function (d) {
-      return formatter(d instanceof Date ? d : new Date(d));
-    };
-  }
-
-  return Object(d3_format__WEBPACK_IMPORTED_MODULE_4__["format"])(format$1);
-};
-var computeGridLines = function computeGridLines(_ref2) {
-  var width = _ref2.width,
-      height = _ref2.height,
-      scale = _ref2.scale,
-      axis = _ref2.axis,
-      _values = _ref2.values;
-  var lineValues = isArray(_values) ? _values : undefined;
-  var values = lineValues || Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_5__["getScaleTicks"])(scale, _values);
-  var position = 'bandwidth' in scale ? Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_5__["centerScale"])(scale) : scale;
-  var lines = axis === 'x' ? values.map(function (value) {
-    var _position3, _position4;
-
-    return {
-      key: "".concat(value),
-      x1: (_position3 = position(value)) !== null && _position3 !== void 0 ? _position3 : 0,
-      x2: (_position4 = position(value)) !== null && _position4 !== void 0 ? _position4 : 0,
-      y1: 0,
-      y2: height
-    };
-  }) : values.map(function (value) {
-    var _position5, _position6;
-
-    return {
-      key: "".concat(value),
-      x1: 0,
-      x2: width,
-      y1: (_position5 = position(value)) !== null && _position5 !== void 0 ? _position5 : 0,
-      y2: (_position6 = position(value)) !== null && _position6 !== void 0 ? _position6 : 0
-    };
-  });
-  return lines;
-};
-
-var AxisTick = function AxisTick(_ref) {
-  var _format;
-
-  var _value = _ref.value,
-      format = _ref.format,
-      lineX = _ref.lineX,
-      lineY = _ref.lineY,
-      _onClick = _ref.onClick,
-      textBaseline = _ref.textBaseline,
-      textAnchor = _ref.textAnchor,
-      animatedProps = _ref.animatedProps;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
-  var value = (_format = format === null || format === void 0 ? void 0 : format(_value)) !== null && _format !== void 0 ? _format : _value;
-  var props = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var style = {
-      opacity: animatedProps.opacity
-    };
-
-    if (!_onClick) {
-      return {
-        style: style
-      };
-    }
-
-    return {
-      style: _objectSpread2(_objectSpread2({}, style), {}, {
-        cursor: 'pointer'
-      }),
-      onClick: function onClick(event) {
-        return _onClick(event, value);
-      }
-    };
-  }, [animatedProps.opacity, _onClick, value]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["animated"].g, _objectSpread2(_objectSpread2({
-    transform: animatedProps.transform
-  }, props), {}, {
-    children: [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("line", {
-      x1: 0,
-      x2: lineX,
-      y1: 0,
-      y2: lineY,
-      style: theme.axis.ticks.line
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["animated"].text, {
-      dominantBaseline: textBaseline,
-      textAnchor: textAnchor,
-      transform: animatedProps.textTransform,
-      style: theme.axis.ticks.text,
-      children: value
-    })]
-  }));
-};
-
-var memoizedAxisTick = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(AxisTick);
-
-var Axis = function Axis(_ref) {
-  var axis = _ref.axis,
-      scale = _ref.scale,
-      _ref$x = _ref.x,
-      x = _ref$x === void 0 ? 0 : _ref$x,
-      _ref$y = _ref.y,
-      y = _ref$y === void 0 ? 0 : _ref$y,
-      length = _ref.length,
-      ticksPosition = _ref.ticksPosition,
-      tickValues = _ref.tickValues,
-      _ref$tickSize = _ref.tickSize,
-      tickSize = _ref$tickSize === void 0 ? 5 : _ref$tickSize,
-      _ref$tickPadding = _ref.tickPadding,
-      tickPadding = _ref$tickPadding === void 0 ? 5 : _ref$tickPadding,
-      _ref$tickRotation = _ref.tickRotation,
-      tickRotation = _ref$tickRotation === void 0 ? 0 : _ref$tickRotation,
-      format = _ref.format,
-      _ref$renderTick = _ref.renderTick,
-      renderTick = _ref$renderTick === void 0 ? memoizedAxisTick : _ref$renderTick,
-      legend = _ref.legend,
-      _ref$legendPosition = _ref.legendPosition,
-      legendPosition = _ref$legendPosition === void 0 ? 'end' : _ref$legendPosition,
-      _ref$legendOffset = _ref.legendOffset,
-      legendOffset = _ref$legendOffset === void 0 ? 0 : _ref$legendOffset,
-      onClick = _ref.onClick,
-      ariaHidden = _ref.ariaHidden;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
-  var formatValue = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return getFormatter(format, scale);
-  }, [format, scale]);
-
-  var _computeCartesianTick = computeCartesianTicks({
-    axis: axis,
-    scale: scale,
-    ticksPosition: ticksPosition,
-    tickValues: tickValues,
-    tickSize: tickSize,
-    tickPadding: tickPadding,
-    tickRotation: tickRotation
-  }),
-      ticks = _computeCartesianTick.ticks,
-      textAlign = _computeCartesianTick.textAlign,
-      textBaseline = _computeCartesianTick.textBaseline;
-
-  var legendNode = null;
-
-  if (legend !== undefined) {
-    var legendX = 0;
-    var legendY = 0;
-    var legendRotation = 0;
-    var textAnchor;
-
-    if (axis === 'y') {
-      legendRotation = -90;
-      legendX = legendOffset;
-
-      if (legendPosition === 'start') {
-        textAnchor = 'start';
-        legendY = length;
-      } else if (legendPosition === 'middle') {
-        textAnchor = 'middle';
-        legendY = length / 2;
-      } else if (legendPosition === 'end') {
-        textAnchor = 'end';
-      }
-    } else {
-      legendY = legendOffset;
-
-      if (legendPosition === 'start') {
-        textAnchor = 'start';
-      } else if (legendPosition === 'middle') {
-        textAnchor = 'middle';
-        legendX = length / 2;
-      } else if (legendPosition === 'end') {
-        textAnchor = 'end';
-        legendX = length;
-      }
-    }
-
-    legendNode = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("text", {
-      transform: "translate(".concat(legendX, ", ").concat(legendY, ") rotate(").concat(legendRotation, ")"),
-      textAnchor: textAnchor,
-      style: _objectSpread2({
-        dominantBaseline: 'central'
-      }, theme.axis.legend.text),
-      children: legend
-    });
-  }
-
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-
-  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["useSpring"])({
-    transform: "translate(".concat(x, ",").concat(y, ")"),
-    lineX2: axis === 'x' ? length : 0,
-    lineY2: axis === 'x' ? 0 : length,
-    config: springConfig,
-    immediate: !animate
-  });
-  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["useTransition"])(ticks, {
-    keys: function keys(tick) {
-      return tick.key;
-    },
-    initial: function initial(tick) {
-      return {
-        opacity: 1,
-        transform: "translate(".concat(tick.x, ",").concat(tick.y, ")"),
-        textTransform: "translate(".concat(tick.textX, ",").concat(tick.textY, ") rotate(").concat(tickRotation, ")")
-      };
-    },
-    from: function from(tick) {
-      return {
-        opacity: 0,
-        transform: "translate(".concat(tick.x, ",").concat(tick.y, ")"),
-        textTransform: "translate(".concat(tick.textX, ",").concat(tick.textY, ") rotate(").concat(tickRotation, ")")
-      };
-    },
-    enter: function enter(tick) {
-      return {
-        opacity: 1,
-        transform: "translate(".concat(tick.x, ",").concat(tick.y, ")"),
-        textTransform: "translate(".concat(tick.textX, ",").concat(tick.textY, ") rotate(").concat(tickRotation, ")")
-      };
-    },
-    update: function update(tick) {
-      return {
-        opacity: 1,
-        transform: "translate(".concat(tick.x, ",").concat(tick.y, ")"),
-        textTransform: "translate(".concat(tick.textX, ",").concat(tick.textY, ") rotate(").concat(tickRotation, ")")
-      };
-    },
-    leave: {
-      opacity: 0
-    },
-    config: springConfig,
-    immediate: !animate
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["animated"].g, {
-    transform: animatedProps.transform,
-    "aria-hidden": ariaHidden,
-    children: [transition(function (transitionProps, tick, _state, tickIndex) {
-      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(renderTick, _objectSpread2(_objectSpread2({
-        tickIndex: tickIndex,
-        format: formatValue,
-        rotate: tickRotation,
-        textBaseline: textBaseline,
-        textAnchor: textAlign,
-        animatedProps: transitionProps
-      }, tick), onClick ? {
-        onClick: onClick
-      } : {}));
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["animated"].line, {
-      style: theme.axis.domain.line,
-      x1: 0,
-      x2: animatedProps.lineX2,
-      y1: 0,
-      y2: animatedProps.lineY2
-    }), legendNode]
-  });
-};
-
-var memoizedAxis = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Axis);
-
-var axisPropTypes = {
-  ticksPosition: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOf(['before', 'after']),
-  tickValues: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.instanceOf(Date)])), prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.string]),
-  tickSize: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number,
-  tickPadding: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number,
-  tickRotation: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number,
-  format: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.string]),
-  renderTick: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-  legend: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.node,
-  legendPosition: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.oneOf(['start', 'middle', 'end']),
-  legendOffset: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.number,
-  ariaHidden: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.bool
-};
-var axisPropType = prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.shape(axisPropTypes);
-var positions = ['top', 'right', 'bottom', 'left'];
-
-var Axes = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
-  var xScale = _ref.xScale,
-      yScale = _ref.yScale,
-      width = _ref.width,
-      height = _ref.height,
-      top = _ref.top,
-      right = _ref.right,
-      bottom = _ref.bottom,
-      left = _ref.left;
-  var axes = {
-    top: top,
-    right: right,
-    bottom: bottom,
-    left: left
-  };
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: positions.map(function (position) {
-      var axis = axes[position];
-      if (!axis) return null;
-      var isXAxis = position === 'top' || position === 'bottom';
-      var ticksPosition = position === 'top' || position === 'left' ? 'before' : 'after';
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(memoizedAxis, _objectSpread2(_objectSpread2({}, axis), {}, {
-        axis: isXAxis ? 'x' : 'y',
-        x: position === 'right' ? width : 0,
-        y: position === 'bottom' ? height : 0,
-        scale: isXAxis ? xScale : yScale,
-        length: isXAxis ? width : height,
-        ticksPosition: ticksPosition
-      }), position);
-    })
-  });
-});
-
-var GridLine = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
-  var animatedProps = _ref.animatedProps;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useTheme"])();
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["animated"].line, _objectSpread2(_objectSpread2({}, animatedProps), theme.grid.line));
-});
-
-var GridLines = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
-  var lines = _ref.lines;
-
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-
-  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_1__["useTransition"])(lines, {
-    keys: function keys(line) {
-      return line.key;
-    },
-    initial: function initial(line) {
-      return {
-        opacity: 1,
-        x1: line.x1,
-        x2: line.x2,
-        y1: line.y1,
-        y2: line.y2
-      };
-    },
-    from: function from(line) {
-      return {
-        opacity: 0,
-        x1: line.x1,
-        x2: line.x2,
-        y1: line.y1,
-        y2: line.y2
-      };
-    },
-    enter: function enter(line) {
-      return {
-        opacity: 1,
-        x1: line.x1,
-        x2: line.x2,
-        y1: line.y1,
-        y2: line.y2
-      };
-    },
-    update: function update(line) {
-      return {
-        opacity: 1,
-        x1: line.x1,
-        x2: line.x2,
-        y1: line.y1,
-        y2: line.y2
-      };
-    },
-    leave: {
-      opacity: 0
-    },
-    config: springConfig,
-    immediate: !animate
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])("g", {
-    children: transition(function (animatedProps, line) {
-      return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(GridLine, _objectSpread2(_objectSpread2({}, line), {}, {
-        key: line.key,
-        animatedProps: animatedProps
-      }));
-    })
-  });
-});
-
-var Grid = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(function (_ref) {
-  var width = _ref.width,
-      height = _ref.height,
-      xScale = _ref.xScale,
-      yScale = _ref.yScale,
-      xValues = _ref.xValues,
-      yValues = _ref.yValues;
-  var xLines = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    if (!xScale) return false;
-    return computeGridLines({
-      width: width,
-      height: height,
-      scale: xScale,
-      axis: 'x',
-      values: xValues
-    });
-  }, [xScale, xValues, width, height]);
-  var yLines = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    if (!yScale) return false;
-    return computeGridLines({
-      width: width,
-      height: height,
-      scale: yScale,
-      axis: 'y',
-      values: yValues
-    });
-  }, [height, width, yScale, yValues]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
-    children: [xLines && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(GridLines, {
-      lines: xLines
-    }), yLines && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(GridLines, {
-      lines: yLines
-    })]
-  });
-});
-
-var renderAxisToCanvas = function renderAxisToCanvas(ctx, _ref) {
-  var _theme$axis$domain$li;
-
-  var axis = _ref.axis,
-      scale = _ref.scale,
-      _ref$x = _ref.x,
-      x = _ref$x === void 0 ? 0 : _ref$x,
-      _ref$y = _ref.y,
-      y = _ref$y === void 0 ? 0 : _ref$y,
-      length = _ref.length,
-      ticksPosition = _ref.ticksPosition,
-      tickValues = _ref.tickValues,
-      _ref$tickSize = _ref.tickSize,
-      tickSize = _ref$tickSize === void 0 ? 5 : _ref$tickSize,
-      _ref$tickPadding = _ref.tickPadding,
-      tickPadding = _ref$tickPadding === void 0 ? 5 : _ref$tickPadding,
-      _ref$tickRotation = _ref.tickRotation,
-      tickRotation = _ref$tickRotation === void 0 ? 0 : _ref$tickRotation,
-      _format = _ref.format,
-      legend = _ref.legend,
-      _ref$legendPosition = _ref.legendPosition,
-      legendPosition = _ref$legendPosition === void 0 ? 'end' : _ref$legendPosition,
-      _ref$legendOffset = _ref.legendOffset,
-      legendOffset = _ref$legendOffset === void 0 ? 0 : _ref$legendOffset,
-      theme = _ref.theme;
-
-  var _computeCartesianTick = computeCartesianTicks({
-    axis: axis,
-    scale: scale,
-    ticksPosition: ticksPosition,
-    tickValues: tickValues,
-    tickSize: tickSize,
-    tickPadding: tickPadding,
-    tickRotation: tickRotation,
-    engine: 'canvas'
-  }),
-      ticks = _computeCartesianTick.ticks,
-      textAlign = _computeCartesianTick.textAlign,
-      textBaseline = _computeCartesianTick.textBaseline;
-
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.textAlign = textAlign;
-  ctx.textBaseline = textBaseline;
-  ctx.font = "".concat(theme.axis.ticks.text.fontWeight ? "".concat(theme.axis.ticks.text.fontWeight, " ") : '').concat(theme.axis.ticks.text.fontSize, "px ").concat(theme.axis.ticks.text.fontFamily);
-
-  if (((_theme$axis$domain$li = theme.axis.domain.line.strokeWidth) !== null && _theme$axis$domain$li !== void 0 ? _theme$axis$domain$li : 0) > 0) {
-    ctx.lineWidth = Number(theme.axis.domain.line.strokeWidth);
-    ctx.lineCap = 'square';
-
-    if (theme.axis.domain.line.stroke) {
-      ctx.strokeStyle = theme.axis.domain.line.stroke;
-    }
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(axis === 'x' ? length : 0, axis === 'x' ? 0 : length);
-    ctx.stroke();
-  }
-
-  var format = typeof _format === 'function' ? _format : function (value) {
-    return "".concat(value);
-  };
-  ticks.forEach(function (tick) {
-    var _theme$axis$ticks$lin;
-
-    if (((_theme$axis$ticks$lin = theme.axis.ticks.line.strokeWidth) !== null && _theme$axis$ticks$lin !== void 0 ? _theme$axis$ticks$lin : 0) > 0) {
-      ctx.lineWidth = Number(theme.axis.ticks.line.strokeWidth);
-      ctx.lineCap = 'square';
-
-      if (theme.axis.ticks.line.stroke) {
-        ctx.strokeStyle = theme.axis.ticks.line.stroke;
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(tick.x, tick.y);
-      ctx.lineTo(tick.x + tick.lineX, tick.y + tick.lineY);
-      ctx.stroke();
-    }
-
-    var value = format(tick.value);
-    ctx.save();
-    ctx.translate(tick.x + tick.textX, tick.y + tick.textY);
-    ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["degreesToRadians"])(tickRotation));
-
-    if (theme.axis.ticks.text.fill) {
-      ctx.fillStyle = theme.axis.ticks.text.fill;
-    }
-
-    ctx.fillText(String(value), 0, 0);
-    ctx.restore();
-  });
-
-  if (legend !== undefined) {
-    var legendX = 0;
-    var legendY = 0;
-    var legendRotation = 0;
-    var _textAlign = 'center';
-
-    if (axis === 'y') {
-      legendRotation = -90;
-      legendX = legendOffset;
-
-      if (legendPosition === 'start') {
-        _textAlign = 'start';
-        legendY = length;
-      } else if (legendPosition === 'middle') {
-        _textAlign = 'center';
-        legendY = length / 2;
-      } else if (legendPosition === 'end') {
-        _textAlign = 'end';
-      }
-    } else {
-      legendY = legendOffset;
-
-      if (legendPosition === 'start') {
-        _textAlign = 'start';
-      } else if (legendPosition === 'middle') {
-        _textAlign = 'center';
-        legendX = length / 2;
-      } else if (legendPosition === 'end') {
-        _textAlign = 'end';
-        legendX = length;
-      }
-    }
-
-    ctx.translate(legendX, legendY);
-    ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_2__["degreesToRadians"])(legendRotation));
-    ctx.font = "".concat(theme.axis.legend.text.fontWeight ? "".concat(theme.axis.legend.text.fontWeight, " ") : '').concat(theme.axis.legend.text.fontSize, "px ").concat(theme.axis.legend.text.fontFamily);
-
-    if (theme.axis.legend.text.fill) {
-      ctx.fillStyle = theme.axis.legend.text.fill;
-    }
-
-    ctx.textAlign = _textAlign;
-    ctx.textBaseline = 'middle';
-    ctx.fillText(legend, 0, 0);
-  }
-
-  ctx.restore();
-};
-var renderAxesToCanvas = function renderAxesToCanvas(ctx, _ref2) {
-  var xScale = _ref2.xScale,
-      yScale = _ref2.yScale,
-      width = _ref2.width,
-      height = _ref2.height,
-      top = _ref2.top,
-      right = _ref2.right,
-      bottom = _ref2.bottom,
-      left = _ref2.left,
-      theme = _ref2.theme;
-  var axes = {
-    top: top,
-    right: right,
-    bottom: bottom,
-    left: left
-  };
-  positions.forEach(function (position) {
-    var axis = axes[position];
-    if (!axis) return null;
-    var isXAxis = position === 'top' || position === 'bottom';
-    var ticksPosition = position === 'top' || position === 'left' ? 'before' : 'after';
-    var scale = isXAxis ? xScale : yScale;
-    var format = getFormatter(axis.format, scale);
-    renderAxisToCanvas(ctx, _objectSpread2(_objectSpread2({}, axis), {}, {
-      axis: isXAxis ? 'x' : 'y',
-      x: position === 'right' ? width : 0,
-      y: position === 'bottom' ? height : 0,
-      scale: scale,
-      format: format,
-      length: isXAxis ? width : height,
-      ticksPosition: ticksPosition,
-      theme: theme
-    }));
-  });
-};
-var renderGridLinesToCanvas = function renderGridLinesToCanvas(ctx, _ref3) {
-  var width = _ref3.width,
-      height = _ref3.height,
-      scale = _ref3.scale,
-      axis = _ref3.axis,
-      values = _ref3.values;
-  var lines = computeGridLines({
-    width: width,
-    height: height,
-    scale: scale,
-    axis: axis,
-    values: values
-  });
-  lines.forEach(function (line) {
-    ctx.beginPath();
-    ctx.moveTo(line.x1, line.y1);
-    ctx.lineTo(line.x2, line.y2);
-    ctx.stroke();
-  });
-};
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/defaultLocale.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/defaultLocale.js ***!
-  \*****************************************************************************/
-/*! exports provided: format, formatPrefix, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "format", function() { return format; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatPrefix", function() { return formatPrefix; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return defaultLocale; });
-/* harmony import */ var _locale_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./locale.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/locale.js");
-
-
-var locale;
-var format;
-var formatPrefix;
-
-defaultLocale({
-  decimal: ".",
-  thousands: ",",
-  grouping: [3],
-  currency: ["$", ""],
-  minus: "-"
-});
-
-function defaultLocale(definition) {
-  locale = Object(_locale_js__WEBPACK_IMPORTED_MODULE_0__["default"])(definition);
-  format = locale.format;
-  formatPrefix = locale.formatPrefix;
-  return locale;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatDecimal.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function(x) {
-  return x = Object(_formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__["formatDecimalParts"])(Math.abs(x)), x ? x[1] : NaN;
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js ***!
-  \*****************************************************************************/
-/*! exports provided: default, formatDecimalParts */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatDecimalParts", function() { return formatDecimalParts; });
-/* harmony default export */ __webpack_exports__["default"] = (function(x) {
-  return Math.abs(x = Math.round(x)) >= 1e21
-      ? x.toLocaleString("en").replace(/,/g, "")
-      : x.toString(10);
-});
-
-// Computes the decimal coefficient and exponent of the specified number x with
-// significant digits p, where x is positive and p is in [1, 21] or undefined.
-// For example, formatDecimalParts(1.23) returns ["123", 0].
-function formatDecimalParts(x, p) {
-  if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf("e")) < 0) return null; // NaN, ±Infinity
-  var i, coefficient = x.slice(0, i);
-
-  // The string returned by toExponential either has the form \d\.\d+e[-+]\d+
-  // (e.g., 1.2e+3) or the form \de[-+]\d+ (e.g., 1e+3).
-  return [
-    coefficient.length > 1 ? coefficient[0] + coefficient.slice(2) : coefficient,
-    +x.slice(i + 1)
-  ];
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatGroup.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatGroup.js ***!
-  \***************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (function(grouping, thousands) {
-  return function(value, width) {
-    var i = value.length,
-        t = [],
-        j = 0,
-        g = grouping[0],
-        length = 0;
-
-    while (i > 0 && g > 0) {
-      if (length + g + 1 > width) g = Math.max(1, width - length);
-      t.push(value.substring(i -= g, i + g));
-      if ((length += g + 1) > width) break;
-      g = grouping[j = (j + 1) % grouping.length];
-    }
-
-    return t.reverse().join(thousands);
-  };
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatNumerals.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatNumerals.js ***!
-  \******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (function(numerals) {
-  return function(value) {
-    return value.replace(/[0-9]/g, function(i) {
-      return numerals[+i];
-    });
-  };
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatPrefixAuto.js":
-/*!********************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatPrefixAuto.js ***!
-  \********************************************************************************/
-/*! exports provided: prefixExponent, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "prefixExponent", function() { return prefixExponent; });
-/* harmony import */ var _formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatDecimal.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js");
-
-
-var prefixExponent;
-
-/* harmony default export */ __webpack_exports__["default"] = (function(x, p) {
-  var d = Object(_formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__["formatDecimalParts"])(x, p);
-  if (!d) return x + "";
-  var coefficient = d[0],
-      exponent = d[1],
-      i = exponent - (prefixExponent = Math.max(-8, Math.min(8, Math.floor(exponent / 3))) * 3) + 1,
-      n = coefficient.length;
-  return i === n ? coefficient
-      : i > n ? coefficient + new Array(i - n + 1).join("0")
-      : i > 0 ? coefficient.slice(0, i) + "." + coefficient.slice(i)
-      : "0." + new Array(1 - i).join("0") + Object(_formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__["formatDecimalParts"])(x, Math.max(0, p + i - 1))[0]; // less than 1y!
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatRounded.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatRounded.js ***!
-  \*****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatDecimal.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function(x, p) {
-  var d = Object(_formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__["formatDecimalParts"])(x, p);
-  if (!d) return x + "";
-  var coefficient = d[0],
-      exponent = d[1];
-  return exponent < 0 ? "0." + new Array(-exponent).join("0") + coefficient
-      : coefficient.length > exponent + 1 ? coefficient.slice(0, exponent + 1) + "." + coefficient.slice(exponent + 1)
-      : coefficient + new Array(exponent - coefficient.length + 2).join("0");
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatSpecifier.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatSpecifier.js ***!
-  \*******************************************************************************/
-/*! exports provided: default, FormatSpecifier */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return formatSpecifier; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormatSpecifier", function() { return FormatSpecifier; });
-// [[fill]align][sign][symbol][0][width][,][.precision][~][type]
-var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
-
-function formatSpecifier(specifier) {
-  if (!(match = re.exec(specifier))) throw new Error("invalid format: " + specifier);
-  var match;
-  return new FormatSpecifier({
-    fill: match[1],
-    align: match[2],
-    sign: match[3],
-    symbol: match[4],
-    zero: match[5],
-    width: match[6],
-    comma: match[7],
-    precision: match[8] && match[8].slice(1),
-    trim: match[9],
-    type: match[10]
-  });
-}
-
-formatSpecifier.prototype = FormatSpecifier.prototype; // instanceof
-
-function FormatSpecifier(specifier) {
-  this.fill = specifier.fill === undefined ? " " : specifier.fill + "";
-  this.align = specifier.align === undefined ? ">" : specifier.align + "";
-  this.sign = specifier.sign === undefined ? "-" : specifier.sign + "";
-  this.symbol = specifier.symbol === undefined ? "" : specifier.symbol + "";
-  this.zero = !!specifier.zero;
-  this.width = specifier.width === undefined ? undefined : +specifier.width;
-  this.comma = !!specifier.comma;
-  this.precision = specifier.precision === undefined ? undefined : +specifier.precision;
-  this.trim = !!specifier.trim;
-  this.type = specifier.type === undefined ? "" : specifier.type + "";
-}
-
-FormatSpecifier.prototype.toString = function() {
-  return this.fill
-      + this.align
-      + this.sign
-      + this.symbol
-      + (this.zero ? "0" : "")
-      + (this.width === undefined ? "" : Math.max(1, this.width | 0))
-      + (this.comma ? "," : "")
-      + (this.precision === undefined ? "" : "." + Math.max(0, this.precision | 0))
-      + (this.trim ? "~" : "")
-      + this.type;
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatTrim.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatTrim.js ***!
-  \**************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// Trims insignificant zeros, e.g., replaces 1.2000k with 1.2k.
-/* harmony default export */ __webpack_exports__["default"] = (function(s) {
-  out: for (var n = s.length, i = 1, i0 = -1, i1; i < n; ++i) {
-    switch (s[i]) {
-      case ".": i0 = i1 = i; break;
-      case "0": if (i0 === 0) i0 = i; i1 = i; break;
-      default: if (!+s[i]) break out; if (i0 > 0) i0 = 0; break;
-    }
-  }
-  return i0 > 0 ? s.slice(0, i0) + s.slice(i1 + 1) : s;
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatTypes.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/formatTypes.js ***!
-  \***************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./formatDecimal.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatDecimal.js");
-/* harmony import */ var _formatPrefixAuto_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./formatPrefixAuto.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatPrefixAuto.js");
-/* harmony import */ var _formatRounded_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./formatRounded.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatRounded.js");
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  "%": function(x, p) { return (x * 100).toFixed(p); },
-  "b": function(x) { return Math.round(x).toString(2); },
-  "c": function(x) { return x + ""; },
-  "d": _formatDecimal_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-  "e": function(x, p) { return x.toExponential(p); },
-  "f": function(x, p) { return x.toFixed(p); },
-  "g": function(x, p) { return x.toPrecision(p); },
-  "o": function(x) { return Math.round(x).toString(8); },
-  "p": function(x, p) { return Object(_formatRounded_js__WEBPACK_IMPORTED_MODULE_2__["default"])(x * 100, p); },
-  "r": _formatRounded_js__WEBPACK_IMPORTED_MODULE_2__["default"],
-  "s": _formatPrefixAuto_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-  "X": function(x) { return Math.round(x).toString(16).toUpperCase(); },
-  "x": function(x) { return Math.round(x).toString(16); }
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/identity.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/identity.js ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (function(x) {
-  return x;
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/index.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/index.js ***!
-  \*********************************************************************/
-/*! exports provided: formatDefaultLocale, format, formatPrefix, formatLocale, formatSpecifier, FormatSpecifier, precisionFixed, precisionPrefix, precisionRound */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _defaultLocale_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./defaultLocale.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/defaultLocale.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "formatDefaultLocale", function() { return _defaultLocale_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "format", function() { return _defaultLocale_js__WEBPACK_IMPORTED_MODULE_0__["format"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "formatPrefix", function() { return _defaultLocale_js__WEBPACK_IMPORTED_MODULE_0__["formatPrefix"]; });
-
-/* harmony import */ var _locale_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./locale.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/locale.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "formatLocale", function() { return _locale_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-/* harmony import */ var _formatSpecifier_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./formatSpecifier.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatSpecifier.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "formatSpecifier", function() { return _formatSpecifier_js__WEBPACK_IMPORTED_MODULE_2__["default"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "FormatSpecifier", function() { return _formatSpecifier_js__WEBPACK_IMPORTED_MODULE_2__["FormatSpecifier"]; });
-
-/* harmony import */ var _precisionFixed_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./precisionFixed.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionFixed.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "precisionFixed", function() { return _precisionFixed_js__WEBPACK_IMPORTED_MODULE_3__["default"]; });
-
-/* harmony import */ var _precisionPrefix_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./precisionPrefix.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionPrefix.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "precisionPrefix", function() { return _precisionPrefix_js__WEBPACK_IMPORTED_MODULE_4__["default"]; });
-
-/* harmony import */ var _precisionRound_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./precisionRound.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionRound.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "precisionRound", function() { return _precisionRound_js__WEBPACK_IMPORTED_MODULE_5__["default"]; });
-
-
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/locale.js":
-/*!**********************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/locale.js ***!
-  \**********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _exponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./exponent.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js");
-/* harmony import */ var _formatGroup_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./formatGroup.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatGroup.js");
-/* harmony import */ var _formatNumerals_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./formatNumerals.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatNumerals.js");
-/* harmony import */ var _formatSpecifier_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./formatSpecifier.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatSpecifier.js");
-/* harmony import */ var _formatTrim_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./formatTrim.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatTrim.js");
-/* harmony import */ var _formatTypes_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./formatTypes.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatTypes.js");
-/* harmony import */ var _formatPrefixAuto_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./formatPrefixAuto.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/formatPrefixAuto.js");
-/* harmony import */ var _identity_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./identity.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/identity.js");
-
-
-
-
-
-
-
-
-
-var map = Array.prototype.map,
-    prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
-
-/* harmony default export */ __webpack_exports__["default"] = (function(locale) {
-  var group = locale.grouping === undefined || locale.thousands === undefined ? _identity_js__WEBPACK_IMPORTED_MODULE_7__["default"] : Object(_formatGroup_js__WEBPACK_IMPORTED_MODULE_1__["default"])(map.call(locale.grouping, Number), locale.thousands + ""),
-      currencyPrefix = locale.currency === undefined ? "" : locale.currency[0] + "",
-      currencySuffix = locale.currency === undefined ? "" : locale.currency[1] + "",
-      decimal = locale.decimal === undefined ? "." : locale.decimal + "",
-      numerals = locale.numerals === undefined ? _identity_js__WEBPACK_IMPORTED_MODULE_7__["default"] : Object(_formatNumerals_js__WEBPACK_IMPORTED_MODULE_2__["default"])(map.call(locale.numerals, String)),
-      percent = locale.percent === undefined ? "%" : locale.percent + "",
-      minus = locale.minus === undefined ? "-" : locale.minus + "",
-      nan = locale.nan === undefined ? "NaN" : locale.nan + "";
-
-  function newFormat(specifier) {
-    specifier = Object(_formatSpecifier_js__WEBPACK_IMPORTED_MODULE_3__["default"])(specifier);
-
-    var fill = specifier.fill,
-        align = specifier.align,
-        sign = specifier.sign,
-        symbol = specifier.symbol,
-        zero = specifier.zero,
-        width = specifier.width,
-        comma = specifier.comma,
-        precision = specifier.precision,
-        trim = specifier.trim,
-        type = specifier.type;
-
-    // The "n" type is an alias for ",g".
-    if (type === "n") comma = true, type = "g";
-
-    // The "" type, and any invalid type, is an alias for ".12~g".
-    else if (!_formatTypes_js__WEBPACK_IMPORTED_MODULE_5__["default"][type]) precision === undefined && (precision = 12), trim = true, type = "g";
-
-    // If zero fill is specified, padding goes after sign and before digits.
-    if (zero || (fill === "0" && align === "=")) zero = true, fill = "0", align = "=";
-
-    // Compute the prefix and suffix.
-    // For SI-prefix, the suffix is lazily computed.
-    var prefix = symbol === "$" ? currencyPrefix : symbol === "#" && /[boxX]/.test(type) ? "0" + type.toLowerCase() : "",
-        suffix = symbol === "$" ? currencySuffix : /[%p]/.test(type) ? percent : "";
-
-    // What format function should we use?
-    // Is this an integer type?
-    // Can this type generate exponential notation?
-    var formatType = _formatTypes_js__WEBPACK_IMPORTED_MODULE_5__["default"][type],
-        maybeSuffix = /[defgprs%]/.test(type);
-
-    // Set the default precision if not specified,
-    // or clamp the specified precision to the supported range.
-    // For significant precision, it must be in [1, 21].
-    // For fixed precision, it must be in [0, 20].
-    precision = precision === undefined ? 6
-        : /[gprs]/.test(type) ? Math.max(1, Math.min(21, precision))
-        : Math.max(0, Math.min(20, precision));
-
-    function format(value) {
-      var valuePrefix = prefix,
-          valueSuffix = suffix,
-          i, n, c;
-
-      if (type === "c") {
-        valueSuffix = formatType(value) + valueSuffix;
-        value = "";
-      } else {
-        value = +value;
-
-        // Determine the sign. -0 is not less than 0, but 1 / -0 is!
-        var valueNegative = value < 0 || 1 / value < 0;
-
-        // Perform the initial formatting.
-        value = isNaN(value) ? nan : formatType(Math.abs(value), precision);
-
-        // Trim insignificant zeros.
-        if (trim) value = Object(_formatTrim_js__WEBPACK_IMPORTED_MODULE_4__["default"])(value);
-
-        // If a negative value rounds to zero after formatting, and no explicit positive sign is requested, hide the sign.
-        if (valueNegative && +value === 0 && sign !== "+") valueNegative = false;
-
-        // Compute the prefix and suffix.
-        valuePrefix = (valueNegative ? (sign === "(" ? sign : minus) : sign === "-" || sign === "(" ? "" : sign) + valuePrefix;
-        valueSuffix = (type === "s" ? prefixes[8 + _formatPrefixAuto_js__WEBPACK_IMPORTED_MODULE_6__["prefixExponent"] / 3] : "") + valueSuffix + (valueNegative && sign === "(" ? ")" : "");
-
-        // Break the formatted value into the integer “value” part that can be
-        // grouped, and fractional or exponential “suffix” part that is not.
-        if (maybeSuffix) {
-          i = -1, n = value.length;
-          while (++i < n) {
-            if (c = value.charCodeAt(i), 48 > c || c > 57) {
-              valueSuffix = (c === 46 ? decimal + value.slice(i + 1) : value.slice(i)) + valueSuffix;
-              value = value.slice(0, i);
-              break;
-            }
-          }
-        }
-      }
-
-      // If the fill character is not "0", grouping is applied before padding.
-      if (comma && !zero) value = group(value, Infinity);
-
-      // Compute the padding.
-      var length = valuePrefix.length + value.length + valueSuffix.length,
-          padding = length < width ? new Array(width - length + 1).join(fill) : "";
-
-      // If the fill character is "0", grouping is applied after padding.
-      if (comma && zero) value = group(padding + value, padding.length ? width - valueSuffix.length : Infinity), padding = "";
-
-      // Reconstruct the final output based on the desired alignment.
-      switch (align) {
-        case "<": value = valuePrefix + value + valueSuffix + padding; break;
-        case "=": value = valuePrefix + padding + value + valueSuffix; break;
-        case "^": value = padding.slice(0, length = padding.length >> 1) + valuePrefix + value + valueSuffix + padding.slice(length); break;
-        default: value = padding + valuePrefix + value + valueSuffix; break;
-      }
-
-      return numerals(value);
-    }
-
-    format.toString = function() {
-      return specifier + "";
-    };
-
-    return format;
-  }
-
-  function formatPrefix(specifier, value) {
-    var f = newFormat((specifier = Object(_formatSpecifier_js__WEBPACK_IMPORTED_MODULE_3__["default"])(specifier), specifier.type = "f", specifier)),
-        e = Math.max(-8, Math.min(8, Math.floor(Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(value) / 3))) * 3,
-        k = Math.pow(10, -e),
-        prefix = prefixes[8 + e / 3];
-    return function(value) {
-      return f(k * value) + prefix;
-    };
-  }
-
-  return {
-    format: newFormat,
-    formatPrefix: formatPrefix
-  };
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionFixed.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/precisionFixed.js ***!
-  \******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _exponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./exponent.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function(step) {
-  return Math.max(0, -Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(Math.abs(step)));
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionPrefix.js":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/precisionPrefix.js ***!
-  \*******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _exponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./exponent.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function(step, value) {
-  return Math.max(0, Math.max(-8, Math.min(8, Math.floor(Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(value) / 3))) * 3 - Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(Math.abs(step)));
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/axes/node_modules/d3-format/src/precisionRound.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/@nivo/axes/node_modules/d3-format/src/precisionRound.js ***!
-  \******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _exponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./exponent.js */ "./node_modules/@nivo/axes/node_modules/d3-format/src/exponent.js");
-
-
-/* harmony default export */ __webpack_exports__["default"] = (function(step, max) {
-  step = Math.abs(step), max = Math.abs(max) - step;
-  return Math.max(0, Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(max) - Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(step)) + 1;
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/calendar/dist/nivo-calendar.es.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/@nivo/calendar/dist/nivo-calendar.es.js ***!
-  \**************************************************************/
-/*! exports provided: Calendar, CalendarCanvas, ResponsiveCalendar, ResponsiveCalendarCanvas, ResponsiveTimeRange, TimeRange, bindDaysData, calendarCanvasDefaultProps, calendarDefaultProps, computeCellPositions, computeCellSize, computeDomain, computeLayout, computeMonthLegendPositions, computeMonthLegends, computeTotalDays, computeWeekdays, computeYearLegendPositions, timeRangeDefaultProps, useCalendarLayout, useColorScale, useDays, useMonthLegends, useYearLegends */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Calendar", function() { return Calendar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarCanvas", function() { return CalendarCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendar", function() { return ResponsiveCalendar; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendarCanvas", function() { return ResponsiveCalendarCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveTimeRange", function() { return ResponsiveTimeRange; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeRange", function() { return TimeRange; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindDaysData", function() { return bindDaysData; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calendarCanvasDefaultProps", function() { return calendarCanvasDefaultProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calendarDefaultProps", function() { return calendarDefaultProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeCellPositions", function() { return computeCellPositions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeCellSize", function() { return computeCellSize$1; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeDomain", function() { return computeDomain; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeLayout", function() { return computeLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMonthLegendPositions", function() { return computeMonthLegendPositions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMonthLegends", function() { return computeMonthLegends; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeTotalDays", function() { return computeTotalDays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeWeekdays", function() { return computeWeekdays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeYearLegendPositions", function() { return computeYearLegendPositions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timeRangeDefaultProps", function() { return timeRangeDefaultProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCalendarLayout", function() { return useCalendarLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useColorScale", function() { return useColorScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useDays", function() { return useDays; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useMonthLegends", function() { return useMonthLegends; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useYearLegends", function() { return useYearLegends; });
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
-/* harmony import */ var d3_time_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-time-format */ "./node_modules/d3-time-format/src/index.js");
-/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
-/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js");
-/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash_range__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/memoize */ "./node_modules/lodash/memoize.js");
-/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_memoize__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/isDate */ "./node_modules/lodash/isDate.js");
-/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_isDate__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var d3_time__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-time */ "./node_modules/d3-time/src/index.js");
-
-
-
-
-
-
-
-
-
-
-
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-  var target = _objectWithoutPropertiesLoose(source, excluded);
-  var key, i;
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
-
-var CalendarYearLegends = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var years = _ref.years,
-      legend = _ref.legend,
-      theme = _ref.theme;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["Fragment"], {
-    children: years.map(function (year) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
-        transform: "translate(".concat(year.x, ",").concat(year.y, ") rotate(").concat(year.rotation, ")"),
-        textAnchor: "middle",
-        style: theme.labels.text,
-        children: legend(year.year)
-      }, year.year);
-    })
-  });
-});
-
-var CalendarMonthPath = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var path = _ref.path,
-      borderWidth = _ref.borderWidth,
-      borderColor = _ref.borderColor;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("path", {
-    d: path,
-    style: {
-      fill: 'none',
-      strokeWidth: borderWidth,
-      stroke: borderColor,
-      pointerEvents: 'none'
-    }
-  });
-});
-
-var CalendarMonthLegends = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var months = _ref.months,
-      legend = _ref.legend,
-      theme = _ref.theme;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["Fragment"], {
-    children: months.map(function (month) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
-        transform: "translate(".concat(month.x, ",").concat(month.y, ") rotate(").concat(month.rotation, ")"),
-        textAnchor: "middle",
-        style: theme.labels.text,
-        children: legend(month.year, month.month, month.date)
-      }, "".concat(month.date.toString(), ".legend"));
-    })
-  });
-});
-
-var CalendarDay = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var data = _ref.data,
-      x = _ref.x,
-      y = _ref.y,
-      size = _ref.size,
-      color = _ref.color,
-      borderWidth = _ref.borderWidth,
-      borderColor = _ref.borderColor,
-      isInteractive = _ref.isInteractive,
-      tooltip = _ref.tooltip,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseMove = _ref.onMouseMove,
-      onMouseLeave = _ref.onMouseLeave,
-      onClick = _ref.onClick,
-      formatValue = _ref.formatValue;
-
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-
-  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
-      value: formatValue(data.value),
-      data: _objectSpread2({}, data.data)
-    });
-
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
-    onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event);
-  }, [showTooltipFromEvent, tooltip, data, onMouseEnter, formatValue]);
-  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
-      value: formatValue(data.value),
-      data: _objectSpread2({}, data.data)
-    });
-
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
-    onMouseMove && onMouseMove(data, event);
-  }, [showTooltipFromEvent, tooltip, data, onMouseMove, formatValue]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    hideTooltip();
-    onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event);
-  }, [hideTooltip, data, onMouseLeave]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    return onClick === null || onClick === void 0 ? void 0 : onClick(data, event);
-  }, [data, onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("rect", {
-    x: x,
-    y: y,
-    width: size,
-    height: size,
-    style: {
-      fill: color,
-      strokeWidth: borderWidth,
-      stroke: borderColor
-    },
-    onMouseEnter: isInteractive ? handleMouseEnter : undefined,
-    onMouseMove: isInteractive ? handleMouseMove : undefined,
-    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
-    onClick: isInteractive ? handleClick : undefined
-  });
-});
-
-var CalendarTooltip = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var value = _ref.value,
-      day = _ref.day,
-      color = _ref.color;
-  if (value === undefined || isNaN(Number(value))) return null;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["BasicTooltip"], {
-    id: day,
-    value: value,
-    color: color,
-    enableChip: true
-  });
-});
-
-var _window$devicePixelRa;
-var monthLabelFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%b');
-var commonDefaultProps = {
-  colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'],
-  align: 'center',
-  direction: 'horizontal',
-  emptyColor: '#fff',
-  minValue: 0,
-  maxValue: 'auto',
-  yearSpacing: 30,
-  yearLegend: function yearLegend(year) {
-    return year;
-  },
-  yearLegendPosition: 'before',
-  yearLegendOffset: 10,
-  monthBorderWidth: 2,
-  monthBorderColor: '#000',
-  monthSpacing: 0,
-  monthLegend: function monthLegend(_year, _month, date) {
-    return monthLabelFormat(date);
-  },
-  monthLegendPosition: 'before',
-  monthLegendOffset: 10,
-  daySpacing: 0,
-  dayBorderWidth: 1,
-  dayBorderColor: '#000',
-  isInteractive: true,
-  legends: [],
-  tooltip: CalendarTooltip
-};
-var calendarDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
-  role: 'img'
-});
-var calendarCanvasDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
-  pixelRatio: typeof window !== 'undefined' ? (_window$devicePixelRa = window.devicePixelRatio) !== null && _window$devicePixelRa !== void 0 ? _window$devicePixelRa : 1 : 1
-});
-var timeRangeDefaultProps = _objectSpread2(_objectSpread2({}, calendarDefaultProps), {}, {
-  dayBorderColor: '#fff',
-  dayRadius: 0,
-  square: true,
-  weekdayLegendOffset: 75
-});
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-  return arr2;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-var computeDomain = function computeDomain(data, minSpec, maxSpec) {
-  var allValues = data.map(function (d) {
-    return d.value;
-  });
-  var minValue = minSpec === 'auto' ? Math.min.apply(Math, _toConsumableArray(allValues)) : minSpec;
-  var maxValue = maxSpec === 'auto' ? Math.max.apply(Math, _toConsumableArray(allValues)) : maxSpec;
-  return [minValue, maxValue];
-};
-
-var computeCellSize = function computeCellSize(_ref) {
-  var width = _ref.width,
-      height = _ref.height,
-      direction = _ref.direction,
-      yearRange = _ref.yearRange,
-      yearSpacing = _ref.yearSpacing,
-      monthSpacing = _ref.monthSpacing,
-      daySpacing = _ref.daySpacing,
-      maxWeeks = _ref.maxWeeks;
-  var hCellSize;
-  var vCellSize;
-
-  if (direction === 'horizontal') {
-    hCellSize = (width - monthSpacing * 12 - daySpacing * maxWeeks) / maxWeeks;
-    vCellSize = (height - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
-  } else {
-    hCellSize = (width - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
-    vCellSize = (height - monthSpacing * 12 - daySpacing * maxWeeks) / maxWeeks;
-  }
-
-  return Math.min(hCellSize, vCellSize);
-};
-
-var monthPathAndBBox = function monthPathAndBBox(_ref2) {
-  var date = _ref2.date,
-      cellSize = _ref2.cellSize,
-      yearIndex = _ref2.yearIndex,
-      yearSpacing = _ref2.yearSpacing,
-      monthSpacing = _ref2.monthSpacing,
-      daySpacing = _ref2.daySpacing,
-      direction = _ref2.direction,
-      originX = _ref2.originX,
-      originY = _ref2.originY;
-  var t1 = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  var firstWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(date), date);
-  var lastWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(t1), t1);
-  var firstDay = date.getDay();
-  var lastDay = t1.getDay();
-  var xO = originX;
-  var yO = originY;
-  var yearOffset = yearIndex * (7 * (cellSize + daySpacing) + yearSpacing);
-  var monthOffset = date.getMonth() * monthSpacing;
-
-  if (direction === 'horizontal') {
-    yO += yearOffset;
-    xO += monthOffset;
-  } else {
-    yO += monthOffset;
-    xO += yearOffset;
-  }
-
-  var path;
-  var bbox = {
-    x: xO,
-    y: yO,
-    width: 0,
-    height: 0
-  };
-
-  if (direction === 'horizontal') {
-    path = ["M".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), ",").concat(yO + firstDay * (cellSize + daySpacing)), "H".concat(xO + firstWeek * (cellSize + daySpacing), "V").concat(yO + 7 * (cellSize + daySpacing)), "H".concat(xO + lastWeek * (cellSize + daySpacing), "V").concat(yO + (lastDay + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastWeek + 1) * (cellSize + daySpacing), "V").concat(yO), "H".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), "Z")].join('');
-    bbox.x = xO + firstWeek * (cellSize + daySpacing);
-    bbox.width = xO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.x;
-    bbox.height = 7 * (cellSize + daySpacing);
-  } else {
-    path = ["M".concat(xO + firstDay * (cellSize + daySpacing), ",").concat(yO + (firstWeek + 1) * (cellSize + daySpacing)), "H".concat(xO, "V").concat(yO + (lastWeek + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastDay + 1) * (cellSize + daySpacing), "V").concat(yO + lastWeek * (cellSize + daySpacing)), "H".concat(xO + 7 * (cellSize + daySpacing), "V").concat(yO + firstWeek * (cellSize + daySpacing)), "H".concat(xO + firstDay * (cellSize + daySpacing), "Z")].join('');
-    bbox.y = yO + firstWeek * (cellSize + daySpacing);
-    bbox.width = 7 * (cellSize + daySpacing);
-    bbox.height = yO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.y;
-  }
-
-  return {
-    path: path,
-    bbox: bbox
-  };
-};
-
-var memoMonthPathAndBBox = lodash_memoize__WEBPACK_IMPORTED_MODULE_8___default()(monthPathAndBBox, function (_ref3) {
-  var date = _ref3.date,
-      cellSize = _ref3.cellSize,
-      yearIndex = _ref3.yearIndex,
-      yearSpacing = _ref3.yearSpacing,
-      monthSpacing = _ref3.monthSpacing,
-      daySpacing = _ref3.daySpacing,
-      direction = _ref3.direction,
-      originX = _ref3.originX,
-      originY = _ref3.originY;
-  return "".concat(date.toString(), ".").concat(cellSize, ".").concat(yearIndex, ".").concat(yearSpacing, ".").concat(monthSpacing, ".").concat(daySpacing, ".").concat(direction, ".").concat(originX, ".").concat(originY);
-});
-
-var cellPositionHorizontal = function cellPositionHorizontal(cellSize, yearSpacing, monthSpacing, daySpacing) {
-  return function (originX, originY, d, yearIndex) {
-    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(d), d);
-    return {
-      x: originX + weekOfYear * (cellSize + daySpacing) + daySpacing / 2 + d.getMonth() * monthSpacing,
-      y: originY + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing))
-    };
-  };
-};
-
-var cellPositionVertical = function cellPositionVertical(cellSize, yearSpacing, monthSpacing, daySpacing) {
-  return function (originX, originY, d, yearIndex) {
-    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(d), d);
-    return {
-      x: originX + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing)),
-      y: originY + weekOfYear * (cellSize + daySpacing) + daySpacing / 2 + d.getMonth() * monthSpacing
-    };
-  };
-};
-
-var dayFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%Y-%m-%d');
-var computeLayout = function computeLayout(_ref4) {
-  var width = _ref4.width,
-      height = _ref4.height,
-      from = _ref4.from,
-      to = _ref4.to,
-      direction = _ref4.direction,
-      yearSpacing = _ref4.yearSpacing,
-      monthSpacing = _ref4.monthSpacing,
-      daySpacing = _ref4.daySpacing,
-      align = _ref4.align;
-  var fromDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(from) ? from : new Date(from);
-  var toDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(to) ? to : new Date(to);
-
-  var yearRange = lodash_range__WEBPACK_IMPORTED_MODULE_7___default()(fromDate.getFullYear(), toDate.getFullYear() + 1);
-
-  var maxWeeks = Math.max.apply(Math, _toConsumableArray(yearRange.map(function (year) {
-    return Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeeks"])(new Date(year, 0, 1), new Date(year + 1, 0, 1)).length;
-  }))) + 1;
-  var cellSize = computeCellSize({
-    width: width,
-    height: height,
-    direction: direction,
-    yearRange: yearRange,
-    yearSpacing: yearSpacing,
-    monthSpacing: monthSpacing,
-    daySpacing: daySpacing,
-    maxWeeks: maxWeeks
-  });
-  var monthsSize = cellSize * maxWeeks + daySpacing * maxWeeks + monthSpacing * 12;
-  var yearsSize = (cellSize + daySpacing) * 7 * yearRange.length + yearSpacing * (yearRange.length - 1);
-  var calendarWidth = direction === 'horizontal' ? monthsSize : yearsSize;
-  var calendarHeight = direction === 'horizontal' ? yearsSize : monthsSize;
-
-  var _alignBox = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["alignBox"])({
-    x: 0,
-    y: 0,
-    width: calendarWidth,
-    height: calendarHeight
-  }, {
-    x: 0,
-    y: 0,
-    width: width,
-    height: height
-  }, align),
-      _alignBox2 = _slicedToArray(_alignBox, 2),
-      originX = _alignBox2[0],
-      originY = _alignBox2[1];
-
-  var cellPosition;
-
-  if (direction === 'horizontal') {
-    cellPosition = cellPositionHorizontal(cellSize, yearSpacing, monthSpacing, daySpacing);
-  } else {
-    cellPosition = cellPositionVertical(cellSize, yearSpacing, monthSpacing, daySpacing);
-  }
-
-  var years = [];
-  var months = [];
-  var days = [];
-  yearRange.forEach(function (year, i) {
-    var yearStart = new Date(year, 0, 1);
-    var yearEnd = new Date(year + 1, 0, 1);
-    days = days.concat(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDays"])(yearStart, yearEnd).map(function (dayDate) {
-      return _objectSpread2({
-        date: dayDate,
-        day: dayFormat(dayDate),
-        size: cellSize
-      }, cellPosition(originX, originY, dayDate, i));
-    }));
-    var yearMonths = Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeMonths"])(yearStart, yearEnd).map(function (monthDate) {
-      return _objectSpread2({
-        date: monthDate,
-        year: monthDate.getFullYear(),
-        month: monthDate.getMonth()
-      }, memoMonthPathAndBBox({
-        originX: originX,
-        originY: originY,
-        date: monthDate,
-        direction: direction,
-        yearIndex: i,
-        yearSpacing: yearSpacing,
-        monthSpacing: monthSpacing,
-        daySpacing: daySpacing,
-        cellSize: cellSize
-      }));
-    });
-    months = months.concat(yearMonths);
-    years.push({
-      year: year,
-      bbox: {
-        x: yearMonths[0].bbox.x,
-        y: yearMonths[0].bbox.y,
-        width: yearMonths[11].bbox.x - yearMonths[0].bbox.x + yearMonths[11].bbox.width,
-        height: yearMonths[11].bbox.y - yearMonths[0].bbox.y + yearMonths[11].bbox.height
-      }
-    });
-  });
-  return {
-    years: years,
-    months: months,
-    days: days,
-    cellSize: cellSize,
-    calendarWidth: calendarWidth,
-    calendarHeight: calendarHeight,
-    originX: originX,
-    originY: originY
-  };
-};
-var bindDaysData = function bindDaysData(_ref5) {
-  var days = _ref5.days,
-      data = _ref5.data,
-      colorScale = _ref5.colorScale,
-      emptyColor = _ref5.emptyColor;
-  return days.map(function (day) {
-    var dayData = data.find(function (item) {
-      return item.day === day.day;
-    });
-
-    if (!dayData) {
-      return _objectSpread2(_objectSpread2({}, day), {}, {
-        color: emptyColor
-      });
-    }
-
-    return _objectSpread2(_objectSpread2({}, day), {}, {
-      color: colorScale(dayData.value),
-      data: dayData,
-      value: dayData.value
-    });
-  });
-};
-var computeYearLegendPositions = function computeYearLegendPositions(_ref6) {
-  var years = _ref6.years,
-      direction = _ref6.direction,
-      position = _ref6.position,
-      offset = _ref6.offset;
-  return years.map(function (year) {
-    var x = 0;
-    var y = 0;
-    var rotation = 0;
-
-    if (direction === 'horizontal' && position === 'before') {
-      x = year.bbox.x - offset;
-      y = year.bbox.y + year.bbox.height / 2;
-      rotation = -90;
-    } else if (direction === 'horizontal' && position === 'after') {
-      x = year.bbox.x + year.bbox.width + offset;
-      y = year.bbox.y + year.bbox.height / 2;
-      rotation = -90;
-    } else if (direction === 'vertical' && position === 'before') {
-      x = year.bbox.x + year.bbox.width / 2;
-      y = year.bbox.y - offset;
-    } else {
-      x = year.bbox.x + year.bbox.width / 2;
-      y = year.bbox.y + year.bbox.height + offset;
-    }
-
-    return _objectSpread2(_objectSpread2({}, year), {}, {
-      x: x,
-      y: y,
-      rotation: rotation
-    });
-  });
-};
-var computeMonthLegendPositions = function computeMonthLegendPositions(_ref7) {
-  var months = _ref7.months,
-      direction = _ref7.direction,
-      position = _ref7.position,
-      offset = _ref7.offset;
-  return months.map(function (month) {
-    var x = 0;
-    var y = 0;
-    var rotation = 0;
-
-    if (direction === 'horizontal' && position === 'before') {
-      x = month.bbox.x + month.bbox.width / 2;
-      y = month.bbox.y - offset;
-    } else if (direction === 'horizontal' && position === 'after') {
-      x = month.bbox.x + month.bbox.width / 2;
-      y = month.bbox.y + month.bbox.height + offset;
-    } else if (direction === 'vertical' && position === 'before') {
-      x = month.bbox.x - offset;
-      y = month.bbox.y + month.bbox.height / 2;
-      rotation = -90;
-    } else {
-      x = month.bbox.x + month.bbox.width + offset;
-      y = month.bbox.y + month.bbox.height / 2;
-      rotation = -90;
-    }
-
-    return _objectSpread2(_objectSpread2({}, month), {}, {
-      x: x,
-      y: y,
-      rotation: rotation
-    });
-  });
-};
-
-var useCalendarLayout = function useCalendarLayout(_ref) {
-  var width = _ref.width,
-      height = _ref.height,
-      from = _ref.from,
-      to = _ref.to,
-      direction = _ref.direction,
-      yearSpacing = _ref.yearSpacing,
-      monthSpacing = _ref.monthSpacing,
-      daySpacing = _ref.daySpacing,
-      align = _ref.align;
-  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    return computeLayout({
-      width: width,
-      height: height,
-      from: from,
-      to: to,
-      direction: direction,
-      yearSpacing: yearSpacing,
-      monthSpacing: monthSpacing,
-      daySpacing: daySpacing,
-      align: align
-    });
-  }, [width, height, from, to, direction, yearSpacing, monthSpacing, daySpacing, align]);
-};
-var useColorScale = function useColorScale(_ref2) {
-  var data = _ref2.data,
-      minValue = _ref2.minValue,
-      maxValue = _ref2.maxValue,
-      colors = _ref2.colors,
-      colorScale = _ref2.colorScale;
-  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    if (colorScale) return colorScale;
-    var domain = computeDomain(data, minValue, maxValue);
-    var defaultColorScale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleQuantize"])().domain(domain).range(colors);
-    return defaultColorScale;
-  }, [data, minValue, maxValue, colors, colorScale]);
-};
-var useYearLegends = function useYearLegends(_ref3) {
-  var years = _ref3.years,
-      direction = _ref3.direction,
-      yearLegendPosition = _ref3.yearLegendPosition,
-      yearLegendOffset = _ref3.yearLegendOffset;
-  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    return computeYearLegendPositions({
-      years: years,
-      direction: direction,
-      position: yearLegendPosition,
-      offset: yearLegendOffset
-    });
-  }, [years, direction, yearLegendPosition, yearLegendOffset]);
-};
-var useMonthLegends = function useMonthLegends(_ref4) {
-  var months = _ref4.months,
-      direction = _ref4.direction,
-      monthLegendPosition = _ref4.monthLegendPosition,
-      monthLegendOffset = _ref4.monthLegendOffset;
-  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    return computeMonthLegendPositions({
-      months: months,
-      direction: direction,
-      position: monthLegendPosition,
-      offset: monthLegendOffset
-    });
-  }, [months, direction, monthLegendPosition, monthLegendOffset]);
-};
-var useDays = function useDays(_ref5) {
-  var days = _ref5.days,
-      data = _ref5.data,
-      colorScale = _ref5.colorScale,
-      emptyColor = _ref5.emptyColor;
-  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    return bindDaysData({
-      days: days,
-      data: data,
-      colorScale: colorScale,
-      emptyColor: emptyColor
-    });
-  }, [days, data, colorScale, emptyColor]);
-};
-
-var InnerCalendar = function InnerCalendar(_ref) {
-  var partialMargin = _ref.margin,
-      width = _ref.width,
-      height = _ref.height,
-      _ref$align = _ref.align,
-      align = _ref$align === void 0 ? calendarDefaultProps.align : _ref$align,
-      _ref$colors = _ref.colors,
-      colors = _ref$colors === void 0 ? calendarDefaultProps.colors : _ref$colors,
-      colorScale = _ref.colorScale,
-      data = _ref.data,
-      _ref$direction = _ref.direction,
-      direction = _ref$direction === void 0 ? calendarDefaultProps.direction : _ref$direction,
-      _ref$emptyColor = _ref.emptyColor,
-      emptyColor = _ref$emptyColor === void 0 ? calendarDefaultProps.emptyColor : _ref$emptyColor,
-      from = _ref.from,
-      to = _ref.to,
-      _ref$minValue = _ref.minValue,
-      minValue = _ref$minValue === void 0 ? calendarDefaultProps.minValue : _ref$minValue,
-      _ref$maxValue = _ref.maxValue,
-      maxValue = _ref$maxValue === void 0 ? calendarDefaultProps.maxValue : _ref$maxValue,
-      valueFormat = _ref.valueFormat,
-      legendFormat = _ref.legendFormat,
-      _ref$yearLegend = _ref.yearLegend,
-      yearLegend = _ref$yearLegend === void 0 ? calendarDefaultProps.yearLegend : _ref$yearLegend,
-      _ref$yearLegendOffset = _ref.yearLegendOffset,
-      yearLegendOffset = _ref$yearLegendOffset === void 0 ? calendarDefaultProps.yearLegendOffset : _ref$yearLegendOffset,
-      _ref$yearLegendPositi = _ref.yearLegendPosition,
-      yearLegendPosition = _ref$yearLegendPositi === void 0 ? calendarDefaultProps.yearLegendPosition : _ref$yearLegendPositi,
-      _ref$yearSpacing = _ref.yearSpacing,
-      yearSpacing = _ref$yearSpacing === void 0 ? calendarDefaultProps.yearSpacing : _ref$yearSpacing,
-      _ref$monthBorderColor = _ref.monthBorderColor,
-      monthBorderColor = _ref$monthBorderColor === void 0 ? calendarDefaultProps.monthBorderColor : _ref$monthBorderColor,
-      _ref$monthBorderWidth = _ref.monthBorderWidth,
-      monthBorderWidth = _ref$monthBorderWidth === void 0 ? calendarDefaultProps.monthBorderWidth : _ref$monthBorderWidth,
-      _ref$monthLegend = _ref.monthLegend,
-      monthLegend = _ref$monthLegend === void 0 ? calendarDefaultProps.monthLegend : _ref$monthLegend,
-      _ref$monthLegendOffse = _ref.monthLegendOffset,
-      monthLegendOffset = _ref$monthLegendOffse === void 0 ? calendarDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
-      _ref$monthLegendPosit = _ref.monthLegendPosition,
-      monthLegendPosition = _ref$monthLegendPosit === void 0 ? calendarDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
-      _ref$monthSpacing = _ref.monthSpacing,
-      monthSpacing = _ref$monthSpacing === void 0 ? calendarDefaultProps.monthSpacing : _ref$monthSpacing,
-      _ref$dayBorderColor = _ref.dayBorderColor,
-      dayBorderColor = _ref$dayBorderColor === void 0 ? calendarDefaultProps.dayBorderColor : _ref$dayBorderColor,
-      _ref$dayBorderWidth = _ref.dayBorderWidth,
-      dayBorderWidth = _ref$dayBorderWidth === void 0 ? calendarDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
-      _ref$daySpacing = _ref.daySpacing,
-      daySpacing = _ref$daySpacing === void 0 ? calendarDefaultProps.daySpacing : _ref$daySpacing,
-      _ref$isInteractive = _ref.isInteractive,
-      isInteractive = _ref$isInteractive === void 0 ? calendarDefaultProps.isInteractive : _ref$isInteractive,
-      _ref$tooltip = _ref.tooltip,
-      tooltip = _ref$tooltip === void 0 ? calendarDefaultProps.tooltip : _ref$tooltip,
-      onClick = _ref.onClick,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseLeave = _ref.onMouseLeave,
-      onMouseMove = _ref.onMouseMove,
-      _ref$legends = _ref.legends,
-      legends = _ref$legends === void 0 ? calendarDefaultProps.legends : _ref$legends,
-      _ref$role = _ref.role,
-      role = _ref$role === void 0 ? calendarDefaultProps.role : _ref$role;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
-
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight;
-
-  var _useCalendarLayout = useCalendarLayout({
-    width: innerWidth,
-    height: innerHeight,
-    from: from,
-    to: to,
-    direction: direction,
-    yearSpacing: yearSpacing,
-    monthSpacing: monthSpacing,
-    daySpacing: daySpacing,
-    align: align
-  }),
-      months = _useCalendarLayout.months,
-      years = _useCalendarLayout.years,
-      rest = _objectWithoutProperties(_useCalendarLayout, ["months", "years"]);
-
-  var colorScaleFn = useColorScale({
-    data: data,
-    minValue: minValue,
-    maxValue: maxValue,
-    colors: colors,
-    colorScale: colorScale
-  });
-  var monthLegends = useMonthLegends({
-    months: months,
-    direction: direction,
-    monthLegendPosition: monthLegendPosition,
-    monthLegendOffset: monthLegendOffset
-  });
-  var yearLegends = useYearLegends({
-    years: years,
-    direction: direction,
-    yearLegendPosition: yearLegendPosition,
-    yearLegendOffset: yearLegendOffset
-  });
-  var days = useDays({
-    days: rest.days,
-    data: data,
-    colorScale: colorScaleFn,
-    emptyColor: emptyColor
-  });
-  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
-  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsxs"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["SvgWrapper"], {
-    width: outerWidth,
-    height: outerHeight,
-    margin: margin,
-    role: role,
-    children: [days.map(function (d) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarDay, {
-        data: d,
-        x: d.x,
-        y: d.y,
-        size: d.size,
-        color: d.color,
-        borderWidth: dayBorderWidth,
-        borderColor: dayBorderColor,
-        onMouseEnter: onMouseEnter,
-        onMouseLeave: onMouseLeave,
-        onMouseMove: onMouseMove,
-        isInteractive: isInteractive,
-        tooltip: tooltip,
-        onClick: onClick,
-        formatValue: formatValue
-      }, d.date.toString());
-    }), months.map(function (m) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthPath, {
-        path: m.path,
-        borderWidth: monthBorderWidth,
-        borderColor: monthBorderColor
-      }, m.date.toString());
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthLegends, {
-      months: monthLegends,
-      legend: monthLegend,
-      theme: theme
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarYearLegends, {
-      years: yearLegends,
-      legend: yearLegend,
-      theme: theme
-    }), legends.map(function (legend, i) {
-      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
-        return {
-          id: value,
-          label: formatLegend(value),
-          color: colorScaleFn(value)
-        };
-      });
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
-        containerWidth: width,
-        containerHeight: height,
-        data: legendData
-      }), i);
-    })]
-  });
-};
-
-var Calendar = function Calendar(_ref2) {
-  var _ref2$isInteractive = _ref2.isInteractive,
-      isInteractive = _ref2$isInteractive === void 0 ? calendarDefaultProps.isInteractive : _ref2$isInteractive,
-      renderWrapper = _ref2.renderWrapper,
-      theme = _ref2.theme,
-      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
-    isInteractive: isInteractive,
-    renderWrapper: renderWrapper,
-    theme: theme,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerCalendar, _objectSpread2({
-      isInteractive: isInteractive
-    }, props))
-  });
-};
-
-var dayFormat$1 = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%Y-%m-%d');
-var computeCellSize$1 = function computeCellSize(_ref) {
-  var direction = _ref.direction,
-      daySpacing = _ref.daySpacing,
-      offset = _ref.offset,
-      square = _ref.square,
-      totalDays = _ref.totalDays,
-      width = _ref.width,
-      height = _ref.height;
-  var daysInRange = 7;
-  var rows;
-  var columns;
-  var widthRest = width;
-  var heightRest = height;
-
-  if (direction === 'horizontal') {
-    widthRest -= offset;
-    rows = daysInRange;
-    columns = Math.ceil(totalDays / daysInRange);
-  } else {
-    heightRest -= offset;
-    columns = daysInRange;
-    rows = Math.ceil(totalDays / daysInRange);
-  }
-
-  var cellHeight = (heightRest - daySpacing * (rows + 1)) / rows;
-  var cellWidth = (widthRest - daySpacing * (columns + 1)) / columns;
-  var size = Math.min(cellHeight, cellWidth);
-  return {
-    columns: columns,
-    rows: rows,
-    cellHeight: square ? size : cellHeight,
-    cellWidth: square ? size : cellWidth
-  };
-};
-
-function computeGrid(_ref2) {
-  var startDate = _ref2.startDate,
-      date = _ref2.date,
-      direction = _ref2.direction;
-  var firstWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(startDate, date);
-  var month = date.getMonth();
-  var year = date.getFullYear();
-  var currentColumn = 0;
-  var currentRow = 0;
-
-  if (direction === 'horizontal') {
-    currentColumn = firstWeek;
-    currentRow = date.getDay();
-  } else {
-    currentColumn = date.getDay();
-    currentRow = firstWeek;
-  }
-
-  return {
-    currentColumn: currentColumn,
-    year: year,
-    currentRow: currentRow,
-    firstWeek: firstWeek,
-    month: month,
-    date: date
-  };
-}
-
-var computeCellPositions = function computeCellPositions(_ref3) {
-  var direction = _ref3.direction,
-      colorScale = _ref3.colorScale,
-      emptyColor = _ref3.emptyColor,
-      from = _ref3.from,
-      to = _ref3.to,
-      data = _ref3.data,
-      cellWidth = _ref3.cellWidth,
-      cellHeight = _ref3.cellHeight,
-      daySpacing = _ref3.daySpacing,
-      offset = _ref3.offset;
-  var x = daySpacing;
-  var y = daySpacing;
-
-  if (direction === 'horizontal') {
-    x += offset;
-  } else {
-    y += offset;
-  }
-
-  var start = from ? from : data[0].date;
-  var end = to ? to : data[data.length - 1].date;
-  var startDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(start) ? start : new Date(start);
-  var endDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(end) ? end : new Date(end);
-  var dateRange = Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDays"])(startDate, endDate).map(function (dayDate) {
-    return {
-      date: dayDate,
-      day: dayFormat$1(dayDate)
-    };
-  });
-  var dataWithCellPosition = dateRange.map(function (day) {
-    var dayData = data.find(function (item) {
-      return item.day === day.day;
-    });
-
-    var _computeGrid = computeGrid({
-      startDate: startDate,
-      date: day.date,
-      direction: direction
-    }),
-        currentColumn = _computeGrid.currentColumn,
-        currentRow = _computeGrid.currentRow,
-        firstWeek = _computeGrid.firstWeek,
-        year = _computeGrid.year,
-        month = _computeGrid.month,
-        date = _computeGrid.date;
-
-    var coordinates = {
-      x: x + daySpacing * currentColumn + cellWidth * currentColumn,
-      y: y + daySpacing * currentRow + cellHeight * currentRow
-    };
-
-    if (!dayData) {
-      return _objectSpread2(_objectSpread2({}, day), {}, {
-        coordinates: coordinates,
-        firstWeek: firstWeek,
-        month: month,
-        year: year,
-        date: date,
-        color: emptyColor,
-        width: cellWidth,
-        height: cellHeight
-      });
-    }
-
-    return _objectSpread2(_objectSpread2({}, dayData), {}, {
-      coordinates: coordinates,
-      firstWeek: firstWeek,
-      month: month,
-      year: year,
-      date: date,
-      color: colorScale(dayData.value),
-      width: cellWidth,
-      height: cellHeight
-    });
-  });
-  return dataWithCellPosition;
-};
-var computeWeekdays = function computeWeekdays(_ref4) {
-  var cellHeight = _ref4.cellHeight,
-      cellWidth = _ref4.cellWidth,
-      direction = _ref4.direction,
-      daySpacing = _ref4.daySpacing,
-      _ref4$ticks = _ref4.ticks,
-      ticks = _ref4$ticks === void 0 ? [1, 3, 5] : _ref4$ticks,
-      _ref4$arrayOfWeekdays = _ref4.arrayOfWeekdays,
-      arrayOfWeekdays = _ref4$arrayOfWeekdays === void 0 ? ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] : _ref4$arrayOfWeekdays;
-  var sizes = {
-    width: cellWidth + daySpacing,
-    height: cellHeight + daySpacing
-  };
-  return ticks.map(function (day) {
-    return {
-      value: arrayOfWeekdays[day],
-      rotation: direction === 'horizontal' ? 0 : -90,
-      y: direction === 'horizontal' ? sizes.height * (day + 1) - sizes.height / 3 : 0,
-      x: direction === 'horizontal' ? 0 : sizes.width * (day + 1) - sizes.width / 3
-    };
-  });
-};
-var computeMonthLegends = function computeMonthLegends(_ref5) {
-  var direction = _ref5.direction,
-      daySpacing = _ref5.daySpacing,
-      days = _ref5.days,
-      cellHeight = _ref5.cellHeight,
-      cellWidth = _ref5.cellWidth;
-  var accumulator = {
-    months: {},
-    weeks: []
-  };
-  return days.reduce(function (acc, day) {
-    if (acc.weeks.length === day.firstWeek) {
-      acc.weeks.push(day);
-
-      var _key = "".concat(day.year, "-").concat(day.month);
-
-      if (!Object.keys(acc.months).includes(_key)) {
-        var bbox = {
-          x: 0,
-          y: 0,
-          width: 0,
-          height: 0
-        };
-
-        if (direction === 'horizontal') {
-          bbox.x = day.coordinates.x - daySpacing;
-          bbox.height = cellHeight + daySpacing;
-          bbox.width = cellWidth + daySpacing * 2;
-        } else {
-          bbox.y = day.coordinates.y - daySpacing;
-          bbox.height = cellHeight + daySpacing * 2;
-          bbox.width = cellWidth + daySpacing * 2;
-        }
-
-        acc.months[_key] = {
-          date: day.date,
-          bbox: bbox,
-          firstWeek: day.firstWeek,
-          month: 0,
-          year: 0
-        };
-      } else {
-        if (direction === 'horizontal') {
-          acc.months[_key].bbox.width = (day.firstWeek - acc.months[_key].firstWeek) * (cellWidth + daySpacing);
-        } else {
-          acc.months[_key].bbox.height = (day.firstWeek - acc.months[_key].firstWeek) * (cellHeight + daySpacing);
-        }
-      }
-    }
-
-    return acc;
-  }, accumulator);
-};
-var computeTotalDays = function computeTotalDays(_ref6) {
-  var from = _ref6.from,
-      to = _ref6.to,
-      data = _ref6.data;
-  var startDate;
-  var endDate;
-
-  if (from) {
-    startDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(from) ? from : new Date(from);
-  } else {
-    startDate = data[0].date;
-  }
-
-  if (from && to) {
-    endDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(to) ? to : new Date(to);
-  } else {
-    endDate = data[data.length - 1].date;
-  }
-
-  return startDate.getDay() + d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDay"].count(startDate, endDate);
-};
-
-var TimeRangeDay = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var data = _ref.data,
-      x = _ref.x,
-      _ref$ry = _ref.ry,
-      ry = _ref$ry === void 0 ? 5 : _ref$ry,
-      _ref$rx = _ref.rx,
-      rx = _ref$rx === void 0 ? 5 : _ref$rx,
-      y = _ref.y,
-      width = _ref.width,
-      height = _ref.height,
-      color = _ref.color,
-      borderWidth = _ref.borderWidth,
-      borderColor = _ref.borderColor,
-      isInteractive = _ref.isInteractive,
-      tooltip = _ref.tooltip,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseMove = _ref.onMouseMove,
-      onMouseLeave = _ref.onMouseLeave,
-      onClick = _ref.onClick,
-      formatValue = _ref.formatValue;
-
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-
-  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
-      value: formatValue(data.value)
-    });
-
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
-    onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event);
-  }, [showTooltipFromEvent, tooltip, data, onMouseEnter, formatValue]);
-  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
-      value: formatValue(data.value)
-    });
-
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
-    onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(data, event);
-  }, [showTooltipFromEvent, tooltip, data, onMouseMove, formatValue]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!('value' in data)) {
-      return;
-    }
-
-    hideTooltip();
-    onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event);
-  }, [hideTooltip, data, onMouseLeave]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    return onClick === null || onClick === void 0 ? void 0 : onClick(data, event);
-  }, [data, onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("rect", {
-    x: x,
-    y: y,
-    rx: rx,
-    ry: ry,
-    width: width,
-    height: height,
-    style: {
-      fill: color,
-      strokeWidth: borderWidth,
-      stroke: borderColor
-    },
-    onMouseEnter: isInteractive ? handleMouseEnter : undefined,
-    onMouseMove: isInteractive ? handleMouseMove : undefined,
-    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
-    onClick: isInteractive ? handleClick : undefined
-  });
-});
-
-var InnerTimeRange = function InnerTimeRange(_ref) {
-  var partialMargin = _ref.margin,
-      width = _ref.width,
-      height = _ref.height,
-      _ref$square = _ref.square,
-      square = _ref$square === void 0 ? timeRangeDefaultProps.square : _ref$square,
-      _ref$colors = _ref.colors,
-      colors = _ref$colors === void 0 ? timeRangeDefaultProps.colors : _ref$colors,
-      colorScale = _ref.colorScale,
-      _ref$emptyColor = _ref.emptyColor,
-      emptyColor = _ref$emptyColor === void 0 ? timeRangeDefaultProps.emptyColor : _ref$emptyColor,
-      from = _ref.from,
-      to = _ref.to,
-      _data = _ref.data,
-      _ref$direction = _ref.direction,
-      direction = _ref$direction === void 0 ? timeRangeDefaultProps.direction : _ref$direction,
-      _ref$minValue = _ref.minValue,
-      minValue = _ref$minValue === void 0 ? timeRangeDefaultProps.minValue : _ref$minValue,
-      _ref$maxValue = _ref.maxValue,
-      maxValue = _ref$maxValue === void 0 ? timeRangeDefaultProps.maxValue : _ref$maxValue,
-      valueFormat = _ref.valueFormat,
-      legendFormat = _ref.legendFormat,
-      _ref$monthLegend = _ref.monthLegend,
-      monthLegend = _ref$monthLegend === void 0 ? timeRangeDefaultProps.monthLegend : _ref$monthLegend,
-      _ref$monthLegendOffse = _ref.monthLegendOffset,
-      monthLegendOffset = _ref$monthLegendOffse === void 0 ? timeRangeDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
-      _ref$monthLegendPosit = _ref.monthLegendPosition,
-      monthLegendPosition = _ref$monthLegendPosit === void 0 ? timeRangeDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
-      _ref$weekdayLegendOff = _ref.weekdayLegendOffset,
-      weekdayLegendOffset = _ref$weekdayLegendOff === void 0 ? timeRangeDefaultProps.weekdayLegendOffset : _ref$weekdayLegendOff,
-      weekdayTicks = _ref.weekdayTicks,
-      _ref$dayBorderColor = _ref.dayBorderColor,
-      dayBorderColor = _ref$dayBorderColor === void 0 ? timeRangeDefaultProps.dayBorderColor : _ref$dayBorderColor,
-      _ref$dayBorderWidth = _ref.dayBorderWidth,
-      dayBorderWidth = _ref$dayBorderWidth === void 0 ? timeRangeDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
-      _ref$daySpacing = _ref.daySpacing,
-      daySpacing = _ref$daySpacing === void 0 ? timeRangeDefaultProps.daySpacing : _ref$daySpacing,
-      _ref$dayRadius = _ref.dayRadius,
-      dayRadius = _ref$dayRadius === void 0 ? timeRangeDefaultProps.dayRadius : _ref$dayRadius,
-      _ref$isInteractive = _ref.isInteractive,
-      isInteractive = _ref$isInteractive === void 0 ? timeRangeDefaultProps.isInteractive : _ref$isInteractive,
-      _ref$tooltip = _ref.tooltip,
-      tooltip = _ref$tooltip === void 0 ? timeRangeDefaultProps.tooltip : _ref$tooltip,
-      onClick = _ref.onClick,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseLeave = _ref.onMouseLeave,
-      onMouseMove = _ref.onMouseMove,
-      _ref$legends = _ref.legends,
-      legends = _ref$legends === void 0 ? timeRangeDefaultProps.legends : _ref$legends,
-      _ref$role = _ref.role,
-      role = _ref$role === void 0 ? timeRangeDefaultProps.role : _ref$role;
-
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight;
-
-  var data = Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
-    return _data.map(function (data) {
-      return _objectSpread2(_objectSpread2({}, data), {}, {
-        date: new Date("".concat(data.day, "T00:00:00"))
-      });
-    }).sort(function (left, right) {
-      return left.day.localeCompare(right.day);
-    });
-  }, [_data]);
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
-  var colorScaleFn = useColorScale({
-    data: data,
-    minValue: minValue,
-    maxValue: maxValue,
-    colors: colors,
-    colorScale: colorScale
-  });
-  var totalDays = computeTotalDays({
-    from: from,
-    to: to,
-    data: data
-  });
-
-  var _computeCellSize = computeCellSize$1({
-    square: square,
-    offset: weekdayLegendOffset,
-    totalDays: totalDays,
-    width: innerWidth,
-    height: innerHeight,
-    daySpacing: daySpacing,
-    direction: direction
-  }),
-      cellHeight = _computeCellSize.cellHeight,
-      cellWidth = _computeCellSize.cellWidth;
-
-  var days = computeCellPositions({
-    offset: weekdayLegendOffset,
-    colorScale: colorScaleFn,
-    emptyColor: emptyColor,
-    cellHeight: cellHeight,
-    cellWidth: cellWidth,
-    from: from,
-    to: to,
-    data: data,
-    direction: direction,
-    daySpacing: daySpacing
-  });
-  var months = Object.values(computeMonthLegends({
-    daySpacing: daySpacing,
-    direction: direction,
-    cellHeight: cellHeight,
-    cellWidth: cellWidth,
-    days: days
-  }).months);
-  var weekdayLegends = computeWeekdays({
-    direction: direction,
-    cellHeight: cellHeight,
-    cellWidth: cellWidth,
-    daySpacing: daySpacing,
-    ticks: weekdayTicks
-  });
-  var monthLegends = useMonthLegends({
-    months: months,
-    direction: direction,
-    monthLegendPosition: monthLegendPosition,
-    monthLegendOffset: monthLegendOffset
-  });
-  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
-  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsxs"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["SvgWrapper"], {
-    width: outerWidth,
-    height: outerHeight,
-    margin: margin,
-    role: role,
-    children: [weekdayLegends.map(function (legend) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
-        transform: "translate(".concat(legend.x, ",").concat(legend.y, ") rotate(").concat(legend.rotation, ")"),
-        textAnchor: "left",
-        style: theme.labels.text,
-        children: legend.value
-      }, legend.value);
-    }), days.map(function (d) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(TimeRangeDay, {
-        data: d,
-        x: d.coordinates.x,
-        rx: dayRadius,
-        y: d.coordinates.y,
-        ry: dayRadius,
-        width: cellWidth,
-        height: cellHeight,
-        color: d.color,
-        borderWidth: dayBorderWidth,
-        borderColor: dayBorderColor,
-        onMouseEnter: onMouseEnter,
-        onMouseLeave: onMouseLeave,
-        onMouseMove: onMouseMove,
-        isInteractive: isInteractive,
-        tooltip: tooltip,
-        onClick: onClick,
-        formatValue: formatValue
-      }, d.date.toString());
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthLegends, {
-      months: monthLegends,
-      legend: monthLegend,
-      theme: theme
-    }), legends.map(function (legend, i) {
-      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
-        return {
-          id: value,
-          label: formatLegend(value),
-          color: colorScaleFn(value)
-        };
-      });
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
-        containerWidth: width,
-        containerHeight: height,
-        data: legendData
-      }), i);
-    })]
-  });
-};
-
-var TimeRange = function TimeRange(_ref2) {
-  var _ref2$isInteractive = _ref2.isInteractive,
-      isInteractive = _ref2$isInteractive === void 0 ? timeRangeDefaultProps.isInteractive : _ref2$isInteractive,
-      renderWrapper = _ref2.renderWrapper,
-      theme = _ref2.theme,
-      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
-    isInteractive: isInteractive,
-    renderWrapper: renderWrapper,
-    theme: theme,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerTimeRange, _objectSpread2({
-      isInteractive: isInteractive
-    }, props))
-  });
-};
-
-var ResponsiveTimeRange = function ResponsiveTimeRange(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(TimeRange, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
-};
-
-var ResponsiveCalendar = function ResponsiveCalendar(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Calendar, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
-};
-
-var findDayUnderCursor = function findDayUnderCursor(event, canvasEl, days, size, dayBorderWidth, margin) {
-  var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["getRelativeCursor"])(canvasEl, event),
-      _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
-      x = _getRelativeCursor2[0],
-      y = _getRelativeCursor2[1];
-
-  return days.find(function (day) {
-    return 'value' in day && Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["isCursorInRect"])(day.x + margin.left - dayBorderWidth / 2, day.y + margin.top - dayBorderWidth / 2, size + dayBorderWidth, size + dayBorderWidth, x, y);
-  });
-};
-
-var InnerCalendarCanvas = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
-  var partialMargin = _ref.margin,
-      width = _ref.width,
-      height = _ref.height,
-      _ref$pixelRatio = _ref.pixelRatio,
-      pixelRatio = _ref$pixelRatio === void 0 ? calendarCanvasDefaultProps.pixelRatio : _ref$pixelRatio,
-      _ref$align = _ref.align,
-      align = _ref$align === void 0 ? calendarCanvasDefaultProps.align : _ref$align,
-      _ref$colors = _ref.colors,
-      colors = _ref$colors === void 0 ? calendarCanvasDefaultProps.colors : _ref$colors,
-      colorScale = _ref.colorScale,
-      data = _ref.data,
-      _ref$direction = _ref.direction,
-      direction = _ref$direction === void 0 ? calendarCanvasDefaultProps.direction : _ref$direction,
-      _ref$emptyColor = _ref.emptyColor,
-      emptyColor = _ref$emptyColor === void 0 ? calendarCanvasDefaultProps.emptyColor : _ref$emptyColor,
-      from = _ref.from,
-      to = _ref.to,
-      _ref$minValue = _ref.minValue,
-      minValue = _ref$minValue === void 0 ? calendarCanvasDefaultProps.minValue : _ref$minValue,
-      _ref$maxValue = _ref.maxValue,
-      maxValue = _ref$maxValue === void 0 ? calendarCanvasDefaultProps.maxValue : _ref$maxValue,
-      valueFormat = _ref.valueFormat,
-      legendFormat = _ref.legendFormat,
-      _ref$yearLegend = _ref.yearLegend,
-      yearLegend = _ref$yearLegend === void 0 ? calendarCanvasDefaultProps.yearLegend : _ref$yearLegend,
-      _ref$yearLegendOffset = _ref.yearLegendOffset,
-      yearLegendOffset = _ref$yearLegendOffset === void 0 ? calendarCanvasDefaultProps.yearLegendOffset : _ref$yearLegendOffset,
-      _ref$yearLegendPositi = _ref.yearLegendPosition,
-      yearLegendPosition = _ref$yearLegendPositi === void 0 ? calendarCanvasDefaultProps.yearLegendPosition : _ref$yearLegendPositi,
-      _ref$yearSpacing = _ref.yearSpacing,
-      yearSpacing = _ref$yearSpacing === void 0 ? calendarCanvasDefaultProps.yearSpacing : _ref$yearSpacing,
-      _ref$monthLegend = _ref.monthLegend,
-      monthLegend = _ref$monthLegend === void 0 ? calendarCanvasDefaultProps.monthLegend : _ref$monthLegend,
-      _ref$monthLegendOffse = _ref.monthLegendOffset,
-      monthLegendOffset = _ref$monthLegendOffse === void 0 ? calendarCanvasDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
-      _ref$monthLegendPosit = _ref.monthLegendPosition,
-      monthLegendPosition = _ref$monthLegendPosit === void 0 ? calendarCanvasDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
-      _ref$monthSpacing = _ref.monthSpacing,
-      monthSpacing = _ref$monthSpacing === void 0 ? calendarCanvasDefaultProps.monthSpacing : _ref$monthSpacing,
-      _ref$dayBorderColor = _ref.dayBorderColor,
-      dayBorderColor = _ref$dayBorderColor === void 0 ? calendarCanvasDefaultProps.dayBorderColor : _ref$dayBorderColor,
-      _ref$dayBorderWidth = _ref.dayBorderWidth,
-      dayBorderWidth = _ref$dayBorderWidth === void 0 ? calendarCanvasDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
-      _ref$daySpacing = _ref.daySpacing,
-      daySpacing = _ref$daySpacing === void 0 ? calendarCanvasDefaultProps.daySpacing : _ref$daySpacing,
-      _ref$isInteractive = _ref.isInteractive,
-      isInteractive = _ref$isInteractive === void 0 ? calendarCanvasDefaultProps.isInteractive : _ref$isInteractive,
-      _ref$tooltip = _ref.tooltip,
-      tooltip = _ref$tooltip === void 0 ? calendarCanvasDefaultProps.tooltip : _ref$tooltip,
-      onClick = _ref.onClick,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseLeave = _ref.onMouseLeave,
-      onMouseMove = _ref.onMouseMove,
-      _ref$legends = _ref.legends,
-      legends = _ref$legends === void 0 ? calendarCanvasDefaultProps.legends : _ref$legends;
-  var canvasEl = Object(react__WEBPACK_IMPORTED_MODULE_2__["useRef"])(null);
-
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight,
-      margin = _useDimensions.margin;
-
-  var _useCalendarLayout = useCalendarLayout({
-    width: innerWidth,
-    height: innerHeight,
-    from: from,
-    to: to,
-    direction: direction,
-    yearSpacing: yearSpacing,
-    monthSpacing: monthSpacing,
-    daySpacing: daySpacing,
-    align: align
-  }),
-      months = _useCalendarLayout.months,
-      years = _useCalendarLayout.years,
-      rest = _objectWithoutProperties(_useCalendarLayout, ["months", "years"]);
-
-  var colorScaleFn = useColorScale({
-    data: data,
-    minValue: minValue,
-    maxValue: maxValue,
-    colors: colors,
-    colorScale: colorScale
-  });
-  var monthLegends = useMonthLegends({
-    months: months,
-    direction: direction,
-    monthLegendPosition: monthLegendPosition,
-    monthLegendOffset: monthLegendOffset
-  });
-  var yearLegends = useYearLegends({
-    years: years,
-    direction: direction,
-    yearLegendPosition: yearLegendPosition,
-    yearLegendOffset: yearLegendOffset
-  });
-  var days = useDays({
-    days: rest.days,
-    data: data,
-    colorScale: colorScaleFn,
-    emptyColor: emptyColor
-  });
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      currentDay = _useState2[0],
-      setCurrentDay = _useState2[1];
-
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
-  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
-  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
-
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-
-  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
-    var _theme$labels$text$fi;
-
-    if (!canvasEl.current) return;
-    canvasEl.current.width = outerWidth * pixelRatio;
-    canvasEl.current.height = outerHeight * pixelRatio;
-    var ctx = canvasEl.current.getContext('2d');
-    if (!ctx) return;
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.fillStyle = theme.background;
-    ctx.fillRect(0, 0, outerWidth, outerHeight);
-    ctx.translate(margin.left, margin.top);
-    days.forEach(function (day) {
-      ctx.fillStyle = day.color;
-
-      if (dayBorderWidth > 0) {
-        ctx.strokeStyle = dayBorderColor;
-        ctx.lineWidth = dayBorderWidth;
-      }
-
-      ctx.beginPath();
-      ctx.rect(day.x, day.y, day.size, day.size);
-      ctx.fill();
-
-      if (dayBorderWidth > 0) {
-        ctx.stroke();
-      }
-    });
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = (_theme$labels$text$fi = theme.labels.text.fill) !== null && _theme$labels$text$fi !== void 0 ? _theme$labels$text$fi : '';
-    ctx.font = "".concat(theme.labels.text.fontSize, "px ").concat(theme.labels.text.fontFamily);
-    monthLegends.forEach(function (month) {
-      ctx.save();
-      ctx.translate(month.x, month.y);
-      ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["degreesToRadians"])(month.rotation));
-      ctx.fillText(String(monthLegend(month.year, month.month, month.date)), 0, 0);
-      ctx.restore();
-    });
-    yearLegends.forEach(function (year) {
-      ctx.save();
-      ctx.translate(year.x, year.y);
-      ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["degreesToRadians"])(year.rotation));
-      ctx.fillText(String(yearLegend(year.year)), 0, 0);
-      ctx.restore();
-    });
-    legends.forEach(function (legend) {
-      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
-        return {
-          id: value,
-          label: formatLegend(value),
-          color: colorScaleFn(value)
-        };
-      });
-      Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["renderLegendToCanvas"])(ctx, _objectSpread2(_objectSpread2({}, legend), {}, {
-        data: legendData,
-        containerWidth: innerWidth,
-        containerHeight: innerHeight,
-        theme: theme
-      }));
-    });
-  }, [canvasEl, innerHeight, innerWidth, outerWidth, outerHeight, pixelRatio, margin, days, dayBorderColor, dayBorderWidth, colorScale, yearLegend, yearLegends, monthLegend, monthLegends, legends, theme, formatLegend, colorScaleFn]);
-  var handleMouseHover = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!canvasEl.current) return;
-    var data = findDayUnderCursor(event, canvasEl.current, days, days[0].size, dayBorderWidth, margin);
-
-    if (data) {
-      setCurrentDay(data);
-
-      if (!('value' in data)) {
-        return;
-      }
-
-      var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
-        value: formatValue(data.value),
-        data: _objectSpread2({}, data.data)
-      });
-
-      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
-      !currentDay && (onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event));
-      onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(data, event);
-      currentDay && (onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event));
-    } else {
-      hideTooltip();
-      data && (onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event));
-    }
-  }, [canvasEl, currentDay, margin, days, setCurrentDay, formatValue, dayBorderWidth, showTooltipFromEvent, hideTooltip, onMouseEnter, onMouseMove, onMouseLeave, tooltip]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function () {
-    setCurrentDay(null);
-    hideTooltip();
-  }, [setCurrentDay, hideTooltip]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
-    if (!onClick || !canvasEl.current) return;
-    var data = findDayUnderCursor(event, canvasEl.current, days, days[0].size, daySpacing, margin);
-    data && onClick(data, event);
-  }, [canvasEl, daySpacing, margin, days, onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("canvas", {
-    ref: canvasEl,
-    width: outerWidth * pixelRatio,
-    height: outerHeight * pixelRatio,
-    style: {
-      width: outerWidth,
-      height: outerHeight
-    },
-    onMouseEnter: isInteractive ? handleMouseHover : undefined,
-    onMouseMove: isInteractive ? handleMouseHover : undefined,
-    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
-    onClick: isInteractive ? handleClick : undefined
-  });
-});
-var CalendarCanvas = function CalendarCanvas(_ref2) {
-  var _ref2$isInteractive = _ref2.isInteractive,
-      isInteractive = _ref2$isInteractive === void 0 ? calendarCanvasDefaultProps.isInteractive : _ref2$isInteractive,
-      renderWrapper = _ref2.renderWrapper,
-      theme = _ref2.theme,
-      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
-    isInteractive: isInteractive,
-    renderWrapper: renderWrapper,
-    theme: theme,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerCalendarCanvas, _objectSpread2({
-      isInteractive: isInteractive
-    }, props))
-  });
-};
-
-var ResponsiveCalendarCanvas = function ResponsiveCalendarCanvas(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarCanvas, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
 };
 
 
@@ -13652,1333 +10385,6 @@ var LegendPropShape = {
 
 /***/ }),
 
-/***/ "./node_modules/@nivo/line/dist/nivo-line.es.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@nivo/line/dist/nivo-line.es.js ***!
-  \******************************************************/
-/*! exports provided: Line, LineCanvas, LineCanvasDefaultProps, LineCanvasPropTypes, LineDefaultProps, LinePropTypes, ResponsiveLine, ResponsiveLineCanvas, useAreaGenerator, useLine, useLineGenerator, useSlices */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Line", function() { return Line$1; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineCanvas", function() { return LineCanvas$1; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineCanvasDefaultProps", function() { return LineCanvasDefaultProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineCanvasPropTypes", function() { return LineCanvasPropTypes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LineDefaultProps", function() { return LineDefaultProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LinePropTypes", function() { return LinePropTypes; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveLine", function() { return ResponsiveLine; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveLineCanvas", function() { return ResponsiveLineCanvas$1; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useAreaGenerator", function() { return useAreaGenerator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLine", function() { return useLine; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useLineGenerator", function() { return useLineGenerator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useSlices", function() { return useSlices; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
-/* harmony import */ var _nivo_axes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @nivo/axes */ "./node_modules/@nivo/axes/dist/nivo-axes.es.js");
-/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
-/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
-/* harmony import */ var _nivo_scales__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @nivo/scales */ "./node_modules/@nivo/scales/dist/nivo-scales.es.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
-/* harmony import */ var _nivo_voronoi__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @nivo/voronoi */ "./node_modules/@nivo/voronoi/dist/nivo-voronoi.es.js");
-
-
-
-
-
-
-
-
-
-
-
-
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-  return arr2;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-var LinePointTooltip = function LinePointTooltip(_ref) {
-  var point = _ref.point;
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["BasicTooltip"], {
-    id: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsxs"])("span", {
-      children: ["x: ", Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("strong", {
-        children: point.data.xFormatted
-      }), ", y:", ' ', Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("strong", {
-        children: point.data.yFormatted
-      })]
-    }),
-    enableChip: true,
-    color: point.serieColor
-  });
-};
-var PointTooltip = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(LinePointTooltip);
-
-var SliceTooltip = function SliceTooltip(_ref) {
-  var slice = _ref.slice,
-      axis = _ref.axis;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var otherAxis = axis === 'x' ? 'y' : 'x';
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["TableTooltip"], {
-    rows: slice.points.map(function (point) {
-      return [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["Chip"], {
-        color: point.serieColor,
-        style: theme.tooltip.chip
-      }, "chip"), point.serieId, Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("span", {
-        style: theme.tooltip.tableCellValue,
-        children: point.data["".concat(otherAxis, "Formatted")]
-      }, "value")];
-    })
-  });
-};
-var SliceTooltip$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(SliceTooltip);
-
-var commonPropTypes = {
-  data: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.shape({
-    id: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number]).isRequired,
-    data: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.shape({
-      x: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)]),
-      y: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)])
-    })).isRequired
-  })).isRequired,
-  xScale: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object.isRequired,
-  xFormat: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string]),
-  yScale: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object.isRequired,
-  yFormat: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string]),
-  layers: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOf(['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines', 'slices', 'points', 'mesh', 'legends']), prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func])).isRequired,
-  curve: _nivo_core__WEBPACK_IMPORTED_MODULE_1__["lineCurvePropType"].isRequired,
-  axisTop: _nivo_axes__WEBPACK_IMPORTED_MODULE_3__["axisPropType"],
-  axisRight: _nivo_axes__WEBPACK_IMPORTED_MODULE_3__["axisPropType"],
-  axisBottom: _nivo_axes__WEBPACK_IMPORTED_MODULE_3__["axisPropType"],
-  axisLeft: _nivo_axes__WEBPACK_IMPORTED_MODULE_3__["axisPropType"],
-  enableGridX: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  enableGridY: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  gridXValues: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)]))]),
-  gridYValues: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)]))]),
-  enablePoints: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  pointSymbol: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func,
-  pointSize: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number.isRequired,
-  pointColor: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.any.isRequired,
-  pointBorderWidth: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number.isRequired,
-  pointBorderColor: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.any.isRequired,
-  enablePointLabel: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  pointLabel: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func]).isRequired,
-  markers: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.shape({
-    axis: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOf(['x', 'y']).isRequired,
-    value: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)]).isRequired,
-    style: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object
-  })),
-  colors: _nivo_colors__WEBPACK_IMPORTED_MODULE_2__["ordinalColorsPropType"].isRequired,
-  enableArea: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  areaOpacity: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number.isRequired,
-  areaBlendMode: _nivo_core__WEBPACK_IMPORTED_MODULE_1__["blendModePropType"].isRequired,
-  areaBaselineValue: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.instanceOf(Date)]).isRequired,
-  lineWidth: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number.isRequired,
-  legends: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.shape(_nivo_legends__WEBPACK_IMPORTED_MODULE_4__["LegendPropShape"])).isRequired,
-  isInteractive: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  debugMesh: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  tooltip: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object]).isRequired,
-  enableSlices: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOf(['x', 'y', false]).isRequired,
-  debugSlices: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  sliceTooltip: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.func, prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object]).isRequired,
-  enableCrosshair: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  crosshairType: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string.isRequired
-};
-var LinePropTypes = _objectSpread2(_objectSpread2(_objectSpread2({}, commonPropTypes), {}, {
-  enablePointLabel: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired,
-  role: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.string.isRequired,
-  useMesh: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.bool.isRequired
-}, _nivo_core__WEBPACK_IMPORTED_MODULE_1__["motionPropTypes"]), _nivo_core__WEBPACK_IMPORTED_MODULE_1__["defsPropTypes"]);
-var LineCanvasPropTypes = _objectSpread2({
-  pixelRatio: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.number.isRequired
-}, commonPropTypes);
-var commonDefaultProps = {
-  curve: 'linear',
-  xScale: {
-    type: 'point'
-  },
-  yScale: {
-    type: 'linear',
-    min: 0,
-    max: 'auto'
-  },
-  layers: ['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends'],
-  axisBottom: {},
-  axisLeft: {},
-  enableGridX: true,
-  enableGridY: true,
-  enablePoints: true,
-  pointSize: 6,
-  pointColor: {
-    from: 'color'
-  },
-  pointBorderWidth: 0,
-  pointBorderColor: {
-    theme: 'background'
-  },
-  enablePointLabel: false,
-  pointLabel: 'yFormatted',
-  colors: {
-    scheme: 'nivo'
-  },
-  enableArea: false,
-  areaBaselineValue: 0,
-  areaOpacity: 0.2,
-  areaBlendMode: 'normal',
-  lineWidth: 2,
-  legends: [],
-  isInteractive: true,
-  tooltip: PointTooltip,
-  enableSlices: false,
-  debugSlices: false,
-  sliceTooltip: SliceTooltip$1,
-  debugMesh: false,
-  enableCrosshair: true,
-  crosshairType: 'bottom-left'
-};
-var LineDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
-  enablePointLabel: false,
-  useMesh: false,
-  animate: true,
-  motionConfig: 'gentle',
-  defs: [],
-  fill: [],
-  role: 'img'
-});
-var LineCanvasDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
-  pixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1
-});
-
-var useLineGenerator = function useLineGenerator(_ref) {
-  var curve = _ref.curve;
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_6__["line"])().defined(function (d) {
-      return d.x !== null && d.y !== null;
-    }).x(function (d) {
-      return d.x;
-    }).y(function (d) {
-      return d.y;
-    }).curve(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["curveFromProp"])(curve));
-  }, [curve]);
-};
-var useAreaGenerator = function useAreaGenerator(_ref2) {
-  var curve = _ref2.curve,
-      yScale = _ref2.yScale,
-      areaBaselineValue = _ref2.areaBaselineValue;
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_shape__WEBPACK_IMPORTED_MODULE_6__["area"])().defined(function (d) {
-      return d.x !== null && d.y !== null;
-    }).x(function (d) {
-      return d.x;
-    }).y1(function (d) {
-      return d.y;
-    }).curve(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["curveFromProp"])(curve)).y0(yScale(areaBaselineValue));
-  }, [curve, yScale, areaBaselineValue]);
-};
-var usePoints = function usePoints(_ref3) {
-  var series = _ref3.series,
-      getPointColor = _ref3.getPointColor,
-      getPointBorderColor = _ref3.getPointBorderColor,
-      formatX = _ref3.formatX,
-      formatY = _ref3.formatY;
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return series.reduce(function (acc, serie) {
-      return [].concat(_toConsumableArray(acc), _toConsumableArray(serie.data.filter(function (datum) {
-        return datum.position.x !== null && datum.position.y !== null;
-      }).map(function (datum, i) {
-        var point = {
-          id: "".concat(serie.id, ".").concat(i),
-          index: acc.length + i,
-          serieId: serie.id,
-          serieColor: serie.color,
-          x: datum.position.x,
-          y: datum.position.y
-        };
-        point.color = getPointColor(serie);
-        point.borderColor = getPointBorderColor(point);
-        point.data = _objectSpread2(_objectSpread2({}, datum.data), {}, {
-          xFormatted: formatX(datum.data.x),
-          yFormatted: formatY(datum.data.y)
-        });
-        return point;
-      })));
-    }, []);
-  }, [series, getPointColor, getPointBorderColor, formatX, formatY]);
-};
-var useSlices = function useSlices(_ref4) {
-  var enableSlices = _ref4.enableSlices,
-      points = _ref4.points,
-      width = _ref4.width,
-      height = _ref4.height;
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    if (enableSlices === false) return [];
-    if (enableSlices === 'x') {
-      var map = new Map();
-      points.forEach(function (point) {
-        if (point.data.x === null || point.data.y === null) return;
-        if (!map.has(point.x)) map.set(point.x, [point]);else map.get(point.x).push(point);
-      });
-      return Array.from(map.entries()).sort(function (a, b) {
-        return a[0] - b[0];
-      }).map(function (_ref5, i, slices) {
-        var _ref6 = _slicedToArray(_ref5, 2),
-            x = _ref6[0],
-            slicePoints = _ref6[1];
-        var prevSlice = slices[i - 1];
-        var nextSlice = slices[i + 1];
-        var x0;
-        if (!prevSlice) x0 = x;else x0 = x - (x - prevSlice[0]) / 2;
-        var sliceWidth;
-        if (!nextSlice) sliceWidth = width - x0;else sliceWidth = x - x0 + (nextSlice[0] - x) / 2;
-        return {
-          id: x,
-          x0: x0,
-          x: x,
-          y0: 0,
-          y: 0,
-          width: sliceWidth,
-          height: height,
-          points: slicePoints.reverse()
-        };
-      });
-    } else if (enableSlices === 'y') {
-      var _map = new Map();
-      points.forEach(function (point) {
-        if (point.data.x === null || point.data.y === null) return;
-        if (!_map.has(point.y)) _map.set(point.y, [point]);else _map.get(point.y).push(point);
-      });
-      return Array.from(_map.entries()).sort(function (a, b) {
-        return a[0] - b[0];
-      }).map(function (_ref7, i, slices) {
-        var _ref8 = _slicedToArray(_ref7, 2),
-            y = _ref8[0],
-            slicePoints = _ref8[1];
-        var prevSlice = slices[i - 1];
-        var nextSlice = slices[i + 1];
-        var y0;
-        if (!prevSlice) y0 = y;else y0 = y - (y - prevSlice[0]) / 2;
-        var sliceHeight;
-        if (!nextSlice) sliceHeight = height - y0;else sliceHeight = y - y0 + (nextSlice[0] - y) / 2;
-        return {
-          id: y,
-          x0: 0,
-          x: 0,
-          y0: y0,
-          y: y,
-          width: width,
-          height: sliceHeight,
-          points: slicePoints.reverse()
-        };
-      });
-    }
-  }, [enableSlices, points]);
-};
-var useLine = function useLine(_ref9) {
-  var data = _ref9.data,
-      _ref9$xScale = _ref9.xScale,
-      xScaleSpec = _ref9$xScale === void 0 ? LineDefaultProps.xScale : _ref9$xScale,
-      xFormat = _ref9.xFormat,
-      _ref9$yScale = _ref9.yScale,
-      yScaleSpec = _ref9$yScale === void 0 ? LineDefaultProps.yScale : _ref9$yScale,
-      yFormat = _ref9.yFormat,
-      width = _ref9.width,
-      height = _ref9.height,
-      _ref9$colors = _ref9.colors,
-      colors = _ref9$colors === void 0 ? LineDefaultProps.colors : _ref9$colors,
-      _ref9$curve = _ref9.curve,
-      curve = _ref9$curve === void 0 ? LineDefaultProps.curve : _ref9$curve,
-      _ref9$areaBaselineVal = _ref9.areaBaselineValue,
-      areaBaselineValue = _ref9$areaBaselineVal === void 0 ? LineDefaultProps.areaBaselineValue : _ref9$areaBaselineVal,
-      _ref9$pointColor = _ref9.pointColor,
-      pointColor = _ref9$pointColor === void 0 ? LineDefaultProps.pointColor : _ref9$pointColor,
-      _ref9$pointBorderColo = _ref9.pointBorderColor,
-      pointBorderColor = _ref9$pointBorderColo === void 0 ? LineDefaultProps.pointBorderColor : _ref9$pointBorderColo,
-      _ref9$enableSlices = _ref9.enableSlices,
-      enableSlices = _ref9$enableSlices === void 0 ? LineDefaultProps.enableSlicesTooltip : _ref9$enableSlices;
-  var formatX = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useValueFormatter"])(xFormat);
-  var formatY = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useValueFormatter"])(yFormat);
-  var getColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useOrdinalColorScale"])(colors, 'id');
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var getPointColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(pointColor, theme);
-  var getPointBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(pointBorderColor, theme);
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState2 = _slicedToArray(_useState, 2),
-      hiddenIds = _useState2[0],
-      setHiddenIds = _useState2[1];
-  var _useMemo = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_7__["computeXYScalesForSeries"])(data.filter(function (item) {
-      return hiddenIds.indexOf(item.id) === -1;
-    }), xScaleSpec, yScaleSpec, width, height);
-  }, [data, hiddenIds, xScaleSpec, yScaleSpec, width, height]),
-      xScale = _useMemo.xScale,
-      yScale = _useMemo.yScale,
-      rawSeries = _useMemo.series;
-  var _useMemo2 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var dataWithColor = data.map(function (line) {
-      return {
-        id: line.id,
-        label: line.id,
-        color: getColor(line)
-      };
-    });
-    var series = dataWithColor.map(function (datum) {
-      return _objectSpread2(_objectSpread2({}, rawSeries.find(function (serie) {
-        return serie.id === datum.id;
-      })), {}, {
-        color: datum.color
-      });
-    }).filter(function (item) {
-      return Boolean(item.id);
-    });
-    var legendData = dataWithColor.map(function (item) {
-      return _objectSpread2(_objectSpread2({}, item), {}, {
-        hidden: !series.find(function (serie) {
-          return serie.id === item.id;
-        })
-      });
-    }).reverse();
-    return {
-      legendData: legendData,
-      series: series
-    };
-  }, [data, rawSeries, getColor]),
-      legendData = _useMemo2.legendData,
-      series = _useMemo2.series;
-  var toggleSerie = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (id) {
-    setHiddenIds(function (state) {
-      return state.indexOf(id) > -1 ? state.filter(function (item) {
-        return item !== id;
-      }) : [].concat(_toConsumableArray(state), [id]);
-    });
-  }, []);
-  var points = usePoints({
-    series: series,
-    getPointColor: getPointColor,
-    getPointBorderColor: getPointBorderColor,
-    formatX: formatX,
-    formatY: formatY
-  });
-  var slices = useSlices({
-    enableSlices: enableSlices,
-    points: points,
-    width: width,
-    height: height
-  });
-  var lineGenerator = useLineGenerator({
-    curve: curve
-  });
-  var areaGenerator = useAreaGenerator({
-    curve: curve,
-    yScale: yScale,
-    areaBaselineValue: areaBaselineValue
-  });
-  return {
-    legendData: legendData,
-    toggleSerie: toggleSerie,
-    lineGenerator: lineGenerator,
-    areaGenerator: areaGenerator,
-    getColor: getColor,
-    series: series,
-    xScale: xScale,
-    yScale: yScale,
-    slices: slices,
-    points: points
-  };
-};
-
-var AreaPath = function AreaPath(_ref) {
-  var areaBlendMode = _ref.areaBlendMode,
-      areaOpacity = _ref.areaOpacity,
-      color = _ref.color,
-      fill = _ref.fill,
-      path = _ref.path;
-  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useMotionConfig"])(),
-      animate = _useMotionConfig.animate,
-      springConfig = _useMotionConfig.config;
-  var animatedPath = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useAnimatedPath"])(path);
-  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_10__["useSpring"])({
-    color: color,
-    config: springConfig,
-    immediate: !animate
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_10__["animated"].path, {
-    d: animatedPath,
-    fill: fill ? fill : animatedProps.color,
-    fillOpacity: areaOpacity,
-    strokeWidth: 0,
-    style: {
-      mixBlendMode: areaBlendMode
-    }
-  });
-};
-var Areas = function Areas(_ref2) {
-  var areaGenerator = _ref2.areaGenerator,
-      areaOpacity = _ref2.areaOpacity,
-      areaBlendMode = _ref2.areaBlendMode,
-      lines = _ref2.lines;
-  var computedLines = lines.slice(0).reverse();
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("g", {
-    children: computedLines.map(function (line) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(AreaPath, _objectSpread2({
-        path: areaGenerator(line.data.map(function (d) {
-          return d.position;
-        }))
-      }, _objectSpread2({
-        areaOpacity: areaOpacity,
-        areaBlendMode: areaBlendMode
-      }, line)), line.id);
-    })
-  });
-};
-var Areas$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Areas);
-
-var LinesItem = function LinesItem(_ref) {
-  var lineGenerator = _ref.lineGenerator,
-      points = _ref.points,
-      color = _ref.color,
-      thickness = _ref.thickness;
-  var path = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return lineGenerator(points);
-  }, [lineGenerator, points]);
-  var animatedPath = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useAnimatedPath"])(path);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_10__["animated"].path, {
-    d: animatedPath,
-    fill: "none",
-    strokeWidth: thickness,
-    stroke: color
-  });
-};
-var LinesItem$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(LinesItem);
-
-var Lines = function Lines(_ref) {
-  var lines = _ref.lines,
-      lineGenerator = _ref.lineGenerator,
-      lineWidth = _ref.lineWidth;
-  return lines.slice(0).reverse().map(function (_ref2) {
-    var id = _ref2.id,
-        data = _ref2.data,
-        color = _ref2.color;
-    return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(LinesItem$1, {
-      id: id,
-      points: data.map(function (d) {
-        return d.position;
-      }),
-      lineGenerator: lineGenerator,
-      color: color,
-      thickness: lineWidth
-    }, id);
-  });
-};
-var Lines$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Lines);
-
-var SlicesItem = function SlicesItem(_ref) {
-  var slice = _ref.slice,
-      axis = _ref.axis,
-      debug = _ref.debug,
-      tooltip = _ref.tooltip,
-      isCurrent = _ref.isCurrent,
-      setCurrent = _ref.setCurrent;
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-      slice: slice,
-      axis: axis
-    }), event, 'right');
-    setCurrent(slice);
-  }, [showTooltipFromEvent, tooltip, slice]);
-  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-      slice: slice,
-      axis: axis
-    }), event, 'right');
-  }, [showTooltipFromEvent, tooltip, slice]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
-    hideTooltip();
-    setCurrent(null);
-  }, [hideTooltip]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("rect", {
-    x: slice.x0,
-    y: slice.y0,
-    width: slice.width,
-    height: slice.height,
-    stroke: "red",
-    strokeWidth: debug ? 1 : 0,
-    strokeOpacity: 0.75,
-    fill: "red",
-    fillOpacity: isCurrent && debug ? 0.35 : 0,
-    onMouseEnter: handleMouseEnter,
-    onMouseMove: handleMouseMove,
-    onMouseLeave: handleMouseLeave
-  });
-};
-var SlicesItem$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(SlicesItem);
-
-var Slices = function Slices(_ref) {
-  var slices = _ref.slices,
-      axis = _ref.axis,
-      debug = _ref.debug,
-      height = _ref.height,
-      tooltip = _ref.tooltip,
-      current = _ref.current,
-      setCurrent = _ref.setCurrent;
-  return slices.map(function (slice) {
-    return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(SlicesItem$1, {
-      slice: slice,
-      axis: axis,
-      debug: debug,
-      height: height,
-      tooltip: tooltip,
-      setCurrent: setCurrent,
-      isCurrent: current !== null && current.id === slice.id
-    }, slice.id);
-  });
-};
-var Slices$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Slices);
-
-var Points = function Points(_ref) {
-  var points = _ref.points,
-      symbol = _ref.symbol,
-      size = _ref.size,
-      borderWidth = _ref.borderWidth,
-      enableLabel = _ref.enableLabel,
-      label = _ref.label,
-      labelYOffset = _ref.labelYOffset;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getLabelGenerator"])(label);
-  var mappedPoints = points.reverse().map(function (point) {
-    var mappedPoint = {
-      id: point.id,
-      x: point.x,
-      y: point.y,
-      datum: point.data,
-      fill: point.color,
-      stroke: point.borderColor,
-      label: enableLabel ? getLabel(point.data) : null
-    };
-    return mappedPoint;
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("g", {
-    children: mappedPoints.map(function (point) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["DotsItem"], {
-        x: point.x,
-        y: point.y,
-        datum: point.datum,
-        symbol: symbol,
-        size: size,
-        color: point.fill,
-        borderWidth: borderWidth,
-        borderColor: point.stroke,
-        label: point.label,
-        labelYOffset: labelYOffset,
-        theme: theme
-      }, point.id);
-    })
-  });
-};
-var Points$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Points);
-
-var Mesh = function Mesh(_ref) {
-  var points = _ref.points,
-      width = _ref.width,
-      height = _ref.height,
-      margin = _ref.margin,
-      setCurrent = _ref.setCurrent,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseMove = _ref.onMouseMove,
-      onMouseLeave = _ref.onMouseLeave,
-      onClick = _ref.onClick,
-      tooltip = _ref.tooltip,
-      debug = _ref.debug;
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["useTooltip"])(),
-      showTooltipAt = _useTooltip.showTooltipAt,
-      hideTooltip = _useTooltip.hideTooltip;
-  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (point, event) {
-    showTooltipAt(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-      point: point
-    }), [point.x + margin.left, point.y + margin.top], 'top');
-    setCurrent(point);
-    onMouseEnter && onMouseEnter(point, event);
-  }, [setCurrent, showTooltipAt, tooltip, onMouseEnter, margin]);
-  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (point, event) {
-    showTooltipAt(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-      point: point
-    }), [point.x + margin.left, point.y + margin.top], 'top');
-    setCurrent(point);
-    onMouseMove && onMouseMove(point, event);
-  }, [setCurrent, showTooltipAt, tooltip, onMouseMove]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (point, event) {
-    hideTooltip();
-    setCurrent(null);
-    onMouseLeave && onMouseLeave(point, event);
-  }, [hideTooltip, setCurrent, onMouseLeave]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (point, event) {
-    onClick && onClick(point, event);
-  }, [onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_voronoi__WEBPACK_IMPORTED_MODULE_11__["Mesh"], {
-    nodes: points,
-    width: width,
-    height: height,
-    onMouseEnter: handleMouseEnter,
-    onMouseMove: handleMouseMove,
-    onMouseLeave: handleMouseLeave,
-    onClick: handleClick,
-    debug: debug
-  });
-};
-var Mesh$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(Mesh);
-
-var Line = function Line(props) {
-  var data = props.data,
-      xScaleSpec = props.xScale,
-      xFormat = props.xFormat,
-      yScaleSpec = props.yScale,
-      yFormat = props.yFormat,
-      layers = props.layers,
-      curve = props.curve,
-      areaBaselineValue = props.areaBaselineValue,
-      colors = props.colors,
-      partialMargin = props.margin,
-      width = props.width,
-      height = props.height,
-      axisTop = props.axisTop,
-      axisRight = props.axisRight,
-      axisBottom = props.axisBottom,
-      axisLeft = props.axisLeft,
-      enableGridX = props.enableGridX,
-      enableGridY = props.enableGridY,
-      gridXValues = props.gridXValues,
-      gridYValues = props.gridYValues,
-      lineWidth = props.lineWidth,
-      enableArea = props.enableArea,
-      areaOpacity = props.areaOpacity,
-      areaBlendMode = props.areaBlendMode,
-      enablePoints = props.enablePoints,
-      pointSymbol = props.pointSymbol,
-      pointSize = props.pointSize,
-      pointColor = props.pointColor,
-      pointBorderWidth = props.pointBorderWidth,
-      pointBorderColor = props.pointBorderColor,
-      enablePointLabel = props.enablePointLabel,
-      pointLabel = props.pointLabel,
-      pointLabelYOffset = props.pointLabelYOffset,
-      defs = props.defs,
-      fill = props.fill,
-      markers = props.markers,
-      legends = props.legends,
-      isInteractive = props.isInteractive,
-      useMesh = props.useMesh,
-      debugMesh = props.debugMesh,
-      onMouseEnter = props.onMouseEnter,
-      onMouseMove = props.onMouseMove,
-      onMouseLeave = props.onMouseLeave,
-      onClick = props.onClick,
-      tooltip = props.tooltip,
-      enableSlices = props.enableSlices,
-      debugSlices = props.debugSlices,
-      sliceTooltip = props.sliceTooltip,
-      enableCrosshair = props.enableCrosshair,
-      crosshairType = props.crosshairType,
-      role = props.role;
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight;
-  var _useLine = useLine({
-    data: data,
-    xScale: xScaleSpec,
-    xFormat: xFormat,
-    yScale: yScaleSpec,
-    yFormat: yFormat,
-    width: innerWidth,
-    height: innerHeight,
-    colors: colors,
-    curve: curve,
-    areaBaselineValue: areaBaselineValue,
-    pointColor: pointColor,
-    pointBorderColor: pointBorderColor,
-    enableSlices: enableSlices
-  }),
-      legendData = _useLine.legendData,
-      toggleSerie = _useLine.toggleSerie,
-      lineGenerator = _useLine.lineGenerator,
-      areaGenerator = _useLine.areaGenerator,
-      series = _useLine.series,
-      xScale = _useLine.xScale,
-      yScale = _useLine.yScale,
-      slices = _useLine.slices,
-      points = _useLine.points;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var getPointColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(pointColor, theme);
-  var getPointBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_2__["useInheritedColor"])(pointBorderColor, theme);
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      currentPoint = _useState2[0],
-      setCurrentPoint = _useState2[1];
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState4 = _slicedToArray(_useState3, 2),
-      currentSlice = _useState4[0],
-      setCurrentSlice = _useState4[1];
-  var layerById = {
-    grid: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_axes__WEBPACK_IMPORTED_MODULE_3__["Grid"], {
-      theme: theme,
-      width: innerWidth,
-      height: innerHeight,
-      xScale: enableGridX ? xScale : null,
-      yScale: enableGridY ? yScale : null,
-      xValues: gridXValues,
-      yValues: gridYValues
-    }, "grid"),
-    markers: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["CartesianMarkers"], {
-      markers: markers,
-      width: innerWidth,
-      height: innerHeight,
-      xScale: xScale,
-      yScale: yScale,
-      theme: theme
-    }, "markers"),
-    axes: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_axes__WEBPACK_IMPORTED_MODULE_3__["Axes"], {
-      xScale: xScale,
-      yScale: yScale,
-      width: innerWidth,
-      height: innerHeight,
-      theme: theme,
-      top: axisTop,
-      right: axisRight,
-      bottom: axisBottom,
-      left: axisLeft
-    }, "axes"),
-    areas: null,
-    lines: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Lines$1, {
-      lines: series,
-      lineGenerator: lineGenerator,
-      lineWidth: lineWidth
-    }, "lines"),
-    slices: null,
-    points: null,
-    crosshair: null,
-    mesh: null,
-    legends: legends.map(function (legend, i) {
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_4__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
-        containerWidth: innerWidth,
-        containerHeight: innerHeight,
-        data: legend.data || legendData,
-        theme: theme,
-        toggleSerie: legend.toggleSerie ? toggleSerie : undefined
-      }), "legend.".concat(i));
-    })
-  };
-  var boundDefs = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["bindDefs"])(defs, series, fill);
-  if (enableArea) {
-    layerById.areas = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Areas$1, {
-      areaGenerator: areaGenerator,
-      areaOpacity: areaOpacity,
-      areaBlendMode: areaBlendMode,
-      lines: series
-    }, "areas");
-  }
-  if (isInteractive && enableSlices !== false) {
-    layerById.slices = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Slices$1, {
-      slices: slices,
-      axis: enableSlices,
-      debug: debugSlices,
-      height: innerHeight,
-      tooltip: sliceTooltip,
-      current: currentSlice,
-      setCurrent: setCurrentSlice
-    }, "slices");
-  }
-  if (enablePoints) {
-    layerById.points = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Points$1, {
-      points: points,
-      symbol: pointSymbol,
-      size: pointSize,
-      color: getPointColor,
-      borderWidth: pointBorderWidth,
-      borderColor: getPointBorderColor,
-      enableLabel: enablePointLabel,
-      label: pointLabel,
-      labelYOffset: pointLabelYOffset
-    }, "points");
-  }
-  if (isInteractive && enableCrosshair) {
-    if (currentPoint !== null) {
-      layerById.crosshair = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["Crosshair"], {
-        width: innerWidth,
-        height: innerHeight,
-        x: currentPoint.x,
-        y: currentPoint.y,
-        type: crosshairType
-      }, "crosshair");
-    }
-    if (currentSlice !== null) {
-      layerById.crosshair = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["Crosshair"], {
-        width: innerWidth,
-        height: innerHeight,
-        x: currentSlice.x,
-        y: currentSlice.y,
-        type: enableSlices
-      }, "crosshair");
-    }
-  }
-  if (isInteractive && useMesh && enableSlices === false) {
-    layerById.mesh = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Mesh$1, {
-      points: points,
-      width: innerWidth,
-      height: innerHeight,
-      margin: margin,
-      current: currentPoint,
-      setCurrent: setCurrentPoint,
-      onMouseEnter: onMouseEnter,
-      onMouseMove: onMouseMove,
-      onMouseLeave: onMouseLeave,
-      onClick: onClick,
-      tooltip: tooltip,
-      debug: debugMesh
-    }, "mesh");
-  }
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["SvgWrapper"], {
-    defs: boundDefs,
-    width: outerWidth,
-    height: outerHeight,
-    margin: margin,
-    role: role,
-    children: layers.map(function (layer, i) {
-      if (typeof layer === 'function') {
-        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
-          children: layer(_objectSpread2(_objectSpread2({}, props), {}, {
-            innerWidth: innerWidth,
-            innerHeight: innerHeight,
-            series: series,
-            slices: slices,
-            points: points,
-            xScale: xScale,
-            yScale: yScale,
-            lineGenerator: lineGenerator,
-            areaGenerator: areaGenerator,
-            currentPoint: currentPoint,
-            setCurrentPoint: setCurrentPoint,
-            currentSlice: currentSlice,
-            setCurrentSlice: setCurrentSlice
-          }))
-        }, i);
-      }
-      return layerById[layer];
-    })
-  });
-};
-Line.defaultProps = LineDefaultProps;
-var Line$1 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["withContainer"])(Line);
-
-var ResponsiveLine = function ResponsiveLine(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(Line$1, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
-};
-
-var LineCanvas = function LineCanvas(_ref) {
-  var width = _ref.width,
-      height = _ref.height,
-      partialMargin = _ref.margin,
-      pixelRatio = _ref.pixelRatio,
-      data = _ref.data,
-      xScaleSpec = _ref.xScale,
-      xFormat = _ref.xFormat,
-      yScaleSpec = _ref.yScale,
-      yFormat = _ref.yFormat,
-      curve = _ref.curve,
-      layers = _ref.layers,
-      colors = _ref.colors,
-      lineWidth = _ref.lineWidth,
-      enableArea = _ref.enableArea,
-      areaBaselineValue = _ref.areaBaselineValue,
-      areaOpacity = _ref.areaOpacity,
-      enablePoints = _ref.enablePoints,
-      pointSize = _ref.pointSize,
-      pointColor = _ref.pointColor,
-      pointBorderWidth = _ref.pointBorderWidth,
-      pointBorderColor = _ref.pointBorderColor,
-      enableGridX = _ref.enableGridX,
-      gridXValues = _ref.gridXValues,
-      enableGridY = _ref.enableGridY,
-      gridYValues = _ref.gridYValues,
-      axisTop = _ref.axisTop,
-      axisRight = _ref.axisRight,
-      axisBottom = _ref.axisBottom,
-      axisLeft = _ref.axisLeft,
-      legends = _ref.legends,
-      isInteractive = _ref.isInteractive,
-      debugMesh = _ref.debugMesh,
-      onMouseLeave = _ref.onMouseLeave,
-      onClick = _ref.onClick,
-      tooltip = _ref.tooltip,
-      canvasRef = _ref.canvasRef;
-  var canvasEl = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight,
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight;
-  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useTheme"])();
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      currentPoint = _useState2[0],
-      setCurrentPoint = _useState2[1];
-  var _useLine = useLine({
-    data: data,
-    xScale: xScaleSpec,
-    xFormat: xFormat,
-    yScale: yScaleSpec,
-    yFormat: yFormat,
-    width: innerWidth,
-    height: innerHeight,
-    colors: colors,
-    curve: curve,
-    areaBaselineValue: areaBaselineValue,
-    pointColor: pointColor,
-    pointBorderColor: pointBorderColor
-  }),
-      lineGenerator = _useLine.lineGenerator,
-      areaGenerator = _useLine.areaGenerator,
-      series = _useLine.series,
-      xScale = _useLine.xScale,
-      yScale = _useLine.yScale,
-      points = _useLine.points;
-  var _useVoronoiMesh = Object(_nivo_voronoi__WEBPACK_IMPORTED_MODULE_11__["useVoronoiMesh"])({
-    points: points,
-    width: innerWidth,
-    height: innerHeight,
-    debug: debugMesh
-  }),
-      delaunay = _useVoronoiMesh.delaunay,
-      voronoi = _useVoronoiMesh.voronoi;
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (canvasRef) {
-      canvasRef.current = canvasEl.current;
-    }
-    canvasEl.current.width = outerWidth * pixelRatio;
-    canvasEl.current.height = outerHeight * pixelRatio;
-    var ctx = canvasEl.current.getContext('2d');
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.fillStyle = theme.background;
-    ctx.fillRect(0, 0, outerWidth, outerHeight);
-    ctx.translate(margin.left, margin.top);
-    layers.forEach(function (layer) {
-      if (typeof layer === 'function') {
-        layer({
-          ctx: ctx,
-          innerWidth: innerWidth,
-          innerHeight: innerHeight,
-          series: series,
-          points: points,
-          xScale: xScale,
-          yScale: yScale,
-          lineWidth: lineWidth,
-          lineGenerator: lineGenerator,
-          areaGenerator: areaGenerator,
-          currentPoint: currentPoint,
-          setCurrentPoint: setCurrentPoint
-        });
-      }
-      if (layer === 'grid' && theme.grid.line.strokeWidth > 0) {
-        ctx.lineWidth = theme.grid.line.strokeWidth;
-        ctx.strokeStyle = theme.grid.line.stroke;
-        enableGridX && Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_3__["renderGridLinesToCanvas"])(ctx, {
-          width: innerWidth,
-          height: innerHeight,
-          scale: xScale,
-          axis: 'x',
-          values: gridXValues
-        });
-        enableGridY && Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_3__["renderGridLinesToCanvas"])(ctx, {
-          width: innerWidth,
-          height: innerHeight,
-          scale: yScale,
-          axis: 'y',
-          values: gridYValues
-        });
-      }
-      if (layer === 'axes') {
-        Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_3__["renderAxesToCanvas"])(ctx, {
-          xScale: xScale,
-          yScale: yScale,
-          width: innerWidth,
-          height: innerHeight,
-          top: axisTop,
-          right: axisRight,
-          bottom: axisBottom,
-          left: axisLeft,
-          theme: theme
-        });
-      }
-      if (layer === 'areas' && enableArea === true) {
-        ctx.save();
-        ctx.globalAlpha = areaOpacity;
-        areaGenerator.context(ctx);
-        series.forEach(function (serie) {
-          ctx.fillStyle = serie.color;
-          ctx.beginPath();
-          areaGenerator(serie.data.map(function (d) {
-            return d.position;
-          }));
-          ctx.fill();
-        });
-        ctx.restore();
-      }
-      if (layer === 'lines') {
-        lineGenerator.context(ctx);
-        series.forEach(function (serie) {
-          ctx.strokeStyle = serie.color;
-          ctx.lineWidth = lineWidth;
-          ctx.beginPath();
-          lineGenerator(serie.data.map(function (d) {
-            return d.position;
-          }));
-          ctx.stroke();
-        });
-      }
-      if (layer === 'points' && enablePoints === true && pointSize > 0) {
-        points.forEach(function (point) {
-          ctx.fillStyle = point.color;
-          ctx.beginPath();
-          ctx.arc(point.x, point.y, pointSize / 2, 0, 2 * Math.PI);
-          ctx.fill();
-          if (pointBorderWidth > 0) {
-            ctx.strokeStyle = point.borderColor;
-            ctx.lineWidth = pointBorderWidth;
-            ctx.stroke();
-          }
-        });
-      }
-      if (layer === 'mesh' && debugMesh === true) {
-        Object(_nivo_voronoi__WEBPACK_IMPORTED_MODULE_11__["renderVoronoiToCanvas"])(ctx, voronoi);
-        if (currentPoint) {
-          Object(_nivo_voronoi__WEBPACK_IMPORTED_MODULE_11__["renderVoronoiCellToCanvas"])(ctx, voronoi, currentPoint.index);
-        }
-      }
-      if (layer === 'legends') {
-        var legendData = series.map(function (serie) {
-          return {
-            id: serie.id,
-            label: serie.id,
-            color: serie.color
-          };
-        }).reverse();
-        legends.forEach(function (legend) {
-          Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_4__["renderLegendToCanvas"])(ctx, _objectSpread2(_objectSpread2({}, legend), {}, {
-            data: legend.data || legendData,
-            containerWidth: innerWidth,
-            containerHeight: innerHeight,
-            theme: theme
-          }));
-        });
-      }
-    });
-  }, [canvasEl, outerWidth, outerHeight, layers, theme, lineGenerator, series, xScale, yScale, enableGridX, gridXValues, enableGridY, gridYValues, axisTop, axisRight, axisBottom, axisLeft, legends, points, enablePoints, pointSize, currentPoint]);
-  var getPointFromMouseEvent = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getRelativeCursor"])(canvasEl.current, event),
-        _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
-        x = _getRelativeCursor2[0],
-        y = _getRelativeCursor2[1];
-    if (!Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["isCursorInRect"])(margin.left, margin.top, innerWidth, innerHeight, x, y)) return null;
-    var pointIndex = delaunay.find(x - margin.left, y - margin.top);
-    return points[pointIndex];
-  }, [canvasEl, margin, innerWidth, innerHeight, delaunay]);
-  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_5__["useTooltip"])(),
-      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
-      hideTooltip = _useTooltip.hideTooltip;
-  var handleMouseHover = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    var point = getPointFromMouseEvent(event);
-    setCurrentPoint(point);
-    if (point) {
-      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(tooltip, {
-        point: point
-      }), event);
-    } else {
-      hideTooltip();
-    }
-  }, [getPointFromMouseEvent, setCurrentPoint, showTooltipFromEvent, hideTooltip, tooltip]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    hideTooltip();
-    setCurrentPoint(null);
-    currentPoint && onMouseLeave && onMouseLeave(currentPoint, event);
-  }, [hideTooltip, setCurrentPoint, onMouseLeave]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    if (onClick) {
-      var point = getPointFromMouseEvent(event);
-      point && onClick(point, event);
-    }
-  }, [getPointFromMouseEvent, onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])("canvas", {
-    ref: canvasEl,
-    width: outerWidth * pixelRatio,
-    height: outerHeight * pixelRatio,
-    style: {
-      width: outerWidth,
-      height: outerHeight,
-      cursor: isInteractive ? 'auto' : 'normal'
-    },
-    onMouseEnter: isInteractive ? handleMouseHover : undefined,
-    onMouseMove: isInteractive ? handleMouseHover : undefined,
-    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
-    onClick: isInteractive ? handleClick : undefined
-  });
-};
-LineCanvas.defaultProps = LineCanvasDefaultProps;
-var LineCanvasWithContainer = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["withContainer"])(LineCanvas);
-var LineCanvas$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(function (props, ref) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(LineCanvasWithContainer, _objectSpread2(_objectSpread2({}, props), {}, {
-    canvasRef: ref
-  }));
-});
-
-var ResponsiveLineCanvas = function ResponsiveLineCanvas(props, ref) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__["jsx"])(LineCanvas$1, _objectSpread2(_objectSpread2({
-        width: width,
-        height: height
-      }, props), {}, {
-        ref: ref
-      }));
-    }
-  });
-};
-var ResponsiveLineCanvas$1 = Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(ResponsiveLineCanvas);
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/@nivo/pie/dist/nivo-pie.es.js":
 /*!****************************************************!*\
   !*** ./node_modules/@nivo/pie/dist/nivo-pie.es.js ***!
@@ -16607,772 +12013,6 @@ var withState = function withState(stateName, stateUpdaterName, initialState) {
 
 /***/ }),
 
-/***/ "./node_modules/@nivo/scales/dist/nivo-scales.es.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@nivo/scales/dist/nivo-scales.es.js ***!
-  \**********************************************************/
-/*! exports provided: castBandScale, castLinearScale, centerScale, compareDateValues, compareValues, computeScale, computeXYScalesForSeries, createBandScale, createDateNormalizer, createLinearScale, createLogScale, createPointScale, createPrecisionMethod, createSymlogScale, createTimeScale, generateSeriesAxis, generateSeriesXY, getOtherAxis, getScaleTicks, precisionCutOffs, precisionCutOffsByType, stackAxis, timePrecisions */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castBandScale", function() { return castBandScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castLinearScale", function() { return castLinearScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "centerScale", function() { return centerScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compareDateValues", function() { return compareDateValues; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compareValues", function() { return compareValues; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeScale", function() { return computeScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeXYScalesForSeries", function() { return computeXYScalesForSeries; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBandScale", function() { return createBandScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createDateNormalizer", function() { return createDateNormalizer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLinearScale", function() { return createLinearScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLogScale", function() { return createLogScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPointScale", function() { return createPointScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createPrecisionMethod", function() { return createPrecisionMethod; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSymlogScale", function() { return createSymlogScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTimeScale", function() { return createTimeScale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateSeriesAxis", function() { return generateSeriesAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generateSeriesXY", function() { return generateSeriesXY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOtherAxis", function() { return getOtherAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getScaleTicks", function() { return getScaleTicks; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "precisionCutOffs", function() { return precisionCutOffs; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "precisionCutOffsByType", function() { return precisionCutOffsByType; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stackAxis", function() { return stackAxis; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timePrecisions", function() { return timePrecisions; });
-/* harmony import */ var lodash_uniq__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/uniq */ "./node_modules/lodash/uniq.js");
-/* harmony import */ var lodash_uniq__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_uniq__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var lodash_uniqBy__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/uniqBy */ "./node_modules/lodash/uniqBy.js");
-/* harmony import */ var lodash_uniqBy__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_uniqBy__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash/sortBy */ "./node_modules/lodash/sortBy.js");
-/* harmony import */ var lodash_sortBy__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash_sortBy__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var lodash_last__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash/last */ "./node_modules/lodash/last.js");
-/* harmony import */ var lodash_last__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_last__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lodash/isDate */ "./node_modules/lodash/isDate.js");
-/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(lodash_isDate__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var d3_time_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-time-format */ "./node_modules/d3-time-format/src/index.js");
-/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
-/* harmony import */ var d3_time__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! d3-time */ "./node_modules/d3-time/src/index.js");
-
-
-
-
-
-
-
-
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-  return arr2;
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-var timePrecisions = ['millisecond', 'second', 'minute', 'hour', 'day', 'month', 'year'];
-var precisionCutOffs = [function (date) {
-  return date.setMilliseconds(0);
-}, function (date) {
-  return date.setSeconds(0);
-}, function (date) {
-  return date.setMinutes(0);
-}, function (date) {
-  return date.setHours(0);
-}, function (date) {
-  return date.setDate(1);
-}, function (date) {
-  return date.setMonth(0);
-}];
-var precisionCutOffsByType = {
-  millisecond: [],
-  second: precisionCutOffs.slice(0, 1),
-  minute: precisionCutOffs.slice(0, 2),
-  hour: precisionCutOffs.slice(0, 3),
-  day: precisionCutOffs.slice(0, 4),
-  month: precisionCutOffs.slice(0, 5),
-  year: precisionCutOffs.slice(0, 6)
-};
-var createPrecisionMethod = function createPrecisionMethod(precision) {
-  return function (date) {
-    precisionCutOffsByType[precision].forEach(function (cutOff) {
-      cutOff(date);
-    });
-    return date;
-  };
-};
-var createDateNormalizer = function createDateNormalizer(_ref) {
-  var _ref$format = _ref.format,
-      format = _ref$format === void 0 ? 'native' : _ref$format,
-      _ref$precision = _ref.precision,
-      precision = _ref$precision === void 0 ? 'millisecond' : _ref$precision,
-      _ref$useUTC = _ref.useUTC,
-      useUTC = _ref$useUTC === void 0 ? true : _ref$useUTC;
-  var precisionFn = createPrecisionMethod(precision);
-  return function (value) {
-    if (value === undefined) {
-      return value;
-    }
-
-    if (format === 'native' || value instanceof Date) {
-      return precisionFn(value);
-    }
-
-    var parseTime = useUTC ? Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["utcParse"])(format) : Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeParse"])(format);
-    return precisionFn(parseTime(value));
-  };
-};
-
-var createLinearScale = function createLinearScale(_ref, data, size, axis) {
-  var _ref$min = _ref.min,
-      min = _ref$min === void 0 ? 0 : _ref$min,
-      _ref$max = _ref.max,
-      max = _ref$max === void 0 ? 'auto' : _ref$max,
-      _ref$stacked = _ref.stacked,
-      stacked = _ref$stacked === void 0 ? false : _ref$stacked,
-      _ref$reverse = _ref.reverse,
-      reverse = _ref$reverse === void 0 ? false : _ref$reverse,
-      _ref$clamp = _ref.clamp,
-      clamp = _ref$clamp === void 0 ? false : _ref$clamp,
-      _ref$nice = _ref.nice,
-      nice = _ref$nice === void 0 ? false : _ref$nice;
-  var minValue;
-
-  if (min === 'auto') {
-    var _data$minStacked;
-
-    minValue = stacked === true ? (_data$minStacked = data.minStacked) !== null && _data$minStacked !== void 0 ? _data$minStacked : 0 : data.min;
-  } else {
-    minValue = min;
-  }
-
-  var maxValue;
-
-  if (max === 'auto') {
-    var _data$maxStacked;
-
-    maxValue = stacked === true ? (_data$maxStacked = data.maxStacked) !== null && _data$maxStacked !== void 0 ? _data$maxStacked : 0 : data.max;
-  } else {
-    maxValue = max;
-  }
-
-  var scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleLinear"])().rangeRound(axis === 'x' ? [0, size] : [size, 0]).domain(reverse ? [maxValue, minValue] : [minValue, maxValue]).clamp(clamp);
-  if (nice === true) scale.nice();else if (typeof nice === 'number') scale.nice(nice);
-  return castLinearScale(scale, stacked);
-};
-var castLinearScale = function castLinearScale(scale) {
-  var stacked = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  var typedScale = scale;
-  typedScale.type = 'linear';
-  typedScale.stacked = stacked;
-  return typedScale;
-};
-
-var createPointScale = function createPointScale(_spec, data, size) {
-  var scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scalePoint"])().range([0, size]).domain(data.all);
-  var typedScale = scale;
-  typedScale.type = 'point';
-  return typedScale;
-};
-
-var createBandScale = function createBandScale(_ref, data, size, axis) {
-  var _ref$round = _ref.round,
-      round = _ref$round === void 0 ? true : _ref$round;
-  var scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleBand"])().range(axis === 'x' ? [0, size] : [size, 0]).domain(data.all).round(round);
-  return castBandScale(scale);
-};
-var castBandScale = function castBandScale(scale) {
-  var typedScale = scale;
-  typedScale.type = 'band';
-  return typedScale;
-};
-
-var createTimeScale = function createTimeScale(_ref, data, size) {
-  var _ref$format = _ref.format,
-      format = _ref$format === void 0 ? 'native' : _ref$format,
-      _ref$precision = _ref.precision,
-      precision = _ref$precision === void 0 ? 'millisecond' : _ref$precision,
-      _ref$min = _ref.min,
-      min = _ref$min === void 0 ? 'auto' : _ref$min,
-      _ref$max = _ref.max,
-      max = _ref$max === void 0 ? 'auto' : _ref$max,
-      _ref$useUTC = _ref.useUTC,
-      useUTC = _ref$useUTC === void 0 ? true : _ref$useUTC,
-      _ref$nice = _ref.nice,
-      nice = _ref$nice === void 0 ? false : _ref$nice;
-  var normalize = createDateNormalizer({
-    format: format,
-    precision: precision,
-    useUTC: useUTC
-  });
-  var minValue;
-
-  if (min === 'auto') {
-    minValue = normalize(data.min);
-  } else if (format !== 'native') {
-    minValue = normalize(min);
-  } else {
-    minValue = min;
-  }
-
-  var maxValue;
-
-  if (max === 'auto') {
-    maxValue = normalize(data.max);
-  } else if (format !== 'native') {
-    maxValue = normalize(max);
-  } else {
-    maxValue = max;
-  }
-
-  var scale = useUTC ? Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleUtc"])() : Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleTime"])();
-  scale.range([0, size]);
-  if (minValue && maxValue) scale.domain([minValue, maxValue]);
-  if (nice === true) scale.nice();else if (typeof nice === 'object' || typeof nice === 'number') scale.nice(nice);
-  var typedScale = scale;
-  typedScale.type = 'time';
-  typedScale.useUTC = useUTC;
-  return typedScale;
-};
-
-var createLogScale = function createLogScale(_ref, data, size, axis) {
-  var _ref$base = _ref.base,
-      base = _ref$base === void 0 ? 10 : _ref$base,
-      _ref$min = _ref.min,
-      min = _ref$min === void 0 ? 'auto' : _ref$min,
-      _ref$max = _ref.max,
-      max = _ref$max === void 0 ? 'auto' : _ref$max;
-  var hasZero = data.all.some(function (v) {
-    return v === 0;
-  });
-
-  if (hasZero) {
-    throw new Error("a log scale domain must not include or cross zero");
-  }
-
-  var sign;
-  var hasMixedSign = false;
-  data.all.filter(function (v) {
-    return v != null;
-  }).forEach(function (v) {
-    if (hasMixedSign) return;
-
-    if (sign === undefined) {
-      sign = Math.sign(v);
-    } else if (Math.sign(v) !== sign) {
-      hasMixedSign = true;
-    }
-  });
-
-  if (hasMixedSign) {
-    throw new Error("a log scale domain must be strictly-positive or strictly-negative");
-  }
-
-  var minValue;
-
-  if (min === 'auto') {
-    minValue = data.min;
-  } else {
-    minValue = min;
-  }
-
-  var maxValue;
-
-  if (max === 'auto') {
-    maxValue = data.max;
-  } else {
-    maxValue = max;
-  }
-
-  var scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleLog"])().domain([minValue, maxValue]).rangeRound(axis === 'x' ? [0, size] : [size, 0]).base(base).nice();
-  var typedScale = scale;
-  typedScale.type = 'log';
-  return scale;
-};
-
-var createSymlogScale = function createSymlogScale(_ref, data, size, axis) {
-  var _ref$constant = _ref.constant,
-      constant = _ref$constant === void 0 ? 1 : _ref$constant,
-      _ref$min = _ref.min,
-      min = _ref$min === void 0 ? 'auto' : _ref$min,
-      _ref$max = _ref.max,
-      max = _ref$max === void 0 ? 'auto' : _ref$max,
-      _ref$reverse = _ref.reverse,
-      reverse = _ref$reverse === void 0 ? false : _ref$reverse;
-  var minValue;
-
-  if (min === 'auto') {
-    minValue = data.min;
-  } else {
-    minValue = min;
-  }
-
-  var maxValue;
-
-  if (max === 'auto') {
-    maxValue = data.max;
-  } else {
-    maxValue = max;
-  }
-
-  var scale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleSymlog"])().constant(constant).rangeRound(axis === 'x' ? [0, size] : [size, 0]).nice();
-  if (reverse === true) scale.domain([maxValue, minValue]);else scale.domain([minValue, maxValue]);
-  var typedScale = scale;
-  typedScale.type = 'symlog';
-  return typedScale;
-};
-
-var getOtherAxis = function getOtherAxis(axis) {
-  return axis === 'x' ? 'y' : 'x';
-};
-var compareValues = function compareValues(a, b) {
-  return a === b;
-};
-var compareDateValues = function compareDateValues(a, b) {
-  return a.getTime() === b.getTime();
-};
-function computeScale(spec, data, size, axis) {
-  switch (spec.type) {
-    case 'linear':
-      return createLinearScale(spec, data, size, axis);
-
-    case 'point':
-      return createPointScale(spec, data, size);
-
-    case 'band':
-      return createBandScale(spec, data, size, axis);
-
-    case 'time':
-      return createTimeScale(spec, data, size);
-
-    case 'log':
-      return createLogScale(spec, data, size, axis);
-
-    case 'symlog':
-      return createSymlogScale(spec, data, size, axis);
-
-    default:
-      throw new Error('invalid scale spec');
-  }
-}
-
-var nestSerieData = function nestSerieData(serie) {
-  return _objectSpread2(_objectSpread2({}, serie), {}, {
-    data: serie.data.map(function (d) {
-      return {
-        data: _objectSpread2({}, d)
-      };
-    })
-  });
-};
-
-var getDatumAxisPosition = function getDatumAxisPosition(datum, axis, scale) {
-  var _scale;
-
-  if ('stacked' in scale && scale.stacked) {
-    var stackedValue = datum.data[axis === 'x' ? 'xStacked' : 'yStacked'];
-
-    if (stackedValue === null || stackedValue === undefined) {
-      return null;
-    }
-
-    return scale(stackedValue);
-  }
-
-  return (_scale = scale(datum.data[axis])) !== null && _scale !== void 0 ? _scale : null;
-};
-
-var computeXYScalesForSeries = function computeXYScalesForSeries(series, xScaleSpec, yScaleSpec, width, height) {
-  var nestedSeries = series.map(function (serie) {
-    return nestSerieData(serie);
-  });
-  var xy = generateSeriesXY(nestedSeries, xScaleSpec, yScaleSpec);
-
-  if ('stacked' in xScaleSpec && xScaleSpec.stacked === true) {
-    stackX(xy, nestedSeries);
-  }
-
-  if ('stacked' in yScaleSpec && yScaleSpec.stacked === true) {
-    stackY(xy, nestedSeries);
-  }
-
-  var xScale = computeScale(xScaleSpec, xy.x, width, 'x');
-  var yScale = computeScale(yScaleSpec, xy.y, height, 'y');
-  var computedSeries = nestedSeries.map(function (serie) {
-    return _objectSpread2(_objectSpread2({}, serie), {}, {
-      data: serie.data.map(function (datum) {
-        return _objectSpread2(_objectSpread2({}, datum), {}, {
-          position: {
-            x: getDatumAxisPosition(datum, 'x', xScale),
-            y: getDatumAxisPosition(datum, 'y', yScale)
-          }
-        });
-      })
-    });
-  });
-  return _objectSpread2(_objectSpread2({}, xy), {}, {
-    series: computedSeries,
-    xScale: xScale,
-    yScale: yScale
-  });
-};
-var generateSeriesXY = function generateSeriesXY(series, xScaleSpec, yScaleSpec) {
-  return {
-    x: generateSeriesAxis(series, 'x', xScaleSpec),
-    y: generateSeriesAxis(series, 'y', yScaleSpec)
-  };
-};
-var generateSeriesAxis = function generateSeriesAxis(series, axis, scaleSpec) {
-  var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-      _ref$getValue = _ref.getValue,
-      getValue = _ref$getValue === void 0 ? function (d) {
-    return d.data[axis];
-  } : _ref$getValue,
-      _ref$setValue = _ref.setValue,
-      setValue = _ref$setValue === void 0 ? function (d, v) {
-    d.data[axis] = v;
-  } : _ref$setValue;
-
-  if (scaleSpec.type === 'linear') {
-    series.forEach(function (serie) {
-      serie.data.forEach(function (d) {
-        var value = getValue(d);
-
-        if (value) {
-          setValue(d, parseFloat(String(value)));
-        }
-      });
-    });
-  } else if (scaleSpec.type === 'time' && scaleSpec.format !== 'native') {
-    var parseTime = createDateNormalizer(scaleSpec);
-    series.forEach(function (serie) {
-      serie.data.forEach(function (d) {
-        var value = getValue(d);
-
-        if (value) {
-          setValue(d, parseTime(value));
-        }
-      });
-    });
-  }
-
-  var values = [];
-  series.forEach(function (serie) {
-    serie.data.forEach(function (d) {
-      values.push(getValue(d));
-    });
-  });
-
-  switch (scaleSpec.type) {
-    case 'linear':
-      {
-        var all = lodash_sortBy__WEBPACK_IMPORTED_MODULE_2___default()(lodash_uniq__WEBPACK_IMPORTED_MODULE_0___default()(values).filter(function (v) {
-          return v !== null;
-        }), function (v) {
-          return v;
-        });
-        return {
-          all: all,
-          min: Math.min.apply(Math, _toConsumableArray(all)),
-          max: Math.max.apply(Math, _toConsumableArray(all))
-        };
-      }
-
-    case 'time':
-      {
-        var _all = lodash_uniqBy__WEBPACK_IMPORTED_MODULE_1___default()(values, function (v) {
-          return v.getTime();
-        }).slice(0).sort(function (a, b) {
-          return b.getTime() - a.getTime();
-        }).reverse();
-
-        return {
-          all: _all,
-          min: _all[0],
-          max: lodash_last__WEBPACK_IMPORTED_MODULE_3___default()(_all)
-        };
-      }
-
-    default:
-      {
-        var _all2 = lodash_uniq__WEBPACK_IMPORTED_MODULE_0___default()(values);
-
-        return {
-          all: _all2,
-          min: _all2[0],
-          max: lodash_last__WEBPACK_IMPORTED_MODULE_3___default()(_all2)
-        };
-      }
-  }
-};
-var stackAxis = function stackAxis(axis, xy, series) {
-  var otherAxis = getOtherAxis(axis);
-  var all = [];
-  xy[otherAxis].all.forEach(function (v) {
-    var compare = lodash_isDate__WEBPACK_IMPORTED_MODULE_4___default()(v) ? compareDateValues : compareValues;
-    var stack = [];
-    series.forEach(function (serie) {
-      var datum = serie.data.find(function (d) {
-        return compare(d.data[otherAxis], v);
-      });
-      var value = null;
-      var stackValue = null;
-
-      if (datum !== undefined) {
-        value = datum.data[axis];
-
-        if (value !== null) {
-          var head = lodash_last__WEBPACK_IMPORTED_MODULE_3___default()(stack);
-
-          if (head === undefined) {
-            stackValue = value;
-          } else if (head !== null) {
-            stackValue = head + value;
-          }
-        }
-
-        datum.data[axis === 'x' ? 'xStacked' : 'yStacked'] = stackValue;
-      }
-
-      stack.push(stackValue);
-
-      if (stackValue !== null) {
-        all.push(stackValue);
-      }
-    });
-  });
-  xy[axis].minStacked = Math.min.apply(Math, all);
-  xy[axis].maxStacked = Math.max.apply(Math, all);
-};
-
-var stackX = function stackX(xy, series) {
-  return stackAxis('x', xy, series);
-};
-
-var stackY = function stackY(xy, series) {
-  return stackAxis('y', xy, series);
-};
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-var centerScale = function centerScale(scale) {
-  var bandwidth = scale.bandwidth();
-  if (bandwidth === 0) return scale;
-  var offset = bandwidth / 2;
-
-  if (scale.round()) {
-    offset = Math.round(offset);
-  }
-
-  return function (d) {
-    var _scale;
-
-    return ((_scale = scale(d)) !== null && _scale !== void 0 ? _scale : 0) + offset;
-  };
-};
-var timeDay = Object(d3_time__WEBPACK_IMPORTED_MODULE_7__["timeInterval"])(function (date) {
-  return date.setHours(0, 0, 0, 0);
-}, function (date, step) {
-  return date.setDate(date.getDate() + step);
-}, function (start, end) {
-  return (end.getTime() - start.getTime()) / 864e5;
-}, function (date) {
-  return Math.floor(date.getTime() / 864e5);
-});
-var utcDay = Object(d3_time__WEBPACK_IMPORTED_MODULE_7__["timeInterval"])(function (date) {
-  return date.setUTCHours(0, 0, 0, 0);
-}, function (date, step) {
-  return date.setUTCDate(date.getUTCDate() + step);
-}, function (start, end) {
-  return (end.getTime() - start.getTime()) / 864e5;
-}, function (date) {
-  return Math.floor(date.getTime() / 864e5);
-});
-var timeByType = {
-  millisecond: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeMillisecond"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcMillisecond"]],
-  second: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeSecond"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcSecond"]],
-  minute: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeMinute"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcMinute"]],
-  hour: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeHour"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcHour"]],
-  day: [timeDay, utcDay],
-  week: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeWeek"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcWeek"]],
-  sunday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeSunday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcSunday"]],
-  monday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeMonday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcMonday"]],
-  tuesday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeTuesday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcTuesday"]],
-  wednesday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeWednesday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcWednesday"]],
-  thursday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeThursday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcThursday"]],
-  friday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeFriday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcFriday"]],
-  saturday: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeSaturday"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcSaturday"]],
-  month: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeMonth"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcMonth"]],
-  year: [d3_time__WEBPACK_IMPORTED_MODULE_7__["timeYear"], d3_time__WEBPACK_IMPORTED_MODULE_7__["utcYear"]]
-};
-var timeTypes = Object.keys(timeByType);
-var timeIntervalRegexp = new RegExp("^every\\s*(\\d+)?\\s*(".concat(timeTypes.join('|'), ")s?$"), 'i');
-
-var isInteger = function isInteger(value) {
-  return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
-};
-
-var getScaleTicks = function getScaleTicks(scale, spec) {
-  if (Array.isArray(spec)) {
-    return spec;
-  }
-
-  if (typeof spec === 'string' && 'useUTC' in scale) {
-    var matches = spec.match(timeIntervalRegexp);
-
-    if (matches) {
-      var _matches = _slicedToArray(matches, 3),
-          amount = _matches[1],
-          type = _matches[2];
-
-      var timeType = timeByType[type][scale.useUTC ? 1 : 0];
-
-      if (type === 'day') {
-        var _timeType$every$range, _timeType$every;
-
-        var _scale$domain = scale.domain(),
-            _scale$domain2 = _slicedToArray(_scale$domain, 2),
-            start = _scale$domain2[0],
-            originalStop = _scale$domain2[1];
-
-        var stop = new Date(originalStop);
-        stop.setDate(stop.getDate() + 1);
-        return (_timeType$every$range = (_timeType$every = timeType.every(Number(amount !== null && amount !== void 0 ? amount : 1))) === null || _timeType$every === void 0 ? void 0 : _timeType$every.range(start, stop)) !== null && _timeType$every$range !== void 0 ? _timeType$every$range : [];
-      }
-
-      if (amount === undefined) {
-        return scale.ticks(timeType);
-      }
-
-      var interval = timeType.every(Number(amount));
-
-      if (interval) {
-        return scale.ticks(interval);
-      }
-    }
-
-    throw new Error("Invalid tickValues: ".concat(spec));
-  }
-
-  if ('ticks' in scale) {
-    if (spec === undefined) {
-      return scale.ticks();
-    }
-
-    if (isInteger(spec)) {
-      return scale.ticks(spec);
-    }
-  }
-
-  return scale.domain();
-};
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js":
 /*!************************************************************!*\
   !*** ./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js ***!
@@ -17966,575 +12606,6 @@ var TooltipProvider = function TooltipProvider(_ref) {
       children: children
     })
   });
-};
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@nivo/voronoi/dist/nivo-voronoi.es.js":
-/*!************************************************************!*\
-  !*** ./node_modules/@nivo/voronoi/dist/nivo-voronoi.es.js ***!
-  \************************************************************/
-/*! exports provided: Mesh, ResponsiveVoronoi, Voronoi, computeMesh, computeMeshPoints, defaultVoronoiProps, renderVoronoiCellToCanvas, renderVoronoiToCanvas, useVoronoi, useVoronoiLayerContext, useVoronoiMesh */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Mesh", function() { return Mesh; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveVoronoi", function() { return ResponsiveVoronoi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Voronoi", function() { return Voronoi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMesh", function() { return computeMesh; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMeshPoints", function() { return computeMeshPoints; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultVoronoiProps", function() { return defaultVoronoiProps; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderVoronoiCellToCanvas", function() { return renderVoronoiCellToCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderVoronoiToCanvas", function() { return renderVoronoiToCanvas; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useVoronoi", function() { return useVoronoi; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useVoronoiLayerContext", function() { return useVoronoiLayerContext; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useVoronoiMesh", function() { return useVoronoiMesh; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
-/* harmony import */ var d3_delaunay__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-delaunay */ "./node_modules/d3-delaunay/src/index.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
-
-
-
-
-
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-
-function _objectWithoutProperties(source, excluded) {
-  if (source == null) return {};
-  var target = _objectWithoutPropertiesLoose(source, excluded);
-  var key, i;
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
-
-var defaultVoronoiProps = {
-  xDomain: [0, 1],
-  yDomain: [0, 1],
-  layers: ['links', 'cells', 'points', 'bounds'],
-  enableLinks: false,
-  linkLineWidth: 1,
-  linkLineColor: '#bbbbbb',
-  enableCells: true,
-  cellLineWidth: 2,
-  cellLineColor: '#000000',
-  enablePoints: true,
-  pointSize: 4,
-  pointColor: '#666666',
-  role: 'img'
-};
-
-var getAccessor = function getAccessor(directive) {
-  return typeof directive === 'function' ? directive : function (datum) {
-    return datum[directive];
-  };
-};
-
-var computeMeshPoints = function computeMeshPoints(_ref) {
-  var points = _ref.points,
-      _ref$x = _ref.x,
-      x = _ref$x === void 0 ? 'x' : _ref$x,
-      _ref$y = _ref.y,
-      y = _ref$y === void 0 ? 'y' : _ref$y;
-  var getX = getAccessor(x);
-  var getY = getAccessor(y);
-  return points.map(function (point) {
-    return [getX(point), getY(point)];
-  });
-};
-var computeMesh = function computeMesh(_ref2) {
-  var points = _ref2.points,
-      width = _ref2.width,
-      height = _ref2.height,
-      debug = _ref2.debug;
-  var delaunay = d3_delaunay__WEBPACK_IMPORTED_MODULE_3__["Delaunay"].from(points);
-  var voronoi = debug ? delaunay.voronoi([0, 0, width, height]) : undefined;
-  return {
-    delaunay: delaunay,
-    voronoi: voronoi
-  };
-};
-
-var useVoronoiMesh = function useVoronoiMesh(_ref) {
-  var points = _ref.points,
-      x = _ref.x,
-      y = _ref.y,
-      width = _ref.width,
-      height = _ref.height,
-      debug = _ref.debug;
-  var points2d = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return computeMeshPoints({
-      points: points,
-      x: x,
-      y: y
-    });
-  }, [points, x, y]);
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return computeMesh({
-      points: points2d,
-      width: width,
-      height: height,
-      debug: debug
-    });
-  }, [points2d, width, height, debug]);
-};
-var useVoronoi = function useVoronoi(_ref2) {
-  var data = _ref2.data,
-      width = _ref2.width,
-      height = _ref2.height,
-      xDomain = _ref2.xDomain,
-      yDomain = _ref2.yDomain;
-  var xScale = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_scale__WEBPACK_IMPORTED_MODULE_2__["scaleLinear"])().domain(xDomain).range([0, width]);
-  }, [xDomain, width]);
-  var yScale = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return Object(d3_scale__WEBPACK_IMPORTED_MODULE_2__["scaleLinear"])().domain(yDomain).range([0, height]);
-  }, [yDomain, height]);
-  var points = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return data.map(function (d) {
-      return {
-        x: xScale(d.x),
-        y: yScale(d.y),
-        data: d
-      };
-    });
-  }, [data, xScale, yScale]);
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    var delaunay = d3_delaunay__WEBPACK_IMPORTED_MODULE_3__["Delaunay"].from(points.map(function (p) {
-      return [p.x, p.y];
-    }));
-    var voronoi = delaunay.voronoi([0, 0, width, height]);
-    return {
-      points: points,
-      delaunay: delaunay,
-      voronoi: voronoi
-    };
-  }, [points, width, height]);
-};
-var useVoronoiLayerContext = function useVoronoiLayerContext(_ref3) {
-  var points = _ref3.points,
-      delaunay = _ref3.delaunay,
-      voronoi = _ref3.voronoi;
-  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    return {
-      points: points,
-      delaunay: delaunay,
-      voronoi: voronoi
-    };
-  }, [points, delaunay, voronoi]);
-};
-
-var InnerVoronoi = function InnerVoronoi(_ref) {
-  var data = _ref.data,
-      width = _ref.width,
-      height = _ref.height,
-      partialMargin = _ref.margin,
-      _ref$layers = _ref.layers,
-      layers = _ref$layers === void 0 ? defaultVoronoiProps.layers : _ref$layers,
-      _ref$xDomain = _ref.xDomain,
-      xDomain = _ref$xDomain === void 0 ? defaultVoronoiProps.xDomain : _ref$xDomain,
-      _ref$yDomain = _ref.yDomain,
-      yDomain = _ref$yDomain === void 0 ? defaultVoronoiProps.yDomain : _ref$yDomain,
-      _ref$enableLinks = _ref.enableLinks,
-      enableLinks = _ref$enableLinks === void 0 ? defaultVoronoiProps.enableLinks : _ref$enableLinks,
-      _ref$linkLineWidth = _ref.linkLineWidth,
-      linkLineWidth = _ref$linkLineWidth === void 0 ? defaultVoronoiProps.linkLineWidth : _ref$linkLineWidth,
-      _ref$linkLineColor = _ref.linkLineColor,
-      linkLineColor = _ref$linkLineColor === void 0 ? defaultVoronoiProps.linkLineColor : _ref$linkLineColor,
-      _ref$enableCells = _ref.enableCells,
-      enableCells = _ref$enableCells === void 0 ? defaultVoronoiProps.enableCells : _ref$enableCells,
-      _ref$cellLineWidth = _ref.cellLineWidth,
-      cellLineWidth = _ref$cellLineWidth === void 0 ? defaultVoronoiProps.cellLineWidth : _ref$cellLineWidth,
-      _ref$cellLineColor = _ref.cellLineColor,
-      cellLineColor = _ref$cellLineColor === void 0 ? defaultVoronoiProps.cellLineColor : _ref$cellLineColor,
-      _ref$enablePoints = _ref.enablePoints,
-      enablePoints = _ref$enablePoints === void 0 ? defaultVoronoiProps.enableCells : _ref$enablePoints,
-      _ref$pointSize = _ref.pointSize,
-      pointSize = _ref$pointSize === void 0 ? defaultVoronoiProps.pointSize : _ref$pointSize,
-      _ref$pointColor = _ref.pointColor,
-      pointColor = _ref$pointColor === void 0 ? defaultVoronoiProps.pointColor : _ref$pointColor,
-      _ref$role = _ref.role,
-      role = _ref$role === void 0 ? defaultVoronoiProps.role : _ref$role;
-
-  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["useDimensions"])(width, height, partialMargin),
-      outerWidth = _useDimensions.outerWidth,
-      outerHeight = _useDimensions.outerHeight,
-      margin = _useDimensions.margin,
-      innerWidth = _useDimensions.innerWidth,
-      innerHeight = _useDimensions.innerHeight;
-
-  var _useVoronoi = useVoronoi({
-    data: data,
-    width: innerWidth,
-    height: innerHeight,
-    xDomain: xDomain,
-    yDomain: yDomain
-  }),
-      points = _useVoronoi.points,
-      delaunay = _useVoronoi.delaunay,
-      voronoi = _useVoronoi.voronoi;
-
-  var layerById = {
-    links: null,
-    cells: null,
-    points: null,
-    bounds: null
-  };
-
-  if (enableLinks && layers.includes('links')) {
-    layerById.links = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-      stroke: linkLineColor,
-      strokeWidth: linkLineWidth,
-      fill: "none",
-      d: delaunay.render()
-    }, "links");
-  }
-
-  if (enableCells && layers.includes('cells')) {
-    layerById.cells = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-      d: voronoi.render(),
-      fill: "none",
-      stroke: cellLineColor,
-      strokeWidth: cellLineWidth
-    }, "cells");
-  }
-
-  if (enablePoints && layers.includes('points')) {
-    layerById.points = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-      stroke: "none",
-      fill: pointColor,
-      d: delaunay.renderPoints(undefined, pointSize / 2)
-    }, "points");
-  }
-
-  if (layers.includes('bounds')) {
-    layerById.bounds = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-      fill: "none",
-      stroke: cellLineColor,
-      strokeWidth: cellLineWidth,
-      d: voronoi.renderBounds()
-    }, "bounds");
-  }
-
-  var layerContext = useVoronoiLayerContext({
-    points: points,
-    delaunay: delaunay,
-    voronoi: voronoi
-  });
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["SvgWrapper"], {
-    width: outerWidth,
-    height: outerHeight,
-    margin: margin,
-    role: role,
-    children: layers.map(function (layer, i) {
-      if (layerById[layer] !== undefined) {
-        return layerById[layer];
-      }
-
-      if (typeof layer === 'function') {
-        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], {
-          children: Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(layer, layerContext)
-        }, i);
-      }
-
-      return null;
-    })
-  });
-};
-
-var Voronoi = function Voronoi(_ref2) {
-  var theme = _ref2.theme,
-      otherProps = _objectWithoutProperties(_ref2, ["theme"]);
-
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["Container"], {
-    isInteractive: false,
-    animate: false,
-    theme: theme,
-    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(InnerVoronoi, _objectSpread2({}, otherProps))
-  });
-};
-
-var ResponsiveVoronoi = function ResponsiveVoronoi(props) {
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["ResponsiveWrapper"], {
-    children: function children(_ref) {
-      var width = _ref.width,
-          height = _ref.height;
-      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])(Voronoi, _objectSpread2({
-        width: width,
-        height: height
-      }, props));
-    }
-  });
-};
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-  return _arr;
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-  return arr2;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-var Mesh = function Mesh(_ref) {
-  var nodes = _ref.nodes,
-      width = _ref.width,
-      height = _ref.height,
-      x = _ref.x,
-      y = _ref.y,
-      onMouseEnter = _ref.onMouseEnter,
-      onMouseMove = _ref.onMouseMove,
-      onMouseLeave = _ref.onMouseLeave,
-      onClick = _ref.onClick,
-      debug = _ref.debug;
-  var elementRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      currentIndex = _useState2[0],
-      setCurrentIndex = _useState2[1];
-
-  var _useVoronoiMesh = useVoronoiMesh({
-    points: nodes,
-    x: x,
-    y: y,
-    width: width,
-    height: height,
-    debug: debug
-  }),
-      delaunay = _useVoronoiMesh.delaunay,
-      voronoi = _useVoronoiMesh.voronoi;
-
-  var voronoiPath = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
-    if (debug && voronoi) {
-      return voronoi.render();
-    }
-
-    return undefined;
-  }, [debug, voronoi]);
-  var getIndexAndNodeFromEvent = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    if (!elementRef.current) {
-      return [null, null];
-    }
-
-    var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_1__["getRelativeCursor"])(elementRef.current, event),
-        _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
-        x = _getRelativeCursor2[0],
-        y = _getRelativeCursor2[1];
-
-    var index = delaunay.find(x, y);
-    return [index, index !== undefined ? nodes[index] : null];
-  }, [elementRef, delaunay]);
-  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    var _getIndexAndNodeFromE = getIndexAndNodeFromEvent(event),
-        _getIndexAndNodeFromE2 = _slicedToArray(_getIndexAndNodeFromE, 2),
-        index = _getIndexAndNodeFromE2[0],
-        node = _getIndexAndNodeFromE2[1];
-
-    setCurrentIndex(index);
-
-    if (node) {
-      onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(node, event);
-    }
-  }, [getIndexAndNodeFromEvent, setCurrentIndex, onMouseEnter]);
-  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    var _getIndexAndNodeFromE3 = getIndexAndNodeFromEvent(event),
-        _getIndexAndNodeFromE4 = _slicedToArray(_getIndexAndNodeFromE3, 2),
-        index = _getIndexAndNodeFromE4[0],
-        node = _getIndexAndNodeFromE4[1];
-
-    setCurrentIndex(index);
-
-    if (node) {
-      onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(node, event);
-    }
-  }, [getIndexAndNodeFromEvent, setCurrentIndex, onMouseMove]);
-  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    setCurrentIndex(null);
-
-    if (onMouseLeave) {
-      var previousNode = undefined;
-
-      if (currentIndex !== null) {
-        previousNode = nodes[currentIndex];
-      }
-
-      previousNode && onMouseLeave(previousNode, event);
-    }
-  }, [setCurrentIndex, currentIndex, onMouseLeave, nodes]);
-  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (event) {
-    var _getIndexAndNodeFromE5 = getIndexAndNodeFromEvent(event),
-        _getIndexAndNodeFromE6 = _slicedToArray(_getIndexAndNodeFromE5, 2),
-        index = _getIndexAndNodeFromE6[0],
-        node = _getIndexAndNodeFromE6[1];
-
-    setCurrentIndex(index);
-
-    if (node) {
-      onClick === null || onClick === void 0 ? void 0 : onClick(node, event);
-    }
-  }, [getIndexAndNodeFromEvent, setCurrentIndex, onClick]);
-  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsxs"])("g", {
-    ref: elementRef,
-    children: [debug && voronoi && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["Fragment"], {
-      children: [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-        d: voronoiPath,
-        stroke: "red",
-        strokeWidth: 1,
-        opacity: 0.75
-      }), currentIndex !== null && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("path", {
-        fill: "pink",
-        opacity: 0.35,
-        d: voronoi.renderCell(currentIndex)
-      })]
-    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__["jsx"])("rect", {
-      width: width,
-      height: height,
-      fill: "red",
-      opacity: 0,
-      style: {
-        cursor: 'auto'
-      },
-      onMouseEnter: handleMouseEnter,
-      onMouseMove: handleMouseMove,
-      onMouseLeave: handleMouseLeave,
-      onClick: handleClick
-    })]
-  });
-};
-
-var renderVoronoiToCanvas = function renderVoronoiToCanvas(ctx, voronoi) {
-  ctx.save();
-  ctx.globalAlpha = 0.75;
-  ctx.beginPath();
-  voronoi.render(ctx);
-  ctx.strokeStyle = 'red';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.restore();
-};
-var renderVoronoiCellToCanvas = function renderVoronoiCellToCanvas(ctx, voronoi, index) {
-  ctx.save();
-  ctx.globalAlpha = 0.35;
-  ctx.beginPath();
-  voronoi.renderCell(index, ctx);
-  ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.restore();
 };
 
 
@@ -25581,707 +19652,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "degrees", function() { return degrees; });
 const radians = Math.PI / 180;
 const degrees = 180 / Math.PI;
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-delaunay/src/delaunay.js":
-/*!**************************************************!*\
-  !*** ./node_modules/d3-delaunay/src/delaunay.js ***!
-  \**************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Delaunay; });
-/* harmony import */ var delaunator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! delaunator */ "./node_modules/delaunator/index.js");
-/* harmony import */ var _path_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./path.js */ "./node_modules/d3-delaunay/src/path.js");
-/* harmony import */ var _polygon_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./polygon.js */ "./node_modules/d3-delaunay/src/polygon.js");
-/* harmony import */ var _voronoi_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./voronoi.js */ "./node_modules/d3-delaunay/src/voronoi.js");
-
-
-
-
-
-const tau = 2 * Math.PI, pow = Math.pow;
-
-function pointX(p) {
-  return p[0];
-}
-
-function pointY(p) {
-  return p[1];
-}
-
-// A triangulation is collinear if all its triangles have a non-null area
-function collinear(d) {
-  const {triangles, coords} = d;
-  for (let i = 0; i < triangles.length; i += 3) {
-    const a = 2 * triangles[i],
-          b = 2 * triangles[i + 1],
-          c = 2 * triangles[i + 2],
-          cross = (coords[c] - coords[a]) * (coords[b + 1] - coords[a + 1])
-                - (coords[b] - coords[a]) * (coords[c + 1] - coords[a + 1]);
-    if (cross > 1e-10) return false;
-  }
-  return true;
-}
-
-function jitter(x, y, r) {
-  return [x + Math.sin(x + y) * r, y + Math.cos(x - y) * r];
-}
-
-class Delaunay {
-  static from(points, fx = pointX, fy = pointY, that) {
-    return new Delaunay("length" in points
-        ? flatArray(points, fx, fy, that)
-        : Float64Array.from(flatIterable(points, fx, fy, that)));
-  }
-  constructor(points) {
-    this._delaunator = new delaunator__WEBPACK_IMPORTED_MODULE_0__["default"](points);
-    this.inedges = new Int32Array(points.length / 2);
-    this._hullIndex = new Int32Array(points.length / 2);
-    this.points = this._delaunator.coords;
-    this._init();
-  }
-  update() {
-    this._delaunator.update();
-    this._init();
-    return this;
-  }
-  _init() {
-    const d = this._delaunator, points = this.points;
-
-    // check for collinear
-    if (d.hull && d.hull.length > 2 && collinear(d)) {
-      this.collinear = Int32Array.from({length: points.length/2}, (_,i) => i)
-        .sort((i, j) => points[2 * i] - points[2 * j] || points[2 * i + 1] - points[2 * j + 1]); // for exact neighbors
-      const e = this.collinear[0], f = this.collinear[this.collinear.length - 1],
-        bounds = [ points[2 * e], points[2 * e + 1], points[2 * f], points[2 * f + 1] ],
-        r = 1e-8 * Math.hypot(bounds[3] - bounds[1], bounds[2] - bounds[0]);
-      for (let i = 0, n = points.length / 2; i < n; ++i) {
-        const p = jitter(points[2 * i], points[2 * i + 1], r);
-        points[2 * i] = p[0];
-        points[2 * i + 1] = p[1];
-      }
-      this._delaunator = new delaunator__WEBPACK_IMPORTED_MODULE_0__["default"](points);
-    } else {
-      delete this.collinear;
-    }
-
-    const halfedges = this.halfedges = this._delaunator.halfedges;
-    const hull = this.hull = this._delaunator.hull;
-    const triangles = this.triangles = this._delaunator.triangles;
-    const inedges = this.inedges.fill(-1);
-    const hullIndex = this._hullIndex.fill(-1);
-
-    // Compute an index from each point to an (arbitrary) incoming halfedge
-    // Used to give the first neighbor of each point; for this reason,
-    // on the hull we give priority to exterior halfedges
-    for (let e = 0, n = halfedges.length; e < n; ++e) {
-      const p = triangles[e % 3 === 2 ? e - 2 : e + 1];
-      if (halfedges[e] === -1 || inedges[p] === -1) inedges[p] = e;
-    }
-    for (let i = 0, n = hull.length; i < n; ++i) {
-      hullIndex[hull[i]] = i;
-    }
-
-    // degenerate case: 1 or 2 (distinct) points
-    if (hull.length <= 2 && hull.length > 0) {
-      this.triangles = new Int32Array(3).fill(-1);
-      this.halfedges = new Int32Array(3).fill(-1);
-      this.triangles[0] = hull[0];
-      this.triangles[1] = hull[1];
-      this.triangles[2] = hull[1];
-      inedges[hull[0]] = 1;
-      if (hull.length === 2) inedges[hull[1]] = 0;
-    }
-  }
-  voronoi(bounds) {
-    return new _voronoi_js__WEBPACK_IMPORTED_MODULE_3__["default"](this, bounds);
-  }
-  *neighbors(i) {
-    const {inedges, hull, _hullIndex, halfedges, triangles, collinear} = this;
-
-    // degenerate case with several collinear points
-    if (collinear) {
-      const l = collinear.indexOf(i);
-      if (l > 0) yield collinear[l - 1];
-      if (l < collinear.length - 1) yield collinear[l + 1];
-      return;
-    }
-
-    const e0 = inedges[i];
-    if (e0 === -1) return; // coincident point
-    let e = e0, p0 = -1;
-    do {
-      yield p0 = triangles[e];
-      e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i) return; // bad triangulation
-      e = halfedges[e];
-      if (e === -1) {
-        const p = hull[(_hullIndex[i] + 1) % hull.length];
-        if (p !== p0) yield p;
-        return;
-      }
-    } while (e !== e0);
-  }
-  find(x, y, i = 0) {
-    if ((x = +x, x !== x) || (y = +y, y !== y)) return -1;
-    const i0 = i;
-    let c;
-    while ((c = this._step(i, x, y)) >= 0 && c !== i && c !== i0) i = c;
-    return c;
-  }
-  _step(i, x, y) {
-    const {inedges, hull, _hullIndex, halfedges, triangles, points} = this;
-    if (inedges[i] === -1 || !points.length) return (i + 1) % (points.length >> 1);
-    let c = i;
-    let dc = pow(x - points[i * 2], 2) + pow(y - points[i * 2 + 1], 2);
-    const e0 = inedges[i];
-    let e = e0;
-    do {
-      let t = triangles[e];
-      const dt = pow(x - points[t * 2], 2) + pow(y - points[t * 2 + 1], 2);
-      if (dt < dc) dc = dt, c = t;
-      e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i) break; // bad triangulation
-      e = halfedges[e];
-      if (e === -1) {
-        e = hull[(_hullIndex[i] + 1) % hull.length];
-        if (e !== t) {
-          if (pow(x - points[e * 2], 2) + pow(y - points[e * 2 + 1], 2) < dc) return e;
-        }
-        break;
-      }
-    } while (e !== e0);
-    return c;
-  }
-  render(context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_1__["default"] : undefined;
-    const {points, halfedges, triangles} = this;
-    for (let i = 0, n = halfedges.length; i < n; ++i) {
-      const j = halfedges[i];
-      if (j < i) continue;
-      const ti = triangles[i] * 2;
-      const tj = triangles[j] * 2;
-      context.moveTo(points[ti], points[ti + 1]);
-      context.lineTo(points[tj], points[tj + 1]);
-    }
-    this.renderHull(context);
-    return buffer && buffer.value();
-  }
-  renderPoints(context, r = 2) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_1__["default"] : undefined;
-    const {points} = this;
-    for (let i = 0, n = points.length; i < n; i += 2) {
-      const x = points[i], y = points[i + 1];
-      context.moveTo(x + r, y);
-      context.arc(x, y, r, 0, tau);
-    }
-    return buffer && buffer.value();
-  }
-  renderHull(context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_1__["default"] : undefined;
-    const {hull, points} = this;
-    const h = hull[0] * 2, n = hull.length;
-    context.moveTo(points[h], points[h + 1]);
-    for (let i = 1; i < n; ++i) {
-      const h = 2 * hull[i];
-      context.lineTo(points[h], points[h + 1]);
-    }
-    context.closePath();
-    return buffer && buffer.value();
-  }
-  hullPolygon() {
-    const polygon = new _polygon_js__WEBPACK_IMPORTED_MODULE_2__["default"];
-    this.renderHull(polygon);
-    return polygon.value();
-  }
-  renderTriangle(i, context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_1__["default"] : undefined;
-    const {points, triangles} = this;
-    const t0 = triangles[i *= 3] * 2;
-    const t1 = triangles[i + 1] * 2;
-    const t2 = triangles[i + 2] * 2;
-    context.moveTo(points[t0], points[t0 + 1]);
-    context.lineTo(points[t1], points[t1 + 1]);
-    context.lineTo(points[t2], points[t2 + 1]);
-    context.closePath();
-    return buffer && buffer.value();
-  }
-  *trianglePolygons() {
-    const {triangles} = this;
-    for (let i = 0, n = triangles.length / 3; i < n; ++i) {
-      yield this.trianglePolygon(i);
-    }
-  }
-  trianglePolygon(i) {
-    const polygon = new _polygon_js__WEBPACK_IMPORTED_MODULE_2__["default"];
-    this.renderTriangle(i, polygon);
-    return polygon.value();
-  }
-}
-
-function flatArray(points, fx, fy, that) {
-  const n = points.length;
-  const array = new Float64Array(n * 2);
-  for (let i = 0; i < n; ++i) {
-    const p = points[i];
-    array[i * 2] = fx.call(that, p, i, points);
-    array[i * 2 + 1] = fy.call(that, p, i, points);
-  }
-  return array;
-}
-
-function* flatIterable(points, fx, fy, that) {
-  let i = 0;
-  for (const p of points) {
-    yield fx.call(that, p, i, points);
-    yield fy.call(that, p, i, points);
-    ++i;
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-delaunay/src/index.js":
-/*!***********************************************!*\
-  !*** ./node_modules/d3-delaunay/src/index.js ***!
-  \***********************************************/
-/*! exports provided: Delaunay, Voronoi */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _delaunay_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./delaunay.js */ "./node_modules/d3-delaunay/src/delaunay.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Delaunay", function() { return _delaunay_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-/* harmony import */ var _voronoi_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./voronoi.js */ "./node_modules/d3-delaunay/src/voronoi.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Voronoi", function() { return _voronoi_js__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-delaunay/src/path.js":
-/*!**********************************************!*\
-  !*** ./node_modules/d3-delaunay/src/path.js ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Path; });
-const epsilon = 1e-6;
-
-class Path {
-  constructor() {
-    this._x0 = this._y0 = // start of current subpath
-    this._x1 = this._y1 = null; // end of current subpath
-    this._ = "";
-  }
-  moveTo(x, y) {
-    this._ += `M${this._x0 = this._x1 = +x},${this._y0 = this._y1 = +y}`;
-  }
-  closePath() {
-    if (this._x1 !== null) {
-      this._x1 = this._x0, this._y1 = this._y0;
-      this._ += "Z";
-    }
-  }
-  lineTo(x, y) {
-    this._ += `L${this._x1 = +x},${this._y1 = +y}`;
-  }
-  arc(x, y, r) {
-    x = +x, y = +y, r = +r;
-    const x0 = x + r;
-    const y0 = y;
-    if (r < 0) throw new Error("negative radius");
-    if (this._x1 === null) this._ += `M${x0},${y0}`;
-    else if (Math.abs(this._x1 - x0) > epsilon || Math.abs(this._y1 - y0) > epsilon) this._ += "L" + x0 + "," + y0;
-    if (!r) return;
-    this._ += `A${r},${r},0,1,1,${x - r},${y}A${r},${r},0,1,1,${this._x1 = x0},${this._y1 = y0}`;
-  }
-  rect(x, y, w, h) {
-    this._ += `M${this._x0 = this._x1 = +x},${this._y0 = this._y1 = +y}h${+w}v${+h}h${-w}Z`;
-  }
-  value() {
-    return this._ || null;
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-delaunay/src/polygon.js":
-/*!*************************************************!*\
-  !*** ./node_modules/d3-delaunay/src/polygon.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Polygon; });
-class Polygon {
-  constructor() {
-    this._ = [];
-  }
-  moveTo(x, y) {
-    this._.push([x, y]);
-  }
-  closePath() {
-    this._.push(this._[0].slice());
-  }
-  lineTo(x, y) {
-    this._.push([x, y]);
-  }
-  value() {
-    return this._.length ? this._ : null;
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-delaunay/src/voronoi.js":
-/*!*************************************************!*\
-  !*** ./node_modules/d3-delaunay/src/voronoi.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Voronoi; });
-/* harmony import */ var _path_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./path.js */ "./node_modules/d3-delaunay/src/path.js");
-/* harmony import */ var _polygon_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polygon.js */ "./node_modules/d3-delaunay/src/polygon.js");
-
-
-
-class Voronoi {
-  constructor(delaunay, [xmin, ymin, xmax, ymax] = [0, 0, 960, 500]) {
-    if (!((xmax = +xmax) >= (xmin = +xmin)) || !((ymax = +ymax) >= (ymin = +ymin))) throw new Error("invalid bounds");
-    this.delaunay = delaunay;
-    this._circumcenters = new Float64Array(delaunay.points.length * 2);
-    this.vectors = new Float64Array(delaunay.points.length * 2);
-    this.xmax = xmax, this.xmin = xmin;
-    this.ymax = ymax, this.ymin = ymin;
-    this._init();
-  }
-  update() {
-    this.delaunay.update();
-    this._init();
-    return this;
-  }
-  _init() {
-    const {delaunay: {points, hull, triangles}, vectors} = this;
-
-    // Compute circumcenters.
-    const circumcenters = this.circumcenters = this._circumcenters.subarray(0, triangles.length / 3 * 2);
-    for (let i = 0, j = 0, n = triangles.length, x, y; i < n; i += 3, j += 2) {
-      const t1 = triangles[i] * 2;
-      const t2 = triangles[i + 1] * 2;
-      const t3 = triangles[i + 2] * 2;
-      const x1 = points[t1];
-      const y1 = points[t1 + 1];
-      const x2 = points[t2];
-      const y2 = points[t2 + 1];
-      const x3 = points[t3];
-      const y3 = points[t3 + 1];
-
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const ex = x3 - x1;
-      const ey = y3 - y1;
-      const bl = dx * dx + dy * dy;
-      const cl = ex * ex + ey * ey;
-      const ab = (dx * ey - dy * ex) * 2;
-
-      if (!ab) {
-        // degenerate case (collinear diagram)
-        x = (x1 + x3) / 2 - 1e8 * ey;
-        y = (y1 + y3) / 2 + 1e8 * ex;
-      }
-      else if (Math.abs(ab) < 1e-8) {
-        // almost equal points (degenerate triangle)
-        x = (x1 + x3) / 2;
-        y = (y1 + y3) / 2;
-      } else {
-        const d = 1 / ab;
-        x = x1 + (ey * bl - dy * cl) * d;
-        y = y1 + (dx * cl - ex * bl) * d;
-      }
-      circumcenters[j] = x;
-      circumcenters[j + 1] = y;
-    }
-
-    // Compute exterior cell rays.
-    let h = hull[hull.length - 1];
-    let p0, p1 = h * 4;
-    let x0, x1 = points[2 * h];
-    let y0, y1 = points[2 * h + 1];
-    vectors.fill(0);
-    for (let i = 0; i < hull.length; ++i) {
-      h = hull[i];
-      p0 = p1, x0 = x1, y0 = y1;
-      p1 = h * 4, x1 = points[2 * h], y1 = points[2 * h + 1];
-      vectors[p0 + 2] = vectors[p1] = y0 - y1;
-      vectors[p0 + 3] = vectors[p1 + 1] = x1 - x0;
-    }
-  }
-  render(context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_0__["default"] : undefined;
-    const {delaunay: {halfedges, inedges, hull}, circumcenters, vectors} = this;
-    if (hull.length <= 1) return null;
-    for (let i = 0, n = halfedges.length; i < n; ++i) {
-      const j = halfedges[i];
-      if (j < i) continue;
-      const ti = Math.floor(i / 3) * 2;
-      const tj = Math.floor(j / 3) * 2;
-      const xi = circumcenters[ti];
-      const yi = circumcenters[ti + 1];
-      const xj = circumcenters[tj];
-      const yj = circumcenters[tj + 1];
-      this._renderSegment(xi, yi, xj, yj, context);
-    }
-    let h0, h1 = hull[hull.length - 1];
-    for (let i = 0; i < hull.length; ++i) {
-      h0 = h1, h1 = hull[i];
-      const t = Math.floor(inedges[h1] / 3) * 2;
-      const x = circumcenters[t];
-      const y = circumcenters[t + 1];
-      const v = h0 * 4;
-      const p = this._project(x, y, vectors[v + 2], vectors[v + 3]);
-      if (p) this._renderSegment(x, y, p[0], p[1], context);
-    }
-    return buffer && buffer.value();
-  }
-  renderBounds(context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_0__["default"] : undefined;
-    context.rect(this.xmin, this.ymin, this.xmax - this.xmin, this.ymax - this.ymin);
-    return buffer && buffer.value();
-  }
-  renderCell(i, context) {
-    const buffer = context == null ? context = new _path_js__WEBPACK_IMPORTED_MODULE_0__["default"] : undefined;
-    const points = this._clip(i);
-    if (points === null || !points.length) return;
-    context.moveTo(points[0], points[1]);
-    let n = points.length;
-    while (points[0] === points[n-2] && points[1] === points[n-1] && n > 1) n -= 2;
-    for (let i = 2; i < n; i += 2) {
-      if (points[i] !== points[i-2] || points[i+1] !== points[i-1])
-        context.lineTo(points[i], points[i + 1]);
-    }
-    context.closePath();
-    return buffer && buffer.value();
-  }
-  *cellPolygons() {
-    const {delaunay: {points}} = this;
-    for (let i = 0, n = points.length / 2; i < n; ++i) {
-      const cell = this.cellPolygon(i);
-      if (cell) cell.index = i, yield cell;
-    }
-  }
-  cellPolygon(i) {
-    const polygon = new _polygon_js__WEBPACK_IMPORTED_MODULE_1__["default"];
-    this.renderCell(i, polygon);
-    return polygon.value();
-  }
-  _renderSegment(x0, y0, x1, y1, context) {
-    let S;
-    const c0 = this._regioncode(x0, y0);
-    const c1 = this._regioncode(x1, y1);
-    if (c0 === 0 && c1 === 0) {
-      context.moveTo(x0, y0);
-      context.lineTo(x1, y1);
-    } else if (S = this._clipSegment(x0, y0, x1, y1, c0, c1)) {
-      context.moveTo(S[0], S[1]);
-      context.lineTo(S[2], S[3]);
-    }
-  }
-  contains(i, x, y) {
-    if ((x = +x, x !== x) || (y = +y, y !== y)) return false;
-    return this.delaunay._step(i, x, y) === i;
-  }
-  *neighbors(i) {
-    const ci = this._clip(i);
-    if (ci) for (const j of this.delaunay.neighbors(i)) {
-      const cj = this._clip(j);
-      // find the common edge
-      if (cj) loop: for (let ai = 0, li = ci.length; ai < li; ai += 2) {
-        for (let aj = 0, lj = cj.length; aj < lj; aj += 2) {
-          if (ci[ai] == cj[aj]
-          && ci[ai + 1] == cj[aj + 1]
-          && ci[(ai + 2) % li] == cj[(aj + lj - 2) % lj]
-          && ci[(ai + 3) % li] == cj[(aj + lj - 1) % lj]
-          ) {
-            yield j;
-            break loop;
-          }
-        }
-      }
-    }
-  }
-  _cell(i) {
-    const {circumcenters, delaunay: {inedges, halfedges, triangles}} = this;
-    const e0 = inedges[i];
-    if (e0 === -1) return null; // coincident point
-    const points = [];
-    let e = e0;
-    do {
-      const t = Math.floor(e / 3);
-      points.push(circumcenters[t * 2], circumcenters[t * 2 + 1]);
-      e = e % 3 === 2 ? e - 2 : e + 1;
-      if (triangles[e] !== i) break; // bad triangulation
-      e = halfedges[e];
-    } while (e !== e0 && e !== -1);
-    return points;
-  }
-  _clip(i) {
-    // degenerate case (1 valid point: return the box)
-    if (i === 0 && this.delaunay.hull.length === 1) {
-      return [this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax, this.xmin, this.ymin];
-    }
-    const points = this._cell(i);
-    if (points === null) return null;
-    const {vectors: V} = this;
-    const v = i * 4;
-    return V[v] || V[v + 1]
-        ? this._clipInfinite(i, points, V[v], V[v + 1], V[v + 2], V[v + 3])
-        : this._clipFinite(i, points);
-  }
-  _clipFinite(i, points) {
-    const n = points.length;
-    let P = null;
-    let x0, y0, x1 = points[n - 2], y1 = points[n - 1];
-    let c0, c1 = this._regioncode(x1, y1);
-    let e0, e1;
-    for (let j = 0; j < n; j += 2) {
-      x0 = x1, y0 = y1, x1 = points[j], y1 = points[j + 1];
-      c0 = c1, c1 = this._regioncode(x1, y1);
-      if (c0 === 0 && c1 === 0) {
-        e0 = e1, e1 = 0;
-        if (P) P.push(x1, y1);
-        else P = [x1, y1];
-      } else {
-        let S, sx0, sy0, sx1, sy1;
-        if (c0 === 0) {
-          if ((S = this._clipSegment(x0, y0, x1, y1, c0, c1)) === null) continue;
-          [sx0, sy0, sx1, sy1] = S;
-        } else {
-          if ((S = this._clipSegment(x1, y1, x0, y0, c1, c0)) === null) continue;
-          [sx1, sy1, sx0, sy0] = S;
-          e0 = e1, e1 = this._edgecode(sx0, sy0);
-          if (e0 && e1) this._edge(i, e0, e1, P, P.length);
-          if (P) P.push(sx0, sy0);
-          else P = [sx0, sy0];
-        }
-        e0 = e1, e1 = this._edgecode(sx1, sy1);
-        if (e0 && e1) this._edge(i, e0, e1, P, P.length);
-        if (P) P.push(sx1, sy1);
-        else P = [sx1, sy1];
-      }
-    }
-    if (P) {
-      e0 = e1, e1 = this._edgecode(P[0], P[1]);
-      if (e0 && e1) this._edge(i, e0, e1, P, P.length);
-    } else if (this.contains(i, (this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2)) {
-      return [this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax, this.xmin, this.ymin];
-    }
-    return P;
-  }
-  _clipSegment(x0, y0, x1, y1, c0, c1) {
-    while (true) {
-      if (c0 === 0 && c1 === 0) return [x0, y0, x1, y1];
-      if (c0 & c1) return null;
-      let x, y, c = c0 || c1;
-      if (c & 0b1000) x = x0 + (x1 - x0) * (this.ymax - y0) / (y1 - y0), y = this.ymax;
-      else if (c & 0b0100) x = x0 + (x1 - x0) * (this.ymin - y0) / (y1 - y0), y = this.ymin;
-      else if (c & 0b0010) y = y0 + (y1 - y0) * (this.xmax - x0) / (x1 - x0), x = this.xmax;
-      else y = y0 + (y1 - y0) * (this.xmin - x0) / (x1 - x0), x = this.xmin;
-      if (c0) x0 = x, y0 = y, c0 = this._regioncode(x0, y0);
-      else x1 = x, y1 = y, c1 = this._regioncode(x1, y1);
-    }
-  }
-  _clipInfinite(i, points, vx0, vy0, vxn, vyn) {
-    let P = Array.from(points), p;
-    if (p = this._project(P[0], P[1], vx0, vy0)) P.unshift(p[0], p[1]);
-    if (p = this._project(P[P.length - 2], P[P.length - 1], vxn, vyn)) P.push(p[0], p[1]);
-    if (P = this._clipFinite(i, P)) {
-      for (let j = 0, n = P.length, c0, c1 = this._edgecode(P[n - 2], P[n - 1]); j < n; j += 2) {
-        c0 = c1, c1 = this._edgecode(P[j], P[j + 1]);
-        if (c0 && c1) j = this._edge(i, c0, c1, P, j), n = P.length;
-      }
-    } else if (this.contains(i, (this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2)) {
-      P = [this.xmin, this.ymin, this.xmax, this.ymin, this.xmax, this.ymax, this.xmin, this.ymax];
-    }
-    return P;
-  }
-  _edge(i, e0, e1, P, j) {
-    while (e0 !== e1) {
-      let x, y;
-      switch (e0) {
-        case 0b0101: e0 = 0b0100; continue; // top-left
-        case 0b0100: e0 = 0b0110, x = this.xmax, y = this.ymin; break; // top
-        case 0b0110: e0 = 0b0010; continue; // top-right
-        case 0b0010: e0 = 0b1010, x = this.xmax, y = this.ymax; break; // right
-        case 0b1010: e0 = 0b1000; continue; // bottom-right
-        case 0b1000: e0 = 0b1001, x = this.xmin, y = this.ymax; break; // bottom
-        case 0b1001: e0 = 0b0001; continue; // bottom-left
-        case 0b0001: e0 = 0b0101, x = this.xmin, y = this.ymin; break; // left
-      }
-      if ((P[j] !== x || P[j + 1] !== y) && this.contains(i, x, y)) {
-        P.splice(j, 0, x, y), j += 2;
-      }
-    }
-    if (P.length > 4) {
-      for (let i = 0; i < P.length; i+= 2) {
-        const j = (i + 2) % P.length, k = (i + 4) % P.length;
-        if (P[i] === P[j] && P[j] === P[k]
-        || P[i + 1] === P[j + 1] && P[j + 1] === P[k + 1])
-          P.splice(j, 2), i -= 2;
-      }
-    }
-    return j;
-  }
-  _project(x0, y0, vx, vy) {
-    let t = Infinity, c, x, y;
-    if (vy < 0) { // top
-      if (y0 <= this.ymin) return null;
-      if ((c = (this.ymin - y0) / vy) < t) y = this.ymin, x = x0 + (t = c) * vx;
-    } else if (vy > 0) { // bottom
-      if (y0 >= this.ymax) return null;
-      if ((c = (this.ymax - y0) / vy) < t) y = this.ymax, x = x0 + (t = c) * vx;
-    }
-    if (vx > 0) { // right
-      if (x0 >= this.xmax) return null;
-      if ((c = (this.xmax - x0) / vx) < t) x = this.xmax, y = y0 + (t = c) * vy;
-    } else if (vx < 0) { // left
-      if (x0 <= this.xmin) return null;
-      if ((c = (this.xmin - x0) / vx) < t) x = this.xmin, y = y0 + (t = c) * vy;
-    }
-    return [x, y];
-  }
-  _edgecode(x, y) {
-    return (x === this.xmin ? 0b0001
-        : x === this.xmax ? 0b0010 : 0b0000)
-        | (y === this.ymin ? 0b0100
-        : y === this.ymax ? 0b1000 : 0b0000);
-  }
-  _regioncode(x, y) {
-    return (x < this.xmin ? 0b0001
-        : x > this.xmax ? 0b0010 : 0b0000)
-        | (y < this.ymin ? 0b0100
-        : y > this.ymax ? 0b1000 : 0b0000);
-  }
-}
 
 
 /***/ }),
@@ -38517,515 +31887,6 @@ var years = year.range;
 
 /***/ }),
 
-/***/ "./node_modules/delaunator/index.js":
-/*!******************************************!*\
-  !*** ./node_modules/delaunator/index.js ***!
-  \******************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Delaunator; });
-
-const EPSILON = Math.pow(2, -52);
-const EDGE_STACK = new Uint32Array(512);
-
-class Delaunator {
-
-    static from(points, getX = defaultGetX, getY = defaultGetY) {
-        const n = points.length;
-        const coords = new Float64Array(n * 2);
-
-        for (let i = 0; i < n; i++) {
-            const p = points[i];
-            coords[2 * i] = getX(p);
-            coords[2 * i + 1] = getY(p);
-        }
-
-        return new Delaunator(coords);
-    }
-
-    constructor(coords) {
-        const n = coords.length >> 1;
-        if (n > 0 && typeof coords[0] !== 'number') throw new Error('Expected coords to contain numbers.');
-
-        this.coords = coords;
-
-        // arrays that will store the triangulation graph
-        const maxTriangles = Math.max(2 * n - 5, 0);
-        this._triangles = new Uint32Array(maxTriangles * 3);
-        this._halfedges = new Int32Array(maxTriangles * 3);
-
-        // temporary arrays for tracking the edges of the advancing convex hull
-        this._hashSize = Math.ceil(Math.sqrt(n));
-        this._hullPrev = new Uint32Array(n); // edge to prev edge
-        this._hullNext = new Uint32Array(n); // edge to next edge
-        this._hullTri = new Uint32Array(n); // edge to adjacent triangle
-        this._hullHash = new Int32Array(this._hashSize).fill(-1); // angular edge hash
-
-        // temporary arrays for sorting points
-        this._ids = new Uint32Array(n);
-        this._dists = new Float64Array(n);
-
-        this.update();
-    }
-
-    update() {
-        const {coords, _hullPrev: hullPrev, _hullNext: hullNext, _hullTri: hullTri, _hullHash: hullHash} =  this;
-        const n = coords.length >> 1;
-
-        // populate an array of point indices; calculate input data bbox
-        let minX = Infinity;
-        let minY = Infinity;
-        let maxX = -Infinity;
-        let maxY = -Infinity;
-
-        for (let i = 0; i < n; i++) {
-            const x = coords[2 * i];
-            const y = coords[2 * i + 1];
-            if (x < minX) minX = x;
-            if (y < minY) minY = y;
-            if (x > maxX) maxX = x;
-            if (y > maxY) maxY = y;
-            this._ids[i] = i;
-        }
-        const cx = (minX + maxX) / 2;
-        const cy = (minY + maxY) / 2;
-
-        let minDist = Infinity;
-        let i0, i1, i2;
-
-        // pick a seed point close to the center
-        for (let i = 0; i < n; i++) {
-            const d = dist(cx, cy, coords[2 * i], coords[2 * i + 1]);
-            if (d < minDist) {
-                i0 = i;
-                minDist = d;
-            }
-        }
-        const i0x = coords[2 * i0];
-        const i0y = coords[2 * i0 + 1];
-
-        minDist = Infinity;
-
-        // find the point closest to the seed
-        for (let i = 0; i < n; i++) {
-            if (i === i0) continue;
-            const d = dist(i0x, i0y, coords[2 * i], coords[2 * i + 1]);
-            if (d < minDist && d > 0) {
-                i1 = i;
-                minDist = d;
-            }
-        }
-        let i1x = coords[2 * i1];
-        let i1y = coords[2 * i1 + 1];
-
-        let minRadius = Infinity;
-
-        // find the third point which forms the smallest circumcircle with the first two
-        for (let i = 0; i < n; i++) {
-            if (i === i0 || i === i1) continue;
-            const r = circumradius(i0x, i0y, i1x, i1y, coords[2 * i], coords[2 * i + 1]);
-            if (r < minRadius) {
-                i2 = i;
-                minRadius = r;
-            }
-        }
-        let i2x = coords[2 * i2];
-        let i2y = coords[2 * i2 + 1];
-
-        if (minRadius === Infinity) {
-            // order collinear points by dx (or dy if all x are identical)
-            // and return the list as a hull
-            for (let i = 0; i < n; i++) {
-                this._dists[i] = (coords[2 * i] - coords[0]) || (coords[2 * i + 1] - coords[1]);
-            }
-            quicksort(this._ids, this._dists, 0, n - 1);
-            const hull = new Uint32Array(n);
-            let j = 0;
-            for (let i = 0, d0 = -Infinity; i < n; i++) {
-                const id = this._ids[i];
-                if (this._dists[id] > d0) {
-                    hull[j++] = id;
-                    d0 = this._dists[id];
-                }
-            }
-            this.hull = hull.subarray(0, j);
-            this.triangles = new Uint32Array(0);
-            this.halfedges = new Uint32Array(0);
-            return;
-        }
-
-        // swap the order of the seed points for counter-clockwise orientation
-        if (orient(i0x, i0y, i1x, i1y, i2x, i2y)) {
-            const i = i1;
-            const x = i1x;
-            const y = i1y;
-            i1 = i2;
-            i1x = i2x;
-            i1y = i2y;
-            i2 = i;
-            i2x = x;
-            i2y = y;
-        }
-
-        const center = circumcenter(i0x, i0y, i1x, i1y, i2x, i2y);
-        this._cx = center.x;
-        this._cy = center.y;
-
-        for (let i = 0; i < n; i++) {
-            this._dists[i] = dist(coords[2 * i], coords[2 * i + 1], center.x, center.y);
-        }
-
-        // sort the points by distance from the seed triangle circumcenter
-        quicksort(this._ids, this._dists, 0, n - 1);
-
-        // set up the seed triangle as the starting hull
-        this._hullStart = i0;
-        let hullSize = 3;
-
-        hullNext[i0] = hullPrev[i2] = i1;
-        hullNext[i1] = hullPrev[i0] = i2;
-        hullNext[i2] = hullPrev[i1] = i0;
-
-        hullTri[i0] = 0;
-        hullTri[i1] = 1;
-        hullTri[i2] = 2;
-
-        hullHash.fill(-1);
-        hullHash[this._hashKey(i0x, i0y)] = i0;
-        hullHash[this._hashKey(i1x, i1y)] = i1;
-        hullHash[this._hashKey(i2x, i2y)] = i2;
-
-        this.trianglesLen = 0;
-        this._addTriangle(i0, i1, i2, -1, -1, -1);
-
-        for (let k = 0, xp, yp; k < this._ids.length; k++) {
-            const i = this._ids[k];
-            const x = coords[2 * i];
-            const y = coords[2 * i + 1];
-
-            // skip near-duplicate points
-            if (k > 0 && Math.abs(x - xp) <= EPSILON && Math.abs(y - yp) <= EPSILON) continue;
-            xp = x;
-            yp = y;
-
-            // skip seed triangle points
-            if (i === i0 || i === i1 || i === i2) continue;
-
-            // find a visible edge on the convex hull using edge hash
-            let start = 0;
-            for (let j = 0, key = this._hashKey(x, y); j < this._hashSize; j++) {
-                start = hullHash[(key + j) % this._hashSize];
-                if (start !== -1 && start !== hullNext[start]) break;
-            }
-
-            start = hullPrev[start];
-            let e = start, q;
-            while (q = hullNext[e], !orient(x, y, coords[2 * e], coords[2 * e + 1], coords[2 * q], coords[2 * q + 1])) {
-                e = q;
-                if (e === start) {
-                    e = -1;
-                    break;
-                }
-            }
-            if (e === -1) continue; // likely a near-duplicate point; skip it
-
-            // add the first triangle from the point
-            let t = this._addTriangle(e, i, hullNext[e], -1, -1, hullTri[e]);
-
-            // recursively flip triangles from the point until they satisfy the Delaunay condition
-            hullTri[i] = this._legalize(t + 2);
-            hullTri[e] = t; // keep track of boundary triangles on the hull
-            hullSize++;
-
-            // walk forward through the hull, adding more triangles and flipping recursively
-            let n = hullNext[e];
-            while (q = hullNext[n], orient(x, y, coords[2 * n], coords[2 * n + 1], coords[2 * q], coords[2 * q + 1])) {
-                t = this._addTriangle(n, i, q, hullTri[i], -1, hullTri[n]);
-                hullTri[i] = this._legalize(t + 2);
-                hullNext[n] = n; // mark as removed
-                hullSize--;
-                n = q;
-            }
-
-            // walk backward from the other side, adding more triangles and flipping
-            if (e === start) {
-                while (q = hullPrev[e], orient(x, y, coords[2 * q], coords[2 * q + 1], coords[2 * e], coords[2 * e + 1])) {
-                    t = this._addTriangle(q, i, e, -1, hullTri[e], hullTri[q]);
-                    this._legalize(t + 2);
-                    hullTri[q] = t;
-                    hullNext[e] = e; // mark as removed
-                    hullSize--;
-                    e = q;
-                }
-            }
-
-            // update the hull indices
-            this._hullStart = hullPrev[i] = e;
-            hullNext[e] = hullPrev[n] = i;
-            hullNext[i] = n;
-
-            // save the two new edges in the hash table
-            hullHash[this._hashKey(x, y)] = i;
-            hullHash[this._hashKey(coords[2 * e], coords[2 * e + 1])] = e;
-        }
-
-        this.hull = new Uint32Array(hullSize);
-        for (let i = 0, e = this._hullStart; i < hullSize; i++) {
-            this.hull[i] = e;
-            e = hullNext[e];
-        }
-
-        // trim typed triangle mesh arrays
-        this.triangles = this._triangles.subarray(0, this.trianglesLen);
-        this.halfedges = this._halfedges.subarray(0, this.trianglesLen);
-    }
-
-    _hashKey(x, y) {
-        return Math.floor(pseudoAngle(x - this._cx, y - this._cy) * this._hashSize) % this._hashSize;
-    }
-
-    _legalize(a) {
-        const {_triangles: triangles, _halfedges: halfedges, coords} = this;
-
-        let i = 0;
-        let ar = 0;
-
-        // recursion eliminated with a fixed-size stack
-        while (true) {
-            const b = halfedges[a];
-
-            /* if the pair of triangles doesn't satisfy the Delaunay condition
-             * (p1 is inside the circumcircle of [p0, pl, pr]), flip them,
-             * then do the same check/flip recursively for the new pair of triangles
-             *
-             *           pl                    pl
-             *          /||\                  /  \
-             *       al/ || \bl            al/    \a
-             *        /  ||  \              /      \
-             *       /  a||b  \    flip    /___ar___\
-             *     p0\   ||   /p1   =>   p0\---bl---/p1
-             *        \  ||  /              \      /
-             *       ar\ || /br             b\    /br
-             *          \||/                  \  /
-             *           pr                    pr
-             */
-            const a0 = a - a % 3;
-            ar = a0 + (a + 2) % 3;
-
-            if (b === -1) { // convex hull edge
-                if (i === 0) break;
-                a = EDGE_STACK[--i];
-                continue;
-            }
-
-            const b0 = b - b % 3;
-            const al = a0 + (a + 1) % 3;
-            const bl = b0 + (b + 2) % 3;
-
-            const p0 = triangles[ar];
-            const pr = triangles[a];
-            const pl = triangles[al];
-            const p1 = triangles[bl];
-
-            const illegal = inCircle(
-                coords[2 * p0], coords[2 * p0 + 1],
-                coords[2 * pr], coords[2 * pr + 1],
-                coords[2 * pl], coords[2 * pl + 1],
-                coords[2 * p1], coords[2 * p1 + 1]);
-
-            if (illegal) {
-                triangles[a] = p1;
-                triangles[b] = p0;
-
-                const hbl = halfedges[bl];
-
-                // edge swapped on the other side of the hull (rare); fix the halfedge reference
-                if (hbl === -1) {
-                    let e = this._hullStart;
-                    do {
-                        if (this._hullTri[e] === bl) {
-                            this._hullTri[e] = a;
-                            break;
-                        }
-                        e = this._hullPrev[e];
-                    } while (e !== this._hullStart);
-                }
-                this._link(a, hbl);
-                this._link(b, halfedges[ar]);
-                this._link(ar, bl);
-
-                const br = b0 + (b + 1) % 3;
-
-                // don't worry about hitting the cap: it can only happen on extremely degenerate input
-                if (i < EDGE_STACK.length) {
-                    EDGE_STACK[i++] = br;
-                }
-            } else {
-                if (i === 0) break;
-                a = EDGE_STACK[--i];
-            }
-        }
-
-        return ar;
-    }
-
-    _link(a, b) {
-        this._halfedges[a] = b;
-        if (b !== -1) this._halfedges[b] = a;
-    }
-
-    // add a new triangle given vertex indices and adjacent half-edge ids
-    _addTriangle(i0, i1, i2, a, b, c) {
-        const t = this.trianglesLen;
-
-        this._triangles[t] = i0;
-        this._triangles[t + 1] = i1;
-        this._triangles[t + 2] = i2;
-
-        this._link(t, a);
-        this._link(t + 1, b);
-        this._link(t + 2, c);
-
-        this.trianglesLen += 3;
-
-        return t;
-    }
-}
-
-// monotonically increases with real angle, but doesn't need expensive trigonometry
-function pseudoAngle(dx, dy) {
-    const p = dx / (Math.abs(dx) + Math.abs(dy));
-    return (dy > 0 ? 3 - p : 1 + p) / 4; // [0..1]
-}
-
-function dist(ax, ay, bx, by) {
-    const dx = ax - bx;
-    const dy = ay - by;
-    return dx * dx + dy * dy;
-}
-
-// return 2d orientation sign if we're confident in it through J. Shewchuk's error bound check
-function orientIfSure(px, py, rx, ry, qx, qy) {
-    const l = (ry - py) * (qx - px);
-    const r = (rx - px) * (qy - py);
-    return Math.abs(l - r) >= 3.3306690738754716e-16 * Math.abs(l + r) ? l - r : 0;
-}
-
-// a more robust orientation test that's stable in a given triangle (to fix robustness issues)
-function orient(rx, ry, qx, qy, px, py) {
-    const sign = orientIfSure(px, py, rx, ry, qx, qy) ||
-    orientIfSure(rx, ry, qx, qy, px, py) ||
-    orientIfSure(qx, qy, px, py, rx, ry);
-    return sign < 0;
-}
-
-function inCircle(ax, ay, bx, by, cx, cy, px, py) {
-    const dx = ax - px;
-    const dy = ay - py;
-    const ex = bx - px;
-    const ey = by - py;
-    const fx = cx - px;
-    const fy = cy - py;
-
-    const ap = dx * dx + dy * dy;
-    const bp = ex * ex + ey * ey;
-    const cp = fx * fx + fy * fy;
-
-    return dx * (ey * cp - bp * fy) -
-           dy * (ex * cp - bp * fx) +
-           ap * (ex * fy - ey * fx) < 0;
-}
-
-function circumradius(ax, ay, bx, by, cx, cy) {
-    const dx = bx - ax;
-    const dy = by - ay;
-    const ex = cx - ax;
-    const ey = cy - ay;
-
-    const bl = dx * dx + dy * dy;
-    const cl = ex * ex + ey * ey;
-    const d = 0.5 / (dx * ey - dy * ex);
-
-    const x = (ey * bl - dy * cl) * d;
-    const y = (dx * cl - ex * bl) * d;
-
-    return x * x + y * y;
-}
-
-function circumcenter(ax, ay, bx, by, cx, cy) {
-    const dx = bx - ax;
-    const dy = by - ay;
-    const ex = cx - ax;
-    const ey = cy - ay;
-
-    const bl = dx * dx + dy * dy;
-    const cl = ex * ex + ey * ey;
-    const d = 0.5 / (dx * ey - dy * ex);
-
-    const x = ax + (ey * bl - dy * cl) * d;
-    const y = ay + (dx * cl - ex * bl) * d;
-
-    return {x, y};
-}
-
-function quicksort(ids, dists, left, right) {
-    if (right - left <= 20) {
-        for (let i = left + 1; i <= right; i++) {
-            const temp = ids[i];
-            const tempDist = dists[temp];
-            let j = i - 1;
-            while (j >= left && dists[ids[j]] > tempDist) ids[j + 1] = ids[j--];
-            ids[j + 1] = temp;
-        }
-    } else {
-        const median = (left + right) >> 1;
-        let i = left + 1;
-        let j = right;
-        swap(ids, median, i);
-        if (dists[ids[left]] > dists[ids[right]]) swap(ids, left, right);
-        if (dists[ids[i]] > dists[ids[right]]) swap(ids, i, right);
-        if (dists[ids[left]] > dists[ids[i]]) swap(ids, left, i);
-
-        const temp = ids[i];
-        const tempDist = dists[temp];
-        while (true) {
-            do i++; while (dists[ids[i]] < tempDist);
-            do j--; while (dists[ids[j]] > tempDist);
-            if (j < i) break;
-            swap(ids, i, j);
-        }
-        ids[left + 1] = ids[j];
-        ids[j] = temp;
-
-        if (right - i + 1 >= j - left) {
-            quicksort(ids, dists, i, right);
-            quicksort(ids, dists, left, j - 1);
-        } else {
-            quicksort(ids, dists, left, j - 1);
-            quicksort(ids, dists, i, right);
-        }
-    }
-}
-
-function swap(arr, i, j) {
-    const tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
-}
-
-function defaultGetX(p) {
-    return p[0];
-}
-function defaultGetY(p) {
-    return p[1];
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/history/esm/history.js":
 /*!*********************************************!*\
   !*** ./node_modules/history/esm/history.js ***!
@@ -41033,31 +33894,6 @@ module.exports = baseDifference;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseEach.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/_baseEach.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseForOwn = __webpack_require__(/*! ./_baseForOwn */ "./node_modules/lodash/_baseForOwn.js"),
-    createBaseEach = __webpack_require__(/*! ./_createBaseEach */ "./node_modules/lodash/_createBaseEach.js");
-
-/**
- * The base implementation of `_.forEach` without support for iteratee shorthands.
- *
- * @private
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array|Object} Returns `collection`.
- */
-var baseEach = createBaseEach(baseForOwn);
-
-module.exports = baseEach;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseFindIndex.js":
 /*!***********************************************!*\
   !*** ./node_modules/lodash/_baseFindIndex.js ***!
@@ -41165,33 +34001,6 @@ var createBaseFor = __webpack_require__(/*! ./_createBaseFor */ "./node_modules/
 var baseFor = createBaseFor();
 
 module.exports = baseFor;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseForOwn.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash/_baseForOwn.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseFor = __webpack_require__(/*! ./_baseFor */ "./node_modules/lodash/_baseFor.js"),
-    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js");
-
-/**
- * The base implementation of `_.forOwn` without support for iteratee shorthands.
- *
- * @private
- * @param {Object} object The object to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Object} Returns `object`.
- */
-function baseForOwn(object, iteratee) {
-  return object && baseFor(object, iteratee, keys);
-}
-
-module.exports = baseForOwn;
 
 
 /***/ }),
@@ -41385,35 +34194,6 @@ module.exports = baseIsArguments;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseIsDate.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash/_baseIsDate.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
-    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
-
-/** `Object#toString` result references. */
-var dateTag = '[object Date]';
-
-/**
- * The base implementation of `_.isDate` without Node.js optimizations.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
- */
-function baseIsDate(value) {
-  return isObjectLike(value) && baseGetTag(value) == dateTag;
-}
-
-module.exports = baseIsDate;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseIsEqual.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash/_baseIsEqual.js ***!
@@ -41543,79 +34323,6 @@ function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
 }
 
 module.exports = baseIsEqualDeep;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseIsMatch.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_baseIsMatch.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Stack = __webpack_require__(/*! ./_Stack */ "./node_modules/lodash/_Stack.js"),
-    baseIsEqual = __webpack_require__(/*! ./_baseIsEqual */ "./node_modules/lodash/_baseIsEqual.js");
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.isMatch` without support for iteratee shorthands.
- *
- * @private
- * @param {Object} object The object to inspect.
- * @param {Object} source The object of property values to match.
- * @param {Array} matchData The property names, values, and compare flags to match.
- * @param {Function} [customizer] The function to customize comparisons.
- * @returns {boolean} Returns `true` if `object` is a match, else `false`.
- */
-function baseIsMatch(object, source, matchData, customizer) {
-  var index = matchData.length,
-      length = index,
-      noCustomizer = !customizer;
-
-  if (object == null) {
-    return !length;
-  }
-  object = Object(object);
-  while (index--) {
-    var data = matchData[index];
-    if ((noCustomizer && data[2])
-          ? data[1] !== object[data[0]]
-          : !(data[0] in object)
-        ) {
-      return false;
-    }
-  }
-  while (++index < length) {
-    data = matchData[index];
-    var key = data[0],
-        objValue = object[key],
-        srcValue = data[1];
-
-    if (noCustomizer && data[2]) {
-      if (objValue === undefined && !(key in object)) {
-        return false;
-      }
-    } else {
-      var stack = new Stack;
-      if (customizer) {
-        var result = customizer(objValue, srcValue, key, object, source, stack);
-      }
-      if (!(result === undefined
-            ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack)
-            : result
-          )) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-module.exports = baseIsMatch;
 
 
 /***/ }),
@@ -41772,48 +34479,6 @@ module.exports = baseIsTypedArray;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseIteratee.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseIteratee.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseMatches = __webpack_require__(/*! ./_baseMatches */ "./node_modules/lodash/_baseMatches.js"),
-    baseMatchesProperty = __webpack_require__(/*! ./_baseMatchesProperty */ "./node_modules/lodash/_baseMatchesProperty.js"),
-    identity = __webpack_require__(/*! ./identity */ "./node_modules/lodash/identity.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    property = __webpack_require__(/*! ./property */ "./node_modules/lodash/property.js");
-
-/**
- * The base implementation of `_.iteratee`.
- *
- * @private
- * @param {*} [value=_.identity] The value to convert to an iteratee.
- * @returns {Function} Returns the iteratee.
- */
-function baseIteratee(value) {
-  // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
-  // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
-  if (typeof value == 'function') {
-    return value;
-  }
-  if (value == null) {
-    return identity;
-  }
-  if (typeof value == 'object') {
-    return isArray(value)
-      ? baseMatchesProperty(value[0], value[1])
-      : baseMatches(value);
-  }
-  return property(value);
-}
-
-module.exports = baseIteratee;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseKeys.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_baseKeys.js ***!
@@ -41895,116 +34560,6 @@ function baseKeysIn(object) {
 }
 
 module.exports = baseKeysIn;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseMap.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/_baseMap.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseEach = __webpack_require__(/*! ./_baseEach */ "./node_modules/lodash/_baseEach.js"),
-    isArrayLike = __webpack_require__(/*! ./isArrayLike */ "./node_modules/lodash/isArrayLike.js");
-
-/**
- * The base implementation of `_.map` without support for iteratee shorthands.
- *
- * @private
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array} Returns the new mapped array.
- */
-function baseMap(collection, iteratee) {
-  var index = -1,
-      result = isArrayLike(collection) ? Array(collection.length) : [];
-
-  baseEach(collection, function(value, key, collection) {
-    result[++index] = iteratee(value, key, collection);
-  });
-  return result;
-}
-
-module.exports = baseMap;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseMatches.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_baseMatches.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsMatch = __webpack_require__(/*! ./_baseIsMatch */ "./node_modules/lodash/_baseIsMatch.js"),
-    getMatchData = __webpack_require__(/*! ./_getMatchData */ "./node_modules/lodash/_getMatchData.js"),
-    matchesStrictComparable = __webpack_require__(/*! ./_matchesStrictComparable */ "./node_modules/lodash/_matchesStrictComparable.js");
-
-/**
- * The base implementation of `_.matches` which doesn't clone `source`.
- *
- * @private
- * @param {Object} source The object of property values to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatches(source) {
-  var matchData = getMatchData(source);
-  if (matchData.length == 1 && matchData[0][2]) {
-    return matchesStrictComparable(matchData[0][0], matchData[0][1]);
-  }
-  return function(object) {
-    return object === source || baseIsMatch(object, source, matchData);
-  };
-}
-
-module.exports = baseMatches;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseMatchesProperty.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/lodash/_baseMatchesProperty.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsEqual = __webpack_require__(/*! ./_baseIsEqual */ "./node_modules/lodash/_baseIsEqual.js"),
-    get = __webpack_require__(/*! ./get */ "./node_modules/lodash/get.js"),
-    hasIn = __webpack_require__(/*! ./hasIn */ "./node_modules/lodash/hasIn.js"),
-    isKey = __webpack_require__(/*! ./_isKey */ "./node_modules/lodash/_isKey.js"),
-    isStrictComparable = __webpack_require__(/*! ./_isStrictComparable */ "./node_modules/lodash/_isStrictComparable.js"),
-    matchesStrictComparable = __webpack_require__(/*! ./_matchesStrictComparable */ "./node_modules/lodash/_matchesStrictComparable.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
- *
- * @private
- * @param {string} path The path of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatchesProperty(path, srcValue) {
-  if (isKey(path) && isStrictComparable(srcValue)) {
-    return matchesStrictComparable(toKey(path), srcValue);
-  }
-  return function(object) {
-    var objValue = get(object, path);
-    return (objValue === undefined && objValue === srcValue)
-      ? hasIn(object, path)
-      : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
-  };
-}
-
-module.exports = baseMatchesProperty;
 
 
 /***/ }),
@@ -42167,66 +34722,6 @@ module.exports = baseMergeDeep;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseOrderBy.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_baseOrderBy.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayMap = __webpack_require__(/*! ./_arrayMap */ "./node_modules/lodash/_arrayMap.js"),
-    baseGet = __webpack_require__(/*! ./_baseGet */ "./node_modules/lodash/_baseGet.js"),
-    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
-    baseMap = __webpack_require__(/*! ./_baseMap */ "./node_modules/lodash/_baseMap.js"),
-    baseSortBy = __webpack_require__(/*! ./_baseSortBy */ "./node_modules/lodash/_baseSortBy.js"),
-    baseUnary = __webpack_require__(/*! ./_baseUnary */ "./node_modules/lodash/_baseUnary.js"),
-    compareMultiple = __webpack_require__(/*! ./_compareMultiple */ "./node_modules/lodash/_compareMultiple.js"),
-    identity = __webpack_require__(/*! ./identity */ "./node_modules/lodash/identity.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js");
-
-/**
- * The base implementation of `_.orderBy` without param guards.
- *
- * @private
- * @param {Array|Object} collection The collection to iterate over.
- * @param {Function[]|Object[]|string[]} iteratees The iteratees to sort by.
- * @param {string[]} orders The sort orders of `iteratees`.
- * @returns {Array} Returns the new sorted array.
- */
-function baseOrderBy(collection, iteratees, orders) {
-  if (iteratees.length) {
-    iteratees = arrayMap(iteratees, function(iteratee) {
-      if (isArray(iteratee)) {
-        return function(value) {
-          return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
-        }
-      }
-      return iteratee;
-    });
-  } else {
-    iteratees = [identity];
-  }
-
-  var index = -1;
-  iteratees = arrayMap(iteratees, baseUnary(baseIteratee));
-
-  var result = baseMap(collection, function(value, key, collection) {
-    var criteria = arrayMap(iteratees, function(iteratee) {
-      return iteratee(value);
-    });
-    return { 'criteria': criteria, 'index': ++index, 'value': value };
-  });
-
-  return baseSortBy(result, function(object, other) {
-    return compareMultiple(object, other, orders);
-  });
-}
-
-module.exports = baseOrderBy;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_basePick.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_basePick.js ***!
@@ -42294,97 +34789,6 @@ function basePickBy(object, paths, predicate) {
 }
 
 module.exports = basePickBy;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseProperty.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseProperty.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : object[key];
-  };
-}
-
-module.exports = baseProperty;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_basePropertyDeep.js":
-/*!**************************************************!*\
-  !*** ./node_modules/lodash/_basePropertyDeep.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGet = __webpack_require__(/*! ./_baseGet */ "./node_modules/lodash/_baseGet.js");
-
-/**
- * A specialized version of `baseProperty` which supports deep paths.
- *
- * @private
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function basePropertyDeep(path) {
-  return function(object) {
-    return baseGet(object, path);
-  };
-}
-
-module.exports = basePropertyDeep;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseRange.js":
-/*!*******************************************!*\
-  !*** ./node_modules/lodash/_baseRange.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeCeil = Math.ceil,
-    nativeMax = Math.max;
-
-/**
- * The base implementation of `_.range` and `_.rangeRight` which doesn't
- * coerce arguments.
- *
- * @private
- * @param {number} start The start of the range.
- * @param {number} end The end of the range.
- * @param {number} step The value to increment or decrement by.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Array} Returns the range of numbers.
- */
-function baseRange(start, end, step, fromRight) {
-  var index = -1,
-      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
-      result = Array(length);
-
-  while (length--) {
-    result[fromRight ? length : ++index] = start;
-    start += step;
-  }
-  return result;
-}
-
-module.exports = baseRange;
 
 
 /***/ }),
@@ -42512,38 +34916,6 @@ module.exports = baseSetToString;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseSortBy.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash/_baseSortBy.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The base implementation of `_.sortBy` which uses `comparer` to define the
- * sort order of `array` and replaces criteria objects with their corresponding
- * values.
- *
- * @private
- * @param {Array} array The array to sort.
- * @param {Function} comparer The function to define sort order.
- * @returns {Array} Returns `array`.
- */
-function baseSortBy(array, comparer) {
-  var length = array.length;
-
-  array.sort(comparer);
-  while (length--) {
-    array[length] = array[length].value;
-  }
-  return array;
-}
-
-module.exports = baseSortBy;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseTimes.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_baseTimes.js ***!
@@ -42623,36 +34995,6 @@ module.exports = baseToString;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseTrim.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/_baseTrim.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var trimmedEndIndex = __webpack_require__(/*! ./_trimmedEndIndex */ "./node_modules/lodash/_trimmedEndIndex.js");
-
-/** Used to match leading whitespace. */
-var reTrimStart = /^\s+/;
-
-/**
- * The base implementation of `_.trim`.
- *
- * @private
- * @param {string} string The string to trim.
- * @returns {string} Returns the trimmed string.
- */
-function baseTrim(string) {
-  return string
-    ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
-    : string;
-}
-
-module.exports = baseTrim;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseUnary.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_baseUnary.js ***!
@@ -42674,89 +35016,6 @@ function baseUnary(func) {
 }
 
 module.exports = baseUnary;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseUniq.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/_baseUniq.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var SetCache = __webpack_require__(/*! ./_SetCache */ "./node_modules/lodash/_SetCache.js"),
-    arrayIncludes = __webpack_require__(/*! ./_arrayIncludes */ "./node_modules/lodash/_arrayIncludes.js"),
-    arrayIncludesWith = __webpack_require__(/*! ./_arrayIncludesWith */ "./node_modules/lodash/_arrayIncludesWith.js"),
-    cacheHas = __webpack_require__(/*! ./_cacheHas */ "./node_modules/lodash/_cacheHas.js"),
-    createSet = __webpack_require__(/*! ./_createSet */ "./node_modules/lodash/_createSet.js"),
-    setToArray = __webpack_require__(/*! ./_setToArray */ "./node_modules/lodash/_setToArray.js");
-
-/** Used as the size to enable large array optimizations. */
-var LARGE_ARRAY_SIZE = 200;
-
-/**
- * The base implementation of `_.uniqBy` without support for iteratee shorthands.
- *
- * @private
- * @param {Array} array The array to inspect.
- * @param {Function} [iteratee] The iteratee invoked per element.
- * @param {Function} [comparator] The comparator invoked per element.
- * @returns {Array} Returns the new duplicate free array.
- */
-function baseUniq(array, iteratee, comparator) {
-  var index = -1,
-      includes = arrayIncludes,
-      length = array.length,
-      isCommon = true,
-      result = [],
-      seen = result;
-
-  if (comparator) {
-    isCommon = false;
-    includes = arrayIncludesWith;
-  }
-  else if (length >= LARGE_ARRAY_SIZE) {
-    var set = iteratee ? null : createSet(array);
-    if (set) {
-      return setToArray(set);
-    }
-    isCommon = false;
-    includes = cacheHas;
-    seen = new SetCache;
-  }
-  else {
-    seen = iteratee ? [] : result;
-  }
-  outer:
-  while (++index < length) {
-    var value = array[index],
-        computed = iteratee ? iteratee(value) : value;
-
-    value = (comparator || value !== 0) ? value : 0;
-    if (isCommon && computed === computed) {
-      var seenIndex = seen.length;
-      while (seenIndex--) {
-        if (seen[seenIndex] === computed) {
-          continue outer;
-        }
-      }
-      if (iteratee) {
-        seen.push(computed);
-      }
-      result.push(value);
-    }
-    else if (!includes(seen, computed, comparator)) {
-      if (seen !== result) {
-        seen.push(computed);
-      }
-      result.push(value);
-    }
-  }
-  return result;
-}
-
-module.exports = baseUniq;
 
 
 /***/ }),
@@ -42918,113 +35177,6 @@ module.exports = cloneTypedArray;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_compareAscending.js":
-/*!**************************************************!*\
-  !*** ./node_modules/lodash/_compareAscending.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/**
- * Compares values to sort them in ascending order.
- *
- * @private
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {number} Returns the sort order indicator for `value`.
- */
-function compareAscending(value, other) {
-  if (value !== other) {
-    var valIsDefined = value !== undefined,
-        valIsNull = value === null,
-        valIsReflexive = value === value,
-        valIsSymbol = isSymbol(value);
-
-    var othIsDefined = other !== undefined,
-        othIsNull = other === null,
-        othIsReflexive = other === other,
-        othIsSymbol = isSymbol(other);
-
-    if ((!othIsNull && !othIsSymbol && !valIsSymbol && value > other) ||
-        (valIsSymbol && othIsDefined && othIsReflexive && !othIsNull && !othIsSymbol) ||
-        (valIsNull && othIsDefined && othIsReflexive) ||
-        (!valIsDefined && othIsReflexive) ||
-        !valIsReflexive) {
-      return 1;
-    }
-    if ((!valIsNull && !valIsSymbol && !othIsSymbol && value < other) ||
-        (othIsSymbol && valIsDefined && valIsReflexive && !valIsNull && !valIsSymbol) ||
-        (othIsNull && valIsDefined && valIsReflexive) ||
-        (!othIsDefined && valIsReflexive) ||
-        !othIsReflexive) {
-      return -1;
-    }
-  }
-  return 0;
-}
-
-module.exports = compareAscending;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_compareMultiple.js":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash/_compareMultiple.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var compareAscending = __webpack_require__(/*! ./_compareAscending */ "./node_modules/lodash/_compareAscending.js");
-
-/**
- * Used by `_.orderBy` to compare multiple properties of a value to another
- * and stable sort them.
- *
- * If `orders` is unspecified, all values are sorted in ascending order. Otherwise,
- * specify an order of "desc" for descending or "asc" for ascending sort order
- * of corresponding values.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {boolean[]|string[]} orders The order to sort by for each property.
- * @returns {number} Returns the sort order indicator for `object`.
- */
-function compareMultiple(object, other, orders) {
-  var index = -1,
-      objCriteria = object.criteria,
-      othCriteria = other.criteria,
-      length = objCriteria.length,
-      ordersLength = orders.length;
-
-  while (++index < length) {
-    var result = compareAscending(objCriteria[index], othCriteria[index]);
-    if (result) {
-      if (index >= ordersLength) {
-        return result;
-      }
-      var order = orders[index];
-      return result * (order == 'desc' ? -1 : 1);
-    }
-  }
-  // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
-  // that causes it, under certain circumstances, to provide the same value for
-  // `object` and `other`. See https://github.com/jashkenas/underscore/pull/1247
-  // for more details.
-  //
-  // This also ensures a stable sort in V8 and other engines.
-  // See https://bugs.chromium.org/p/v8/issues/detail?id=90 for more details.
-  return object.index - other.index;
-}
-
-module.exports = compareMultiple;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_copyArray.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_copyArray.js ***!
@@ -43172,49 +35324,6 @@ module.exports = createAssigner;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_createBaseEach.js":
-/*!************************************************!*\
-  !*** ./node_modules/lodash/_createBaseEach.js ***!
-  \************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArrayLike = __webpack_require__(/*! ./isArrayLike */ "./node_modules/lodash/isArrayLike.js");
-
-/**
- * Creates a `baseEach` or `baseEachRight` function.
- *
- * @private
- * @param {Function} eachFunc The function to iterate over a collection.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new base function.
- */
-function createBaseEach(eachFunc, fromRight) {
-  return function(collection, iteratee) {
-    if (collection == null) {
-      return collection;
-    }
-    if (!isArrayLike(collection)) {
-      return eachFunc(collection, iteratee);
-    }
-    var length = collection.length,
-        index = fromRight ? length : -1,
-        iterable = Object(collection);
-
-    while ((fromRight ? index-- : ++index < length)) {
-      if (iteratee(iterable[index], index, iterable) === false) {
-        break;
-      }
-    }
-    return collection;
-  };
-}
-
-module.exports = createBaseEach;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_createBaseFor.js":
 /*!***********************************************!*\
   !*** ./node_modules/lodash/_createBaseFor.js ***!
@@ -43247,77 +35356,6 @@ function createBaseFor(fromRight) {
 }
 
 module.exports = createBaseFor;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_createRange.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_createRange.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseRange = __webpack_require__(/*! ./_baseRange */ "./node_modules/lodash/_baseRange.js"),
-    isIterateeCall = __webpack_require__(/*! ./_isIterateeCall */ "./node_modules/lodash/_isIterateeCall.js"),
-    toFinite = __webpack_require__(/*! ./toFinite */ "./node_modules/lodash/toFinite.js");
-
-/**
- * Creates a `_.range` or `_.rangeRight` function.
- *
- * @private
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new range function.
- */
-function createRange(fromRight) {
-  return function(start, end, step) {
-    if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
-      end = step = undefined;
-    }
-    // Ensure the sign of `-0` is preserved.
-    start = toFinite(start);
-    if (end === undefined) {
-      end = start;
-      start = 0;
-    } else {
-      end = toFinite(end);
-    }
-    step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
-    return baseRange(start, end, step, fromRight);
-  };
-}
-
-module.exports = createRange;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_createSet.js":
-/*!*******************************************!*\
-  !*** ./node_modules/lodash/_createSet.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Set = __webpack_require__(/*! ./_Set */ "./node_modules/lodash/_Set.js"),
-    noop = __webpack_require__(/*! ./noop */ "./node_modules/lodash/noop.js"),
-    setToArray = __webpack_require__(/*! ./_setToArray */ "./node_modules/lodash/_setToArray.js");
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0;
-
-/**
- * Creates a set object of `values`.
- *
- * @private
- * @param {Array} values The values to add to the set.
- * @returns {Object} Returns the new set.
- */
-var createSet = !(Set && (1 / setToArray(new Set([,-0]))[1]) == INFINITY) ? noop : function(values) {
-  return new Set(values);
-};
-
-module.exports = createSet;
 
 
 /***/ }),
@@ -43758,41 +35796,6 @@ function getMapData(map, key) {
 }
 
 module.exports = getMapData;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_getMatchData.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_getMatchData.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isStrictComparable = __webpack_require__(/*! ./_isStrictComparable */ "./node_modules/lodash/_isStrictComparable.js"),
-    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js");
-
-/**
- * Gets the property names, values, and compare flags of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the match data of `object`.
- */
-function getMatchData(object) {
-  var result = keys(object),
-      length = result.length;
-
-  while (length--) {
-    var key = result[length],
-        value = object[key];
-
-    result[length] = [key, value, isStrictComparable(value)];
-  }
-  return result;
-}
-
-module.exports = getMatchData;
 
 
 /***/ }),
@@ -44509,32 +36512,6 @@ module.exports = isPrototype;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_isStrictComparable.js":
-/*!****************************************************!*\
-  !*** ./node_modules/lodash/_isStrictComparable.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js");
-
-/**
- * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` if suitable for strict
- *  equality comparisons, else `false`.
- */
-function isStrictComparable(value) {
-  return value === value && !isObject(value);
-}
-
-module.exports = isStrictComparable;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_listCacheClear.js":
 /*!************************************************!*\
   !*** ./node_modules/lodash/_listCacheClear.js ***!
@@ -44872,37 +36849,6 @@ function mapToArray(map) {
 }
 
 module.exports = mapToArray;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_matchesStrictComparable.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/lodash/_matchesStrictComparable.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * A specialized version of `matchesProperty` for source values suitable
- * for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function matchesStrictComparable(key, srcValue) {
-  return function(object) {
-    if (object == null) {
-      return false;
-    }
-    return object[key] === srcValue &&
-      (srcValue !== undefined || (key in Object(object)));
-  };
-}
-
-module.exports = matchesStrictComparable;
 
 
 /***/ }),
@@ -45657,36 +37603,6 @@ module.exports = toSource;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_trimmedEndIndex.js":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash/_trimmedEndIndex.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/** Used to match a single whitespace character. */
-var reWhitespace = /\s/;
-
-/**
- * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
- * character of `string`.
- *
- * @private
- * @param {string} string The string to inspect.
- * @returns {number} Returns the index of the last non-whitespace character.
- */
-function trimmedEndIndex(string) {
-  var index = string.length;
-
-  while (index-- && reWhitespace.test(string.charAt(index))) {}
-  return index;
-}
-
-module.exports = trimmedEndIndex;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/constant.js":
 /*!*****************************************!*\
   !*** ./node_modules/lodash/constant.js ***!
@@ -46145,44 +38061,6 @@ var isBuffer = nativeIsBuffer || stubFalse;
 module.exports = isBuffer;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
-
-/***/ }),
-
-/***/ "./node_modules/lodash/isDate.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/isDate.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsDate = __webpack_require__(/*! ./_baseIsDate */ "./node_modules/lodash/_baseIsDate.js"),
-    baseUnary = __webpack_require__(/*! ./_baseUnary */ "./node_modules/lodash/_baseUnary.js"),
-    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ "./node_modules/lodash/_nodeUtil.js");
-
-/* Node.js helper references. */
-var nodeIsDate = nodeUtil && nodeUtil.isDate;
-
-/**
- * Checks if `value` is classified as a `Date` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
- * @example
- *
- * _.isDate(new Date);
- * // => true
- *
- * _.isDate('Mon April 23 2012');
- * // => false
- */
-var isDate = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
-
-module.exports = isDate;
-
 
 /***/ }),
 
@@ -46856,34 +38734,6 @@ module.exports = merge;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/noop.js":
-/*!*************************************!*\
-  !*** ./node_modules/lodash/noop.js ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * This method returns `undefined`.
- *
- * @static
- * @memberOf _
- * @since 2.3.0
- * @category Util
- * @example
- *
- * _.times(2, _.noop);
- * // => [undefined, undefined]
- */
-function noop() {
-  // No operation performed.
-}
-
-module.exports = noop;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/pick.js":
 /*!*************************************!*\
   !*** ./node_modules/lodash/pick.js ***!
@@ -46916,106 +38766,6 @@ var pick = flatRest(function(object, paths) {
 });
 
 module.exports = pick;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/property.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/property.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseProperty = __webpack_require__(/*! ./_baseProperty */ "./node_modules/lodash/_baseProperty.js"),
-    basePropertyDeep = __webpack_require__(/*! ./_basePropertyDeep */ "./node_modules/lodash/_basePropertyDeep.js"),
-    isKey = __webpack_require__(/*! ./_isKey */ "./node_modules/lodash/_isKey.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/**
- * Creates a function that returns the value at `path` of a given object.
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Util
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- * @example
- *
- * var objects = [
- *   { 'a': { 'b': 2 } },
- *   { 'a': { 'b': 1 } }
- * ];
- *
- * _.map(objects, _.property('a.b'));
- * // => [2, 1]
- *
- * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
- * // => [1, 2]
- */
-function property(path) {
-  return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
-}
-
-module.exports = property;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/range.js":
-/*!**************************************!*\
-  !*** ./node_modules/lodash/range.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var createRange = __webpack_require__(/*! ./_createRange */ "./node_modules/lodash/_createRange.js");
-
-/**
- * Creates an array of numbers (positive and/or negative) progressing from
- * `start` up to, but not including, `end`. A step of `-1` is used if a negative
- * `start` is specified without an `end` or `step`. If `end` is not specified,
- * it's set to `start` with `start` then set to `0`.
- *
- * **Note:** JavaScript follows the IEEE-754 standard for resolving
- * floating-point values which can produce unexpected results.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Util
- * @param {number} [start=0] The start of the range.
- * @param {number} end The end of the range.
- * @param {number} [step=1] The value to increment or decrement by.
- * @returns {Array} Returns the range of numbers.
- * @see _.inRange, _.rangeRight
- * @example
- *
- * _.range(4);
- * // => [0, 1, 2, 3]
- *
- * _.range(-4);
- * // => [0, -1, -2, -3]
- *
- * _.range(1, 5);
- * // => [1, 2, 3, 4]
- *
- * _.range(0, 20, 5);
- * // => [0, 5, 10, 15]
- *
- * _.range(0, -4, -1);
- * // => [0, -1, -2, -3]
- *
- * _.range(1, 4, 0);
- * // => [1, 1, 1]
- *
- * _.range(0);
- * // => []
- */
-var range = createRange();
-
-module.exports = range;
 
 
 /***/ }),
@@ -47062,65 +38812,6 @@ function set(object, path, value) {
 }
 
 module.exports = set;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/sortBy.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/sortBy.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseFlatten = __webpack_require__(/*! ./_baseFlatten */ "./node_modules/lodash/_baseFlatten.js"),
-    baseOrderBy = __webpack_require__(/*! ./_baseOrderBy */ "./node_modules/lodash/_baseOrderBy.js"),
-    baseRest = __webpack_require__(/*! ./_baseRest */ "./node_modules/lodash/_baseRest.js"),
-    isIterateeCall = __webpack_require__(/*! ./_isIterateeCall */ "./node_modules/lodash/_isIterateeCall.js");
-
-/**
- * Creates an array of elements, sorted in ascending order by the results of
- * running each element in a collection thru each iteratee. This method
- * performs a stable sort, that is, it preserves the original sort order of
- * equal elements. The iteratees are invoked with one argument: (value).
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Collection
- * @param {Array|Object} collection The collection to iterate over.
- * @param {...(Function|Function[])} [iteratees=[_.identity]]
- *  The iteratees to sort by.
- * @returns {Array} Returns the new sorted array.
- * @example
- *
- * var users = [
- *   { 'user': 'fred',   'age': 48 },
- *   { 'user': 'barney', 'age': 36 },
- *   { 'user': 'fred',   'age': 30 },
- *   { 'user': 'barney', 'age': 34 }
- * ];
- *
- * _.sortBy(users, [function(o) { return o.user; }]);
- * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 30]]
- *
- * _.sortBy(users, ['user', 'age']);
- * // => objects for [['barney', 34], ['barney', 36], ['fred', 30], ['fred', 48]]
- */
-var sortBy = baseRest(function(collection, iteratees) {
-  if (collection == null) {
-    return [];
-  }
-  var length = iteratees.length;
-  if (length > 1 && isIterateeCall(collection, iteratees[0], iteratees[1])) {
-    iteratees = [];
-  } else if (length > 2 && isIterateeCall(iteratees[0], iteratees[1], iteratees[2])) {
-    iteratees = [iteratees[0]];
-  }
-  return baseOrderBy(collection, baseFlatten(iteratees, 1), []);
-});
-
-module.exports = sortBy;
 
 
 /***/ }),
@@ -47184,134 +38875,6 @@ function stubFalse() {
 }
 
 module.exports = stubFalse;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toFinite.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toFinite.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0,
-    MAX_INTEGER = 1.7976931348623157e+308;
-
-/**
- * Converts `value` to a finite number.
- *
- * @static
- * @memberOf _
- * @since 4.12.0
- * @category Lang
- * @param {*} value The value to convert.
- * @returns {number} Returns the converted number.
- * @example
- *
- * _.toFinite(3.2);
- * // => 3.2
- *
- * _.toFinite(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toFinite(Infinity);
- * // => 1.7976931348623157e+308
- *
- * _.toFinite('3.2');
- * // => 3.2
- */
-function toFinite(value) {
-  if (!value) {
-    return value === 0 ? value : 0;
-  }
-  value = toNumber(value);
-  if (value === INFINITY || value === -INFINITY) {
-    var sign = (value < 0 ? -1 : 1);
-    return sign * MAX_INTEGER;
-  }
-  return value === value ? value : 0;
-}
-
-module.exports = toFinite;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toNumber.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toNumber.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseTrim = __webpack_require__(/*! ./_baseTrim */ "./node_modules/lodash/_baseTrim.js"),
-    isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used as references for various `Number` constants. */
-var NAN = 0 / 0;
-
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-
-/**
- * Converts `value` to a number.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {number} Returns the number.
- * @example
- *
- * _.toNumber(3.2);
- * // => 3.2
- *
- * _.toNumber(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toNumber(Infinity);
- * // => Infinity
- *
- * _.toNumber('3.2');
- * // => 3.2
- */
-function toNumber(value) {
-  if (typeof value == 'number') {
-    return value;
-  }
-  if (isSymbol(value)) {
-    return NAN;
-  }
-  if (isObject(value)) {
-    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-    value = isObject(other) ? (other + '') : other;
-  }
-  if (typeof value != 'string') {
-    return value === 0 ? value : +value;
-  }
-  value = baseTrim(value);
-  var isBinary = reIsBinary.test(value);
-  return (isBinary || reIsOctal.test(value))
-    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-    : (reIsBadHex.test(value) ? NAN : +value);
-}
-
-module.exports = toNumber;
 
 
 /***/ }),
@@ -47394,84 +38957,6 @@ function toString(value) {
 }
 
 module.exports = toString;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/uniq.js":
-/*!*************************************!*\
-  !*** ./node_modules/lodash/uniq.js ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseUniq = __webpack_require__(/*! ./_baseUniq */ "./node_modules/lodash/_baseUniq.js");
-
-/**
- * Creates a duplicate-free version of an array, using
- * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
- * for equality comparisons, in which only the first occurrence of each element
- * is kept. The order of result values is determined by the order they occur
- * in the array.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Array
- * @param {Array} array The array to inspect.
- * @returns {Array} Returns the new duplicate free array.
- * @example
- *
- * _.uniq([2, 1, 2]);
- * // => [2, 1]
- */
-function uniq(array) {
-  return (array && array.length) ? baseUniq(array) : [];
-}
-
-module.exports = uniq;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/uniqBy.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/uniqBy.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
-    baseUniq = __webpack_require__(/*! ./_baseUniq */ "./node_modules/lodash/_baseUniq.js");
-
-/**
- * This method is like `_.uniq` except that it accepts `iteratee` which is
- * invoked for each element in `array` to generate the criterion by which
- * uniqueness is computed. The order of result values is determined by the
- * order they occur in the array. The iteratee is invoked with one argument:
- * (value).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Array
- * @param {Array} array The array to inspect.
- * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
- * @returns {Array} Returns the new duplicate free array.
- * @example
- *
- * _.uniqBy([2.1, 1.2, 2.3], Math.floor);
- * // => [2.1, 1.2]
- *
- * // The `_.property` iteratee shorthand.
- * _.uniqBy([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
- * // => [{ 'x': 1 }, { 'x': 2 }]
- */
-function uniqBy(array, iteratee) {
-  return (array && array.length) ? baseUniq(array, baseIteratee(iteratee, 2)) : [];
-}
-
-module.exports = uniqBy;
 
 
 /***/ }),
