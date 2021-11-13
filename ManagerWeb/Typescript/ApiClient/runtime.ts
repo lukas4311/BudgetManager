@@ -227,6 +227,10 @@ export function querystring(params: HTTPQuery, prefix: string = ''): string {
                     .join(`&${encodeURIComponent(fullKey)}=`);
                 return `${encodeURIComponent(fullKey)}=${multiValue}`;
             }
+
+            if(value == null || value == undefined)
+                return "";
+
             if (value instanceof Object) {
                 return querystring(value as HTTPQuery, fullKey);
             }
