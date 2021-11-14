@@ -30,9 +30,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
+    <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />
     <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
-    <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
   </ItemGroup>
 
   <ItemGroup>

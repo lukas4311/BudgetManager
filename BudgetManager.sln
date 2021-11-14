@@ -1,23 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.ManagerWeb", "ManagerWeb\BudgetManager.ManagerWeb.csproj", "{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinanceDataMining", "InvestmentIntegrationApi\BudgetManager.FinanceDataMining.csproj", "{3AF953B7-222B-4A6F-AF49-C87050124EBC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.TestingConsole", "TestingConsole\BudgetManager.TestingConsole.csproj", "{D3FB65CE-E760-493D-804C-C7735E41424F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinancialDataProvider", "FinancialDataProvider\BudgetManager.FinancialDataProvider.csproj", "{943EC85F-4669-4452-AEAD-53FF786E629F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.InfluxDbData", "InfluxDbData\BudgetManager.InfluxDbData.csproj", "{CF38C15D-89B8-48C6-9028-18A332B37A1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{766BF606-B5CB-4D86-9A46-497F8B2CCE22}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{E74A8A66-07C0-444E-91DA-04A2CA077430}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BudgetManager.WebScrapers", "WebScrapers\BudgetManager.WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Core", "BudgetManager.Core\BudgetManager.Core.csproj", "{E0C43364-8446-47D2-A887-5267891106CE}"
 EndProject
@@ -39,6 +31,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Data", "Budge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.Repository", "BudgetManager.Repositories\BudgetManager.Repository.csproj", "{5AFFDBB5-AC29-4B2C-8359-FBADED15722A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.InfluxDbData", "BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj", "{71B6F282-991B-4B0A-85B1-AA13BA9AE128}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinanceDataMining", "BudgetManager.InvestmentIntegrationApi\BudgetManager.FinanceDataMining.csproj", "{386175CB-7603-4E14-BAFB-9C8B47E51A74}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BudgetManager.WebScrapers", "BudgetManager.WebScrapers\BudgetManager.WebScrapers.pyproj", "{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinancialDataProvider", "BudgetManager.FinancialDataProvider\BudgetManager.FinancialDataProvider.csproj", "{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,24 +49,10 @@ Global
 		{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96D25EF8-05E5-4A26-8FB2-5E1F28E9B5F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AF953B7-222B-4A6F-AF49-C87050124EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AF953B7-222B-4A6F-AF49-C87050124EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AF953B7-222B-4A6F-AF49-C87050124EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AF953B7-222B-4A6F-AF49-C87050124EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3FB65CE-E760-493D-804C-C7735E41424F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{943EC85F-4669-4452-AEAD-53FF786E629F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{943EC85F-4669-4452-AEAD-53FF786E629F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{943EC85F-4669-4452-AEAD-53FF786E629F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{943EC85F-4669-4452-AEAD-53FF786E629F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF38C15D-89B8-48C6-9028-18A332B37A1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0C43364-8446-47D2-A887-5267891106CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0C43364-8446-47D2-A887-5267891106CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0C43364-8446-47D2-A887-5267891106CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,15 +85,25 @@ Global
 		{5AFFDBB5-AC29-4B2C-8359-FBADED15722A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AFFDBB5-AC29-4B2C-8359-FBADED15722A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AFFDBB5-AC29-4B2C-8359-FBADED15722A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71B6F282-991B-4B0A-85B1-AA13BA9AE128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71B6F282-991B-4B0A-85B1-AA13BA9AE128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71B6F282-991B-4B0A-85B1-AA13BA9AE128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71B6F282-991B-4B0A-85B1-AA13BA9AE128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{386175CB-7603-4E14-BAFB-9C8B47E51A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{386175CB-7603-4E14-BAFB-9C8B47E51A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{386175CB-7603-4E14-BAFB-9C8B47E51A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{386175CB-7603-4E14-BAFB-9C8B47E51A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3AF953B7-222B-4A6F-AF49-C87050124EBC} = {EB89D496-6A94-4DCC-BCF7-6BE25DE46C09}
-		{943EC85F-4669-4452-AEAD-53FF786E629F} = {E74A8A66-07C0-444E-91DA-04A2CA077430}
-		{CF38C15D-89B8-48C6-9028-18A332B37A1B} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
-		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023} = {EB89D496-6A94-4DCC-BCF7-6BE25DE46C09}
 		{E0C43364-8446-47D2-A887-5267891106CE} = {54814E60-332C-469F-888D-43E468D61D7B}
 		{049E6B37-254E-462E-8E19-E8FAE87384C9} = {54814E60-332C-469F-888D-43E468D61D7B}
 		{E6277191-B73B-4BDC-A7E7-1B1ED443B89C} = {54814E60-332C-469F-888D-43E468D61D7B}
@@ -115,6 +111,10 @@ Global
 		{E832E265-D8A1-4DEB-9374-3474789F204E} = {E74A8A66-07C0-444E-91DA-04A2CA077430}
 		{CAF85A90-792D-4BA7-801F-6116ECD839DF} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
 		{5AFFDBB5-AC29-4B2C-8359-FBADED15722A} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
+		{71B6F282-991B-4B0A-85B1-AA13BA9AE128} = {766BF606-B5CB-4D86-9A46-497F8B2CCE22}
+		{386175CB-7603-4E14-BAFB-9C8B47E51A74} = {EB89D496-6A94-4DCC-BCF7-6BE25DE46C09}
+		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023} = {EB89D496-6A94-4DCC-BCF7-6BE25DE46C09}
+		{2B5A5B50-516B-40BD-AFA8-14C25C3EBF6C} = {E74A8A66-07C0-444E-91DA-04A2CA077430}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B1D0D492-7D14-450A-82BF-4483B63FE10E}
