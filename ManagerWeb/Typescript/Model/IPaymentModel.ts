@@ -4,7 +4,7 @@ export interface IPaymentModel {
     id?: number;
     name: string;
     amount: number;
-    date: string;
+    date: Date;
     description: string;
     paymentTypeId: number;
     paymentTypes: PaymentTypeModel[];

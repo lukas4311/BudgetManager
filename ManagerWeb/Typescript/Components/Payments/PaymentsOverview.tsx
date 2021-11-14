@@ -99,10 +99,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
     }
 
-    private onRejected = () => {
-        this.setState({ apiError: this.apiErrorMessage });
-    }
-
     private setPayments = async (payments: Array<PaymentModel>) => {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
@@ -291,7 +287,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail platby</DialogTitle>
                         <DialogContent className="bg-prussianBlue">
-                            {/* <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm> */}
+                            <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}
+                                handleClose={this.handleConfirmationClose} history={this.props.history}>
+                            </PaymentForm>
                         </DialogContent>
                     </Dialog>
                 </div >

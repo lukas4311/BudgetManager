@@ -6,36 +6,35 @@ import PaymentTagManager from '../PaymentTagManager';
 import {  FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { IconsData } from '../../Enums/IconsEnum';
 import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentModel } from '../../ApiClient/Main';
+import ApiClientFactory from '../../Utils/ApiClientFactory';
+import * as H from 'history';
 
 interface IPaymentFormProps {
     paymentId: number,
     bankAccountId: number,
-    handleClose: () => void
+    handleClose: () => void,
+    history: H.History<any>
 }
 
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
     private requiredMessage: string = "Zadejte hodnotu.";
-    private dataLoader: DataLoader;
     private paymentApi: PaymentApi;
 
     constructor(props: IPaymentFormProps) {
         super(props);
         this.state = {
-            name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, paymentTypes: [],
-            paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, disabledConfirm: false, errorMessage: undefined,
-            tags: []
+            name: '', amount: 0, date: moment(Date.now()).toDate(), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, 
+            paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, 
+            disabledConfirm: false, errorMessage: undefined, tags: []
         };
-        this.dataLoader = new DataLoader();
-        this.paymentApi = new PaymentApi();
     }
 
     private processPaymentTypesData = (data: PaymentTypeModel[]) => this.setState({ paymentTypeId: data[0].id, paymentTypes: data })
 
-
     private processPaymentCategoryData = (data: PaymentCategoryModel[]) =>
         this.setState({ paymentCategoryId: data[0].id, paymentCategories: data })
 
-    private processPaymentData = (data: IPaymentModel) => {
+    private processPaymentData = (data: PaymentModel) => {
         this.setState({
             name: data.name, amount: data.amount, date: data.date, description: data.description || '',
             paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
@@ -43,13 +42,16 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     }
 
     public async componentDidMount() {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.paymentApi = await apiFactory.getClient(PaymentApi);
+        
         const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
         const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
         this.processPaymentTypesData(types);
         this.processPaymentCategoryData(categories);
 
         if (this.state.id != null) {
-            let paymentResponse = await this.dataLoader.getPayment(this.state.id, this.onError);
+            let paymentResponse = await this.paymentApi.paymentsDetailGet({id: this.state.id});
             this.processPaymentData(paymentResponse);
         }
     }
@@ -83,10 +85,6 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         return dataModel;
     }
 
-    private onError = () => {
-        this.setState({ errorMessage: 'Při uložení záznamu došlo k chybě' });
-    }
-
     private handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, property: string, isRequired: boolean = false): void => {
         let errorMessage = '';
         let value = e.target.value;
@@ -115,13 +113,11 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
         this.setState({ paymentTypeId: id });
     }
 
-    private changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    private changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) =>
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
-    }
 
-    private tagsChange = (tags: string[]) => {
+    private tagsChange = (tags: string[]) => 
         this.setState({ tags: tags });
-    }
 
     public render() {
         let iconsData = new IconsData();
