@@ -55,11 +55,11 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    authAuthenticatePostRaw(requestParameters: AuthAuthenticatePostRequest): Promise<runtime.ApiResponse<AuthResponseModel>>;
+    authAuthenticatePostRaw(requestParameters: AuthAuthenticatePostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<AuthResponseModel>>;
 
     /**
      */
-    authAuthenticatePost(requestParameters: AuthAuthenticatePostRequest): Promise<AuthResponseModel>;
+    authAuthenticatePost(requestParameters: AuthAuthenticatePostRequest, initOverrides?: RequestInit): Promise<AuthResponseModel>;
 
     /**
      * 
@@ -68,11 +68,11 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    authTokenDataGetRaw(requestParameters: AuthTokenDataGetRequest): Promise<runtime.ApiResponse<UserIdentification>>;
+    authTokenDataGetRaw(requestParameters: AuthTokenDataGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<UserIdentification>>;
 
     /**
      */
-    authTokenDataGet(requestParameters: AuthTokenDataGetRequest): Promise<UserIdentification>;
+    authTokenDataGet(requestParameters: AuthTokenDataGetRequest, initOverrides?: RequestInit): Promise<UserIdentification>;
 
     /**
      * 
@@ -81,11 +81,11 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    authValidatePostRaw(requestParameters: AuthValidatePostRequest): Promise<runtime.ApiResponse<boolean>>;
+    authValidatePostRaw(requestParameters: AuthValidatePostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<boolean>>;
 
     /**
      */
-    authValidatePost(requestParameters: AuthValidatePostRequest): Promise<boolean>;
+    authValidatePost(requestParameters: AuthValidatePostRequest, initOverrides?: RequestInit): Promise<boolean>;
 
 }
 
@@ -93,10 +93,16 @@ export interface AuthApiInterface {
  * 
  */
 export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
+    processPathParam(param: any): string {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+
+        return encodeURIComponent(String(param));
+    }
 
     /**
      */
-    async authAuthenticatePostRaw(requestParameters: AuthAuthenticatePostRequest): Promise<runtime.ApiResponse<AuthResponseModel>> {
+    async authAuthenticatePostRaw(requestParameters: AuthAuthenticatePostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<AuthResponseModel>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -109,21 +115,21 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
             headers: headerParameters,
             query: queryParameters,
             body: UserModelToJSON(requestParameters.userModel),
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AuthResponseModelFromJSON(jsonValue));
     }
 
     /**
      */
-    async authAuthenticatePost(requestParameters: AuthAuthenticatePostRequest): Promise<AuthResponseModel> {
-        const response = await this.authAuthenticatePostRaw(requestParameters);
+    async authAuthenticatePost(requestParameters: AuthAuthenticatePostRequest, initOverrides?: RequestInit): Promise<AuthResponseModel> {
+        const response = await this.authAuthenticatePostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async authTokenDataGetRaw(requestParameters: AuthTokenDataGetRequest): Promise<runtime.ApiResponse<UserIdentification>> {
+    async authTokenDataGetRaw(requestParameters: AuthTokenDataGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<UserIdentification>> {
         const queryParameters: any = {};
 
         if (requestParameters.token !== undefined) {
@@ -137,21 +143,21 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserIdentificationFromJSON(jsonValue));
     }
 
     /**
      */
-    async authTokenDataGet(requestParameters: AuthTokenDataGetRequest): Promise<UserIdentification> {
-        const response = await this.authTokenDataGetRaw(requestParameters);
+    async authTokenDataGet(requestParameters: AuthTokenDataGetRequest, initOverrides?: RequestInit): Promise<UserIdentification> {
+        const response = await this.authTokenDataGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async authValidatePostRaw(requestParameters: AuthValidatePostRequest): Promise<runtime.ApiResponse<boolean>> {
+    async authValidatePostRaw(requestParameters: AuthValidatePostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<boolean>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -164,15 +170,15 @@ export class AuthApi extends runtime.BaseAPI implements AuthApiInterface {
             headers: headerParameters,
             query: queryParameters,
             body: TokenModelToJSON(requestParameters.tokenModel),
-        });
+        }, initOverrides);
 
         return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async authValidatePost(requestParameters: AuthValidatePostRequest): Promise<boolean> {
-        const response = await this.authValidatePostRaw(requestParameters);
+    async authValidatePost(requestParameters: AuthValidatePostRequest, initOverrides?: RequestInit): Promise<boolean> {
+        const response = await this.authValidatePostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

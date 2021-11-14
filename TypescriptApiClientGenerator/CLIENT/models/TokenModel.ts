@@ -54,4 +54,3 @@ export function TokenModelToJSON(value?: TokenModel | null): any {
     };
 }
 
-

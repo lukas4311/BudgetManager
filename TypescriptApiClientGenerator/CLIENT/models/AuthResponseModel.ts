@@ -70,4 +70,3 @@ export function AuthResponseModelToJSON(value?: AuthResponseModel | null): any {
     };
 }
 
-

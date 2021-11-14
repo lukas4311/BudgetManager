@@ -144,9 +144,14 @@ const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Au
  *
  */
 class AuthApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
     /**
      */
-    authAuthenticatePostRaw(requestParameters) {
+    authAuthenticatePostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -157,21 +162,21 @@ class AuthApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.UserModelToJSON)(requestParameters.userModel),
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.AuthResponseModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    authAuthenticatePost(requestParameters) {
+    authAuthenticatePost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.authAuthenticatePostRaw(requestParameters);
+            const response = yield this.authAuthenticatePostRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    authTokenDataGetRaw(requestParameters) {
+    authTokenDataGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.token !== undefined) {
@@ -183,21 +188,21 @@ class AuthApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.UserIdentificationFromJSON)(jsonValue));
         });
     }
     /**
      */
-    authTokenDataGet(requestParameters) {
+    authTokenDataGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.authTokenDataGetRaw(requestParameters);
+            const response = yield this.authTokenDataGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    authValidatePostRaw(requestParameters) {
+    authValidatePostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -208,15 +213,15 @@ class AuthApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.TokenModelToJSON)(requestParameters.tokenModel),
-            });
+            }, initOverrides);
             return new runtime.TextApiResponse(response);
         });
     }
     /**
      */
-    authValidatePost(requestParameters) {
+    authValidatePost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.authValidatePostRaw(requestParameters);
+            const response = yield this.authValidatePostRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
@@ -502,6 +507,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./AuthResponseModel */ "./Typescript/ApiClient/Auth/models/AuthResponseModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./TokenModel */ "./Typescript/ApiClient/Auth/models/TokenModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./UserIdentification */ "./Typescript/ApiClient/Auth/models/UserIdentification.ts"), exports);

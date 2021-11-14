@@ -62,4 +62,3 @@ export function UserIdentificationToJSON(value?: UserIdentification | null): any
     };
 }
 
-
