@@ -1,0 +1,17 @@
+{
+  "name": "Tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version": "openapi-generator-cli version",
+    "generate": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator-cli generate -i https://localhost:44303/swagger/v1/swagger.json -g typescript-fetch -o D:\\TypescriptClients\\NewGenerateClient\\Client -c D:\\TypescriptClients\\NewGenerateClient\\config.yaml -t D:\\TypescriptClients\\NewGenerateClient\\templates\\ --enable-post-process-file --skip-validate-spec"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.4.15"
+  }
+}
