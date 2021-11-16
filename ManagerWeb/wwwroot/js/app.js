@@ -3037,6 +3037,51 @@ exports.BudgetForm2 = BudgetForm;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Charts/CalendarChart.tsx":
+/*!********************************************************!*\
+  !*** ./Typescript/Components/Charts/CalendarChart.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CalendarChart = void 0;
+const calendar_1 = __webpack_require__(/*! @nivo/calendar */ "./node_modules/@nivo/calendar/dist/nivo-calendar.es.js");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function CalendarChart(props) {
+    const czechMonths = [
+        'Leden',
+        'Únor',
+        'Březen',
+        'Duben',
+        'Květen',
+        'Ćerven',
+        'Červenec',
+        'Srpen',
+        'Září',
+        'Říjen',
+        'Listopad',
+        'Prosinec',
+    ];
+    return (react_1.default.createElement(calendar_1.ResponsiveCalendar, { data: props.dataSets, from: (0, moment_1.default)(`${props.fromYear}-01-01`).toISOString(), to: (0, moment_1.default)(`${props.toYear}-12-31`).toISOString(), emptyColor: "#eeeeee", colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'], margin: { top: 20, right: 30, bottom: 10, left: 30 }, yearSpacing: 40, monthSpacing: 5, daySpacing: 2, isInteractive: true, monthLegend: (year, month) => czechMonths[month], theme: {
+            tooltip: {
+                container: {
+                    background: '#333',
+                },
+            }
+        } }));
+}
+exports.CalendarChart = CalendarChart;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Charts/PieChart.tsx":
 /*!***************************************************!*\
   !*** ./Typescript/Components/Charts/PieChart.tsx ***!
@@ -3676,6 +3721,7 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "./Typescript/Components/Payments/PaymentForm.tsx"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
@@ -3713,7 +3759,7 @@ class PaymentsOverview extends React.Component {
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }
                 });
             }
@@ -3776,8 +3822,8 @@ class PaymentsOverview extends React.Component {
         this.state = {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: '', filterDateFrom: ''
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -3857,7 +3903,8 @@ class PaymentsOverview extends React.Component {
                             React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                         React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                             React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                    React.createElement("div", { className: "w-3/5 h-64 mt-auto calendar" })),
+                    React.createElement("div", { className: "w-3/5 h-64 mt-4 calendar" },
+                        React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                 React.createElement("div", { className: "flex flex-row" },
                     React.createElement("div", { className: "w-1/3 h-64" }),
                     React.createElement("div", { className: "w-1/3 h-64" }),
@@ -4201,8 +4248,8 @@ class IconsData {
             react_1.default.createElement("g", null,
                 react_1.default.createElement("path", { d: "m271.293 297.106c0 4.142 3.357 7.5 7.5 7.5s7.5-3.358 7.5-7.5c0-13.488-10.491-23.568-22.792-22.885v-4.147c0-4.142-3.357-7.5-7.5-7.5-4.142 0-7.5 3.358-7.5 7.5v4.147c-12.37-.834-22.814 9.608-22.792 22.885v10.256c-.062 13.11 10.422 23.837 22.792 22.885v26.026c-4.259.514-7.792-2.679-7.792-7.885 0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5c0 13.109 10.422 23.838 22.792 22.885v4.148c0 4.142 3.358 7.5 7.5 7.5 4.143 0 7.5-3.358 7.5-7.5v-4.148c12.252.682 22.825-9.496 22.792-22.885v-10.257c.03-13.491-10.492-23.565-22.792-22.885v-26.025c4.131-.709 7.792 2.824 7.792 7.885zm-22.792 18.142c-4.258.515-7.786-2.68-7.792-7.885v-10.256c-.01-4.951 3.673-8.653 7.792-7.885zm22.792 22.884v10.257c-.063 4.924-3.615 8.675-7.792 7.885v-26.026c4.131-.712 7.8 2.824 7.792 7.884zm19.208-258.238c0-19.023-15.477-34.5-34.5-34.5s-34.5 15.477-34.5 34.5 15.477 34.5 34.5 34.5 34.5-15.477 34.5-34.5zm-54 0c0-10.752 8.748-19.5 19.5-19.5s19.5 8.748 19.5 19.5-8.748 19.5-19.5 19.5-19.5-8.748-19.5-19.5zm19.5 156.916c-47.386 0-85.938 38.552-85.938 85.938s38.552 85.938 85.938 85.938c47.387 0 85.938-38.552 85.938-85.938s-38.551-85.938-85.938-85.938zm0 156.876c-39.115 0-70.938-31.823-70.938-70.938s31.823-70.938 70.938-70.938 70.938 31.823 70.938 70.938-31.823 70.938-70.938 70.938zm222.372-200.09c17.359 1.086 33.776-11.537 33.628-30v-22.5c-.124-2.149-.831-4.872-3.94-6.602l-233.878-129.657c-11.384-6.312-24.979-6.312-36.364 0l-94.36 52.312c-3.623 2.008-4.932 6.573-2.923 10.196 2.008 3.623 6.574 4.933 10.196 2.923l94.36-52.312c6.832-3.787 14.988-3.786 21.819 0l208.594 115.64h-439.007l83.276-46.167c3.623-2.008 4.932-6.573 2.923-10.196-2.008-3.623-6.573-4.932-10.196-2.923l-108.558 60.183c-1.724 1.01-3.972 3.17-3.942 6.603v22.5c-.16 17.66 15.804 31.928 33.628 30l26.372 37.121v184.062l-26.372 37.12h-16.128c-9.649 0-17.5 7.851-17.5 17.5v25c0 9.649 7.851 17.5 17.5 17.5h477c9.649 0 17.5-7.851 17.5-17.5v-25c0-9.649-7.851-17.5-17.5-17.5h-16.128l-26.372-37.12v-184.062zm-448.372-15c-8.271 0-15-6.729-15-15v-15h482v15c0 8.271-6.729 15-15 15zm354.249 150.592c4.143 0 7.5-3.358 7.5-7.5v-85.864h45.251v173.848h-45.251v-52.984c0-4.142-3.357-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v58.091l-26.372 37.12h-188.753l-26.372-37.12v-184.062l26.372-37.121h188.754l26.372 37.121v90.971c-.001 4.142 3.357 7.5 7.499 7.5zm-332.22-135.592h91.195l-19.343 27.228h-52.509zm68.223 42.228v173.848h-45.252v-173.848zm-48.88 188.848h52.508l19.343 27.227h-91.194zm423.128 42.227c1.379 0 2.5 1.122 2.5 2.5v25c0 1.378-1.121 2.5-2.5 2.5h-477c-1.378 0-2.5-1.122-2.5-2.5v-25c0-1.378 1.122-2.5 2.5-2.5zm-34.528-15h-91.194l19.344-27.227h52.507zm-19.344-231.075h-52.507l-19.344-27.228h91.194z" })));
         this.copy = react_1.default.createElement("svg", { viewBox: "0 0 60 60", xmlns: "http://www.w3.org/2000/svg" },
-            react_1.default.createElement("g", { id: "Page-1", fill: "none", "fill-rule": "evenodd" },
-                react_1.default.createElement("g", { id: "134---Copy-Files", fill: "rgb(0,0,0)", "fill-rule": "nonzero" },
+            react_1.default.createElement("g", { id: "Page-1", fill: "none", fillRule: "evenodd" },
+                react_1.default.createElement("g", { id: "134---Copy-Files", fill: "rgb(0,0,0)", fillRule: "nonzero" },
                     react_1.default.createElement("path", { id: "Shape", d: "m29 6h6c.5522847 0 1-.44771525 1-1s-.4477153-1-1-1h-6c-.5522847 0-1 .44771525-1 1s.4477153 1 1 1z" }),
                     react_1.default.createElement("path", { id: "Shape", d: "m39 6h2c.5522847 0 1-.44771525 1-1s-.4477153-1-1-1h-2c-.5522847 0-1 .44771525-1 1s.4477153 1 1 1z" }),
                     react_1.default.createElement("path", { id: "Shape", d: "m9 20h9c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1h-9c-.55228475 0-1 .4477153-1 1s.44771525 1 1 1z" }),
@@ -5993,6 +6040,1781 @@ var useArcGenerator = function useArcGenerator() {
       return arc.outerRadius;
     }).cornerRadius(cornerRadius).padAngle(padAngle);
   }, [cornerRadius, padAngle]);
+};
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/calendar/dist/nivo-calendar.es.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@nivo/calendar/dist/nivo-calendar.es.js ***!
+  \**************************************************************/
+/*! exports provided: Calendar, CalendarCanvas, ResponsiveCalendar, ResponsiveCalendarCanvas, ResponsiveTimeRange, TimeRange, bindDaysData, calendarCanvasDefaultProps, calendarDefaultProps, computeCellPositions, computeCellSize, computeDomain, computeLayout, computeMonthLegendPositions, computeMonthLegends, computeTotalDays, computeWeekdays, computeYearLegendPositions, timeRangeDefaultProps, useCalendarLayout, useColorScale, useDays, useMonthLegends, useYearLegends */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Calendar", function() { return Calendar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CalendarCanvas", function() { return CalendarCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendar", function() { return ResponsiveCalendar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveCalendarCanvas", function() { return ResponsiveCalendarCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveTimeRange", function() { return ResponsiveTimeRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeRange", function() { return TimeRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindDaysData", function() { return bindDaysData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calendarCanvasDefaultProps", function() { return calendarCanvasDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calendarDefaultProps", function() { return calendarDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeCellPositions", function() { return computeCellPositions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeCellSize", function() { return computeCellSize$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeDomain", function() { return computeDomain; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeLayout", function() { return computeLayout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMonthLegendPositions", function() { return computeMonthLegendPositions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeMonthLegends", function() { return computeMonthLegends; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeTotalDays", function() { return computeTotalDays; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeWeekdays", function() { return computeWeekdays; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeYearLegendPositions", function() { return computeYearLegendPositions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timeRangeDefaultProps", function() { return timeRangeDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useCalendarLayout", function() { return useCalendarLayout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useColorScale", function() { return useColorScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useDays", function() { return useDays; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useMonthLegends", function() { return useMonthLegends; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useYearLegends", function() { return useYearLegends; });
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
+/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
+/* harmony import */ var d3_time_format__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! d3-time-format */ "./node_modules/d3-time-format/src/index.js");
+/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/index.js");
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash/range */ "./node_modules/lodash/range.js");
+/* harmony import */ var lodash_range__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash_range__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/memoize */ "./node_modules/lodash/memoize.js");
+/* harmony import */ var lodash_memoize__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_memoize__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/isDate */ "./node_modules/lodash/isDate.js");
+/* harmony import */ var lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_isDate__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var d3_time__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-time */ "./node_modules/d3-time/src/index.js");
+
+
+
+
+
+
+
+
+
+
+
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+var CalendarYearLegends = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var years = _ref.years,
+      legend = _ref.legend,
+      theme = _ref.theme;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["Fragment"], {
+    children: years.map(function (year) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
+        transform: "translate(".concat(year.x, ",").concat(year.y, ") rotate(").concat(year.rotation, ")"),
+        textAnchor: "middle",
+        style: theme.labels.text,
+        children: legend(year.year)
+      }, year.year);
+    })
+  });
+});
+
+var CalendarMonthPath = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var path = _ref.path,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("path", {
+    d: path,
+    style: {
+      fill: 'none',
+      strokeWidth: borderWidth,
+      stroke: borderColor,
+      pointerEvents: 'none'
+    }
+  });
+});
+
+var CalendarMonthLegends = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var months = _ref.months,
+      legend = _ref.legend,
+      theme = _ref.theme;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["Fragment"], {
+    children: months.map(function (month) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
+        transform: "translate(".concat(month.x, ",").concat(month.y, ") rotate(").concat(month.rotation, ")"),
+        textAnchor: "middle",
+        style: theme.labels.text,
+        children: legend(month.year, month.month, month.date)
+      }, "".concat(month.date.toString(), ".legend"));
+    })
+  });
+});
+
+var CalendarDay = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var data = _ref.data,
+      x = _ref.x,
+      y = _ref.y,
+      size = _ref.size,
+      color = _ref.color,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      isInteractive = _ref.isInteractive,
+      tooltip = _ref.tooltip,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave,
+      onClick = _ref.onClick,
+      formatValue = _ref.formatValue;
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
+      value: formatValue(data.value),
+      data: _objectSpread2({}, data.data)
+    });
+
+    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
+    onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event);
+  }, [showTooltipFromEvent, tooltip, data, onMouseEnter, formatValue]);
+  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
+      value: formatValue(data.value),
+      data: _objectSpread2({}, data.data)
+    });
+
+    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
+    onMouseMove && onMouseMove(data, event);
+  }, [showTooltipFromEvent, tooltip, data, onMouseMove, formatValue]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    hideTooltip();
+    onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event);
+  }, [hideTooltip, data, onMouseLeave]);
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    return onClick === null || onClick === void 0 ? void 0 : onClick(data, event);
+  }, [data, onClick]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("rect", {
+    x: x,
+    y: y,
+    width: size,
+    height: size,
+    style: {
+      fill: color,
+      strokeWidth: borderWidth,
+      stroke: borderColor
+    },
+    onMouseEnter: isInteractive ? handleMouseEnter : undefined,
+    onMouseMove: isInteractive ? handleMouseMove : undefined,
+    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+    onClick: isInteractive ? handleClick : undefined
+  });
+});
+
+var CalendarTooltip = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var value = _ref.value,
+      day = _ref.day,
+      color = _ref.color;
+  if (value === undefined || isNaN(Number(value))) return null;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["BasicTooltip"], {
+    id: day,
+    value: value,
+    color: color,
+    enableChip: true
+  });
+});
+
+var _window$devicePixelRa;
+var monthLabelFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%b');
+var commonDefaultProps = {
+  colors: ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560'],
+  align: 'center',
+  direction: 'horizontal',
+  emptyColor: '#fff',
+  minValue: 0,
+  maxValue: 'auto',
+  yearSpacing: 30,
+  yearLegend: function yearLegend(year) {
+    return year;
+  },
+  yearLegendPosition: 'before',
+  yearLegendOffset: 10,
+  monthBorderWidth: 2,
+  monthBorderColor: '#000',
+  monthSpacing: 0,
+  monthLegend: function monthLegend(_year, _month, date) {
+    return monthLabelFormat(date);
+  },
+  monthLegendPosition: 'before',
+  monthLegendOffset: 10,
+  daySpacing: 0,
+  dayBorderWidth: 1,
+  dayBorderColor: '#000',
+  isInteractive: true,
+  legends: [],
+  tooltip: CalendarTooltip
+};
+var calendarDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
+  role: 'img'
+});
+var calendarCanvasDefaultProps = _objectSpread2(_objectSpread2({}, commonDefaultProps), {}, {
+  pixelRatio: typeof window !== 'undefined' ? (_window$devicePixelRa = window.devicePixelRatio) !== null && _window$devicePixelRa !== void 0 ? _window$devicePixelRa : 1 : 1
+});
+var timeRangeDefaultProps = _objectSpread2(_objectSpread2({}, calendarDefaultProps), {}, {
+  dayBorderColor: '#fff',
+  dayRadius: 0,
+  square: true,
+  weekdayLegendOffset: 75
+});
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+  return _arr;
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+var computeDomain = function computeDomain(data, minSpec, maxSpec) {
+  var allValues = data.map(function (d) {
+    return d.value;
+  });
+  var minValue = minSpec === 'auto' ? Math.min.apply(Math, _toConsumableArray(allValues)) : minSpec;
+  var maxValue = maxSpec === 'auto' ? Math.max.apply(Math, _toConsumableArray(allValues)) : maxSpec;
+  return [minValue, maxValue];
+};
+
+var computeCellSize = function computeCellSize(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      direction = _ref.direction,
+      yearRange = _ref.yearRange,
+      yearSpacing = _ref.yearSpacing,
+      monthSpacing = _ref.monthSpacing,
+      daySpacing = _ref.daySpacing,
+      maxWeeks = _ref.maxWeeks;
+  var hCellSize;
+  var vCellSize;
+
+  if (direction === 'horizontal') {
+    hCellSize = (width - monthSpacing * 12 - daySpacing * maxWeeks) / maxWeeks;
+    vCellSize = (height - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
+  } else {
+    hCellSize = (width - (yearRange.length - 1) * yearSpacing - yearRange.length * (8 * daySpacing)) / (yearRange.length * 7);
+    vCellSize = (height - monthSpacing * 12 - daySpacing * maxWeeks) / maxWeeks;
+  }
+
+  return Math.min(hCellSize, vCellSize);
+};
+
+var monthPathAndBBox = function monthPathAndBBox(_ref2) {
+  var date = _ref2.date,
+      cellSize = _ref2.cellSize,
+      yearIndex = _ref2.yearIndex,
+      yearSpacing = _ref2.yearSpacing,
+      monthSpacing = _ref2.monthSpacing,
+      daySpacing = _ref2.daySpacing,
+      direction = _ref2.direction,
+      originX = _ref2.originX,
+      originY = _ref2.originY;
+  var t1 = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  var firstWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(date), date);
+  var lastWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(t1), t1);
+  var firstDay = date.getDay();
+  var lastDay = t1.getDay();
+  var xO = originX;
+  var yO = originY;
+  var yearOffset = yearIndex * (7 * (cellSize + daySpacing) + yearSpacing);
+  var monthOffset = date.getMonth() * monthSpacing;
+
+  if (direction === 'horizontal') {
+    yO += yearOffset;
+    xO += monthOffset;
+  } else {
+    yO += monthOffset;
+    xO += yearOffset;
+  }
+
+  var path;
+  var bbox = {
+    x: xO,
+    y: yO,
+    width: 0,
+    height: 0
+  };
+
+  if (direction === 'horizontal') {
+    path = ["M".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), ",").concat(yO + firstDay * (cellSize + daySpacing)), "H".concat(xO + firstWeek * (cellSize + daySpacing), "V").concat(yO + 7 * (cellSize + daySpacing)), "H".concat(xO + lastWeek * (cellSize + daySpacing), "V").concat(yO + (lastDay + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastWeek + 1) * (cellSize + daySpacing), "V").concat(yO), "H".concat(xO + (firstWeek + 1) * (cellSize + daySpacing), "Z")].join('');
+    bbox.x = xO + firstWeek * (cellSize + daySpacing);
+    bbox.width = xO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.x;
+    bbox.height = 7 * (cellSize + daySpacing);
+  } else {
+    path = ["M".concat(xO + firstDay * (cellSize + daySpacing), ",").concat(yO + (firstWeek + 1) * (cellSize + daySpacing)), "H".concat(xO, "V").concat(yO + (lastWeek + 1) * (cellSize + daySpacing)), "H".concat(xO + (lastDay + 1) * (cellSize + daySpacing), "V").concat(yO + lastWeek * (cellSize + daySpacing)), "H".concat(xO + 7 * (cellSize + daySpacing), "V").concat(yO + firstWeek * (cellSize + daySpacing)), "H".concat(xO + firstDay * (cellSize + daySpacing), "Z")].join('');
+    bbox.y = yO + firstWeek * (cellSize + daySpacing);
+    bbox.width = 7 * (cellSize + daySpacing);
+    bbox.height = yO + (lastWeek + 1) * (cellSize + daySpacing) - bbox.y;
+  }
+
+  return {
+    path: path,
+    bbox: bbox
+  };
+};
+
+var memoMonthPathAndBBox = lodash_memoize__WEBPACK_IMPORTED_MODULE_8___default()(monthPathAndBBox, function (_ref3) {
+  var date = _ref3.date,
+      cellSize = _ref3.cellSize,
+      yearIndex = _ref3.yearIndex,
+      yearSpacing = _ref3.yearSpacing,
+      monthSpacing = _ref3.monthSpacing,
+      daySpacing = _ref3.daySpacing,
+      direction = _ref3.direction,
+      originX = _ref3.originX,
+      originY = _ref3.originY;
+  return "".concat(date.toString(), ".").concat(cellSize, ".").concat(yearIndex, ".").concat(yearSpacing, ".").concat(monthSpacing, ".").concat(daySpacing, ".").concat(direction, ".").concat(originX, ".").concat(originY);
+});
+
+var cellPositionHorizontal = function cellPositionHorizontal(cellSize, yearSpacing, monthSpacing, daySpacing) {
+  return function (originX, originY, d, yearIndex) {
+    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(d), d);
+    return {
+      x: originX + weekOfYear * (cellSize + daySpacing) + daySpacing / 2 + d.getMonth() * monthSpacing,
+      y: originY + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing))
+    };
+  };
+};
+
+var cellPositionVertical = function cellPositionVertical(cellSize, yearSpacing, monthSpacing, daySpacing) {
+  return function (originX, originY, d, yearIndex) {
+    var weekOfYear = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeYear"])(d), d);
+    return {
+      x: originX + d.getDay() * (cellSize + daySpacing) + daySpacing / 2 + yearIndex * (yearSpacing + 7 * (cellSize + daySpacing)),
+      y: originY + weekOfYear * (cellSize + daySpacing) + daySpacing / 2 + d.getMonth() * monthSpacing
+    };
+  };
+};
+
+var dayFormat = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%Y-%m-%d');
+var computeLayout = function computeLayout(_ref4) {
+  var width = _ref4.width,
+      height = _ref4.height,
+      from = _ref4.from,
+      to = _ref4.to,
+      direction = _ref4.direction,
+      yearSpacing = _ref4.yearSpacing,
+      monthSpacing = _ref4.monthSpacing,
+      daySpacing = _ref4.daySpacing,
+      align = _ref4.align;
+  var fromDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(from) ? from : new Date(from);
+  var toDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(to) ? to : new Date(to);
+
+  var yearRange = lodash_range__WEBPACK_IMPORTED_MODULE_7___default()(fromDate.getFullYear(), toDate.getFullYear() + 1);
+
+  var maxWeeks = Math.max.apply(Math, _toConsumableArray(yearRange.map(function (year) {
+    return Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeeks"])(new Date(year, 0, 1), new Date(year + 1, 0, 1)).length;
+  }))) + 1;
+  var cellSize = computeCellSize({
+    width: width,
+    height: height,
+    direction: direction,
+    yearRange: yearRange,
+    yearSpacing: yearSpacing,
+    monthSpacing: monthSpacing,
+    daySpacing: daySpacing,
+    maxWeeks: maxWeeks
+  });
+  var monthsSize = cellSize * maxWeeks + daySpacing * maxWeeks + monthSpacing * 12;
+  var yearsSize = (cellSize + daySpacing) * 7 * yearRange.length + yearSpacing * (yearRange.length - 1);
+  var calendarWidth = direction === 'horizontal' ? monthsSize : yearsSize;
+  var calendarHeight = direction === 'horizontal' ? yearsSize : monthsSize;
+
+  var _alignBox = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["alignBox"])({
+    x: 0,
+    y: 0,
+    width: calendarWidth,
+    height: calendarHeight
+  }, {
+    x: 0,
+    y: 0,
+    width: width,
+    height: height
+  }, align),
+      _alignBox2 = _slicedToArray(_alignBox, 2),
+      originX = _alignBox2[0],
+      originY = _alignBox2[1];
+
+  var cellPosition;
+
+  if (direction === 'horizontal') {
+    cellPosition = cellPositionHorizontal(cellSize, yearSpacing, monthSpacing, daySpacing);
+  } else {
+    cellPosition = cellPositionVertical(cellSize, yearSpacing, monthSpacing, daySpacing);
+  }
+
+  var years = [];
+  var months = [];
+  var days = [];
+  yearRange.forEach(function (year, i) {
+    var yearStart = new Date(year, 0, 1);
+    var yearEnd = new Date(year + 1, 0, 1);
+    days = days.concat(Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDays"])(yearStart, yearEnd).map(function (dayDate) {
+      return _objectSpread2({
+        date: dayDate,
+        day: dayFormat(dayDate),
+        size: cellSize
+      }, cellPosition(originX, originY, dayDate, i));
+    }));
+    var yearMonths = Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeMonths"])(yearStart, yearEnd).map(function (monthDate) {
+      return _objectSpread2({
+        date: monthDate,
+        year: monthDate.getFullYear(),
+        month: monthDate.getMonth()
+      }, memoMonthPathAndBBox({
+        originX: originX,
+        originY: originY,
+        date: monthDate,
+        direction: direction,
+        yearIndex: i,
+        yearSpacing: yearSpacing,
+        monthSpacing: monthSpacing,
+        daySpacing: daySpacing,
+        cellSize: cellSize
+      }));
+    });
+    months = months.concat(yearMonths);
+    years.push({
+      year: year,
+      bbox: {
+        x: yearMonths[0].bbox.x,
+        y: yearMonths[0].bbox.y,
+        width: yearMonths[11].bbox.x - yearMonths[0].bbox.x + yearMonths[11].bbox.width,
+        height: yearMonths[11].bbox.y - yearMonths[0].bbox.y + yearMonths[11].bbox.height
+      }
+    });
+  });
+  return {
+    years: years,
+    months: months,
+    days: days,
+    cellSize: cellSize,
+    calendarWidth: calendarWidth,
+    calendarHeight: calendarHeight,
+    originX: originX,
+    originY: originY
+  };
+};
+var bindDaysData = function bindDaysData(_ref5) {
+  var days = _ref5.days,
+      data = _ref5.data,
+      colorScale = _ref5.colorScale,
+      emptyColor = _ref5.emptyColor;
+  return days.map(function (day) {
+    var dayData = data.find(function (item) {
+      return item.day === day.day;
+    });
+
+    if (!dayData) {
+      return _objectSpread2(_objectSpread2({}, day), {}, {
+        color: emptyColor
+      });
+    }
+
+    return _objectSpread2(_objectSpread2({}, day), {}, {
+      color: colorScale(dayData.value),
+      data: dayData,
+      value: dayData.value
+    });
+  });
+};
+var computeYearLegendPositions = function computeYearLegendPositions(_ref6) {
+  var years = _ref6.years,
+      direction = _ref6.direction,
+      position = _ref6.position,
+      offset = _ref6.offset;
+  return years.map(function (year) {
+    var x = 0;
+    var y = 0;
+    var rotation = 0;
+
+    if (direction === 'horizontal' && position === 'before') {
+      x = year.bbox.x - offset;
+      y = year.bbox.y + year.bbox.height / 2;
+      rotation = -90;
+    } else if (direction === 'horizontal' && position === 'after') {
+      x = year.bbox.x + year.bbox.width + offset;
+      y = year.bbox.y + year.bbox.height / 2;
+      rotation = -90;
+    } else if (direction === 'vertical' && position === 'before') {
+      x = year.bbox.x + year.bbox.width / 2;
+      y = year.bbox.y - offset;
+    } else {
+      x = year.bbox.x + year.bbox.width / 2;
+      y = year.bbox.y + year.bbox.height + offset;
+    }
+
+    return _objectSpread2(_objectSpread2({}, year), {}, {
+      x: x,
+      y: y,
+      rotation: rotation
+    });
+  });
+};
+var computeMonthLegendPositions = function computeMonthLegendPositions(_ref7) {
+  var months = _ref7.months,
+      direction = _ref7.direction,
+      position = _ref7.position,
+      offset = _ref7.offset;
+  return months.map(function (month) {
+    var x = 0;
+    var y = 0;
+    var rotation = 0;
+
+    if (direction === 'horizontal' && position === 'before') {
+      x = month.bbox.x + month.bbox.width / 2;
+      y = month.bbox.y - offset;
+    } else if (direction === 'horizontal' && position === 'after') {
+      x = month.bbox.x + month.bbox.width / 2;
+      y = month.bbox.y + month.bbox.height + offset;
+    } else if (direction === 'vertical' && position === 'before') {
+      x = month.bbox.x - offset;
+      y = month.bbox.y + month.bbox.height / 2;
+      rotation = -90;
+    } else {
+      x = month.bbox.x + month.bbox.width + offset;
+      y = month.bbox.y + month.bbox.height / 2;
+      rotation = -90;
+    }
+
+    return _objectSpread2(_objectSpread2({}, month), {}, {
+      x: x,
+      y: y,
+      rotation: rotation
+    });
+  });
+};
+
+var useCalendarLayout = function useCalendarLayout(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      from = _ref.from,
+      to = _ref.to,
+      direction = _ref.direction,
+      yearSpacing = _ref.yearSpacing,
+      monthSpacing = _ref.monthSpacing,
+      daySpacing = _ref.daySpacing,
+      align = _ref.align;
+  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    return computeLayout({
+      width: width,
+      height: height,
+      from: from,
+      to: to,
+      direction: direction,
+      yearSpacing: yearSpacing,
+      monthSpacing: monthSpacing,
+      daySpacing: daySpacing,
+      align: align
+    });
+  }, [width, height, from, to, direction, yearSpacing, monthSpacing, daySpacing, align]);
+};
+var useColorScale = function useColorScale(_ref2) {
+  var data = _ref2.data,
+      minValue = _ref2.minValue,
+      maxValue = _ref2.maxValue,
+      colors = _ref2.colors,
+      colorScale = _ref2.colorScale;
+  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    if (colorScale) return colorScale;
+    var domain = computeDomain(data, minValue, maxValue);
+    var defaultColorScale = Object(d3_scale__WEBPACK_IMPORTED_MODULE_6__["scaleQuantize"])().domain(domain).range(colors);
+    return defaultColorScale;
+  }, [data, minValue, maxValue, colors, colorScale]);
+};
+var useYearLegends = function useYearLegends(_ref3) {
+  var years = _ref3.years,
+      direction = _ref3.direction,
+      yearLegendPosition = _ref3.yearLegendPosition,
+      yearLegendOffset = _ref3.yearLegendOffset;
+  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    return computeYearLegendPositions({
+      years: years,
+      direction: direction,
+      position: yearLegendPosition,
+      offset: yearLegendOffset
+    });
+  }, [years, direction, yearLegendPosition, yearLegendOffset]);
+};
+var useMonthLegends = function useMonthLegends(_ref4) {
+  var months = _ref4.months,
+      direction = _ref4.direction,
+      monthLegendPosition = _ref4.monthLegendPosition,
+      monthLegendOffset = _ref4.monthLegendOffset;
+  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    return computeMonthLegendPositions({
+      months: months,
+      direction: direction,
+      position: monthLegendPosition,
+      offset: monthLegendOffset
+    });
+  }, [months, direction, monthLegendPosition, monthLegendOffset]);
+};
+var useDays = function useDays(_ref5) {
+  var days = _ref5.days,
+      data = _ref5.data,
+      colorScale = _ref5.colorScale,
+      emptyColor = _ref5.emptyColor;
+  return Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    return bindDaysData({
+      days: days,
+      data: data,
+      colorScale: colorScale,
+      emptyColor: emptyColor
+    });
+  }, [days, data, colorScale, emptyColor]);
+};
+
+var InnerCalendar = function InnerCalendar(_ref) {
+  var partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      _ref$align = _ref.align,
+      align = _ref$align === void 0 ? calendarDefaultProps.align : _ref$align,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? calendarDefaultProps.colors : _ref$colors,
+      colorScale = _ref.colorScale,
+      data = _ref.data,
+      _ref$direction = _ref.direction,
+      direction = _ref$direction === void 0 ? calendarDefaultProps.direction : _ref$direction,
+      _ref$emptyColor = _ref.emptyColor,
+      emptyColor = _ref$emptyColor === void 0 ? calendarDefaultProps.emptyColor : _ref$emptyColor,
+      from = _ref.from,
+      to = _ref.to,
+      _ref$minValue = _ref.minValue,
+      minValue = _ref$minValue === void 0 ? calendarDefaultProps.minValue : _ref$minValue,
+      _ref$maxValue = _ref.maxValue,
+      maxValue = _ref$maxValue === void 0 ? calendarDefaultProps.maxValue : _ref$maxValue,
+      valueFormat = _ref.valueFormat,
+      legendFormat = _ref.legendFormat,
+      _ref$yearLegend = _ref.yearLegend,
+      yearLegend = _ref$yearLegend === void 0 ? calendarDefaultProps.yearLegend : _ref$yearLegend,
+      _ref$yearLegendOffset = _ref.yearLegendOffset,
+      yearLegendOffset = _ref$yearLegendOffset === void 0 ? calendarDefaultProps.yearLegendOffset : _ref$yearLegendOffset,
+      _ref$yearLegendPositi = _ref.yearLegendPosition,
+      yearLegendPosition = _ref$yearLegendPositi === void 0 ? calendarDefaultProps.yearLegendPosition : _ref$yearLegendPositi,
+      _ref$yearSpacing = _ref.yearSpacing,
+      yearSpacing = _ref$yearSpacing === void 0 ? calendarDefaultProps.yearSpacing : _ref$yearSpacing,
+      _ref$monthBorderColor = _ref.monthBorderColor,
+      monthBorderColor = _ref$monthBorderColor === void 0 ? calendarDefaultProps.monthBorderColor : _ref$monthBorderColor,
+      _ref$monthBorderWidth = _ref.monthBorderWidth,
+      monthBorderWidth = _ref$monthBorderWidth === void 0 ? calendarDefaultProps.monthBorderWidth : _ref$monthBorderWidth,
+      _ref$monthLegend = _ref.monthLegend,
+      monthLegend = _ref$monthLegend === void 0 ? calendarDefaultProps.monthLegend : _ref$monthLegend,
+      _ref$monthLegendOffse = _ref.monthLegendOffset,
+      monthLegendOffset = _ref$monthLegendOffse === void 0 ? calendarDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
+      _ref$monthLegendPosit = _ref.monthLegendPosition,
+      monthLegendPosition = _ref$monthLegendPosit === void 0 ? calendarDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
+      _ref$monthSpacing = _ref.monthSpacing,
+      monthSpacing = _ref$monthSpacing === void 0 ? calendarDefaultProps.monthSpacing : _ref$monthSpacing,
+      _ref$dayBorderColor = _ref.dayBorderColor,
+      dayBorderColor = _ref$dayBorderColor === void 0 ? calendarDefaultProps.dayBorderColor : _ref$dayBorderColor,
+      _ref$dayBorderWidth = _ref.dayBorderWidth,
+      dayBorderWidth = _ref$dayBorderWidth === void 0 ? calendarDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
+      _ref$daySpacing = _ref.daySpacing,
+      daySpacing = _ref$daySpacing === void 0 ? calendarDefaultProps.daySpacing : _ref$daySpacing,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? calendarDefaultProps.isInteractive : _ref$isInteractive,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? calendarDefaultProps.tooltip : _ref$tooltip,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      onMouseMove = _ref.onMouseMove,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? calendarDefaultProps.legends : _ref$legends,
+      _ref$role = _ref.role,
+      role = _ref$role === void 0 ? calendarDefaultProps.role : _ref$role;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight;
+
+  var _useCalendarLayout = useCalendarLayout({
+    width: innerWidth,
+    height: innerHeight,
+    from: from,
+    to: to,
+    direction: direction,
+    yearSpacing: yearSpacing,
+    monthSpacing: monthSpacing,
+    daySpacing: daySpacing,
+    align: align
+  }),
+      months = _useCalendarLayout.months,
+      years = _useCalendarLayout.years,
+      rest = _objectWithoutProperties(_useCalendarLayout, ["months", "years"]);
+
+  var colorScaleFn = useColorScale({
+    data: data,
+    minValue: minValue,
+    maxValue: maxValue,
+    colors: colors,
+    colorScale: colorScale
+  });
+  var monthLegends = useMonthLegends({
+    months: months,
+    direction: direction,
+    monthLegendPosition: monthLegendPosition,
+    monthLegendOffset: monthLegendOffset
+  });
+  var yearLegends = useYearLegends({
+    years: years,
+    direction: direction,
+    yearLegendPosition: yearLegendPosition,
+    yearLegendOffset: yearLegendOffset
+  });
+  var days = useDays({
+    days: rest.days,
+    data: data,
+    colorScale: colorScaleFn,
+    emptyColor: emptyColor
+  });
+  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
+  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsxs"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["SvgWrapper"], {
+    width: outerWidth,
+    height: outerHeight,
+    margin: margin,
+    role: role,
+    children: [days.map(function (d) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarDay, {
+        data: d,
+        x: d.x,
+        y: d.y,
+        size: d.size,
+        color: d.color,
+        borderWidth: dayBorderWidth,
+        borderColor: dayBorderColor,
+        onMouseEnter: onMouseEnter,
+        onMouseLeave: onMouseLeave,
+        onMouseMove: onMouseMove,
+        isInteractive: isInteractive,
+        tooltip: tooltip,
+        onClick: onClick,
+        formatValue: formatValue
+      }, d.date.toString());
+    }), months.map(function (m) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthPath, {
+        path: m.path,
+        borderWidth: monthBorderWidth,
+        borderColor: monthBorderColor
+      }, m.date.toString());
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthLegends, {
+      months: monthLegends,
+      legend: monthLegend,
+      theme: theme
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarYearLegends, {
+      years: yearLegends,
+      legend: yearLegend,
+      theme: theme
+    }), legends.map(function (legend, i) {
+      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
+        return {
+          id: value,
+          label: formatLegend(value),
+          color: colorScaleFn(value)
+        };
+      });
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
+        containerWidth: width,
+        containerHeight: height,
+        data: legendData
+      }), i);
+    })]
+  });
+};
+
+var Calendar = function Calendar(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? calendarDefaultProps.isInteractive : _ref2$isInteractive,
+      renderWrapper = _ref2.renderWrapper,
+      theme = _ref2.theme,
+      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
+    isInteractive: isInteractive,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerCalendar, _objectSpread2({
+      isInteractive: isInteractive
+    }, props))
+  });
+};
+
+var dayFormat$1 = Object(d3_time_format__WEBPACK_IMPORTED_MODULE_5__["timeFormat"])('%Y-%m-%d');
+var computeCellSize$1 = function computeCellSize(_ref) {
+  var direction = _ref.direction,
+      daySpacing = _ref.daySpacing,
+      offset = _ref.offset,
+      square = _ref.square,
+      totalDays = _ref.totalDays,
+      width = _ref.width,
+      height = _ref.height;
+  var daysInRange = 7;
+  var rows;
+  var columns;
+  var widthRest = width;
+  var heightRest = height;
+
+  if (direction === 'horizontal') {
+    widthRest -= offset;
+    rows = daysInRange;
+    columns = Math.ceil(totalDays / daysInRange);
+  } else {
+    heightRest -= offset;
+    columns = daysInRange;
+    rows = Math.ceil(totalDays / daysInRange);
+  }
+
+  var cellHeight = (heightRest - daySpacing * (rows + 1)) / rows;
+  var cellWidth = (widthRest - daySpacing * (columns + 1)) / columns;
+  var size = Math.min(cellHeight, cellWidth);
+  return {
+    columns: columns,
+    rows: rows,
+    cellHeight: square ? size : cellHeight,
+    cellWidth: square ? size : cellWidth
+  };
+};
+
+function computeGrid(_ref2) {
+  var startDate = _ref2.startDate,
+      date = _ref2.date,
+      direction = _ref2.direction;
+  var firstWeek = d3_time__WEBPACK_IMPORTED_MODULE_10__["timeWeek"].count(startDate, date);
+  var month = date.getMonth();
+  var year = date.getFullYear();
+  var currentColumn = 0;
+  var currentRow = 0;
+
+  if (direction === 'horizontal') {
+    currentColumn = firstWeek;
+    currentRow = date.getDay();
+  } else {
+    currentColumn = date.getDay();
+    currentRow = firstWeek;
+  }
+
+  return {
+    currentColumn: currentColumn,
+    year: year,
+    currentRow: currentRow,
+    firstWeek: firstWeek,
+    month: month,
+    date: date
+  };
+}
+
+var computeCellPositions = function computeCellPositions(_ref3) {
+  var direction = _ref3.direction,
+      colorScale = _ref3.colorScale,
+      emptyColor = _ref3.emptyColor,
+      from = _ref3.from,
+      to = _ref3.to,
+      data = _ref3.data,
+      cellWidth = _ref3.cellWidth,
+      cellHeight = _ref3.cellHeight,
+      daySpacing = _ref3.daySpacing,
+      offset = _ref3.offset;
+  var x = daySpacing;
+  var y = daySpacing;
+
+  if (direction === 'horizontal') {
+    x += offset;
+  } else {
+    y += offset;
+  }
+
+  var start = from ? from : data[0].date;
+  var end = to ? to : data[data.length - 1].date;
+  var startDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(start) ? start : new Date(start);
+  var endDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(end) ? end : new Date(end);
+  var dateRange = Object(d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDays"])(startDate, endDate).map(function (dayDate) {
+    return {
+      date: dayDate,
+      day: dayFormat$1(dayDate)
+    };
+  });
+  var dataWithCellPosition = dateRange.map(function (day) {
+    var dayData = data.find(function (item) {
+      return item.day === day.day;
+    });
+
+    var _computeGrid = computeGrid({
+      startDate: startDate,
+      date: day.date,
+      direction: direction
+    }),
+        currentColumn = _computeGrid.currentColumn,
+        currentRow = _computeGrid.currentRow,
+        firstWeek = _computeGrid.firstWeek,
+        year = _computeGrid.year,
+        month = _computeGrid.month,
+        date = _computeGrid.date;
+
+    var coordinates = {
+      x: x + daySpacing * currentColumn + cellWidth * currentColumn,
+      y: y + daySpacing * currentRow + cellHeight * currentRow
+    };
+
+    if (!dayData) {
+      return _objectSpread2(_objectSpread2({}, day), {}, {
+        coordinates: coordinates,
+        firstWeek: firstWeek,
+        month: month,
+        year: year,
+        date: date,
+        color: emptyColor,
+        width: cellWidth,
+        height: cellHeight
+      });
+    }
+
+    return _objectSpread2(_objectSpread2({}, dayData), {}, {
+      coordinates: coordinates,
+      firstWeek: firstWeek,
+      month: month,
+      year: year,
+      date: date,
+      color: colorScale(dayData.value),
+      width: cellWidth,
+      height: cellHeight
+    });
+  });
+  return dataWithCellPosition;
+};
+var computeWeekdays = function computeWeekdays(_ref4) {
+  var cellHeight = _ref4.cellHeight,
+      cellWidth = _ref4.cellWidth,
+      direction = _ref4.direction,
+      daySpacing = _ref4.daySpacing,
+      _ref4$ticks = _ref4.ticks,
+      ticks = _ref4$ticks === void 0 ? [1, 3, 5] : _ref4$ticks,
+      _ref4$arrayOfWeekdays = _ref4.arrayOfWeekdays,
+      arrayOfWeekdays = _ref4$arrayOfWeekdays === void 0 ? ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] : _ref4$arrayOfWeekdays;
+  var sizes = {
+    width: cellWidth + daySpacing,
+    height: cellHeight + daySpacing
+  };
+  return ticks.map(function (day) {
+    return {
+      value: arrayOfWeekdays[day],
+      rotation: direction === 'horizontal' ? 0 : -90,
+      y: direction === 'horizontal' ? sizes.height * (day + 1) - sizes.height / 3 : 0,
+      x: direction === 'horizontal' ? 0 : sizes.width * (day + 1) - sizes.width / 3
+    };
+  });
+};
+var computeMonthLegends = function computeMonthLegends(_ref5) {
+  var direction = _ref5.direction,
+      daySpacing = _ref5.daySpacing,
+      days = _ref5.days,
+      cellHeight = _ref5.cellHeight,
+      cellWidth = _ref5.cellWidth;
+  var accumulator = {
+    months: {},
+    weeks: []
+  };
+  return days.reduce(function (acc, day) {
+    if (acc.weeks.length === day.firstWeek) {
+      acc.weeks.push(day);
+
+      var _key = "".concat(day.year, "-").concat(day.month);
+
+      if (!Object.keys(acc.months).includes(_key)) {
+        var bbox = {
+          x: 0,
+          y: 0,
+          width: 0,
+          height: 0
+        };
+
+        if (direction === 'horizontal') {
+          bbox.x = day.coordinates.x - daySpacing;
+          bbox.height = cellHeight + daySpacing;
+          bbox.width = cellWidth + daySpacing * 2;
+        } else {
+          bbox.y = day.coordinates.y - daySpacing;
+          bbox.height = cellHeight + daySpacing * 2;
+          bbox.width = cellWidth + daySpacing * 2;
+        }
+
+        acc.months[_key] = {
+          date: day.date,
+          bbox: bbox,
+          firstWeek: day.firstWeek,
+          month: 0,
+          year: 0
+        };
+      } else {
+        if (direction === 'horizontal') {
+          acc.months[_key].bbox.width = (day.firstWeek - acc.months[_key].firstWeek) * (cellWidth + daySpacing);
+        } else {
+          acc.months[_key].bbox.height = (day.firstWeek - acc.months[_key].firstWeek) * (cellHeight + daySpacing);
+        }
+      }
+    }
+
+    return acc;
+  }, accumulator);
+};
+var computeTotalDays = function computeTotalDays(_ref6) {
+  var from = _ref6.from,
+      to = _ref6.to,
+      data = _ref6.data;
+  var startDate;
+  var endDate;
+
+  if (from) {
+    startDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(from) ? from : new Date(from);
+  } else {
+    startDate = data[0].date;
+  }
+
+  if (from && to) {
+    endDate = lodash_isDate__WEBPACK_IMPORTED_MODULE_9___default()(to) ? to : new Date(to);
+  } else {
+    endDate = data[data.length - 1].date;
+  }
+
+  return startDate.getDay() + d3_time__WEBPACK_IMPORTED_MODULE_10__["timeDay"].count(startDate, endDate);
+};
+
+var TimeRangeDay = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var data = _ref.data,
+      x = _ref.x,
+      _ref$ry = _ref.ry,
+      ry = _ref$ry === void 0 ? 5 : _ref$ry,
+      _ref$rx = _ref.rx,
+      rx = _ref$rx === void 0 ? 5 : _ref$rx,
+      y = _ref.y,
+      width = _ref.width,
+      height = _ref.height,
+      color = _ref.color,
+      borderWidth = _ref.borderWidth,
+      borderColor = _ref.borderColor,
+      isInteractive = _ref.isInteractive,
+      tooltip = _ref.tooltip,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseMove = _ref.onMouseMove,
+      onMouseLeave = _ref.onMouseLeave,
+      onClick = _ref.onClick,
+      formatValue = _ref.formatValue;
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
+      value: formatValue(data.value)
+    });
+
+    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
+    onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event);
+  }, [showTooltipFromEvent, tooltip, data, onMouseEnter, formatValue]);
+  var handleMouseMove = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
+      value: formatValue(data.value)
+    });
+
+    showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
+    onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(data, event);
+  }, [showTooltipFromEvent, tooltip, data, onMouseMove, formatValue]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!('value' in data)) {
+      return;
+    }
+
+    hideTooltip();
+    onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event);
+  }, [hideTooltip, data, onMouseLeave]);
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    return onClick === null || onClick === void 0 ? void 0 : onClick(data, event);
+  }, [data, onClick]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("rect", {
+    x: x,
+    y: y,
+    rx: rx,
+    ry: ry,
+    width: width,
+    height: height,
+    style: {
+      fill: color,
+      strokeWidth: borderWidth,
+      stroke: borderColor
+    },
+    onMouseEnter: isInteractive ? handleMouseEnter : undefined,
+    onMouseMove: isInteractive ? handleMouseMove : undefined,
+    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+    onClick: isInteractive ? handleClick : undefined
+  });
+});
+
+var InnerTimeRange = function InnerTimeRange(_ref) {
+  var partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      _ref$square = _ref.square,
+      square = _ref$square === void 0 ? timeRangeDefaultProps.square : _ref$square,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? timeRangeDefaultProps.colors : _ref$colors,
+      colorScale = _ref.colorScale,
+      _ref$emptyColor = _ref.emptyColor,
+      emptyColor = _ref$emptyColor === void 0 ? timeRangeDefaultProps.emptyColor : _ref$emptyColor,
+      from = _ref.from,
+      to = _ref.to,
+      _data = _ref.data,
+      _ref$direction = _ref.direction,
+      direction = _ref$direction === void 0 ? timeRangeDefaultProps.direction : _ref$direction,
+      _ref$minValue = _ref.minValue,
+      minValue = _ref$minValue === void 0 ? timeRangeDefaultProps.minValue : _ref$minValue,
+      _ref$maxValue = _ref.maxValue,
+      maxValue = _ref$maxValue === void 0 ? timeRangeDefaultProps.maxValue : _ref$maxValue,
+      valueFormat = _ref.valueFormat,
+      legendFormat = _ref.legendFormat,
+      _ref$monthLegend = _ref.monthLegend,
+      monthLegend = _ref$monthLegend === void 0 ? timeRangeDefaultProps.monthLegend : _ref$monthLegend,
+      _ref$monthLegendOffse = _ref.monthLegendOffset,
+      monthLegendOffset = _ref$monthLegendOffse === void 0 ? timeRangeDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
+      _ref$monthLegendPosit = _ref.monthLegendPosition,
+      monthLegendPosition = _ref$monthLegendPosit === void 0 ? timeRangeDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
+      _ref$weekdayLegendOff = _ref.weekdayLegendOffset,
+      weekdayLegendOffset = _ref$weekdayLegendOff === void 0 ? timeRangeDefaultProps.weekdayLegendOffset : _ref$weekdayLegendOff,
+      weekdayTicks = _ref.weekdayTicks,
+      _ref$dayBorderColor = _ref.dayBorderColor,
+      dayBorderColor = _ref$dayBorderColor === void 0 ? timeRangeDefaultProps.dayBorderColor : _ref$dayBorderColor,
+      _ref$dayBorderWidth = _ref.dayBorderWidth,
+      dayBorderWidth = _ref$dayBorderWidth === void 0 ? timeRangeDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
+      _ref$daySpacing = _ref.daySpacing,
+      daySpacing = _ref$daySpacing === void 0 ? timeRangeDefaultProps.daySpacing : _ref$daySpacing,
+      _ref$dayRadius = _ref.dayRadius,
+      dayRadius = _ref$dayRadius === void 0 ? timeRangeDefaultProps.dayRadius : _ref$dayRadius,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? timeRangeDefaultProps.isInteractive : _ref$isInteractive,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? timeRangeDefaultProps.tooltip : _ref$tooltip,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      onMouseMove = _ref.onMouseMove,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? timeRangeDefaultProps.legends : _ref$legends,
+      _ref$role = _ref.role,
+      role = _ref$role === void 0 ? timeRangeDefaultProps.role : _ref$role;
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight;
+
+  var data = Object(react__WEBPACK_IMPORTED_MODULE_2__["useMemo"])(function () {
+    return _data.map(function (data) {
+      return _objectSpread2(_objectSpread2({}, data), {}, {
+        date: new Date("".concat(data.day, "T00:00:00"))
+      });
+    }).sort(function (left, right) {
+      return left.day.localeCompare(right.day);
+    });
+  }, [_data]);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
+  var colorScaleFn = useColorScale({
+    data: data,
+    minValue: minValue,
+    maxValue: maxValue,
+    colors: colors,
+    colorScale: colorScale
+  });
+  var totalDays = computeTotalDays({
+    from: from,
+    to: to,
+    data: data
+  });
+
+  var _computeCellSize = computeCellSize$1({
+    square: square,
+    offset: weekdayLegendOffset,
+    totalDays: totalDays,
+    width: innerWidth,
+    height: innerHeight,
+    daySpacing: daySpacing,
+    direction: direction
+  }),
+      cellHeight = _computeCellSize.cellHeight,
+      cellWidth = _computeCellSize.cellWidth;
+
+  var days = computeCellPositions({
+    offset: weekdayLegendOffset,
+    colorScale: colorScaleFn,
+    emptyColor: emptyColor,
+    cellHeight: cellHeight,
+    cellWidth: cellWidth,
+    from: from,
+    to: to,
+    data: data,
+    direction: direction,
+    daySpacing: daySpacing
+  });
+  var months = Object.values(computeMonthLegends({
+    daySpacing: daySpacing,
+    direction: direction,
+    cellHeight: cellHeight,
+    cellWidth: cellWidth,
+    days: days
+  }).months);
+  var weekdayLegends = computeWeekdays({
+    direction: direction,
+    cellHeight: cellHeight,
+    cellWidth: cellWidth,
+    daySpacing: daySpacing,
+    ticks: weekdayTicks
+  });
+  var monthLegends = useMonthLegends({
+    months: months,
+    direction: direction,
+    monthLegendPosition: monthLegendPosition,
+    monthLegendOffset: monthLegendOffset
+  });
+  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
+  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsxs"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["SvgWrapper"], {
+    width: outerWidth,
+    height: outerHeight,
+    margin: margin,
+    role: role,
+    children: [weekdayLegends.map(function (legend) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("text", {
+        transform: "translate(".concat(legend.x, ",").concat(legend.y, ") rotate(").concat(legend.rotation, ")"),
+        textAnchor: "left",
+        style: theme.labels.text,
+        children: legend.value
+      }, legend.value);
+    }), days.map(function (d) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(TimeRangeDay, {
+        data: d,
+        x: d.coordinates.x,
+        rx: dayRadius,
+        y: d.coordinates.y,
+        ry: dayRadius,
+        width: cellWidth,
+        height: cellHeight,
+        color: d.color,
+        borderWidth: dayBorderWidth,
+        borderColor: dayBorderColor,
+        onMouseEnter: onMouseEnter,
+        onMouseLeave: onMouseLeave,
+        onMouseMove: onMouseMove,
+        isInteractive: isInteractive,
+        tooltip: tooltip,
+        onClick: onClick,
+        formatValue: formatValue
+      }, d.date.toString());
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarMonthLegends, {
+      months: monthLegends,
+      legend: monthLegend,
+      theme: theme
+    }), legends.map(function (legend, i) {
+      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
+        return {
+          id: value,
+          label: formatLegend(value),
+          color: colorScaleFn(value)
+        };
+      });
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
+        containerWidth: width,
+        containerHeight: height,
+        data: legendData
+      }), i);
+    })]
+  });
+};
+
+var TimeRange = function TimeRange(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? timeRangeDefaultProps.isInteractive : _ref2$isInteractive,
+      renderWrapper = _ref2.renderWrapper,
+      theme = _ref2.theme,
+      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
+    isInteractive: isInteractive,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerTimeRange, _objectSpread2({
+      isInteractive: isInteractive
+    }, props))
+  });
+};
+
+var ResponsiveTimeRange = function ResponsiveTimeRange(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(TimeRange, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
+};
+
+var ResponsiveCalendar = function ResponsiveCalendar(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(Calendar, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
+};
+
+var findDayUnderCursor = function findDayUnderCursor(event, canvasEl, days, size, dayBorderWidth, margin) {
+  var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["getRelativeCursor"])(canvasEl, event),
+      _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
+      x = _getRelativeCursor2[0],
+      y = _getRelativeCursor2[1];
+
+  return days.find(function (day) {
+    return 'value' in day && Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["isCursorInRect"])(day.x + margin.left - dayBorderWidth / 2, day.y + margin.top - dayBorderWidth / 2, size + dayBorderWidth, size + dayBorderWidth, x, y);
+  });
+};
+
+var InnerCalendarCanvas = Object(react__WEBPACK_IMPORTED_MODULE_2__["memo"])(function (_ref) {
+  var partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      _ref$pixelRatio = _ref.pixelRatio,
+      pixelRatio = _ref$pixelRatio === void 0 ? calendarCanvasDefaultProps.pixelRatio : _ref$pixelRatio,
+      _ref$align = _ref.align,
+      align = _ref$align === void 0 ? calendarCanvasDefaultProps.align : _ref$align,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? calendarCanvasDefaultProps.colors : _ref$colors,
+      colorScale = _ref.colorScale,
+      data = _ref.data,
+      _ref$direction = _ref.direction,
+      direction = _ref$direction === void 0 ? calendarCanvasDefaultProps.direction : _ref$direction,
+      _ref$emptyColor = _ref.emptyColor,
+      emptyColor = _ref$emptyColor === void 0 ? calendarCanvasDefaultProps.emptyColor : _ref$emptyColor,
+      from = _ref.from,
+      to = _ref.to,
+      _ref$minValue = _ref.minValue,
+      minValue = _ref$minValue === void 0 ? calendarCanvasDefaultProps.minValue : _ref$minValue,
+      _ref$maxValue = _ref.maxValue,
+      maxValue = _ref$maxValue === void 0 ? calendarCanvasDefaultProps.maxValue : _ref$maxValue,
+      valueFormat = _ref.valueFormat,
+      legendFormat = _ref.legendFormat,
+      _ref$yearLegend = _ref.yearLegend,
+      yearLegend = _ref$yearLegend === void 0 ? calendarCanvasDefaultProps.yearLegend : _ref$yearLegend,
+      _ref$yearLegendOffset = _ref.yearLegendOffset,
+      yearLegendOffset = _ref$yearLegendOffset === void 0 ? calendarCanvasDefaultProps.yearLegendOffset : _ref$yearLegendOffset,
+      _ref$yearLegendPositi = _ref.yearLegendPosition,
+      yearLegendPosition = _ref$yearLegendPositi === void 0 ? calendarCanvasDefaultProps.yearLegendPosition : _ref$yearLegendPositi,
+      _ref$yearSpacing = _ref.yearSpacing,
+      yearSpacing = _ref$yearSpacing === void 0 ? calendarCanvasDefaultProps.yearSpacing : _ref$yearSpacing,
+      _ref$monthLegend = _ref.monthLegend,
+      monthLegend = _ref$monthLegend === void 0 ? calendarCanvasDefaultProps.monthLegend : _ref$monthLegend,
+      _ref$monthLegendOffse = _ref.monthLegendOffset,
+      monthLegendOffset = _ref$monthLegendOffse === void 0 ? calendarCanvasDefaultProps.monthLegendOffset : _ref$monthLegendOffse,
+      _ref$monthLegendPosit = _ref.monthLegendPosition,
+      monthLegendPosition = _ref$monthLegendPosit === void 0 ? calendarCanvasDefaultProps.monthLegendPosition : _ref$monthLegendPosit,
+      _ref$monthSpacing = _ref.monthSpacing,
+      monthSpacing = _ref$monthSpacing === void 0 ? calendarCanvasDefaultProps.monthSpacing : _ref$monthSpacing,
+      _ref$dayBorderColor = _ref.dayBorderColor,
+      dayBorderColor = _ref$dayBorderColor === void 0 ? calendarCanvasDefaultProps.dayBorderColor : _ref$dayBorderColor,
+      _ref$dayBorderWidth = _ref.dayBorderWidth,
+      dayBorderWidth = _ref$dayBorderWidth === void 0 ? calendarCanvasDefaultProps.dayBorderWidth : _ref$dayBorderWidth,
+      _ref$daySpacing = _ref.daySpacing,
+      daySpacing = _ref$daySpacing === void 0 ? calendarCanvasDefaultProps.daySpacing : _ref$daySpacing,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? calendarCanvasDefaultProps.isInteractive : _ref$isInteractive,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? calendarCanvasDefaultProps.tooltip : _ref$tooltip,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      onMouseMove = _ref.onMouseMove,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? calendarCanvasDefaultProps.legends : _ref$legends;
+  var canvasEl = Object(react__WEBPACK_IMPORTED_MODULE_2__["useRef"])(null);
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useDimensions"])(width, height, partialMargin),
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight,
+      margin = _useDimensions.margin;
+
+  var _useCalendarLayout = useCalendarLayout({
+    width: innerWidth,
+    height: innerHeight,
+    from: from,
+    to: to,
+    direction: direction,
+    yearSpacing: yearSpacing,
+    monthSpacing: monthSpacing,
+    daySpacing: daySpacing,
+    align: align
+  }),
+      months = _useCalendarLayout.months,
+      years = _useCalendarLayout.years,
+      rest = _objectWithoutProperties(_useCalendarLayout, ["months", "years"]);
+
+  var colorScaleFn = useColorScale({
+    data: data,
+    minValue: minValue,
+    maxValue: maxValue,
+    colors: colors,
+    colorScale: colorScale
+  });
+  var monthLegends = useMonthLegends({
+    months: months,
+    direction: direction,
+    monthLegendPosition: monthLegendPosition,
+    monthLegendOffset: monthLegendOffset
+  });
+  var yearLegends = useYearLegends({
+    years: years,
+    direction: direction,
+    yearLegendPosition: yearLegendPosition,
+    yearLegendOffset: yearLegendOffset
+  });
+  var days = useDays({
+    days: rest.days,
+    data: data,
+    colorScale: colorScaleFn,
+    emptyColor: emptyColor
+  });
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(null),
+      _useState2 = _slicedToArray(_useState, 2),
+      currentDay = _useState2[0],
+      setCurrentDay = _useState2[1];
+
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useTheme"])();
+  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(valueFormat);
+  var formatLegend = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["useValueFormatter"])(legendFormat);
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_4__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    var _theme$labels$text$fi;
+
+    if (!canvasEl.current) return;
+    canvasEl.current.width = outerWidth * pixelRatio;
+    canvasEl.current.height = outerHeight * pixelRatio;
+    var ctx = canvasEl.current.getContext('2d');
+    if (!ctx) return;
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.fillStyle = theme.background;
+    ctx.fillRect(0, 0, outerWidth, outerHeight);
+    ctx.translate(margin.left, margin.top);
+    days.forEach(function (day) {
+      ctx.fillStyle = day.color;
+
+      if (dayBorderWidth > 0) {
+        ctx.strokeStyle = dayBorderColor;
+        ctx.lineWidth = dayBorderWidth;
+      }
+
+      ctx.beginPath();
+      ctx.rect(day.x, day.y, day.size, day.size);
+      ctx.fill();
+
+      if (dayBorderWidth > 0) {
+        ctx.stroke();
+      }
+    });
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = (_theme$labels$text$fi = theme.labels.text.fill) !== null && _theme$labels$text$fi !== void 0 ? _theme$labels$text$fi : '';
+    ctx.font = "".concat(theme.labels.text.fontSize, "px ").concat(theme.labels.text.fontFamily);
+    monthLegends.forEach(function (month) {
+      ctx.save();
+      ctx.translate(month.x, month.y);
+      ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["degreesToRadians"])(month.rotation));
+      ctx.fillText(String(monthLegend(month.year, month.month, month.date)), 0, 0);
+      ctx.restore();
+    });
+    yearLegends.forEach(function (year) {
+      ctx.save();
+      ctx.translate(year.x, year.y);
+      ctx.rotate(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["degreesToRadians"])(year.rotation));
+      ctx.fillText(String(yearLegend(year.year)), 0, 0);
+      ctx.restore();
+    });
+    legends.forEach(function (legend) {
+      var legendData = colorScaleFn.ticks(legend.itemCount).map(function (value) {
+        return {
+          id: value,
+          label: formatLegend(value),
+          color: colorScaleFn(value)
+        };
+      });
+      Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_1__["renderLegendToCanvas"])(ctx, _objectSpread2(_objectSpread2({}, legend), {}, {
+        data: legendData,
+        containerWidth: innerWidth,
+        containerHeight: innerHeight,
+        theme: theme
+      }));
+    });
+  }, [canvasEl, innerHeight, innerWidth, outerWidth, outerHeight, pixelRatio, margin, days, dayBorderColor, dayBorderWidth, colorScale, yearLegend, yearLegends, monthLegend, monthLegends, legends, theme, formatLegend, colorScaleFn]);
+  var handleMouseHover = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!canvasEl.current) return;
+    var data = findDayUnderCursor(event, canvasEl.current, days, days[0].size, dayBorderWidth, margin);
+
+    if (data) {
+      setCurrentDay(data);
+
+      if (!('value' in data)) {
+        return;
+      }
+
+      var formatedData = _objectSpread2(_objectSpread2({}, data), {}, {
+        value: formatValue(data.value),
+        data: _objectSpread2({}, data.data)
+      });
+
+      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_2__["createElement"])(tooltip, _objectSpread2({}, formatedData)), event);
+      !currentDay && (onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event));
+      onMouseMove === null || onMouseMove === void 0 ? void 0 : onMouseMove(data, event);
+      currentDay && (onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event));
+    } else {
+      hideTooltip();
+      data && (onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event));
+    }
+  }, [canvasEl, currentDay, margin, days, setCurrentDay, formatValue, dayBorderWidth, showTooltipFromEvent, hideTooltip, onMouseEnter, onMouseMove, onMouseLeave, tooltip]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function () {
+    setCurrentDay(null);
+    hideTooltip();
+  }, [setCurrentDay, hideTooltip]);
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_2__["useCallback"])(function (event) {
+    if (!onClick || !canvasEl.current) return;
+    var data = findDayUnderCursor(event, canvasEl.current, days, days[0].size, daySpacing, margin);
+    data && onClick(data, event);
+  }, [canvasEl, daySpacing, margin, days, onClick]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])("canvas", {
+    ref: canvasEl,
+    width: outerWidth * pixelRatio,
+    height: outerHeight * pixelRatio,
+    style: {
+      width: outerWidth,
+      height: outerHeight
+    },
+    onMouseEnter: isInteractive ? handleMouseHover : undefined,
+    onMouseMove: isInteractive ? handleMouseHover : undefined,
+    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+    onClick: isInteractive ? handleClick : undefined
+  });
+});
+var CalendarCanvas = function CalendarCanvas(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? calendarCanvasDefaultProps.isInteractive : _ref2$isInteractive,
+      renderWrapper = _ref2.renderWrapper,
+      theme = _ref2.theme,
+      props = _objectWithoutProperties(_ref2, ["isInteractive", "renderWrapper", "theme"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["Container"], {
+    isInteractive: isInteractive,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(InnerCalendarCanvas, _objectSpread2({
+      isInteractive: isInteractive
+    }, props))
+  });
+};
+
+var ResponsiveCalendarCanvas = function ResponsiveCalendarCanvas(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_0__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__["jsx"])(CalendarCanvas, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
 };
 
 
@@ -34431,6 +36253,35 @@ module.exports = baseIsArguments;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseIsDate.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseIsDate.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
+
+/** `Object#toString` result references. */
+var dateTag = '[object Date]';
+
+/**
+ * The base implementation of `_.isDate` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
+ */
+function baseIsDate(value) {
+  return isObjectLike(value) && baseGetTag(value) == dateTag;
+}
+
+module.exports = baseIsDate;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseIsEqual.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash/_baseIsEqual.js ***!
@@ -35030,6 +36881,45 @@ module.exports = basePickBy;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseRange.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseRange.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeCeil = Math.ceil,
+    nativeMax = Math.max;
+
+/**
+ * The base implementation of `_.range` and `_.rangeRight` which doesn't
+ * coerce arguments.
+ *
+ * @private
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} step The value to increment or decrement by.
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Array} Returns the range of numbers.
+ */
+function baseRange(start, end, step, fromRight) {
+  var index = -1,
+      length = nativeMax(nativeCeil((end - start) / (step || 1)), 0),
+      result = Array(length);
+
+  while (length--) {
+    result[fromRight ? length : ++index] = start;
+    start += step;
+  }
+  return result;
+}
+
+module.exports = baseRange;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseRest.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_baseRest.js ***!
@@ -35228,6 +37118,36 @@ function baseToString(value) {
 }
 
 module.exports = baseToString;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseTrim.js":
+/*!******************************************!*\
+  !*** ./node_modules/lodash/_baseTrim.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var trimmedEndIndex = __webpack_require__(/*! ./_trimmedEndIndex */ "./node_modules/lodash/_trimmedEndIndex.js");
+
+/** Used to match leading whitespace. */
+var reTrimStart = /^\s+/;
+
+/**
+ * The base implementation of `_.trim`.
+ *
+ * @private
+ * @param {string} string The string to trim.
+ * @returns {string} Returns the trimmed string.
+ */
+function baseTrim(string) {
+  return string
+    ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+    : string;
+}
+
+module.exports = baseTrim;
 
 
 /***/ }),
@@ -35593,6 +37513,47 @@ function createBaseFor(fromRight) {
 }
 
 module.exports = createBaseFor;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_createRange.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_createRange.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseRange = __webpack_require__(/*! ./_baseRange */ "./node_modules/lodash/_baseRange.js"),
+    isIterateeCall = __webpack_require__(/*! ./_isIterateeCall */ "./node_modules/lodash/_isIterateeCall.js"),
+    toFinite = __webpack_require__(/*! ./toFinite */ "./node_modules/lodash/toFinite.js");
+
+/**
+ * Creates a `_.range` or `_.rangeRight` function.
+ *
+ * @private
+ * @param {boolean} [fromRight] Specify iterating from right to left.
+ * @returns {Function} Returns the new range function.
+ */
+function createRange(fromRight) {
+  return function(start, end, step) {
+    if (step && typeof step != 'number' && isIterateeCall(start, end, step)) {
+      end = step = undefined;
+    }
+    // Ensure the sign of `-0` is preserved.
+    start = toFinite(start);
+    if (end === undefined) {
+      end = start;
+      start = 0;
+    } else {
+      end = toFinite(end);
+    }
+    step = step === undefined ? (start < end ? 1 : -1) : toFinite(step);
+    return baseRange(start, end, step, fromRight);
+  };
+}
+
+module.exports = createRange;
 
 
 /***/ }),
@@ -37840,6 +39801,36 @@ module.exports = toSource;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_trimmedEndIndex.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_trimmedEndIndex.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/** Used to match a single whitespace character. */
+var reWhitespace = /\s/;
+
+/**
+ * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+ * character of `string`.
+ *
+ * @private
+ * @param {string} string The string to inspect.
+ * @returns {number} Returns the index of the last non-whitespace character.
+ */
+function trimmedEndIndex(string) {
+  var index = string.length;
+
+  while (index-- && reWhitespace.test(string.charAt(index))) {}
+  return index;
+}
+
+module.exports = trimmedEndIndex;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/constant.js":
 /*!*****************************************!*\
   !*** ./node_modules/lodash/constant.js ***!
@@ -38298,6 +40289,44 @@ var isBuffer = nativeIsBuffer || stubFalse;
 module.exports = isBuffer;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isDate.js":
+/*!***************************************!*\
+  !*** ./node_modules/lodash/isDate.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsDate = __webpack_require__(/*! ./_baseIsDate */ "./node_modules/lodash/_baseIsDate.js"),
+    baseUnary = __webpack_require__(/*! ./_baseUnary */ "./node_modules/lodash/_baseUnary.js"),
+    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ "./node_modules/lodash/_nodeUtil.js");
+
+/* Node.js helper references. */
+var nodeIsDate = nodeUtil && nodeUtil.isDate;
+
+/**
+ * Checks if `value` is classified as a `Date` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
+ * @example
+ *
+ * _.isDate(new Date);
+ * // => true
+ *
+ * _.isDate('Mon April 23 2012');
+ * // => false
+ */
+var isDate = nodeIsDate ? baseUnary(nodeIsDate) : baseIsDate;
+
+module.exports = isDate;
+
 
 /***/ }),
 
@@ -39007,6 +41036,63 @@ module.exports = pick;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/range.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/range.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var createRange = __webpack_require__(/*! ./_createRange */ "./node_modules/lodash/_createRange.js");
+
+/**
+ * Creates an array of numbers (positive and/or negative) progressing from
+ * `start` up to, but not including, `end`. A step of `-1` is used if a negative
+ * `start` is specified without an `end` or `step`. If `end` is not specified,
+ * it's set to `start` with `start` then set to `0`.
+ *
+ * **Note:** JavaScript follows the IEEE-754 standard for resolving
+ * floating-point values which can produce unexpected results.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {number} [start=0] The start of the range.
+ * @param {number} end The end of the range.
+ * @param {number} [step=1] The value to increment or decrement by.
+ * @returns {Array} Returns the range of numbers.
+ * @see _.inRange, _.rangeRight
+ * @example
+ *
+ * _.range(4);
+ * // => [0, 1, 2, 3]
+ *
+ * _.range(-4);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 5);
+ * // => [1, 2, 3, 4]
+ *
+ * _.range(0, 20, 5);
+ * // => [0, 5, 10, 15]
+ *
+ * _.range(0, -4, -1);
+ * // => [0, -1, -2, -3]
+ *
+ * _.range(1, 4, 0);
+ * // => [1, 1, 1]
+ *
+ * _.range(0);
+ * // => []
+ */
+var range = createRange();
+
+module.exports = range;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/set.js":
 /*!************************************!*\
   !*** ./node_modules/lodash/set.js ***!
@@ -39112,6 +41198,134 @@ function stubFalse() {
 }
 
 module.exports = stubFalse;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/toFinite.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/toFinite.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
+
+/** Used as references for various `Number` constants. */
+var INFINITY = 1 / 0,
+    MAX_INTEGER = 1.7976931348623157e+308;
+
+/**
+ * Converts `value` to a finite number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.12.0
+ * @category Lang
+ * @param {*} value The value to convert.
+ * @returns {number} Returns the converted number.
+ * @example
+ *
+ * _.toFinite(3.2);
+ * // => 3.2
+ *
+ * _.toFinite(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toFinite(Infinity);
+ * // => 1.7976931348623157e+308
+ *
+ * _.toFinite('3.2');
+ * // => 3.2
+ */
+function toFinite(value) {
+  if (!value) {
+    return value === 0 ? value : 0;
+  }
+  value = toNumber(value);
+  if (value === INFINITY || value === -INFINITY) {
+    var sign = (value < 0 ? -1 : 1);
+    return sign * MAX_INTEGER;
+  }
+  return value === value ? value : 0;
+}
+
+module.exports = toFinite;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/toNumber.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/toNumber.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseTrim = __webpack_require__(/*! ./_baseTrim */ "./node_modules/lodash/_baseTrim.js"),
+    isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = baseTrim(value);
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = toNumber;
 
 
 /***/ }),

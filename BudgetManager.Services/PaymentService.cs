@@ -14,14 +14,12 @@ namespace BudgetManager.Services
         private readonly IPaymentTypeRepository paymentTypeRepository;
         private readonly IPaymentCategoryRepository paymentCategoryRepository;
         private readonly IPaymentRepository paymentRepository;
-        private readonly IBankAccountRepository bankAccountRepository;
 
-        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, IPaymentRepository paymentRepository, IBankAccountRepository bankAccountRepository)
+        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, IPaymentRepository paymentRepository)
         {
             this.paymentTypeRepository = paymentTypeRepository;
             this.paymentCategoryRepository = paymentCategoryRepository;
             this.paymentRepository = paymentRepository;
-            this.bankAccountRepository = bankAccountRepository;
         }
 
         public List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int userId, int? bankAccountId)

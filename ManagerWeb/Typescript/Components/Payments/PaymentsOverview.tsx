@@ -69,8 +69,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.state = {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: '', filterDateFrom: ''
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -116,7 +116,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                 radarChartData: { dataSets: radarData }
             });
         } else {
@@ -263,8 +263,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                             </div>
                         </div>
-                        <div className="w-3/5 h-64 mt-auto calendar">
-                            {/* <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart> */}
+                        <div className="w-3/5 h-64 mt-4 calendar">
+                            <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                         </div>
                     </div>
                     <div className="flex flex-row">
