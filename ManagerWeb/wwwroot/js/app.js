@@ -2798,10 +2798,10 @@ const BaseList = (props) => {
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
             React.createElement("div", { className: "text-center flex" },
-                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.header)),
+                React.createElement("div", { className: "w-10/12 flex flex-row" }, props.header)),
             React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
                 React.createElement("div", { className: "w-8/10 flex flex-row" }, props.template(d)),
-                React.createElement("div", { className: "w-2/10 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+                React.createElement("div", { className: "w-2/12 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -3809,13 +3809,13 @@ class PaymentsOverview extends React.Component {
             let iconsData = new IconsEnum_1.IconsData();
             return (React.createElement(React.Fragment, null,
                 React.createElement("span", { className: "min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode) }),
-                React.createElement("p", { className: "mx-6 my-1 w-2/7" },
+                React.createElement("p", { className: "mx-6 my-1 w-2/12" },
                     p.amount,
                     ",-"),
-                React.createElement("p", { className: "mx-6 my-1 w-2/7" }, p.name),
-                React.createElement("p", { className: "mx-6 my-1 w-1/7" }, (0, moment_1.default)(p.date).format('DD.MM.YYYY')),
-                React.createElement("span", { className: "mx-6 my-1 w-1/7 categoryIcon" }, iconsData[p.paymentCategoryIcon]),
-                React.createElement("span", { className: "ml-auto my-1 w-1/7 categoryIcon", onClick: e => this.clonePayment(e, p.id) }, iconsData.copy)));
+                React.createElement("p", { className: "mx-6 my-1 w-2/12" }, p.name),
+                React.createElement("p", { className: "mx-6 my-1 w-3/12" }, (0, moment_1.default)(p.date).format('DD.MM.YYYY')),
+                React.createElement("span", { className: "mx-6 my-1 w-1/12 categoryIcon" }, iconsData[p.paymentCategoryIcon]),
+                React.createElement("span", { className: "ml-auto my-1 w-2/12 categoryIcon", onClick: e => this.clonePayment(e, p.id) }, iconsData.copy)));
         };
         moment_1.default.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];

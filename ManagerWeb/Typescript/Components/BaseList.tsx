@@ -55,7 +55,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                     ) : <></>}
                 </div>
                 <div className="text-center flex">
-                    <div className="w-8/10 flex flex-row">
+                    <div className="w-10/12 flex flex-row">
                         {props.header}
                     </div>
                 </div>
@@ -65,7 +65,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                             <div className="w-8/10 flex flex-row">
                                 {props.template(d)}
                             </div>
-                            <div className="w-2/10 flex items-center">
+                            <div className="w-2/12 flex items-center">
                                 {
                                     props.deleteItemHandler != undefined ? (
                                         <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">

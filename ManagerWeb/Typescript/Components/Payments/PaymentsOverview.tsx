@@ -208,11 +208,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         return (
             <>
                 <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                <p className="mx-6 my-1 w-2/7">{p.amount},-</p>
-                <p className="mx-6 my-1 w-2/7">{p.name}</p>
-                <p className="mx-6 my-1 w-1/7">{moment(p.date).format('DD.MM.YYYY')}</p>
-                <span className="mx-6 my-1 w-1/7 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
-                <span className="ml-auto my-1 w-1/7 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
+                <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
+                <p className="mx-6 my-1 w-2/12">{p.name}</p>
+                <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
+                <span className="mx-6 my-1 w-1/12 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
+                <span className="ml-auto my-1 w-2/12 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
             </>
         );
     }
