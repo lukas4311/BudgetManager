@@ -2912,6 +2912,7 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 class BudgetComponent extends React.Component {
@@ -2942,13 +2943,14 @@ class BudgetComponent extends React.Component {
                 React.createElement(ActualBudgetCard_1.default, Object.assign({}, actualProps))));
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
-        this.budgetApi = new Main_1.BudgetApi();
     }
     componentDidMount() {
         this.loadData();
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.budgetApi = yield apiFactory.getClient(Main_1.BudgetApi);
             let budgets = yield this.budgetApi.budgetsActualGet();
             let budgetViewModels = budgets.map(b => ({
                 id: b.id, amount: b.amount, dateFrom: (0, moment_1.default)(b.dateFrom).format('DD.MM.YYYY'),
@@ -2960,7 +2962,7 @@ class BudgetComponent extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement("div", { className: "flex flex-col mt-6" },
-                React.createElement("h2", { className: "ml-6 text-xl" }, "Actual budgets"),
+                React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
                 React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
             React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
                 React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
@@ -3824,6 +3826,7 @@ const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Ty
 const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
+const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
@@ -4015,7 +4018,8 @@ class PaymentsOverview extends React.Component {
                     React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                         React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
                 React.createElement("div", { className: "flex flex-row p-6" },
-                    React.createElement("div", { className: "w-2/5" })),
+                    React.createElement("div", { className: "w-2/5" },
+                        React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
                 React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
                     React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail platby"),
                     React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },

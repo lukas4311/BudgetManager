@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import moment from 'moment';
 import * as React from 'react'
 import { BudgetApi, BudgetModel, Configuration } from '../../ApiClient/Main';
+import ApiClientFactory from '../../Utils/ApiClientFactory';
 import ActualBudgetCard, { ActualBudgetCardProps } from './ActualBudgetCard';
 import { BudgetComponentProps } from './BudgetComponentProps';
 import { BudgetComponentState } from './BudgetComponentState';
@@ -14,7 +15,6 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     constructor(props: BudgetComponentProps) {
         super(props);
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
-        this.budgetApi = new BudgetApi();
     }
 
     public componentDidMount() {
@@ -26,6 +26,8 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private async loadBudget(): Promise<void> {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.budgetApi = await apiFactory.getClient(BudgetApi);
         let budgets = await this.budgetApi.budgetsActualGet();
         let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
             id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).format('DD.MM.YYYY')
@@ -66,7 +68,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         return (
             <React.Fragment>
                 <div className="flex flex-col mt-6">
-                    <h2 className="ml-6 text-xl">Actual budgets</h2>
+                    <h2 className="ml-6 text-xl text-left">Actual budgets</h2>
                     <div className="flex flex-row flex-wrap justify-around">
                         {this.state.budgets.map(b => this.renderCard(b))}
                     </div>

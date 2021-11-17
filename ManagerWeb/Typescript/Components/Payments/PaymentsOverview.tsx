@@ -283,7 +283,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     </div>
                     <div className="flex flex-row p-6">
                         <div className="w-2/5">
-                            {/* <BudgetComponent></BudgetComponent> */}
+                            <BudgetComponent history={this.props.history}></BudgetComponent>
                         </div>
                     </div>
                     <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Detail platby"
