@@ -66,8 +66,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
+        const bankAccounts: BankAccountModel[] = [];
+        bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+
         this.state = {
-            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
+            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
             , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
@@ -233,8 +236,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     </svg>
                                 </span>
                             </div>
-                            <div className="flex flex-col mb-3 ml-6">
-                                <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
+                            <div className="flex flex-row items-center mb-3 ml-6">
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
@@ -245,6 +247,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
                                     })}
                                 </Select>
+                                <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
                             </div>
                             <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
                                 <div className="text-left m-auto w-2/5">
@@ -269,13 +272,13 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     </div>
                     <div className="flex flex-row">
                         <div className="w-1/3 h-64">
-                            {/* <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart> */}
+                            <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
                         </div>
                         <div className="w-1/3 h-64">
-                            {/* <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart> */}
+                            <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
                         </div>
                         <div className="w-1/3 h-64 calendar text-black">
-                            {/* <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart> problem with error  */}
+                            <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
                         </div>
                     </div>
                     <div className="flex flex-row p-6">

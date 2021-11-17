@@ -9,7 +9,7 @@ function LineChart({ dataSets }: LineChartProps) {
   let maxY = Math.max(...allYData);
   let yScale = (minY / 100);
 
-  if(yScale < 1000)
+  if (yScale < 1000)
     yScale = 1000;
 
   return (<ResponsiveLine
@@ -45,13 +45,13 @@ function LineChart({ dataSets }: LineChartProps) {
     areaOpacity={0.5}
     areaBaselineValue={minY - yScale}
     enableSlices="y"
-    sliceTooltip={({slice}) => {
+    sliceTooltip={({ slice }) => {
       return (
-        <div style={{background:'black', padding: '9px 12px'}}>
+        <div style={{ background: 'black', padding: '9px 12px' }}>
           {slice.points.map(point => (
-            <div key={point.id} style={{color:'white', padding: '3px 0'}}>
-               <span>{point.data.xFormatted}</span>
-               <span style={{margin:'0px 8px'}}>{point.data.yFormatted}</span>
+            <div key={point.id} style={{ color: 'white', padding: '3px 0' }}>
+              <span>{point.data.xFormatted}</span>
+              <span style={{ margin: '0px 8px' }}>{point.data.yFormatted}</span>
             </div>
           ))}
         </div>
