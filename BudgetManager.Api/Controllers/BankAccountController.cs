@@ -42,9 +42,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPost]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            bankAccountViewModel.UserIdentityId = this.GetUserId();
             int paymentId = this.bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
         }
@@ -52,9 +50,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPut]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            if (bankAccountViewModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            bankAccountViewModel.UserIdentityId = this.GetUserId();
             this.bankAccountService.Update(bankAccountViewModel);
             return Ok();
         }

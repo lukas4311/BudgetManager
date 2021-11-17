@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BudgetManager.ManagerWeb.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BudgetManager.ManagerWeb.Controllers
 {
@@ -18,18 +17,6 @@ namespace BudgetManager.ManagerWeb.Controllers
         public IActionResult Index()
         {
             return View();
-        }
-
-        [HttpGet("crypto-overview")]
-        public IActionResult Crypto()
-        {
-            return this.View();
-        }
-
-        [HttpGet("bankaccount-overview")]
-        public IActionResult BankAccount()
-        {
-            return this.View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

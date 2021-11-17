@@ -2837,6 +2837,11 @@ class BankAccountOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.componentDidMount = () => this.init();
+        this.loadBankAccounts = () => __awaiter(this, void 0, void 0, function* () {
+            let bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
+            let bankViewModels = this.getMappedViewModels(bankAccounts);
+            this.setState({ bankAccounts: bankViewModels });
+        });
         this.getMappedViewModels = (bankAccountModels) => bankAccountModels.map(b => this.mapDataModelToViewModel(b));
         this.mapDataModelToViewModel = (bankAccountModels) => {
             let viewModel = new BankAccountViewModel_1.default();
@@ -2862,9 +2867,7 @@ class BankAccountOverview extends react_1.default.Component {
             let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
             this.setState({ showForm: true, selectedBankAccount: selectedBankAccount, selectedId: id });
         });
-        this.hideForm = () => {
-            this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
-        };
+        this.hideForm = () => this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
         this.saveFormData = (model) => __awaiter(this, void 0, void 0, function* () {
             let bankModel = {
                 code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
@@ -2879,6 +2882,7 @@ class BankAccountOverview extends react_1.default.Component {
                 console.log(error);
             }
             this.hideForm();
+            yield this.loadBankAccounts();
         });
         this.deleteBank = (id) => {
             this.bankAccountApi.bankAccountsDelete({ body: id });
@@ -2889,9 +2893,7 @@ class BankAccountOverview extends react_1.default.Component {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
-            let bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
-            let bankViewModels = this.getMappedViewModels(bankAccounts);
-            this.setState({ bankAccounts: bankViewModels });
+            yield this.loadBankAccounts();
         });
     }
     render() {
