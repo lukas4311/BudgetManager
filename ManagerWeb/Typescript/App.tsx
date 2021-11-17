@@ -11,6 +11,7 @@ import { IconsData } from "./Enums/IconsEnum";
 import moment from "moment";
 import Auth from "./Components/Auth/Auth";
 import PrivateRoute from "./Utils/PrivateRoute";
+import BankAccountOverview from "./Components/BankAccount/BankAccountOverview";
 
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
                             <PrivateRoute path="/payments" component={PaymentsOverview} />
                             <PrivateRoute path="/crypto-overview" component={Crypto} />
                             <PrivateRoute path="/budget" component={BudgetComponent} />
+                            <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />
                             <PrivateRoute path="/" component={Overview} />
                         </Switch>
                     </main>

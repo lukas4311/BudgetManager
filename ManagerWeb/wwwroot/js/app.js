@@ -2629,6 +2629,7 @@ const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/E
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const Auth_1 = __importDefault(__webpack_require__(/*! ./Components/Auth/Auth */ "./Typescript/Components/Auth/Auth.tsx"));
 const PrivateRoute_1 = __importDefault(__webpack_require__(/*! ./Utils/PrivateRoute */ "./Typescript/Utils/PrivateRoute.tsx"));
+const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Components/BankAccount/BankAccountOverview */ "./Typescript/Components/BankAccount/BankAccountOverview.tsx"));
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
@@ -2645,6 +2646,7 @@ function App() {
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/payments", component: PaymentsOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/crypto-overview", component: Crypto_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/budget", component: BudgetComponent_1.default }),
+                        react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
             react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
                 react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
@@ -2734,6 +2736,181 @@ class Auth extends react_1.default.Component {
     }
 }
 exports.default = Auth;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/BankAccount/BankAccountForm.tsx":
+/*!***************************************************************!*\
+  !*** ./Typescript/Components/BankAccount/BankAccountForm.tsx ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BankAccountFromViewModel = exports.BankAccountForm = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+class BankAccountFromViewModel {
+}
+exports.BankAccountFromViewModel = BankAccountFromViewModel;
+const BankAccountForm = (props) => {
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const onSubmit = (data) => {
+        data.id = props.id;
+        props.onSave(data);
+    };
+    return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            React.createElement("div", null,
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "N\u00E1zev \u00FA\u010Dtu" }, field, { className: "materialUIInput w-full" })), name: "code", control: control })),
+            React.createElement("div", null,
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Po\u010D\u00E1te\u010Dn\u00ED stav" }, field, { className: "materialUIInput w-full" })), name: "openingBalance", control: control }))),
+        React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
+};
+exports.BankAccountForm = BankAccountForm;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/BankAccount/BankAccountOverview.tsx":
+/*!*******************************************************************!*\
+  !*** ./Typescript/Components/BankAccount/BankAccountOverview.tsx ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const BankAccountViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/BankAccountViewModel */ "./Typescript/Model/BankAccountViewModel.ts"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const BankAccountForm_1 = __webpack_require__(/*! ./BankAccountForm */ "./Typescript/Components/BankAccount/BankAccountForm.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+class BankAccountOverviewState {
+}
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+    }
+});
+class BankAccountOverview extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.componentDidMount = () => this.init();
+        this.getMappedViewModels = (bankAccountModels) => bankAccountModels.map(b => this.mapDataModelToViewModel(b));
+        this.mapDataModelToViewModel = (bankAccountModels) => {
+            let viewModel = new BankAccountViewModel_1.default();
+            viewModel.code = bankAccountModels.code;
+            viewModel.id = bankAccountModels.id;
+            viewModel.openingBalance = bankAccountModels.openingBalance;
+            return viewModel;
+        };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3 text-left" }, "N\u00E1zev \u00FA\u010Dtu"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3 text-left" }, "Po\u010D\u00E1te\u010Dn\u00ED stav")));
+        };
+        this.renderTemplate = (p) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3" }, p.code.toUpperCase()),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.openingBalance)));
+        };
+        this.addNewItem = () => {
+            this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
+        };
+        this.bankEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
+            this.setState({ showForm: true, selectedBankAccount: selectedBankAccount, selectedId: id });
+        });
+        this.hideForm = () => {
+            this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
+        };
+        this.saveFormData = (model) => __awaiter(this, void 0, void 0, function* () {
+            let bankModel = {
+                code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
+            };
+            try {
+                if (model.id != undefined)
+                    yield this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
+                else
+                    yield this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
+            }
+            catch (error) {
+                console.log(error);
+            }
+            this.hideForm();
+        });
+        this.deleteBank = (id) => {
+            this.bankAccountApi.bankAccountsDelete({ body: id });
+        };
+        this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
+            let bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
+            let bankViewModels = this.getMappedViewModels(bankAccounts);
+            this.setState({ bankAccounts: bankViewModels });
+        });
+    }
+    render() {
+        return (react_1.default.createElement("div", { className: "" },
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "P\u0159ehled bankovn\u00EDch \u00FA\u010Dt\u016F"),
+            react_1.default.createElement("div", { className: "flex" },
+                react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
+                    react_1.default.createElement("div", { className: "h-full" },
+                        react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                            react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
+                                react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
+                            react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
+                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
+                                react_1.default.createElement(core_1.DialogContent, null,
+                                    react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
+                                        react_1.default.createElement(BankAccountForm_1.BankAccountForm, Object.assign({ key: this.state.formKey }, this.state.selectedBankAccount, { onSave: this.saveFormData })))))))))));
+    }
+}
+exports.default = BankAccountOverview;
 
 
 /***/ }),
@@ -4379,6 +4556,23 @@ class IconsData {
     }
 }
 exports.IconsData = IconsData;
+
+
+/***/ }),
+
+/***/ "./Typescript/Model/BankAccountViewModel.ts":
+/*!**************************************************!*\
+  !*** ./Typescript/Model/BankAccountViewModel.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class BankAccountViewModel {
+}
+exports.default = BankAccountViewModel;
 
 
 /***/ }),

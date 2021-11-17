@@ -5,8 +5,10 @@ import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
 import { BankAccountModel } from "../../ApiClient/Main/models/BankAccountModel";
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
-import { BankAccountForm, BankAccountFromViewModel } from "./BankAccountForm";
+import { BankAccountForm } from "./BankAccountForm";
 import { BankAccount } from "../../Model/BankAccount";
+import { RouteComponentProps } from "react-router-dom";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
@@ -22,35 +24,32 @@ const theme = createMuiTheme({
     }
 });
 
-export default class BankAccountOverview extends React.Component<{}, BankAccountOverviewState> {
+export default class BankAccountOverview extends React.Component<RouteComponentProps, BankAccountOverviewState> {
     bankAccountApi: BankAccountApiInterface;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
-        this.bankAccountApi = new BankAccountApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
 
-    public componentDidMount() {
-        this.load();
-    }
+    public componentDidMount = () => this.init();
 
-    private async load(): Promise<void> {
+    private async init(): Promise<void> {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountsAllGet();
         let bankViewModels: BankAccountViewModel[] = this.getMappedViewModels(bankAccounts);
         this.setState({ bankAccounts: bankViewModels });
     }
 
-    private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] => {
-        return bankAccountModels.map(b => this.mapDataModelToViewModel(b));
-    }
+    private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] =>
+        bankAccountModels.map(b => this.mapDataModelToViewModel(b));
 
     private mapDataModelToViewModel = (bankAccountModels: BankAccountModel): BankAccountViewModel => {
         let viewModel = new BankAccountViewModel();
         viewModel.code = bankAccountModels.code;
         viewModel.id = bankAccountModels.id;
         viewModel.openingBalance = bankAccountModels.openingBalance;
-
         return viewModel;
     }
 
@@ -108,24 +107,31 @@ export default class BankAccountOverview extends React.Component<{}, BankAccount
 
     render() {
         return (
-            <div className="h-full">
-                <ThemeProvider theme={theme}>
-                    <div className="w-full lg:w-1/2">
-                        <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
-                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
-                            deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
-                        </BaseList>
+            <div className="">
+                <p className="text-3xl text-center mt-6">Přehled bankovních účtů</p>
+                <div className="flex">
+                    <div className="w-full p-4 overflow-y-auto">
+                        <div className="h-full">
+                            <ThemeProvider theme={theme}>
+                                <div className="w-full lg:w-1/2">
+                                    <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
+                                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
+                                        deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
+                                    </BaseList>
+                                </div>
+                                <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Detail rozpočtu"
+                                    maxWidth="sm" fullWidth={true}>
+                                    <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
+                                    <DialogContent>
+                                        <div className="p-2 overflow-y-auto">
+                                            <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            </ThemeProvider>
+                        </div>
                     </div>
-                    <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Detail rozpočtu"
-                        maxWidth="sm" fullWidth={true}>
-                        <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
-                        <DialogContent>
-                            <div className="p-2 overflow-y-auto">
-                                <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
-                </ThemeProvider>
+                </div>
             </div>
         );
     }

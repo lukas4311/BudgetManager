@@ -47,12 +47,9 @@ export default class Menu extends React.Component<{}, MenuState> {
         return (
             <li className="menu-item" key={item.linkUri}>
                 <Link to={"/" + item.linkUri} className="block cursor-pointer flex">
-                    {/* <a className="block cursor-pointer flex" onClick={_ => this.redirectToPage(item.linkUri)}> */}
-                    {/* <a className="block cursor-pointer flex" > */}
                         <span className="w-10 m-auto">
                             {item.icon}
                         </span>
-                    {/* </a> */}
                 </Link>
             </li>
         );
