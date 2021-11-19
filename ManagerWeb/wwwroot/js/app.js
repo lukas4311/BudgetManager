@@ -2976,11 +2976,11 @@ const BaseList = (props) => {
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
-            React.createElement("div", { className: "text-center flex" },
-                React.createElement("div", { className: "w-10/12 flex flex-row" }, props.header)),
+            React.createElement("div", { className: "text-center flex pr-5" },
+                React.createElement("div", { className: "w-9/12 flex flex-row text-sm" }, props.header)),
             React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
-                React.createElement("div", { className: "w-8/10 flex flex-row" }, props.template(d)),
-                React.createElement("div", { className: "w-2/12 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+                React.createElement("div", { className: "w-9/12 flex flex-row" }, props.template(d)),
+                React.createElement("div", { className: "w-3/12 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -3371,12 +3371,11 @@ class PieChartProps {
 }
 function PieChart(props) {
     var _a;
-    return (react_1.default.createElement(pie_1.ResponsivePieCanvas, { data: ((_a = props.data) !== null && _a !== void 0 ? _a : []), margin: { top: 40, right: 200, bottom: 40, left: 80 }, innerRadius: 0.6, padAngle: 0, isInteractive: true, cornerRadius: 0, colors: { scheme: 'paired' }, borderColor: { from: 'color', modifiers: [['darker', 0.6]] }, 
-        // enableRadialLabels={true}
-        // radialLabel={d => `${d.id} (${d.formattedValue})`}
-        // radialLabelsTextColor="#ffffff"
-        // radialLabelsLinkColor={{ from: 'color' }}
-        sortByValue: true }));
+    return (react_1.default.createElement(pie_1.ResponsivePieCanvas, { data: ((_a = props.data) !== null && _a !== void 0 ? _a : []), margin: { top: 40, right: 200, bottom: 40, left: 80 }, innerRadius: 0.6, padAngle: 0, isInteractive: true, cornerRadius: 0, colors: { scheme: 'paired' }, borderColor: { from: 'color', modifiers: [['darker', 0.6]] }, arcLinkLabelsTextColor: "#ffffff", arcLabelsTextColor: "ffffff", arcLinkLabelsSkipAngle: 10, arcLabelsSkipAngle: 10, sortByValue: true, tooltip: (p) => { return react_1.default.createElement("p", { className: "bg-black p-2 rounded-xl" },
+            p.datum.label,
+            " : ",
+            p.datum.value,
+            " USD"); } }));
 }
 exports.PieChart = PieChart;
 
@@ -3436,6 +3435,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const PieChart_1 = __webpack_require__(/*! ../Charts/PieChart */ "./Typescript/Components/Charts/PieChart.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const usdSymbol = "USD";
 class CryptoSum {
 }
@@ -3445,6 +3445,8 @@ class CryptoPortfolio extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.load = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
             let trades = yield this.cryptoApi.cryptosAllGet();
             let groupedTrades = lodash_1.default.groupBy(trades, t => t.cryptoTicker);
             let cryptoSums = [];
@@ -3469,7 +3471,6 @@ class CryptoPortfolio extends react_1.default.Component {
             }
             return element;
         };
-        this.cryptoApi = new Main_1.CryptoApi(new Main_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { allCryptoSum: undefined };
     }
     componentDidMount() {
@@ -3493,9 +3494,7 @@ class CryptoPortfolio extends react_1.default.Component {
                             " USD)"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
                             p.tradeValueSum.toFixed(2),
-                            "(",
-                            p.usdPrice.toFixed(2),
-                            " USD)"))))
+                            " USD"))))
                 : react_1.default.createElement("div", null,
                     react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
             this.renderChart()));
@@ -3590,6 +3589,7 @@ const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/Api
 const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 class CryptoTradesState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -3625,10 +3625,11 @@ class CryptoTrades extends react_1.default.Component {
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Velikost tradu"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Datum tradu"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Celkova hodnota"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "M\u011Bna")));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Trade size"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, "Date"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, "Value"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Currency"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" })));
         };
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -3636,7 +3637,11 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, (0, moment_1.default)(p.tradeTimeStamp).format('DD.MM.YYYY')),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol)));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, this.renderTradeBadge(p.tradeValue))));
+        };
+        this.renderTradeBadge = (tradeValue) => {
+            return react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         };
         this.addNewItem = () => {
             // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
@@ -3645,7 +3650,6 @@ class CryptoTrades extends react_1.default.Component {
             let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
             this.setState({ selectedTrade: tradeHistory, openedForm: true });
         });
-        this.cryptoInterface = new Main_1.CryptoApi(new Main_1.Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: [], openedForm: false, selectedTrade: undefined };
     }
     componentDidMount() {
@@ -3653,7 +3657,9 @@ class CryptoTrades extends react_1.default.Component {
     }
     load() {
         return __awaiter(this, void 0, void 0, function* () {
-            let tradesData = yield this.cryptoInterface.cryptosAllGet();
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
+            let tradesData = yield this.cryptoApi.cryptosAllGet();
             let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
             trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
             this.setState({ trades });
@@ -4243,16 +4249,15 @@ const CryptoTrades_1 = __importDefault(__webpack_require__(/*! ./Components/Cryp
 class Crypto extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto p\u0159ehled"),
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto overview"),
             react_1.default.createElement("div", { className: "flex" },
-                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
-                    react_1.default.createElement(CryptoTrades_1.default, null)),
-                react_1.default.createElement("div", { className: "w-1/2 p-4 overflow-y-auto" },
-                    react_1.default.createElement(CryptoPortfolio_1.default, null)))));
+                react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto" },
+                    react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
+                react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
+                    react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props))))));
     }
 }
 exports.default = Crypto;
-// ReactDOM.render(<ErrorBoundary><CryptoComponent /></ErrorBoundary>, document.getElementById('overview'));
 
 
 /***/ }),

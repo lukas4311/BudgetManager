@@ -24,7 +24,10 @@ namespace BudgetManager.TestingConsole
             //await processManager.DownloadHashRate(); /*-DONE*/
 
             // download crypto data
-            //await processManager.DownloadCryptoHistory(CryptoTicker.LINKUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.ETHUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
+            //await processManager.DownloadCryptoHistory(CryptoTicker.ATOMUSD);
 
             //SaveCoinbaseDataToDb();
             //await processManager.DownloadFearAndGreed();
@@ -36,7 +39,7 @@ namespace BudgetManager.TestingConsole
             //var dataOld = await fearAndGreed.GetFearAndGreedFrom(new System.DateTime(2021, 1, 1));
 
             // process coinbase report
-            processManager.ParseCoinbaseReport();
+            //processManager.ParseCoinbaseReport();
 
         }
     }

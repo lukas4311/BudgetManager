@@ -66,11 +66,6 @@ VALUES
 	,'net'
 ),
 (
-	 'Network'
-	,'Internet'
-	,'net'
-),
-(
 	 'Salary'
 	,'Mzda'
 	,'salary'
@@ -79,6 +74,11 @@ VALUES
 	 'Sale'
 	,'Prodej'
 	,'sale'
+),
+(
+	'Alimony'
+	,'alimenty'
+	,'alimony'
 )
 
 

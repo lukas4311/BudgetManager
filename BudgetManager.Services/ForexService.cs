@@ -9,7 +9,7 @@ namespace BudgetManager.Services
     public class ForexService : IForexService
     {
         private const string bucketForex = "Forex";
-        private const string organizationId = "8f46f33452affe4a";
+        private const string organizationId = "f209a688c8dcfff3";
         private readonly IRepository<ForexData> forexRepository;
 
         public ForexService(IRepository<ForexData> forexRepository)

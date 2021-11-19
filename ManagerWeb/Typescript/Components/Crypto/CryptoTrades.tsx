@@ -5,6 +5,8 @@ import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../.
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList, IBaseModel } from "../BaseList";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { RouteComponentProps } from "react-router-dom";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -18,12 +20,11 @@ const theme = createMuiTheme({
     }
 });
 
-export default class CryptoTrades extends React.Component<{}, CryptoTradesState> {
-    cryptoInterface: CryptoApiInterface;
+export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
+    cryptoApi: CryptoApiInterface;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
-        this.cryptoInterface = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { trades: [], openedForm: false, selectedTrade: undefined };
     }
 
@@ -32,7 +33,10 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
     }
 
     private async load(): Promise<void> {
-        let tradesData: TradeHistory[] = await this.cryptoInterface.cryptosAllGet();
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.cryptoApi = await apiFactory.getClient(CryptoApi);
+
+        let tradesData: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
         this.setState({ trades });
@@ -68,10 +72,11 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
         return (
             <>
                 <p className="mx-6 my-1 w-1/10">Ticker</p>
-                <p className="mx-6 my-1 w-3/10">Velikost tradu</p>
-                <p className="mx-6 my-1 w-2/10">Datum tradu</p>
-                <p className="mx-6 my-1 w-3/10">Celkova hodnota</p>
-                <p className="mx-6 my-1 w-1/10">Měna</p>
+                <p className="mx-6 my-1 w-3/10">Trade size</p>
+                <p className="mx-6 my-1 w-2/10">Date</p>
+                <p className="mx-6 my-1 w-3/10">Value</p>
+                <p className="mx-6 my-1 w-1/10">Currency</p>
+                <p className="mx-6 my-1 w-1/10"></p>
             </>
         );
     }
@@ -84,8 +89,13 @@ export default class CryptoTrades extends React.Component<{}, CryptoTradesState>
                 <p className="mx-6 my-1 w-2/10">{moment(p.tradeTimeStamp).format('DD.MM.YYYY')}</p>
                 <p className="mx-6 my-1 w-3/10">{p.tradeValue.toFixed(2)}</p>
                 <p className="mx-6 my-1 w-1/10">{p.currencySymbol}</p>
+                <p className="mx-6 my-1 w-1/10">{this.renderTradeBadge(p.tradeValue)}</p>
             </>
         );
+    }
+
+    private renderTradeBadge = (tradeValue: number) => {
+        return <span className={(tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{tradeValue > 0 ? "SELL" : "BUY"}</span>
     }
 
     private addNewItem = (): void => {

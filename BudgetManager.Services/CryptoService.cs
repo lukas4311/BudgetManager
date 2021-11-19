@@ -15,7 +15,7 @@ namespace BudgetManager.Services
     public class CryptoService : ICryptoService
     {
         private const string bucketForex = "Crypto";
-        private const string organizationId = "8f46f33452affe4a";
+        private const string organizationId = "f209a688c8dcfff3";
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;

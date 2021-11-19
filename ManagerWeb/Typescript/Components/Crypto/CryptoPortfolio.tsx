@@ -2,6 +2,8 @@ import React from "react";
 import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
 import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { RouteComponentProps } from "react-router-dom";
 
 const usdSymbol = "USD";
 
@@ -18,12 +20,11 @@ class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
 }
 
-export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolioState> {
+export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
     cryptoApi: CryptoApiInterface;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
-        this.cryptoApi = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { allCryptoSum: undefined };
     }
 
@@ -32,6 +33,9 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
     }
 
     private load = async (): Promise<void> => {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.cryptoApi = await apiFactory.getClient(CryptoApi);
+
         let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
@@ -79,7 +83,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
                             <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                 <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
                                 <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)}({p.usdPrice.toFixed(2)} USD)</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
                             </div>
                         )}
                     </div>
