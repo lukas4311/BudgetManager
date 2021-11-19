@@ -6,8 +6,8 @@ class BudgetFormModel {
     id: number;
     name: string;
     amount: number;
-    to: string;
     from: string;
+    to: string;
     onSave: (model: BudgetFormModel) => void;
 }
 
@@ -38,15 +38,17 @@ const BudgetForm = (props: BudgetFormModel) => {
                 </div>
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Od" type="date" {...field} className="w-full" InputLabelProps={{ shrink: true, }} />}
+                        render={({ field }) => <TextField label="Od" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
                         name="from"
+                        defaultValue={props.from}
                         control={control}
                     />
                 </div>
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Do" type="date"   {...field} className="w-full" InputLabelProps={{ shrink: true, }} />}
+                        render={({ field }) => <TextField label="Do" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
                         name="to"
+                        defaultValue={props.to}
                         control={control}
                     />
                 </div>

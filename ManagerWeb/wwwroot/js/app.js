@@ -3124,11 +3124,14 @@ class BudgetComponent extends React.Component {
         };
         this.renderCard = (budgetModel) => {
             let actualProps = { from: budgetModel.dateFrom, limit: budgetModel.amount, name: budgetModel.name, spent: 20 };
-            return (React.createElement("div", { className: "w-2/5 my-2 cursor-pointer" },
+            return (React.createElement("div", { className: "w-2/5 my-2 cursor-pointer", onClick: _ => this.editBudget(budgetModel) },
                 React.createElement(ActualBudgetCard_1.default, Object.assign({}, actualProps))));
         };
-        this.addNewBudget = () => {
-            this.setState({ showBudgetFormModal: true, selectedBudget: null, selectedBudgetId: null, budgetFormKey: Date.now() });
+        this.addNewBudget = () => this.setState({ showBudgetFormModal: true, selectedBudget: null, selectedBudgetId: null, budgetFormKey: Date.now() });
+        this.editBudget = (budgetModel) => {
+            let budgetFormModel = { id: budgetModel.id, name: budgetModel.name, amount: budgetModel.amount, to: (0, moment_1.default)(budgetModel.dateTo).format("YYYY-MM-DD"),
+                from: (0, moment_1.default)(budgetModel.dateFrom).format("YYYY-MM-DD"), onSave: this.saveFormData };
+            this.setState({ showBudgetFormModal: true, selectedBudget: budgetFormModel, selectedBudgetId: budgetModel.id, budgetFormKey: Date.now() });
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
     }
@@ -3141,8 +3144,8 @@ class BudgetComponent extends React.Component {
             this.budgetApi = yield apiFactory.getClient(Main_1.BudgetApi);
             let budgets = yield this.budgetApi.budgetsActualGet();
             let budgetViewModels = budgets.map(b => ({
-                id: b.id, amount: b.amount, dateFrom: (0, moment_1.default)(b.dateFrom).format('DD.MM.YYYY'),
-                dateTo: (0, moment_1.default)(b.dateTo).format('DD.MM.YYYY'), name: b.name
+                id: b.id, amount: b.amount, dateFrom: (0, moment_1.default)(b.dateFrom).toDate(),
+                dateTo: (0, moment_1.default)(b.dateTo).toDate(), name: b.name
             }));
             this.setState({ budgets: budgetViewModels });
         });
@@ -3219,9 +3222,9 @@ const BudgetForm = (props) => {
             React.createElement("div", { className: "w-3/5" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Velikost", type: "text" }, field, { className: "w-full" })), name: "amount", control: control })),
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Od", type: "date" }, field, { className: "w-full", InputLabelProps: { shrink: true, } })), name: "from", control: control })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Od", type: "date", value: field.value }, field, { className: "w-full", InputLabelProps: { shrink: true } })), name: "from", defaultValue: props.from, control: control })),
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Do", type: "date" }, field, { className: "w-full", InputLabelProps: { shrink: true, } })), name: "to", control: control }))),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Do", type: "date", value: field.value }, field, { className: "w-full", InputLabelProps: { shrink: true } })), name: "to", defaultValue: props.to, control: control }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.BudgetForm2 = BudgetForm;
