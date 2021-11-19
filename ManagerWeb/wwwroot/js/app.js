@@ -3150,18 +3150,19 @@ class BudgetComponent extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement(styles_1.ThemeProvider, { theme: theme },
-                React.createElement("div", { className: "flex flex-col mt-6" },
-                    React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
-                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
-                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))),
-                    React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
-                React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
-                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
-                    React.createElement(core_1.DialogContent, null,
-                        React.createElement("div", { className: "p-2 overflow-y-auto" },
-                            React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget))))))));
+                React.createElement("div", null,
+                    React.createElement("div", { className: "flex flex-col mt-6 w-2/3 m-auto" },
+                        React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
+                        React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
+                            React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))),
+                        React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
+                    React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
+                        React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
+                        React.createElement(core_1.DialogContent, null,
+                            React.createElement("div", { className: "p-2 overflow-y-auto" },
+                                React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget)))))))));
     }
 }
 exports.default = BudgetComponent;

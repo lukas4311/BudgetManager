@@ -41,9 +41,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {
-            if (budgetModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            budgetModel.UserIdentityId = this.GetUserId();
             this.budgetService.Add(budgetModel);
             return Ok();
         }
@@ -51,9 +49,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPut]
         public IActionResult Update([FromBody] BudgetModel budgetModel)
         {
-            if (budgetModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            budgetModel.UserIdentityId = this.GetUserId();
             this.budgetService.Update(budgetModel);
             return Ok();
         }

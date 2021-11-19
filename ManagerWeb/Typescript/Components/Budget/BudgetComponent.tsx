@@ -79,27 +79,29 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         return (
             <React.Fragment>
                 <ThemeProvider theme={theme}>
-                    <div className="flex flex-col mt-6">
-                        <h2 className="ml-6 text-xl text-left">Actual budgets</h2>
-                        <span className="inline-block ml-auto mr-5" onClick={this.addNewBudget}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                <path d="M0 0h24v24H0z" fill="none" />
-                                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                            </svg>
-                        </span>
-                        <div className="flex flex-row flex-wrap justify-around">
-                            {this.state.budgets.map(b => this.renderCard(b))}
-                        </div>
-                    </div>
-                    <Dialog open={this.state.showBudgetFormModal} onClose={this.hideBudgetModal} aria-labelledby="Detail rozpočtu"
-                        maxWidth="sm" fullWidth={true}>
-                        <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
-                        <DialogContent>
-                            <div className="p-2 overflow-y-auto">
-                                <BudgetForm2 key={this.state.budgetFormKey} onSave={this.saveFormData} {...this.state.selectedBudget} ></BudgetForm2>
+                    <div>
+                        <div className="flex flex-col mt-6 w-2/3 m-auto">
+                            <h2 className="ml-6 text-xl text-left">Actual budgets</h2>
+                            <span className="inline-block ml-auto mr-5" onClick={this.addNewBudget}>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                </svg>
+                            </span>
+                            <div className="flex flex-row flex-wrap justify-around">
+                                {this.state.budgets.map(b => this.renderCard(b))}
                             </div>
-                        </DialogContent>
-                    </Dialog>
+                        </div>
+                        <Dialog open={this.state.showBudgetFormModal} onClose={this.hideBudgetModal} aria-labelledby="Detail rozpočtu"
+                            maxWidth="sm" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
+                            <DialogContent>
+                                <div className="p-2 overflow-y-auto">
+                                    <BudgetForm2 key={this.state.budgetFormKey} onSave={this.saveFormData} {...this.state.selectedBudget} ></BudgetForm2>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </ThemeProvider>
             </React.Fragment>
         );
