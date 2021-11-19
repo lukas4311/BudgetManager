@@ -147,6 +147,12 @@ namespace BudgetManager.TestingConsole
             coinbaseParser.ParseCoinbaseReport();
         }
 
+        internal void ParseCoinbaseReport()
+        {
+            var coinbaseParser = new CoinbaseParser(new CryptoTickerRepository(this.GetDataContext()), new CurrencySymbolRepository(this.GetDataContext()), new CryptoTradeHistoryRepository(this.GetDataContext()));
+            coinbaseParser.ParseCoinbaseReport();
+        }
+
         private DataContext GetDataContext()
         {
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();

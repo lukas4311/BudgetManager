@@ -3094,6 +3094,12 @@ const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/Api
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+    }
+});
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -3121,6 +3127,9 @@ class BudgetComponent extends React.Component {
             return (React.createElement("div", { className: "w-2/5 my-2 cursor-pointer" },
                 React.createElement(ActualBudgetCard_1.default, Object.assign({}, actualProps))));
         };
+        this.addNewBudget = () => {
+            this.setState({ showBudgetFormModal: true, selectedBudget: null, selectedBudgetId: null, budgetFormKey: Date.now() });
+        };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
     }
     componentDidMount() {
@@ -3140,14 +3149,19 @@ class BudgetComponent extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "flex flex-col mt-6" },
-                React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
-                React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
-            React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
-                React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
-                React.createElement(core_1.DialogContent, null,
-                    React.createElement("div", { className: "p-2 overflow-y-auto" },
-                        React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget)))))));
+            React.createElement(styles_1.ThemeProvider, { theme: theme },
+                React.createElement("div", { className: "flex flex-col mt-6" },
+                    React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
+                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
+                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))),
+                    React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
+                React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
+                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
+                    React.createElement(core_1.DialogContent, null,
+                        React.createElement("div", { className: "p-2 overflow-y-auto" },
+                            React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget))))))));
     }
 }
 exports.default = BudgetComponent;
@@ -3192,7 +3206,7 @@ class BudgetFormModel {
 }
 exports.BudgetFormModel = BudgetFormModel;
 const BudgetForm = (props) => {
-    const { register, handleSubmit } = (0, react_hook_form_1.useForm)({ defaultValues: props });
+    const { register, handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
     const onSubmit = (data) => {
         data.id = props.id;
         props.onSave(data);
@@ -3200,17 +3214,13 @@ const BudgetForm = (props) => {
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(core_1.TextField, { label: "N\u00E1zev", type: "text", name: "name", inputRef: register, className: "w-full" })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "N\u00E1zev", type: "text" }, field, { className: "w-full" })), name: "name", control: control })),
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(core_1.TextField, { label: "Velikost", type: "text", name: "amount", inputRef: register, className: "w-full" })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Velikost", type: "text" }, field, { className: "w-full" })), name: "amount", control: control })),
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(core_1.TextField, { label: "Od", type: "date", name: "from", inputRef: register, className: "w-full", InputLabelProps: {
-                        shrink: true,
-                    } })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Od", type: "date" }, field, { className: "w-full", InputLabelProps: { shrink: true, } })), name: "from", control: control })),
             React.createElement("div", { className: "w-3/5" },
-                React.createElement(core_1.TextField, { label: "Do", type: "date", name: "to", inputRef: register, className: "w-full", InputLabelProps: {
-                        shrink: true,
-                    } }))),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_1.TextField, Object.assign({ label: "Do", type: "date" }, field, { className: "w-full", InputLabelProps: { shrink: true, } })), name: "to", control: control }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.BudgetForm2 = BudgetForm;

@@ -1,4 +1,6 @@
 ﻿using BudgetManager.FinanceDataMining.CryproApi;
+using BudgetManager.Repository;
+using BudgetManager.TestingConsole.Crypto;
 using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole
@@ -32,6 +34,10 @@ namespace BudgetManager.TestingConsole
             //FearAndGreed fearAndGreed = new FearAndGreed(new System.Net.Http.HttpClient());
             //var data = await fearAndGreed.GetActualFearAndGreed();
             //var dataOld = await fearAndGreed.GetFearAndGreedFrom(new System.DateTime(2021, 1, 1));
+
+            // process coinbase report
+            processManager.ParseCoinbaseReport();
+
         }
     }
 }
