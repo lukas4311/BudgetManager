@@ -9,6 +9,8 @@ namespace BudgetManager.TestingConsole
     public class ConfigManager
     {
         private const string QuandlSettingSectionKey = "QuandlSetting";
+        private const string TwelveDataKeySection = "TwelveDataApi";
+        private const string TwelveDataKey = "ApiKey";
 
         public InfluxConfig GetSecretToken()
         {
@@ -32,6 +34,11 @@ namespace BudgetManager.TestingConsole
         {
             IConfigurationRoot configuration = this.GetConfigurationRoot();
             return configuration.GetConnectionString("DefaultConnection");
+        }
+
+        public string GetTwelveDataApiKey()
+        {
+            return this.GetConfigurationRoot().GetSection(TwelveDataKeySection).GetValue<string>(TwelveDataKey);
         }
 
         private IConfigurationRoot GetConfigurationRoot()

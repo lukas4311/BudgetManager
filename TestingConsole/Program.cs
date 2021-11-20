@@ -41,6 +41,8 @@ namespace BudgetManager.TestingConsole
             // process coinbase report
             //processManager.ParseCoinbaseReport();
 
+            // download forex
+            await processManager.DownloadForexHistory(ForexTicker.USD);
         }
     }
 }

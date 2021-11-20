@@ -11,17 +11,19 @@ namespace BudgetManager.FinanceDataMining.CurrencyApi
 {
     public class ExchangeRatesApi
     {
-        private const string ExchangeApiUrlBase = "https://api.exchangeratesapi.io";
+        private const string ExchangeApiUrlBase = "https://api.twelvedata.com";
         private readonly HttpClient httpClient;
+        private readonly string apiKey;
 
-        public ExchangeRatesApi(HttpClient httpClient)
+        public ExchangeRatesApi(HttpClient httpClient, string apiKey)
         {
             this.httpClient = httpClient;
+            this.apiKey = apiKey;
         }
 
         public async Task<List<CurrencyData>> GetCurrencyHistory(DateTime from, DateTime to, string currencyCode)
         {
-            string json = await httpClient.GetStringAsync($"{ExchangeApiUrlBase}/history?start_at={from.Date:yyyy-MM-dd}&end_at={to.Date:yyyy-MM-dd}&base={currencyCode}").ConfigureAwait(false);
+            string json = await httpClient.GetStringAsync($"{ExchangeApiUrlBase}/time_series?access_key={this.apiKey}&start_date={from.Date:yyyy-MM-dd}&end_date={to.Date:yyyy-MM-dd}&symbol={currencyCode}&interval=4h").ConfigureAwait(false);
 
             return this.ParseDonwloadedData(json, currencyCode);
         }
