@@ -66,6 +66,36 @@ VALUES
 	,'net'
 ),
 (
+	'Tools',
+	'nářadí',
+	'tools'
+),
+(
+	'Medication',
+	'léky',
+	'medication'
+),
+(
+	'Pets',
+	'domácí mazlíčci',
+	'pets'
+),
+(
+	'Kids',
+	'děti',
+	'kids'
+),
+(
+	'Education',
+	'vzdělání',
+	'education'
+),
+(
+	'Insurance',
+	'pojistka',
+	'insurance'
+),
+(
 	 'Salary'
 	,'Mzda'
 	,'salary'
@@ -79,6 +109,11 @@ VALUES
 	'Alimony'
 	,'alimenty'
 	,'alimony'
+),
+(
+	'Dividents',
+	'dividendy',
+	'dividents'
 )
 
 
