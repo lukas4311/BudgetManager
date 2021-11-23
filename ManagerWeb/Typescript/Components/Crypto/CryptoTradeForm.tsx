@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import { IBaseModel } from '../BaseList';
@@ -17,7 +17,7 @@ class CryptoTradeViewModel implements IBaseModel {
 }
 
 const CryptoTradeForm = (props: CryptoTradeViewModel) => {
-    const { register, handleSubmit } = useForm<CryptoTradeViewModel>({ defaultValues: props });
+    const { handleSubmit, control } = useForm<CryptoTradeViewModel>({ defaultValues: { ...props } });
 
     const onSubmit = (data: CryptoTradeViewModel) => {
         props.onSave(data);
@@ -26,16 +26,25 @@ const CryptoTradeForm = (props: CryptoTradeViewModel) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
-                <div>
-                    <TextField
-                        label="Datum tradu"
-                        type="date"
-                        name="tradeTimeStamp"
-                        inputRef={register}
-                    />
+                <div className="col-span-2">
+                    <Controller render={({ field }) => <TextField label="Datum tradu" type="date" value={field.value} {...field} className="place-self-end" InputLabelProps={{ shrink: true }} />}
+                        name="tradeTimeStamp" defaultValue={props.tradeTimeStamp} control={control} />
                 </div>
                 <div>
-                    <TextField inputRef={register} name="cryptoTicker" className="place-self-end" label="Crypto ticker" />
+                    <Controller render={({ field }) => <TextField label="Crypto ticker" type="text" {...field} className="place-self-end" />}
+                        name="cryptoTicker" control={control} />
+                </div>
+                <div>
+                    <Controller render={({ field }) => <TextField label="Velikost tradu" type="text" {...field} className="place-self-end" />}
+                        name="tradeSize" control={control} />
+                </div>
+                <div>
+                    <Controller render={({ field }) => <TextField label="Hodnota tradu" type="text" {...field} className="place-self-end" />}
+                        name="tradeValue" control={control} />
+                </div>
+                <div>
+                    <Controller render={({ field }) => <TextField label="Zdrojová měna tradu" type="text" {...field} className="place-self-end" />}
+                        name="currencySymbol" control={control} />
                 </div>
             </div>
 

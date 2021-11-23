@@ -71,7 +71,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
     render() {
         return (
             <div>
-                <h2 className="text-xl ml-12 mb-10">Portfolio</h2>
+                <h2 className="text-xl ml-12 p-4">Crypto portfolio</h2>
                 {this.state.allCryptoSum != undefined ?
                     <div className="pb-10 overflow-y-scroll">
                         <div className="font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">

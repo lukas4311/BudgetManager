@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,13 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly ICryptoService cryptoService;
         private readonly IForexService forexService;
+        private readonly ICryptoTickerRepository cryptoTickerRepository;
 
-        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService) : base(httpContextAccessor)
+        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService, ICryptoTickerRepository cryptoTickerRepository) : base(httpContextAccessor)
         {
             this.cryptoService = cryptoService;
             this.forexService = forexService;
+            this.cryptoTickerRepository = cryptoTickerRepository;
         }
 
         [HttpGet("all")]
@@ -42,5 +46,8 @@ namespace BudgetManager.Api.Controllers
         {
             return Ok(this.cryptoService.Get(id, this.GetUserId()));
         }
+
+        [HttpGet("tickers")]
+        public ActionResult<CryptoTicker> GetTickers() => Ok(this.cryptoTickerRepository.FindAll());
     }
 }

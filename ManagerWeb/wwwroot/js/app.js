@@ -3129,8 +3129,10 @@ class BudgetComponent extends React.Component {
         };
         this.addNewBudget = () => this.setState({ showBudgetFormModal: true, selectedBudget: null, selectedBudgetId: null, budgetFormKey: Date.now() });
         this.editBudget = (budgetModel) => {
-            let budgetFormModel = { id: budgetModel.id, name: budgetModel.name, amount: budgetModel.amount, to: (0, moment_1.default)(budgetModel.dateTo).format("YYYY-MM-DD"),
-                from: (0, moment_1.default)(budgetModel.dateFrom).format("YYYY-MM-DD"), onSave: this.saveFormData };
+            let budgetFormModel = {
+                id: budgetModel.id, name: budgetModel.name, amount: budgetModel.amount, to: (0, moment_1.default)(budgetModel.dateTo).format("YYYY-MM-DD"),
+                from: (0, moment_1.default)(budgetModel.dateFrom).format("YYYY-MM-DD"), onSave: this.saveFormData
+            };
             this.setState({ showBudgetFormModal: true, selectedBudget: budgetFormModel, selectedBudgetId: budgetModel.id, budgetFormKey: Date.now() });
         };
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
@@ -3478,7 +3480,7 @@ class CryptoPortfolio extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", null,
-            react_1.default.createElement("h2", { className: "text-xl ml-12 mb-10" }, "Portfolio"),
+            react_1.default.createElement("h2", { className: "text-xl ml-12 p-4" }, "Crypto portfolio"),
             this.state.allCryptoSum != undefined ?
                 react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
                     react_1.default.createElement("div", { className: "font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
@@ -3543,16 +3545,22 @@ class CryptoTradeViewModel {
 }
 exports.CryptoTradeViewModel = CryptoTradeViewModel;
 const CryptoTradeForm = (props) => {
-    const { register, handleSubmit } = (0, react_hook_form_1.useForm)({ defaultValues: props });
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
     const onSubmit = (data) => {
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            React.createElement("div", { className: "col-span-2" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: props.tradeTimeStamp, control: control })),
             React.createElement("div", null,
-                React.createElement(core_2.TextField, { label: "Datum tradu", type: "date", name: "tradeTimeStamp", inputRef: register })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Crypto ticker", type: "text" }, field, { className: "place-self-end" })), name: "cryptoTicker", control: control })),
             React.createElement("div", null,
-                React.createElement(core_2.TextField, { inputRef: register, name: "cryptoTicker", className: "place-self-end", label: "Crypto ticker" }))),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Velikost tradu", type: "text" }, field, { className: "place-self-end" })), name: "tradeSize", control: control })),
+            React.createElement("div", null,
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Hodnota tradu", type: "text" }, field, { className: "place-self-end" })), name: "tradeValue", control: control })),
+            React.createElement("div", null,
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Zdrojov\u00E1 m\u011Bna tradu", type: "text" }, field, { className: "place-self-end" })), name: "currencySymbol", control: control }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.CryptoTradeForm = CryptoTradeForm;
@@ -3644,13 +3652,13 @@ class CryptoTrades extends react_1.default.Component {
             return react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         };
         this.addNewItem = () => {
-            // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+            this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: undefined });
         };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
             this.setState({ selectedTrade: tradeHistory, openedForm: true });
         });
-        this.state = { trades: [], openedForm: false, selectedTrade: undefined };
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
     }
     componentDidMount() {
         this.load();

@@ -12,6 +12,7 @@ class CryptoTradesState {
     trades: CryptoTradeViewModel[];
     openedForm: boolean;
     selectedTrade: CryptoTradeViewModel;
+    cryptoFormKey: number;
 }
 
 const theme = createMuiTheme({
@@ -25,7 +26,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { trades: [], openedForm: false, selectedTrade: undefined };
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
     }
 
     public componentDidMount() {
@@ -99,7 +100,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     }
 
     private addNewItem = (): void => {
-        // this.setState({ showBudgetFormModal: true, budgetFormKey: Date.now(), selectedBudget: undefined });
+        this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: undefined });
     }
 
     private budgetEdit = async (id: number): Promise<void> => {

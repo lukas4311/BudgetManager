@@ -37,8 +37,8 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.budgetApi = await apiFactory.getClient(BudgetApi);
         let budgets = await this.budgetApi.budgetsActualGet();
         let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
-            id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).toDate()
-            , dateTo: moment(b.dateTo).toDate(), name: b.name
+            id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).toDate(),
+            dateTo: moment(b.dateTo).toDate(), name: b.name
         }));
         this.setState({ budgets: budgetViewModels });
     }
@@ -75,8 +75,10 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
         this.setState({ showBudgetFormModal: true, selectedBudget: null, selectedBudgetId: null, budgetFormKey: Date.now() });
 
     private editBudget = (budgetModel: BudgetViewModel) => {
-        let budgetFormModel = { id: budgetModel.id, name: budgetModel.name, amount: budgetModel.amount, to: moment(budgetModel.dateTo).format("YYYY-MM-DD"), 
-        from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"), onSave: this.saveFormData };
+        let budgetFormModel = {
+            id: budgetModel.id, name: budgetModel.name, amount: budgetModel.amount, to: moment(budgetModel.dateTo).format("YYYY-MM-DD"),
+            from: moment(budgetModel.dateFrom).format("YYYY-MM-DD"), onSave: this.saveFormData
+        };
         this.setState({ showBudgetFormModal: true, selectedBudget: budgetFormModel, selectedBudgetId: budgetModel.id, budgetFormKey: Date.now() });
     }
 
