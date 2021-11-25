@@ -49,24 +49,20 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsActualGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
-
+    budgetsActualGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
     /**
      */
-    budgetsActualGet(initOverrides?: RequestInit): Promise<Array<BudgetModel>>;
-
+    budgetsActualGet(): Promise<Array<BudgetModel>>;
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
-
+    budgetsAllGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>>;
     /**
      */
-    budgetsAllGet(initOverrides?: RequestInit): Promise<Array<BudgetModel>>;
-
+    budgetsAllGet(): Promise<Array<BudgetModel>>;
     /**
      * 
      * @param {number} [body] 
@@ -74,12 +70,10 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsDeleteRaw(requestParameters: BudgetsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    budgetsDeleteRaw(requestParameters: BudgetsDeleteRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    budgetsDelete(requestParameters: BudgetsDeleteRequest, initOverrides?: RequestInit): Promise<void>;
-
+    budgetsDelete(requestParameters: BudgetsDeleteRequest): Promise<void>;
     /**
      * 
      * @param {number} [id] 
@@ -87,12 +81,10 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsGetRaw(requestParameters: BudgetsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<BudgetModel>>;
-
+    budgetsGetRaw(requestParameters: BudgetsGetRequest): Promise<runtime.ApiResponse<BudgetModel>>;
     /**
      */
-    budgetsGet(requestParameters: BudgetsGetRequest, initOverrides?: RequestInit): Promise<BudgetModel>;
-
+    budgetsGet(requestParameters: BudgetsGetRequest): Promise<BudgetModel>;
     /**
      * 
      * @param {BudgetModel} [budgetModel] 
@@ -100,12 +92,10 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsPostRaw(requestParameters: BudgetsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    budgetsPostRaw(requestParameters: BudgetsPostRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    budgetsPost(requestParameters: BudgetsPostRequest, initOverrides?: RequestInit): Promise<void>;
-
+    budgetsPost(requestParameters: BudgetsPostRequest): Promise<void>;
     /**
      * 
      * @param {BudgetModel} [budgetModel] 
@@ -113,14 +103,11 @@ export interface BudgetApiInterface {
      * @throws {RequiredError}
      * @memberof BudgetApiInterface
      */
-    budgetsPutRaw(requestParameters: BudgetsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    budgetsPutRaw(requestParameters: BudgetsPutRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    budgetsPut(requestParameters: BudgetsPutRequest, initOverrides?: RequestInit): Promise<void>;
-
+    budgetsPut(requestParameters: BudgetsPutRequest): Promise<void>;
 }
-
 /**
  * 
  */
@@ -134,180 +121,140 @@ export class BudgetApi extends runtime.BaseAPI implements BudgetApiInterface {
 
     /**
      */
-    async budgetsActualGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
-        const queryParameters: any = {};
-
+    async budgetsActualGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets/actual`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BudgetModelFromJSON));
     }
-
     /**
      */
-    async budgetsActualGet(initOverrides?: RequestInit): Promise<Array<BudgetModel>> {
-        const response = await this.budgetsActualGetRaw(initOverrides);
+    async budgetsActualGet(): Promise<Array<BudgetModel>> {
+        const response = await this.budgetsActualGetRaw();
         return await response.value();
     }
-
     /**
      */
-    async budgetsAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
-        const queryParameters: any = {};
-
+    async budgetsAllGetRaw(): Promise<runtime.ApiResponse<Array<BudgetModel>>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets/all`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BudgetModelFromJSON));
     }
-
     /**
      */
-    async budgetsAllGet(initOverrides?: RequestInit): Promise<Array<BudgetModel>> {
-        const response = await this.budgetsAllGetRaw(initOverrides);
+    async budgetsAllGet(): Promise<Array<BudgetModel>> {
+        const response = await this.budgetsAllGetRaw();
         return await response.value();
     }
-
     /**
      */
-    async budgetsDeleteRaw(requestParameters: BudgetsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async budgetsDeleteRaw(requestParameters: BudgetsDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets`,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
             body: requestParameters.body as any,
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async budgetsDelete(requestParameters: BudgetsDeleteRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.budgetsDeleteRaw(requestParameters, initOverrides);
+    async budgetsDelete(requestParameters: BudgetsDeleteRequest): Promise<void> {
+        await this.budgetsDeleteRaw(requestParameters);
     }
-
     /**
      */
-    async budgetsGetRaw(requestParameters: BudgetsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<BudgetModel>> {
-        const queryParameters: any = {};
-
+    async budgetsGetRaw(requestParameters: BudgetsGetRequest): Promise<runtime.ApiResponse<BudgetModel>> {
+        const queryParameters: runtime.HTTPQuery = {};
         if (requestParameters.id !== undefined) {
             queryParameters['id'] = requestParameters.id;
         }
-
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => BudgetModelFromJSON(jsonValue));
     }
-
     /**
      */
-    async budgetsGet(requestParameters: BudgetsGetRequest, initOverrides?: RequestInit): Promise<BudgetModel> {
-        const response = await this.budgetsGetRaw(requestParameters, initOverrides);
+    async budgetsGet(requestParameters: BudgetsGetRequest): Promise<BudgetModel> {
+        const response = await this.budgetsGetRaw(requestParameters);
         return await response.value();
     }
-
     /**
      */
-    async budgetsPostRaw(requestParameters: BudgetsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async budgetsPostRaw(requestParameters: BudgetsPostRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: BudgetModelToJSON(requestParameters.budgetModel),
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async budgetsPost(requestParameters: BudgetsPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.budgetsPostRaw(requestParameters, initOverrides);
+    async budgetsPost(requestParameters: BudgetsPostRequest): Promise<void> {
+        await this.budgetsPostRaw(requestParameters);
     }
-
     /**
      */
-    async budgetsPutRaw(requestParameters: BudgetsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async budgetsPutRaw(requestParameters: BudgetsPutRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/budgets`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
             body: BudgetModelToJSON(requestParameters.budgetModel),
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async budgetsPut(requestParameters: BudgetsPutRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.budgetsPutRaw(requestParameters, initOverrides);
+    async budgetsPut(requestParameters: BudgetsPutRequest): Promise<void> {
+        await this.budgetsPutRaw(requestParameters);
     }
-
 }

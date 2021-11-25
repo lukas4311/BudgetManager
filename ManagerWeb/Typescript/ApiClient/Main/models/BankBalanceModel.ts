@@ -70,3 +70,4 @@ export function BankBalanceModelToJSON(value?: BankBalanceModel | null): any {
     };
 }
 
+

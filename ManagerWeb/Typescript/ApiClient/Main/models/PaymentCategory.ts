@@ -13,49 +13,70 @@
  */
 
 import { exists, mapValues } from '../../runtime';
+import {
+    Payment,
+    PaymentFromJSON,
+    PaymentFromJSONTyped,
+    PaymentToJSON,
+} from './';
+
 /**
  * 
  * @export
- * @class PaymentCategoryModel
+ * @class PaymentCategory
  */
-export class PaymentCategoryModel {
+export class PaymentCategory {
     /**
      * 
      * @type {number}
-     * @memberof PaymentCategoryModel
+     * @memberof PaymentCategory
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof PaymentCategoryModel
+     * @memberof PaymentCategory
+     */
+    code?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaymentCategory
      */
     name?: string | null;
     /**
      * 
+     * @type {Array<Payment>}
+     * @memberof PaymentCategory
+     */
+    payments?: Array<Payment> | null;
+    /**
+     * 
      * @type {string}
-     * @memberof PaymentCategoryModel
+     * @memberof PaymentCategory
      */
     icon?: string | null;
 }
 
-export function PaymentCategoryModelFromJSON(json: any): PaymentCategoryModel {
-    return PaymentCategoryModelFromJSONTyped(json, false);
+export function PaymentCategoryFromJSON(json: any): PaymentCategory {
+    return PaymentCategoryFromJSONTyped(json, false);
 }
 
-export function PaymentCategoryModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaymentCategoryModel {
+export function PaymentCategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaymentCategory {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'code': !exists(json, 'code') ? undefined : json['code'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'payments': !exists(json, 'payments') ? undefined : (json['payments'] === null ? null : (json['payments'] as Array<any>).map(PaymentFromJSON)),
         'icon': !exists(json, 'icon') ? undefined : json['icon'],
     };
 }
 
-export function PaymentCategoryModelToJSON(value?: PaymentCategoryModel | null): any {
+export function PaymentCategoryToJSON(value?: PaymentCategory | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -65,7 +86,9 @@ export function PaymentCategoryModelToJSON(value?: PaymentCategoryModel | null):
     return {
         
         'id': value.id,
+        'code': value.code,
         'name': value.name,
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : (value.payments as Array<any>).map(PaymentToJSON)),
         'icon': value.icon,
     };
 }

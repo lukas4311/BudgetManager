@@ -62,3 +62,4 @@ export function PaymentTypeModelToJSON(value?: PaymentTypeModel | null): any {
     };
 }
 
+

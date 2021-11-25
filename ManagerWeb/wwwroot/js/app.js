@@ -582,7 +582,7 @@ class BankAccountApi extends runtime.BaseAPI {
     }
     /**
      */
-    bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides) {
+    bankAccountsAllBalanceToDateGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.toDate === null || requestParameters.toDate === undefined) {
                 throw new runtime.RequiredError('toDate', 'Required parameter requestParameters.toDate was null or undefined when calling bankAccountsAllBalanceToDateGet.');
@@ -597,21 +597,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankBalanceModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllBalanceToDateGet(requestParameters, initOverrides) {
+    bankAccountsAllBalanceToDateGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides);
+            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsAllGetRaw(initOverrides) {
+    bankAccountsAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -623,21 +623,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankAccountModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllGet(initOverrides) {
+    bankAccountsAllGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllGetRaw(initOverrides);
+            const response = yield this.bankAccountsAllGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides) {
+    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.bankAccountId === null || requestParameters.bankAccountId === undefined) {
                 throw new runtime.RequiredError('bankAccountId', 'Required parameter requestParameters.bankAccountId was null or undefined when calling bankAccountsBankAccountIdBalanceToDateGet.');
@@ -655,21 +655,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BankBalanceModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGet(requestParameters, initOverrides) {
+    bankAccountsBankAccountIdBalanceToDateGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides);
+            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsDeleteRaw(requestParameters, initOverrides) {
+    bankAccountsDeleteRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -683,20 +683,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsDelete(requestParameters, initOverrides) {
+    bankAccountsDelete(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsDeleteRaw(requestParameters, initOverrides);
+            yield this.bankAccountsDeleteRaw(requestParameters);
         });
     }
     /**
      */
-    bankAccountsPostRaw(requestParameters, initOverrides) {
+    bankAccountsPostRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -710,20 +710,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPost(requestParameters, initOverrides) {
+    bankAccountsPost(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPostRaw(requestParameters, initOverrides);
+            yield this.bankAccountsPostRaw(requestParameters);
         });
     }
     /**
      */
-    bankAccountsPutRaw(requestParameters, initOverrides) {
+    bankAccountsPutRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -737,15 +737,15 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPut(requestParameters, initOverrides) {
+    bankAccountsPut(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPutRaw(requestParameters, initOverrides);
+            yield this.bankAccountsPutRaw(requestParameters);
         });
     }
 }
@@ -819,7 +819,7 @@ class BudgetApi extends runtime.BaseAPI {
     }
     /**
      */
-    budgetsActualGetRaw(initOverrides) {
+    budgetsActualGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -831,21 +831,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsActualGet(initOverrides) {
+    budgetsActualGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsActualGetRaw(initOverrides);
+            const response = yield this.budgetsActualGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    budgetsAllGetRaw(initOverrides) {
+    budgetsAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -857,21 +857,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsAllGet(initOverrides) {
+    budgetsAllGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsAllGetRaw(initOverrides);
+            const response = yield this.budgetsAllGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    budgetsDeleteRaw(requestParameters, initOverrides) {
+    budgetsDeleteRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -885,20 +885,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsDelete(requestParameters, initOverrides) {
+    budgetsDelete(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsDeleteRaw(requestParameters, initOverrides);
+            yield this.budgetsDeleteRaw(requestParameters);
         });
     }
     /**
      */
-    budgetsGetRaw(requestParameters, initOverrides) {
+    budgetsGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -913,21 +913,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BudgetModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    budgetsGet(requestParameters, initOverrides) {
+    budgetsGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsGetRaw(requestParameters, initOverrides);
+            const response = yield this.budgetsGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsPostRaw(requestParameters, initOverrides) {
+    budgetsPostRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -941,20 +941,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPost(requestParameters, initOverrides) {
+    budgetsPost(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPostRaw(requestParameters, initOverrides);
+            yield this.budgetsPostRaw(requestParameters);
         });
     }
     /**
      */
-    budgetsPutRaw(requestParameters, initOverrides) {
+    budgetsPutRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -968,15 +968,15 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPut(requestParameters, initOverrides) {
+    budgetsPut(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPutRaw(requestParameters, initOverrides);
+            yield this.budgetsPutRaw(requestParameters);
         });
     }
 }
@@ -1050,7 +1050,7 @@ class CryptoApi extends runtime.BaseAPI {
     }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
                 throw new runtime.RequiredError('fromCurrency', 'Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
@@ -1068,21 +1068,21 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.TextApiResponse(response);
         });
     }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters, initOverrides) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
+            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosAllGetRaw(initOverrides) {
+    cryptosAllGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1094,21 +1094,47 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TradeHistoryFromJSON));
         });
     }
     /**
      */
-    cryptosAllGet(initOverrides) {
+    cryptosAllGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosAllGetRaw(initOverrides);
+            const response = yield this.cryptosAllGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides) {
+    cryptosTickersGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/cryptos/tickers`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.CryptoTickerFromJSON)(jsonValue));
+        });
+    }
+    /**
+     */
+    cryptosTickersGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.cryptosTickersGetRaw();
+            return yield response.value();
+        });
+    }
+    /**
+     */
+    cryptosTradeDetailTradeIdGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tradeId === null || requestParameters.tradeId === undefined) {
                 throw new runtime.RequiredError('tradeId', 'Required parameter requestParameters.tradeId was null or undefined when calling cryptosTradeDetailTradeIdGet.');
@@ -1126,20 +1152,115 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.TradeHistoryFromJSON)(jsonValue));
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGet(requestParameters, initOverrides) {
+    cryptosTradeDetailTradeIdGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
+            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters);
             return yield response.value();
         });
     }
 }
 exports.CryptoApi = CryptoApi;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/apis/CurrencyApi.ts":
+/*!*******************************************************!*\
+  !*** ./Typescript/ApiClient/Main/apis/CurrencyApi.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CurrencyApi = void 0;
+const runtime = __importStar(__webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts"));
+const models_1 = __webpack_require__(/*! ../models */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ */
+class CurrencyApi extends runtime.BaseAPI {
+    processPathParam(param) {
+        if (param instanceof Date)
+            return encodeURIComponent(String(param.toISOString()));
+        return encodeURIComponent(String(param));
+    }
+    /**
+     */
+    currencyAllGetRaw() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/currency/all`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            });
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TradeHistoryFromJSON));
+        });
+    }
+    /**
+     */
+    currencyAllGet() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.currencyAllGetRaw();
+            return yield response.value();
+        });
+    }
+}
+exports.CurrencyApi = CurrencyApi;
 
 
 /***/ }),
@@ -1209,7 +1330,7 @@ class PaymentApi extends runtime.BaseAPI {
     }
     /**
      */
-    paymentsCategoriesGetRaw(initOverrides) {
+    paymentsCategoriesGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1221,21 +1342,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentCategoryModelFromJSON));
         });
     }
     /**
      */
-    paymentsCategoriesGet(initOverrides) {
+    paymentsCategoriesGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsCategoriesGetRaw(initOverrides);
+            const response = yield this.paymentsCategoriesGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    paymentsCloneIdPostRaw(requestParameters, initOverrides) {
+    paymentsCloneIdPostRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.id === null || requestParameters.id === undefined) {
                 throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
@@ -1250,20 +1371,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'POST',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsCloneIdPost(requestParameters, initOverrides) {
+    paymentsCloneIdPost(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsCloneIdPostRaw(requestParameters, initOverrides);
+            yield this.paymentsCloneIdPostRaw(requestParameters);
         });
     }
     /**
      */
-    paymentsDeleteRaw(requestParameters, initOverrides) {
+    paymentsDeleteRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1278,20 +1399,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsDelete(requestParameters, initOverrides) {
+    paymentsDelete(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsDeleteRaw(requestParameters, initOverrides);
+            yield this.paymentsDeleteRaw(requestParameters);
         });
     }
     /**
      */
-    paymentsDetailGetRaw(requestParameters, initOverrides) {
+    paymentsDetailGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1306,21 +1427,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.PaymentModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    paymentsDetailGet(requestParameters, initOverrides) {
+    paymentsDetailGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsDetailGetRaw(requestParameters, initOverrides);
+            const response = yield this.paymentsDetailGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsGetRaw(requestParameters, initOverrides) {
+    paymentsGetRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.fromDate !== undefined) {
@@ -1341,21 +1462,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentModelFromJSON));
         });
     }
     /**
      */
-    paymentsGet(requestParameters, initOverrides) {
+    paymentsGet(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsGetRaw(requestParameters, initOverrides);
+            const response = yield this.paymentsGetRaw(requestParameters);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides) {
+    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
                 throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
@@ -1373,20 +1494,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDelete(requestParameters, initOverrides) {
+    paymentsPaymentIdTagTagIdDelete(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides);
+            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters);
         });
     }
     /**
      */
-    paymentsPostRaw(requestParameters, initOverrides) {
+    paymentsPostRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1400,20 +1521,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPost(requestParameters, initOverrides) {
+    paymentsPost(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPostRaw(requestParameters, initOverrides);
+            yield this.paymentsPostRaw(requestParameters);
         });
     }
     /**
      */
-    paymentsPutRaw(requestParameters, initOverrides) {
+    paymentsPutRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1427,20 +1548,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPut(requestParameters, initOverrides) {
+    paymentsPut(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPutRaw(requestParameters, initOverrides);
+            yield this.paymentsPutRaw(requestParameters);
         });
     }
     /**
      */
-    paymentsTypesGetRaw(initOverrides) {
+    paymentsTypesGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1452,15 +1573,15 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentTypeModelFromJSON));
         });
     }
     /**
      */
-    paymentsTypesGet(initOverrides) {
+    paymentsTypesGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsTypesGetRaw(initOverrides);
+            const response = yield this.paymentsTypesGetRaw();
             return yield response.value();
         });
     }
@@ -1535,7 +1656,7 @@ class TagApi extends runtime.BaseAPI {
     }
     /**
      */
-    tagsAllUsedGetRaw(initOverrides) {
+    tagsAllUsedGetRaw() {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1547,21 +1668,21 @@ class TagApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TagModelFromJSON));
         });
     }
     /**
      */
-    tagsAllUsedGet(initOverrides) {
+    tagsAllUsedGet() {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.tagsAllUsedGetRaw(initOverrides);
+            const response = yield this.tagsAllUsedGetRaw();
             return yield response.value();
         });
     }
     /**
      */
-    tagsDeleteRaw(requestParameters, initOverrides) {
+    tagsDeleteRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.tagId !== undefined) {
@@ -1576,20 +1697,20 @@ class TagApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsDelete(requestParameters, initOverrides) {
+    tagsDelete(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsDeleteRaw(requestParameters, initOverrides);
+            yield this.tagsDeleteRaw(requestParameters);
         });
     }
     /**
      */
-    tagsPostRaw(requestParameters, initOverrides) {
+    tagsPostRaw(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1603,15 +1724,15 @@ class TagApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.AddTagModelToJSON)(requestParameters.addTagModel),
-            }, initOverrides);
+            });
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsPost(requestParameters, initOverrides) {
+    tagsPost(requestParameters) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsPostRaw(requestParameters, initOverrides);
+            yield this.tagsPostRaw(requestParameters);
         });
     }
 }
@@ -1640,11 +1761,10 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* tslint:disable */
-/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./BankAccountApi */ "./Typescript/ApiClient/Main/apis/BankAccountApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BudgetApi */ "./Typescript/ApiClient/Main/apis/BudgetApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./CryptoApi */ "./Typescript/ApiClient/Main/apis/CryptoApi.ts"), exports);
+__exportStar(__webpack_require__(/*! ./CurrencyApi */ "./Typescript/ApiClient/Main/apis/CurrencyApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./PaymentApi */ "./Typescript/ApiClient/Main/apis/PaymentApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./TagApi */ "./Typescript/ApiClient/Main/apis/TagApi.ts"), exports);
 
@@ -1738,6 +1858,81 @@ function AddTagModelToJSON(value) {
     };
 }
 exports.AddTagModelToJSON = AddTagModelToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/BankAccount.ts":
+/*!*********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/BankAccount.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BankAccountToJSON = exports.BankAccountFromJSONTyped = exports.BankAccountFromJSON = exports.BankAccount = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class BankAccount
+ */
+class BankAccount {
+}
+exports.BankAccount = BankAccount;
+function BankAccountFromJSON(json) {
+    return BankAccountFromJSONTyped(json, false);
+}
+exports.BankAccountFromJSON = BankAccountFromJSON;
+function BankAccountFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
+        'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
+        'interestRates': !(0, runtime_1.exists)(json, 'interestRates') ? undefined : (json['interestRates'] === null ? null : json['interestRates'].map(_1.InterestRateFromJSON)),
+        'openingBalance': !(0, runtime_1.exists)(json, 'openingBalance') ? undefined : json['openingBalance'],
+    };
+}
+exports.BankAccountFromJSONTyped = BankAccountFromJSONTyped;
+function BankAccountToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'code': value.code,
+        'userIdentityId': value.userIdentityId,
+        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
+        'interestRates': value.interestRates === undefined ? undefined : (value.interestRates === null ? null : value.interestRates.map(_1.InterestRateToJSON)),
+        'openingBalance': value.openingBalance,
+    };
+}
+exports.BankAccountToJSON = BankAccountToJSON;
 
 
 /***/ }),
@@ -1948,6 +2143,454 @@ exports.BudgetModelToJSON = BudgetModelToJSON;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/Main/models/CryptoTicker.ts":
+/*!**********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/CryptoTicker.ts ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CryptoTickerToJSON = exports.CryptoTickerFromJSONTyped = exports.CryptoTickerFromJSON = exports.CryptoTicker = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class CryptoTicker
+ */
+class CryptoTicker {
+}
+exports.CryptoTicker = CryptoTicker;
+function CryptoTickerFromJSON(json) {
+    return CryptoTickerFromJSONTyped(json, false);
+}
+exports.CryptoTickerFromJSON = CryptoTickerFromJSON;
+function CryptoTickerFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'ticker': !(0, runtime_1.exists)(json, 'ticker') ? undefined : json['ticker'],
+        'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
+        'cryptoTradeHistories': !(0, runtime_1.exists)(json, 'cryptoTradeHistories') ? undefined : (json['cryptoTradeHistories'] === null ? null : json['cryptoTradeHistories'].map(_1.CryptoTradeHistoryFromJSON)),
+    };
+}
+exports.CryptoTickerFromJSONTyped = CryptoTickerFromJSONTyped;
+function CryptoTickerToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'ticker': value.ticker,
+        'name': value.name,
+        'cryptoTradeHistories': value.cryptoTradeHistories === undefined ? undefined : (value.cryptoTradeHistories === null ? null : value.cryptoTradeHistories.map(_1.CryptoTradeHistoryToJSON)),
+    };
+}
+exports.CryptoTickerToJSON = CryptoTickerToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts":
+/*!****************************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CryptoTradeHistoryToJSON = exports.CryptoTradeHistoryFromJSONTyped = exports.CryptoTradeHistoryFromJSON = exports.CryptoTradeHistory = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class CryptoTradeHistory
+ */
+class CryptoTradeHistory {
+}
+exports.CryptoTradeHistory = CryptoTradeHistory;
+function CryptoTradeHistoryFromJSON(json) {
+    return CryptoTradeHistoryFromJSONTyped(json, false);
+}
+exports.CryptoTradeHistoryFromJSON = CryptoTradeHistoryFromJSON;
+function CryptoTradeHistoryFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'tradeTimeStamp': !(0, runtime_1.exists)(json, 'tradeTimeStamp') ? undefined : (new Date(json['tradeTimeStamp'])),
+        'cryptoTickerId': !(0, runtime_1.exists)(json, 'cryptoTickerId') ? undefined : json['cryptoTickerId'],
+        'cryptoTicker': !(0, runtime_1.exists)(json, 'cryptoTicker') ? undefined : (0, _1.CryptoTickerFromJSON)(json['cryptoTicker']),
+        'tradeSize': !(0, runtime_1.exists)(json, 'tradeSize') ? undefined : json['tradeSize'],
+        'tradeValue': !(0, runtime_1.exists)(json, 'tradeValue') ? undefined : json['tradeValue'],
+        'currencySymbolId': !(0, runtime_1.exists)(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
+        'currencySymbol': !(0, runtime_1.exists)(json, 'currencySymbol') ? undefined : (0, _1.CurrencySymbolFromJSON)(json['currencySymbol']),
+        'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
+    };
+}
+exports.CryptoTradeHistoryFromJSONTyped = CryptoTradeHistoryFromJSONTyped;
+function CryptoTradeHistoryToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'tradeTimeStamp': value.tradeTimeStamp === undefined ? undefined : (value.tradeTimeStamp.toISOString()),
+        'cryptoTickerId': value.cryptoTickerId,
+        'cryptoTicker': (0, _1.CryptoTickerToJSON)(value.cryptoTicker),
+        'tradeSize': value.tradeSize,
+        'tradeValue': value.tradeValue,
+        'currencySymbolId': value.currencySymbolId,
+        'currencySymbol': (0, _1.CurrencySymbolToJSON)(value.currencySymbol),
+        'userIdentityId': value.userIdentityId,
+        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
+    };
+}
+exports.CryptoTradeHistoryToJSON = CryptoTradeHistoryToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/CurrencySymbol.ts":
+/*!************************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/CurrencySymbol.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CurrencySymbolToJSON = exports.CurrencySymbolFromJSONTyped = exports.CurrencySymbolFromJSON = exports.CurrencySymbol = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class CurrencySymbol
+ */
+class CurrencySymbol {
+}
+exports.CurrencySymbol = CurrencySymbol;
+function CurrencySymbolFromJSON(json) {
+    return CurrencySymbolFromJSONTyped(json, false);
+}
+exports.CurrencySymbolFromJSON = CurrencySymbolFromJSON;
+function CurrencySymbolFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'symbol': !(0, runtime_1.exists)(json, 'symbol') ? undefined : json['symbol'],
+        'cryptoTradeHistory': !(0, runtime_1.exists)(json, 'cryptoTradeHistory') ? undefined : (json['cryptoTradeHistory'] === null ? null : json['cryptoTradeHistory'].map(_1.CryptoTradeHistoryFromJSON)),
+    };
+}
+exports.CurrencySymbolFromJSONTyped = CurrencySymbolFromJSONTyped;
+function CurrencySymbolToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'symbol': value.symbol,
+        'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : value.cryptoTradeHistory.map(_1.CryptoTradeHistoryToJSON)),
+    };
+}
+exports.CurrencySymbolToJSON = CurrencySymbolToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/InterestRate.ts":
+/*!**********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/InterestRate.ts ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InterestRateToJSON = exports.InterestRateFromJSONTyped = exports.InterestRateFromJSON = exports.InterestRate = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class InterestRate
+ */
+class InterestRate {
+}
+exports.InterestRate = InterestRate;
+function InterestRateFromJSON(json) {
+    return InterestRateFromJSONTyped(json, false);
+}
+exports.InterestRateFromJSON = InterestRateFromJSON;
+function InterestRateFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'rangeFrom': !(0, runtime_1.exists)(json, 'rangeFrom') ? undefined : json['rangeFrom'],
+        'rangeTo': !(0, runtime_1.exists)(json, 'rangeTo') ? undefined : json['rangeTo'],
+        'value': !(0, runtime_1.exists)(json, 'value') ? undefined : json['value'],
+        'bankAccountId': !(0, runtime_1.exists)(json, 'bankAccountId') ? undefined : json['bankAccountId'],
+        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, _1.BankAccountFromJSON)(json['bankAccount']),
+        'payoutDate': !(0, runtime_1.exists)(json, 'payoutDate') ? undefined : (new Date(json['payoutDate'])),
+    };
+}
+exports.InterestRateFromJSONTyped = InterestRateFromJSONTyped;
+function InterestRateToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'rangeFrom': value.rangeFrom,
+        'rangeTo': value.rangeTo,
+        'value': value.value,
+        'bankAccountId': value.bankAccountId,
+        'bankAccount': (0, _1.BankAccountToJSON)(value.bankAccount),
+        'payoutDate': value.payoutDate === undefined ? undefined : (value.payoutDate.toISOString()),
+    };
+}
+exports.InterestRateToJSON = InterestRateToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/Payment.ts":
+/*!*****************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/Payment.ts ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentToJSON = exports.PaymentFromJSONTyped = exports.PaymentFromJSON = exports.Payment = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class Payment
+ */
+class Payment {
+}
+exports.Payment = Payment;
+function PaymentFromJSON(json) {
+    return PaymentFromJSONTyped(json, false);
+}
+exports.PaymentFromJSON = PaymentFromJSON;
+function PaymentFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'amount': !(0, runtime_1.exists)(json, 'amount') ? undefined : json['amount'],
+        'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
+        'description': !(0, runtime_1.exists)(json, 'description') ? undefined : json['description'],
+        'date': !(0, runtime_1.exists)(json, 'date') ? undefined : (new Date(json['date'])),
+        'bankAccountId': !(0, runtime_1.exists)(json, 'bankAccountId') ? undefined : json['bankAccountId'],
+        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, _1.BankAccountFromJSON)(json['bankAccount']),
+        'paymentTypeId': !(0, runtime_1.exists)(json, 'paymentTypeId') ? undefined : json['paymentTypeId'],
+        'paymentType': !(0, runtime_1.exists)(json, 'paymentType') ? undefined : (0, _1.PaymentTypeFromJSON)(json['paymentType']),
+        'paymentCategoryId': !(0, runtime_1.exists)(json, 'paymentCategoryId') ? undefined : json['paymentCategoryId'],
+        'paymentCategory': !(0, runtime_1.exists)(json, 'paymentCategory') ? undefined : (0, _1.PaymentCategoryFromJSON)(json['paymentCategory']),
+        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(_1.PaymentTagFromJSON)),
+    };
+}
+exports.PaymentFromJSONTyped = PaymentFromJSONTyped;
+function PaymentToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'amount': value.amount,
+        'name': value.name,
+        'description': value.description,
+        'date': value.date === undefined ? undefined : (value.date.toISOString()),
+        'bankAccountId': value.bankAccountId,
+        'bankAccount': (0, _1.BankAccountToJSON)(value.bankAccount),
+        'paymentTypeId': value.paymentTypeId,
+        'paymentType': (0, _1.PaymentTypeToJSON)(value.paymentType),
+        'paymentCategoryId': value.paymentCategoryId,
+        'paymentCategory': (0, _1.PaymentCategoryToJSON)(value.paymentCategory),
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(_1.PaymentTagToJSON)),
+    };
+}
+exports.PaymentToJSON = PaymentToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/PaymentCategory.ts":
+/*!*************************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/PaymentCategory.ts ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentCategoryToJSON = exports.PaymentCategoryFromJSONTyped = exports.PaymentCategoryFromJSON = exports.PaymentCategory = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class PaymentCategory
+ */
+class PaymentCategory {
+}
+exports.PaymentCategory = PaymentCategory;
+function PaymentCategoryFromJSON(json) {
+    return PaymentCategoryFromJSONTyped(json, false);
+}
+exports.PaymentCategoryFromJSON = PaymentCategoryFromJSON;
+function PaymentCategoryFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
+        'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
+        'icon': !(0, runtime_1.exists)(json, 'icon') ? undefined : json['icon'],
+    };
+}
+exports.PaymentCategoryFromJSONTyped = PaymentCategoryFromJSONTyped;
+function PaymentCategoryToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'code': value.code,
+        'name': value.name,
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
+        'icon': value.icon,
+    };
+}
+exports.PaymentCategoryToJSON = PaymentCategoryToJSON;
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/Main/models/PaymentCategoryModel.ts":
 /*!******************************************************************!*\
   !*** ./Typescript/ApiClient/Main/models/PaymentCategoryModel.ts ***!
@@ -2098,6 +2741,146 @@ exports.PaymentModelToJSON = PaymentModelToJSON;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/Main/models/PaymentTag.ts":
+/*!********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/PaymentTag.ts ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentTagToJSON = exports.PaymentTagFromJSONTyped = exports.PaymentTagFromJSON = exports.PaymentTag = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class PaymentTag
+ */
+class PaymentTag {
+}
+exports.PaymentTag = PaymentTag;
+function PaymentTagFromJSON(json) {
+    return PaymentTagFromJSONTyped(json, false);
+}
+exports.PaymentTagFromJSON = PaymentTagFromJSON;
+function PaymentTagFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'paymentId': !(0, runtime_1.exists)(json, 'paymentId') ? undefined : json['paymentId'],
+        'payment': !(0, runtime_1.exists)(json, 'payment') ? undefined : (0, _1.PaymentFromJSON)(json['payment']),
+        'tagId': !(0, runtime_1.exists)(json, 'tagId') ? undefined : json['tagId'],
+        'tag': !(0, runtime_1.exists)(json, 'tag') ? undefined : (0, _1.TagFromJSON)(json['tag']),
+    };
+}
+exports.PaymentTagFromJSONTyped = PaymentTagFromJSONTyped;
+function PaymentTagToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'paymentId': value.paymentId,
+        'payment': (0, _1.PaymentToJSON)(value.payment),
+        'tagId': value.tagId,
+        'tag': (0, _1.TagToJSON)(value.tag),
+    };
+}
+exports.PaymentTagToJSON = PaymentTagToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/PaymentType.ts":
+/*!*********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/PaymentType.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PaymentTypeToJSON = exports.PaymentTypeFromJSONTyped = exports.PaymentTypeFromJSON = exports.PaymentType = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class PaymentType
+ */
+class PaymentType {
+}
+exports.PaymentType = PaymentType;
+function PaymentTypeFromJSON(json) {
+    return PaymentTypeFromJSONTyped(json, false);
+}
+exports.PaymentTypeFromJSON = PaymentTypeFromJSON;
+function PaymentTypeFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
+        'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
+    };
+}
+exports.PaymentTypeFromJSONTyped = PaymentTypeFromJSONTyped;
+function PaymentTypeToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'code': value.code,
+        'name': value.name,
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
+    };
+}
+exports.PaymentTypeToJSON = PaymentTypeToJSON;
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/Main/models/PaymentTypeModel.ts":
 /*!**************************************************************!*\
   !*** ./Typescript/ApiClient/Main/models/PaymentTypeModel.ts ***!
@@ -2158,6 +2941,73 @@ function PaymentTypeModelToJSON(value) {
     };
 }
 exports.PaymentTypeModelToJSON = PaymentTypeModelToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/Tag.ts":
+/*!*************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/Tag.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TagToJSON = exports.TagFromJSONTyped = exports.TagFromJSON = exports.Tag = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class Tag
+ */
+class Tag {
+}
+exports.Tag = Tag;
+function TagFromJSON(json) {
+    return TagFromJSONTyped(json, false);
+}
+exports.TagFromJSON = TagFromJSON;
+function TagFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
+        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(_1.PaymentTagFromJSON)),
+    };
+}
+exports.TagFromJSONTyped = TagFromJSONTyped;
+function TagToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'code': value.code,
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(_1.PaymentTagToJSON)),
+    };
+}
+exports.TagToJSON = TagToJSON;
 
 
 /***/ }),
@@ -2302,6 +3152,156 @@ exports.TradeHistoryToJSON = TradeHistoryToJSON;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/Main/models/UserData.ts":
+/*!******************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/UserData.ts ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserDataToJSON = exports.UserDataFromJSONTyped = exports.UserDataFromJSON = exports.UserData = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class UserData
+ */
+class UserData {
+}
+exports.UserData = UserData;
+function UserDataFromJSON(json) {
+    return UserDataFromJSONTyped(json, false);
+}
+exports.UserDataFromJSON = UserDataFromJSON;
+function UserDataFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
+        'firstName': !(0, runtime_1.exists)(json, 'firstName') ? undefined : json['firstName'],
+        'lastName': !(0, runtime_1.exists)(json, 'lastName') ? undefined : json['lastName'],
+        'isLocked': !(0, runtime_1.exists)(json, 'isLocked') ? undefined : json['isLocked'],
+        'phone': !(0, runtime_1.exists)(json, 'phone') ? undefined : json['phone'],
+        'email': !(0, runtime_1.exists)(json, 'email') ? undefined : json['email'],
+    };
+}
+exports.UserDataFromJSONTyped = UserDataFromJSONTyped;
+function UserDataToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'userIdentityId': value.userIdentityId,
+        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
+        'firstName': value.firstName,
+        'lastName': value.lastName,
+        'isLocked': value.isLocked,
+        'phone': value.phone,
+        'email': value.email,
+    };
+}
+exports.UserDataToJSON = UserDataToJSON;
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Main/models/UserIdentity.ts":
+/*!**********************************************************!*\
+  !*** ./Typescript/ApiClient/Main/models/UserIdentity.ts ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/* tslint:disable */
+/* eslint-disable */
+/**
+ * BudgetManager.Api
+ * No description provided (generated by Openapi Generator https://github.com/openapitools/openapi-generator)
+ *
+ * The version of the OpenAPI document: v1
+ *
+ *
+ * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
+ * https://openapi-generator.tech
+ * Do not edit the class manually.
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserIdentityToJSON = exports.UserIdentityFromJSONTyped = exports.UserIdentityFromJSON = exports.UserIdentity = void 0;
+const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+/**
+ *
+ * @export
+ * @class UserIdentity
+ */
+class UserIdentity {
+}
+exports.UserIdentity = UserIdentity;
+function UserIdentityFromJSON(json) {
+    return UserIdentityFromJSONTyped(json, false);
+}
+exports.UserIdentityFromJSON = UserIdentityFromJSON;
+function UserIdentityFromJSONTyped(json, ignoreDiscriminator) {
+    if ((json === undefined) || (json === null)) {
+        return json;
+    }
+    return {
+        'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
+        'login': !(0, runtime_1.exists)(json, 'login') ? undefined : json['login'],
+        'passwordHash': !(0, runtime_1.exists)(json, 'passwordHash') ? undefined : json['passwordHash'],
+        'userData': !(0, runtime_1.exists)(json, 'userData') ? undefined : (0, _1.UserDataFromJSON)(json['userData']),
+        'bankAccounts': !(0, runtime_1.exists)(json, 'bankAccounts') ? undefined : (json['bankAccounts'] === null ? null : json['bankAccounts'].map(_1.BankAccountFromJSON)),
+        'cryptoTradesHistory': !(0, runtime_1.exists)(json, 'cryptoTradesHistory') ? undefined : (json['cryptoTradesHistory'] === null ? null : json['cryptoTradesHistory'].map(_1.CryptoTradeHistoryFromJSON)),
+    };
+}
+exports.UserIdentityFromJSONTyped = UserIdentityFromJSONTyped;
+function UserIdentityToJSON(value) {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (value === null) {
+        return null;
+    }
+    return {
+        'id': value.id,
+        'login': value.login,
+        'passwordHash': value.passwordHash,
+        'userData': (0, _1.UserDataToJSON)(value.userData),
+        'bankAccounts': value.bankAccounts === undefined ? undefined : (value.bankAccounts === null ? null : value.bankAccounts.map(_1.BankAccountToJSON)),
+        'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : value.cryptoTradesHistory.map(_1.CryptoTradeHistoryToJSON)),
+    };
+}
+exports.UserIdentityToJSON = UserIdentityToJSON;
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/Main/models/index.ts":
 /*!***************************************************!*\
   !*** ./Typescript/ApiClient/Main/models/index.ts ***!
@@ -2322,17 +3322,27 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* tslint:disable */
-/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./AddTagModel */ "./Typescript/ApiClient/Main/models/AddTagModel.ts"), exports);
+__exportStar(__webpack_require__(/*! ./BankAccount */ "./Typescript/ApiClient/Main/models/BankAccount.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankAccountModel */ "./Typescript/ApiClient/Main/models/BankAccountModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankBalanceModel */ "./Typescript/ApiClient/Main/models/BankBalanceModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BudgetModel */ "./Typescript/ApiClient/Main/models/BudgetModel.ts"), exports);
+__exportStar(__webpack_require__(/*! ./CryptoTicker */ "./Typescript/ApiClient/Main/models/CryptoTicker.ts"), exports);
+__exportStar(__webpack_require__(/*! ./CryptoTradeHistory */ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts"), exports);
+__exportStar(__webpack_require__(/*! ./CurrencySymbol */ "./Typescript/ApiClient/Main/models/CurrencySymbol.ts"), exports);
+__exportStar(__webpack_require__(/*! ./InterestRate */ "./Typescript/ApiClient/Main/models/InterestRate.ts"), exports);
+__exportStar(__webpack_require__(/*! ./Payment */ "./Typescript/ApiClient/Main/models/Payment.ts"), exports);
+__exportStar(__webpack_require__(/*! ./PaymentCategory */ "./Typescript/ApiClient/Main/models/PaymentCategory.ts"), exports);
 __exportStar(__webpack_require__(/*! ./PaymentCategoryModel */ "./Typescript/ApiClient/Main/models/PaymentCategoryModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./PaymentModel */ "./Typescript/ApiClient/Main/models/PaymentModel.ts"), exports);
+__exportStar(__webpack_require__(/*! ./PaymentTag */ "./Typescript/ApiClient/Main/models/PaymentTag.ts"), exports);
+__exportStar(__webpack_require__(/*! ./PaymentType */ "./Typescript/ApiClient/Main/models/PaymentType.ts"), exports);
 __exportStar(__webpack_require__(/*! ./PaymentTypeModel */ "./Typescript/ApiClient/Main/models/PaymentTypeModel.ts"), exports);
+__exportStar(__webpack_require__(/*! ./Tag */ "./Typescript/ApiClient/Main/models/Tag.ts"), exports);
 __exportStar(__webpack_require__(/*! ./TagModel */ "./Typescript/ApiClient/Main/models/TagModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./TradeHistory */ "./Typescript/ApiClient/Main/models/TradeHistory.ts"), exports);
+__exportStar(__webpack_require__(/*! ./UserData */ "./Typescript/ApiClient/Main/models/UserData.ts"), exports);
+__exportStar(__webpack_require__(/*! ./UserIdentity */ "./Typescript/ApiClient/Main/models/UserIdentity.ts"), exports);
 
 
 /***/ }),

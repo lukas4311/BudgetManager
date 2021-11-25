@@ -13,67 +13,94 @@
  */
 
 import { exists, mapValues } from '../../runtime';
+import {
+    CryptoTicker,
+    CryptoTickerFromJSON,
+    CryptoTickerFromJSONTyped,
+    CryptoTickerToJSON,
+    CurrencySymbol,
+    CurrencySymbolFromJSON,
+    CurrencySymbolFromJSONTyped,
+    CurrencySymbolToJSON,
+    UserIdentity,
+    UserIdentityFromJSON,
+    UserIdentityFromJSONTyped,
+    UserIdentityToJSON,
+} from './';
+
 /**
  * 
  * @export
- * @class TradeHistory
+ * @class CryptoTradeHistory
  */
-export class TradeHistory {
+export class CryptoTradeHistory {
     /**
      * 
      * @type {number}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     id?: number;
     /**
      * 
      * @type {Date}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     tradeTimeStamp?: Date;
     /**
      * 
      * @type {number}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     cryptoTickerId?: number;
     /**
      * 
-     * @type {string}
-     * @memberof TradeHistory
+     * @type {CryptoTicker}
+     * @memberof CryptoTradeHistory
      */
-    cryptoTicker?: string | null;
+    cryptoTicker?: CryptoTicker;
     /**
      * 
      * @type {number}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     tradeSize?: number;
     /**
      * 
      * @type {number}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     tradeValue?: number;
     /**
      * 
      * @type {number}
-     * @memberof TradeHistory
+     * @memberof CryptoTradeHistory
      */
     currencySymbolId?: number;
     /**
      * 
-     * @type {string}
-     * @memberof TradeHistory
+     * @type {CurrencySymbol}
+     * @memberof CryptoTradeHistory
      */
-    currencySymbol?: string | null;
+    currencySymbol?: CurrencySymbol;
+    /**
+     * 
+     * @type {number}
+     * @memberof CryptoTradeHistory
+     */
+    userIdentityId?: number;
+    /**
+     * 
+     * @type {UserIdentity}
+     * @memberof CryptoTradeHistory
+     */
+    userIdentity?: UserIdentity;
 }
 
-export function TradeHistoryFromJSON(json: any): TradeHistory {
-    return TradeHistoryFromJSONTyped(json, false);
+export function CryptoTradeHistoryFromJSON(json: any): CryptoTradeHistory {
+    return CryptoTradeHistoryFromJSONTyped(json, false);
 }
 
-export function TradeHistoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): TradeHistory {
+export function CryptoTradeHistoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): CryptoTradeHistory {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -82,15 +109,17 @@ export function TradeHistoryFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': !exists(json, 'id') ? undefined : json['id'],
         'tradeTimeStamp': !exists(json, 'tradeTimeStamp') ? undefined : (new Date(json['tradeTimeStamp'])),
         'cryptoTickerId': !exists(json, 'cryptoTickerId') ? undefined : json['cryptoTickerId'],
-        'cryptoTicker': !exists(json, 'cryptoTicker') ? undefined : json['cryptoTicker'],
+        'cryptoTicker': !exists(json, 'cryptoTicker') ? undefined : CryptoTickerFromJSON(json['cryptoTicker']),
         'tradeSize': !exists(json, 'tradeSize') ? undefined : json['tradeSize'],
         'tradeValue': !exists(json, 'tradeValue') ? undefined : json['tradeValue'],
         'currencySymbolId': !exists(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
-        'currencySymbol': !exists(json, 'currencySymbol') ? undefined : json['currencySymbol'],
+        'currencySymbol': !exists(json, 'currencySymbol') ? undefined : CurrencySymbolFromJSON(json['currencySymbol']),
+        'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'userIdentity': !exists(json, 'userIdentity') ? undefined : UserIdentityFromJSON(json['userIdentity']),
     };
 }
 
-export function TradeHistoryToJSON(value?: TradeHistory | null): any {
+export function CryptoTradeHistoryToJSON(value?: CryptoTradeHistory | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -102,11 +131,13 @@ export function TradeHistoryToJSON(value?: TradeHistory | null): any {
         'id': value.id,
         'tradeTimeStamp': value.tradeTimeStamp === undefined ? undefined : (value.tradeTimeStamp.toISOString()),
         'cryptoTickerId': value.cryptoTickerId,
-        'cryptoTicker': value.cryptoTicker,
+        'cryptoTicker': CryptoTickerToJSON(value.cryptoTicker),
         'tradeSize': value.tradeSize,
         'tradeValue': value.tradeValue,
         'currencySymbolId': value.currencySymbolId,
-        'currencySymbol': value.currencySymbol,
+        'currencySymbol': CurrencySymbolToJSON(value.currencySymbol),
+        'userIdentityId': value.userIdentityId,
+        'userIdentity': UserIdentityToJSON(value.userIdentity),
     };
 }
 

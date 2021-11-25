@@ -70,12 +70,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsCategoriesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>>;
-
+    paymentsCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>>;
     /**
      */
-    paymentsCategoriesGet(initOverrides?: RequestInit): Promise<Array<PaymentCategoryModel>>;
-
+    paymentsCategoriesGet(): Promise<Array<PaymentCategoryModel>>;
     /**
      * 
      * @param {number} id 
@@ -83,12 +81,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<void>;
-
+    paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest): Promise<void>;
     /**
      * 
      * @param {number} [id] 
@@ -96,12 +92,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    paymentsDelete(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<void>;
-
+    paymentsDelete(requestParameters: PaymentsDeleteRequest): Promise<void>;
     /**
      * 
      * @param {number} [id] 
@@ -109,12 +103,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PaymentModel>>;
-
+    paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest): Promise<runtime.ApiResponse<PaymentModel>>;
     /**
      */
-    paymentsDetailGet(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<PaymentModel>;
-
+    paymentsDetailGet(requestParameters: PaymentsDetailGetRequest): Promise<PaymentModel>;
     /**
      * 
      * @param {Date} [fromDate] 
@@ -124,12 +116,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsGetRaw(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>>;
-
+    paymentsGetRaw(requestParameters: PaymentsGetRequest): Promise<runtime.ApiResponse<Array<PaymentModel>>>;
     /**
      */
-    paymentsGet(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>>;
-
+    paymentsGet(requestParameters: PaymentsGetRequest): Promise<Array<PaymentModel>>;
     /**
      * 
      * @param {number} tagId 
@@ -138,12 +128,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<void>;
-
+    paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<void>;
     /**
      * 
      * @param {PaymentModel} [paymentModel] 
@@ -151,12 +139,10 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsPostRaw(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    paymentsPostRaw(requestParameters: PaymentsPostRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    paymentsPost(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<void>;
-
+    paymentsPost(requestParameters: PaymentsPostRequest): Promise<void>;
     /**
      * 
      * @param {PaymentModel} [paymentModel] 
@@ -164,26 +150,21 @@ export interface PaymentApiInterface {
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsPutRaw(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
-
+    paymentsPutRaw(requestParameters: PaymentsPutRequest): Promise<runtime.ApiResponse<void>>;
     /**
      */
-    paymentsPut(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<void>;
-
+    paymentsPut(requestParameters: PaymentsPutRequest): Promise<void>;
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PaymentApiInterface
      */
-    paymentsTypesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>>;
-
+    paymentsTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>>;
     /**
      */
-    paymentsTypesGet(initOverrides?: RequestInit): Promise<Array<PaymentTypeModel>>;
-
+    paymentsTypesGet(): Promise<Array<PaymentTypeModel>>;
 }
-
 /**
  * 
  */
@@ -197,287 +178,223 @@ export class PaymentApi extends runtime.BaseAPI implements PaymentApiInterface {
 
     /**
      */
-    async paymentsCategoriesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>> {
-        const queryParameters: any = {};
-
+    async paymentsCategoriesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentCategoryModel>>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments/categories`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentCategoryModelFromJSON));
     }
-
     /**
      */
-    async paymentsCategoriesGet(initOverrides?: RequestInit): Promise<Array<PaymentCategoryModel>> {
-        const response = await this.paymentsCategoriesGetRaw(initOverrides);
+    async paymentsCategoriesGet(): Promise<Array<PaymentCategoryModel>> {
+        const response = await this.paymentsCategoriesGetRaw();
         return await response.value();
     }
-
     /**
      */
-    async paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async paymentsCloneIdPostRaw(requestParameters: PaymentsCloneIdPostRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
+            throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
         }
-
-        const queryParameters: any = {};
-
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments/clone/{id}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.paymentsCloneIdPostRaw(requestParameters, initOverrides);
+    async paymentsCloneIdPost(requestParameters: PaymentsCloneIdPostRequest): Promise<void> {
+        await this.paymentsCloneIdPostRaw(requestParameters);
     }
-
     /**
      */
-    async paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async paymentsDeleteRaw(requestParameters: PaymentsDeleteRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         if (requestParameters.id !== undefined) {
             queryParameters['id'] = requestParameters.id;
         }
-
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments`,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async paymentsDelete(requestParameters: PaymentsDeleteRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.paymentsDeleteRaw(requestParameters, initOverrides);
+    async paymentsDelete(requestParameters: PaymentsDeleteRequest): Promise<void> {
+        await this.paymentsDeleteRaw(requestParameters);
     }
-
     /**
      */
-    async paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<PaymentModel>> {
-        const queryParameters: any = {};
-
+    async paymentsDetailGetRaw(requestParameters: PaymentsDetailGetRequest): Promise<runtime.ApiResponse<PaymentModel>> {
+        const queryParameters: runtime.HTTPQuery = {};
         if (requestParameters.id !== undefined) {
             queryParameters['id'] = requestParameters.id;
         }
-
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments/detail`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => PaymentModelFromJSON(jsonValue));
     }
-
     /**
      */
-    async paymentsDetailGet(requestParameters: PaymentsDetailGetRequest, initOverrides?: RequestInit): Promise<PaymentModel> {
-        const response = await this.paymentsDetailGetRaw(requestParameters, initOverrides);
+    async paymentsDetailGet(requestParameters: PaymentsDetailGetRequest): Promise<PaymentModel> {
+        const response = await this.paymentsDetailGetRaw(requestParameters);
         return await response.value();
     }
-
     /**
      */
-    async paymentsGetRaw(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>> {
-        const queryParameters: any = {};
-
+    async paymentsGetRaw(requestParameters: PaymentsGetRequest): Promise<runtime.ApiResponse<Array<PaymentModel>>> {
+        const queryParameters: runtime.HTTPQuery = {};
         if (requestParameters.fromDate !== undefined) {
             queryParameters['fromDate'] = (requestParameters.fromDate as any).toISOString();
         }
-
         if (requestParameters.toDate !== undefined) {
             queryParameters['toDate'] = (requestParameters.toDate as any).toISOString();
         }
-
         if (requestParameters.bankAccountId !== undefined) {
             queryParameters['bankAccountId'] = requestParameters.bankAccountId;
         }
-
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentModelFromJSON));
     }
-
     /**
      */
-    async paymentsGet(requestParameters: PaymentsGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>> {
-        const response = await this.paymentsGetRaw(requestParameters, initOverrides);
+    async paymentsGet(requestParameters: PaymentsGetRequest): Promise<Array<PaymentModel>> {
+        const response = await this.paymentsGetRaw(requestParameters);
         return await response.value();
     }
-
     /**
      */
-    async paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async paymentsPaymentIdTagTagIdDeleteRaw(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
-            throw new runtime.RequiredError('tagId','Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
+            throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
         }
-
         if (requestParameters.paymentId === null || requestParameters.paymentId === undefined) {
-            throw new runtime.RequiredError('paymentId','Required parameter requestParameters.paymentId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
+            throw new runtime.RequiredError('paymentId', 'Required parameter requestParameters.paymentId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
         }
-
-        const queryParameters: any = {};
-
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments/{paymentId}/tag/{tagId}`.replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)).replace(`{${"paymentId"}}`, this.processPathParam(requestParameters.paymentId)),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides);
+    async paymentsPaymentIdTagTagIdDelete(requestParameters: PaymentsPaymentIdTagTagIdDeleteRequest): Promise<void> {
+        await this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters);
     }
-
     /**
      */
-    async paymentsPostRaw(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async paymentsPostRaw(requestParameters: PaymentsPostRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: PaymentModelToJSON(requestParameters.paymentModel),
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async paymentsPost(requestParameters: PaymentsPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.paymentsPostRaw(requestParameters, initOverrides);
+    async paymentsPost(requestParameters: PaymentsPostRequest): Promise<void> {
+        await this.paymentsPostRaw(requestParameters);
     }
-
     /**
      */
-    async paymentsPutRaw(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
+    async paymentsPutRaw(requestParameters: PaymentsPutRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         headerParameters['Content-Type'] = 'application/json';
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
             body: PaymentModelToJSON(requestParameters.paymentModel),
-        }, initOverrides);
-
+        });
         return new runtime.VoidApiResponse(response);
     }
-
     /**
      */
-    async paymentsPut(requestParameters: PaymentsPutRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.paymentsPutRaw(requestParameters, initOverrides);
+    async paymentsPut(requestParameters: PaymentsPutRequest): Promise<void> {
+        await this.paymentsPutRaw(requestParameters);
     }
-
     /**
      */
-    async paymentsTypesGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>> {
-        const queryParameters: any = {};
-
+    async paymentsTypesGetRaw(): Promise<runtime.ApiResponse<Array<PaymentTypeModel>>> {
+        const queryParameters: runtime.HTTPQuery = {};
         const headerParameters: runtime.HTTPHeaders = {};
-
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
-
         const response = await this.request({
             path: `/payments/types`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        }, initOverrides);
-
+        });
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentTypeModelFromJSON));
     }
-
     /**
      */
-    async paymentsTypesGet(initOverrides?: RequestInit): Promise<Array<PaymentTypeModel>> {
-        const response = await this.paymentsTypesGetRaw(initOverrides);
+    async paymentsTypesGet(): Promise<Array<PaymentTypeModel>> {
+        const response = await this.paymentsTypesGetRaw();
         return await response.value();
     }
-
 }

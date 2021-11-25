@@ -13,43 +13,44 @@
  */
 
 import { exists, mapValues } from '../../runtime';
+import {
+    PaymentTag,
+    PaymentTagFromJSON,
+    PaymentTagFromJSONTyped,
+    PaymentTagToJSON,
+} from './';
+
 /**
  * 
  * @export
- * @class BankAccountModel
+ * @class Tag
  */
-export class BankAccountModel {
+export class Tag {
     /**
      * 
      * @type {number}
-     * @memberof BankAccountModel
+     * @memberof Tag
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof BankAccountModel
+     * @memberof Tag
      */
     code?: string | null;
     /**
      * 
-     * @type {number}
-     * @memberof BankAccountModel
+     * @type {Array<PaymentTag>}
+     * @memberof Tag
      */
-    openingBalance?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof BankAccountModel
-     */
-    userIdentityId?: number;
+    paymentTags?: Array<PaymentTag> | null;
 }
 
-export function BankAccountModelFromJSON(json: any): BankAccountModel {
-    return BankAccountModelFromJSONTyped(json, false);
+export function TagFromJSON(json: any): Tag {
+    return TagFromJSONTyped(json, false);
 }
 
-export function BankAccountModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): BankAccountModel {
+export function TagFromJSONTyped(json: any, ignoreDiscriminator: boolean): Tag {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -57,12 +58,11 @@ export function BankAccountModelFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'code': !exists(json, 'code') ? undefined : json['code'],
-        'openingBalance': !exists(json, 'openingBalance') ? undefined : json['openingBalance'],
-        'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'paymentTags': !exists(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : (json['paymentTags'] as Array<any>).map(PaymentTagFromJSON)),
     };
 }
 
-export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
+export function TagToJSON(value?: Tag | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -73,8 +73,7 @@ export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
         
         'id': value.id,
         'code': value.code,
-        'openingBalance': value.openingBalance,
-        'userIdentityId': value.userIdentityId,
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : (value.paymentTags as Array<any>).map(PaymentTagToJSON)),
     };
 }
 

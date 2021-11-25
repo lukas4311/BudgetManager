@@ -13,91 +13,110 @@
  */
 
 import { exists, mapValues } from '../../runtime';
+import {
+    BankAccount,
+    BankAccountFromJSON,
+    BankAccountFromJSONTyped,
+    BankAccountToJSON,
+    PaymentCategory,
+    PaymentCategoryFromJSON,
+    PaymentCategoryFromJSONTyped,
+    PaymentCategoryToJSON,
+    PaymentTag,
+    PaymentTagFromJSON,
+    PaymentTagFromJSONTyped,
+    PaymentTagToJSON,
+    PaymentType,
+    PaymentTypeFromJSON,
+    PaymentTypeFromJSONTyped,
+    PaymentTypeToJSON,
+} from './';
+
 /**
  * 
  * @export
- * @class PaymentModel
+ * @class Payment
  */
-export class PaymentModel {
+export class Payment {
     /**
      * 
      * @type {number}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
-    id?: number | null;
+    id?: number;
     /**
      * 
      * @type {number}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
     amount?: number;
     /**
      * 
      * @type {string}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
     name?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
     description?: string | null;
     /**
      * 
      * @type {Date}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
     date?: Date;
     /**
      * 
      * @type {number}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
-    bankAccountId?: number | null;
+    bankAccountId?: number;
+    /**
+     * 
+     * @type {BankAccount}
+     * @memberof Payment
+     */
+    bankAccount?: BankAccount;
     /**
      * 
      * @type {number}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
-    paymentTypeId?: number | null;
+    paymentTypeId?: number;
+    /**
+     * 
+     * @type {PaymentType}
+     * @memberof Payment
+     */
+    paymentType?: PaymentType;
     /**
      * 
      * @type {number}
-     * @memberof PaymentModel
+     * @memberof Payment
      */
-    paymentCategoryId?: number | null;
+    paymentCategoryId?: number;
     /**
      * 
-     * @type {string}
-     * @memberof PaymentModel
+     * @type {PaymentCategory}
+     * @memberof Payment
      */
-    paymentTypeCode?: string | null;
+    paymentCategory?: PaymentCategory;
     /**
      * 
-     * @type {string}
-     * @memberof PaymentModel
+     * @type {Array<PaymentTag>}
+     * @memberof Payment
      */
-    paymentCategoryIcon?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PaymentModel
-     */
-    paymentCategoryCode?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PaymentModel
-     */
-    tags?: Array<string> | null;
+    paymentTags?: Array<PaymentTag> | null;
 }
 
-export function PaymentModelFromJSON(json: any): PaymentModel {
-    return PaymentModelFromJSONTyped(json, false);
+export function PaymentFromJSON(json: any): Payment {
+    return PaymentFromJSONTyped(json, false);
 }
 
-export function PaymentModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaymentModel {
+export function PaymentFromJSONTyped(json: any, ignoreDiscriminator: boolean): Payment {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -109,16 +128,16 @@ export function PaymentModelFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'description': !exists(json, 'description') ? undefined : json['description'],
         'date': !exists(json, 'date') ? undefined : (new Date(json['date'])),
         'bankAccountId': !exists(json, 'bankAccountId') ? undefined : json['bankAccountId'],
+        'bankAccount': !exists(json, 'bankAccount') ? undefined : BankAccountFromJSON(json['bankAccount']),
         'paymentTypeId': !exists(json, 'paymentTypeId') ? undefined : json['paymentTypeId'],
+        'paymentType': !exists(json, 'paymentType') ? undefined : PaymentTypeFromJSON(json['paymentType']),
         'paymentCategoryId': !exists(json, 'paymentCategoryId') ? undefined : json['paymentCategoryId'],
-        'paymentTypeCode': !exists(json, 'paymentTypeCode') ? undefined : json['paymentTypeCode'],
-        'paymentCategoryIcon': !exists(json, 'paymentCategoryIcon') ? undefined : json['paymentCategoryIcon'],
-        'paymentCategoryCode': !exists(json, 'paymentCategoryCode') ? undefined : json['paymentCategoryCode'],
-        'tags': !exists(json, 'tags') ? undefined : json['tags'],
+        'paymentCategory': !exists(json, 'paymentCategory') ? undefined : PaymentCategoryFromJSON(json['paymentCategory']),
+        'paymentTags': !exists(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : (json['paymentTags'] as Array<any>).map(PaymentTagFromJSON)),
     };
 }
 
-export function PaymentModelToJSON(value?: PaymentModel | null): any {
+export function PaymentToJSON(value?: Payment | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -133,12 +152,12 @@ export function PaymentModelToJSON(value?: PaymentModel | null): any {
         'description': value.description,
         'date': value.date === undefined ? undefined : (value.date.toISOString()),
         'bankAccountId': value.bankAccountId,
+        'bankAccount': BankAccountToJSON(value.bankAccount),
         'paymentTypeId': value.paymentTypeId,
+        'paymentType': PaymentTypeToJSON(value.paymentType),
         'paymentCategoryId': value.paymentCategoryId,
-        'paymentTypeCode': value.paymentTypeCode,
-        'paymentCategoryIcon': value.paymentCategoryIcon,
-        'paymentCategoryCode': value.paymentCategoryCode,
-        'tags': value.tags,
+        'paymentCategory': PaymentCategoryToJSON(value.paymentCategory),
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : (value.paymentTags as Array<any>).map(PaymentTagToJSON)),
     };
 }
 

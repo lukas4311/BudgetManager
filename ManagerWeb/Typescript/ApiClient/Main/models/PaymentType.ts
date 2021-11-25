@@ -13,43 +13,50 @@
  */
 
 import { exists, mapValues } from '../../runtime';
+import {
+    Payment,
+    PaymentFromJSON,
+    PaymentFromJSONTyped,
+    PaymentToJSON,
+} from './';
+
 /**
  * 
  * @export
- * @class BankAccountModel
+ * @class PaymentType
  */
-export class BankAccountModel {
+export class PaymentType {
     /**
      * 
      * @type {number}
-     * @memberof BankAccountModel
+     * @memberof PaymentType
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof BankAccountModel
+     * @memberof PaymentType
      */
     code?: string | null;
     /**
      * 
-     * @type {number}
-     * @memberof BankAccountModel
+     * @type {string}
+     * @memberof PaymentType
      */
-    openingBalance?: number;
+    name?: string | null;
     /**
      * 
-     * @type {number}
-     * @memberof BankAccountModel
+     * @type {Array<Payment>}
+     * @memberof PaymentType
      */
-    userIdentityId?: number;
+    payments?: Array<Payment> | null;
 }
 
-export function BankAccountModelFromJSON(json: any): BankAccountModel {
-    return BankAccountModelFromJSONTyped(json, false);
+export function PaymentTypeFromJSON(json: any): PaymentType {
+    return PaymentTypeFromJSONTyped(json, false);
 }
 
-export function BankAccountModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): BankAccountModel {
+export function PaymentTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaymentType {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -57,12 +64,12 @@ export function BankAccountModelFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'code': !exists(json, 'code') ? undefined : json['code'],
-        'openingBalance': !exists(json, 'openingBalance') ? undefined : json['openingBalance'],
-        'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'payments': !exists(json, 'payments') ? undefined : (json['payments'] === null ? null : (json['payments'] as Array<any>).map(PaymentFromJSON)),
     };
 }
 
-export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
+export function PaymentTypeToJSON(value?: PaymentType | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -73,8 +80,8 @@ export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
         
         'id': value.id,
         'code': value.code,
-        'openingBalance': value.openingBalance,
-        'userIdentityId': value.userIdentityId,
+        'name': value.name,
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : (value.payments as Array<any>).map(PaymentToJSON)),
     };
 }
 
