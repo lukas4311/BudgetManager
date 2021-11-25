@@ -21,7 +21,7 @@ namespace BudgetManager.TestingConsole
             this.twelveDataapiKey = twelveDataapiKey;
         }
 
-        public async Task ForexDownload(ForexTicker currency)
+        public async Task ForexDownload(string currency)
         {
             ExchangeRatesApi exchangeRatesApi = new ExchangeRatesApi(new HttpClient(), this.twelveDataapiKey);
             DateTime? lastRecordTime = (await this.influxRepo.GetLastWrittenRecordsTime(this.dataSourceIdentification))

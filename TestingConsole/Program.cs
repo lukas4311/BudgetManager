@@ -1,6 +1,7 @@
 ﻿using BudgetManager.FinanceDataMining.CryproApi;
 using BudgetManager.Repository;
 using BudgetManager.TestingConsole.Crypto;
+using System;
 using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole
@@ -12,26 +13,38 @@ namespace BudgetManager.TestingConsole
             ProcessManager processManager = new ProcessManager();
 
             // download all assets
-            //await processManager.DownloadAssets(); /*-DONE*/
+            Console.WriteLine("Donwloading assets");
+            await processManager.DownloadAssets(); /*-DONE*/
+            Console.WriteLine("Donwloading assets - DONE");
+
 
             // download fear and greed
-            //await processManager.DownloadFearAndGreed(); /*-DONE*/
+            Console.WriteLine("Donwloading fear and greed");
+            await processManager.DownloadFearAndGreed(); /*-DONE*/
+            Console.WriteLine("Donwloading fear and greed - DONE");
 
             // download gold data
-            //await processManager.SaveGoldDataToDb(); /*-DONE*/
+            Console.WriteLine("Donwloading gold");
+            await processManager.SaveGoldDataToDb(); /*-DONE*/
+            Console.WriteLine("Donwloading gold - DONE");
 
             // download hash rate
-            //await processManager.DownloadHashRate(); /*-DONE*/
+            Console.WriteLine("Donwloading hash rate");
+            await processManager.DownloadHashRate(); /*-DONE*/
+            Console.WriteLine("Donwloading hash rate - DONE");
 
             // download crypto data
-            //await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
-            //await processManager.DownloadCryptoHistory(CryptoTicker.ETHUSD);
-            //await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
-            //await processManager.DownloadCryptoHistory(CryptoTicker.ATOMUSD);
-
-            //SaveCoinbaseDataToDb();
-            //await processManager.DownloadFearAndGreed();
-            //await processManager.SaveGoldDataToDb();
+            Console.WriteLine("Donwloading crypto");
+            await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
+            Console.WriteLine("BTC done");
+            await processManager.DownloadCryptoHistory(CryptoTicker.ETHUSD);
+            Console.WriteLine("ETH done");
+            await processManager.DownloadCryptoHistory(CryptoTicker.SNXUSD);
+            Console.WriteLine("SNX done");
+            await processManager.DownloadCryptoHistory(CryptoTicker.ATOMUSD);
+            Console.WriteLine("ATOM done");
+            await processManager.DownloadCryptoHistory(CryptoTicker.LINKUSD);
+            Console.WriteLine("LINK done");
 
             // actual stock fear and greed
             //FearAndGreed fearAndGreed = new FearAndGreed(new System.Net.Http.HttpClient());
@@ -42,7 +55,7 @@ namespace BudgetManager.TestingConsole
             //processManager.ParseCoinbaseReport();
 
             // download forex
-            await processManager.DownloadForexHistory(ForexTicker.USD);
+            //await processManager.DownloadForexHistory(ForexTicker.EurCzk);
         }
     }
 }

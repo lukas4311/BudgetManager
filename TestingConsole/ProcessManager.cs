@@ -57,7 +57,7 @@ namespace BudgetManager.TestingConsole
 
             InfluxDbData.Repository<ForexData> repo = new(new InfluxContext(config.Url, config.Token));
             ForexDataDownloader forexDataDownloader = new ForexDataDownloader(repo, new DataSourceIdentification(organizationId, bucketForex), this.configManager.GetTwelveDataApiKey());
-            await forexDataDownloader.ForexDownload(forexTicker).ConfigureAwait(false);
+            await forexDataDownloader.ForexDownload(forexTicker.Value).ConfigureAwait(false);
         }
 
         /// <summary>
