@@ -61,5 +61,3 @@ export function PaymentTypeModelToJSON(value?: PaymentTypeModel | null): any {
         'name': value.name,
     };
 }
-
-

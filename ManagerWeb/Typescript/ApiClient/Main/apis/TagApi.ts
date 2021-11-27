@@ -44,10 +44,12 @@ export interface TagApiInterface {
      * @throws {RequiredError}
      * @memberof TagApiInterface
      */
-    tagsAllUsedGetRaw(): Promise<runtime.ApiResponse<Array<TagModel>>>;
+    tagsAllUsedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TagModel>>>;
+
     /**
      */
-    tagsAllUsedGet(): Promise<Array<TagModel>>;
+    tagsAllUsedGet(initOverrides?: RequestInit): Promise<Array<TagModel>>;
+
     /**
      * 
      * @param {number} [tagId] 
@@ -55,10 +57,12 @@ export interface TagApiInterface {
      * @throws {RequiredError}
      * @memberof TagApiInterface
      */
-    tagsDeleteRaw(requestParameters: TagsDeleteRequest): Promise<runtime.ApiResponse<void>>;
+    tagsDeleteRaw(requestParameters: TagsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
     /**
      */
-    tagsDelete(requestParameters: TagsDeleteRequest): Promise<void>;
+    tagsDelete(requestParameters: TagsDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
     /**
      * 
      * @param {AddTagModel} [addTagModel] 
@@ -66,11 +70,14 @@ export interface TagApiInterface {
      * @throws {RequiredError}
      * @memberof TagApiInterface
      */
-    tagsPostRaw(requestParameters: TagsPostRequest): Promise<runtime.ApiResponse<void>>;
+    tagsPostRaw(requestParameters: TagsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
     /**
      */
-    tagsPost(requestParameters: TagsPostRequest): Promise<void>;
+    tagsPost(requestParameters: TagsPostRequest, initOverrides?: RequestInit): Promise<void>;
+
 }
+
 /**
  * 
  */
@@ -84,71 +91,91 @@ export class TagApi extends runtime.BaseAPI implements TagApiInterface {
 
     /**
      */
-    async tagsAllUsedGetRaw(): Promise<runtime.ApiResponse<Array<TagModel>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async tagsAllUsedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TagModel>>> {
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/tags/allUsed`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
+
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TagModelFromJSON));
     }
+
     /**
      */
-    async tagsAllUsedGet(): Promise<Array<TagModel>> {
-        const response = await this.tagsAllUsedGetRaw();
+    async tagsAllUsedGet(initOverrides?: RequestInit): Promise<Array<TagModel>> {
+        const response = await this.tagsAllUsedGetRaw(initOverrides);
         return await response.value();
     }
+
     /**
      */
-    async tagsDeleteRaw(requestParameters: TagsDeleteRequest): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async tagsDeleteRaw(requestParameters: TagsDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
         if (requestParameters.tagId !== undefined) {
             queryParameters['tagId'] = requestParameters.tagId;
         }
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/tags`,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
+
         return new runtime.VoidApiResponse(response);
     }
+
     /**
      */
-    async tagsDelete(requestParameters: TagsDeleteRequest): Promise<void> {
-        await this.tagsDeleteRaw(requestParameters);
+    async tagsDelete(requestParameters: TagsDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.tagsDeleteRaw(requestParameters, initOverrides);
     }
+
     /**
      */
-    async tagsPostRaw(requestParameters: TagsPostRequest): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async tagsPostRaw(requestParameters: TagsPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         headerParameters['Content-Type'] = 'application/json';
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/tags`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
             body: AddTagModelToJSON(requestParameters.addTagModel),
-        });
+        }, initOverrides);
+
         return new runtime.VoidApiResponse(response);
     }
+
     /**
      */
-    async tagsPost(requestParameters: TagsPostRequest): Promise<void> {
-        await this.tagsPostRaw(requestParameters);
+    async tagsPost(requestParameters: TagsPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.tagsPostRaw(requestParameters, initOverrides);
     }
+
 }

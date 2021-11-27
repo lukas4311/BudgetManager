@@ -109,5 +109,3 @@ export function TradeHistoryToJSON(value?: TradeHistory | null): any {
         'currencySymbol': value.currencySymbol,
     };
 }
-
-

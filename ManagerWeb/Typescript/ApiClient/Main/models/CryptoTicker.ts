@@ -18,7 +18,7 @@ import {
     CryptoTradeHistoryFromJSON,
     CryptoTradeHistoryFromJSONTyped,
     CryptoTradeHistoryToJSON,
-} from './';
+} from './CryptoTradeHistory';
 
 /**
  * 
@@ -84,5 +84,3 @@ export function CryptoTickerToJSON(value?: CryptoTicker | null): any {
         'cryptoTradeHistories': value.cryptoTradeHistories === undefined ? undefined : (value.cryptoTradeHistories === null ? null : (value.cryptoTradeHistories as Array<any>).map(CryptoTradeHistoryToJSON)),
     };
 }
-
-

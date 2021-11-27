@@ -61,5 +61,3 @@ export function AddTagModelToJSON(value?: AddTagModel | null): any {
         'paymentId': value.paymentId,
     };
 }
-
-

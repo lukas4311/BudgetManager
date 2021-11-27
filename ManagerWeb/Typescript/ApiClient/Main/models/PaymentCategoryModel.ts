@@ -69,5 +69,3 @@ export function PaymentCategoryModelToJSON(value?: PaymentCategoryModel | null):
         'icon': value.icon,
     };
 }
-
-

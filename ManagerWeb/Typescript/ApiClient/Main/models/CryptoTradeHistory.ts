@@ -18,15 +18,19 @@ import {
     CryptoTickerFromJSON,
     CryptoTickerFromJSONTyped,
     CryptoTickerToJSON,
+} from './CryptoTicker';
+import {
     CurrencySymbol,
     CurrencySymbolFromJSON,
     CurrencySymbolFromJSONTyped,
     CurrencySymbolToJSON,
+} from './CurrencySymbol';
+import {
     UserIdentity,
     UserIdentityFromJSON,
     UserIdentityFromJSONTyped,
     UserIdentityToJSON,
-} from './';
+} from './UserIdentity';
 
 /**
  * 
@@ -140,5 +144,3 @@ export function CryptoTradeHistoryToJSON(value?: CryptoTradeHistory | null): any
         'userIdentity': UserIdentityToJSON(value.userIdentity),
     };
 }
-
-

@@ -18,19 +18,25 @@ import {
     BankAccountFromJSON,
     BankAccountFromJSONTyped,
     BankAccountToJSON,
+} from './BankAccount';
+import {
     PaymentCategory,
     PaymentCategoryFromJSON,
     PaymentCategoryFromJSONTyped,
     PaymentCategoryToJSON,
+} from './PaymentCategory';
+import {
     PaymentTag,
     PaymentTagFromJSON,
     PaymentTagFromJSONTyped,
     PaymentTagToJSON,
+} from './PaymentTag';
+import {
     PaymentType,
     PaymentTypeFromJSON,
     PaymentTypeFromJSONTyped,
     PaymentTypeToJSON,
-} from './';
+} from './PaymentType';
 
 /**
  * 
@@ -160,5 +166,3 @@ export function PaymentToJSON(value?: Payment | null): any {
         'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : (value.paymentTags as Array<any>).map(PaymentTagToJSON)),
     };
 }
-
-

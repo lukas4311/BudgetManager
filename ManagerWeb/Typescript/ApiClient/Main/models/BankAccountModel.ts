@@ -77,5 +77,3 @@ export function BankAccountModelToJSON(value?: BankAccountModel | null): any {
         'userIdentityId': value.userIdentityId,
     };
 }
-
-

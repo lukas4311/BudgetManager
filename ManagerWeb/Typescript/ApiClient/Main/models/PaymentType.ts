@@ -18,7 +18,7 @@ import {
     PaymentFromJSON,
     PaymentFromJSONTyped,
     PaymentToJSON,
-} from './';
+} from './Payment';
 
 /**
  * 
@@ -84,5 +84,3 @@ export function PaymentTypeToJSON(value?: PaymentType | null): any {
         'payments': value.payments === undefined ? undefined : (value.payments === null ? null : (value.payments as Array<any>).map(PaymentToJSON)),
     };
 }
-
-

@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* eslint-disable */
 export * from './AddTagModel';
 export * from './BankAccount';
 export * from './BankAccountModel';

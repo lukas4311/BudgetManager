@@ -13,7 +13,7 @@
  */
 
 
- import * as runtime from '../../runtime';
+import * as runtime from '../../runtime';
 import {
     CryptoTicker,
     CryptoTickerFromJSON,
@@ -48,30 +48,36 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest): Promise<runtime.ApiResponse<number>>;
+    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest): Promise<number>;
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof CryptoApiInterface
-     */
-    cryptosAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
-    /**
-     */
-    cryptosAllGet(): Promise<Array<TradeHistory>>;
+    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number>;
+
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosTickersGetRaw(): Promise<runtime.ApiResponse<CryptoTicker>>;
+    cryptosAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
+
     /**
      */
-    cryptosTickersGet(): Promise<CryptoTicker>;
+    cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTicker>>>;
+
+    /**
+     */
+    cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTicker>>;
+
     /**
      * 
      * @param {string} tradeId 
@@ -80,11 +86,14 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosTradeDetailTradeIdGetRaw(requestParameters: CryptosTradeDetailTradeIdGetRequest): Promise<runtime.ApiResponse<TradeHistory>>;
+    cryptosTradeDetailTradeIdGetRaw(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>>;
+
     /**
      */
-    cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest): Promise<TradeHistory>;
+    cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory>;
+
 }
+
 /**
  * 
  */
@@ -98,102 +107,130 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest): Promise<runtime.ApiResponse<number>> {
+    async cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
             throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
         }
+
         if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
             throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
         }
-        const queryParameters: runtime.HTTPQuery = {};
+
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
+
         return new runtime.TextApiResponse(response) as any;
     }
+
     /**
      */
-    async cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest): Promise<number> {
-        const response = await this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
+    async cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
+
     /**
      */
-    async cryptosAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async cryptosAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/cryptos/all`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
+
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradeHistoryFromJSON));
     }
+
     /**
      */
-    async cryptosAllGet(): Promise<Array<TradeHistory>> {
-        const response = await this.cryptosAllGetRaw();
+    async cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>> {
+        const response = await this.cryptosAllGetRaw(initOverrides);
         return await response.value();
     }
+
     /**
      */
-    async cryptosTickersGetRaw(): Promise<runtime.ApiResponse<CryptoTicker>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTicker>>> {
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/cryptos/tickers`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
-        return new runtime.JSONApiResponse(response, (jsonValue) => CryptoTickerFromJSON(jsonValue));
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CryptoTickerFromJSON));
     }
+
     /**
      */
-    async cryptosTickersGet(): Promise<CryptoTicker> {
-        const response = await this.cryptosTickersGetRaw();
+    async cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTicker>> {
+        const response = await this.cryptosTickersGetRaw(initOverrides);
         return await response.value();
     }
+
     /**
      */
-    async cryptosTradeDetailTradeIdGetRaw(requestParameters: CryptosTradeDetailTradeIdGetRequest): Promise<runtime.ApiResponse<TradeHistory>> {
+    async cryptosTradeDetailTradeIdGetRaw(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>> {
         if (requestParameters.tradeId === null || requestParameters.tradeId === undefined) {
             throw new runtime.RequiredError('tradeId','Required parameter requestParameters.tradeId was null or undefined when calling cryptosTradeDetailTradeIdGet.');
         }
-        const queryParameters: runtime.HTTPQuery = {};
+
+        const queryParameters: any = {};
+
         if (requestParameters.id !== undefined) {
             queryParameters['id'] = requestParameters.id;
         }
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/cryptos/tradeDetail/{tradeId}`.replace(`{${"tradeId"}}`, this.processPathParam(requestParameters.tradeId)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
+
         return new runtime.JSONApiResponse(response, (jsonValue) => TradeHistoryFromJSON(jsonValue));
     }
+
     /**
      */
-    async cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest): Promise<TradeHistory> {
-        const response = await this.cryptosTradeDetailTradeIdGetRaw(requestParameters);
+    async cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory> {
+        const response = await this.cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
+
 }

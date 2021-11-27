@@ -18,7 +18,7 @@ import {
     UserIdentityFromJSON,
     UserIdentityFromJSONTyped,
     UserIdentityToJSON,
-} from './';
+} from './UserIdentity';
 
 /**
  * 
@@ -116,5 +116,3 @@ export function UserDataToJSON(value?: UserData | null): any {
         'email': value.email,
     };
 }
-
-

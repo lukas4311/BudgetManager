@@ -18,7 +18,7 @@ import {
     PaymentTagFromJSON,
     PaymentTagFromJSONTyped,
     PaymentTagToJSON,
-} from './';
+} from './PaymentTag';
 
 /**
  * 
@@ -76,5 +76,3 @@ export function TagToJSON(value?: Tag | null): any {
         'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : (value.paymentTags as Array<any>).map(PaymentTagToJSON)),
     };
 }
-
-

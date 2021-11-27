@@ -18,7 +18,7 @@ import {
     CryptoTradeHistoryFromJSON,
     CryptoTradeHistoryFromJSONTyped,
     CryptoTradeHistoryToJSON,
-} from './';
+} from './CryptoTradeHistory';
 
 /**
  * 
@@ -76,5 +76,3 @@ export function CurrencySymbolToJSON(value?: CurrencySymbol | null): any {
         'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : (value.cryptoTradeHistory as Array<any>).map(CryptoTradeHistoryToJSON)),
     };
 }
-
-

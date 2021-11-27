@@ -1,12 +1,13 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import moment from "moment";
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, CurrencyApi, TradeHistory } from "../../ApiClient/Main";
+import { Configuration, CryptoApi, CryptoApiInterface, CurrencyApi } from "../../ApiClient/Main";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList, IBaseModel } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
+import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -25,6 +26,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private cryptoApi: CryptoApiInterface;
     private currencyApi: CurrencyApi;
     private cryptoTickers: CryptoTicker[];
+    currencies: any[];
     
 
     constructor(props: RouteComponentProps) {

@@ -18,11 +18,13 @@ import {
     PaymentFromJSON,
     PaymentFromJSONTyped,
     PaymentToJSON,
+} from './Payment';
+import {
     Tag,
     TagFromJSON,
     TagFromJSONTyped,
     TagToJSON,
-} from './';
+} from './Tag';
 
 /**
  * 
@@ -96,5 +98,3 @@ export function PaymentTagToJSON(value?: PaymentTag | null): any {
         'tag': TagToJSON(value.tag),
     };
 }
-
-

@@ -18,15 +18,19 @@ import {
     InterestRateFromJSON,
     InterestRateFromJSONTyped,
     InterestRateToJSON,
+} from './InterestRate';
+import {
     Payment,
     PaymentFromJSON,
     PaymentFromJSONTyped,
     PaymentToJSON,
+} from './Payment';
+import {
     UserIdentity,
     UserIdentityFromJSON,
     UserIdentityFromJSONTyped,
     UserIdentityToJSON,
-} from './';
+} from './UserIdentity';
 
 /**
  * 
@@ -116,5 +120,3 @@ export function BankAccountToJSON(value?: BankAccount | null): any {
         'openingBalance': value.openingBalance,
     };
 }
-
-

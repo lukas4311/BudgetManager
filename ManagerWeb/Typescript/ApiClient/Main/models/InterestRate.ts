@@ -18,7 +18,7 @@ import {
     BankAccountFromJSON,
     BankAccountFromJSONTyped,
     BankAccountToJSON,
-} from './';
+} from './BankAccount';
 
 /**
  * 
@@ -108,5 +108,3 @@ export function InterestRateToJSON(value?: InterestRate | null): any {
         'payoutDate': value.payoutDate === undefined ? undefined : (value.payoutDate.toISOString()),
     };
 }
-
-

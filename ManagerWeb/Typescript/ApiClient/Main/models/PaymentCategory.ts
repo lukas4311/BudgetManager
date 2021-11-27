@@ -18,7 +18,7 @@ import {
     PaymentFromJSON,
     PaymentFromJSONTyped,
     PaymentToJSON,
-} from './';
+} from './Payment';
 
 /**
  * 
@@ -92,5 +92,3 @@ export function PaymentCategoryToJSON(value?: PaymentCategory | null): any {
         'icon': value.icon,
     };
 }
-
-

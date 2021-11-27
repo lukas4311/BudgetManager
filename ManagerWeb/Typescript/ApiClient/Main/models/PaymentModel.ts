@@ -141,5 +141,3 @@ export function PaymentModelToJSON(value?: PaymentModel | null): any {
         'tags': value.tags,
     };
 }
-
-

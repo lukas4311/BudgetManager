@@ -18,15 +18,19 @@ import {
     BankAccountFromJSON,
     BankAccountFromJSONTyped,
     BankAccountToJSON,
+} from './BankAccount';
+import {
     CryptoTradeHistory,
     CryptoTradeHistoryFromJSON,
     CryptoTradeHistoryFromJSONTyped,
     CryptoTradeHistoryToJSON,
+} from './CryptoTradeHistory';
+import {
     UserData,
     UserDataFromJSON,
     UserDataFromJSONTyped,
     UserDataToJSON,
-} from './';
+} from './UserData';
 
 /**
  * 
@@ -108,5 +112,3 @@ export function UserIdentityToJSON(value?: UserIdentity | null): any {
         'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : (value.cryptoTradesHistory as Array<any>).map(CryptoTradeHistoryToJSON)),
     };
 }
-
-

@@ -13,11 +13,11 @@
  */
 
 
- import * as runtime from '../../runtime';
+import * as runtime from '../../runtime';
 import {
-    TradeHistory,
-    TradeHistoryFromJSON,
-    TradeHistoryToJSON,
+    CurrencySymbol,
+    CurrencySymbolFromJSON,
+    CurrencySymbolToJSON,
 } from '../models';
 
 /**
@@ -33,11 +33,14 @@ export interface CurrencyApiInterface {
      * @throws {RequiredError}
      * @memberof CurrencyApiInterface
      */
-    currencyAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
+    currencyAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CurrencySymbol>>>;
+
     /**
      */
-    currencyAllGet(): Promise<Array<TradeHistory>>;
+    currencyAllGet(initOverrides?: RequestInit): Promise<Array<CurrencySymbol>>;
+
 }
+
 /**
  * 
  */
@@ -51,24 +54,30 @@ export class CurrencyApi extends runtime.BaseAPI implements CurrencyApiInterface
 
     /**
      */
-    async currencyAllGetRaw(): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
-        const queryParameters: runtime.HTTPQuery = {};
+    async currencyAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CurrencySymbol>>> {
+        const queryParameters: any = {};
+
         const headerParameters: runtime.HTTPHeaders = {};
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
+
         const response = await this.request({
             path: `/currency/all`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradeHistoryFromJSON));
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CurrencySymbolFromJSON));
     }
+
     /**
      */
-    async currencyAllGet(): Promise<Array<TradeHistory>> {
-        const response = await this.currencyAllGetRaw();
+    async currencyAllGet(initOverrides?: RequestInit): Promise<Array<CurrencySymbol>> {
+        const response = await this.currencyAllGetRaw(initOverrides);
         return await response.value();
     }
+
 }

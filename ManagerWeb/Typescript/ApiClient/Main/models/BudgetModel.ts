@@ -93,5 +93,3 @@ export function BudgetModelToJSON(value?: BudgetModel | null): any {
         'userIdentityId': value.userIdentityId,
     };
 }
-
-
