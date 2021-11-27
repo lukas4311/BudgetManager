@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using BudgetManager.Domain.DTOs;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Repository;
-using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +18,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<TradeHistory>> Get()
+        public ActionResult<IEnumerable<CurrencySymbol>> Get()
         {
             return Ok(this.currencySymbolRepository.FindAll());
         }

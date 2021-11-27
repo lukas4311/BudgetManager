@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import moment from "moment";
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
+import { Configuration, CryptoApi, CryptoApiInterface, CurrencyApi, TradeHistory } from "../../ApiClient/Main";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList, IBaseModel } from "../BaseList";
@@ -22,7 +22,10 @@ const theme = createMuiTheme({
 });
 
 export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
-    cryptoApi: CryptoApiInterface;
+    private cryptoApi: CryptoApiInterface;
+    private currencyApi: CurrencyApi;
+    private cryptoTickers: CryptoTicker[];
+    
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -36,10 +39,13 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private async load(): Promise<void> {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
+        this.currencyApi = await apiFactory.getAuthClient(CurrencyApi);
 
         let tradesData: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
+        this.cryptoTickers = await this.cryptoApi.cryptosTickersGet();
+        this.currencies = await this.currencyApi.currencyAllGet();
         this.setState({ trades });
     }
 

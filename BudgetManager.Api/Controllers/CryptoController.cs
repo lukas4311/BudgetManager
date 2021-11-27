@@ -48,6 +48,6 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("tickers")]
-        public ActionResult<CryptoTicker> GetTickers() => Ok(this.cryptoTickerRepository.FindAll());
+        public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(this.cryptoTickerRepository.FindAll());
     }
 }
