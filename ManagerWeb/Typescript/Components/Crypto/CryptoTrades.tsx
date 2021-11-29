@@ -8,6 +8,7 @@ import { BaseList, IBaseModel } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
 import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
+import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -25,9 +26,9 @@ const theme = createMuiTheme({
 export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
     private cryptoApi: CryptoApiInterface;
     private currencyApi: CurrencyApi;
-    private cryptoTickers: CryptoTicker[];
-    currencies: any[];
-    
+    private cryptoTickers: CryptoTickerSelectModel[];
+    private currencies: any[];
+
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -41,13 +42,13 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private async load(): Promise<void> {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.currencyApi = await apiFactory.getAuthClient(CurrencyApi);
+        this.currencyApi = await apiFactory.getClient(CurrencyApi);
 
+        this.cryptoTickers = (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
+        this.currencies = (await this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         let tradesData: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
-        this.cryptoTickers = await this.cryptoApi.cryptosTickersGet();
-        this.currencies = await this.currencyApi.currencyAllGet();
         this.setState({ trades });
     }
 
@@ -62,6 +63,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         model.tradeTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
         model.tradeValue = tradeHistory.tradeValue;
         model.onSave = this.saveTrade;
+        model.currencies = this.currencies;
+        model.cryptoTickers = this.cryptoTickers;
         return model;
     }
 
@@ -108,7 +111,11 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     }
 
     private addNewItem = (): void => {
-        this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: undefined });
+        let model: CryptoTradeViewModel = new CryptoTradeViewModel();
+        model.onSave = this.saveTrade;
+        model.currencies = this.currencies;
+        model.cryptoTickers = this.cryptoTickers;
+        this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
     }
 
     private budgetEdit = async (id: number): Promise<void> => {

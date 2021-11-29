@@ -582,7 +582,7 @@ class BankAccountApi extends runtime.BaseAPI {
     }
     /**
      */
-    bankAccountsAllBalanceToDateGetRaw(requestParameters) {
+    bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.toDate === null || requestParameters.toDate === undefined) {
                 throw new runtime.RequiredError('toDate', 'Required parameter requestParameters.toDate was null or undefined when calling bankAccountsAllBalanceToDateGet.');
@@ -597,21 +597,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankBalanceModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllBalanceToDateGet(requestParameters) {
+    bankAccountsAllBalanceToDateGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters);
+            const response = yield this.bankAccountsAllBalanceToDateGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsAllGetRaw() {
+    bankAccountsAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -623,21 +623,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BankAccountModelFromJSON));
         });
     }
     /**
      */
-    bankAccountsAllGet() {
+    bankAccountsAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsAllGetRaw();
+            const response = yield this.bankAccountsAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters) {
+    bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.bankAccountId === null || requestParameters.bankAccountId === undefined) {
                 throw new runtime.RequiredError('bankAccountId', 'Required parameter requestParameters.bankAccountId was null or undefined when calling bankAccountsBankAccountIdBalanceToDateGet.');
@@ -655,21 +655,21 @@ class BankAccountApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BankBalanceModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    bankAccountsBankAccountIdBalanceToDateGet(requestParameters) {
+    bankAccountsBankAccountIdBalanceToDateGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters);
+            const response = yield this.bankAccountsBankAccountIdBalanceToDateGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    bankAccountsDeleteRaw(requestParameters) {
+    bankAccountsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -683,20 +683,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsDelete(requestParameters) {
+    bankAccountsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsDeleteRaw(requestParameters);
+            yield this.bankAccountsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    bankAccountsPostRaw(requestParameters) {
+    bankAccountsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -710,20 +710,20 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPost(requestParameters) {
+    bankAccountsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPostRaw(requestParameters);
+            yield this.bankAccountsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    bankAccountsPutRaw(requestParameters) {
+    bankAccountsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -737,15 +737,15 @@ class BankAccountApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BankAccountModelToJSON)(requestParameters.bankAccountModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    bankAccountsPut(requestParameters) {
+    bankAccountsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.bankAccountsPutRaw(requestParameters);
+            yield this.bankAccountsPutRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -819,7 +819,7 @@ class BudgetApi extends runtime.BaseAPI {
     }
     /**
      */
-    budgetsActualGetRaw() {
+    budgetsActualGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -831,21 +831,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsActualGet() {
+    budgetsActualGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsActualGetRaw();
+            const response = yield this.budgetsActualGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsAllGetRaw() {
+    budgetsAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -857,21 +857,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.BudgetModelFromJSON));
         });
     }
     /**
      */
-    budgetsAllGet() {
+    budgetsAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsAllGetRaw();
+            const response = yield this.budgetsAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsDeleteRaw(requestParameters) {
+    budgetsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -885,20 +885,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: requestParameters.body,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsDelete(requestParameters) {
+    budgetsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsDeleteRaw(requestParameters);
+            yield this.budgetsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    budgetsGetRaw(requestParameters) {
+    budgetsGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -913,21 +913,21 @@ class BudgetApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.BudgetModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    budgetsGet(requestParameters) {
+    budgetsGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.budgetsGetRaw(requestParameters);
+            const response = yield this.budgetsGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    budgetsPostRaw(requestParameters) {
+    budgetsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -941,20 +941,20 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPost(requestParameters) {
+    budgetsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPostRaw(requestParameters);
+            yield this.budgetsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    budgetsPutRaw(requestParameters) {
+    budgetsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -968,15 +968,15 @@ class BudgetApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.BudgetModelToJSON)(requestParameters.budgetModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    budgetsPut(requestParameters) {
+    budgetsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.budgetsPutRaw(requestParameters);
+            yield this.budgetsPutRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -1050,7 +1050,7 @@ class CryptoApi extends runtime.BaseAPI {
     }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
                 throw new runtime.RequiredError('fromCurrency', 'Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
@@ -1068,21 +1068,21 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.TextApiResponse(response);
         });
     }
     /**
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters) {
+    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters);
+            const response = yield this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosAllGetRaw() {
+    cryptosAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1094,21 +1094,21 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TradeHistoryFromJSON));
         });
     }
     /**
      */
-    cryptosAllGet() {
+    cryptosAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosAllGetRaw();
+            const response = yield this.cryptosAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosTickersGetRaw() {
+    cryptosTickersGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1120,21 +1120,21 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
-            return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.CryptoTickerFromJSON)(jsonValue));
+            }, initOverrides);
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.CryptoTickerFromJSON));
         });
     }
     /**
      */
-    cryptosTickersGet() {
+    cryptosTickersGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosTickersGetRaw();
+            const response = yield this.cryptosTickersGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGetRaw(requestParameters) {
+    cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tradeId === null || requestParameters.tradeId === undefined) {
                 throw new runtime.RequiredError('tradeId', 'Required parameter requestParameters.tradeId was null or undefined when calling cryptosTradeDetailTradeIdGet.');
@@ -1152,15 +1152,15 @@ class CryptoApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.TradeHistoryFromJSON)(jsonValue));
         });
     }
     /**
      */
-    cryptosTradeDetailTradeIdGet(requestParameters) {
+    cryptosTradeDetailTradeIdGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters);
+            const response = yield this.cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
@@ -1235,7 +1235,7 @@ class CurrencyApi extends runtime.BaseAPI {
     }
     /**
      */
-    currencyAllGetRaw() {
+    currencyAllGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1247,15 +1247,15 @@ class CurrencyApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
-            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TradeHistoryFromJSON));
+            }, initOverrides);
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.CurrencySymbolFromJSON));
         });
     }
     /**
      */
-    currencyAllGet() {
+    currencyAllGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.currencyAllGetRaw();
+            const response = yield this.currencyAllGetRaw(initOverrides);
             return yield response.value();
         });
     }
@@ -1330,7 +1330,7 @@ class PaymentApi extends runtime.BaseAPI {
     }
     /**
      */
-    paymentsCategoriesGetRaw() {
+    paymentsCategoriesGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1342,21 +1342,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentCategoryModelFromJSON));
         });
     }
     /**
      */
-    paymentsCategoriesGet() {
+    paymentsCategoriesGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsCategoriesGetRaw();
+            const response = yield this.paymentsCategoriesGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsCloneIdPostRaw(requestParameters) {
+    paymentsCloneIdPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.id === null || requestParameters.id === undefined) {
                 throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling paymentsCloneIdPost.');
@@ -1371,20 +1371,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'POST',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsCloneIdPost(requestParameters) {
+    paymentsCloneIdPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsCloneIdPostRaw(requestParameters);
+            yield this.paymentsCloneIdPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsDeleteRaw(requestParameters) {
+    paymentsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1399,20 +1399,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsDelete(requestParameters) {
+    paymentsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsDeleteRaw(requestParameters);
+            yield this.paymentsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsDetailGetRaw(requestParameters) {
+    paymentsDetailGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.id !== undefined) {
@@ -1427,21 +1427,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => (0, models_1.PaymentModelFromJSON)(jsonValue));
         });
     }
     /**
      */
-    paymentsDetailGet(requestParameters) {
+    paymentsDetailGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsDetailGetRaw(requestParameters);
+            const response = yield this.paymentsDetailGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsGetRaw(requestParameters) {
+    paymentsGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.fromDate !== undefined) {
@@ -1462,21 +1462,21 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentModelFromJSON));
         });
     }
     /**
      */
-    paymentsGet(requestParameters) {
+    paymentsGet(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsGetRaw(requestParameters);
+            const response = yield this.paymentsGetRaw(requestParameters, initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters) {
+    paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
                 throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling paymentsPaymentIdTagTagIdDelete.');
@@ -1494,20 +1494,20 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPaymentIdTagTagIdDelete(requestParameters) {
+    paymentsPaymentIdTagTagIdDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters);
+            yield this.paymentsPaymentIdTagTagIdDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsPostRaw(requestParameters) {
+    paymentsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1521,20 +1521,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPost(requestParameters) {
+    paymentsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPostRaw(requestParameters);
+            yield this.paymentsPostRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsPutRaw(requestParameters) {
+    paymentsPutRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1548,20 +1548,20 @@ class PaymentApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.PaymentModelToJSON)(requestParameters.paymentModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    paymentsPut(requestParameters) {
+    paymentsPut(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.paymentsPutRaw(requestParameters);
+            yield this.paymentsPutRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    paymentsTypesGetRaw() {
+    paymentsTypesGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1573,15 +1573,15 @@ class PaymentApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentTypeModelFromJSON));
         });
     }
     /**
      */
-    paymentsTypesGet() {
+    paymentsTypesGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.paymentsTypesGetRaw();
+            const response = yield this.paymentsTypesGetRaw(initOverrides);
             return yield response.value();
         });
     }
@@ -1656,7 +1656,7 @@ class TagApi extends runtime.BaseAPI {
     }
     /**
      */
-    tagsAllUsedGetRaw() {
+    tagsAllUsedGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1668,21 +1668,21 @@ class TagApi extends runtime.BaseAPI {
                 method: 'GET',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.TagModelFromJSON));
         });
     }
     /**
      */
-    tagsAllUsedGet() {
+    tagsAllUsedGet(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = yield this.tagsAllUsedGetRaw();
+            const response = yield this.tagsAllUsedGetRaw(initOverrides);
             return yield response.value();
         });
     }
     /**
      */
-    tagsDeleteRaw(requestParameters) {
+    tagsDeleteRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             if (requestParameters.tagId !== undefined) {
@@ -1697,20 +1697,20 @@ class TagApi extends runtime.BaseAPI {
                 method: 'DELETE',
                 headers: headerParameters,
                 query: queryParameters,
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsDelete(requestParameters) {
+    tagsDelete(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsDeleteRaw(requestParameters);
+            yield this.tagsDeleteRaw(requestParameters, initOverrides);
         });
     }
     /**
      */
-    tagsPostRaw(requestParameters) {
+    tagsPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
             const headerParameters = {};
@@ -1724,15 +1724,15 @@ class TagApi extends runtime.BaseAPI {
                 headers: headerParameters,
                 query: queryParameters,
                 body: (0, models_1.AddTagModelToJSON)(requestParameters.addTagModel),
-            });
+            }, initOverrides);
             return new runtime.VoidApiResponse(response);
         });
     }
     /**
      */
-    tagsPost(requestParameters) {
+    tagsPost(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.tagsPostRaw(requestParameters);
+            yield this.tagsPostRaw(requestParameters, initOverrides);
         });
     }
 }
@@ -1761,6 +1761,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./BankAccountApi */ "./Typescript/ApiClient/Main/apis/BankAccountApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BudgetApi */ "./Typescript/ApiClient/Main/apis/BudgetApi.ts"), exports);
 __exportStar(__webpack_require__(/*! ./CryptoApi */ "./Typescript/ApiClient/Main/apis/CryptoApi.ts"), exports);
@@ -1887,7 +1889,9 @@ exports.AddTagModelToJSON = AddTagModelToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BankAccountToJSON = exports.BankAccountFromJSONTyped = exports.BankAccountFromJSON = exports.BankAccount = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const InterestRate_1 = __webpack_require__(/*! ./InterestRate */ "./Typescript/ApiClient/Main/models/InterestRate.ts");
+const Payment_1 = __webpack_require__(/*! ./Payment */ "./Typescript/ApiClient/Main/models/Payment.ts");
+const UserIdentity_1 = __webpack_require__(/*! ./UserIdentity */ "./Typescript/ApiClient/Main/models/UserIdentity.ts");
 /**
  *
  * @export
@@ -1908,9 +1912,9 @@ function BankAccountFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
         'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
-        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
-        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
-        'interestRates': !(0, runtime_1.exists)(json, 'interestRates') ? undefined : (json['interestRates'] === null ? null : json['interestRates'].map(_1.InterestRateFromJSON)),
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, UserIdentity_1.UserIdentityFromJSON)(json['userIdentity']),
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(Payment_1.PaymentFromJSON)),
+        'interestRates': !(0, runtime_1.exists)(json, 'interestRates') ? undefined : (json['interestRates'] === null ? null : json['interestRates'].map(InterestRate_1.InterestRateFromJSON)),
         'openingBalance': !(0, runtime_1.exists)(json, 'openingBalance') ? undefined : json['openingBalance'],
     };
 }
@@ -1926,9 +1930,9 @@ function BankAccountToJSON(value) {
         'id': value.id,
         'code': value.code,
         'userIdentityId': value.userIdentityId,
-        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
-        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
-        'interestRates': value.interestRates === undefined ? undefined : (value.interestRates === null ? null : value.interestRates.map(_1.InterestRateToJSON)),
+        'userIdentity': (0, UserIdentity_1.UserIdentityToJSON)(value.userIdentity),
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(Payment_1.PaymentToJSON)),
+        'interestRates': value.interestRates === undefined ? undefined : (value.interestRates === null ? null : value.interestRates.map(InterestRate_1.InterestRateToJSON)),
         'openingBalance': value.openingBalance,
     };
 }
@@ -2168,7 +2172,7 @@ exports.BudgetModelToJSON = BudgetModelToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoTickerToJSON = exports.CryptoTickerFromJSONTyped = exports.CryptoTickerFromJSON = exports.CryptoTicker = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const CryptoTradeHistory_1 = __webpack_require__(/*! ./CryptoTradeHistory */ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts");
 /**
  *
  * @export
@@ -2189,7 +2193,7 @@ function CryptoTickerFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'ticker': !(0, runtime_1.exists)(json, 'ticker') ? undefined : json['ticker'],
         'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
-        'cryptoTradeHistories': !(0, runtime_1.exists)(json, 'cryptoTradeHistories') ? undefined : (json['cryptoTradeHistories'] === null ? null : json['cryptoTradeHistories'].map(_1.CryptoTradeHistoryFromJSON)),
+        'cryptoTradeHistories': !(0, runtime_1.exists)(json, 'cryptoTradeHistories') ? undefined : (json['cryptoTradeHistories'] === null ? null : json['cryptoTradeHistories'].map(CryptoTradeHistory_1.CryptoTradeHistoryFromJSON)),
     };
 }
 exports.CryptoTickerFromJSONTyped = CryptoTickerFromJSONTyped;
@@ -2204,7 +2208,7 @@ function CryptoTickerToJSON(value) {
         'id': value.id,
         'ticker': value.ticker,
         'name': value.name,
-        'cryptoTradeHistories': value.cryptoTradeHistories === undefined ? undefined : (value.cryptoTradeHistories === null ? null : value.cryptoTradeHistories.map(_1.CryptoTradeHistoryToJSON)),
+        'cryptoTradeHistories': value.cryptoTradeHistories === undefined ? undefined : (value.cryptoTradeHistories === null ? null : value.cryptoTradeHistories.map(CryptoTradeHistory_1.CryptoTradeHistoryToJSON)),
     };
 }
 exports.CryptoTickerToJSON = CryptoTickerToJSON;
@@ -2237,7 +2241,9 @@ exports.CryptoTickerToJSON = CryptoTickerToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoTradeHistoryToJSON = exports.CryptoTradeHistoryFromJSONTyped = exports.CryptoTradeHistoryFromJSON = exports.CryptoTradeHistory = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const CryptoTicker_1 = __webpack_require__(/*! ./CryptoTicker */ "./Typescript/ApiClient/Main/models/CryptoTicker.ts");
+const CurrencySymbol_1 = __webpack_require__(/*! ./CurrencySymbol */ "./Typescript/ApiClient/Main/models/CurrencySymbol.ts");
+const UserIdentity_1 = __webpack_require__(/*! ./UserIdentity */ "./Typescript/ApiClient/Main/models/UserIdentity.ts");
 /**
  *
  * @export
@@ -2258,13 +2264,13 @@ function CryptoTradeHistoryFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'tradeTimeStamp': !(0, runtime_1.exists)(json, 'tradeTimeStamp') ? undefined : (new Date(json['tradeTimeStamp'])),
         'cryptoTickerId': !(0, runtime_1.exists)(json, 'cryptoTickerId') ? undefined : json['cryptoTickerId'],
-        'cryptoTicker': !(0, runtime_1.exists)(json, 'cryptoTicker') ? undefined : (0, _1.CryptoTickerFromJSON)(json['cryptoTicker']),
+        'cryptoTicker': !(0, runtime_1.exists)(json, 'cryptoTicker') ? undefined : (0, CryptoTicker_1.CryptoTickerFromJSON)(json['cryptoTicker']),
         'tradeSize': !(0, runtime_1.exists)(json, 'tradeSize') ? undefined : json['tradeSize'],
         'tradeValue': !(0, runtime_1.exists)(json, 'tradeValue') ? undefined : json['tradeValue'],
         'currencySymbolId': !(0, runtime_1.exists)(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
-        'currencySymbol': !(0, runtime_1.exists)(json, 'currencySymbol') ? undefined : (0, _1.CurrencySymbolFromJSON)(json['currencySymbol']),
+        'currencySymbol': !(0, runtime_1.exists)(json, 'currencySymbol') ? undefined : (0, CurrencySymbol_1.CurrencySymbolFromJSON)(json['currencySymbol']),
         'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
-        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, UserIdentity_1.UserIdentityFromJSON)(json['userIdentity']),
     };
 }
 exports.CryptoTradeHistoryFromJSONTyped = CryptoTradeHistoryFromJSONTyped;
@@ -2279,13 +2285,13 @@ function CryptoTradeHistoryToJSON(value) {
         'id': value.id,
         'tradeTimeStamp': value.tradeTimeStamp === undefined ? undefined : (value.tradeTimeStamp.toISOString()),
         'cryptoTickerId': value.cryptoTickerId,
-        'cryptoTicker': (0, _1.CryptoTickerToJSON)(value.cryptoTicker),
+        'cryptoTicker': (0, CryptoTicker_1.CryptoTickerToJSON)(value.cryptoTicker),
         'tradeSize': value.tradeSize,
         'tradeValue': value.tradeValue,
         'currencySymbolId': value.currencySymbolId,
-        'currencySymbol': (0, _1.CurrencySymbolToJSON)(value.currencySymbol),
+        'currencySymbol': (0, CurrencySymbol_1.CurrencySymbolToJSON)(value.currencySymbol),
         'userIdentityId': value.userIdentityId,
-        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
+        'userIdentity': (0, UserIdentity_1.UserIdentityToJSON)(value.userIdentity),
     };
 }
 exports.CryptoTradeHistoryToJSON = CryptoTradeHistoryToJSON;
@@ -2318,7 +2324,7 @@ exports.CryptoTradeHistoryToJSON = CryptoTradeHistoryToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CurrencySymbolToJSON = exports.CurrencySymbolFromJSONTyped = exports.CurrencySymbolFromJSON = exports.CurrencySymbol = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const CryptoTradeHistory_1 = __webpack_require__(/*! ./CryptoTradeHistory */ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts");
 /**
  *
  * @export
@@ -2338,7 +2344,7 @@ function CurrencySymbolFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'symbol': !(0, runtime_1.exists)(json, 'symbol') ? undefined : json['symbol'],
-        'cryptoTradeHistory': !(0, runtime_1.exists)(json, 'cryptoTradeHistory') ? undefined : (json['cryptoTradeHistory'] === null ? null : json['cryptoTradeHistory'].map(_1.CryptoTradeHistoryFromJSON)),
+        'cryptoTradeHistory': !(0, runtime_1.exists)(json, 'cryptoTradeHistory') ? undefined : (json['cryptoTradeHistory'] === null ? null : json['cryptoTradeHistory'].map(CryptoTradeHistory_1.CryptoTradeHistoryFromJSON)),
     };
 }
 exports.CurrencySymbolFromJSONTyped = CurrencySymbolFromJSONTyped;
@@ -2352,7 +2358,7 @@ function CurrencySymbolToJSON(value) {
     return {
         'id': value.id,
         'symbol': value.symbol,
-        'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : value.cryptoTradeHistory.map(_1.CryptoTradeHistoryToJSON)),
+        'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : value.cryptoTradeHistory.map(CryptoTradeHistory_1.CryptoTradeHistoryToJSON)),
     };
 }
 exports.CurrencySymbolToJSON = CurrencySymbolToJSON;
@@ -2385,7 +2391,7 @@ exports.CurrencySymbolToJSON = CurrencySymbolToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InterestRateToJSON = exports.InterestRateFromJSONTyped = exports.InterestRateFromJSON = exports.InterestRate = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const BankAccount_1 = __webpack_require__(/*! ./BankAccount */ "./Typescript/ApiClient/Main/models/BankAccount.ts");
 /**
  *
  * @export
@@ -2408,7 +2414,7 @@ function InterestRateFromJSONTyped(json, ignoreDiscriminator) {
         'rangeTo': !(0, runtime_1.exists)(json, 'rangeTo') ? undefined : json['rangeTo'],
         'value': !(0, runtime_1.exists)(json, 'value') ? undefined : json['value'],
         'bankAccountId': !(0, runtime_1.exists)(json, 'bankAccountId') ? undefined : json['bankAccountId'],
-        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, _1.BankAccountFromJSON)(json['bankAccount']),
+        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, BankAccount_1.BankAccountFromJSON)(json['bankAccount']),
         'payoutDate': !(0, runtime_1.exists)(json, 'payoutDate') ? undefined : (new Date(json['payoutDate'])),
     };
 }
@@ -2426,7 +2432,7 @@ function InterestRateToJSON(value) {
         'rangeTo': value.rangeTo,
         'value': value.value,
         'bankAccountId': value.bankAccountId,
-        'bankAccount': (0, _1.BankAccountToJSON)(value.bankAccount),
+        'bankAccount': (0, BankAccount_1.BankAccountToJSON)(value.bankAccount),
         'payoutDate': value.payoutDate === undefined ? undefined : (value.payoutDate.toISOString()),
     };
 }
@@ -2460,7 +2466,10 @@ exports.InterestRateToJSON = InterestRateToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentToJSON = exports.PaymentFromJSONTyped = exports.PaymentFromJSON = exports.Payment = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const BankAccount_1 = __webpack_require__(/*! ./BankAccount */ "./Typescript/ApiClient/Main/models/BankAccount.ts");
+const PaymentCategory_1 = __webpack_require__(/*! ./PaymentCategory */ "./Typescript/ApiClient/Main/models/PaymentCategory.ts");
+const PaymentTag_1 = __webpack_require__(/*! ./PaymentTag */ "./Typescript/ApiClient/Main/models/PaymentTag.ts");
+const PaymentType_1 = __webpack_require__(/*! ./PaymentType */ "./Typescript/ApiClient/Main/models/PaymentType.ts");
 /**
  *
  * @export
@@ -2484,12 +2493,12 @@ function PaymentFromJSONTyped(json, ignoreDiscriminator) {
         'description': !(0, runtime_1.exists)(json, 'description') ? undefined : json['description'],
         'date': !(0, runtime_1.exists)(json, 'date') ? undefined : (new Date(json['date'])),
         'bankAccountId': !(0, runtime_1.exists)(json, 'bankAccountId') ? undefined : json['bankAccountId'],
-        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, _1.BankAccountFromJSON)(json['bankAccount']),
+        'bankAccount': !(0, runtime_1.exists)(json, 'bankAccount') ? undefined : (0, BankAccount_1.BankAccountFromJSON)(json['bankAccount']),
         'paymentTypeId': !(0, runtime_1.exists)(json, 'paymentTypeId') ? undefined : json['paymentTypeId'],
-        'paymentType': !(0, runtime_1.exists)(json, 'paymentType') ? undefined : (0, _1.PaymentTypeFromJSON)(json['paymentType']),
+        'paymentType': !(0, runtime_1.exists)(json, 'paymentType') ? undefined : (0, PaymentType_1.PaymentTypeFromJSON)(json['paymentType']),
         'paymentCategoryId': !(0, runtime_1.exists)(json, 'paymentCategoryId') ? undefined : json['paymentCategoryId'],
-        'paymentCategory': !(0, runtime_1.exists)(json, 'paymentCategory') ? undefined : (0, _1.PaymentCategoryFromJSON)(json['paymentCategory']),
-        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(_1.PaymentTagFromJSON)),
+        'paymentCategory': !(0, runtime_1.exists)(json, 'paymentCategory') ? undefined : (0, PaymentCategory_1.PaymentCategoryFromJSON)(json['paymentCategory']),
+        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(PaymentTag_1.PaymentTagFromJSON)),
     };
 }
 exports.PaymentFromJSONTyped = PaymentFromJSONTyped;
@@ -2507,12 +2516,12 @@ function PaymentToJSON(value) {
         'description': value.description,
         'date': value.date === undefined ? undefined : (value.date.toISOString()),
         'bankAccountId': value.bankAccountId,
-        'bankAccount': (0, _1.BankAccountToJSON)(value.bankAccount),
+        'bankAccount': (0, BankAccount_1.BankAccountToJSON)(value.bankAccount),
         'paymentTypeId': value.paymentTypeId,
-        'paymentType': (0, _1.PaymentTypeToJSON)(value.paymentType),
+        'paymentType': (0, PaymentType_1.PaymentTypeToJSON)(value.paymentType),
         'paymentCategoryId': value.paymentCategoryId,
-        'paymentCategory': (0, _1.PaymentCategoryToJSON)(value.paymentCategory),
-        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(_1.PaymentTagToJSON)),
+        'paymentCategory': (0, PaymentCategory_1.PaymentCategoryToJSON)(value.paymentCategory),
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(PaymentTag_1.PaymentTagToJSON)),
     };
 }
 exports.PaymentToJSON = PaymentToJSON;
@@ -2545,7 +2554,7 @@ exports.PaymentToJSON = PaymentToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentCategoryToJSON = exports.PaymentCategoryFromJSONTyped = exports.PaymentCategoryFromJSON = exports.PaymentCategory = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const Payment_1 = __webpack_require__(/*! ./Payment */ "./Typescript/ApiClient/Main/models/Payment.ts");
 /**
  *
  * @export
@@ -2566,7 +2575,7 @@ function PaymentCategoryFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
         'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
-        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(Payment_1.PaymentFromJSON)),
         'icon': !(0, runtime_1.exists)(json, 'icon') ? undefined : json['icon'],
     };
 }
@@ -2582,7 +2591,7 @@ function PaymentCategoryToJSON(value) {
         'id': value.id,
         'code': value.code,
         'name': value.name,
-        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(Payment_1.PaymentToJSON)),
         'icon': value.icon,
     };
 }
@@ -2766,7 +2775,8 @@ exports.PaymentModelToJSON = PaymentModelToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentTagToJSON = exports.PaymentTagFromJSONTyped = exports.PaymentTagFromJSON = exports.PaymentTag = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const Payment_1 = __webpack_require__(/*! ./Payment */ "./Typescript/ApiClient/Main/models/Payment.ts");
+const Tag_1 = __webpack_require__(/*! ./Tag */ "./Typescript/ApiClient/Main/models/Tag.ts");
 /**
  *
  * @export
@@ -2786,9 +2796,9 @@ function PaymentTagFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'paymentId': !(0, runtime_1.exists)(json, 'paymentId') ? undefined : json['paymentId'],
-        'payment': !(0, runtime_1.exists)(json, 'payment') ? undefined : (0, _1.PaymentFromJSON)(json['payment']),
+        'payment': !(0, runtime_1.exists)(json, 'payment') ? undefined : (0, Payment_1.PaymentFromJSON)(json['payment']),
         'tagId': !(0, runtime_1.exists)(json, 'tagId') ? undefined : json['tagId'],
-        'tag': !(0, runtime_1.exists)(json, 'tag') ? undefined : (0, _1.TagFromJSON)(json['tag']),
+        'tag': !(0, runtime_1.exists)(json, 'tag') ? undefined : (0, Tag_1.TagFromJSON)(json['tag']),
     };
 }
 exports.PaymentTagFromJSONTyped = PaymentTagFromJSONTyped;
@@ -2802,9 +2812,9 @@ function PaymentTagToJSON(value) {
     return {
         'id': value.id,
         'paymentId': value.paymentId,
-        'payment': (0, _1.PaymentToJSON)(value.payment),
+        'payment': (0, Payment_1.PaymentToJSON)(value.payment),
         'tagId': value.tagId,
-        'tag': (0, _1.TagToJSON)(value.tag),
+        'tag': (0, Tag_1.TagToJSON)(value.tag),
     };
 }
 exports.PaymentTagToJSON = PaymentTagToJSON;
@@ -2837,7 +2847,7 @@ exports.PaymentTagToJSON = PaymentTagToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentTypeToJSON = exports.PaymentTypeFromJSONTyped = exports.PaymentTypeFromJSON = exports.PaymentType = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const Payment_1 = __webpack_require__(/*! ./Payment */ "./Typescript/ApiClient/Main/models/Payment.ts");
 /**
  *
  * @export
@@ -2858,7 +2868,7 @@ function PaymentTypeFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
         'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
-        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(_1.PaymentFromJSON)),
+        'payments': !(0, runtime_1.exists)(json, 'payments') ? undefined : (json['payments'] === null ? null : json['payments'].map(Payment_1.PaymentFromJSON)),
     };
 }
 exports.PaymentTypeFromJSONTyped = PaymentTypeFromJSONTyped;
@@ -2873,7 +2883,7 @@ function PaymentTypeToJSON(value) {
         'id': value.id,
         'code': value.code,
         'name': value.name,
-        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(_1.PaymentToJSON)),
+        'payments': value.payments === undefined ? undefined : (value.payments === null ? null : value.payments.map(Payment_1.PaymentToJSON)),
     };
 }
 exports.PaymentTypeToJSON = PaymentTypeToJSON;
@@ -2970,7 +2980,7 @@ exports.PaymentTypeModelToJSON = PaymentTypeModelToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TagToJSON = exports.TagFromJSONTyped = exports.TagFromJSON = exports.Tag = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const PaymentTag_1 = __webpack_require__(/*! ./PaymentTag */ "./Typescript/ApiClient/Main/models/PaymentTag.ts");
 /**
  *
  * @export
@@ -2990,7 +3000,7 @@ function TagFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'code': !(0, runtime_1.exists)(json, 'code') ? undefined : json['code'],
-        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(_1.PaymentTagFromJSON)),
+        'paymentTags': !(0, runtime_1.exists)(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : json['paymentTags'].map(PaymentTag_1.PaymentTagFromJSON)),
     };
 }
 exports.TagFromJSONTyped = TagFromJSONTyped;
@@ -3004,7 +3014,7 @@ function TagToJSON(value) {
     return {
         'id': value.id,
         'code': value.code,
-        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(_1.PaymentTagToJSON)),
+        'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : value.paymentTags.map(PaymentTag_1.PaymentTagToJSON)),
     };
 }
 exports.TagToJSON = TagToJSON;
@@ -3177,7 +3187,7 @@ exports.TradeHistoryToJSON = TradeHistoryToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserDataToJSON = exports.UserDataFromJSONTyped = exports.UserDataFromJSON = exports.UserData = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const UserIdentity_1 = __webpack_require__(/*! ./UserIdentity */ "./Typescript/ApiClient/Main/models/UserIdentity.ts");
 /**
  *
  * @export
@@ -3197,7 +3207,7 @@ function UserDataFromJSONTyped(json, ignoreDiscriminator) {
     return {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
-        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, _1.UserIdentityFromJSON)(json['userIdentity']),
+        'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, UserIdentity_1.UserIdentityFromJSON)(json['userIdentity']),
         'firstName': !(0, runtime_1.exists)(json, 'firstName') ? undefined : json['firstName'],
         'lastName': !(0, runtime_1.exists)(json, 'lastName') ? undefined : json['lastName'],
         'isLocked': !(0, runtime_1.exists)(json, 'isLocked') ? undefined : json['isLocked'],
@@ -3216,7 +3226,7 @@ function UserDataToJSON(value) {
     return {
         'id': value.id,
         'userIdentityId': value.userIdentityId,
-        'userIdentity': (0, _1.UserIdentityToJSON)(value.userIdentity),
+        'userIdentity': (0, UserIdentity_1.UserIdentityToJSON)(value.userIdentity),
         'firstName': value.firstName,
         'lastName': value.lastName,
         'isLocked': value.isLocked,
@@ -3254,7 +3264,9 @@ exports.UserDataToJSON = UserDataToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserIdentityToJSON = exports.UserIdentityFromJSONTyped = exports.UserIdentityFromJSON = exports.UserIdentity = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
-const _1 = __webpack_require__(/*! ./ */ "./Typescript/ApiClient/Main/models/index.ts");
+const BankAccount_1 = __webpack_require__(/*! ./BankAccount */ "./Typescript/ApiClient/Main/models/BankAccount.ts");
+const CryptoTradeHistory_1 = __webpack_require__(/*! ./CryptoTradeHistory */ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts");
+const UserData_1 = __webpack_require__(/*! ./UserData */ "./Typescript/ApiClient/Main/models/UserData.ts");
 /**
  *
  * @export
@@ -3275,9 +3287,9 @@ function UserIdentityFromJSONTyped(json, ignoreDiscriminator) {
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'login': !(0, runtime_1.exists)(json, 'login') ? undefined : json['login'],
         'passwordHash': !(0, runtime_1.exists)(json, 'passwordHash') ? undefined : json['passwordHash'],
-        'userData': !(0, runtime_1.exists)(json, 'userData') ? undefined : (0, _1.UserDataFromJSON)(json['userData']),
-        'bankAccounts': !(0, runtime_1.exists)(json, 'bankAccounts') ? undefined : (json['bankAccounts'] === null ? null : json['bankAccounts'].map(_1.BankAccountFromJSON)),
-        'cryptoTradesHistory': !(0, runtime_1.exists)(json, 'cryptoTradesHistory') ? undefined : (json['cryptoTradesHistory'] === null ? null : json['cryptoTradesHistory'].map(_1.CryptoTradeHistoryFromJSON)),
+        'userData': !(0, runtime_1.exists)(json, 'userData') ? undefined : (0, UserData_1.UserDataFromJSON)(json['userData']),
+        'bankAccounts': !(0, runtime_1.exists)(json, 'bankAccounts') ? undefined : (json['bankAccounts'] === null ? null : json['bankAccounts'].map(BankAccount_1.BankAccountFromJSON)),
+        'cryptoTradesHistory': !(0, runtime_1.exists)(json, 'cryptoTradesHistory') ? undefined : (json['cryptoTradesHistory'] === null ? null : json['cryptoTradesHistory'].map(CryptoTradeHistory_1.CryptoTradeHistoryFromJSON)),
     };
 }
 exports.UserIdentityFromJSONTyped = UserIdentityFromJSONTyped;
@@ -3292,9 +3304,9 @@ function UserIdentityToJSON(value) {
         'id': value.id,
         'login': value.login,
         'passwordHash': value.passwordHash,
-        'userData': (0, _1.UserDataToJSON)(value.userData),
-        'bankAccounts': value.bankAccounts === undefined ? undefined : (value.bankAccounts === null ? null : value.bankAccounts.map(_1.BankAccountToJSON)),
-        'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : value.cryptoTradesHistory.map(_1.CryptoTradeHistoryToJSON)),
+        'userData': (0, UserData_1.UserDataToJSON)(value.userData),
+        'bankAccounts': value.bankAccounts === undefined ? undefined : (value.bankAccounts === null ? null : value.bankAccounts.map(BankAccount_1.BankAccountToJSON)),
+        'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : value.cryptoTradesHistory.map(CryptoTradeHistory_1.CryptoTradeHistoryToJSON)),
     };
 }
 exports.UserIdentityToJSON = UserIdentityToJSON;
@@ -3322,6 +3334,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
 __exportStar(__webpack_require__(/*! ./AddTagModel */ "./Typescript/ApiClient/Main/models/AddTagModel.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankAccount */ "./Typescript/ApiClient/Main/models/BankAccount.ts"), exports);
 __exportStar(__webpack_require__(/*! ./BankAccountModel */ "./Typescript/ApiClient/Main/models/BankAccountModel.ts"), exports);
@@ -4561,16 +4575,32 @@ const CryptoTradeForm = (props) => {
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
-            React.createElement("div", { className: "col-span-2" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: props.tradeTimeStamp, control: control })),
-            React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Crypto ticker", type: "text" }, field, { className: "place-self-end" })), name: "cryptoTicker", control: control })),
-            React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Velikost tradu", type: "text" }, field, { className: "place-self-end" })), name: "tradeSize", control: control })),
-            React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Hodnota tradu", type: "text" }, field, { className: "place-self-end" })), name: "tradeValue", control: control })),
-            React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Zdrojov\u00E1 m\u011Bna tradu", type: "text" }, field, { className: "place-self-end" })), name: "currencySymbol", control: control }))),
+            React.createElement("div", { className: "col-span-2 w-1/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: props.tradeTimeStamp, control: control })),
+            React.createElement("div", { className: "w-2/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return React.createElement(core_1.FormControl, { className: "w-full" },
+                            React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Crypto ticker"),
+                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", defaultValue: field.value }), (_a = props.cryptoTickers) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    React.createElement("span", null, p.ticker));
+                            })));
+                    }, name: "cryptoTickerId", control: control })),
+            React.createElement("div", { className: "w-2/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Velikost tradu", type: "text" }, field, { className: "place-self-end w-full" })), name: "tradeSize", control: control })),
+            React.createElement("div", { className: "w-2/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Hodnota tradu", type: "text" }, field, { className: "place-self-end w-full" })), name: "tradeValue", control: control })),
+            React.createElement("div", { className: "w-2/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return React.createElement(core_1.FormControl, { className: "w-full" },
+                            React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Zdrojov\u00E1 m\u011Bna tradu"),
+                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", defaultValue: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    React.createElement("span", null, p.ticker));
+                            })));
+                    }, name: "currencySymbolId", control: control }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.CryptoTradeForm = CryptoTradeForm;
@@ -4629,6 +4659,8 @@ class CryptoTrades extends react_1.default.Component {
             model.tradeTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
             model.tradeValue = tradeHistory.tradeValue;
             model.onSave = this.saveTrade;
+            model.currencies = this.currencies;
+            model.cryptoTickers = this.cryptoTickers;
             return model;
         };
         this.saveTrade = (data) => {
@@ -4662,7 +4694,11 @@ class CryptoTrades extends react_1.default.Component {
             return react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         };
         this.addNewItem = () => {
-            this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: undefined });
+            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
+            model.onSave = this.saveTrade;
+            model.currencies = this.currencies;
+            model.cryptoTickers = this.cryptoTickers;
+            this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
         };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
@@ -4677,6 +4713,9 @@ class CryptoTrades extends react_1.default.Component {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
+            this.currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
+            this.cryptoTickers = (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
+            this.currencies = (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             let tradesData = yield this.cryptoApi.cryptosAllGet();
             let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
             trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
@@ -4873,7 +4912,7 @@ class PaymentForm extends React.Component {
         this.processPaymentCategoryData = (data) => this.setState({ paymentCategoryId: data[0].id, paymentCategories: data });
         this.processPaymentData = (data) => {
             this.setState({
-                name: data.name, amount: data.amount, date: data.date, description: data.description || '',
+                name: data.name, amount: data.amount, date: (0, moment_1.default)(data.date).format("YYYY-MM-DD"), description: data.description || '',
                 paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
             });
         };
@@ -4924,7 +4963,7 @@ class PaymentForm extends React.Component {
         this.changeCategory = (e) => this.setState({ paymentCategoryId: parseInt(e.target.value) });
         this.tagsChange = (tags) => this.setState({ tags: tags });
         this.state = {
-            name: '', amount: 0, date: (0, moment_1.default)(Date.now()).toDate(), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1,
+            name: '', amount: 0, date: (0, moment_1.default)(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1,
             paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId,
             disabledConfirm: false, errorMessage: undefined, tags: []
         };
@@ -4974,9 +5013,7 @@ class PaymentForm extends React.Component {
                 React.createElement("div", { className: "flex mt-4" },
                     React.createElement("div", { className: "w-1/2" },
                         React.createElement("div", { className: "relative inline-block float-left ml-6 w-2/3" },
-                            React.createElement(core_1.TextField, { label: "Datum", type: "date", name: "date", className: "w-full", value: this.state.date, onChange: (e) => this.handleChange(e, "date", true), InputLabelProps: {
-                                    shrink: true,
-                                } })),
+                            React.createElement(core_1.TextField, { label: "Datum", type: "date", name: "date", className: "w-full", value: this.state.date, onChange: (e) => this.handleChange(e, "date", true), InputLabelProps: { shrink: true } })),
                         this.generateErrorMessageIfError("date"))),
                 React.createElement("div", { className: "flex my-4" },
                     React.createElement("div", { className: "w-full" },

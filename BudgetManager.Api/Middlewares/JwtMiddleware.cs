@@ -82,7 +82,7 @@ namespace BudgetManager.Api.Middlewares
                 UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
                 this.SignIn(context, user.userName, user.userId);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }

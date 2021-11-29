@@ -3,7 +3,7 @@ import DataLoader from '../../Services/DataLoader'
 import { IPaymentModel } from '../../Model/IPaymentModel';
 import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
-import {  FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import { IconsData } from '../../Enums/IconsEnum';
 import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentModel } from '../../ApiClient/Main';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
@@ -23,8 +23,8 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     constructor(props: IPaymentFormProps) {
         super(props);
         this.state = {
-            name: '', amount: 0, date: moment(Date.now()).toDate(), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1, 
-            paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId, 
+            name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1,
+            paymentTypes: [], paymentCategoryId: -1, paymentCategories: [], bankAccountId: this.props.bankAccountId, id: this.props.paymentId,
             disabledConfirm: false, errorMessage: undefined, tags: []
         };
     }
@@ -36,7 +36,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     private processPaymentData = (data: PaymentModel) => {
         this.setState({
-            name: data.name, amount: data.amount, date: data.date, description: data.description || '',
+            name: data.name, amount: data.amount, date: moment(data.date).format("YYYY-MM-DD"), description: data.description || '',
             paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
         })
     }
@@ -44,14 +44,14 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     public async componentDidMount() {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.paymentApi = await apiFactory.getClient(PaymentApi);
-        
+
         const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
         const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
         this.processPaymentTypesData(types);
         this.processPaymentCategoryData(categories);
 
         if (this.state.id != null) {
-            let paymentResponse = await this.paymentApi.paymentsDetailGet({id: this.state.id});
+            let paymentResponse = await this.paymentApi.paymentsDetailGet({ id: this.state.id });
             this.processPaymentData(paymentResponse);
         }
     }
@@ -116,7 +116,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     private changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) =>
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
 
-    private tagsChange = (tags: string[]) => 
+    private tagsChange = (tags: string[]) =>
         this.setState({ tags: tags });
 
     public render() {
@@ -176,9 +176,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
                                 <TextField label="Datum" type="date" name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    InputLabelProps={{ shrink: true }}
                                 />
                             </div>
                             {this.generateErrorMessageIfError("date")}
