@@ -76,11 +76,33 @@ namespace BudgetManager.Services
             this.cryptoTradeHistoryRepository.Update(tradeHistoryRecord);
         }
 
+        public void Add(TradeHistory tradeHistory)
+        {
+            this.cryptoTradeHistoryRepository.Create(new CryptoTradeHistory()
+            {
+                TradeTimeStamp = tradeHistory.TradeTimeStamp,
+                CryptoTickerId = tradeHistory.CryptoTickerId,
+                CurrencySymbolId = tradeHistory.CurrencySymbolId,
+                TradeSize = tradeHistory.TradeSize,
+                TradeValue = tradeHistory.TradeValue,
+                UserIdentityId = tradeHistory.UserIdentityId
+            });
+
+            this.cryptoTradeHistoryRepository.Save();
+        }
+
+        public void Delete(int id)
+        {
+            CryptoTradeHistory budget = this.cryptoTradeHistoryRepository.FindByCondition(a => a.Id == id).Single();
+            this.cryptoTradeHistoryRepository.Delete(budget);
+            this.cryptoTradeHistoryRepository.Save();
+        }
+
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
             List<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
-            return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
+            return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
     }
 }

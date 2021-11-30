@@ -43,7 +43,7 @@ const CryptoTradeForm = (props: CryptoTradeViewModel) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
-                                defaultValue={field.value}
+                                value={field.value}
                             >
                                 {props.cryptoTickers?.map(p => {
                                     return <MenuItem key={p.id} value={p.id}>
@@ -70,7 +70,7 @@ const CryptoTradeForm = (props: CryptoTradeViewModel) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
-                                defaultValue={field.value}
+                                value={field.value}
                             >
                                 {props.currencies?.map(p => {
                                     return <MenuItem key={p.id} value={p.id}>

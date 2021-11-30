@@ -30,6 +30,13 @@ namespace BudgetManager.Api.Controllers
             return Ok(this.cryptoService.GetByUser(this.GetUserId()));
         }
 
+        [HttpPost]
+        public IActionResult Add([FromBody] TradeHistory tradeHistory)
+        {
+            this.cryptoService.Add(tradeHistory);
+            return Ok();
+        }
+
         [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {

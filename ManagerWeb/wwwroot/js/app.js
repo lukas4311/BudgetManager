@@ -4582,7 +4582,7 @@ const CryptoTradeForm = (props) => {
                         var _a;
                         return React.createElement(core_1.FormControl, { className: "w-full" },
                             React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Crypto ticker"),
-                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", defaultValue: field.value }), (_a = props.cryptoTickers) === null || _a === void 0 ? void 0 : _a.map(p => {
+                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.cryptoTickers) === null || _a === void 0 ? void 0 : _a.map(p => {
                                 return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
                                     React.createElement("span", null, p.ticker));
                             })));
@@ -4596,7 +4596,7 @@ const CryptoTradeForm = (props) => {
                         var _a;
                         return React.createElement(core_1.FormControl, { className: "w-full" },
                             React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Zdrojov\u00E1 m\u011Bna tradu"),
-                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", defaultValue: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
+                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
                                 return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
                                     React.createElement("span", null, p.ticker));
                             })));
@@ -4664,14 +4664,9 @@ class CryptoTrades extends react_1.default.Component {
             return model;
         };
         this.saveTrade = (data) => {
-            console.log(`Saved ${data}`);
         };
-        this.handleClickOpen = (tradeHistory) => {
-            this.setState({ selectedTrade: tradeHistory, openedForm: true });
-        };
-        this.handleClose = () => {
-            this.setState({ openedForm: false });
-        };
+        this.handleClickOpen = (tradeHistory) => this.setState({ selectedTrade: tradeHistory, openedForm: true });
+        this.handleClose = () => this.setState({ openedForm: false });
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, "Ticker"),
@@ -4690,14 +4685,17 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, this.renderTradeBadge(p.tradeValue))));
         };
-        this.renderTradeBadge = (tradeValue) => {
-            return react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
-        };
+        this.renderTradeBadge = (tradeValue) => react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         this.addNewItem = () => {
             let model = new CryptoTradeForm_1.CryptoTradeViewModel();
             model.onSave = this.saveTrade;
             model.currencies = this.currencies;
             model.cryptoTickers = this.cryptoTickers;
+            model.cryptoTickerId = this.cryptoTickers[0].id;
+            model.currencySymbolId = this.currencies[0].id;
+            model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
+            model.tradeSize = 0;
+            model.tradeValue = 0;
             this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
         };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {

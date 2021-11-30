@@ -69,16 +69,12 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     }
 
     private saveTrade = (data: CryptoTradeViewModel): void => {
-        console.log(`Saved ${data}`)
+        
     }
 
-    private handleClickOpen = (tradeHistory: CryptoTradeViewModel) => {
-        this.setState({ selectedTrade: tradeHistory, openedForm: true });
-    };
+    private handleClickOpen = (tradeHistory: CryptoTradeViewModel) => this.setState({ selectedTrade: tradeHistory, openedForm: true });
 
-    private handleClose = () => {
-        this.setState({ openedForm: false });
-    };
+    private handleClose = () => this.setState({ openedForm: false });
 
     private renderHeader = (): JSX.Element => {
         return (
@@ -106,15 +102,20 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 
-    private renderTradeBadge = (tradeValue: number) => {
-        return <span className={(tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{tradeValue > 0 ? "SELL" : "BUY"}</span>
-    }
+    private renderTradeBadge = (tradeValue: number) => 
+        <span className={(tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{tradeValue > 0 ? "SELL" : "BUY"}</span>
+    
 
     private addNewItem = (): void => {
         let model: CryptoTradeViewModel = new CryptoTradeViewModel();
         model.onSave = this.saveTrade;
         model.currencies = this.currencies;
         model.cryptoTickers = this.cryptoTickers;
+        model.cryptoTickerId = this.cryptoTickers[0].id;
+        model.currencySymbolId = this.currencies[0].id;
+        model.tradeTimeStamp = moment().format("YYYY-MM-DD");
+        model.tradeSize = 0;
+        model.tradeValue = 0;
         this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
     }
 

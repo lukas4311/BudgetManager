@@ -19,5 +19,7 @@ namespace BudgetManager.Domain.DTOs
         public int CurrencySymbolId { get; set; }
 
         public string CurrencySymbol { get; set; }
+
+        public int UserIdentityId { get; set; }
     }
 }
