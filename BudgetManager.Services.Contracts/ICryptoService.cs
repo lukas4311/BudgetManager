@@ -15,5 +15,11 @@ namespace BudgetManager.Services.Contracts
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
 
         void Update(TradeHistory tradeHistory);
+
+        void Add(TradeHistory tradeHistory);
+
+        void Delete(int id);
+
+        bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId);
     }
 }

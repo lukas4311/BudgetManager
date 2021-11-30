@@ -76,6 +76,12 @@ namespace BudgetManager.Services
             this.cryptoTradeHistoryRepository.Update(tradeHistoryRecord);
         }
 
+        public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)
+        {
+            CryptoTradeHistory cryptoTrade = this.cryptoTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
+            return cryptoTrade.UserIdentityId == userId;
+        }
+
         public void Add(TradeHistory tradeHistory)
         {
             this.cryptoTradeHistoryRepository.Create(new CryptoTradeHistory()

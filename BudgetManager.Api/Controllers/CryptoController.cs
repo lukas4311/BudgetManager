@@ -33,7 +33,26 @@ namespace BudgetManager.Api.Controllers
         [HttpPost]
         public IActionResult Add([FromBody] TradeHistory tradeHistory)
         {
+            tradeHistory.UserIdentityId = this.GetUserId();
             this.cryptoService.Add(tradeHistory);
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult Update([FromBody] TradeHistory tradeHistory)
+        {
+            tradeHistory.UserIdentityId = this.GetUserId();
+            this.cryptoService.Update(tradeHistory);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete([FromBody] int id)
+        {
+            if (!this.cryptoService.UserHasRightToCryptoTrade(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.cryptoService.Delete(id);
             return Ok();
         }
 
