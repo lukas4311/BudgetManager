@@ -19,22 +19,22 @@ namespace BudgetManager.TestingConsole
 
 
             // download fear and greed
-            Console.WriteLine("Donwloading fear and greed");
+            Console.WriteLine("\nDonwloading fear and greed");
             await processManager.DownloadFearAndGreed(); /*-DONE*/
             Console.WriteLine("Donwloading fear and greed - DONE");
 
             // download gold data
-            Console.WriteLine("Donwloading gold");
+            Console.WriteLine("\nDonwloading gold");
             await processManager.SaveGoldDataToDb(); /*-DONE*/
             Console.WriteLine("Donwloading gold - DONE");
 
             // download hash rate
-            Console.WriteLine("Donwloading hash rate");
+            Console.WriteLine("\nDonwloading hash rate");
             await processManager.DownloadHashRate(); /*-DONE*/
             Console.WriteLine("Donwloading hash rate - DONE");
 
             // download crypto data
-            Console.WriteLine("Donwloading crypto");
+            Console.WriteLine("\nDonwloading crypto");
             await processManager.DownloadCryptoHistory(CryptoTicker.BTCUSD);
             Console.WriteLine("BTC done");
             await processManager.DownloadCryptoHistory(CryptoTicker.ETHUSD);

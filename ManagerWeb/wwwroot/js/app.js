@@ -3649,7 +3649,6 @@ const Crypto_1 = __importDefault(__webpack_require__(/*! ./Crypto */ "./Typescri
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
 const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ./Components/Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
-const IconsEnum_1 = __webpack_require__(/*! ./Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const Auth_1 = __importDefault(__webpack_require__(/*! ./Components/Auth/Auth */ "./Typescript/Components/Auth/Auth.tsx"));
 const PrivateRoute_1 = __importDefault(__webpack_require__(/*! ./Utils/PrivateRoute */ "./Typescript/Utils/PrivateRoute.tsx"));
@@ -3657,9 +3656,9 @@ const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Componen
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
-            react_1.default.createElement("header", { className: "bg-mainDarkBlue flex flex-row text-white p-4 px-12" },
+            react_1.default.createElement("header", { className: "bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12" },
                 react_1.default.createElement("div", null,
-                    new IconsEnum_1.IconsData().logo,
+                    react_1.default.createElement("img", { src: "./images/logo.png", alt: "logo", className: "w-2/12 inline-block" }),
                     react_1.default.createElement("nav", { id: "navMenu" },
                         react_1.default.createElement(Menu_1.default, null))),
                 react_1.default.createElement("nav", { id: "navMenu" })),
@@ -5709,7 +5708,7 @@ class Overview extends React.Component {
     }
     render() {
         return (React.createElement("div", { className: "" },
-            React.createElement("p", { className: "text-3xl text-center mt-6" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
+            React.createElement("p", { className: "text-3xl text-center mt-2" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
             React.createElement("div", { className: "w-full lg:p-4" },
                 React.createElement(PaymentsOverview_1.default, Object.assign({}, this.props)))));
     }

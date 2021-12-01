@@ -18,9 +18,10 @@ export default function App() {
     return (
         <Router>
             <div className="bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden">
-                <header className="bg-mainDarkBlue flex flex-row text-white p-4 px-12">
+                <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
                     <div>
-                        {new IconsData().logo}
+                        {/* {new IconsData().logo} */}
+                        <img src="./images/logo.png" alt="logo" className="w-2/12 inline-block"/>
                         <nav id="navMenu">
                             <Menu></Menu>
                         </nav>
