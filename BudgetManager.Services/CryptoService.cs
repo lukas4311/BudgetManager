@@ -58,22 +58,25 @@ namespace BudgetManager.Services
 
         public void Update(TradeHistory tradeHistory)
         {
-            CryptoTradeHistory tradeHistoryRecord = this.userIdentityRepository.FindByCondition(u => u.Id == tradeHistory.Id)
+            CryptoTradeHistory tradeHistoryRecord = this.userIdentityRepository.FindByCondition(u => u.Id == tradeHistory.UserIdentityId)
                 .SelectMany(a => a.CryptoTradesHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.CryptoTicker)
-                .Single();
+                .SingleOrDefault(a => a.Id == tradeHistory.Id);
 
             if (tradeHistoryRecord is null)
                 throw new Exception();
 
             tradeHistoryRecord.CryptoTickerId = tradeHistory.CryptoTickerId;
+            tradeHistoryRecord.CurrencySymbol = null;
             tradeHistoryRecord.CurrencySymbolId = tradeHistory.CurrencySymbolId;
+            tradeHistoryRecord.CryptoTicker = null;
             tradeHistoryRecord.TradeSize = tradeHistory.TradeSize;
             tradeHistoryRecord.TradeTimeStamp = tradeHistory.TradeTimeStamp;
             tradeHistoryRecord.TradeValue = tradeHistory.TradeValue;
 
             this.cryptoTradeHistoryRepository.Update(tradeHistoryRecord);
+            this.cryptoTradeHistoryRepository.Save();
         }
 
         public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)

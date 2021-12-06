@@ -1108,6 +1108,87 @@ class CryptoApi extends runtime.BaseAPI {
     }
     /**
      */
+    cryptosDeleteRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/cryptos`,
+                method: 'DELETE',
+                headers: headerParameters,
+                query: queryParameters,
+                body: requestParameters.body,
+            }, initOverrides);
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    cryptosDelete(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.cryptosDeleteRaw(requestParameters, initOverrides);
+        });
+    }
+    /**
+     */
+    cryptosPostRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/cryptos`,
+                method: 'POST',
+                headers: headerParameters,
+                query: queryParameters,
+                body: (0, models_1.TradeHistoryToJSON)(requestParameters.tradeHistory),
+            }, initOverrides);
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    cryptosPost(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.cryptosPostRaw(requestParameters, initOverrides);
+        });
+    }
+    /**
+     */
+    cryptosPutRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            headerParameters['Content-Type'] = 'application/json';
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/cryptos`,
+                method: 'PUT',
+                headers: headerParameters,
+                query: queryParameters,
+                body: (0, models_1.TradeHistoryToJSON)(requestParameters.tradeHistory),
+            }, initOverrides);
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    cryptosPut(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.cryptosPutRaw(requestParameters, initOverrides);
+        });
+    }
+    /**
+     */
     cryptosTickersGetRaw(initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -3136,6 +3217,7 @@ function TradeHistoryFromJSONTyped(json, ignoreDiscriminator) {
         'tradeValue': !(0, runtime_1.exists)(json, 'tradeValue') ? undefined : json['tradeValue'],
         'currencySymbolId': !(0, runtime_1.exists)(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
         'currencySymbol': !(0, runtime_1.exists)(json, 'currencySymbol') ? undefined : json['currencySymbol'],
+        'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
     };
 }
 exports.TradeHistoryFromJSONTyped = TradeHistoryFromJSONTyped;
@@ -3155,6 +3237,7 @@ function TradeHistoryToJSON(value) {
         'tradeValue': value.tradeValue,
         'currencySymbolId': value.currencySymbolId,
         'currencySymbol': value.currencySymbol,
+        'userIdentityId': value.userIdentityId,
     };
 }
 exports.TradeHistoryToJSON = TradeHistoryToJSON;
@@ -4632,7 +4715,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
@@ -4647,6 +4730,14 @@ const theme = (0, styles_1.createMuiTheme)({
 class CryptoTrades extends react_1.default.Component {
     constructor(props) {
         super(props);
+        this.loadCryptoTradesData = () => __awaiter(this, void 0, void 0, function* () {
+            this.cryptoTickers = (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
+            this.currencies = (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            let tradesData = yield this.cryptoApi.cryptosAllGet();
+            let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
+            trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
+            this.setState({ trades });
+        });
         this.mapDataModelToViewModel = (tradeHistory) => {
             let model = new CryptoTradeForm_1.CryptoTradeViewModel();
             model.cryptoTicker = tradeHistory.cryptoTicker;
@@ -4663,8 +4754,41 @@ class CryptoTrades extends react_1.default.Component {
             return model;
         };
         this.saveTrade = (data) => {
+            const tradeHistory = {
+                cryptoTickerId: data.cryptoTickerId,
+                currencySymbolId: data.currencySymbolId,
+                id: data.id,
+                tradeSize: data.tradeSize,
+                tradeTimeStamp: (0, moment_1.default)(data.tradeTimeStamp).toDate(),
+                tradeValue: data.tradeValue
+            };
+            if (data.id)
+                this.cryptoApi.cryptosPut({ tradeHistory });
+            else
+                this.cryptoApi.cryptosPost({ tradeHistory });
+            this.setState({ openedForm: false, selectedTrade: undefined });
+            this.loadCryptoTradesData();
         };
-        this.handleClickOpen = (tradeHistory) => this.setState({ selectedTrade: tradeHistory, openedForm: true });
+        this.addNewItem = () => {
+            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
+            model.onSave = this.saveTrade;
+            model.currencies = this.currencies;
+            model.cryptoTickers = this.cryptoTickers;
+            model.cryptoTickerId = this.cryptoTickers[0].id;
+            model.currencySymbolId = this.currencies[0].id;
+            model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
+            model.tradeSize = 0;
+            model.tradeValue = 0;
+            this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
+        };
+        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
+            let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
+            this.setState({ selectedTrade: tradeHistory, openedForm: true });
+        });
+        this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
+            yield this.cryptoApi.cryptosDelete({ body: id });
+            this.loadCryptoTradesData();
+        });
         this.handleClose = () => this.setState({ openedForm: false });
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -4685,22 +4809,6 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, this.renderTradeBadge(p.tradeValue))));
         };
         this.renderTradeBadge = (tradeValue) => react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
-        this.addNewItem = () => {
-            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
-            model.onSave = this.saveTrade;
-            model.currencies = this.currencies;
-            model.cryptoTickers = this.cryptoTickers;
-            model.cryptoTickerId = this.cryptoTickers[0].id;
-            model.currencySymbolId = this.currencies[0].id;
-            model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
-            model.tradeSize = 0;
-            model.tradeValue = 0;
-            this.setState({ openedForm: true, cryptoFormKey: Date.now(), selectedTrade: model });
-        };
-        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
-            let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
-            this.setState({ selectedTrade: tradeHistory, openedForm: true });
-        });
         this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
     }
     componentDidMount() {
@@ -4709,20 +4817,15 @@ class CryptoTrades extends react_1.default.Component {
     load() {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
-            this.currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
-            this.cryptoTickers = (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
-            this.currencies = (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
-            let tradesData = yield this.cryptoApi.cryptosAllGet();
-            let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
-            trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
-            this.setState({ trades });
+            this.cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
+            this.currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            this.loadCryptoTradesData();
         });
     }
     render() {
         return (react_1.default.createElement("div", { className: "pr-5 h-full" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-                react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
+                react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, deleteItemHandler: this.deleteTrade, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
                     react_1.default.createElement(core_1.DialogContent, null,

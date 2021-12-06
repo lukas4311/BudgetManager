@@ -67,6 +67,12 @@ export class TradeHistory {
      * @memberof TradeHistory
      */
     currencySymbol?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof TradeHistory
+     */
+    userIdentityId?: number;
 }
 
 export function TradeHistoryFromJSON(json: any): TradeHistory {
@@ -87,6 +93,7 @@ export function TradeHistoryFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'tradeValue': !exists(json, 'tradeValue') ? undefined : json['tradeValue'],
         'currencySymbolId': !exists(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
         'currencySymbol': !exists(json, 'currencySymbol') ? undefined : json['currencySymbol'],
+        'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
     };
 }
 
@@ -107,5 +114,6 @@ export function TradeHistoryToJSON(value?: TradeHistory | null): any {
         'tradeValue': value.tradeValue,
         'currencySymbolId': value.currencySymbolId,
         'currencySymbol': value.currencySymbol,
+        'userIdentityId': value.userIdentityId,
     };
 }

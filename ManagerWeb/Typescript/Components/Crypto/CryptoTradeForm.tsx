@@ -3,7 +3,6 @@ import { Controller, useForm } from "react-hook-form";
 import { Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import { IBaseModel } from '../BaseList';
-import { CryptoTicker, CurrencySymbol } from '../../ApiClient/Main/models';
 import CryptoTickerSelectModel from './CryptoTickerSelectModel';
 import CurrencyTickerSelectModel from './CurrencyTickerSelectModel';
 

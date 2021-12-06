@@ -28,6 +28,18 @@ export interface CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
     toCurrency: string | null;
 }
 
+export interface CryptosDeleteRequest {
+    body?: number;
+}
+
+export interface CryptosPostRequest {
+    tradeHistory?: TradeHistory;
+}
+
+export interface CryptosPutRequest {
+    tradeHistory?: TradeHistory;
+}
+
 export interface CryptosTradeDetailTradeIdGetRequest {
     tradeId: string;
     id?: number;
@@ -65,6 +77,45 @@ export interface CryptoApiInterface {
     /**
      */
     cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>>;
+
+    /**
+     * 
+     * @param {number} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosDeleteRaw(requestParameters: CryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    cryptosDelete(requestParameters: CryptosDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {TradeHistory} [tradeHistory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosPostRaw(requestParameters: CryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    cryptosPost(requestParameters: CryptosPostRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {TradeHistory} [tradeHistory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosPutRaw(requestParameters: CryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    cryptosPut(requestParameters: CryptosPutRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -167,6 +218,96 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
     async cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>> {
         const response = await this.cryptosAllGetRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async cryptosDeleteRaw(requestParameters: CryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos`,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body as any,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async cryptosDelete(requestParameters: CryptosDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.cryptosDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async cryptosPostRaw(requestParameters: CryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TradeHistoryToJSON(requestParameters.tradeHistory),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async cryptosPost(requestParameters: CryptosPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.cryptosPostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async cryptosPutRaw(requestParameters: CryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TradeHistoryToJSON(requestParameters.tradeHistory),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async cryptosPut(requestParameters: CryptosPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.cryptosPutRaw(requestParameters, initOverrides);
     }
 
     /**
