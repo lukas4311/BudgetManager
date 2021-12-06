@@ -31,7 +31,7 @@ export default class Menu extends React.Component<{}, MenuState> {
             { icon: icons.debts, linkUri: "debts" },
             { icon: icons.statistics, linkUri: "stats" },
             { icon: icons.budget, linkUri: "bankaccount-overview" },
-            // { icon: icons.budget, linkUri: "bankaccount-overview" },
+            { icon: icons.ingot, linkUri: "comodity" },
         ];
     }
 
