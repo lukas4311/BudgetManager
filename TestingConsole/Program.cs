@@ -1,7 +1,4 @@
-﻿using BudgetManager.FinanceDataMining.CryproApi;
-using BudgetManager.Repository;
-using BudgetManager.TestingConsole.Crypto;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole
@@ -13,9 +10,9 @@ namespace BudgetManager.TestingConsole
             ProcessManager processManager = new ProcessManager();
 
             // download all assets
-            Console.WriteLine("Donwloading assets");
-            await processManager.DownloadAssets(); /*-DONE*/
-            Console.WriteLine("Donwloading assets - DONE");
+            //Console.WriteLine("Donwloading assets");
+            //await processManager.DownloadAssets(); /*-DONE*/
+            //Console.WriteLine("Donwloading assets - DONE");
 
 
             // download fear and greed
