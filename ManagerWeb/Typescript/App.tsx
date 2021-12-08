@@ -7,11 +7,11 @@ import Crypto from './Crypto';
 import ErrorBoundary from "./Utils/ErrorBoundry";
 import PaymentsOverview from "./Components/Payments/PaymentsOverview";
 import BudgetComponent from "./Components/Budget/BudgetComponent";
-import { IconsData } from "./Enums/IconsEnum";
 import moment from "moment";
 import Auth from "./Components/Auth/Auth";
 import PrivateRoute from "./Utils/PrivateRoute";
 import BankAccountOverview from "./Components/BankAccount/BankAccountOverview";
+import Comodities from "./Components/Comodities/Comodities";
 
 
 export default function App() {
@@ -36,6 +36,7 @@ export default function App() {
                             <PrivateRoute path="/crypto-overview" component={Crypto} />
                             <PrivateRoute path="/budget" component={BudgetComponent} />
                             <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />
+                            <PrivateRoute path="/comodity" component={Comodities} />
                             <PrivateRoute path="/" component={Overview} />
                         </Switch>
                     </main>

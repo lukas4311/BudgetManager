@@ -1,0 +1,17 @@
+.goldCard {
+    min-width: 9em;
+    transition: .7s;
+
+    &:hover{
+        transform: translateY(-3em);
+    }
+}
+
+#goldCards .cardOverlap{
+    // transform: translateX(-4.5em);
+    margin-left: -2em !important;
+}
+
+.bg-gold{
+    background: #e6c200;
+}

@@ -3736,6 +3736,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const Auth_1 = __importDefault(__webpack_require__(/*! ./Components/Auth/Auth */ "./Typescript/Components/Auth/Auth.tsx"));
 const PrivateRoute_1 = __importDefault(__webpack_require__(/*! ./Utils/PrivateRoute */ "./Typescript/Utils/PrivateRoute.tsx"));
 const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Components/BankAccount/BankAccountOverview */ "./Typescript/Components/BankAccount/BankAccountOverview.tsx"));
+const Comodities_1 = __importDefault(__webpack_require__(/*! ./Components/Comodities/Comodities */ "./Typescript/Components/Comodities/Comodities.tsx"));
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
@@ -3753,6 +3754,7 @@ function App() {
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/crypto-overview", component: Crypto_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/budget", component: BudgetComponent_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
+                        react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
             react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
                 react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
@@ -4513,6 +4515,80 @@ function RadarChart({ dataSets }) {
         isInteractive: true, legends: [] }));
 }
 exports.RadarChart = RadarChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Comodities/Comodities.tsx":
+/*!*********************************************************!*\
+  !*** ./Typescript/Components/Comodities/Comodities.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Gold_1 = __importDefault(__webpack_require__(/*! ./Gold */ "./Typescript/Components/Comodities/Gold.tsx"));
+class Comodities extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (react_1.default.createElement("div", { className: "" },
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
+            react_1.default.createElement("div", { className: "flex" },
+                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
+                    react_1.default.createElement(Gold_1.default, null)),
+                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
+                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others"))));
+    }
+}
+exports.default = Comodities;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Comodities/Gold.tsx":
+/*!***************************************************!*\
+  !*** ./Typescript/Components/Comodities/Gold.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Gold = (props) => {
+    const goldIngots = [
+        { id: 1, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 10 },
+        { id: 2, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 5 },
+        { id: 3, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 5 },
+        { id: 4, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 5 },
+        { id: 5, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 5 },
+        { id: 6, boughtDate: (0, moment_1.default)().toDate(), company: "Argor-Heraus", weight: 5 },
+        { id: 7, boughtDate: (0, moment_1.default)().toDate(), company: "Pamp", weight: 20 }
+    ];
+    return (react_1.default.createElement("div", { id: "goldCards" },
+        react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
+        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center text-rufous" }, goldIngots.map((g, i) => (react_1.default.createElement("div", { className: "p-1 bg-gold rounded-xl inline-block goldCard shadow-2xl z-0" + (i == 0 ? "" : " cardOverlap") },
+            react_1.default.createElement("div", { className: "px-2 py-6 bg-gray-400 rounded-xl" },
+                react_1.default.createElement("p", { className: "font-medium" }, g.company),
+                react_1.default.createElement("p", { className: "text-2xl font-bold mt-4" },
+                    g.weight,
+                    "g"),
+                react_1.default.createElement("p", { className: "mt-6" }, g.boughtDate.toLocaleDateString()))))))));
+};
+exports.default = Gold;
 
 
 /***/ }),

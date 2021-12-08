@@ -1,10 +1,6 @@
 import React from "react";
 import Gold from "./Gold";
-
-class GoldIngot {
-    public company: string;
-    public weight: number;
-}
+import { GoldIngot } from "./GoldIngot";
 
 export default class Comodities extends React.Component<{}, {}>{
     private goldIngots: GoldIngot[];
