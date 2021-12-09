@@ -4580,13 +4580,14 @@ const Gold = (props) => {
     ];
     return (react_1.default.createElement("div", { id: "goldCards" },
         react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
-        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center text-rufous" }, goldIngots.map((g, i) => (react_1.default.createElement("div", { className: "p-1 bg-gold rounded-xl inline-block goldCard shadow-2xl z-0" + (i == 0 ? "" : " cardOverlap") },
-            react_1.default.createElement("div", { className: "px-2 py-6 bg-gray-400 rounded-xl" },
-                react_1.default.createElement("p", { className: "font-medium" }, g.company),
-                react_1.default.createElement("p", { className: "text-2xl font-bold mt-4" },
+        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center" }, goldIngots.map((g, i) => (react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap") },
+            react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
+            react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
+                react_1.default.createElement("p", { className: "font-medium goldText" }, g.company),
+                react_1.default.createElement("p", { className: "text-2xl font-bold mt-4 goldText" },
                     g.weight,
                     "g"),
-                react_1.default.createElement("p", { className: "mt-6" }, g.boughtDate.toLocaleDateString()))))))));
+                react_1.default.createElement("p", { className: "mt-6 goldText" }, g.boughtDate.toLocaleDateString()))))))));
 };
 exports.default = Gold;
 
