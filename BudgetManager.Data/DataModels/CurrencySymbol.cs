@@ -9,5 +9,7 @@ namespace BudgetManager.Data.DataModels
         public string Symbol { get; set; }
 
         public List<CryptoTradeHistory> CryptoTradeHistory { get; set; }
+
+        public List<ComodityTradeHistory> ComodityTradeHistory { get; set; }
     }
 }

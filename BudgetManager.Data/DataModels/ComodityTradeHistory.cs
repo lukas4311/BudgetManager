@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    internal class ComodityTradeHistory
+    public class ComodityTradeHistory
     {
         public int Id { get; set; }
 
