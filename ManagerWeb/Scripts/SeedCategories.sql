@@ -122,14 +122,14 @@ VALUES
 		'dividents'
 	),
 	(
-		'WorkshopTools',
-		'workshopTools',
-		'workshopTools'
+		'Games',
+		'hry',
+		'games'
 	),
 	(
-		'Games',
-		'games',
-		'games'
+		'Presents',
+		'dárky',
+		'presents'
 	)
 
 INSERT INTO PaymentCategory([Code], [Name], [Icon])
