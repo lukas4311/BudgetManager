@@ -33,7 +33,6 @@ for interest_rate in interest_rates:
 
     if len(split_values) == 2:
         date_string = split_values[0].split("-")
-        #dateParsed = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         dateParsed = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         pandas_date = pd.to_datetime(dateParsed)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
