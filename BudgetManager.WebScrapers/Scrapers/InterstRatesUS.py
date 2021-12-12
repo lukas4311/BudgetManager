@@ -1,6 +1,7 @@
 import requests
 import datetime
 import pytz
+import pandas as pd
 from influxdb_client import Point, WritePrecision
 
 from Services.InfluxRepository import InfluxRepository
@@ -32,8 +33,12 @@ for interest_rate in interest_rates:
 
     if len(split_values) == 2:
         date_string = split_values[0].split("-")
+        #dateParsed = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         dateParsed = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
-        m_models.append(InterestRateModel(float(split_values[1]), dateParsed))
+        pandas_date = pd.to_datetime(dateParsed)
+        pandas_date = pandas_date.tz_localize("Europe/Prague")
+        pandas_date = pandas_date.tz_convert("utc")
+        m_models.append(InterestRateModel(float(split_values[1]), pandas_date))
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
 min_date = influx_repository.find_last(measurement, state)
