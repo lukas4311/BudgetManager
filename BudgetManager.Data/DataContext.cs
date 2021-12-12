@@ -34,5 +34,9 @@ namespace BudgetManager.Data
         public DbSet<PaymentTag> PaymentTag { get; set; }
 
         public DbSet<Budget> Budget { get; set; }
+
+        public DbSet<ComodityUnit> ComodityUnit { get; set; }
+        public DbSet<ComodityType> ComodityType { get; set; }
+        public DbSet<ComodityTradeHistory> ComodityTradeHistory { get; set; }
     }
 }
