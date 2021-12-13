@@ -73,32 +73,32 @@ VALUES
 	),
 	(
 		'Tools',
-		'náøadí',
+		'Náøadí',
 		'tools'
 	),
 	(
 		'Medication',
-		'léky',
+		'Léky',
 		'medication'
 	),
 	(
 		'Pets',
-		'domácí mazlíèci',
+		'Domácí mazlíèci',
 		'pets'
 	),
 	(
 		'Kids',
-		'dìti',
+		'Dìti',
 		'kids'
 	),
 	(
 		'Education',
-		'vzdìlání',
+		'Vzdìlání',
 		'education'
 	),
 	(
 		'Insurance',
-		'pojistka',
+		'Pojistka',
 		'insurance'
 	),
 	(
@@ -113,22 +113,22 @@ VALUES
 	),
 	(
 		'Alimony'
-		,'alimenty'
+		,'Alimenty'
 		,'alimony'
 	),
 	(
 		'Dividents',
-		'dividendy',
+		'Dividendy',
 		'dividents'
 	),
 	(
 		'Games',
-		'hry',
+		'Hry',
 		'games'
 	),
 	(
 		'Presents',
-		'dárky',
+		'Dárky',
 		'presents'
 	)
 
