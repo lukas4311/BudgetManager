@@ -1,5 +1,7 @@
 ﻿using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
+using BudgetManager.Services.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +14,7 @@ namespace BudgetManager.Services
         private readonly IComodityTypeRepository comodityTypeRepository;
         private readonly IComodityUnitRepository comodityUnitRepository;
 
-        public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, 
+        public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository,
             IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository)
         {
             this.comodityTradeHistoryRepository = comodityTradeHistoryRepository;
@@ -33,5 +35,23 @@ namespace BudgetManager.Services
                 ComodityUnit = c.ComodityUnit.Name
             });
         }
+
+        public IEnumerable<ComodityUnitModel> GetComodityUnits()
+        {
+            return this.comodityUnitRepository.FindAll().Select(c => new ComodityUnitModel
+            {
+                Code = c.Code,
+                Id = c.Id,
+                Name = c.Name
+            });
+        }
+
+        public IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin) =>
+            this.userIdentityRepository.FindByCondition(u => u.Login == userLogin)
+                .SelectMany(a => a.ComodityTradeHistory)
+                .Include(s => s.CurrencySymbol)
+                .Include(s => s.ComodityType)
+                .ThenInclude(s => s.ComodityUnit)
+                .Select(e => e.MapToComodityTradeHistoryModel());
     }
 }
