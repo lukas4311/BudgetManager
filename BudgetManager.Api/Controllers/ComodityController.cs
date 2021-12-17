@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("comodity")]
+    [Route("comodities")]
     public class ComodityController : BaseController
     {
         private readonly IComodityService comodityService;
@@ -49,11 +49,11 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("/comodityType/all")]
+        [HttpGet("comodityType/all")]
         public ActionResult<IEnumerable<ComodityTypeModel>> GetComodityTypes() =>
             this.Ok(this.comodityService.GetComodityTypes());
 
-        [HttpGet("/comodityType/all")]
+        [HttpGet("comodityUnit/all")]
         public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
             this.Ok(this.comodityService.GetComodityUnits());
     }

@@ -20,62 +20,76 @@ import {
     ComodityTradeHistoryToJSON,
 } from './ComodityTradeHistory';
 import {
-    CryptoTradeHistory,
-    CryptoTradeHistoryFromJSON,
-    CryptoTradeHistoryFromJSONTyped,
-    CryptoTradeHistoryToJSON,
-} from './CryptoTradeHistory';
+    ComodityUnit,
+    ComodityUnitFromJSON,
+    ComodityUnitFromJSONTyped,
+    ComodityUnitToJSON,
+} from './ComodityUnit';
 
 /**
  * 
  * @export
- * @class CurrencySymbol
+ * @class ComodityType
  */
-export class CurrencySymbol {
+export class ComodityType {
     /**
      * 
      * @type {number}
-     * @memberof CurrencySymbol
+     * @memberof ComodityType
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof CurrencySymbol
+     * @memberof ComodityType
      */
-    symbol?: string | null;
+    code?: string | null;
     /**
      * 
-     * @type {Array<CryptoTradeHistory>}
-     * @memberof CurrencySymbol
+     * @type {string}
+     * @memberof ComodityType
      */
-    cryptoTradeHistory?: Array<CryptoTradeHistory> | null;
+    name?: string | null;
+    /**
+     * 
+     * @type {ComodityUnit}
+     * @memberof ComodityType
+     */
+    comodityUnit?: ComodityUnit;
+    /**
+     * 
+     * @type {number}
+     * @memberof ComodityType
+     */
+    comodityUnitId?: number;
     /**
      * 
      * @type {Array<ComodityTradeHistory>}
-     * @memberof CurrencySymbol
+     * @memberof ComodityType
      */
     comodityTradeHistory?: Array<ComodityTradeHistory> | null;
 }
 
-export function CurrencySymbolFromJSON(json: any): CurrencySymbol {
-    return CurrencySymbolFromJSONTyped(json, false);
+export function ComodityTypeFromJSON(json: any): ComodityType {
+    return ComodityTypeFromJSONTyped(json, false);
 }
 
-export function CurrencySymbolFromJSONTyped(json: any, ignoreDiscriminator: boolean): CurrencySymbol {
+export function ComodityTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): ComodityType {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'symbol': !exists(json, 'symbol') ? undefined : json['symbol'],
-        'cryptoTradeHistory': !exists(json, 'cryptoTradeHistory') ? undefined : (json['cryptoTradeHistory'] === null ? null : (json['cryptoTradeHistory'] as Array<any>).map(CryptoTradeHistoryFromJSON)),
+        'code': !exists(json, 'code') ? undefined : json['code'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'comodityUnit': !exists(json, 'comodityUnit') ? undefined : ComodityUnitFromJSON(json['comodityUnit']),
+        'comodityUnitId': !exists(json, 'comodityUnitId') ? undefined : json['comodityUnitId'],
         'comodityTradeHistory': !exists(json, 'comodityTradeHistory') ? undefined : (json['comodityTradeHistory'] === null ? null : (json['comodityTradeHistory'] as Array<any>).map(ComodityTradeHistoryFromJSON)),
     };
 }
 
-export function CurrencySymbolToJSON(value?: CurrencySymbol | null): any {
+export function ComodityTypeToJSON(value?: ComodityType | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -85,8 +99,10 @@ export function CurrencySymbolToJSON(value?: CurrencySymbol | null): any {
     return {
         
         'id': value.id,
-        'symbol': value.symbol,
-        'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : (value.cryptoTradeHistory as Array<any>).map(CryptoTradeHistoryToJSON)),
+        'code': value.code,
+        'name': value.name,
+        'comodityUnit': ComodityUnitToJSON(value.comodityUnit),
+        'comodityUnitId': value.comodityUnitId,
         'comodityTradeHistory': value.comodityTradeHistory === undefined ? undefined : (value.comodityTradeHistory === null ? null : (value.comodityTradeHistory as Array<any>).map(ComodityTradeHistoryToJSON)),
     };
 }

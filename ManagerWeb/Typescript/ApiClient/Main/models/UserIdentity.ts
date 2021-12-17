@@ -20,6 +20,12 @@ import {
     BankAccountToJSON,
 } from './BankAccount';
 import {
+    ComodityTradeHistory,
+    ComodityTradeHistoryFromJSON,
+    ComodityTradeHistoryFromJSONTyped,
+    ComodityTradeHistoryToJSON,
+} from './ComodityTradeHistory';
+import {
     CryptoTradeHistory,
     CryptoTradeHistoryFromJSON,
     CryptoTradeHistoryFromJSONTyped,
@@ -74,6 +80,12 @@ export class UserIdentity {
      * @memberof UserIdentity
      */
     cryptoTradesHistory?: Array<CryptoTradeHistory> | null;
+    /**
+     * 
+     * @type {Array<ComodityTradeHistory>}
+     * @memberof UserIdentity
+     */
+    comodityTradeHistory?: Array<ComodityTradeHistory> | null;
 }
 
 export function UserIdentityFromJSON(json: any): UserIdentity {
@@ -92,6 +104,7 @@ export function UserIdentityFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'userData': !exists(json, 'userData') ? undefined : UserDataFromJSON(json['userData']),
         'bankAccounts': !exists(json, 'bankAccounts') ? undefined : (json['bankAccounts'] === null ? null : (json['bankAccounts'] as Array<any>).map(BankAccountFromJSON)),
         'cryptoTradesHistory': !exists(json, 'cryptoTradesHistory') ? undefined : (json['cryptoTradesHistory'] === null ? null : (json['cryptoTradesHistory'] as Array<any>).map(CryptoTradeHistoryFromJSON)),
+        'comodityTradeHistory': !exists(json, 'comodityTradeHistory') ? undefined : (json['comodityTradeHistory'] === null ? null : (json['comodityTradeHistory'] as Array<any>).map(ComodityTradeHistoryFromJSON)),
     };
 }
 
@@ -110,5 +123,6 @@ export function UserIdentityToJSON(value?: UserIdentity | null): any {
         'userData': UserDataToJSON(value.userData),
         'bankAccounts': value.bankAccounts === undefined ? undefined : (value.bankAccounts === null ? null : (value.bankAccounts as Array<any>).map(BankAccountToJSON)),
         'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : (value.cryptoTradesHistory as Array<any>).map(CryptoTradeHistoryToJSON)),
+        'comodityTradeHistory': value.comodityTradeHistory === undefined ? undefined : (value.comodityTradeHistory === null ? null : (value.comodityTradeHistory as Array<any>).map(ComodityTradeHistoryToJSON)),
     };
 }
