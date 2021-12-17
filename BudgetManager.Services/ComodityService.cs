@@ -49,8 +49,13 @@ namespace BudgetManager.Services
         }
 
         public IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin) =>
-            this.userIdentityRepository.FindByCondition(u => u.Login == userLogin)
-                .SelectMany(a => a.ComodityTradeHistory)
+            this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Login == userLogin));
+
+        public IEnumerable<ComodityTradeHistoryModel> GetByUser(int userId) =>
+            this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Id == userId));
+
+        private IEnumerable<ComodityTradeHistoryModel> GetComodityTradeHistoryForUser(IQueryable<UserIdentity> userIdentity) =>
+            userIdentity.SelectMany(a => a.ComodityTradeHistory)
                 .Include(s => s.CurrencySymbol)
                 .Include(s => s.ComodityType)
                 .ThenInclude(s => s.ComodityUnit)

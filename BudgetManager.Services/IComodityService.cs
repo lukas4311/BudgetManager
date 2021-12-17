@@ -8,6 +8,7 @@ namespace BudgetManager.Services
         void Add(ComodityTradeHistoryModel tradeHistory);
         void Delete(int id);
         IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin);
+        IEnumerable<ComodityTradeHistoryModel> GetByUser(int userId);
         IEnumerable<ComodityTypeModel> GetComodityTypes();
         IEnumerable<ComodityUnitModel> GetComodityUnits();
         void Update(ComodityTradeHistoryModel tradeHistory);
