@@ -48,5 +48,13 @@ namespace BudgetManager.Api.Controllers
             this.comodityService.Delete(id);
             return Ok();
         }
+
+        [HttpGet("/comodityType/all")]
+        public ActionResult<IEnumerable<ComodityTypeModel>> GetComodityTypes() =>
+            this.Ok(this.comodityService.GetComodityTypes());
+
+        [HttpGet("/comodityType/all")]
+        public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
+            this.Ok(this.comodityService.GetComodityUnits());
     }
 }
