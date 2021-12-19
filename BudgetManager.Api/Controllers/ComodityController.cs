@@ -3,6 +3,7 @@ using BudgetManager.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -56,5 +57,12 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("comodityUnit/all")]
         public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
             this.Ok(this.comodityService.GetComodityUnits());
+
+        [HttpGet("gold/actualPrice")]
+        public async Task<ActionResult<double>> GetCurrentExchangeRate()
+        {
+            double exhangeRate = await this.comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
+            return Ok(exhangeRate);
+        }
     }
 }

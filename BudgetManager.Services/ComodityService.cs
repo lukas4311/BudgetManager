@@ -1,28 +1,35 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.InfluxDbData;
 using BudgetManager.Repository;
 using BudgetManager.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
     public class ComodityService : IComodityService
     {
+        private const string bucketComodity = "Comodity";
+        private const string organizationId = "f209a688c8dcfff3";
+        private const string Gold = "AU";
         private readonly IComodityTradeHistoryRepository comodityTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IComodityTypeRepository comodityTypeRepository;
         private readonly IComodityUnitRepository comodityUnitRepository;
+        private readonly InfluxDbData.IRepository<ComodityData> comodityRepository;
 
         public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository,
-            IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository)
+            IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository, InfluxDbData.IRepository<ComodityData> comodityRepository)
         {
             this.comodityTradeHistoryRepository = comodityTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.comodityTypeRepository = comodityTypeRepository;
             this.comodityUnitRepository = comodityUnitRepository;
+            this.comodityRepository = comodityRepository;
         }
 
         public IEnumerable<ComodityTypeModel> GetComodityTypes()
@@ -113,6 +120,13 @@ namespace BudgetManager.Services
             ComodityTradeHistory budget = this.comodityTradeHistoryRepository.FindByCondition(a => a.Id == id).Single();
             this.comodityTradeHistoryRepository.Delete(budget);
             this.comodityTradeHistoryRepository.Save();
+        }
+
+        public async Task<double> GetCurrentGoldPriceForOunce()
+        {
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketComodity);
+            List<ComodityData> data = await this.comodityRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
+            return data.SingleOrDefault(a => string.Equals(a.Ticker, Gold))?.Price ?? 0;
         }
     }
 }

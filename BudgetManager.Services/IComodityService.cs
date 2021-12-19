@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
@@ -11,6 +12,7 @@ namespace BudgetManager.Services
         IEnumerable<ComodityTradeHistoryModel> GetByUser(int userId);
         IEnumerable<ComodityTypeModel> GetComodityTypes();
         IEnumerable<ComodityUnitModel> GetComodityUnits();
+        Task<double> GetCurrentGoldPriceForOunce();
         void Update(ComodityTradeHistoryModel tradeHistory);
         bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId);
     }
