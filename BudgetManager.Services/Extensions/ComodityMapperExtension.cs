@@ -19,7 +19,8 @@ namespace BudgetManager.Services.Extensions
                 TradeSize = cryptoTradeHistory.TradeSize,
                 TradeTimeStamp = cryptoTradeHistory.TradeTimeStamp,
                 TradeValue = cryptoTradeHistory.TradeValue,
-                UserIdentityId = cryptoTradeHistory.UserIdentityId
+                UserIdentityId = cryptoTradeHistory.UserIdentityId,
+                Company = cryptoTradeHistory.Company
             };
         }
     }

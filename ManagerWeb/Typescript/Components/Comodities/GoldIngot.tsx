@@ -3,4 +3,7 @@ export class GoldIngot {
     public company: string;
     public weight: number;
     public boughtDate: Date;
+    public costs: number;
+    public unit: string;
+    public currency: string;
 }

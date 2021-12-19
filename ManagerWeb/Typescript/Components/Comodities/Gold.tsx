@@ -1,18 +1,13 @@
-import moment from "moment";
+import _ from "lodash";
 import React from "react";
-import { GoldIngot } from "./GoldIngot";
+import { GoldListProps } from "./GoldListProps";
 
-const Gold = (props: {}) => {
-
-    const goldIngots: GoldIngot[] = [
-        { id: 1, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 10 },
-        { id: 2, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 5 },
-        { id: 3, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 5 },
-        { id: 4, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 5 },
-        { id: 5, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 5 },
-        { id: 6, boughtDate: moment().toDate(), company: "Argor-Heraus", weight: 5 },
-        { id: 7, boughtDate: moment().toDate(), company: "Pamp", weight: 20 }
-    ];
+const Gold = (props: GoldListProps) => {
+    const goldIngots = props.goldIngots ?? [];
+    const totalWeight = _.sumBy(goldIngots, (g) => g.weight);
+    const totalCosts = _.sumBy(goldIngots, (g) => g.costs);
+    const goldUnit = props.goldIngots[0]?.unit;
+    const currency = props.goldIngots[0]?.currency;
 
     return (
         <div id="goldCards">
@@ -29,6 +24,11 @@ const Gold = (props: {}) => {
                         </div>
                     </div>
                 ))}
+            </div>
+            <div>
+                <h4 className="text-lg mt-6">Summary info</h4>
+                <p className="mt-2">Total weight: {totalWeight} {goldUnit}</p>
+                <p className="">Total costs: {totalCosts} {currency}</p>
             </div>
         </div>
     );

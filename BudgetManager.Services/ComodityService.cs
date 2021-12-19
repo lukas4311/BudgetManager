@@ -80,6 +80,7 @@ namespace BudgetManager.Services
             comodityTrade.TradeSize = tradeHistory.TradeSize;
             comodityTrade.TradeTimeStamp = tradeHistory.TradeTimeStamp;
             comodityTrade.TradeValue = tradeHistory.TradeValue;
+            comodityTrade.Company = tradeHistory.Company;
 
             this.comodityTradeHistoryRepository.Update(comodityTrade);
             this.comodityTradeHistoryRepository.Save();
@@ -100,7 +101,8 @@ namespace BudgetManager.Services
                 CurrencySymbolId = tradeHistory.CurrencySymbolId,
                 TradeSize = tradeHistory.TradeSize,
                 TradeValue = tradeHistory.TradeValue,
-                UserIdentityId = tradeHistory.UserIdentityId
+                UserIdentityId = tradeHistory.UserIdentityId,
+                Company = tradeHistory.Company
             });
 
             this.comodityTradeHistoryRepository.Save();

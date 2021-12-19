@@ -23,5 +23,7 @@ namespace BudgetManager.Data.DataModels
         public int UserIdentityId { get; set; }
 
         public UserIdentity UserIdentity { get; set; }
+
+        public string Company { get; set; }
     }
 }

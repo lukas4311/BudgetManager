@@ -98,6 +98,12 @@ export class ComodityTradeHistory {
      * @memberof ComodityTradeHistory
      */
     userIdentity?: UserIdentity;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComodityTradeHistory
+     */
+    company?: string | null;
 }
 
 export function ComodityTradeHistoryFromJSON(json: any): ComodityTradeHistory {
@@ -120,6 +126,7 @@ export function ComodityTradeHistoryFromJSONTyped(json: any, ignoreDiscriminator
         'currencySymbol': !exists(json, 'currencySymbol') ? undefined : CurrencySymbolFromJSON(json['currencySymbol']),
         'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
         'userIdentity': !exists(json, 'userIdentity') ? undefined : UserIdentityFromJSON(json['userIdentity']),
+        'company': !exists(json, 'company') ? undefined : json['company'],
     };
 }
 
@@ -142,5 +149,6 @@ export function ComodityTradeHistoryToJSON(value?: ComodityTradeHistory | null):
         'currencySymbol': CurrencySymbolToJSON(value.currencySymbol),
         'userIdentityId': value.userIdentityId,
         'userIdentity': UserIdentityToJSON(value.userIdentity),
+        'company': value.company,
     };
 }
