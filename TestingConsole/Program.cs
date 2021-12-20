@@ -52,7 +52,12 @@ namespace BudgetManager.TestingConsole
             //processManager.ParseCoinbaseReport();
 
             // download forex
-            //await processManager.DownloadForexHistory(ForexTicker.EurCzk);
+            await processManager.DownloadForexHistory(ForexTicker.EurCzk);
+            //await processManager.DownloadForexHistory(ForexTicker.CzkEur);
+            //await processManager.DownloadForexHistory(ForexTicker.UsdCzk);
+            //await processManager.DownloadForexHistory(ForexTicker.CzkUsd);
+            //await processManager.DownloadForexHistory(ForexTicker.UsdEur);
+            //await processManager.DownloadForexHistory(ForexTicker.EurUsd);
         }
     }
 }

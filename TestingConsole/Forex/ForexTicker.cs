@@ -2,7 +2,7 @@
 {
     public class ForexTicker
     {
-        public ForexTicker(string value)
+        private ForexTicker(string value)
         {
             this.Value = value;
         }
