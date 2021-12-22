@@ -7,8 +7,6 @@ namespace BudgetManager.FinanceDataMining.CurrencyApi
     {
         public string BaseCurrency { get; set; }
 
-        public DateTime Date { get; set; }
-
-        public List<(string currency, decimal value)> PriceOfAnotherCurrencies { get; set; } = new List<(string currency, decimal value)>();
+        public IEnumerable<(string currency, decimal value, DateTime Date)> PriceOfAnotherCurrencies { get; set; } = new List<(string currency, decimal value, DateTime Date)>();
     }
 }
