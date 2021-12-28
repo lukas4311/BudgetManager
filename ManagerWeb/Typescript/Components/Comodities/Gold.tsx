@@ -41,7 +41,7 @@ const Gold = (props: GoldListProps) => {
                         </div>
                     </div>
                 ))}
-                <div className="relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap">
+                <div className="relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap" onClick={props.addNewIngot}>
                     <div className="w-11/12 z-negative1 bg-gold rotateBox">
                     </div>
                     <div className="px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center">

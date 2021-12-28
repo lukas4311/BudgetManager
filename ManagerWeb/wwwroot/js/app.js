@@ -5317,7 +5317,7 @@ class Comodities extends react_1.default.Component {
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
             react_1.default.createElement("div", { className: "flex" },
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
-                    react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history })),
+                    react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => console.log("New ingot") })),
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others"))));
     }
@@ -5406,7 +5406,7 @@ const Gold = (props) => {
                         g.weight,
                         "g"),
                     react_1.default.createElement("p", { className: "mt-6 goldText" }, g.boughtDate.toLocaleDateString()))))),
-            react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap" },
+            react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap", onClick: props.addNewIngot },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center" },
                     react_1.default.createElement("p", { className: "font-medium goldText text-7xl font-black" }, "+")))),
