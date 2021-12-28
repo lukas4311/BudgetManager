@@ -1155,6 +1155,61 @@ class ComodityApi extends runtime.BaseAPI {
     }
     /**
      */
+    comoditiesGoldActualPriceCurrencyCodeGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.currencyCode === null || requestParameters.currencyCode === undefined) {
+                throw new runtime.RequiredError('currencyCode', 'Required parameter requestParameters.currencyCode was null or undefined when calling comoditiesGoldActualPriceCurrencyCodeGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/comodities/gold/actualPrice/{currencyCode}`.replace(`{${"currencyCode"}}`, this.processPathParam(requestParameters.currencyCode)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.TextApiResponse(response);
+        });
+    }
+    /**
+     */
+    comoditiesGoldActualPriceCurrencyCodeGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.comoditiesGoldActualPriceCurrencyCodeGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
+    comoditiesGoldActualPriceGetRaw(initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/comodities/gold/actualPrice`,
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.TextApiResponse(response);
+        });
+    }
+    /**
+     */
+    comoditiesGoldActualPriceGet(initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.comoditiesGoldActualPriceGetRaw(initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
     comoditiesPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             const queryParameters = {};
@@ -5262,7 +5317,7 @@ class Comodities extends react_1.default.Component {
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
             react_1.default.createElement("div", { className: "flex" },
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
-                    react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots })),
+                    react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history })),
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
                 react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others"))));
     }
@@ -5281,29 +5336,80 @@ exports.default = Comodities;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold = (props) => {
     var _a, _b, _c;
+    const ounce = 28.34;
     const goldIngots = (_a = props.goldIngots) !== null && _a !== void 0 ? _a : [];
     const totalWeight = lodash_1.default.sumBy(goldIngots, (g) => g.weight);
     const totalCosts = lodash_1.default.sumBy(goldIngots, (g) => g.costs);
     const goldUnit = (_b = props.goldIngots[0]) === null || _b === void 0 ? void 0 : _b.unit;
     const currency = (_c = props.goldIngots[0]) === null || _c === void 0 ? void 0 : _c.currency;
+    const [actualTotalPrice, setActualTotalPrice] = (0, react_1.useState)("");
+    (0, react_1.useEffect)(() => {
+        function calculateTotalActualPrice() {
+            var _a;
+            return __awaiter(this, void 0, void 0, function* () {
+                const apiFactory = new ApiClientFactory_1.default(null);
+                const totalWeight = lodash_1.default.sumBy((_a = props.goldIngots) !== null && _a !== void 0 ? _a : [], (g) => g.weight);
+                let comodityApi = yield apiFactory.getClient(Main_1.ComodityApi);
+                const price = yield comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: "CZK" });
+                const actualTotalPrice = totalWeight * price / ounce;
+                setActualTotalPrice(actualTotalPrice.toFixed(1));
+            });
+        }
+        calculateTotalActualPrice();
+    }, [props.goldIngots]);
     return (react_1.default.createElement("div", { id: "goldCards" },
         react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
-        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center" }, goldIngots.map((g, i) => (react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap") },
-            react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
-            react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
-                react_1.default.createElement("p", { className: "font-medium goldText" }, g.company),
-                react_1.default.createElement("p", { className: "text-2xl font-bold mt-4 goldText" },
-                    g.weight,
-                    "g"),
-                react_1.default.createElement("p", { className: "mt-6 goldText" }, g.boughtDate.toLocaleDateString())))))),
+        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center cursor-default" },
+            goldIngots.map((g, i) => (react_1.default.createElement("div", { key: g.id, className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap") },
+                react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
+                react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
+                    react_1.default.createElement("p", { className: "font-medium goldText" }, g.company),
+                    react_1.default.createElement("p", { className: "text-2xl font-bold mt-4 goldText" },
+                        g.weight,
+                        "g"),
+                    react_1.default.createElement("p", { className: "mt-6 goldText" }, g.boughtDate.toLocaleDateString()))))),
+            react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap" },
+                react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
+                react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center" },
+                    react_1.default.createElement("p", { className: "font-medium goldText text-7xl font-black" }, "+")))),
         react_1.default.createElement("div", null,
             react_1.default.createElement("h4", { className: "text-lg mt-6" }, "Summary info"),
             react_1.default.createElement("p", { className: "mt-2" },
@@ -5314,6 +5420,11 @@ const Gold = (props) => {
             react_1.default.createElement("p", { className: "" },
                 "Total costs: ",
                 totalCosts,
+                " ",
+                currency),
+            react_1.default.createElement("p", null,
+                "Actual total price: ",
+                actualTotalPrice,
                 " ",
                 currency))));
 };

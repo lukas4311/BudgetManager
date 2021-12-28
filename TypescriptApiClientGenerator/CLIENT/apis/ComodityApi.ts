@@ -30,6 +30,10 @@ export interface ComoditiesDeleteRequest {
     body?: number;
 }
 
+export interface ComoditiesGoldActualPriceCurrencyCodeGetRequest {
+    currencyCode: string | null;
+}
+
 export interface ComoditiesPostRequest {
     comodityTradeHistoryModel?: ComodityTradeHistoryModel;
 }
@@ -93,6 +97,31 @@ export interface ComodityApiInterface {
     /**
      */
     comoditiesDelete(requestParameters: ComoditiesDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {string} currencyCode 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ComodityApiInterface
+     */
+    comoditiesGoldActualPriceCurrencyCodeGetRaw(requestParameters: ComoditiesGoldActualPriceCurrencyCodeGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+
+    /**
+     */
+    comoditiesGoldActualPriceCurrencyCodeGet(requestParameters: ComoditiesGoldActualPriceCurrencyCodeGetRequest, initOverrides?: RequestInit): Promise<number>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ComodityApiInterface
+     */
+    comoditiesGoldActualPriceGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+
+    /**
+     */
+    comoditiesGoldActualPriceGet(initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
@@ -245,6 +274,66 @@ export class ComodityApi extends runtime.BaseAPI implements ComodityApiInterface
      */
     async comoditiesDelete(requestParameters: ComoditiesDeleteRequest, initOverrides?: RequestInit): Promise<void> {
         await this.comoditiesDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async comoditiesGoldActualPriceCurrencyCodeGetRaw(requestParameters: ComoditiesGoldActualPriceCurrencyCodeGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+        if (requestParameters.currencyCode === null || requestParameters.currencyCode === undefined) {
+            throw new runtime.RequiredError('currencyCode','Required parameter requestParameters.currencyCode was null or undefined when calling comoditiesGoldActualPriceCurrencyCodeGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/comodities/gold/actualPrice/{currencyCode}`.replace(`{${"currencyCode"}}`, this.processPathParam(requestParameters.currencyCode)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async comoditiesGoldActualPriceCurrencyCodeGet(requestParameters: ComoditiesGoldActualPriceCurrencyCodeGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.comoditiesGoldActualPriceCurrencyCodeGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async comoditiesGoldActualPriceGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/comodities/gold/actualPrice`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async comoditiesGoldActualPriceGet(initOverrides?: RequestInit): Promise<number> {
+        const response = await this.comoditiesGoldActualPriceGetRaw(initOverrides);
+        return await response.value();
     }
 
     /**

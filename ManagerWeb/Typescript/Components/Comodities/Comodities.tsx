@@ -44,7 +44,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
             <div className="">
                 <p className="text-3xl text-center mt-6">Comodities overview</p>
                 <div className="flex">
-                    <div className="w-4/12 p-4 overflow-y-auto"><Gold goldIngots={this.state.goldIngots} /></div>
+                    <div className="w-4/12 p-4 overflow-y-auto"><Gold goldIngots={this.state.goldIngots} routeComponent={this.props.history} /></div>
                     <div className="w-4/12 p-4 overflow-y-auto">Silver component</div>
                     <div className="w-4/12 p-4 overflow-y-auto">Others</div>
                 </div>
