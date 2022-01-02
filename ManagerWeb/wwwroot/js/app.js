@@ -5287,8 +5287,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold_1 = __importDefault(__webpack_require__(/*! ./Gold */ "./Typescript/Components/Comodities/Gold.tsx"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+    }
+});
 class ComoditiesState {
 }
 class Comodities extends react_1.default.Component {
@@ -5307,19 +5314,28 @@ class Comodities extends react_1.default.Component {
             const goldIngots = data.filter(a => a.comodityTypeId == goldType.id).map(c => ({ id: c.id, company: c.company, weight: c.tradeSize, boughtDate: c.tradeTimeStamp, unit: c.comodityUnit, costs: c.tradeValue, currency: c.currencySymbol }));
             this.setState({ goldIngots: goldIngots });
         });
-        this.state = { goldIngots: [] };
+        this.addNewGold = () => {
+            this.setState({ openedForm: true });
+        };
+        this.handleClose = () => this.setState({ openedForm: false });
+        this.state = { goldIngots: [], openedForm: false };
     }
     componentDidMount() {
         this.init();
     }
     render() {
         return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
-            react_1.default.createElement("div", { className: "flex" },
-                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
-                    react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => console.log("New ingot") })),
-                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
-                react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others"))));
+            react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
+                react_1.default.createElement("div", { className: "flex" },
+                    react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
+                        react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold() })),
+                    react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
+                    react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others")),
+                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Zlat\u00FD slitek"),
+                    react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement("p", null, "Form"))))));
     }
 }
 exports.default = Comodities;
