@@ -31,7 +31,8 @@ const Gold = (props: GoldListProps) => {
             <h3 className="text-xl">Gold</h3>
             <div className="mt-3 flex flex-row flex-nowrap text-center cursor-default">
                 {goldIngots.map((g, i) => (
-                    <div key={g.id} className={"relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap")}>
+                    <div key={g.id} className={"relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap")}
+                        onClick={() => props.editIngot(g.id)}>
                         <div className="w-11/12 z-negative1 bg-gold rotateBox">
                         </div>
                         <div className={"px-2 py-6 rounded-xl bg-gold z-10"}>

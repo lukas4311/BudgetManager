@@ -5315,10 +5315,13 @@ class Comodities extends react_1.default.Component {
             this.setState({ goldIngots: goldIngots });
         });
         this.addNewGold = () => {
-            this.setState({ openedForm: true });
+            this.setState({ openedForm: true, dialogTitle: "Přidat zlato" });
+        };
+        this.editGold = (id) => {
+            this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
         };
         this.handleClose = () => this.setState({ openedForm: false });
-        this.state = { goldIngots: [], openedForm: false };
+        this.state = { goldIngots: [], openedForm: false, dialogTitle: "" };
     }
     componentDidMount() {
         this.init();
@@ -5329,7 +5332,7 @@ class Comodities extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
                 react_1.default.createElement("div", { className: "flex" },
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
-                        react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold() })),
+                        react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold })),
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others")),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
@@ -5414,7 +5417,7 @@ const Gold = (props) => {
     return (react_1.default.createElement("div", { id: "goldCards" },
         react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
         react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center cursor-default" },
-            goldIngots.map((g, i) => (react_1.default.createElement("div", { key: g.id, className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap") },
+            goldIngots.map((g, i) => (react_1.default.createElement("div", { key: g.id, className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap"), onClick: () => props.editIngot(g.id) },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
                     react_1.default.createElement("p", { className: "font-medium goldText" }, g.company),

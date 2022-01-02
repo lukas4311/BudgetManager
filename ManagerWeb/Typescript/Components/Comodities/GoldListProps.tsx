@@ -5,5 +5,5 @@ export class GoldListProps {
     goldIngots: GoldIngot[];
     routeComponent: H.History<any>;
     addNewIngot?: () => void;
-    deleteIngot?: (id: number) => void;
+    editIngot?: (id: number) => void;
 }

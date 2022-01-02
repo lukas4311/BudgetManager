@@ -18,6 +18,7 @@ const theme = createMuiTheme({
 class ComoditiesState {
     goldIngots: GoldIngot[];
     openedForm: boolean;
+    dialogTitle: string
 }
 
 export default class Comodities extends React.Component<RouteComponentProps, ComoditiesState>{
@@ -26,7 +27,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { goldIngots: [], openedForm: false };
+        this.state = { goldIngots: [], openedForm: false, dialogTitle: "" };
     }
 
     componentDidMount(): void {
@@ -49,7 +50,11 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     }
 
     private addNewGold = () => {
-        this.setState({ openedForm: true });
+        this.setState({ openedForm: true, dialogTitle: "Přidat zlato" });
+    }
+
+    private editGold = (id: number) => {
+        this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
     }
 
     private handleClose = () => this.setState({ openedForm: false });
@@ -60,7 +65,8 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                 <ThemeProvider theme={theme}>
                     <p className="text-3xl text-center mt-6">Comodities overview</p>
                     <div className="flex">
-                        <div className="w-4/12 p-4 overflow-y-auto"><Gold goldIngots={this.state.goldIngots} routeComponent={this.props.history} addNewIngot={() => this.addNewGold()} /></div>
+                        <div className="w-4/12 p-4 overflow-y-auto"><Gold goldIngots={this.state.goldIngots} routeComponent={this.props.history}
+                            addNewIngot={() => this.addNewGold()} editIngot={this.editGold} /></div>
                         <div className="w-4/12 p-4 overflow-y-auto">Silver component</div>
                         <div className="w-4/12 p-4 overflow-y-auto">Others</div>
                     </div>
