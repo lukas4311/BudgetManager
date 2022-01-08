@@ -26,9 +26,18 @@ const ComoditiesForm = (props: ComoditiesFormViewModel) => {
             <h1 className='text-center text-3xl'>{props.comodityTypeName}</h1>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="col-span-2 w-1/3">
-                    <Controller render={({ field }) => 
-                        <TextField label="Datum nákupu" type="date" value={field.value} {...field} className="place-self-end w-full"  InputLabelProps={{ shrink: true }} />}
-                    name="buyTimeStamp" defaultValue={props.buyTimeStamp} control={control} />
+                    <Controller render={({ field }) =>
+                        <TextField label="Datum nákupu" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                        name="buyTimeStamp" defaultValue={props.buyTimeStamp} control={control} />
+                </div>
+                <div className="w-2/3">
+                    <Controller render={({ field }) => <TextField label="Množství" type="text" {...field} className="place-self-end w-full" />}
+                        name="comodityAmount" control={control} />
+                    <p>{props.comodityUnit}</p>
+                </div>
+                <div className="w-2/3">
+                    <Controller render={({ field }) => <TextField label="Cena" type="text" {...field} className="place-self-end w-full" />}
+                        name="price" control={control} />
                 </div>
             </div>
 
