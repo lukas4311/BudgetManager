@@ -5319,7 +5319,7 @@ class Comodities extends react_1.default.Component {
         });
         this.loadGoldData = () => __awaiter(this, void 0, void 0, function* () {
             let data = yield this.comodityApi.comoditiesAllGet();
-            const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(c => ({ id: c.id, company: c.company, weight: c.tradeSize, boughtDate: c.tradeTimeStamp, unit: c.comodityUnit, costs: c.tradeValue, currency: c.currencySymbol }));
+            const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
             this.setState({ goldIngots: goldIngots });
         });
         this.addNewGold = () => {
@@ -5336,9 +5336,24 @@ class Comodities extends react_1.default.Component {
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
         this.editGold = (id) => {
-            this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
+            let tradeHistory = this.state.goldIngots.filter(t => t.id == id)[0];
+            this.setState({ selectedModel: tradeHistory, openedForm: true });
+            this.setState({ openedForm: true, dialogTitle: "Gold" });
         };
-        this.saveTrade = (data) => {
+        this.mapDataModelToViewModel = (tradeHistory) => {
+            let model = new ComoditiesForm_1.ComoditiesFormViewModel();
+            model.currencySymbol = tradeHistory.currencySymbol;
+            model.currencySymbolId = tradeHistory.currencySymbolId;
+            model.id = tradeHistory.id;
+            model.price = tradeHistory.tradeValue;
+            model.buyTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+            model.comodityAmount = tradeHistory.tradeSize;
+            model.onSave = this.saveTrade;
+            model.currencies = this.currencies;
+            model.company = tradeHistory.company;
+            return model;
+        };
+        this.saveTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const tradeHistory = {
                 comodityTypeId: this.goldType.id,
                 comodityUnitId: this.goldType.comodityUnitId,
@@ -5349,16 +5364,12 @@ class Comodities extends react_1.default.Component {
                 tradeTimeStamp: (0, moment_1.default)(data.buyTimeStamp).toDate(),
                 tradeValue: data.price
             };
-            // if (data.id)
-            //     this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
-            // else
-            //     this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+            if (data.id)
+                yield this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+            else
+                yield this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadGoldData();
-        };
-        this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
-            // let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
-            // this.setState({ selectedTrade: tradeHistory, openedForm: true });
         });
         this.handleClose = () => this.setState({ openedForm: false });
         this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now() };
@@ -5372,7 +5383,7 @@ class Comodities extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
                 react_1.default.createElement("div", { className: "flex" },
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" },
-                        react_1.default.createElement(Gold_1.default, { goldIngots: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold })),
+                        react_1.default.createElement(Gold_1.default, { comoditiesViewModels: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold })),
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Silver component"),
                     react_1.default.createElement("div", { className: "w-4/12 p-4 overflow-y-auto" }, "Others")),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
@@ -5499,24 +5510,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold = (props) => {
     var _a, _b, _c;
     const ounce = 28.34;
-    const goldIngots = (_a = props.goldIngots) !== null && _a !== void 0 ? _a : [];
-    const totalWeight = lodash_1.default.sumBy(goldIngots, (g) => g.weight);
-    const totalCosts = lodash_1.default.sumBy(goldIngots, (g) => g.costs);
-    const goldUnit = (_b = props.goldIngots[0]) === null || _b === void 0 ? void 0 : _b.unit;
-    const currency = (_c = props.goldIngots[0]) === null || _c === void 0 ? void 0 : _c.currency;
+    const goldIngots = (_a = props.comoditiesViewModels) !== null && _a !== void 0 ? _a : [];
+    const totalWeight = lodash_1.default.sumBy(goldIngots, (g) => g.comodityAmount);
+    const totalCosts = lodash_1.default.sumBy(goldIngots, (g) => g.price);
+    const goldUnit = (_b = props.comoditiesViewModels[0]) === null || _b === void 0 ? void 0 : _b.comodityUnit;
+    const currency = (_c = props.comoditiesViewModels[0]) === null || _c === void 0 ? void 0 : _c.currencySymbol;
     const [actualTotalPrice, setActualTotalPrice] = (0, react_1.useState)("");
     (0, react_1.useEffect)(() => {
         function calculateTotalActualPrice() {
             var _a;
             return __awaiter(this, void 0, void 0, function* () {
                 const apiFactory = new ApiClientFactory_1.default(null);
-                const totalWeight = lodash_1.default.sumBy((_a = props.goldIngots) !== null && _a !== void 0 ? _a : [], (g) => g.weight);
+                const totalWeight = lodash_1.default.sumBy((_a = props.comoditiesViewModels) !== null && _a !== void 0 ? _a : [], (g) => g.comodityAmount);
                 let comodityApi = yield apiFactory.getClient(Main_1.ComodityApi);
                 const price = yield comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: "CZK" });
                 const actualTotalPrice = totalWeight * price / ounce;
@@ -5524,7 +5536,7 @@ const Gold = (props) => {
             });
         }
         calculateTotalActualPrice();
-    }, [props.goldIngots]);
+    }, [props.comoditiesViewModels]);
     return (react_1.default.createElement("div", { id: "goldCards" },
         react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
         react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center cursor-default" },
@@ -5533,9 +5545,9 @@ const Gold = (props) => {
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
                     react_1.default.createElement("p", { className: "font-medium goldText" }, g.company),
                     react_1.default.createElement("p", { className: "text-2xl font-bold mt-4 goldText" },
-                        g.weight,
+                        g.comodityAmount,
                         "g"),
-                    react_1.default.createElement("p", { className: "mt-6 goldText" }, g.boughtDate.toLocaleDateString()))))),
+                    react_1.default.createElement("p", { className: "mt-6 goldText" }, (0, moment_1.default)(g.buyTimeStamp).toDate().toLocaleDateString()))))),
             react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap", onClick: props.addNewIngot },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center" },

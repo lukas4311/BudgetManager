@@ -19,7 +19,7 @@ const theme = createMuiTheme({
 });
 
 class ComoditiesState {
-    goldIngots: GoldIngot[];
+    goldIngots: ComoditiesFormViewModel[];
     openedForm: boolean;
     dialogTitle: string;
     selectedModel: ComoditiesFormViewModel;
@@ -58,7 +58,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     private loadGoldData = async () => {
         let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
-        const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map<GoldIngot>(c => ({ id: c.id, company: c.company, weight: c.tradeSize, boughtDate: c.tradeTimeStamp, unit: c.comodityUnit, costs: c.tradeValue, currency: c.currencySymbol }));
+        const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
         this.setState({ goldIngots: goldIngots });
     }
 
@@ -78,10 +78,26 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
 
     private editGold = (id: number) => {
-        this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
+        let tradeHistory = this.state.goldIngots.filter(t => t.id == id)[0];
+        this.setState({ selectedModel: tradeHistory, openedForm: true });
+        this.setState({ openedForm: true, dialogTitle: "Gold" });
     }
 
-    private saveTrade = (data: ComoditiesFormViewModel): void => {
+    private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
+        let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
+        model.currencySymbol = tradeHistory.currencySymbol;
+        model.currencySymbolId = tradeHistory.currencySymbolId;
+        model.id = tradeHistory.id;
+        model.price = tradeHistory.tradeValue;
+        model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+        model.comodityAmount = tradeHistory.tradeSize;
+        model.onSave = this.saveTrade;
+        model.currencies = this.currencies;
+        model.company = tradeHistory.company;
+        return model;
+    }
+
+    private saveTrade = async (data: ComoditiesFormViewModel): Promise<void> => {
         const tradeHistory: ComodityTradeHistoryModel = {
             comodityTypeId: this.goldType.id,
             comodityUnitId: this.goldType.comodityUnitId,
@@ -93,18 +109,13 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
             tradeValue: data.price
         };
 
-        // if (data.id)
-        //     this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
-        // else
-        //     this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+        if (data.id)
+            await this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+        else
+            await this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
 
         this.setState({ openedForm: false, selectedModel: undefined });
         this.loadGoldData();
-    }
-
-    private budgetEdit = async (id: number): Promise<void> => {
-        // let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
-        // this.setState({ selectedTrade: tradeHistory, openedForm: true });
     }
 
     private handleClose = () => this.setState({ openedForm: false });
@@ -115,7 +126,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                 <ThemeProvider theme={theme}>
                     <p className="text-3xl text-center mt-6">Comodities overview</p>
                     <div className="flex">
-                        <div className="w-4/12 p-4 overflow-y-auto"><Gold goldIngots={this.state.goldIngots} routeComponent={this.props.history}
+                        <div className="w-4/12 p-4 overflow-y-auto"><Gold comoditiesViewModels={this.state.goldIngots} routeComponent={this.props.history}
                             addNewIngot={() => this.addNewGold()} editIngot={this.editGold} /></div>
                         <div className="w-4/12 p-4 overflow-y-auto">Silver component</div>
                         <div className="w-4/12 p-4 overflow-y-auto">Others</div>

@@ -1,4 +1,5 @@
 import _ from "lodash";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ComodityApi } from "../../ApiClient/Main";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
@@ -6,17 +7,17 @@ import { GoldListProps } from "./GoldListProps";
 
 const Gold = (props: GoldListProps) => {
     const ounce = 28.34;
-    const goldIngots = props.goldIngots ?? [];
-    const totalWeight = _.sumBy(goldIngots, (g) => g.weight);
-    const totalCosts = _.sumBy(goldIngots, (g) => g.costs);
-    const goldUnit = props.goldIngots[0]?.unit;
-    const currency = props.goldIngots[0]?.currency;
+    const goldIngots = props.comoditiesViewModels ?? [];
+    const totalWeight = _.sumBy(goldIngots, (g) => g.comodityAmount);
+    const totalCosts = _.sumBy(goldIngots, (g) => g.price);
+    const goldUnit = props.comoditiesViewModels[0]?.comodityUnit;
+    const currency = props.comoditiesViewModels[0]?.currencySymbol;
     const [actualTotalPrice, setActualTotalPrice] = useState("");
 
     useEffect(() => {
         async function calculateTotalActualPrice() {
             const apiFactory = new ApiClientFactory(null);
-            const totalWeight = _.sumBy(props.goldIngots ?? [], (g) => g.weight);
+            const totalWeight = _.sumBy(props.comoditiesViewModels ?? [], (g) => g.comodityAmount);
             let comodityApi = await apiFactory.getClient(ComodityApi);
             const price = await comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: "CZK" });
             const actualTotalPrice = totalWeight * price / ounce;
@@ -24,7 +25,7 @@ const Gold = (props: GoldListProps) => {
         }
 
         calculateTotalActualPrice()
-    }, [props.goldIngots])
+    }, [props.comoditiesViewModels])
 
     return (
         <div id="goldCards">
@@ -37,8 +38,8 @@ const Gold = (props: GoldListProps) => {
                         </div>
                         <div className={"px-2 py-6 rounded-xl bg-gold z-10"}>
                             <p className="font-medium goldText">{g.company}</p>
-                            <p className="text-2xl font-bold mt-4 goldText">{g.weight}g</p>
-                            <p className="mt-6 goldText">{g.boughtDate.toLocaleDateString()}</p>
+                            <p className="text-2xl font-bold mt-4 goldText">{g.comodityAmount}g</p>
+                            <p className="mt-6 goldText">{moment(g.buyTimeStamp).toDate().toLocaleDateString()}</p>
                         </div>
                     </div>
                 ))}
