@@ -5312,20 +5312,24 @@ class Comodities extends react_1.default.Component {
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            const comodityTypes = yield this.comodityApi.comoditiesComodityTypeAllGet();
+            this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            yield this.loadGoldData();
+        });
+        this.loadGoldData = () => __awaiter(this, void 0, void 0, function* () {
             let data = yield this.comodityApi.comoditiesAllGet();
-            let comodityType = yield this.comodityApi.comoditiesComodityTypeAllGet();
-            this.goldType = comodityType.filter(c => c.code == this.goldCode)[0];
             const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(c => ({ id: c.id, company: c.company, weight: c.tradeSize, boughtDate: c.tradeTimeStamp, unit: c.comodityUnit, costs: c.tradeValue, currency: c.currencySymbol }));
             this.setState({ goldIngots: goldIngots });
         });
         this.addNewGold = () => {
             let model = new ComoditiesForm_1.ComoditiesFormViewModel();
-            model.onSave = () => console.log('Saved');
+            model.onSave = this.saveTrade;
             model.buyTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.comodityTypeName = "Gold";
             model.comodityUnit = this.goldType.comodityUnit;
             model.price = 0;
+            model.company = "";
             model.comodityAmount = 0;
             model.currencies = this.currencies;
             model.currencySymbolId = this.currencies[0].id;
@@ -5333,6 +5337,24 @@ class Comodities extends react_1.default.Component {
         };
         this.editGold = (id) => {
             this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
+        };
+        this.saveTrade = (data) => {
+            const tradeHistory = {
+                comodityTypeId: this.goldType.id,
+                comodityUnitId: this.goldType.comodityUnitId,
+                company: data.company,
+                id: data.id,
+                tradeSize: data.comodityAmount,
+                currencySymbolId: data.currencySymbolId,
+                tradeTimeStamp: (0, moment_1.default)(data.buyTimeStamp).toDate(),
+                tradeValue: data.price
+            };
+            // if (data.id)
+            //     this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+            // else
+            //     this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+            this.setState({ openedForm: false, selectedModel: undefined });
+            this.loadGoldData();
         };
         this.budgetEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             // let tradeHistory = this.state.trades.filter(t => t.id == id)[0];
@@ -5409,13 +5431,15 @@ const ComoditiesForm = (props) => {
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("h1", { className: 'text-center text-3xl mb-5' }, props.comodityTypeName),
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center gap-y-8" },
+            React.createElement("div", { className: "col-span-2 w-2/3 flex flex-row items-center" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Company", type: "text" }, field, { className: "place-self-end w-full" })), name: "company", control: control })),
             React.createElement("div", { className: "w-2/3 flex justify-start" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum n\u00E1kupu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "buyTimeStamp", defaultValue: props.buyTimeStamp, control: control })),
             React.createElement("div", { className: "w-2/3 flex flex-row items-center" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Mno\u017Estv\u00ED", type: "text" }, field, { className: "place-self-end w-full" })), name: "comodityAmount", control: control }),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Amount", type: "text" }, field, { className: "place-self-end w-full" })), name: "comodityAmount", control: control }),
                 React.createElement("p", { className: 'ml-3' }, props.comodityUnit)),
             React.createElement("div", { className: "w-2/3" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Cena", type: "text" }, field, { className: "place-self-end w-full" })), name: "price", control: control })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Price", type: "text" }, field, { className: "place-self-end w-full" })), name: "price", control: control })),
             React.createElement("div", { className: "w-2/3" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
                         var _a;

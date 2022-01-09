@@ -12,6 +12,7 @@ class ComoditiesFormViewModel implements IBaseModel {
     comodityAmount: number;
     comodityUnit: string;
     price: number;
+    company: string;
     currencySymbolId: number;
     currencySymbol: string;
     currencies: CurrencyTickerSelectModel[];
@@ -29,18 +30,22 @@ const ComoditiesForm = (props: ComoditiesFormViewModel) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <h1 className='text-center text-3xl mb-5'>{props.comodityTypeName}</h1>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center gap-y-8">
+                <div className="col-span-2 w-2/3 flex flex-row items-center">
+                    <Controller render={({ field }) => <TextField label="Company" type="text" {...field} className="place-self-end w-full" />}
+                        name="company" control={control} />
+                </div>
                 <div className="w-2/3 flex justify-start">
                     <Controller render={({ field }) =>
                         <TextField label="Datum nákupu" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                         name="buyTimeStamp" defaultValue={props.buyTimeStamp} control={control} />
                 </div>
                 <div className="w-2/3 flex flex-row items-center">
-                    <Controller render={({ field }) => <TextField label="Množství" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Amount" type="text" {...field} className="place-self-end w-full" />}
                         name="comodityAmount" control={control} />
                     <p className='ml-3'>{props.comodityUnit}</p>
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Cena" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Price" type="text" {...field} className="place-self-end w-full" />}
                         name="price" control={control} />
                 </div>
                 <div className="w-2/3">

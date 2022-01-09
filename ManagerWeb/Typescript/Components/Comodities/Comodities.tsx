@@ -50,30 +50,56 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private loadData = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
+        const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
+        this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
-        let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
-        let comodityType = await this.comodityApi.comoditiesComodityTypeAllGet();
+        await this.loadGoldData();
+    }
 
-        this.goldType = comodityType.filter(c => c.code == this.goldCode)[0];
+    private loadGoldData = async () => {
+        let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
         const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map<GoldIngot>(c => ({ id: c.id, company: c.company, weight: c.tradeSize, boughtDate: c.tradeTimeStamp, unit: c.comodityUnit, costs: c.tradeValue, currency: c.currencySymbol }));
         this.setState({ goldIngots: goldIngots });
     }
 
     private addNewGold = () => {
         let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-        model.onSave = () => console.log('Saved');
+        model.onSave = this.saveTrade;
         model.buyTimeStamp = moment().format("YYYY-MM-DD");
         model.comodityTypeName = "Gold";
         model.comodityUnit = this.goldType.comodityUnit;
         model.price = 0;
+        model.company = "";
         model.comodityAmount = 0;
         model.currencies = this.currencies;
         model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
 
+
     private editGold = (id: number) => {
         this.setState({ openedForm: true, dialogTitle: "Upravit zlato" });
+    }
+
+    private saveTrade = (data: ComoditiesFormViewModel): void => {
+        const tradeHistory: ComodityTradeHistoryModel = {
+            comodityTypeId: this.goldType.id,
+            comodityUnitId: this.goldType.comodityUnitId,
+            company: data.company,
+            id: data.id,
+            tradeSize: data.comodityAmount,
+            currencySymbolId: data.currencySymbolId,
+            tradeTimeStamp: moment(data.buyTimeStamp).toDate(),
+            tradeValue: data.price
+        };
+
+        // if (data.id)
+        //     this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+        // else
+        //     this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+
+        this.setState({ openedForm: false, selectedModel: undefined });
+        this.loadGoldData();
     }
 
     private budgetEdit = async (id: number): Promise<void> => {
