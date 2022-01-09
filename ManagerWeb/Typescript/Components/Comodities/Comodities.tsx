@@ -1,8 +1,8 @@
 import _ from "lodash";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { ComodityApi } from "../../ApiClient/Main/apis";
-import { ComodityTradeHistoryModel, ComodityTypeModel } from "../../ApiClient/Main/models";
+import { ComodityApi, CurrencyApi } from "../../ApiClient/Main/apis";
+import { ComodityTradeHistoryModel, ComodityTypeModel, CurrencySymbol } from "../../ApiClient/Main/models";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import Gold from "./Gold";
@@ -10,6 +10,7 @@ import { GoldIngot } from "./GoldIngot";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { ComoditiesForm, ComoditiesFormViewModel } from "./ComoditiesForm";
 import moment from "moment";
+import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 
 const theme = createMuiTheme({
     palette: {
@@ -29,6 +30,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private comodityApi: ComodityApi;
     private goldCode: string = 'AU';
     private goldType: ComodityTypeModel;
+    private currencies: CurrencyTickerSelectModel[];
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -46,6 +48,9 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     }
 
     private loadData = async () => {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        const currencyApi = await apiFactory.getClient(CurrencyApi);
+        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
         let comodityType = await this.comodityApi.comoditiesComodityTypeAllGet();
 
@@ -62,6 +67,8 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         model.comodityUnit = this.goldType.comodityUnit;
         model.price = 0;
         model.comodityAmount = 0;
+        model.currencies = this.currencies;
+        model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
 

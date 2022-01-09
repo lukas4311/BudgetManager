@@ -5310,6 +5310,9 @@ class Comodities extends react_1.default.Component {
             this.loadData();
         });
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             let data = yield this.comodityApi.comoditiesAllGet();
             let comodityType = yield this.comodityApi.comoditiesComodityTypeAllGet();
             this.goldType = comodityType.filter(c => c.code == this.goldCode)[0];
@@ -5324,6 +5327,8 @@ class Comodities extends react_1.default.Component {
             model.comodityUnit = this.goldType.comodityUnit;
             model.price = 0;
             model.comodityAmount = 0;
+            model.currencies = this.currencies;
+            model.currencySymbolId = this.currencies[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
         this.editGold = (id) => {
@@ -5402,15 +5407,25 @@ const ComoditiesForm = (props) => {
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
-        React.createElement("h1", { className: 'text-center text-3xl' }, props.comodityTypeName),
-        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
-            React.createElement("div", { className: "col-span-2 w-1/3" },
+        React.createElement("h1", { className: 'text-center text-3xl mb-5' }, props.comodityTypeName),
+        React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center gap-y-8" },
+            React.createElement("div", { className: "w-2/3 flex justify-start" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum n\u00E1kupu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "buyTimeStamp", defaultValue: props.buyTimeStamp, control: control })),
-            React.createElement("div", { className: "w-2/3" },
+            React.createElement("div", { className: "w-2/3 flex flex-row items-center" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Mno\u017Estv\u00ED", type: "text" }, field, { className: "place-self-end w-full" })), name: "comodityAmount", control: control }),
-                React.createElement("p", null, props.comodityUnit)),
+                React.createElement("p", { className: 'ml-3' }, props.comodityUnit)),
             React.createElement("div", { className: "w-2/3" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Cena", type: "text" }, field, { className: "place-self-end w-full" })), name: "price", control: control }))),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Cena", type: "text" }, field, { className: "place-self-end w-full" })), name: "price", control: control })),
+            React.createElement("div", { className: "w-2/3" },
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return React.createElement(core_1.FormControl, { className: "w-full" },
+                            React.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Zdrojov\u00E1 m\u011Bna tradu"),
+                            React.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return React.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    React.createElement("span", null, p.ticker));
+                            })));
+                    }, name: "currencySymbolId", control: control }))),
         React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.ComoditiesForm = ComoditiesForm;
