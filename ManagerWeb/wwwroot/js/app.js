@@ -5325,6 +5325,7 @@ class Comodities extends react_1.default.Component {
         this.addNewGold = () => {
             let model = new ComoditiesForm_1.ComoditiesFormViewModel();
             model.onSave = this.saveTrade;
+            model.onDelete = this.deleteTrade;
             model.buyTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.comodityTypeName = "Gold";
             model.comodityUnit = this.goldType.comodityUnit;
@@ -5349,6 +5350,7 @@ class Comodities extends react_1.default.Component {
             model.buyTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
             model.comodityAmount = tradeHistory.tradeSize;
             model.onSave = this.saveTrade;
+            model.onDelete = this.deleteTrade;
             model.currencies = this.currencies;
             model.company = tradeHistory.company;
             return model;
@@ -5370,6 +5372,11 @@ class Comodities extends react_1.default.Component {
                 yield this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadGoldData();
+        });
+        this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
+            console.log("delete");
+            // TODO: ask for confirmation (do universal confirmation modal window)
+            // await this.comodityApi.comoditiesDelete({body: id});
         });
         this.handleClose = () => this.setState({ openedForm: false });
         this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now() };

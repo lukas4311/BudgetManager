@@ -65,6 +65,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private addNewGold = () => {
         let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
         model.onSave = this.saveTrade;
+        model.onDelete = this.deleteTrade;
         model.buyTimeStamp = moment().format("YYYY-MM-DD");
         model.comodityTypeName = "Gold";
         model.comodityUnit = this.goldType.comodityUnit;
@@ -92,6 +93,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
         model.comodityAmount = tradeHistory.tradeSize;
         model.onSave = this.saveTrade;
+        model.onDelete = this.deleteTrade;
         model.currencies = this.currencies;
         model.company = tradeHistory.company;
         return model;
@@ -116,6 +118,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
         this.setState({ openedForm: false, selectedModel: undefined });
         this.loadGoldData();
+    }
+
+    private deleteTrade = async(id: number): Promise<void> => {
+        console.log("delete");
+        // TODO: ask for confirmation (do universal confirmation modal window)
+        // await this.comodityApi.comoditiesDelete({body: id});
     }
 
     private handleClose = () => this.setState({ openedForm: false });
