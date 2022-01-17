@@ -120,7 +120,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         this.loadGoldData();
     }
 
-    private deleteTrade = async(id: number): Promise<void> => {
+    private deleteTrade = async (id: number): Promise<void> => {
         console.log("delete");
         // TODO: ask for confirmation (do universal confirmation modal window)
         // await this.comodityApi.comoditiesDelete({body: id});
@@ -134,10 +134,17 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                 <ThemeProvider theme={theme}>
                     <p className="text-3xl text-center mt-6">Comodities overview</p>
                     <div className="flex">
-                        <div className="w-4/12 p-4 overflow-y-auto"><Gold comoditiesViewModels={this.state.goldIngots} routeComponent={this.props.history}
-                            addNewIngot={() => this.addNewGold()} editIngot={this.editGold} /></div>
-                        <div className="w-4/12 p-4 overflow-y-auto">Silver component</div>
-                        <div className="w-4/12 p-4 overflow-y-auto">Others</div>
+                        <div className="w-7/12 p-4 overflow-y-auto flex">
+                            <div className="w-4/5 mx-auto px-10">
+                                <Gold comoditiesViewModels={this.state.goldIngots} routeComponent={this.props.history}
+                                    addNewIngot={() => this.addNewGold()} editIngot={this.editGold} />
+                            </div>
+                        </div>
+                        <div className="w-5/12 p-4 overflow-y-auto flex flex-col">
+                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Gold</div>
+                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Silver</div>
+                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Others</div>
+                        </div>
                     </div>
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                         maxWidth="md" fullWidth={true}>
