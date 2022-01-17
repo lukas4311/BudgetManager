@@ -5300,6 +5300,8 @@ const theme = (0, styles_1.createMuiTheme)({
 });
 class ComoditiesState {
 }
+class ComodityMenuItem {
+}
 class Comodities extends react_1.default.Component {
     constructor(props) {
         super(props);
@@ -5379,10 +5381,22 @@ class Comodities extends react_1.default.Component {
             // await this.comodityApi.comoditiesDelete({body: id});
         });
         this.handleClose = () => this.setState({ openedForm: false });
-        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now() };
+        const menu = [
+            { id: 1, title: "Gold", selected: true },
+            { id: 2, title: "Silver", selected: false },
+            { id: 3, title: "Others", selected: false }
+        ];
+        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(), comodityMenu: menu };
     }
     componentDidMount() {
         this.init();
+    }
+    comodityMenuClick(id) {
+        let menu = this.state.comodityMenu;
+        menu.forEach(a => a.selected = false);
+        let selectedMenu = menu.filter(m => m.id == id)[0];
+        selectedMenu.selected = true;
+        this.setState({ comodityMenu: menu });
     }
     render() {
         return (react_1.default.createElement("div", { className: "" },
@@ -5392,10 +5406,7 @@ class Comodities extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
                         react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" },
                             react_1.default.createElement(Gold_1.default, { comoditiesViewModels: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold }))),
-                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col" },
-                        react_1.default.createElement("div", { className: "mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500" }, "Gold"),
-                        react_1.default.createElement("div", { className: "mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500" }, "Silver"),
-                        react_1.default.createElement("div", { className: "mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500" }, "Others"))),
+                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Zlat\u00FD slitek"),
                     react_1.default.createElement(core_1.DialogContent, null,

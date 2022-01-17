@@ -24,6 +24,13 @@ class ComoditiesState {
     dialogTitle: string;
     selectedModel: ComoditiesFormViewModel;
     formKey: number;
+    comodityMenu: Array<ComodityMenuItem>
+}
+
+class ComodityMenuItem {
+    title: string;
+    id: number;
+    selected: boolean;
 }
 
 export default class Comodities extends React.Component<RouteComponentProps, ComoditiesState>{
@@ -34,7 +41,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now() };
+        const menu: Array<ComodityMenuItem> = [
+            { id: 1, title: "Gold", selected: true },
+            { id: 2, title: "Silver", selected: false },
+            { id: 3, title: "Others", selected: false }
+        ];
+        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(), comodityMenu: menu };
     }
 
     componentDidMount(): void {
@@ -128,6 +140,14 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     private handleClose = () => this.setState({ openedForm: false });
 
+    private comodityMenuClick(id: number) {
+        let menu = this.state.comodityMenu;
+        menu.forEach(a => a.selected = false);
+        let selectedMenu = menu.filter(m => m.id == id)[0];
+        selectedMenu.selected = true;
+        this.setState({ comodityMenu: menu });
+    }
+
     public render() {
         return (
             <div className="">
@@ -141,9 +161,9 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                             </div>
                         </div>
                         <div className="w-5/12 p-4 overflow-y-auto flex flex-col">
-                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Gold</div>
-                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Silver</div>
-                            <div className="mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500">Others</div>
+                            {this.state.comodityMenu.map(c =>
+                                (<div className={"mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>{c.title}</div>)
+                            )}
                         </div>
                     </div>
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
