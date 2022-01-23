@@ -148,6 +148,20 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         this.setState({ comodityMenu: menu });
     }
 
+    private showSelectedComponent = (): JSX.Element => {
+        let component: JSX.Element =
+            (<div>
+                <h3 className="text-xl text-center">You don't have any comodity of this type</h3>
+            </div>)
+        const selectedMenu = _.first(this.state.comodityMenu.filter(a => a.selected == true));
+
+        if (selectedMenu.id == 1)
+            component = <Gold comoditiesViewModels={this.state.goldIngots} routeComponent={this.props.history}
+                addNewIngot={() => this.addNewGold()} editIngot={this.editGold} />
+
+        return component;
+    }
+
     public render() {
         return (
             <div className="">
@@ -156,13 +170,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                     <div className="flex">
                         <div className="w-7/12 p-4 overflow-y-auto flex">
                             <div className="w-4/5 mx-auto px-10">
-                                <Gold comoditiesViewModels={this.state.goldIngots} routeComponent={this.props.history}
-                                    addNewIngot={() => this.addNewGold()} editIngot={this.editGold} />
+                                {this.showSelectedComponent()}
                             </div>
                         </div>
-                        <div className="w-5/12 p-4 overflow-y-auto flex flex-col">
+                        <div className="w-5/12 p-4 overflow-y-auto flex flex-col justify-start">
                             {this.state.comodityMenu.map(c =>
-                                (<div className={"mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>{c.title}</div>)
+                                (<div className={"p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>{c.title}</div>)
                             )}
                         </div>
                     </div>

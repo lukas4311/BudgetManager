@@ -5285,6 +5285,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
@@ -5381,6 +5382,14 @@ class Comodities extends react_1.default.Component {
             // await this.comodityApi.comoditiesDelete({body: id});
         });
         this.handleClose = () => this.setState({ openedForm: false });
+        this.showSelectedComponent = () => {
+            let component = (react_1.default.createElement("div", null,
+                react_1.default.createElement("h3", { className: "text-xl text-center" }, "You don't have any comodity of this type")));
+            const selectedMenu = lodash_1.default.first(this.state.comodityMenu.filter(a => a.selected == true));
+            if (selectedMenu.id == 1)
+                component = react_1.default.createElement(Gold_1.default, { comoditiesViewModels: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold });
+            return component;
+        };
         const menu = [
             { id: 1, title: "Gold", selected: true },
             { id: 2, title: "Silver", selected: false },
@@ -5404,9 +5413,8 @@ class Comodities extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
                 react_1.default.createElement("div", { className: "flex" },
                     react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
-                        react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" },
-                            react_1.default.createElement(Gold_1.default, { comoditiesViewModels: this.state.goldIngots, routeComponent: this.props.history, addNewIngot: () => this.addNewGold(), editIngot: this.editGold }))),
-                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "mx-auto p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
+                        react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
+                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col justify-start" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Zlat\u00FD slitek"),
                     react_1.default.createElement(core_1.DialogContent, null,
@@ -5483,7 +5491,7 @@ const ComoditiesForm = (props) => {
                                         React.createElement("span", null, p.ticker));
                                 })));
                         }, name: "currencySymbolId", control: control }))),
-            React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block m-auto w-1/3" }, "Save")),
+            React.createElement(core_1.Button, { type: "submit", variant: "contained", className: "block m-auto w-1/3 bg-vermilion text-white" }, "Save")),
         React.createElement(core_1.Button, { className: 'bg-red-600', onClick: () => console.log("delete") }, "Delete")));
 };
 exports.ComoditiesForm = ComoditiesForm;
@@ -5561,8 +5569,8 @@ const Gold = (props) => {
         calculateTotalActualPrice();
     }, [props.comoditiesViewModels]);
     return (react_1.default.createElement("div", { id: "goldCards" },
-        react_1.default.createElement("h3", { className: "text-xl" }, "Gold"),
-        react_1.default.createElement("div", { className: "mt-3 flex flex-row flex-nowrap text-center cursor-default" },
+        react_1.default.createElement("h3", { className: "text-xl text-center" }, "Gold"),
+        react_1.default.createElement("div", { className: "mt-3 flex flex-row justify-center flex-nowrap text-center cursor-default" },
             goldIngots.map((g, i) => (react_1.default.createElement("div", { key: g.id, className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap"), onClick: () => props.editIngot(g.id) },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10" },
@@ -5575,8 +5583,8 @@ const Gold = (props) => {
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center" },
                     react_1.default.createElement("p", { className: "font-medium goldText text-7xl font-black" }, "+")))),
-        react_1.default.createElement("div", null,
-            react_1.default.createElement("h4", { className: "text-lg mt-6" }, "Summary info"),
+        react_1.default.createElement("div", { className: "text-center block" },
+            react_1.default.createElement("h4", { className: "text-xl mt-12" }, "Summary info"),
             react_1.default.createElement("p", { className: "mt-2" },
                 "Total weight: ",
                 totalWeight,

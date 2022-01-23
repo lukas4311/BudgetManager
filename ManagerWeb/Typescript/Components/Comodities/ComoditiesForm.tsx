@@ -71,7 +71,7 @@ const ComoditiesForm = (props: ComoditiesFormViewModel) => {
                     </div>
                 </div>
 
-                <Button type="submit" variant="contained" color="primary" className="block m-auto w-1/3">Save</Button>
+                <Button type="submit" variant="contained" className="block m-auto w-1/3 bg-vermilion text-white">Save</Button>
             </form>
             <Button className='bg-red-600' onClick={() => console.log("delete")}>Delete</Button>
         </div>
