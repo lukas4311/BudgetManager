@@ -1,6 +1,6 @@
 ﻿namespace BudgetManager.Domain.DTOs
 {
-    public class ComodityTypeModel
+    public class ComodityTypeModel : IDtoModel
     {
         public int Id { get; set; }
 

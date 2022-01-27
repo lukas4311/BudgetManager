@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class BudgetModel
+    public class BudgetModel : IUserDtoModel
     {
         public int? Id { get; set; }
 
