@@ -1,8 +1,9 @@
-﻿using System;
+﻿using BudgetManager.Data.DataModels;
+using System;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class TradeHistory : IUserDtoModel
+    public class TradeHistory : IUserDtoModel<CryptoTradeHistory>
     {
         public int Id { get; set; }
 
@@ -21,5 +22,10 @@ namespace BudgetManager.Domain.DTOs
         public string CurrencySymbol { get; set; }
 
         public int UserIdentityId { get; set; }
+
+        public CryptoTradeHistory ToEntity()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

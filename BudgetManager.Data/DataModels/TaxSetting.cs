@@ -1,6 +1,6 @@
 namespace BudgetManager.Data.DataModels
 {
-    public class TaxSetting
+    public class TaxSetting : IDataModel
     {
         public int Id { get; set; }
 

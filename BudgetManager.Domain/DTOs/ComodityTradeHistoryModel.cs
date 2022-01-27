@@ -1,8 +1,9 @@
-﻿using System;
+﻿using BudgetManager.Data.DataModels;
+using System;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class ComodityTradeHistoryModel : IUserDtoModel
+    public class ComodityTradeHistoryModel : IUserDtoModel<ComodityTradeHistory>
     {
         public int Id { get; set; }
 
@@ -27,5 +28,10 @@ namespace BudgetManager.Domain.DTOs
         public int UserIdentityId { get; set; }
 
         public string Company { get; set; }
+
+        public ComodityTradeHistory ToEntity()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

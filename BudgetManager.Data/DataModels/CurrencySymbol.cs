@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class CurrencySymbol
+    public class CurrencySymbol : IDataModel
     {
         public int Id { get; set; }
 

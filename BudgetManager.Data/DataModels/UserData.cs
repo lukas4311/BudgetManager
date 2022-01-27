@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BudgetManager.Data.DataModels
+﻿namespace BudgetManager.Data.DataModels
 {
-    public class UserData
+    public class UserData : IDataModel
     {
         public int Id { get; set; }
 

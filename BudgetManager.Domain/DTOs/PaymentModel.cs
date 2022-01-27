@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BudgetManager.Data.DataModels;
+using System;
 using System.Collections.Generic;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class PaymentModel : IDtoModel
+    public class PaymentModel : IDtoModel<Payment>
     {
         public int? Id { get; set; }
 
@@ -28,5 +29,11 @@ namespace BudgetManager.Domain.DTOs
         public string PaymentCategoryCode { get; set; }
 
         public List<string> Tags { get; set; }
+        int IDtoModel<Payment>.Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public Payment ToEntity()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

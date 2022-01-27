@@ -1,10 +1,16 @@
-﻿using BudgetManager.Repository;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BudgetManager.Services
 {
-    internal abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model> where IRepo : IRepository<Entity>
+    internal abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model>
+        where Model : IDtoModel<Entity>
+        where Entity : class, IDataModel
+        where IRepo : IRepository<Entity>
     {
         private readonly IRepo repository;
 
@@ -15,21 +21,26 @@ namespace BudgetManager.Services
 
         public int Add(Model model)
         {
-            //map model to entity
-            // add entity to repo
-            // save context
-
-            throw new System.NotImplementedException();
+            var entity = model.ToEntity();
+            this.repository.Create(entity);
+            this.repository.Save();
+            return entity.Id;
         }
 
         public void Update(Model model)
         {
-            throw new System.NotImplementedException();
+            Entity bankAccount = this.repository.FindByCondition(p => p.Id == model.Id).Single();
+            //Entity model = model.ToEntity();
+
+            this.repository.Update(bankAccount);
+            this.repository.Save();
         }
 
         public void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            Entity entity = this.repository.FindByCondition(a => a.Id == id).Single();
+            this.repository.Delete(entity);
+            this.repository.Save();
         }
 
         public Model Get(int id)

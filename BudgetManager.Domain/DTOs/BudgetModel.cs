@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BudgetManager.Data.DataModels;
+using System;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class BudgetModel : IUserDtoModel
+    public class BudgetModel : IUserDtoModel<Budget>
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public DateTime DateFrom { get; set; }
 
@@ -15,5 +16,10 @@ namespace BudgetManager.Domain.DTOs
         public string Name { get; set; }
 
         public int UserIdentityId { get; set; }
+
+        public Budget ToEntity()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

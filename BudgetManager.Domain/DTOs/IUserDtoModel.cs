@@ -1,6 +1,8 @@
-﻿namespace BudgetManager.Domain.DTOs
+﻿using BudgetManager.Data.DataModels;
+
+namespace BudgetManager.Domain.DTOs
 {
-    public interface IUserDtoModel : IDtoModel
+    public interface IUserDtoModel<Entity> : IDtoModel<Entity> where Entity : class, IDataModel
     {
         public int UserIdentityId { get; set; }
     }

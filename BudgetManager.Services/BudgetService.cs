@@ -9,7 +9,7 @@ using BudgetManager.Services.Extensions;
 
 namespace BudgetManager.Services
 {
-    internal class BudgetService : IBudgetService
+    public class BudgetService : IBudgetService
     {
         private readonly IBudgetRepository budgetRepository;
 
