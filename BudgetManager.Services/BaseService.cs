@@ -1,7 +1,9 @@
-﻿using BudgetManager.Data.DataModels;
+﻿using AutoMapper;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,26 +15,30 @@ namespace BudgetManager.Services
         where IRepo : IRepository<Entity>
     {
         private readonly IRepo repository;
+        private readonly IMapper mapper;
 
-        public BaseService(IRepo repository)
+        public BaseService(IRepo repository, IMapper mapper)
         {
             this.repository = repository;
+            this.mapper = mapper;
         }
 
         public int Add(Model model)
         {
-            var entity = model.ToEntity();
+            Entity entity = this.mapper.Map<Entity>(model);
+            entity.Id = null;
             this.repository.Create(entity);
             this.repository.Save();
-            return entity.Id;
+            return entity.Id.Value;
         }
 
         public void Update(Model model)
         {
-            Entity bankAccount = this.repository.FindByCondition(p => p.Id == model.Id).Single();
-            //Entity model = model.ToEntity();
+            if (this.repository.FindByCondition(p => p.Id == model.Id).Any())
+                throw new Exception();
 
-            this.repository.Update(bankAccount);
+            Entity entity = this.mapper.Map<Entity>(model);
+            this.repository.Update(entity);
             this.repository.Save();
         }
 
@@ -45,12 +51,10 @@ namespace BudgetManager.Services
 
         public Model Get(int id)
         {
-            throw new System.NotImplementedException();
+            Entity entity = this.repository.FindByCondition(p => p.Id == id).Single();
+            return this.mapper.Map<Model>(entity);
         }
 
-        public IEnumerable<Model> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        public IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
     }
 }

@@ -1,4 +1,5 @@
-﻿using BudgetManager.Data.DataModels;
+﻿using AutoMapper;
+using BudgetManager.Data.DataModels;
 using System;
 
 namespace BudgetManager.Domain.DTOs
@@ -19,7 +20,9 @@ namespace BudgetManager.Domain.DTOs
 
         public Budget ToEntity()
         {
-            throw new NotImplementedException();
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<BudgetModel, Budget>());
+            Mapper mapper = new Mapper(config);
+            return mapper.Map<Budget>(this);
         }
     }
 }
