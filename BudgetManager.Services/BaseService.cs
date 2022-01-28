@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BudgetManager.Services
 {
-    internal abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model>
+    public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model>
         where Model : IDtoModel<Entity>
         where Entity : class, IDataModel
         where IRepo : IRepository<Entity>
@@ -23,18 +23,18 @@ namespace BudgetManager.Services
             this.mapper = mapper;
         }
 
-        public int Add(Model model)
+        public virtual int Add(Model model)
         {
             Entity entity = this.mapper.Map<Entity>(model);
-            entity.Id = null;
+            entity.Id = default;
             this.repository.Create(entity);
             this.repository.Save();
-            return entity.Id.Value;
+            return entity.Id;
         }
 
-        public void Update(Model model)
+        public virtual void Update(Model model)
         {
-            if (this.repository.FindByCondition(p => p.Id == model.Id).Any())
+            if (!this.repository.FindByCondition(p => p.Id == model.Id).Any())
                 throw new Exception();
 
             Entity entity = this.mapper.Map<Entity>(model);
@@ -42,7 +42,7 @@ namespace BudgetManager.Services
             this.repository.Save();
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             Entity entity = this.repository.FindByCondition(a => a.Id == id).Single();
             this.repository.Delete(entity);
@@ -55,6 +55,6 @@ namespace BudgetManager.Services
             return this.mapper.Map<Model>(entity);
         }
 
-        public IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
+        public virtual IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
     }
 }

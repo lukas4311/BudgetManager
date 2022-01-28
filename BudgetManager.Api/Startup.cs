@@ -1,10 +1,13 @@
 using Autofac;
 using Autofac.Core;
+using AutoMapper;
 using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Data;
+using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
@@ -86,6 +89,25 @@ namespace BudgetManager.Api
             builder.RegisterType<CryptoData>();
             builder.RegisterType<ForexData>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+
+            //Automapper
+            var config = new MapperConfiguration(
+                cfg => {
+                    cfg.CreateMap<BankAccount, BankAccountModel>()
+                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
+                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId))
+                        .ForMember(o => o.Id, m => m.Ignore());
+
+                    cfg.CreateMap<BankAccountModel, BankAccount>()
+                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
+                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId));
+                }
+            );
+            builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();
+
+            builder.RegisterType<Mapper>().As<IMapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,8 +123,8 @@ namespace BudgetManager.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
-            app.UseMiddleware<JwtMiddleware>();
-            app.UseAuthorization();
+            //app.UseMiddleware<JwtMiddleware>();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
