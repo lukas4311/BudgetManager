@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using BudgetManager.Data.DataModels;
-using System;
+﻿using System;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class BudgetModel : IUserDtoModel<Budget>
+    public class BudgetModel : IUserDtoModel
     {
         public int Id { get; set; }
 
@@ -17,12 +15,5 @@ namespace BudgetManager.Domain.DTOs
         public string Name { get; set; }
 
         public int UserIdentityId { get; set; }
-
-        public Budget ToEntity()
-        {
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.CreateMap<BudgetModel, Budget>());
-            Mapper mapper = new Mapper(config);
-            return mapper.Map<Budget>(this);
-        }
     }
 }

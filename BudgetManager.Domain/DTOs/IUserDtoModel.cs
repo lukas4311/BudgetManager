@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Domain.DTOs
 {
-    public interface IUserDtoModel<Entity> : IDtoModel<Entity> where Entity : class, IDataModel
+    public interface IUserDtoModel : IDtoModel
     {
         public int UserIdentityId { get; set; }
     }

@@ -1,8 +1,6 @@
-﻿using BudgetManager.Data.DataModels;
-
-namespace BudgetManager.Domain.DTOs
+﻿namespace BudgetManager.Domain.DTOs
 {
-    public class ComodityTypeModel : IDtoModel<ComodityType>
+    public class ComodityTypeModel : IDtoModel
     {
         public int Id { get; set; }
 
@@ -13,10 +11,5 @@ namespace BudgetManager.Domain.DTOs
         public int ComodityUnitId { get; set; }
 
         public string ComodityUnit { get; set; }
-
-        public ComodityType ToEntity()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

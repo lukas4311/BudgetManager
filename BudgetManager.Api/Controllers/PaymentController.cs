@@ -56,7 +56,7 @@ namespace BudgetManager.Api.Controllers
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.paymentService.Update(paymentViewModel);
-            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
+            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id);
             return Ok();
         }
 

@@ -3,7 +3,7 @@ using System;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class ComodityTradeHistoryModel : IUserDtoModel<ComodityTradeHistory>
+    public class ComodityTradeHistoryModel : IUserDtoModel
     {
         public int Id { get; set; }
 
@@ -28,10 +28,5 @@ namespace BudgetManager.Domain.DTOs
         public int UserIdentityId { get; set; }
 
         public string Company { get; set; }
-
-        public ComodityTradeHistory ToEntity()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
