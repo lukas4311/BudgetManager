@@ -108,6 +108,8 @@ namespace BudgetManager.Api
                     cfg.CreateMap<Budget, BudgetModel>();
                     cfg.CreateMap<ComodityTradeHistoryModel, ComodityTradeHistory>();
                     cfg.CreateMap<ComodityTradeHistory, ComodityTradeHistoryModel>();
+                    cfg.CreateMap<CryptoTradeHistory, TradeHistory>();
+                    cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
                 }
             );
             builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();
