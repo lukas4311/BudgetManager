@@ -110,6 +110,8 @@ namespace BudgetManager.Api
                     cfg.CreateMap<ComodityTradeHistory, ComodityTradeHistoryModel>();
                     cfg.CreateMap<CryptoTradeHistory, TradeHistory>();
                     cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
+                    cfg.CreateMap<Tag, TagModel>();
+                    cfg.CreateMap<TagModel, Tag>();
                 }
             );
             builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();

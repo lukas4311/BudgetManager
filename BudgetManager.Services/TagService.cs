@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
@@ -9,14 +10,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Services
 {
-    internal class TagService : ITagService
+    internal class TagService : BaseService<TagModel, Tag, ITagRepository>, ITagService
     {
         private const string DoesntExists = "Tag doesn't exists";
         private readonly ITagRepository tagRepository;
         private readonly IPaymentTagRepository paymentTagRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
 
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository)
+        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IMapper autoMapper)
+            : base(tagRepository, autoMapper)
         {
             this.tagRepository = tagRepository;
             this.paymentTagRepository = paymentTagRepository;
@@ -88,7 +90,7 @@ namespace BudgetManager.Services
             this.paymentTagRepository.Save();
         }
 
-        public void Delete(int tagId)
+        public override void Delete(int tagId)
         {
             Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
 
