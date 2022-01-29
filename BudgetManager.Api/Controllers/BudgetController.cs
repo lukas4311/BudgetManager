@@ -63,5 +63,13 @@ namespace BudgetManager.Api.Controllers
             this.budgetService.Delete(id);
             return Ok();
         }
+
+        //[HttpGet("test")]
+        //public IActionResult Test()
+        //{
+        //    this.budgetService.Delete(2);
+
+        //    return Ok();
+        //}
     }
 }

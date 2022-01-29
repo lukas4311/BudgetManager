@@ -103,10 +103,12 @@ namespace BudgetManager.Api
                         .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                         .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
                         .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId));
+
+                    cfg.CreateMap<BudgetModel, Budget>();
+                    cfg.CreateMap<Budget, BudgetModel>();
                 }
             );
             builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();
-
             builder.RegisterType<Mapper>().As<IMapper>();
         }
 

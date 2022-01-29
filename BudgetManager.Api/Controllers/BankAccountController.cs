@@ -64,17 +64,5 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService.Delete(bankAccountId);
             return this.Ok();
         }
-
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            var bankAccount = this.bankAccountService.Get(1);
-
-            this.bankAccountService.Delete(1002);
-            this.bankAccountService.Delete(1003);
-            this.bankAccountService.Delete(1004);
-
-            return Ok();
-        }
     }
 }

@@ -10,7 +10,7 @@ using System.Linq;
 namespace BudgetManager.Services
 {
     public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model>
-        where Model : IDtoModel<Entity>
+        where Model : IDtoModel
         where Entity : class, IDataModel
         where IRepo : IRepository<Entity>
     {
