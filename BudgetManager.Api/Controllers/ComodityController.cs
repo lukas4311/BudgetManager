@@ -86,5 +86,13 @@ namespace BudgetManager.Api.Controllers
             double exhangeRate = await this.comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
             return Ok(exhangeRate * currencyExchangeRate);
         }
+
+        //[HttpGet("test")]
+        //public IActionResult Test()
+        //{
+        //    this.comodityService.Delete(5);
+
+        //    return Ok();
+        //}
     }
 }

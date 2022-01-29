@@ -6,15 +6,7 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IBudgetService : IBaseService<BudgetModel>
     {
-        //void Add(BudgetModel budgetModel);
-
-        //void Delete(int id);
-
-        //void Update(BudgetModel budgetModel);
-
         IEnumerable<BudgetModel> Get();
-
-        //BudgetModel Get(int id);
 
         IEnumerable<BudgetModel> Get(int userId, DateTime fromDate, DateTime? toDate);
 
