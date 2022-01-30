@@ -60,8 +60,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
     private renderHeader = (): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-2/3 text-left">Název účtu</p>
-                <p className="mx-6 my-1 w-1/3 text-left">Počáteční stav</p>
+                <p className="mx-6 my-1 w-2/3 text-left">Account name</p>
+                <p className="mx-6 my-1 w-1/3 text-left">Initial balance</p>
             </>
         );
     }
@@ -112,20 +112,20 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
     render() {
         return (
             <div className="">
-                <p className="text-3xl text-center mt-6">Přehled bankovních účtů</p>
+                <p className="text-3xl text-center mt-6">Bank accounts overview</p>
                 <div className="flex">
                     <div className="w-full p-4 overflow-y-auto">
                         <div className="h-full">
                             <ThemeProvider theme={theme}>
                                 <div className="w-full lg:w-1/2">
-                                    <BaseList<BankAccountViewModel> title="Bankovní účet" data={this.state.bankAccounts} template={this.renderTemplate}
+                                    <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
                                         header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
                                         deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
                                     </BaseList>
                                 </div>
-                                <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Detail rozpočtu"
+                                <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
                                     maxWidth="sm" fullWidth={true}>
-                                    <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
+                                    <DialogTitle id="form-dialog-title">Bank account detail</DialogTitle>
                                     <DialogContent>
                                         <div className="p-2 overflow-y-auto">
                                             <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>

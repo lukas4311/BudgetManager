@@ -1,13 +1,9 @@
 using Autofac;
-using Autofac.Core;
-using AutoMapper;
 using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Data;
-using BudgetManager.Data.DataModels;
-using BudgetManager.Domain.DTOs;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
@@ -19,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace BudgetManager.Api
@@ -84,40 +79,13 @@ namespace BudgetManager.Api
             builder.RegisterType<UserDataProviderService>().As<IUserDataProviderService>();
             builder.RegisterRepositories();
             builder.RegisterServices();
+
             InfluxSetting influxSetting = this.Configuration.GetSection("Influxdb").Get<InfluxSetting>();
             builder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
             builder.RegisterType<CryptoData>();
             builder.RegisterType<ForexData>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-
-            //Automapper
-            var config = new MapperConfiguration(
-                cfg => {
-                    cfg.CreateMap<BankAccount, BankAccountModel>()
-                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
-                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
-                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId))
-                        .ForMember(o => o.Id, m => m.Ignore());
-
-                    cfg.CreateMap<BankAccountModel, BankAccount>()
-                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
-                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
-                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId));
-
-                    cfg.CreateMap<BudgetModel, Budget>();
-                    cfg.CreateMap<Budget, BudgetModel>();
-                    cfg.CreateMap<ComodityTradeHistoryModel, ComodityTradeHistory>();
-                    cfg.CreateMap<ComodityTradeHistory, ComodityTradeHistoryModel>();
-                    cfg.CreateMap<CryptoTradeHistory, TradeHistory>();
-                    cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
-                    cfg.CreateMap<Tag, TagModel>();
-                    cfg.CreateMap<TagModel, Tag>();
-                    cfg.CreateMap<PaymentModel, Payment>();
-                    cfg.CreateMap<Payment, PaymentModel>();
-                }
-            );
-            builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();
-            builder.RegisterType<Mapper>().As<IMapper>();
+            builder.RegisterModelMapping();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -133,8 +101,8 @@ namespace BudgetManager.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
-            //app.UseMiddleware<JwtMiddleware>();
-            //app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

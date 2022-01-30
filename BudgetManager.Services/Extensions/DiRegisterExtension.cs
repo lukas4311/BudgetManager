@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using Autofac;
+using AutoMapper;
+using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Services.Extensions
 {
@@ -11,6 +14,39 @@ namespace BudgetManager.Services.Extensions
                 .Where(t => t.Namespace == "BudgetManager.Services")
                .AsImplementedInterfaces()
                .InstancePerLifetimeScope();
+        }
+
+        public static void RegisterModelMapping(this ContainerBuilder containerBuilder)
+        {
+            //Automapper
+            var config = new MapperConfiguration(
+                cfg => {
+                    cfg.CreateMap<BankAccount, BankAccountModel>()
+                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
+                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId))
+                        .ForMember(o => o.Id, m => m.Ignore());
+
+                    cfg.CreateMap<BankAccountModel, BankAccount>()
+                        .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                        .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
+                        .ForMember(dest => dest.UserIdentityId, opt => opt.MapFrom(src => src.UserIdentityId));
+
+                    cfg.CreateMap<BudgetModel, Budget>();
+                    cfg.CreateMap<Budget, BudgetModel>();
+                    cfg.CreateMap<ComodityTradeHistoryModel, ComodityTradeHistory>();
+                    cfg.CreateMap<ComodityTradeHistory, ComodityTradeHistoryModel>();
+                    cfg.CreateMap<CryptoTradeHistory, TradeHistory>();
+                    cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
+                    cfg.CreateMap<Tag, TagModel>();
+                    cfg.CreateMap<TagModel, Tag>();
+                    cfg.CreateMap<PaymentModel, Payment>();
+                    cfg.CreateMap<Payment, PaymentModel>();
+                }
+            );
+
+            containerBuilder.RegisterInstance(config).As<IConfigurationProvider>();
+            containerBuilder.RegisterType<Mapper>().As<IMapper>();
         }
     }
 }
