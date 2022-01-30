@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class ComodityUnit
+    public class ComodityUnit : IDataModel
     {
         public int Id { get; set; }
 

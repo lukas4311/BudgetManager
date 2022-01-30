@@ -1,5 +1,4 @@
 using Autofac;
-using Autofac.Core;
 using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
@@ -16,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace BudgetManager.Api
@@ -81,11 +79,13 @@ namespace BudgetManager.Api
             builder.RegisterType<UserDataProviderService>().As<IUserDataProviderService>();
             builder.RegisterRepositories();
             builder.RegisterServices();
+
             InfluxSetting influxSetting = this.Configuration.GetSection("Influxdb").Get<InfluxSetting>();
             builder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
             builder.RegisterType<CryptoData>();
             builder.RegisterType<ForexData>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterModelMapping();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

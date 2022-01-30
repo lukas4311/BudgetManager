@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class PaymentType
+    public class PaymentType : IDataModel
     {
         public int Id { get; set; }
 

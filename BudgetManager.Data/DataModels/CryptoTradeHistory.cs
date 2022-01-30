@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class CryptoTradeHistory
+    public class CryptoTradeHistory : IDataModel
     {
         public int Id { get; set; }
 

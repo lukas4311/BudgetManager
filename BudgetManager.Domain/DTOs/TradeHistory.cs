@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class TradeHistory
+    public class TradeHistory : IUserDtoModel
     {
         public int Id { get; set; }
 

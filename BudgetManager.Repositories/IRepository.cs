@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BudgetManager.Data.DataModels;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace BudgetManager.Repository
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class, IDataModel
     {
         IQueryable<T> FindAll();
 

@@ -4638,10 +4638,10 @@ const BankAccountForm = (props) => {
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "N\u00E1zev \u00FA\u010Dtu" }, field, { className: "materialUIInput w-full" })), name: "code", control: control })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Account name" }, field, { className: "materialUIInput w-full" })), name: "code", control: control })),
             React.createElement("div", null,
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Po\u010D\u00E1te\u010Dn\u00ED stav" }, field, { className: "materialUIInput w-full" })), name: "openingBalance", control: control }))),
-        React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Initial balance" }, field, { className: "materialUIInput w-full" })), name: "openingBalance", control: control }))),
+        React.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Save")));
 };
 exports.BankAccountForm = BankAccountForm;
 
@@ -4704,8 +4704,8 @@ class BankAccountOverview extends react_1.default.Component {
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3 text-left" }, "N\u00E1zev \u00FA\u010Dtu"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3 text-left" }, "Po\u010D\u00E1te\u010Dn\u00ED stav")));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3 text-left" }, "Account name"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3 text-left" }, "Initial balance")));
         };
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -4750,15 +4750,15 @@ class BankAccountOverview extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "P\u0159ehled bankovn\u00EDch \u00FA\u010Dt\u016F"),
+            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Bank accounts overview"),
             react_1.default.createElement("div", { className: "flex" },
                 react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
                     react_1.default.createElement("div", { className: "h-full" },
                         react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                             react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
-                                react_1.default.createElement(BaseList_1.BaseList, { title: "Bankovn\u00ED \u00FA\u010Det", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
-                            react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
-                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
+                                react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
+                            react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Bank account detail", maxWidth: "sm", fullWidth: true },
+                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Bank account detail"),
                                 react_1.default.createElement(core_1.DialogContent, null,
                                     react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
                                         react_1.default.createElement(BankAccountForm_1.BankAccountForm, Object.assign({ key: this.state.formKey }, this.state.selectedBankAccount, { onSave: this.saveFormData })))))))))));

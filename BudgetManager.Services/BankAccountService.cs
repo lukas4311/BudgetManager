@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Services
 {
-    public class BankAccountService : IBankAccountService
+    public class BankAccountService : BaseService<BankAccountModel, BankAccount, IBankAccountRepository>, IBankAccountService
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
@@ -19,7 +20,8 @@ namespace BudgetManager.Services
         private readonly IInterestRateRepository interestRateRepository;
 
         public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository, IInterestRateRepository interestRateRepository)
+            IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository, 
+            IInterestRateRepository interestRateRepository, IMapper autoMapper):base(bankAccountRepository, autoMapper)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -70,31 +72,7 @@ namespace BudgetManager.Services
             });
         }
 
-        public int Add(BankAccountModel bankAccountViewModel)
-        {
-            BankAccount bankAccount = new BankAccount
-            {
-                Code = bankAccountViewModel.Code,
-                OpeningBalance = bankAccountViewModel.OpeningBalance,
-                UserIdentityId = bankAccountViewModel.UserIdentityId
-            };
-
-            this.bankAccountRepository.Create(bankAccount);
-            this.bankAccountRepository.Save();
-            return bankAccount.Id;
-        }
-
-        public void Update(BankAccountModel bankAccountViewModel)
-        {
-            BankAccount bankAccount = this.bankAccountRepository.FindByCondition(p => p.Id == bankAccountViewModel.Id).Single();
-            bankAccount.Code = bankAccountViewModel.Code;
-            bankAccount.OpeningBalance = bankAccountViewModel.OpeningBalance;
-
-            this.bankAccountRepository.Update(bankAccount);
-            this.bankAccountRepository.Save();
-        }
-
-        public void Delete(int id)
+        public override void Delete(int id)
         {
             PaymentDeleteModel data = this.bankAccountRepository.FindByCondition(b => b.Id == id)
                     .Include(a => a.InterestRates)
