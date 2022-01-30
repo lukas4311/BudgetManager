@@ -112,6 +112,8 @@ namespace BudgetManager.Api
                     cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
                     cfg.CreateMap<Tag, TagModel>();
                     cfg.CreateMap<TagModel, Tag>();
+                    cfg.CreateMap<PaymentModel, Payment>();
+                    cfg.CreateMap<Payment, PaymentModel>();
                 }
             );
             builder.RegisterInstance(config).As<AutoMapper.IConfigurationProvider>();
