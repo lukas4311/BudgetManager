@@ -15,5 +15,7 @@ namespace BudgetManager.Data.DataModels
         public List<BankAccount> BankAccounts { get; set; }
 
         public List<CryptoTradeHistory> CryptoTradesHistory { get; set; }
+
+        public List<OtherInvestment> OtherInvestments { get; set; }
     }
 }
