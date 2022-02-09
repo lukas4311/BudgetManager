@@ -34,8 +34,8 @@ namespace BudgetManager.TestingConsole.Crypto
         private void LoadFile(string path)
         {
             TextReader reader = new StreamReader(path);
-            CsvReader csvReader = new CsvReader(reader, culture: CultureInfo.InvariantCulture);
-            IEnumerable<CoinbaseRecord> records = csvReader.GetRecords<CoinbaseRecord>();
+            using CsvReader csvReader = new CsvReader(reader, culture: CultureInfo.InvariantCulture);
+            List<CoinbaseRecord> records = csvReader.GetRecords<CoinbaseRecord>().ToList();
             this.CacheCurrencySymbols();
             this.CacheCryptoTickers();
 

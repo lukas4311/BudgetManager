@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { Link } from "react-router-dom";
 import { IconsData } from "../Enums/IconsEnum";
 
 interface MenuState {
@@ -11,7 +11,7 @@ class MenuItemModel {
     linkUri: string;
 }
 
-class Menu extends React.Component<{}, MenuState> {
+export default class Menu extends React.Component<{}, MenuState> {
     private menuItems: MenuItemModel[];
 
     constructor(props: {}) {
@@ -31,7 +31,7 @@ class Menu extends React.Component<{}, MenuState> {
             { icon: icons.debts, linkUri: "debts" },
             { icon: icons.statistics, linkUri: "stats" },
             { icon: icons.budget, linkUri: "bankaccount-overview" },
-            { icon: icons.budget, linkUri: "bankaccount-overview" },
+            { icon: icons.ingot, linkUri: "comodity" },
         ];
     }
 
@@ -46,11 +46,11 @@ class Menu extends React.Component<{}, MenuState> {
     private renderMenuItem = (item: MenuItemModel): JSX.Element => {
         return (
             <li className="menu-item" key={item.linkUri}>
-                <a className="block cursor-pointer flex" onClick={_ => this.redirectToPage(item.linkUri)}>
-                    <span className="w-10 m-auto">
-                        {item.icon}
-                    </span>
-                </a>
+                <Link to={"/" + item.linkUri} className="block cursor-pointer flex">
+                        <span className="w-10 m-auto">
+                            {item.icon}
+                        </span>
+                </Link>
             </li>
         );
     }
@@ -70,4 +70,4 @@ class Menu extends React.Component<{}, MenuState> {
     }
 }
 
-ReactDOM.render(<Menu />, document.getElementById('navMenu'));
+// ReactDOM.render(<Menu />, document.getElementById('navMenu'));

@@ -1,15 +1,14 @@
-﻿using BudgetManager.Data.DataModels;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("payment")]
+    [Route("payments")]
     public class PaymentController : BaseController
     {
         private readonly IPaymentService paymentService;
@@ -23,10 +22,10 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService = bankAccountService;
         }
 
-        [HttpGet("data")]
+        [HttpGet]
         public ActionResult<IEnumerable<PaymentModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
-            if(bankAccountId.HasValue && !this.bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, this.GetUserId()))
+            if (bankAccountId.HasValue && !this.bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             IEnumerable<PaymentModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, this.GetUserId(), bankAccountId);
@@ -39,13 +38,6 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("categories")]
         public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => this.paymentService.GetPaymentCategories();
 
-        [HttpGet("bankAccounts")]
-        public IActionResult GetBankAccounts()
-        {
-            IEnumerable<BankAccountModel> bankAccounts = this.paymentService.GetBankAccounts();
-            return Ok(new { success = true, bankAccounts });
-        }
-
         [HttpPost]
         public IActionResult AddPayment([FromBody] PaymentModel paymentViewModel)
         {
@@ -54,7 +46,7 @@ namespace BudgetManager.Api.Controllers
 
             int paymentId = this.paymentService.Add(paymentViewModel);
             this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
-            return Ok(new { success = true });
+            return Ok();
         }
 
         [HttpPut]
@@ -64,12 +56,12 @@ namespace BudgetManager.Api.Controllers
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.paymentService.Update(paymentViewModel);
-            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
-            return Ok(new { success = true });
+            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id);
+            return Ok();
         }
 
         [HttpGet("detail")]
-        public ActionResult<PaymentModel> GetPayment([FromQuery] int id)
+        public ActionResult<PaymentModel> GetPayment(int id)
         {
             PaymentModel payment = this.paymentService.Get(id);
 
@@ -79,13 +71,34 @@ namespace BudgetManager.Api.Controllers
             return Ok(payment);
         }
 
-        [HttpPost("clone")]
-        public IActionResult ClonePayment([FromBody] PaymentModel paymentViewModel)
+        [HttpPost("clone/{id}")]
+        public IActionResult ClonePayment(int id)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, this.GetUserId()))
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.ClonePayment(paymentViewModel.Id.Value);
+            this.paymentService.ClonePayment(id);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult DeletePayment(int id)
+        {
+            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.paymentService.Delete(id);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{paymentId}/tag/{tagId}")]
+        public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
+        {
+            if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
+                return this.StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.tagService.RemoveTagFromPayment(tagId, paymentId);
             return Ok();
         }
     }

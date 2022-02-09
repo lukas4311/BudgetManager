@@ -1,5 +1,5 @@
 ﻿var gulp = require("gulp");
-var sass = require('gulp-sass');
+var sass = require('gulp-sass')(require('sass'));
 const webpack_stream = require('webpack-stream');
 const webpack_config = require('./webpack.config.js');
 

@@ -19,7 +19,7 @@ namespace BudgetManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Data.DataModels.BankAccount", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.BankAccount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("BankAccount");
                 });
 
-            modelBuilder.Entity("Data.DataModels.Budget", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Budget", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,99 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("Budget");
                 });
 
-            modelBuilder.Entity("Data.DataModels.CryptoTicker", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.ComodityTradeHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ComodityTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CurrencySymbolId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TradeSize")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("TradeTimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("TradeValue")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UserIdentityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComodityTypeId");
+
+                    b.HasIndex("CurrencySymbolId");
+
+                    b.HasIndex("UserIdentityId");
+
+                    b.ToTable("ComodityTradeHistory");
+                });
+
+            modelBuilder.Entity("BudgetManager.Data.DataModels.ComodityType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<int>("ComodityUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("[Code] IS NOT NULL");
+
+                    b.HasIndex("ComodityUnitId");
+
+                    b.ToTable("ComodityType");
+                });
+
+            modelBuilder.Entity("BudgetManager.Data.DataModels.ComodityUnit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("[Code] IS NOT NULL");
+
+                    b.ToTable("ComodityUnit");
+                });
+
+            modelBuilder.Entity("BudgetManager.Data.DataModels.CryptoTicker", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +196,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("CryptoTicker");
                 });
 
-            modelBuilder.Entity("Data.DataModels.CryptoTradeHistory", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.CryptoTradeHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -140,7 +232,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("CryptoTradeHistory");
                 });
 
-            modelBuilder.Entity("Data.DataModels.CurrencySymbol", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.CurrencySymbol", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +252,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("CurrencySymbol");
                 });
 
-            modelBuilder.Entity("Data.DataModels.InterestRate", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.InterestRate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,7 +281,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("InterestRate");
                 });
 
-            modelBuilder.Entity("Data.DataModels.Payment", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Payment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -230,7 +322,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("Payment");
                 });
 
-            modelBuilder.Entity("Data.DataModels.PaymentCategory", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.PaymentCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,7 +349,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("PaymentCategory");
                 });
 
-            modelBuilder.Entity("Data.DataModels.PaymentTag", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.PaymentTag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -279,7 +371,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("PaymentTag");
                 });
 
-            modelBuilder.Entity("Data.DataModels.PaymentType", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.PaymentType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +389,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("PaymentType");
                 });
 
-            modelBuilder.Entity("Data.DataModels.Setting", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Setting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -321,7 +413,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("Setting");
                 });
 
-            modelBuilder.Entity("Data.DataModels.Tag", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -336,7 +428,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("Tag");
                 });
 
-            modelBuilder.Entity("Data.DataModels.TaxSetting", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.TaxSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -359,7 +451,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("TaxSetting");
                 });
 
-            modelBuilder.Entity("Data.DataModels.UserData", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.UserData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -399,7 +491,7 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("UserData");
                 });
 
-            modelBuilder.Entity("Data.DataModels.UserIdentity", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.UserIdentity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -417,95 +509,125 @@ namespace BudgetManager.Data.Migrations
                     b.ToTable("UserIdentity");
                 });
 
-            modelBuilder.Entity("Data.DataModels.BankAccount", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.BankAccount", b =>
                 {
-                    b.HasOne("Data.DataModels.UserIdentity", "UserIdentity")
+                    b.HasOne("BudgetManager.Data.DataModels.UserIdentity", "UserIdentity")
                         .WithMany("BankAccounts")
                         .HasForeignKey("UserIdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.Budget", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Budget", b =>
                 {
-                    b.HasOne("Data.DataModels.UserIdentity", "UserIdentity")
+                    b.HasOne("BudgetManager.Data.DataModels.UserIdentity", "UserIdentity")
                         .WithMany()
                         .HasForeignKey("UserIdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.CryptoTradeHistory", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.ComodityTradeHistory", b =>
                 {
-                    b.HasOne("Data.DataModels.CryptoTicker", "CryptoTicker")
+                    b.HasOne("BudgetManager.Data.DataModels.ComodityType", "ComodityType")
+                        .WithMany("ComodityTradeHistory")
+                        .HasForeignKey("ComodityTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BudgetManager.Data.DataModels.CurrencySymbol", "CurrencySymbol")
+                        .WithMany("ComodityTradeHistory")
+                        .HasForeignKey("CurrencySymbolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BudgetManager.Data.DataModels.UserIdentity", "UserIdentity")
+                        .WithMany("ComodityTradeHistory")
+                        .HasForeignKey("UserIdentityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BudgetManager.Data.DataModels.ComodityType", b =>
+                {
+                    b.HasOne("BudgetManager.Data.DataModels.ComodityUnit", "ComodityUnit")
+                        .WithMany("ComodityTypes")
+                        .HasForeignKey("ComodityUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BudgetManager.Data.DataModels.CryptoTradeHistory", b =>
+                {
+                    b.HasOne("BudgetManager.Data.DataModels.CryptoTicker", "CryptoTicker")
                         .WithMany("CryptoTradeHistories")
                         .HasForeignKey("CryptoTickerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.DataModels.CurrencySymbol", "CurrencySymbol")
+                    b.HasOne("BudgetManager.Data.DataModels.CurrencySymbol", "CurrencySymbol")
                         .WithMany("CryptoTradeHistory")
                         .HasForeignKey("CurrencySymbolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.DataModels.UserIdentity", "UserIdentity")
+                    b.HasOne("BudgetManager.Data.DataModels.UserIdentity", "UserIdentity")
                         .WithMany("CryptoTradesHistory")
                         .HasForeignKey("UserIdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.InterestRate", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.InterestRate", b =>
                 {
-                    b.HasOne("Data.DataModels.BankAccount", "BankAccount")
+                    b.HasOne("BudgetManager.Data.DataModels.BankAccount", "BankAccount")
                         .WithMany("InterestRates")
                         .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.Payment", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.Payment", b =>
                 {
-                    b.HasOne("Data.DataModels.BankAccount", "BankAccount")
+                    b.HasOne("BudgetManager.Data.DataModels.BankAccount", "BankAccount")
                         .WithMany("Payments")
                         .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.DataModels.PaymentCategory", "PaymentCategory")
+                    b.HasOne("BudgetManager.Data.DataModels.PaymentCategory", "PaymentCategory")
                         .WithMany("Payments")
                         .HasForeignKey("PaymentCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.DataModels.PaymentType", "PaymentType")
+                    b.HasOne("BudgetManager.Data.DataModels.PaymentType", "PaymentType")
                         .WithMany("Payments")
                         .HasForeignKey("PaymentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.PaymentTag", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.PaymentTag", b =>
                 {
-                    b.HasOne("Data.DataModels.Payment", "Payment")
+                    b.HasOne("BudgetManager.Data.DataModels.Payment", "Payment")
                         .WithMany("PaymentTags")
                         .HasForeignKey("PaymentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.DataModels.Tag", "Tag")
+                    b.HasOne("BudgetManager.Data.DataModels.Tag", "Tag")
                         .WithMany("PaymentTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.DataModels.UserData", b =>
+            modelBuilder.Entity("BudgetManager.Data.DataModels.UserData", b =>
                 {
-                    b.HasOne("Data.DataModels.UserIdentity", "UserIdentity")
+                    b.HasOne("BudgetManager.Data.DataModels.UserIdentity", "UserIdentity")
                         .WithOne("UserData")
-                        .HasForeignKey("Data.DataModels.UserData", "UserIdentityId")
+                        .HasForeignKey("BudgetManager.Data.DataModels.UserData", "UserIdentityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

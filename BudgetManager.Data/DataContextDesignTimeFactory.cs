@@ -8,7 +8,7 @@ namespace BudgetManager.Data.DataModels
         public DataContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TestDb;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-6LA7KLF;Database=BudgetManager;Trusted_Connection=True;");
 
             return new DataContext(optionsBuilder.Options);
         }

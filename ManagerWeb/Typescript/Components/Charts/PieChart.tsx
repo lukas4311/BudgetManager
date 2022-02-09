@@ -22,11 +22,12 @@ function PieChart(props: PieChartProps) {
             cornerRadius={0}
             colors={{ scheme: 'paired' }}
             borderColor={{ from: 'color', modifiers: [['darker', 0.6]] }}
-            enableRadialLabels={true}
-            radialLabel={d => `${d.id} (${d.formattedValue})`}
-            radialLabelsTextColor="#ffffff"
-            radialLabelsLinkColor={{ from: 'color' }}
+            arcLinkLabelsTextColor="#ffffff"
+            arcLabelsTextColor="ffffff"
+            arcLinkLabelsSkipAngle={10}
+            arcLabelsSkipAngle={10}
             sortByValue={true}
+            tooltip={(p) => { return <p className="bg-black p-2 rounded-xl">{p.datum.label} : {p.datum.value} USD</p> }}
         />
     )
 }

@@ -1,21 +1,25 @@
 import { IPaymentInfo } from "../Model/IPaymentInfo"
 import { BankAccountReponse } from '../Model/BankAccountReponse'
-import { PaymentTypeResponse } from '../Model/PaymentTypeResponse'
-import { PaymentCategoryResponse } from "../Model/PaymentCategoryResponse";
-import { IPaymentResponseModel } from "../Model/IPaymentResponseModel";
 import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 import { BudgetModel } from "../Model/BudgetModel";
 import { IPaymentModel } from "../Model/IPaymentModel";
+import ApiUrls from "../Model/Setting/ApiUrl";
 
 export default class DataLoader {
+
+    async getSetting(): Promise<ApiUrls> {
+        const res = await fetch(`/setting/apiRoutes`);
+        let responseData: ApiUrls = await res.json();
+        // let apiUrls: ApiUrls = JSON.parse(responseData);
+        return responseData;
+    }
+
     async getPayments(fromDate: string, toDate: string, bankAccountId: number, onRejected: () => void): Promise<IPaymentInfo[]> {
         let response: IPaymentInfo[];
         let url = '/payment/data';
 
-
         try {
-            // const res = await fetch(`/payment/data?fromDate=${fromDate}&toDate=${toDate}&bankAccountId=${bankAccountId}`);
-            const res = await fetch(`/payment/data?${this.queryParams({fromDate: fromDate, toDate: toDate, bankAccountId: bankAccountId})}`);
+            const res = await fetch(`/payment/data?${this.queryParams({ fromDate: fromDate, toDate: toDate, bankAccountId: bankAccountId })}`);
             response = await res.json();
         }
         catch (_) {
@@ -64,34 +68,6 @@ export default class DataLoader {
             onRejected();
         }
     }
-
-    // async getPaymentTypes(onRejected: () => void): Promise<PaymentTypeResponse> {
-    //     let response: PaymentTypeResponse;
-
-    //     try {
-    //         const res = await fetch("/payment/types");
-    //         response = await res.json();
-    //     }
-    //     catch (_) {
-    //         onRejected();
-    //     }
-
-    //     return response;
-    // }
-
-    // async getPaymentCategories(onRejected: () => void): Promise<PaymentCategoryResponse> {
-    //     let response: PaymentCategoryResponse;
-
-    //     try {
-    //         const res = await fetch("/payment/categories");
-    //         response = await res.json();
-    //     }
-    //     catch (_) {
-    //         onRejected();
-    //     }
-
-    //     return response;
-    // }
 
     async getPayment(id: number, onRejected: () => void): Promise<IPaymentModel> {
         let response: IPaymentModel;

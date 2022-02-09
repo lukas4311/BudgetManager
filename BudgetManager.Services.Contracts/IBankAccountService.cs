@@ -4,7 +4,7 @@ using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IBankAccountService
+    public interface IBankAccountService : IBaseService<BankAccountModel>
     {
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate);
 
@@ -13,12 +13,6 @@ namespace BudgetManager.Services.Contracts
         BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate);
 
         IEnumerable<BankAccountModel> GetAllBankAccounts(int userId);
-
-        int Add(BankAccountModel bankAccountViewModel);
-
-        void Update(BankAccountModel bankAccountViewModel);
-
-        void Delete(int id);
 
         bool UserHasRightToBankAccount(int bankAccountId, int userId);
     }

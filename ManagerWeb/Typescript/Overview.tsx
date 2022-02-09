@@ -1,17 +1,18 @@
 ﻿import * as React from 'react'
-import * as ReactDOM from 'react-dom';
-import ErrorBoundary from './Utils/ErrorBoundry';
+import { RouteComponentProps } from 'react-router-dom';
 import PaymentsOverview from './Components/Payments/PaymentsOverview'
 
-class Overview extends React.Component {
+export default class Overview extends React.Component<RouteComponentProps, {}> {
+    constructor(props: RouteComponentProps) {
+        super(props);
+    }
+
     render() {
         return (
             <div className="">
-                <p className="text-3xl text-center mt-6">Základní přehled</p>
-                <div className="w-full lg:p-4"><PaymentsOverview /></div>
+                <p className="text-3xl text-center mt-2">Základní přehled</p>
+                <div className="w-full lg:p-4"><PaymentsOverview {...this.props} /></div>
             </div>
         )
     }
 }
-
-ReactDOM.render(<ErrorBoundary><Overview /></ErrorBoundary>, document.getElementById('overview'));

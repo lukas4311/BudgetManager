@@ -1,21 +1,18 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { RouteComponentProps } from "react-router";
 import CryptoPortfolio from "./Components/Crypto/CryptoPortfolio";
 import CryptoPayments from "./Components/Crypto/CryptoTrades";
-import ErrorBoundary from "./Utils/ErrorBoundry";
 
-class CryptoComponent extends React.Component<{}, {}>{
+export default class Crypto extends React.Component<RouteComponentProps, {}>{
     render() {
         return (
             <div className="">
-                <p className="text-3xl text-center mt-6">Crypto přehled</p>
+                <p className="text-3xl text-center mt-6">Crypto overview</p>
                 <div className="flex">
-                    <div className="w-1/2 p-4 overflow-y-auto"><CryptoPayments></CryptoPayments></div>
-                    <div className="w-1/2 p-4 overflow-y-auto"><CryptoPortfolio></CryptoPortfolio></div>
+                    <div className="w-7/12 p-4 overflow-y-auto"><CryptoPayments {...this.props}></CryptoPayments></div>
+                    <div className="w-5/12 p-4 overflow-y-auto"><CryptoPortfolio {...this.props}></CryptoPortfolio></div>
                 </div>
             </div>
         );
     }
 }
-
-ReactDOM.render(<ErrorBoundary><CryptoComponent /></ErrorBoundary>, document.getElementById('overview'));

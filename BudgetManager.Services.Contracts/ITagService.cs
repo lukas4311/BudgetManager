@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface ITagService
+    public interface ITagService : IBaseService<TagModel>
     {
         void AddTagToPayment(AddTagModel tagModel);
 
-        void Delete(int tagId);
-
         IEnumerable<TagModel> GetPaymentTags();
 
-        IEnumerable<TagModel> GetPaymentTags(int userId);
+        IEnumerable<TagModel> GetPaymentsTags(int userId);
 
         void RemoveTagFromPayment(int tagId, int paymentId);
 

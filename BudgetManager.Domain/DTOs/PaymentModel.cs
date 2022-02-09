@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class PaymentModel
+    public class PaymentModel : IDtoModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         public decimal Amount { get; set; }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BudgetManager.Data.DataModels
 {
-    public class Payment
+    public class Payment : IDataModel
     {
         public int Id { get; set; }
 

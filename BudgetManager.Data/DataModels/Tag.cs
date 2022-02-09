@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace BudgetManager.Data.DataModels
 {
-    public class Tag
+    public class Tag : IDataModel
     {
         public int Id { get; set; }
 

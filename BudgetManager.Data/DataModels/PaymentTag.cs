@@ -1,6 +1,6 @@
 namespace BudgetManager.Data.DataModels
 {
-    public class PaymentTag
+    public class PaymentTag : IDataModel
     {
         public int Id { get; set; }
 

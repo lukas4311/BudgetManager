@@ -1,6 +1,6 @@
 ﻿namespace BudgetManager.Domain.DTOs
 {
-    public class PaymentTypeModel
+    public class PaymentTypeModel : IDtoModel
     {
         public int Id { get; set; }
 

@@ -1,14 +1,8 @@
 ﻿import * as React from 'react'
 import moment from 'moment';
-import { Modal } from '../../Modal'
 import PaymentForm from './PaymentForm'
-import DataLoader from '../../Services/DataLoader';
-import { IPaymentInfo } from "../../Model/IPaymentInfo"
-import { BankAccount } from '../../Model/BankAccount';
-import { BankAccountReponse } from '../../Model/BankAccountReponse';
 import { IconsData } from '../../Enums/IconsEnum';
 import { LineChart } from '../Charts/LineChart';
-import { IBankAccountBalanceResponseModel } from '../../Model/IBankAccountBalanceResponseModel';
 import { LineChartProps } from '../../Model/LineChartProps';
 import { CalendarChartProps } from '../../Model/CalendarChartProps';
 import { CalendarChart } from '../Charts/CalendarChart';
@@ -21,14 +15,17 @@ import ErrorBoundary from '../../Utils/ErrorBoundry';
 import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
+import ApiClientFactory from '../../Utils/ApiClientFactory'
+import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { RouteComponentProps } from 'react-router-dom';
 
 interface PaymentsOverviewState {
-    payments: IPaymentInfo[],
+    payments: PaymentModel[],
     selectedFilter: DateFilter,
     filterDateFrom: string,
     filterDateTo: string,
     showPaymentFormModal: boolean,
-    bankAccounts: Array<BankAccount>
+    bankAccounts: Array<BankAccountModel>
     selectedBankAccount?: number,
     showBankAccountError: boolean,
     paymentId: number,
@@ -57,33 +54,43 @@ const theme = createMuiTheme({
 
 const defaultSelectedBankAccount = -1;
 
-export default class PaymentsOverview extends React.Component<{}, PaymentsOverviewState>{
+export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewState>{
     private defaultBankOption: string = "Vše";
     private filters: DateFilter[];
-    private dataLoader: DataLoader;
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartDataProcessor: ChartDataProcessor;
+    private bankAccountApi: BankAccountApiInterface;
+    private paymentApi: PaymentApi;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
         moment.locale('cs');
         this.filters = [{ caption: "7d", days: 7, key: 1 }, { caption: "1m", days: 30, key: 2 }, { caption: "3m", days: 90, key: 3 }];
+        const bankAccounts: BankAccountModel[] = [];
+        bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+
         this.state = {
-            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: [], selectedBankAccount: 0,
+            payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
-            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [] }, radarChartData: { dataSets: [] },
-            filterDateTo: '', filterDateFrom: ''
+            expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
         };
 
-        this.dataLoader = new DataLoader();
         this.chartDataProcessor = new ChartDataProcessor();
     }
 
     public async componentDidMount() {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
+        this.paymentApi = await apiFactory.getClient(PaymentApi);
+
         this.setState({ selectedFilter: this.filters[0] });
-        const bankAccounts: BankAccountReponse = await this.dataLoader.getBankAccounts(this.onRejected);
+        let bankAccounts: BankAccountModel[] = [];
+        bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
+
+        bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+        this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
-        this.setBankAccounts(bankAccounts);
     }
 
     private async getPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number) {
@@ -91,16 +98,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.setPayments(payments);
     }
 
-    private async getExactDateRangeDaysPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<IPaymentInfo[]> {
-        let filterDate: string = moment(dateFrom).format("YYYY-MM-DD");
-        return await this.dataLoader.getPayments(filterDate, moment(dateTo).format("YYYY-MM-DD"), bankAccountId, this.onRejected);
+    private async getExactDateRangeDaysPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> {
+        return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
     }
 
-    private onRejected = () => {
-        this.setState({ apiError: this.apiErrorMessage });
-    }
-
-    private setPayments = async (payments: Array<IPaymentInfo>) => {
+    private setPayments = async (payments: Array<PaymentModel>) => {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
@@ -113,11 +115,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                 dateTo = this.state.filterDateTo;
             }
 
-            let bankAccountBalanceResponse: IBankAccountBalanceResponseModel = await this.dataLoader.getBankAccountsBalanceToDate(dateTo, this.onRejected)
+            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
-                balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData },
+                balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                 radarChartData: { dataSets: radarData }
             });
         } else {
@@ -155,8 +157,8 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         this.getFilteredPaymentData(this.state.selectedBankAccount);
     }
 
-    private bankAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        let selectedbankId: number = parseInt(e.target.value);
+    private bankAccountChange = (e: React.ChangeEvent<{ name?: string; value: unknown; }>) => {
+        let selectedbankId: number = parseInt(e.target.value.toString());
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
         this.getFilteredPaymentData(selectedbankId);
     }
@@ -192,14 +194,6 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         }
     }
 
-    private setBankAccounts = (data: BankAccountReponse) => {
-        if (data.success) {
-            let bankAccounts: Array<BankAccount> = data.bankAccounts;
-            bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-            this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
-        }
-    }
-
     private rangeDatesHandler = (dateFrom: string, dateTo: string): void => {
         this.setState({ selectedFilter: undefined, filterDateTo: dateTo, filterDateFrom: dateFrom }, () => this.getFilteredPaymentData(this.state.selectedBankAccount));
     }
@@ -211,24 +205,22 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
         // TODO: call client with method clone and open detail with cloned item
     }
 
-    private renderTemplate = (p: IPaymentInfo): JSX.Element => {
+    private renderTemplate = (p: PaymentModel): JSX.Element => {
         let iconsData: IconsData = new IconsData();
 
         return (
             <>
                 <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                <p className="mx-6 my-1 w-2/7">{p.amount},-</p>
-                <p className="mx-6 my-1 w-2/7">{p.name}</p>
-                <p className="mx-6 my-1 w-1/7">{moment(p.date).format('DD.MM.YYYY')}</p>
-                <span className="mx-6 my-1 w-1/7 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
-                <span className="ml-auto my-1 w-1/7 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
+                <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
+                <p className="mx-6 my-1 w-2/12">{p.name}</p>
+                <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
+                <span className="mx-6 my-1 w-1/12 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
+                <span className="ml-auto my-1 w-2/12 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
             </>
         );
     }
 
     public render() {
-
-
         return (
             <ThemeProvider theme={theme}>
                 <div className="text-center mt-6 bg-prussianBlue rounded-lg">
@@ -244,8 +236,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                     </svg>
                                 </span>
                             </div>
-                            <div className="flex flex-col mb-3 ml-6">
-                                <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
+                            <div className="flex flex-row items-center mb-3 ml-6">
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
@@ -256,6 +247,7 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                         return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
                                     })}
                                 </Select>
+                                <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Prosím vyberte kontkrétní účet</span>
                             </div>
                             <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
                                 <div className="text-left m-auto w-2/5">
@@ -271,11 +263,11 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                                 <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
                             </div>
                             <div className="pb-10 h-64 overflow-y-scroll pr-4">
-                                <BaseList<IPaymentInfo> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
+                                <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                             </div>
                         </div>
-                        <div className="w-3/5 h-64 mt-auto calendar">
-                            <CalendarChart dataSets={this.state.calendarChartData.dataSets}></CalendarChart>
+                        <div className="w-3/5 h-64 mt-4 calendar">
+                            <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                         </div>
                     </div>
                     <div className="flex flex-row">
@@ -291,16 +283,16 @@ export default class PaymentsOverview extends React.Component<{}, PaymentsOvervi
                     </div>
                     <div className="flex flex-row p-6">
                         <div className="w-2/5">
-                            <BudgetComponent></BudgetComponent>
+                            <BudgetComponent history={this.props.history}></BudgetComponent>
                         </div>
                     </div>
                     <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Detail platby"
                         maxWidth="md" fullWidth={true}>
                         <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail platby</DialogTitle>
                         <DialogContent className="bg-prussianBlue">
-                            <ErrorBoundary>
-                                <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount} handleClose={this.handleConfirmationClose}></PaymentForm>
-                            </ErrorBoundary>
+                            <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}
+                                handleClose={this.handleConfirmationClose} history={this.props.history}>
+                            </PaymentForm>
                         </DialogContent>
                     </Dialog>
                 </div >

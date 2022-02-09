@@ -1,0 +1,58 @@
+.goldCard {
+    min-width: 9em;
+    transition: .7s;
+
+    &:hover{
+        transform: translateY(-3em);
+    }
+}
+
+#goldCards .cardOverlap{
+    // transform: translateX(-4.5em);
+    margin-left: -2em !important;
+}
+
+.bg-gold{
+    background: #e6c200;
+}
+
+.bg-gold-brighter{
+    background: #ffdc20;
+}
+
+.z-negative1{
+    z-index: -1;
+}
+
+.goldText{
+        // font: bold 200px arial, sans-serif;
+        background-color: #705f00;
+        color: transparent;
+        text-shadow: 2px 2px 3px rgba(231,195,0,0.6);
+        -webkit-background-clip: text;
+           -moz-background-clip: text;
+                background-clip: text;
+}
+
+.rotateBox{
+    top:-25%;
+    left:0;
+    right:0;
+    height: 150%;
+    margin-left: auto;
+    margin-right: auto;
+
+    position: absolute;
+    // transform: translateX(-50%);
+    animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+}
+  

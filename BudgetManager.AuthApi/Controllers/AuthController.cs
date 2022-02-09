@@ -3,6 +3,7 @@ using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -22,7 +23,7 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] UserModel model)
+        public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
             UserIdentification userInfo = this.userService.Authenticate(model.UserName, model.Password);
 
@@ -30,11 +31,12 @@ namespace BudgetManager.AuthApi.Controllers
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             string token = this.jwtService.GenerateToken(userInfo);
+            Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
             return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
         }
 
         [HttpPost("validate")]
-        public IActionResult Validate([FromBody] TokenModel tokenModel)
+        public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
                 return BadRequest(new { message = "Token is required" });
@@ -44,7 +46,7 @@ namespace BudgetManager.AuthApi.Controllers
         }
 
         [HttpGet("tokenData")]
-        public IActionResult GetTokenData([FromQuery]string token)
+        public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
         {
             if(string.IsNullOrEmpty(token))
                 return BadRequest(new { message = "Token is required" });

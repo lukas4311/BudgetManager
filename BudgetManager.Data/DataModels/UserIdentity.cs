@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class UserIdentity
+    public class UserIdentity : IDataModel
     {
         public int Id { get; set; }
 
@@ -17,5 +17,7 @@ namespace BudgetManager.Data.DataModels
         public List<CryptoTradeHistory> CryptoTradesHistory { get; set; }
 
         public List<OtherInvestment> OtherInvestments { get; set; }
+
+        public List<ComodityTradeHistory> ComodityTradeHistory { get; set; }
     }
 }

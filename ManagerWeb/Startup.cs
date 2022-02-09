@@ -42,6 +42,7 @@ namespace BudgetManager.ManagerWeb
             services.AddHttpContextAccessor();
 
             services.ConfigureDataContext(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
+            services.Configure<ApiUrls>(Configuration.GetSection(nameof(ApiUrls)));
             services.ConfigureIoCRepositories();
             services.ConfigureInfluxRepositories();
             services.RegisterServices();
@@ -80,9 +81,8 @@ namespace BudgetManager.ManagerWeb
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(name:"a", pattern: "{controller}/{action}/{id?}", defaults: new { controller = "setting", action = "apiRoutes" });
+                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }

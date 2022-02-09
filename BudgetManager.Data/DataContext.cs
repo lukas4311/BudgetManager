@@ -36,5 +36,11 @@ namespace BudgetManager.Data
         public DbSet<Budget> Budget { get; set; }
 
         public DbSet<OtherInvestment> OtherInvestment {get; set;}
+
+        public DbSet<ComodityUnit> ComodityUnit { get; set; }
+
+        public DbSet<ComodityType> ComodityType { get; set; }
+
+        public DbSet<ComodityTradeHistory> ComodityTradeHistory { get; set; }
     }
 }

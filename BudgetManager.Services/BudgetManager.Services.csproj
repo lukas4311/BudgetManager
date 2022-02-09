@@ -6,14 +6,15 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
+    <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />
     <ProjectReference Include="..\BudgetManager.Services.Contracts\BudgetManager.Services.Contracts.csproj" />
-    <ProjectReference Include="..\InfluxDbData\BudgetManager.InfluxDbData.csproj" />
   </ItemGroup>
 
 </Project>

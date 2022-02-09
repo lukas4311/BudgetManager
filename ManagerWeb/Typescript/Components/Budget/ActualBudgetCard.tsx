@@ -2,8 +2,8 @@ import moment from 'moment';
 import * as React from 'react'
 
 class ActualBudgetCardProps {
-    from: string;
-    to?: string;
+    from: Date;
+    to?: Date;
     spent: number;
     limit: number;
     name: string;

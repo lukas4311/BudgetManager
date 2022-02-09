@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BudgetManager.Api.Controllers
 {
     [ApiController]
-    [Route("budget")]
+    [Route("budgets")]
     public class BudgetController : BaseController
     {
         private readonly IBudgetService budgetService;
@@ -17,13 +17,13 @@ namespace BudgetManager.Api.Controllers
             this.budgetService = budgetService;
         }
 
-        [HttpGet("getAll")]
+        [HttpGet("all")]
         public ActionResult<IEnumerable<BudgetModel>> Get()
         {
             return Ok(this.budgetService.GetByUserId(this.GetUserId()));
         }
 
-        [HttpGet("get")]
+        [HttpGet]
         public ActionResult<BudgetModel> Get(int id)
         {
             if (!this.budgetService.UserHasRightToBudget(id, this.GetUserId()))
@@ -32,33 +32,29 @@ namespace BudgetManager.Api.Controllers
             return Ok(this.budgetService.Get(id));
         }
 
-        [HttpGet("getActual")]
+        [HttpGet("actual")]
         public ActionResult<IEnumerable<BudgetModel>> GetActual()
         {
             return Ok(this.budgetService.GetActual(this.GetUserId()));
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {
-            if (budgetModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            budgetModel.UserIdentityId = this.GetUserId();
             this.budgetService.Add(budgetModel);
             return Ok();
         }
 
-        [HttpPut("update")]
+        [HttpPut]
         public IActionResult Update([FromBody] BudgetModel budgetModel)
         {
-            if (budgetModel.UserIdentityId != this.GetUserId())
-                return StatusCode(StatusCodes.Status401Unauthorized);
-
+            budgetModel.UserIdentityId = this.GetUserId();
             this.budgetService.Update(budgetModel);
             return Ok();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
             if (!this.budgetService.UserHasRightToBudget(id, this.GetUserId()))

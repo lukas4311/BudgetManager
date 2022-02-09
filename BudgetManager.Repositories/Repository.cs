@@ -1,4 +1,5 @@
 ﻿using BudgetManager.Data;
+using BudgetManager.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace BudgetManager.Repository
 {
-    public abstract class Repository<T> : IRepository<T> where T : class
+    public abstract class Repository<T> : IRepository<T> where T : class, IDataModel
     {
         protected DataContext RepositoryContext { get; set; }
 

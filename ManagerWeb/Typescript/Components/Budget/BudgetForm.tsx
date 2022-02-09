@@ -1,18 +1,18 @@
 import * as React from 'react'
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button, TextField } from '@material-ui/core';
 
 class BudgetFormModel {
     id: number;
     name: string;
     amount: number;
-    to: string;
     from: string;
+    to: string;
     onSave: (model: BudgetFormModel) => void;
 }
 
 const BudgetForm = (props: BudgetFormModel) => {
-    const { register, handleSubmit } = useForm<BudgetFormModel>({ defaultValues: props });
+    const { register, handleSubmit, control } = useForm<BudgetFormModel>({ defaultValues: { ...props } });
 
     const onSubmit = (data: BudgetFormModel) => {
         data.id = props.id;
@@ -23,23 +23,33 @@ const BudgetForm = (props: BudgetFormModel) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-3/5">
-                    <TextField label="Název" type="text" name="name" inputRef={register} className="w-full"/>
-                </div>
-                <div className="w-3/5">
-                    <TextField label="Velikost" type="text" name="amount" inputRef={register} className="w-full"/>
-                </div>
-                <div className="w-3/5">
-                    <TextField label="Od" type="date" name="from" inputRef={register} className="w-full"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                    <Controller
+                        render={({ field }) => <TextField label="Název" type="text" {...field} className="w-full" />}
+                        name="name"
+                        control={control}
                     />
                 </div>
                 <div className="w-3/5">
-                    <TextField label="Do" type="date" name="to" inputRef={register} className="w-full"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                    <Controller
+                        render={({ field }) => <TextField label="Velikost" type="text" {...field} className="w-full" />}
+                        name="amount"
+                        control={control}
+                    />
+                </div>
+                <div className="w-3/5">
+                    <Controller
+                        render={({ field }) => <TextField label="Od" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
+                        name="from"
+                        defaultValue={props.from}
+                        control={control}
+                    />
+                </div>
+                <div className="w-3/5">
+                    <Controller
+                        render={({ field }) => <TextField label="Do" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
+                        name="to"
+                        defaultValue={props.to}
+                        control={control}
                     />
                 </div>
             </div>

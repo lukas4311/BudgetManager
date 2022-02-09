@@ -1,7 +1,9 @@
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient";
+import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
 import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { RouteComponentProps } from "react-router-dom";
 
 const usdSymbol = "USD";
 
@@ -18,12 +20,11 @@ class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
 }
 
-export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolioState> {
+export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
     cryptoApi: CryptoApiInterface;
 
-    constructor(props: {}) {
+    constructor(props: RouteComponentProps) {
         super(props);
-        this.cryptoApi = new CryptoApi(new Configuration({ basePath: "https://localhost:5001" }));
         this.state = { allCryptoSum: undefined };
     }
 
@@ -32,17 +33,20 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
     }
 
     private load = async (): Promise<void> => {
-        let trades: TradeHistory[] = await this.cryptoApi.cryptoGetAllGet();
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.cryptoApi = await apiFactory.getClient(CryptoApi);
+
+        let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
         let that = this;
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-            let exhangeRateTrade: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+            let exhangeRateTrade: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
 
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let exhangeRate: number = await that.cryptoApi.cryptoGetExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+            let exhangeRate: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             that.setState({ allCryptoSum: cryptoSums });
@@ -67,7 +71,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
     render() {
         return (
             <div>
-                <h2 className="text-xl ml-12 mb-10">Portfolio</h2>
+                <h2 className="text-xl ml-12 p-4">Crypto portfolio</h2>
                 {this.state.allCryptoSum != undefined ?
                     <div className="pb-10 overflow-y-scroll">
                         <div className="font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
@@ -79,7 +83,7 @@ export default class CryptoPortfolio extends React.Component<{}, CryptoPortfolio
                             <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                 <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
                                 <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)}({p.usdPrice.toFixed(2)} USD)</p>
+                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
                             </div>
                         )}
                     </div>

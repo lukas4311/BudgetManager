@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { useForm } from "react-hook-form";
-import { Button } from "@material-ui/core";
+import { Controller, useForm } from "react-hook-form";
+import { Button, Input } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import { IBaseModel } from '../BaseList';
 
@@ -12,7 +12,7 @@ class BankAccountFromViewModel implements IBaseModel {
 }
 
 const BankAccountForm = (props: BankAccountFromViewModel) => {
-    const { register, handleSubmit } = useForm<BankAccountFromViewModel>({ defaultValues: props });
+    const { handleSubmit, control } = useForm<BankAccountFromViewModel>({ defaultValues: { ...props } });
 
     const onSubmit = (data: BankAccountFromViewModel) => {
         data.id = props.id;
@@ -23,14 +23,22 @@ const BankAccountForm = (props: BankAccountFromViewModel) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div>
-                    <TextField label="Název účtu" name="code" inputRef={register} />
+                    <Controller
+                        render={({ field }) => <TextField label="Account name" {...field} className="materialUIInput w-full" />}
+                        name="code"
+                        control={control}
+                    />
                 </div>
                 <div>
-                    <TextField label="Počáteční stav" type="text" name="openingBalance" inputRef={register} className="w-full" />
+                    <Controller
+                        render={({ field }) => <TextField label="Initial balance" {...field} className="materialUIInput w-full" />}
+                        name="openingBalance"
+                        control={control}
+                    />
                 </div>
             </div>
 
-            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Uložit</Button>
+            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Save</Button>
         </form>
     );
 };
