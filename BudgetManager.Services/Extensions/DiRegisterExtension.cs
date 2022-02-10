@@ -42,6 +42,12 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<TagModel, Tag>();
                     cfg.CreateMap<PaymentModel, Payment>();
                     cfg.CreateMap<Payment, PaymentModel>();
+                    cfg.CreateMap<OtherInvestment, OtherInvestmentModel>();
+                    cfg.CreateMap<OtherInvestmentModel, OtherInvestment>();
+                    cfg.CreateMap<OtherInvestmentBalaceHistory, OtherInvestmentBalaceHistoryModel>();
+                    cfg.CreateMap<OtherInvestmentBalaceHistoryModel, OtherInvestmentBalaceHistory>();
+                    cfg.CreateMap<OtherInvestmentTag, OtherInvestmentTagModel>();
+                    cfg.CreateMap<OtherInvestmentTagModel, OtherInvestmentTag>();
                 }
             );
 

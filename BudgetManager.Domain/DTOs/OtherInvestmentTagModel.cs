@@ -1,6 +1,6 @@
 ﻿namespace BudgetManager.Domain.DTOs
 {
-    public class OtherInvestmentTag
+    public class OtherInvestmentTagModel
     {
         public int Id { get; set; }
 
