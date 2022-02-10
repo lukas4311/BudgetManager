@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace BudgetManager.Data.DataModels
@@ -6,7 +7,7 @@ namespace BudgetManager.Data.DataModels
     {
         public int Id { get; set; }
 
-        public decimal Created { get; set; }
+        public DateTime Created { get; set; }
 
         public string Code { get; set; }
 

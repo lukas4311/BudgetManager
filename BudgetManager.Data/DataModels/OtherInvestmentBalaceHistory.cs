@@ -1,10 +1,12 @@
+using System;
+
 namespace BudgetManager.Data.DataModels
 {
     public class OtherInvestmentBalaceHistory
     {
         public int Id { get; set; }
 
-        public decimal Created { get; set; }
+        public DateTime Date { get; set; }
 
         public int Balance { get; set; }
 
