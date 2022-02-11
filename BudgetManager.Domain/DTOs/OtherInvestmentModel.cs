@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Domain.DTOs
 {
-    public class OtherInvestmentModel
+    public class OtherInvestmentModel : IDtoModel
     {
         public int Id { get; set; }
 

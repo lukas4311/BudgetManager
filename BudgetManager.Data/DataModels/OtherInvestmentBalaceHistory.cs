@@ -2,7 +2,7 @@ using System;
 
 namespace BudgetManager.Data.DataModels
 {
-    public class OtherInvestmentBalaceHistory
+    public class OtherInvestmentBalaceHistory : IDataModel
     {
         public int Id { get; set; }
 
