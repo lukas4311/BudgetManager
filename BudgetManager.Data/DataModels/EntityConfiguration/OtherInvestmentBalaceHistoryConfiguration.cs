@@ -7,7 +7,7 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<OtherInvestmentBalaceHistory> builder)
         {
-            builder.Property(i => i.Created)
+            builder.Property(i => i.Date)
                 .IsRequired();
 
             builder.Property(p => p.Balance)
