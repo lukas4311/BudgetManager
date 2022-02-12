@@ -14,8 +14,8 @@ namespace BudgetManager.Services
         where Entity : class, IDataModel
         where IRepo : IRepository<Entity>
     {
-        private readonly IRepo repository;
-        private readonly IMapper mapper;
+        protected readonly IRepo repository;
+        protected readonly IMapper mapper;
 
         public BaseService(IRepo repository, IMapper mapper)
         {
