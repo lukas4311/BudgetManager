@@ -20,5 +20,7 @@ namespace BudgetManager.Data.DataModels
         public UserIdentity UserIdentity { get; set; }
 
         public IEnumerable<OtherInvestmentBalaceHistory> OtherInvestmentBalaceHistory { get; set; }
+
+        public IEnumerable<OtherInvestmentTag> OtherInvestmentTags { get; set; }
     }
 }

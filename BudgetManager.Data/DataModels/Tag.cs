@@ -9,5 +9,7 @@ namespace BudgetManager.Data.DataModels
         public string Code {get; set;}
 
         public IList<PaymentTag> PaymentTags { get; set; }
+
+        public IEnumerable<OtherInvestmentTag> OtherInvestmentTags { get; set; }
     }
 }
