@@ -14,6 +14,12 @@
 
 import { exists, mapValues } from '../../runtime';
 import {
+    OtherInvestmentTag,
+    OtherInvestmentTagFromJSON,
+    OtherInvestmentTagFromJSONTyped,
+    OtherInvestmentTagToJSON,
+} from './OtherInvestmentTag';
+import {
     PaymentTag,
     PaymentTagFromJSON,
     PaymentTagFromJSONTyped,
@@ -44,6 +50,12 @@ export class Tag {
      * @memberof Tag
      */
     paymentTags?: Array<PaymentTag> | null;
+    /**
+     * 
+     * @type {Array<OtherInvestmentTag>}
+     * @memberof Tag
+     */
+    otherInvestmentTags?: Array<OtherInvestmentTag> | null;
 }
 
 export function TagFromJSON(json: any): Tag {
@@ -59,6 +71,7 @@ export function TagFromJSONTyped(json: any, ignoreDiscriminator: boolean): Tag {
         'id': !exists(json, 'id') ? undefined : json['id'],
         'code': !exists(json, 'code') ? undefined : json['code'],
         'paymentTags': !exists(json, 'paymentTags') ? undefined : (json['paymentTags'] === null ? null : (json['paymentTags'] as Array<any>).map(PaymentTagFromJSON)),
+        'otherInvestmentTags': !exists(json, 'otherInvestmentTags') ? undefined : (json['otherInvestmentTags'] === null ? null : (json['otherInvestmentTags'] as Array<any>).map(OtherInvestmentTagFromJSON)),
     };
 }
 
@@ -74,5 +87,6 @@ export function TagToJSON(value?: Tag | null): any {
         'id': value.id,
         'code': value.code,
         'paymentTags': value.paymentTags === undefined ? undefined : (value.paymentTags === null ? null : (value.paymentTags as Array<any>).map(PaymentTagToJSON)),
+        'otherInvestmentTags': value.otherInvestmentTags === undefined ? undefined : (value.otherInvestmentTags === null ? null : (value.otherInvestmentTags as Array<any>).map(OtherInvestmentTagToJSON)),
     };
 }
