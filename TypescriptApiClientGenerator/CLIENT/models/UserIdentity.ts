@@ -32,6 +32,12 @@ import {
     CryptoTradeHistoryToJSON,
 } from './CryptoTradeHistory';
 import {
+    OtherInvestment,
+    OtherInvestmentFromJSON,
+    OtherInvestmentFromJSONTyped,
+    OtherInvestmentToJSON,
+} from './OtherInvestment';
+import {
     UserData,
     UserDataFromJSON,
     UserDataFromJSONTyped,
@@ -82,6 +88,12 @@ export class UserIdentity {
     cryptoTradesHistory?: Array<CryptoTradeHistory> | null;
     /**
      * 
+     * @type {Array<OtherInvestment>}
+     * @memberof UserIdentity
+     */
+    otherInvestments?: Array<OtherInvestment> | null;
+    /**
+     * 
      * @type {Array<ComodityTradeHistory>}
      * @memberof UserIdentity
      */
@@ -104,6 +116,7 @@ export function UserIdentityFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'userData': !exists(json, 'userData') ? undefined : UserDataFromJSON(json['userData']),
         'bankAccounts': !exists(json, 'bankAccounts') ? undefined : (json['bankAccounts'] === null ? null : (json['bankAccounts'] as Array<any>).map(BankAccountFromJSON)),
         'cryptoTradesHistory': !exists(json, 'cryptoTradesHistory') ? undefined : (json['cryptoTradesHistory'] === null ? null : (json['cryptoTradesHistory'] as Array<any>).map(CryptoTradeHistoryFromJSON)),
+        'otherInvestments': !exists(json, 'otherInvestments') ? undefined : (json['otherInvestments'] === null ? null : (json['otherInvestments'] as Array<any>).map(OtherInvestmentFromJSON)),
         'comodityTradeHistory': !exists(json, 'comodityTradeHistory') ? undefined : (json['comodityTradeHistory'] === null ? null : (json['comodityTradeHistory'] as Array<any>).map(ComodityTradeHistoryFromJSON)),
     };
 }
@@ -123,6 +136,7 @@ export function UserIdentityToJSON(value?: UserIdentity | null): any {
         'userData': UserDataToJSON(value.userData),
         'bankAccounts': value.bankAccounts === undefined ? undefined : (value.bankAccounts === null ? null : (value.bankAccounts as Array<any>).map(BankAccountToJSON)),
         'cryptoTradesHistory': value.cryptoTradesHistory === undefined ? undefined : (value.cryptoTradesHistory === null ? null : (value.cryptoTradesHistory as Array<any>).map(CryptoTradeHistoryToJSON)),
+        'otherInvestments': value.otherInvestments === undefined ? undefined : (value.otherInvestments === null ? null : (value.otherInvestments as Array<any>).map(OtherInvestmentToJSON)),
         'comodityTradeHistory': value.comodityTradeHistory === undefined ? undefined : (value.comodityTradeHistory === null ? null : (value.comodityTradeHistory as Array<any>).map(ComodityTradeHistoryToJSON)),
     };
 }

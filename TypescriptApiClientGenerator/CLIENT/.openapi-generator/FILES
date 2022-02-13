@@ -3,6 +3,7 @@ apis/BudgetApi.ts
 apis/ComodityApi.ts
 apis/CryptoApi.ts
 apis/CurrencyApi.ts
+apis/OtherInvestmentApi.ts
 apis/PaymentApi.ts
 apis/TagApi.ts
 apis/index.ts
@@ -22,6 +23,11 @@ models/CryptoTicker.ts
 models/CryptoTradeHistory.ts
 models/CurrencySymbol.ts
 models/InterestRate.ts
+models/OtherInvestment.ts
+models/OtherInvestmentBalaceHistory.ts
+models/OtherInvestmentBalaceHistoryModel.ts
+models/OtherInvestmentModel.ts
+models/OtherInvestmentTag.ts
 models/Payment.ts
 models/PaymentCategory.ts
 models/PaymentCategoryModel.ts

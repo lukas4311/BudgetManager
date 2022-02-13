@@ -16,67 +16,67 @@ import { exists, mapValues } from '../../runtime';
 /**
  * 
  * @export
- * @class BudgetModel
+ * @class OtherInvestmentModel
  */
-export class BudgetModel {
+export class OtherInvestmentModel {
     /**
      * 
      * @type {number}
-     * @memberof BudgetModel
+     * @memberof OtherInvestmentModel
      */
     id?: number;
     /**
      * 
      * @type {Date}
-     * @memberof BudgetModel
+     * @memberof OtherInvestmentModel
      */
-    dateFrom?: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof BudgetModel
-     */
-    dateTo?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof BudgetModel
-     */
-    amount?: number;
+    created?: Date;
     /**
      * 
      * @type {string}
-     * @memberof BudgetModel
+     * @memberof OtherInvestmentModel
+     */
+    code?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OtherInvestmentModel
      */
     name?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof BudgetModel
+     * @memberof OtherInvestmentModel
+     */
+    openingBalance?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OtherInvestmentModel
      */
     userIdentityId?: number;
 }
 
-export function BudgetModelFromJSON(json: any): BudgetModel {
-    return BudgetModelFromJSONTyped(json, false);
+export function OtherInvestmentModelFromJSON(json: any): OtherInvestmentModel {
+    return OtherInvestmentModelFromJSONTyped(json, false);
 }
 
-export function BudgetModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): BudgetModel {
+export function OtherInvestmentModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): OtherInvestmentModel {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'dateFrom': !exists(json, 'dateFrom') ? undefined : (new Date(json['dateFrom'])),
-        'dateTo': !exists(json, 'dateTo') ? undefined : (new Date(json['dateTo'])),
-        'amount': !exists(json, 'amount') ? undefined : json['amount'],
+        'created': !exists(json, 'created') ? undefined : (new Date(json['created'])),
+        'code': !exists(json, 'code') ? undefined : json['code'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'openingBalance': !exists(json, 'openingBalance') ? undefined : json['openingBalance'],
         'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
     };
 }
 
-export function BudgetModelToJSON(value?: BudgetModel | null): any {
+export function OtherInvestmentModelToJSON(value?: OtherInvestmentModel | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -86,10 +86,10 @@ export function BudgetModelToJSON(value?: BudgetModel | null): any {
     return {
         
         'id': value.id,
-        'dateFrom': value.dateFrom === undefined ? undefined : (value.dateFrom.toISOString()),
-        'dateTo': value.dateTo === undefined ? undefined : (value.dateTo.toISOString()),
-        'amount': value.amount,
+        'created': value.created === undefined ? undefined : (value.created.toISOString()),
+        'code': value.code,
         'name': value.name,
+        'openingBalance': value.openingBalance,
         'userIdentityId': value.userIdentityId,
     };
 }

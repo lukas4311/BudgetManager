@@ -5117,6 +5117,7 @@ const Auth_1 = __importDefault(__webpack_require__(/*! ./Components/Auth/Auth */
 const PrivateRoute_1 = __importDefault(__webpack_require__(/*! ./Utils/PrivateRoute */ "./Typescript/Utils/PrivateRoute.tsx"));
 const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Components/BankAccount/BankAccountOverview */ "./Typescript/Components/BankAccount/BankAccountOverview.tsx"));
 const Comodities_1 = __importDefault(__webpack_require__(/*! ./Components/Comodities/Comodities */ "./Typescript/Components/Comodities/Comodities.tsx"));
+const OtherInvestmentOverview_1 = __importDefault(__webpack_require__(/*! ./Components/OtherInvestment/OtherInvestmentOverview */ "./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx"));
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden" },
@@ -5135,6 +5136,7 @@ function App() {
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/budget", component: BudgetComponent_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
+                        react_1.default.createElement(PrivateRoute_1.default, { path: "/other-investment", component: OtherInvestmentOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
             react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
                 react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
@@ -6603,7 +6605,7 @@ class Menu extends react_1.default.Component {
             { icon: icons.payments, linkUri: "payments" },
             { icon: icons.crypto, linkUri: "crypto-overview" },
             { icon: icons.budget, linkUri: "budget" },
-            { icon: icons.debts, linkUri: "debts" },
+            { icon: icons.debts, linkUri: "other-investment" },
             { icon: icons.statistics, linkUri: "stats" },
             { icon: icons.budget, linkUri: "bankaccount-overview" },
             { icon: icons.ingot, linkUri: "comodity" },
@@ -6622,6 +6624,85 @@ class Menu extends react_1.default.Component {
 }
 exports.default = Menu;
 // ReactDOM.render(<Menu />, document.getElementById('navMenu'));
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx":
+/*!***************************************************************************!*\
+  !*** ./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
+class OtherInvestmentOverviewState {
+}
+class OtherInvestmentOverview extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.componentDidMount = () => this.init();
+        this.init = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
+            this.setState({ otherInvesmnets: data });
+        });
+        this.renderTemplate = (p) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" },
+                    p.name,
+                    ",-"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, p.openingBalance)));
+        };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Investment name"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Opening balance")));
+        };
+        this.state = { otherInvesmnets: [] };
+    }
+    render() {
+        return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+            react_1.default.createElement("h2", { className: "text-xl p-4 text-center" }, "Other investments"),
+            react_1.default.createElement("div", { className: "text-center mt-4 bg-prussianBlue rounded-lg" },
+                react_1.default.createElement("h2", { className: "text-2xl" }),
+                react_1.default.createElement("div", { className: "grid grid-cols-2" },
+                    react_1.default.createElement("div", null,
+                        react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvesmnets, template: this.renderTemplate, header: this.renderHeader() }))),
+                    react_1.default.createElement("div", null, "Detail"),
+                    react_1.default.createElement("div", { className: "col-span-2" }, "Overview")))));
+    }
+}
+exports.default = OtherInvestmentOverview;
 
 
 /***/ }),

@@ -2,7 +2,6 @@
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 
 namespace BudgetManager.Api.Controllers
@@ -12,10 +11,13 @@ namespace BudgetManager.Api.Controllers
     public class OtherInvestmentController : BaseController
     {
         private readonly IOtherInvestmentService otherInvestmentService;
+        private readonly IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService;
 
-        public OtherInvestmentController(IHttpContextAccessor httpContextAccessor, IOtherInvestmentService otherInvestmentService) : base(httpContextAccessor)
+        public OtherInvestmentController(IHttpContextAccessor httpContextAccessor, IOtherInvestmentService otherInvestmentService,
+            IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService) : base(httpContextAccessor)
         {
             this.otherInvestmentService = otherInvestmentService;
+            this.otherInvestmentBalaceHistoryService = otherInvestmentBalaceHistoryService;
         }
 
         [HttpGet("all")]
@@ -42,6 +44,31 @@ namespace BudgetManager.Api.Controllers
 
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
+        {
+            if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.otherInvestmentService.Delete(id);
+            return Ok();
+        }
+
+        [HttpPost("{otherInvestmentId}/balanceHistory")]
+        public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
+        {
+            otherInvestmentBalaceHistory.Id = otherInvestmentId;
+            this.otherInvestmentBalaceHistoryService.Add(otherInvestmentBalaceHistory);
+            return Ok();
+        }
+
+        [HttpPut("/balanceHistory")]
+        public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
+        {
+            this.otherInvestmentBalaceHistoryService.Update(otherInvestmentBalaceHistory);
+            return Ok();
+        }
+
+        [HttpDelete("/balanceHistory")]
+        public IActionResult DeleteHistoryBalance([FromBody] int id)
         {
             if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
