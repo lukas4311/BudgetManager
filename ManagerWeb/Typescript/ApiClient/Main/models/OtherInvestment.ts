@@ -14,6 +14,12 @@
 
 import { exists, mapValues } from '../../runtime';
 import {
+    CurrencySymbol,
+    CurrencySymbolFromJSON,
+    CurrencySymbolFromJSONTyped,
+    CurrencySymbolToJSON,
+} from './CurrencySymbol';
+import {
     OtherInvestmentBalaceHistory,
     OtherInvestmentBalaceHistoryFromJSON,
     OtherInvestmentBalaceHistoryFromJSONTyped,
@@ -82,6 +88,18 @@ export class OtherInvestment {
     userIdentity?: UserIdentity;
     /**
      * 
+     * @type {number}
+     * @memberof OtherInvestment
+     */
+    currencySymbolId?: number;
+    /**
+     * 
+     * @type {CurrencySymbol}
+     * @memberof OtherInvestment
+     */
+    currencySymbol?: CurrencySymbol;
+    /**
+     * 
      * @type {Array<OtherInvestmentBalaceHistory>}
      * @memberof OtherInvestment
      */
@@ -111,6 +129,8 @@ export function OtherInvestmentFromJSONTyped(json: any, ignoreDiscriminator: boo
         'openingBalance': !exists(json, 'openingBalance') ? undefined : json['openingBalance'],
         'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
         'userIdentity': !exists(json, 'userIdentity') ? undefined : UserIdentityFromJSON(json['userIdentity']),
+        'currencySymbolId': !exists(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
+        'currencySymbol': !exists(json, 'currencySymbol') ? undefined : CurrencySymbolFromJSON(json['currencySymbol']),
         'otherInvestmentBalaceHistory': !exists(json, 'otherInvestmentBalaceHistory') ? undefined : (json['otherInvestmentBalaceHistory'] === null ? null : (json['otherInvestmentBalaceHistory'] as Array<any>).map(OtherInvestmentBalaceHistoryFromJSON)),
         'otherInvestmentTags': !exists(json, 'otherInvestmentTags') ? undefined : (json['otherInvestmentTags'] === null ? null : (json['otherInvestmentTags'] as Array<any>).map(OtherInvestmentTagFromJSON)),
     };
@@ -132,6 +152,8 @@ export function OtherInvestmentToJSON(value?: OtherInvestment | null): any {
         'openingBalance': value.openingBalance,
         'userIdentityId': value.userIdentityId,
         'userIdentity': UserIdentityToJSON(value.userIdentity),
+        'currencySymbolId': value.currencySymbolId,
+        'currencySymbol': CurrencySymbolToJSON(value.currencySymbol),
         'otherInvestmentBalaceHistory': value.otherInvestmentBalaceHistory === undefined ? undefined : (value.otherInvestmentBalaceHistory === null ? null : (value.otherInvestmentBalaceHistory as Array<any>).map(OtherInvestmentBalaceHistoryToJSON)),
         'otherInvestmentTags': value.otherInvestmentTags === undefined ? undefined : (value.otherInvestmentTags === null ? null : (value.otherInvestmentTags as Array<any>).map(OtherInvestmentTagToJSON)),
     };
