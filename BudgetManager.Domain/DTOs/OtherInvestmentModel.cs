@@ -15,5 +15,7 @@ namespace BudgetManager.Domain.DTOs
         public int OpeningBalance { get; set; }
 
         public int UserIdentityId { get; set; }
+
+        public int CurrencySymbolId { get; set; }
     }
 }
