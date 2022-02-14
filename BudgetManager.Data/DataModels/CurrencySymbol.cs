@@ -11,5 +11,7 @@ namespace BudgetManager.Data.DataModels
         public List<CryptoTradeHistory> CryptoTradeHistory { get; set; }
 
         public List<ComodityTradeHistory> ComodityTradeHistory { get; set; }
+
+        public IEnumerable<OtherInvestment> OtherInvestments { get; set; }
     }
 }

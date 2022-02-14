@@ -19,6 +19,10 @@ namespace BudgetManager.Data.DataModels
 
         public UserIdentity UserIdentity { get; set; }
 
+        public int CurrencySymbolId { get; set; }
+
+        public CurrencySymbol CurrencySymbol { get; set; }
+
         public IEnumerable<OtherInvestmentBalaceHistory> OtherInvestmentBalaceHistory { get; set; }
 
         public IEnumerable<OtherInvestmentTag> OtherInvestmentTags { get; set; }

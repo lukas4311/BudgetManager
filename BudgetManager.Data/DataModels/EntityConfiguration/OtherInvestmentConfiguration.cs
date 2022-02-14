@@ -22,6 +22,10 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
             builder.HasOne(e => e.UserIdentity)
                 .WithMany(e => e.OtherInvestments)
                 .HasForeignKey(e => e.UserIdentityId);
+
+            builder.HasOne(e => e.CurrencySymbol)
+                .WithMany(e => e.OtherInvestments)
+                .HasForeignKey(e => e.CurrencySymbolId);
         }
     }
 }
