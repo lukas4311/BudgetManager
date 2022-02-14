@@ -55,6 +55,12 @@ export class OtherInvestmentModel {
      * @memberof OtherInvestmentModel
      */
     userIdentityId?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OtherInvestmentModel
+     */
+    currencySymbolId?: number;
 }
 
 export function OtherInvestmentModelFromJSON(json: any): OtherInvestmentModel {
@@ -73,6 +79,7 @@ export function OtherInvestmentModelFromJSONTyped(json: any, ignoreDiscriminator
         'name': !exists(json, 'name') ? undefined : json['name'],
         'openingBalance': !exists(json, 'openingBalance') ? undefined : json['openingBalance'],
         'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'currencySymbolId': !exists(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
     };
 }
 
@@ -91,5 +98,6 @@ export function OtherInvestmentModelToJSON(value?: OtherInvestmentModel | null):
         'name': value.name,
         'openingBalance': value.openingBalance,
         'userIdentityId': value.userIdentityId,
+        'currencySymbolId': value.currencySymbolId,
     };
 }
