@@ -5,7 +5,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class PaymentModel : IDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public decimal Amount { get; set; }
 

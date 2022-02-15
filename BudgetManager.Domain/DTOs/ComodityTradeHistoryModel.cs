@@ -5,7 +5,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class ComodityTradeHistoryModel : IUserDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public DateTime TradeTimeStamp { get; set; }
 

@@ -4,7 +4,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class BudgetModel : IUserDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public DateTime DateFrom { get; set; }
 

@@ -2,7 +2,7 @@
 {
     public class OtherInvestmentTagModel : IDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public int OtherInvestmentId { get; set; }
 

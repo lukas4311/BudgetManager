@@ -4,7 +4,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class PaymentCategoryModel : IDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Name { get; set; }
 

@@ -4,7 +4,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class TradeHistory : IUserDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public DateTime TradeTimeStamp { get; set; }
 

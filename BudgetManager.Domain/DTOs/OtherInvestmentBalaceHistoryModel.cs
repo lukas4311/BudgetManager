@@ -4,7 +4,7 @@ namespace BudgetManager.Domain.DTOs
 {
     public class OtherInvestmentBalaceHistoryModel : IDtoModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public DateTime Date { get; set; }
 
