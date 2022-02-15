@@ -42,6 +42,11 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        await this.loadData();
+        
+    }
+
+    private async loadData() {
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
         const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
         this.setState({ otherInvestments: viewModels });
@@ -98,15 +103,23 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     private saveTrade = async (otherInvestmentData: OtherInvestmentViewModel): Promise<void> => {
         const otherInvestment: OtherInvestmentModel = {
+            code: otherInvestmentData.code,
+            created: new Date(otherInvestmentData.created),
+            currencySymbolId: otherInvestmentData.currencySymbolId,
+            id: otherInvestmentData.id,
+            name: otherInvestmentData.name,
+            openingBalance: otherInvestmentData.openingBalance
         };
+
+        console.log(otherInvestmentData);
 
         if (otherInvestmentData.id)
             await this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
         else
             await this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
 
-        // this.setState({ openedForm: false, selectedModel: undefined });
-        // this.loadGoldData();
+        this.setState({ openedForm: false, selectedModel: undefined });
+        this.loadData();
     }
 
     private handleClose = () => {

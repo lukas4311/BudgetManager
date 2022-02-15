@@ -3400,6 +3400,7 @@ exports.CurrencySymbolToJSON = exports.CurrencySymbolFromJSONTyped = exports.Cur
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
 const ComodityTradeHistory_1 = __webpack_require__(/*! ./ComodityTradeHistory */ "./Typescript/ApiClient/Main/models/ComodityTradeHistory.ts");
 const CryptoTradeHistory_1 = __webpack_require__(/*! ./CryptoTradeHistory */ "./Typescript/ApiClient/Main/models/CryptoTradeHistory.ts");
+const OtherInvestment_1 = __webpack_require__(/*! ./OtherInvestment */ "./Typescript/ApiClient/Main/models/OtherInvestment.ts");
 /**
  *
  * @export
@@ -3421,6 +3422,7 @@ function CurrencySymbolFromJSONTyped(json, ignoreDiscriminator) {
         'symbol': !(0, runtime_1.exists)(json, 'symbol') ? undefined : json['symbol'],
         'cryptoTradeHistory': !(0, runtime_1.exists)(json, 'cryptoTradeHistory') ? undefined : (json['cryptoTradeHistory'] === null ? null : json['cryptoTradeHistory'].map(CryptoTradeHistory_1.CryptoTradeHistoryFromJSON)),
         'comodityTradeHistory': !(0, runtime_1.exists)(json, 'comodityTradeHistory') ? undefined : (json['comodityTradeHistory'] === null ? null : json['comodityTradeHistory'].map(ComodityTradeHistory_1.ComodityTradeHistoryFromJSON)),
+        'otherInvestments': !(0, runtime_1.exists)(json, 'otherInvestments') ? undefined : (json['otherInvestments'] === null ? null : json['otherInvestments'].map(OtherInvestment_1.OtherInvestmentFromJSON)),
     };
 }
 exports.CurrencySymbolFromJSONTyped = CurrencySymbolFromJSONTyped;
@@ -3436,6 +3438,7 @@ function CurrencySymbolToJSON(value) {
         'symbol': value.symbol,
         'cryptoTradeHistory': value.cryptoTradeHistory === undefined ? undefined : (value.cryptoTradeHistory === null ? null : value.cryptoTradeHistory.map(CryptoTradeHistory_1.CryptoTradeHistoryToJSON)),
         'comodityTradeHistory': value.comodityTradeHistory === undefined ? undefined : (value.comodityTradeHistory === null ? null : value.comodityTradeHistory.map(ComodityTradeHistory_1.ComodityTradeHistoryToJSON)),
+        'otherInvestments': value.otherInvestments === undefined ? undefined : (value.otherInvestments === null ? null : value.otherInvestments.map(OtherInvestment_1.OtherInvestmentToJSON)),
     };
 }
 exports.CurrencySymbolToJSON = CurrencySymbolToJSON;
@@ -3543,6 +3546,7 @@ exports.InterestRateToJSON = InterestRateToJSON;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtherInvestmentToJSON = exports.OtherInvestmentFromJSONTyped = exports.OtherInvestmentFromJSON = exports.OtherInvestment = void 0;
 const runtime_1 = __webpack_require__(/*! ../../runtime */ "./Typescript/ApiClient/runtime.ts");
+const CurrencySymbol_1 = __webpack_require__(/*! ./CurrencySymbol */ "./Typescript/ApiClient/Main/models/CurrencySymbol.ts");
 const OtherInvestmentBalaceHistory_1 = __webpack_require__(/*! ./OtherInvestmentBalaceHistory */ "./Typescript/ApiClient/Main/models/OtherInvestmentBalaceHistory.ts");
 const OtherInvestmentTag_1 = __webpack_require__(/*! ./OtherInvestmentTag */ "./Typescript/ApiClient/Main/models/OtherInvestmentTag.ts");
 const UserIdentity_1 = __webpack_require__(/*! ./UserIdentity */ "./Typescript/ApiClient/Main/models/UserIdentity.ts");
@@ -3570,6 +3574,8 @@ function OtherInvestmentFromJSONTyped(json, ignoreDiscriminator) {
         'openingBalance': !(0, runtime_1.exists)(json, 'openingBalance') ? undefined : json['openingBalance'],
         'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
         'userIdentity': !(0, runtime_1.exists)(json, 'userIdentity') ? undefined : (0, UserIdentity_1.UserIdentityFromJSON)(json['userIdentity']),
+        'currencySymbolId': !(0, runtime_1.exists)(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
+        'currencySymbol': !(0, runtime_1.exists)(json, 'currencySymbol') ? undefined : (0, CurrencySymbol_1.CurrencySymbolFromJSON)(json['currencySymbol']),
         'otherInvestmentBalaceHistory': !(0, runtime_1.exists)(json, 'otherInvestmentBalaceHistory') ? undefined : (json['otherInvestmentBalaceHistory'] === null ? null : json['otherInvestmentBalaceHistory'].map(OtherInvestmentBalaceHistory_1.OtherInvestmentBalaceHistoryFromJSON)),
         'otherInvestmentTags': !(0, runtime_1.exists)(json, 'otherInvestmentTags') ? undefined : (json['otherInvestmentTags'] === null ? null : json['otherInvestmentTags'].map(OtherInvestmentTag_1.OtherInvestmentTagFromJSON)),
     };
@@ -3590,6 +3596,8 @@ function OtherInvestmentToJSON(value) {
         'openingBalance': value.openingBalance,
         'userIdentityId': value.userIdentityId,
         'userIdentity': (0, UserIdentity_1.UserIdentityToJSON)(value.userIdentity),
+        'currencySymbolId': value.currencySymbolId,
+        'currencySymbol': (0, CurrencySymbol_1.CurrencySymbolToJSON)(value.currencySymbol),
         'otherInvestmentBalaceHistory': value.otherInvestmentBalaceHistory === undefined ? undefined : (value.otherInvestmentBalaceHistory === null ? null : value.otherInvestmentBalaceHistory.map(OtherInvestmentBalaceHistory_1.OtherInvestmentBalaceHistoryToJSON)),
         'otherInvestmentTags': value.otherInvestmentTags === undefined ? undefined : (value.otherInvestmentTags === null ? null : value.otherInvestmentTags.map(OtherInvestmentTag_1.OtherInvestmentTagToJSON)),
     };
@@ -3786,6 +3794,7 @@ function OtherInvestmentModelFromJSONTyped(json, ignoreDiscriminator) {
         'name': !(0, runtime_1.exists)(json, 'name') ? undefined : json['name'],
         'openingBalance': !(0, runtime_1.exists)(json, 'openingBalance') ? undefined : json['openingBalance'],
         'userIdentityId': !(0, runtime_1.exists)(json, 'userIdentityId') ? undefined : json['userIdentityId'],
+        'currencySymbolId': !(0, runtime_1.exists)(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
     };
 }
 exports.OtherInvestmentModelFromJSONTyped = OtherInvestmentModelFromJSONTyped;
@@ -3803,6 +3812,7 @@ function OtherInvestmentModelToJSON(value) {
         'name': value.name,
         'openingBalance': value.openingBalance,
         'userIdentityId': value.userIdentityId,
+        'currencySymbolId': value.currencySymbolId,
     };
 }
 exports.OtherInvestmentModelToJSON = OtherInvestmentModelToJSON;
@@ -6628,6 +6638,55 @@ exports.default = Menu;
 
 /***/ }),
 
+/***/ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx":
+/*!***********************************************************************!*\
+  !*** ./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx ***!
+  \***********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OtherInvestmentForm = void 0;
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const OtherInvestmentForm = (props) => {
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const onSubmit = (data) => {
+        props.onSave(data);
+    };
+    return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            react_1.default.createElement("div", { className: "col-span-2 w-1/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Invested on", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "created", defaultValue: props.created, control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Code", type: "text" }, field, { className: "place-self-end w-full" })), name: "code", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Investment name", type: "text" }, field, { className: "place-self-end w-full" })), name: "name", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Opening balance", type: "text" }, field, { className: "place-self-end w-full" })), name: "openingBalance", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return react_1.default.createElement(core_1.FormControl, { className: "w-full" },
+                            react_1.default.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Investment currency"),
+                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return react_1.default.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    react_1.default.createElement("span", null, p.ticker));
+                            })));
+                    }, name: "currencySymbolId", control: control }))),
+        react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Save")));
+};
+exports.OtherInvestmentForm = OtherInvestmentForm;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx":
 /*!***************************************************************************!*\
   !*** ./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx ***!
@@ -6653,8 +6712,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const OtherInvestmentViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/OtherInvestmentViewModel */ "./Typescript/Model/OtherInvestmentViewModel.ts"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6672,8 +6735,9 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
-            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
-            this.setState({ otherInvesmnets: data });
+            const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
+            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            yield this.loadData();
         });
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -6687,7 +6751,62 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Investment name"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Opening balance")));
         };
-        this.state = { otherInvesmnets: [] };
+        this.addInvesment = () => {
+            let model = new OtherInvestmentViewModel_1.default();
+            model.onSave = this.saveTrade;
+            model.created = (0, moment_1.default)().format("YYYY-MM-DD");
+            model.name = "";
+            model.code = "";
+            model.openingBalance = 0;
+            model.currencies = this.currencies;
+            model.currencySymbolId = this.currencies[0].id;
+            this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
+        };
+        this.editInvesment = (id) => {
+            let tradeHistory = this.state.otherInvestments.filter(t => t.id == id)[0];
+            this.setState({ selectedModel: tradeHistory, openedForm: true });
+        };
+        this.mapDataModelToViewModel = (otherInvestment) => {
+            let model = new OtherInvestmentViewModel_1.default();
+            model.currencySymbol = this.currencies.find(f => f.id == otherInvestment.currencySymbolId).ticker;
+            model.currencySymbolId = otherInvestment.currencySymbolId;
+            model.currencies = this.currencies;
+            model.id = otherInvestment.id;
+            model.created = (0, moment_1.default)(otherInvestment.created).format("YYYY-MM-DD");
+            model.name = otherInvestment.name;
+            model.code = otherInvestment.code;
+            model.openingBalance = otherInvestment.openingBalance;
+            model.onSave = this.saveTrade;
+            return model;
+        };
+        this.saveTrade = (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
+            const otherInvestment = {
+                code: otherInvestmentData.code,
+                created: new Date(otherInvestmentData.created),
+                currencySymbolId: otherInvestmentData.currencySymbolId,
+                id: otherInvestmentData.id,
+                name: otherInvestmentData.name,
+                openingBalance: otherInvestmentData.openingBalance
+            };
+            console.log(otherInvestmentData);
+            if (otherInvestmentData.id)
+                yield this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+            else
+                yield this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
+            this.setState({ openedForm: false, selectedModel: undefined });
+            this.loadData();
+        });
+        this.handleClose = () => {
+            this.setState({ openedForm: false, selectedModel: undefined });
+        };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false };
+    }
+    loadData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
+            const viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            this.setState({ otherInvestments: viewModels });
+        });
     }
     render() {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
@@ -6697,9 +6816,13 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "grid grid-cols-2" },
                     react_1.default.createElement("div", null,
                         react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
-                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvesmnets, template: this.renderTemplate, header: this.renderHeader() }))),
+                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment }))),
                     react_1.default.createElement("div", null, "Detail"),
-                    react_1.default.createElement("div", { className: "col-span-2" }, "Overview")))));
+                    react_1.default.createElement("div", { className: "col-span-2" }, "Overview"))),
+            react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
+                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
+                react_1.default.createElement(core_1.DialogContent, null,
+                    react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, Object.assign({}, this.state.selectedModel))))));
     }
 }
 exports.default = OtherInvestmentOverview;
@@ -7598,6 +7721,23 @@ exports.CalendarChartData = void 0;
 class CalendarChartData {
 }
 exports.CalendarChartData = CalendarChartData;
+
+
+/***/ }),
+
+/***/ "./Typescript/Model/OtherInvestmentViewModel.ts":
+/*!******************************************************!*\
+  !*** ./Typescript/Model/OtherInvestmentViewModel.ts ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class OtherInvestmentViewModel {
+}
+exports.default = OtherInvestmentViewModel;
 
 
 /***/ }),
