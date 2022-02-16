@@ -9,6 +9,7 @@ import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentForm } from "./OtherInvestmentForm";
+import OtherInvestmentDetail from "./OtherInvestmentDetail";
 
 const theme = createMuiTheme({
     palette: {
@@ -24,6 +25,7 @@ class OtherInvestmentOverviewState {
     selectedModel: OtherInvestmentViewModel;
     formKey: number;
     openedForm: boolean;
+    showDetail: boolean;
 }
 
 export default class OtherInvestmentOverview extends React.Component<RouteComponentProps, OtherInvestmentOverviewState>{
@@ -32,7 +34,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false };
     }
 
     public componentDidMount = () => this.init();
@@ -43,7 +45,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         await this.loadData();
-        
+
     }
 
     private async loadData() {
@@ -83,8 +85,12 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     }
 
     private editInvesment = (id: number) => {
-        let tradeHistory = this.state.otherInvestments.filter(t => t.id == id)[0];
-        this.setState({ selectedModel: tradeHistory, openedForm: true });
+        let selectedModel = this.state.otherInvestments.filter(t => t.id == id)[0];
+        this.showDetail(selectedModel);
+    }
+
+    private showDetail = (selectedModel: OtherInvestmentViewModel) => {
+        this.setState({ showDetail: true, selectedModel: selectedModel });
     }
 
     private mapDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
@@ -139,7 +145,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment}></BaseList>
                             </div>
                         </div>
-                        <div>Detail</div>
+                        <div>{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} /> : <div />}</div>
                         <div className="col-span-2">Overview</div>
                     </div>
                 </div>

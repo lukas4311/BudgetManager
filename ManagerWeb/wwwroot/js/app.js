@@ -6638,6 +6638,38 @@ exports.default = Menu;
 
 /***/ }),
 
+/***/ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx":
+/*!*************************************************************************!*\
+  !*** ./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class OtherInvestmentDetailProps {
+}
+class OtherInvestmentDetail extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.render = () => {
+            var _a;
+            return (react_1.default.createElement("div", null,
+                react_1.default.createElement("h2", null, "Detail"),
+                react_1.default.createElement("p", null, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 : _a.code)));
+        };
+    }
+}
+exports.default = OtherInvestmentDetail;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx":
 /*!***********************************************************************!*\
   !*** ./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx ***!
@@ -6718,6 +6750,7 @@ const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/Api
 const OtherInvestmentViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/OtherInvestmentViewModel */ "./Typescript/Model/OtherInvestmentViewModel.ts"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx");
+const OtherInvestmentDetail_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6763,8 +6796,11 @@ class OtherInvestmentOverview extends react_1.default.Component {
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
         this.editInvesment = (id) => {
-            let tradeHistory = this.state.otherInvestments.filter(t => t.id == id)[0];
-            this.setState({ selectedModel: tradeHistory, openedForm: true });
+            let selectedModel = this.state.otherInvestments.filter(t => t.id == id)[0];
+            this.showDetail(selectedModel);
+        };
+        this.showDetail = (selectedModel) => {
+            this.setState({ showDetail: true, selectedModel: selectedModel });
         };
         this.mapDataModelToViewModel = (otherInvestment) => {
             let model = new OtherInvestmentViewModel_1.default();
@@ -6799,7 +6835,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.handleClose = () => {
             this.setState({ openedForm: false, selectedModel: undefined });
         };
-        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false };
     }
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -6817,7 +6853,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                     react_1.default.createElement("div", null,
                         react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment }))),
-                    react_1.default.createElement("div", null, "Detail"),
+                    react_1.default.createElement("div", null, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel }) : react_1.default.createElement("div", null)),
                     react_1.default.createElement("div", { className: "col-span-2" }, "Overview"))),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
                 react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
