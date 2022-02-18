@@ -6658,10 +6658,20 @@ class OtherInvestmentDetail extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.render = () => {
-            var _a;
-            return (react_1.default.createElement("div", null,
-                react_1.default.createElement("h2", null, "Detail"),
-                react_1.default.createElement("p", null, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 : _a.code)));
+            var _a, _b;
+            return (react_1.default.createElement("div", { className: "bg-battleshipGrey rounded-xl m-6 p-4" },
+                react_1.default.createElement("div", { className: "flex flex-row justify-center" },
+                    react_1.default.createElement("h2", { className: "text-vermilion text-3xl font-bold" }, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 :
+                        _a.code,
+                        " detail"),
+                    react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "Initial invest"),
+                    react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, (_b = this.props.selectedInvestment) === null || _b === void 0 ? void 0 : _b.openingBalance)),
+                react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
+                    react_1.default.createElement("div", null,
+                        react_1.default.createElement("p", null, "Curent value"),
+                        react_1.default.createElement("p", null, "Overall progress"),
+                        react_1.default.createElement("p", null, "Y/Y progress")),
+                    react_1.default.createElement("div", null, "GRAF"))));
         };
     }
 }
