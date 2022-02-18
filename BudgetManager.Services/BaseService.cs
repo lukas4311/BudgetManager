@@ -6,10 +6,11 @@ using BudgetManager.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace BudgetManager.Services
 {
-    public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model>
+    public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model, Entity>
         where Model : IDtoModel
         where Entity : class, IDataModel
         where IRepo : IRepository<Entity>
@@ -53,6 +54,12 @@ namespace BudgetManager.Services
         {
             Entity entity = this.repository.FindByCondition(p => p.Id == id).Single();
             return this.mapper.Map<Model>(entity);
+        }
+
+        public IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression)
+        {
+            var entities = this.repository.FindByCondition(expression);
+            yield return this.mapper.Map<Model>(entities);
         }
 
         public virtual IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));

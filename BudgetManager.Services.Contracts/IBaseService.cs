@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IBaseService<Model>
+    public interface IBaseService<Model, Entity>
     {
         int Add(Model model);
 
@@ -13,5 +15,7 @@ namespace BudgetManager.Services.Contracts
         IEnumerable<Model> GetAll();
 
         Model Get(int id);
+
+        IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression);
     }
 }

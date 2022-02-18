@@ -1,11 +1,12 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
-    public interface IComodityService : IBaseService<ComodityTradeHistoryModel>
+    public interface IComodityService : IBaseService<ComodityTradeHistoryModel, ComodityTradeHistory>
     {
         IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin);
 

@@ -3,6 +3,7 @@ using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -30,7 +31,13 @@ namespace BudgetManager.Api.Controllers
         public IActionResult Add([FromBody] OtherInvestmentModel otherInvestment)
         {
             otherInvestment.UserIdentityId = this.GetUserId();
-            this.otherInvestmentService.Add(otherInvestment);
+            var id = this.otherInvestmentService.Add(otherInvestment);
+            this.otherInvestmentBalaceHistoryService.Add(new OtherInvestmentBalaceHistoryModel
+            {
+                Balance = otherInvestment.OpeningBalance,
+                Date = otherInvestment.Created,
+                OtherInvestmentId = id
+            });
             return Ok();
         }
 

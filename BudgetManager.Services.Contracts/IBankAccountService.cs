@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IBankAccountService : IBaseService<BankAccountModel>
+    public interface IBankAccountService : IBaseService<BankAccountModel, BankAccount>
     {
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate);
 

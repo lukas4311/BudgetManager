@@ -1,10 +1,11 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface ICryptoService : IBaseService<TradeHistory>
+    public interface ICryptoService : IBaseService<TradeHistory, CryptoTradeHistory>
     {
         IEnumerable<TradeHistory> GetByUser(string userLogin);
 

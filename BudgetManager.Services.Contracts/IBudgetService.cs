@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IBudgetService : IBaseService<BudgetModel>
+    public interface IBudgetService : IBaseService<BudgetModel, Budget>
     {
         IEnumerable<BudgetModel> Get();
 

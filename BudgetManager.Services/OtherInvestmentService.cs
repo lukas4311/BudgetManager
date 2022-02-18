@@ -10,8 +10,20 @@ namespace BudgetManager.Services
 {
     public class OtherInvestmentService : BaseService<OtherInvestmentModel, OtherInvestment, IOtherInvestmentRepository>, IOtherInvestmentService
     {
-        public OtherInvestmentService(IOtherInvestmentRepository repository, IMapper mapper) : base(repository, mapper)
+        private readonly IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository;
+
+        public OtherInvestmentService(IOtherInvestmentRepository repository, IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository, IMapper mapper) : base(repository, mapper)
         {
+            this.otherInvestmentBalaceHistoryRepository = otherInvestmentBalaceHistoryRepository;
+        }
+
+        public override int Add(OtherInvestmentModel model)
+        {
+            var id = base.Add(model);
+            var otherInvestmentBalanceHistory = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).Single();
+            otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
+            otherInvestmentBalanceHistory.Date = model.Created;
+            return id;
         }
 
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)

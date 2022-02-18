@@ -1,9 +1,10 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface ITagService : IBaseService<TagModel>
+    public interface ITagService : IBaseService<TagModel, Tag>
     {
         void AddTagToPayment(AddTagModel tagModel);
 
