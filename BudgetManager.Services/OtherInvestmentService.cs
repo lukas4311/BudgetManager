@@ -19,12 +19,37 @@ namespace BudgetManager.Services
 
         public override int Add(OtherInvestmentModel model)
         {
-            var id = base.Add(model);
-            var otherInvestmentBalanceHistory = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).Single();
+            int id = base.Add(model);
+            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = this.FindFirstRelatedHistoryRecord(id);
             otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
             otherInvestmentBalanceHistory.Date = model.Created;
+            this.otherInvestmentBalaceHistoryRepository.Create(otherInvestmentBalanceHistory);
+            this.otherInvestmentBalaceHistoryRepository.Save();
             return id;
         }
+
+        public override void Update(OtherInvestmentModel model)
+        {
+            base.Update(model);
+            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = this.FindFirstRelatedHistoryRecord(model.Id.Value);
+            otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
+            otherInvestmentBalanceHistory.Date = model.Created;
+            this.otherInvestmentBalaceHistoryRepository.Update(otherInvestmentBalanceHistory);
+            this.otherInvestmentBalaceHistoryRepository.Save();
+        }
+
+        public override void Delete(int id)
+        {
+            base.Delete(id);
+            IEnumerable<OtherInvestmentBalaceHistory> relatedHistoryRecords = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).ToList();
+
+            foreach (OtherInvestmentBalaceHistory historyRecord in relatedHistoryRecords)
+                this.otherInvestmentBalaceHistoryRepository.Delete(historyRecord);
+
+            this.otherInvestmentBalaceHistoryRepository.Save();
+        }
+
+        private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).Single();
 
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)
         {
@@ -33,7 +58,7 @@ namespace BudgetManager.Services
                    .Select(i => this.mapper.Map<OtherInvestmentModel>(i));
         }
 
-        public bool UserHasRightToPayment(int otherInvestmentId, int userId) 
+        public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
     }
 }
