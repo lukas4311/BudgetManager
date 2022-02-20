@@ -50,8 +50,6 @@ namespace BudgetManager.Services
             this.otherInvestmentBalaceHistoryRepository.Save();
         }
 
-        private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).Single();
-
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)
         {
             return this.repository
@@ -59,7 +57,20 @@ namespace BudgetManager.Services
                    .Select(i => this.mapper.Map<OtherInvestmentModel>(i));
         }
 
+        public decimal GetProgressForYears(int id, int? years = null)
+        {
+            var startBalance = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestmentId == id && (years == null || o.Date < System.DateTime.Now.AddYears(-years.Value))).OrderByDescending(a => a.Date).First().Balance;
+            var endBalance = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestmentId == id).OrderBy(a => a.Date).Last().Balance;
+
+            if (startBalance == endBalance)
+                return 0;
+
+            return (decimal)((endBalance * 1.0 / startBalance * 1.0) * 100.0 - 100.0);
+        }
+
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
+
+        private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
     }
 }

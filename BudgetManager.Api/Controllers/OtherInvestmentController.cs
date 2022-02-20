@@ -77,5 +77,15 @@ namespace BudgetManager.Api.Controllers
             this.otherInvestmentService.Delete(id);
             return Ok();
         }
+
+        [HttpGet("{id}/profitOverYears/{years}")]
+        public ActionResult<decimal> ProfitOverYears(int id, int? years = null)
+        {
+            if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            decimal profit = this.otherInvestmentService.GetProgressForYears(id, years);
+            return Ok(profit);
+        }
     }
 }
