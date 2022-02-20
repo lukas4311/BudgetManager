@@ -32,12 +32,6 @@ namespace BudgetManager.Api.Controllers
         {
             otherInvestment.UserIdentityId = this.GetUserId();
             var id = this.otherInvestmentService.Add(otherInvestment);
-            this.otherInvestmentBalaceHistoryService.Add(new OtherInvestmentBalaceHistoryModel
-            {
-                Balance = otherInvestment.OpeningBalance,
-                Date = otherInvestment.Created,
-                OtherInvestmentId = id
-            });
             return Ok();
         }
 

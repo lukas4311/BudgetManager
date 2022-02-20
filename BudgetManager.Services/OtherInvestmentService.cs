@@ -20,9 +20,10 @@ namespace BudgetManager.Services
         public override int Add(OtherInvestmentModel model)
         {
             int id = base.Add(model);
-            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = this.FindFirstRelatedHistoryRecord(id);
+            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = new OtherInvestmentBalaceHistory();
             otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
             otherInvestmentBalanceHistory.Date = model.Created;
+            otherInvestmentBalanceHistory.OtherInvestmentId = id;
             this.otherInvestmentBalaceHistoryRepository.Create(otherInvestmentBalanceHistory);
             this.otherInvestmentBalaceHistoryRepository.Save();
             return id;
