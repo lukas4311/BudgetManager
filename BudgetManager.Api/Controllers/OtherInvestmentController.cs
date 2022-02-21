@@ -2,9 +2,8 @@
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -15,12 +14,14 @@ namespace BudgetManager.Api.Controllers
         private const int OkResult = 200;
         private readonly IOtherInvestmentService otherInvestmentService;
         private readonly IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService;
+        private readonly IOtherInvestmentTagService otherInvestmentTagService;
 
         public OtherInvestmentController(IHttpContextAccessor httpContextAccessor, IOtherInvestmentService otherInvestmentService,
-            IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService) : base(httpContextAccessor)
+            IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService, IOtherInvestmentTagService otherInvestmentTagService) : base(httpContextAccessor)
         {
             this.otherInvestmentService = otherInvestmentService;
             this.otherInvestmentBalaceHistoryService = otherInvestmentBalaceHistoryService;
+            this.otherInvestmentTagService = otherInvestmentTagService;
         }
 
         [HttpGet("all")]
@@ -33,7 +34,7 @@ namespace BudgetManager.Api.Controllers
         public IActionResult Add([FromBody] OtherInvestmentModel otherInvestment)
         {
             otherInvestment.UserIdentityId = this.GetUserId();
-            var id = this.otherInvestmentService.Add(otherInvestment);
+            this.otherInvestmentService.Add(otherInvestment);
             return Ok();
         }
 
@@ -91,12 +92,12 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("{id}/tagedPayments/{tagId}")]
-        public ActionResult<IEnumerable<PaymentModel>> GetTagedPayments(int id, int tagId)
+        public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)
         {
             if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            throw new NotImplementedException();
+            return Ok(await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId));
         }
 
         private StatusCodeResult CheckUserRigth(int otherInvestmentId)
