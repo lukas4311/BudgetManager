@@ -2,6 +2,7 @@
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,7 @@ namespace BudgetManager.Api.Controllers
     [Route("otherInvestment")]
     public class OtherInvestmentController : BaseController
     {
+        private const int OkResult = 200;
         private readonly IOtherInvestmentService otherInvestmentService;
         private readonly IOtherInvestmentBalaceHistoryService otherInvestmentBalaceHistoryService;
 
@@ -71,8 +73,8 @@ namespace BudgetManager.Api.Controllers
         [HttpDelete("/balanceHistory")]
         public IActionResult DeleteHistoryBalance([FromBody] int id)
         {
-            if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
-                return StatusCode(StatusCodes.Status401Unauthorized);
+            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+                return result;
 
             this.otherInvestmentService.Delete(id);
             return Ok();
@@ -81,11 +83,28 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("{id}/profitOverYears/{years}")]
         public ActionResult<decimal> ProfitOverYears(int id, int? years = null)
         {
-            if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
-                return StatusCode(StatusCodes.Status401Unauthorized);
+            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+                return result;
 
             decimal profit = this.otherInvestmentService.GetProgressForYears(id, years);
             return Ok(profit);
+        }
+
+        [HttpGet("{id}/tagedPayments/{tagId}")]
+        public ActionResult<IEnumerable<PaymentModel>> GetTagedPayments(int id, int tagId)
+        {
+            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+                return result;
+
+            throw new NotImplementedException();
+        }
+
+        private StatusCodeResult CheckUserRigth(int otherInvestmentId)
+        {
+            if (!this.otherInvestmentService.UserHasRightToPayment(otherInvestmentId, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            return Ok();
         }
     }
 }
