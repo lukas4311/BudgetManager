@@ -50,13 +50,13 @@ namespace BudgetManager.Services
             this.repository.Save();
         }
 
-        public Model Get(int id)
+        public virtual Model Get(int id)
         {
             Entity entity = this.repository.FindByCondition(p => p.Id == id).Single();
             return this.mapper.Map<Model>(entity);
         }
 
-        public IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression)
+        public virtual IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression)
         {
             var entities = this.repository.FindByCondition(expression);
             yield return this.mapper.Map<Model>(entities);

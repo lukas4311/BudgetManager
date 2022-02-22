@@ -46,6 +46,30 @@ namespace BudgetManager.Services
             }).ToList();
         }
 
+        public override PaymentModel Get(int id)
+        {
+            PaymentModel model = this.repository.FindByCondition(p => p.Id == id)
+                .Include(a => a.PaymentTags)
+                .ThenInclude(a => a.Tag)
+                .Select(a => new PaymentModel
+                {
+                    Amount = a.Amount,
+                    Date = a.Date,
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description,
+                    PaymentTypeCode = a.PaymentType.Code,
+                    PaymentCategoryIcon = a.PaymentCategory.Icon,
+                    PaymentCategoryCode = a.PaymentCategory.Code,
+                    BankAccountId = a.BankAccountId,
+                    PaymentCategoryId = a.PaymentCategoryId,
+                    PaymentTypeId = a.PaymentTypeId,
+                    Tags = a.PaymentTags.Select(a => a.Tag.Code).ToList()
+                })
+                .Single();
+            return model;
+        }
+
         public List<PaymentTypeModel> GetPaymentTypes()
         {
             return this.paymentTypeRepository.FindAll().Select(p => new PaymentTypeModel
