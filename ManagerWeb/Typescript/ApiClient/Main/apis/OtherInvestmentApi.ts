@@ -40,7 +40,11 @@ export interface OtherInvestmentDeleteRequest {
 
 export interface OtherInvestmentIdProfitOverYearsYearsGetRequest {
     id: number;
-    years?: number | null;
+    years: number | null;
+}
+
+export interface OtherInvestmentIdProfitOverallGetRequest {
+    id: number;
 }
 
 export interface OtherInvestmentIdTagedPaymentsTagIdGetRequest {
@@ -136,6 +140,19 @@ export interface OtherInvestmentApiInterface {
     /**
      */
     otherInvestmentIdProfitOverYearsYearsGet(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<number>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentIdProfitOverallGetRaw(requestParameters: OtherInvestmentIdProfitOverallGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+
+    /**
+     */
+    otherInvestmentIdProfitOverallGet(requestParameters: OtherInvestmentIdProfitOverallGetRequest, initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
@@ -368,6 +385,38 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
      */
     async otherInvestmentIdProfitOverYearsYearsGet(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<number> {
         const response = await this.otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async otherInvestmentIdProfitOverallGetRaw(requestParameters: OtherInvestmentIdProfitOverallGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdProfitOverallGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{id}/profitOverall`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async otherInvestmentIdProfitOverallGet(requestParameters: OtherInvestmentIdProfitOverallGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.otherInvestmentIdProfitOverallGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
