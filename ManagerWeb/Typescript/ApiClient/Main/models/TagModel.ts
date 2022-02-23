@@ -24,7 +24,7 @@ export class TagModel {
      * @type {number}
      * @memberof TagModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {string}

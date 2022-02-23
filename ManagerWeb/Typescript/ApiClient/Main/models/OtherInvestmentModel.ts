@@ -24,7 +24,7 @@ export class OtherInvestmentModel {
      * @type {number}
      * @memberof OtherInvestmentModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {Date}

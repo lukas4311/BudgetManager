@@ -1801,6 +1801,99 @@ class OtherInvestmentApi extends runtime.BaseAPI {
     }
     /**
      */
+    otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.id === null || requestParameters.id === undefined) {
+                throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdProfitOverYearsYearsGet.');
+            }
+            if (requestParameters.years === null || requestParameters.years === undefined) {
+                throw new runtime.RequiredError('years', 'Required parameter requestParameters.years was null or undefined when calling otherInvestmentIdProfitOverYearsYearsGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/otherInvestment/{id}/profitOverYears/{years}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"years"}}`, this.processPathParam(requestParameters.years)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.TextApiResponse(response);
+        });
+    }
+    /**
+     */
+    otherInvestmentIdProfitOverYearsYearsGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
+    otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.id === null || requestParameters.id === undefined) {
+                throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdGet.');
+            }
+            if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+                throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/otherInvestment/{id}/tagedPayments/{tagId}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.PaymentModelFromJSON));
+        });
+    }
+    /**
+     */
+    otherInvestmentIdTagedPaymentsTagIdGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
+    otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.otherInvestmentId === null || requestParameters.otherInvestmentId === undefined) {
+                throw new runtime.RequiredError('otherInvestmentId', 'Required parameter requestParameters.otherInvestmentId was null or undefined when calling otherInvestmentOtherInvestmentIdBalanceHistoryGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/otherInvestment/{otherInvestmentId}/balanceHistory`.replace(`{${"otherInvestmentId"}}`, this.processPathParam(requestParameters.otherInvestmentId)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.OtherInvestmentBalaceHistoryModelFromJSON));
+        });
+    }
+    /**
+     */
+    otherInvestmentOtherInvestmentIdBalanceHistoryGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
     otherInvestmentOtherInvestmentIdBalanceHistoryPostRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.otherInvestmentId === null || requestParameters.otherInvestmentId === undefined) {
@@ -6647,16 +6740,64 @@ exports.default = Menu;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const OtherInvestmentApi_1 = __webpack_require__(/*! ../../ApiClient/Main/apis/OtherInvestmentApi */ "./Typescript/ApiClient/Main/apis/OtherInvestmentApi.ts");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 class OtherInvestmentDetailProps {
+}
+class OtherInvestmentBalaceHistoryViewModel {
+}
+class OtherInvestmentDetailState {
 }
 class OtherInvestmentDetail extends react_1.default.Component {
     constructor(props) {
         super(props);
+        this.componentDidMount = () => this.init();
+        this.init = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.route.history);
+            this.otherInvestmentApi = yield apiFactory.getClient(OtherInvestmentApi_1.OtherInvestmentApi);
+            yield this.loadData();
+        });
+        this.renderTemplate = (p) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" },
+                    p.date,
+                    ",-"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, p.balance)));
+        };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Check date"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Balance")));
+        };
+        this.mapDataModelToViewModel = (otherInvestmentBalance) => {
+            let model = new OtherInvestmentBalaceHistoryViewModel();
+            model.id = otherInvestmentBalance.id;
+            model.date = (0, moment_1.default)(otherInvestmentBalance.date).format("YYYY-MM-DD");
+            model.balance = otherInvestmentBalance.balance;
+            model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
+            model.onSave = this.saveBalance;
+            return model;
+        };
+        this.saveBalance = () => {
+        };
+        this.addBalance = () => {
+        };
         this.render = () => {
             var _a, _b;
             return (react_1.default.createElement("div", { className: "bg-battleshipGrey rounded-xl m-6 p-4" },
@@ -6669,10 +6810,26 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
                     react_1.default.createElement("div", null,
                         react_1.default.createElement("p", null, "Curent value"),
-                        react_1.default.createElement("p", null, "Overall progress"),
-                        react_1.default.createElement("p", null, "Y/Y progress")),
-                    react_1.default.createElement("div", null, "GRAF"))));
+                        react_1.default.createElement("p", null,
+                            "Overall progress ",
+                            this.state.progressOverall),
+                        react_1.default.createElement("p", null,
+                            "Y/Y progress ",
+                            this.state.progressYY)),
+                    react_1.default.createElement("div", null, "GRAF")),
+                react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
+                    react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance }))));
         };
+        this.state = { balances: [], progressOverall: 0, progressYY: 0 };
+    }
+    loadData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
+            const viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
+            const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id });
+            this.setState({ balances: viewModels, progressOverall, progressYY });
+        });
     }
 }
 exports.default = OtherInvestmentDetail;
@@ -6859,12 +7016,12 @@ class OtherInvestmentOverview extends react_1.default.Component {
             react_1.default.createElement("h2", { className: "text-xl p-4 text-center" }, "Other investments"),
             react_1.default.createElement("div", { className: "text-center mt-4 bg-prussianBlue rounded-lg" },
                 react_1.default.createElement("h2", { className: "text-2xl" }),
-                react_1.default.createElement("div", { className: "grid grid-cols-2" },
-                    react_1.default.createElement("div", null,
+                react_1.default.createElement("div", { className: "flex flex-row" },
+                    react_1.default.createElement("div", { className: "w-2/5" },
                         react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment }))),
-                    react_1.default.createElement("div", null, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel }) : react_1.default.createElement("div", null)),
-                    react_1.default.createElement("div", { className: "col-span-2" }, "Overview"))),
+                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props }) : react_1.default.createElement("div", null))),
+                react_1.default.createElement("div", { className: "w-full" }, "Overview")),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
                 react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                 react_1.default.createElement(core_1.DialogContent, null,
@@ -6916,6 +7073,11 @@ class PaymentTagManager extends react_1.default.Component {
             }
         };
         this.state = { tags: props.tags, tagName: "" };
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.tags !== this.props.tags) {
+            this.setState({ tags: this.props.tags });
+        }
     }
     render() {
         return (react_1.default.createElement("div", { className: "flex mb-4" },
@@ -6988,7 +7150,7 @@ class PaymentForm extends React.Component {
         this.processPaymentData = (data) => {
             this.setState({
                 name: data.name, amount: data.amount, date: (0, moment_1.default)(data.date).format("YYYY-MM-DD"), description: data.description || '',
-                paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
+                paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId, tags: data.tags
             });
         };
         this.confirmPayment = (e) => {

@@ -24,7 +24,7 @@ export class BankAccountModel {
      * @type {number}
      * @memberof BankAccountModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {string}

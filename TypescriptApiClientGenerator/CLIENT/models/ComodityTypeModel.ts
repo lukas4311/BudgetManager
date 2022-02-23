@@ -24,7 +24,7 @@ export class ComodityTypeModel {
      * @type {number}
      * @memberof ComodityTypeModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {string}

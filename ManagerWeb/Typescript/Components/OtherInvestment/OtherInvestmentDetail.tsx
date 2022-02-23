@@ -1,13 +1,89 @@
+import moment from "moment";
 import React from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { OtherInvestmentApi } from "../../ApiClient/Main/apis/OtherInvestmentApi";
+import { OtherInvestmentBalaceHistoryModel } from "../../ApiClient/Main/models/OtherInvestmentBalaceHistoryModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { BaseList, IBaseModel } from "../BaseList";
 
 class OtherInvestmentDetailProps {
     selectedInvestment: OtherInvestmentViewModel;
+    route: RouteComponentProps;
 }
 
-export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, {}>{
+class OtherInvestmentBalaceHistoryViewModel implements IBaseModel {
+    id?: number | null;
+    date?: string;
+    balance?: number;
+    otherInvestmentId?: number;
+    onSave: (data: OtherInvestmentViewModel) => void;
+}
+
+class OtherInvestmentDetailState {
+    balances: OtherInvestmentBalaceHistoryViewModel[];
+    progressYY: number;
+    progressOverall: number;
+}
+
+export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
+    private otherInvestmentApi: OtherInvestmentApi;
+
     constructor(props: OtherInvestmentDetailProps) {
         super(props);
+        this.state = { balances: [], progressOverall: 0, progressYY: 0 };
+    }
+
+    public componentDidMount = () => this.init();
+
+    private init = async () => {
+        const apiFactory = new ApiClientFactory(this.props.route.history);
+        this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        await this.loadData();
+    }
+
+    private async loadData() {
+        const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
+        const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
+        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id });
+        this.setState({ balances: viewModels, progressOverall, progressYY });
+    }
+
+    private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
+        return (
+            <>
+                <p className="mx-6 my-1 w-1/2">{p.date},-</p>
+                <p className="mx-6 my-1 w-1/2">{p.balance}</p>
+            </>
+        );
+    }
+
+    private renderHeader = (): JSX.Element => {
+        return (
+            <>
+                <p className="mx-6 my-1 w-1/2">Check date</p>
+                <p className="mx-6 my-1 w-1/2">Balance</p>
+            </>
+        );
+    }
+
+    private mapDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {
+        let model: OtherInvestmentBalaceHistoryViewModel = new OtherInvestmentBalaceHistoryViewModel();
+        model.id = otherInvestmentBalance.id;
+        model.date = moment(otherInvestmentBalance.date).format("YYYY-MM-DD");
+        model.balance = otherInvestmentBalance.balance;
+        model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
+        model.onSave = this.saveBalance;
+        return model;
+    }
+
+    private saveBalance = () => {
+
+    }
+
+    private addBalance = () => {
+
     }
 
     render = () => {
@@ -21,12 +97,15 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <p>Curent value</p>
-                        <p>Overall progress</p>
-                        <p>Y/Y progress</p>
+                        <p>Overall progress {this.state.progressOverall}</p>
+                        <p>Y/Y progress {this.state.progressYY}</p>
                     </div>
                     <div>GRAF</div>
                 </div>
-
+                <div className="grid grid-cols-2 gap-4">
+                    <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
+                        addItemHandler={this.addBalance}></BaseList>
+                </div>
             </div>
         );
     }

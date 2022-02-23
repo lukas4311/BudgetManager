@@ -4,12 +4,13 @@ import { BaseList } from "../BaseList";
 import moment from "moment";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from 'react-router-dom';
-import { CurrencyApi, OtherInvestmentApi, OtherInvestmentModel } from "../../ApiClient/Main";
+import { CurrencyApi, OtherInvestmentApi } from "../../ApiClient/Main";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentForm } from "./OtherInvestmentForm";
 import OtherInvestmentDetail from "./OtherInvestmentDetail";
+import { OtherInvestmentModel } from "../../ApiClient/Main/models/OtherInvestmentModel";
 
 const theme = createMuiTheme({
     palette: {
@@ -138,16 +139,16 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                 <h2 className="text-xl p-4 text-center">Other investments</h2>
                 <div className="text-center mt-4 bg-prussianBlue rounded-lg">
                     <h2 className="text-2xl"></h2>
-                    <div className="grid grid-cols-2">
-                        <div>
+                    <div className="flex flex-row">
+                        <div className="w-2/5">
                             <div className="pb-10 h-64 overflow-y-scroll pr-4">
                                 <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment}></BaseList>
                             </div>
                         </div>
-                        <div>{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} /> : <div />}</div>
-                        <div className="col-span-2">Overview</div>
+                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} /> : <div />}</div>
                     </div>
+                    <div className="w-full">Overview</div>
                 </div>
                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
                     maxWidth="md" fullWidth={true}>

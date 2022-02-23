@@ -37,7 +37,7 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
     private processPaymentData = (data: PaymentModel) => {
         this.setState({
             name: data.name, amount: data.amount, date: moment(data.date).format("YYYY-MM-DD"), description: data.description || '',
-            paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId
+            paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId, tags: data.tags
         })
     }
 

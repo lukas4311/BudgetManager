@@ -24,7 +24,7 @@ export class BudgetModel {
      * @type {number}
      * @memberof BudgetModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {Date}

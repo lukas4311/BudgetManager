@@ -24,7 +24,7 @@ export class PaymentCategoryModel {
      * @type {number}
      * @memberof PaymentCategoryModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {string}

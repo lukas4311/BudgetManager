@@ -56,11 +56,8 @@ namespace BudgetManager.Services
             return this.mapper.Map<Model>(entity);
         }
 
-        public virtual IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression)
-        {
-            var entities = this.repository.FindByCondition(expression);
-            yield return this.mapper.Map<Model>(entities);
-        }
+        public virtual IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression) 
+            => this.repository.FindByCondition(expression).Select(a => this.mapper.Map<Model>(a));
 
         public virtual IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
     }

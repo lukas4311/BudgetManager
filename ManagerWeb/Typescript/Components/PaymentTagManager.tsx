@@ -28,6 +28,12 @@ export default class PaymentTagManager extends React.Component<TagComponentProps
         this.setState({ tagName: e.target.value });
     }
 
+    componentDidUpdate(prevProps: TagComponentProps) {
+        if (prevProps.tags !== this.props.tags) {
+            this.setState({ tags: this.props.tags });
+        }
+    }
+
     private deleteTag = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>, tagName: string) => {
         let tags = this.state.tags;
         let index = tags.indexOf(tagName);

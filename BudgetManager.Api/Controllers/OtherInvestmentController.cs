@@ -56,6 +56,15 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("{otherInvestmentId}/balanceHistory")]
+        public ActionResult<IEnumerable<OtherInvestmentBalaceHistoryModel>> Get(int otherInvestmentId)
+        {
+            if (this.CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
+                return result;
+
+            return Ok(this.otherInvestmentBalaceHistoryService.Get(c => c.OtherInvestmentId == otherInvestmentId));
+        }
+
         [HttpPost("{otherInvestmentId}/balanceHistory")]
         public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
@@ -90,6 +99,10 @@ namespace BudgetManager.Api.Controllers
             decimal profit = this.otherInvestmentService.GetProgressForYears(id, years);
             return Ok(profit);
         }
+
+        [HttpGet("{id}/profitOverall")]
+        public ActionResult<decimal> ProfitOverall(int id)
+            => this.ProfitOverYears(id);
 
         [HttpGet("{id}/tagedPayments/{tagId}")]
         public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)

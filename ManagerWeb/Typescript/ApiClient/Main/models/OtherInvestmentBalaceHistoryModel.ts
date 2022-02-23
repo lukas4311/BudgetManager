@@ -24,7 +24,7 @@ export class OtherInvestmentBalaceHistoryModel {
      * @type {number}
      * @memberof OtherInvestmentBalaceHistoryModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {Date}

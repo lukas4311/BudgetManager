@@ -24,7 +24,7 @@ export class TradeHistory {
      * @type {number}
      * @memberof TradeHistory
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {Date}

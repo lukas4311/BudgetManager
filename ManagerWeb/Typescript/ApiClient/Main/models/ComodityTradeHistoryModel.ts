@@ -24,7 +24,7 @@ export class ComodityTradeHistoryModel {
      * @type {number}
      * @memberof ComodityTradeHistoryModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {Date}

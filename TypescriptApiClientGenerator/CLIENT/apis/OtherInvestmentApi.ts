@@ -21,6 +21,9 @@ import {
     OtherInvestmentModel,
     OtherInvestmentModelFromJSON,
     OtherInvestmentModelToJSON,
+    PaymentModel,
+    PaymentModelFromJSON,
+    PaymentModelToJSON,
 } from '../models';
 
 export interface BalanceHistoryDeleteRequest {
@@ -33,6 +36,20 @@ export interface BalanceHistoryPutRequest {
 
 export interface OtherInvestmentDeleteRequest {
     body?: number;
+}
+
+export interface OtherInvestmentIdProfitOverYearsYearsGetRequest {
+    id: number;
+    years: number | null;
+}
+
+export interface OtherInvestmentIdTagedPaymentsTagIdGetRequest {
+    id: number;
+    tagId: number;
+}
+
+export interface OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest {
+    otherInvestmentId: number;
 }
 
 export interface OtherInvestmentOtherInvestmentIdBalanceHistoryPostRequest {
@@ -105,6 +122,47 @@ export interface OtherInvestmentApiInterface {
     /**
      */
     otherInvestmentDelete(requestParameters: OtherInvestmentDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {number} years 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+
+    /**
+     */
+    otherInvestmentIdProfitOverYearsYearsGet(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<number>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {number} tagId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>>;
+
+    /**
+     */
+    otherInvestmentIdTagedPaymentsTagIdGet(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>>;
+
+    /**
+     * 
+     * @param {number} otherInvestmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters: OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<OtherInvestmentBalaceHistoryModel>>>;
+
+    /**
+     */
+    otherInvestmentOtherInvestmentIdBalanceHistoryGet(requestParameters: OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest, initOverrides?: RequestInit): Promise<Array<OtherInvestmentBalaceHistoryModel>>;
 
     /**
      * 
@@ -275,6 +333,110 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
      */
     async otherInvestmentDelete(requestParameters: OtherInvestmentDeleteRequest, initOverrides?: RequestInit): Promise<void> {
         await this.otherInvestmentDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdProfitOverYearsYearsGet.');
+        }
+
+        if (requestParameters.years === null || requestParameters.years === undefined) {
+            throw new runtime.RequiredError('years','Required parameter requestParameters.years was null or undefined when calling otherInvestmentIdProfitOverYearsYearsGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{id}/profitOverYears/{years}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"years"}}`, this.processPathParam(requestParameters.years)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async otherInvestmentIdProfitOverYearsYearsGet(requestParameters: OtherInvestmentIdProfitOverYearsYearsGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.otherInvestmentIdProfitOverYearsYearsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<PaymentModel>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdGet.');
+        }
+
+        if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+            throw new runtime.RequiredError('tagId','Required parameter requestParameters.tagId was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{id}/tagedPayments/{tagId}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PaymentModelFromJSON));
+    }
+
+    /**
+     */
+    async otherInvestmentIdTagedPaymentsTagIdGet(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>> {
+        const response = await this.otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters: OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<OtherInvestmentBalaceHistoryModel>>> {
+        if (requestParameters.otherInvestmentId === null || requestParameters.otherInvestmentId === undefined) {
+            throw new runtime.RequiredError('otherInvestmentId','Required parameter requestParameters.otherInvestmentId was null or undefined when calling otherInvestmentOtherInvestmentIdBalanceHistoryGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{otherInvestmentId}/balanceHistory`.replace(`{${"otherInvestmentId"}}`, this.processPathParam(requestParameters.otherInvestmentId)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OtherInvestmentBalaceHistoryModelFromJSON));
+    }
+
+    /**
+     */
+    async otherInvestmentOtherInvestmentIdBalanceHistoryGet(requestParameters: OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest, initOverrides?: RequestInit): Promise<Array<OtherInvestmentBalaceHistoryModel>> {
+        const response = await this.otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

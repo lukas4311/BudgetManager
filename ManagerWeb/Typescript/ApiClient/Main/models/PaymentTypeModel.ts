@@ -24,7 +24,7 @@ export class PaymentTypeModel {
      * @type {number}
      * @memberof PaymentTypeModel
      */
-    id?: number;
+    id?: number | null;
     /**
      * 
      * @type {string}
