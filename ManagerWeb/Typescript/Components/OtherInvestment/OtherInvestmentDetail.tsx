@@ -46,7 +46,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
         const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
         const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
-        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id });
+        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: this.props.selectedInvestment.id });
         this.setState({ balances: viewModels, progressOverall, progressYY });
     }
 
