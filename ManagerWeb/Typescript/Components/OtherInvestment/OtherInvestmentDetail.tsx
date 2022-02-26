@@ -24,6 +24,8 @@ class OtherInvestmentDetailState {
     balances: OtherInvestmentBalaceHistoryViewModel[];
     progressYY: number;
     progressOverall: number;
+    openedForm: boolean;
+    selectedModel: OtherInvestmentBalaceHistoryViewModel;
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
@@ -31,7 +33,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     constructor(props: OtherInvestmentDetailProps) {
         super(props);
-        this.state = { balances: [], progressOverall: 0, progressYY: 0 };
+        this.state = { balances: [], progressOverall: 0, progressYY: 0, openedForm: false, selectedModel: undefined };
     }
 
     public componentDidMount = () => this.init();
@@ -78,8 +80,23 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         return model;
     }
 
-    private saveBalance = () => {
+    private saveBalance = () => async (otherInvestmentData: OtherInvestmentBalaceHistoryViewModel): Promise<void> => {
+        const otherInvestmentBalance: OtherInvestmentBalaceHistoryModel = {
+            id: otherInvestmentData.id,
+            balance: otherInvestmentData.balance,
+            date: new Date(otherInvestmentData.date),
+            otherInvestmentId: otherInvestmentData.otherInvestmentId
+        };
 
+        console.log(otherInvestmentData);
+
+        if (otherInvestmentData.id)
+            await this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+        else
+            await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+
+        this.setState({ openedForm: false, selectedModel: undefined });
+        this.loadData();
     }
 
     private addBalance = () => {

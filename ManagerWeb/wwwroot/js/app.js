@@ -6823,8 +6823,21 @@ class OtherInvestmentDetail extends react_1.default.Component {
             model.onSave = this.saveBalance;
             return model;
         };
-        this.saveBalance = () => {
-        };
+        this.saveBalance = () => (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
+            const otherInvestmentBalance = {
+                id: otherInvestmentData.id,
+                balance: otherInvestmentData.balance,
+                date: new Date(otherInvestmentData.date),
+                otherInvestmentId: otherInvestmentData.otherInvestmentId
+            };
+            console.log(otherInvestmentData);
+            if (otherInvestmentData.id)
+                yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+            else
+                yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+            this.setState({ openedForm: false, selectedModel: undefined });
+            this.loadData();
+        });
         this.addBalance = () => {
         };
         this.render = () => {
@@ -6849,7 +6862,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
                     react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance }))));
         };
-        this.state = { balances: [], progressOverall: 0, progressYY: 0 };
+        this.state = { balances: [], progressOverall: 0, progressYY: 0, openedForm: false, selectedModel: undefined };
     }
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {

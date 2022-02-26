@@ -68,7 +68,10 @@ namespace BudgetManager.Api.Controllers
         [HttpPost("{otherInvestmentId}/balanceHistory")]
         public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
-            otherInvestmentBalaceHistory.Id = otherInvestmentId;
+            if (this.CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
+                return result;
+
+            otherInvestmentBalaceHistory.OtherInvestmentId = otherInvestmentId;
             this.otherInvestmentBalaceHistoryService.Add(otherInvestmentBalaceHistory);
             return Ok();
         }
@@ -76,6 +79,9 @@ namespace BudgetManager.Api.Controllers
         [HttpPut("/balanceHistory")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
+            if (this.CheckUserRigth(otherInvestmentBalaceHistory.OtherInvestmentId) is var result && result.StatusCode != OkResult)
+                return result;
+
             this.otherInvestmentBalaceHistoryService.Update(otherInvestmentBalaceHistory);
             return Ok();
         }
