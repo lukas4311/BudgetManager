@@ -8,9 +8,9 @@ module.exports = {
                 blueSapphire: "#275068ff",
                 blueGreen: "#12b4baff",
                 vermilion: "#e03d15ff",
-                battleshipGrey: "#878787ff",
+                battleshipGrey: "#707F99ff",
                 rufous: "#b00000ff",
-                lightGray: "#A2ACBD"
+                lightGray: "#A2ACBDff"
             },
             width: {
                 '1/10': '10%',

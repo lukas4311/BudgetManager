@@ -1833,6 +1833,35 @@ class OtherInvestmentApi extends runtime.BaseAPI {
     }
     /**
      */
+    otherInvestmentIdProfitOverallGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.id === null || requestParameters.id === undefined) {
+                throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdProfitOverallGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/otherInvestment/{id}/profitOverall`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.TextApiResponse(response);
+        });
+    }
+    /**
+     */
+    otherInvestmentIdProfitOverallGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.otherInvestmentIdProfitOverallGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
+    /**
+     */
     otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.id === null || requestParameters.id === undefined) {
@@ -5562,18 +5591,18 @@ const BaseList = (props) => {
         return iconsData.bin;
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: "flex w-ful flex-col" },
+        React.createElement("div", { className: "flex w-full flex-col bg-battleshipGrey rounded-t-md" },
             React.createElement("div", { className: "py-4 flex w-full" },
                 props.title != undefined ? (React.createElement("h1", { className: "ml-6 text-xl" }, props.title)) : React.createElement(React.Fragment, null),
-                props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: props.addItemHandler },
-                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5 ", onClick: props.addItemHandler },
+                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-mainDarkBlue hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
             React.createElement("div", { className: "text-center flex pr-5" },
                 React.createElement("div", { className: "w-9/12 flex flex-row text-sm" }, props.header)),
-            React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
+            React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
                 React.createElement("div", { className: "w-9/12 flex flex-row" }, props.template(d)),
-                React.createElement("div", { className: "w-3/12 flex items-center" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+                React.createElement("div", { className: "w-3/12 flex items-center border border-vermilion rounded-r-full" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -6775,10 +6804,10 @@ class OtherInvestmentDetail extends react_1.default.Component {
         });
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" },
+                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" },
                     p.date,
                     ",-"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, p.balance)));
+                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" }, p.balance)));
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -6800,7 +6829,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         };
         this.render = () => {
             var _a, _b;
-            return (react_1.default.createElement("div", { className: "bg-battleshipGrey rounded-xl m-6 p-4" },
+            return (react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
                 react_1.default.createElement("div", { className: "flex flex-row justify-center" },
                     react_1.default.createElement("h2", { className: "text-vermilion text-3xl font-bold" }, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 :
                         _a.code,
@@ -6827,7 +6856,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
             const data = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
             const viewModels = data.map(d => this.mapDataModelToViewModel(d));
             const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
-            const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id });
+            const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: this.props.selectedInvestment.id });
             this.setState({ balances: viewModels, progressOverall, progressYY });
         });
     }
@@ -6941,10 +6970,10 @@ class OtherInvestmentOverview extends react_1.default.Component {
         });
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" },
+                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" },
                     p.name,
                     ",-"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, p.openingBalance)));
+                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" }, p.openingBalance)));
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -7018,7 +7047,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("h2", { className: "text-2xl" }),
                 react_1.default.createElement("div", { className: "flex flex-row" },
                     react_1.default.createElement("div", { className: "w-2/5" },
-                        react_1.default.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                        react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment }))),
                     react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", { className: "w-full" }, "Overview")),

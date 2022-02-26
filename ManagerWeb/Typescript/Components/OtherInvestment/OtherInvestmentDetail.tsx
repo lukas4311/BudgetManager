@@ -53,8 +53,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-1/2">{p.date},-</p>
-                <p className="mx-6 my-1 w-1/2">{p.balance}</p>
+                <p className="w-1/2 border border-vermilion">{p.date},-</p>
+                <p className="w-1/2 border border-vermilion">{p.balance}</p>
             </>
         );
     }
@@ -88,7 +88,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     render = () => {
         return (
-            <div className="bg-battleshipGrey rounded-xl m-6 p-4">
+            <div className="bg-lightGray rounded-xl m-6 p-4">
                 <div className="flex flex-row justify-center">
                     <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
                     <p className="self-end ml-4 mr-2">Initial invest</p>

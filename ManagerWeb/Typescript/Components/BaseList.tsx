@@ -42,12 +42,12 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
     return (
         <React.Fragment>
 
-            <div className="flex w-ful flex-col">
+            <div className="flex w-full flex-col bg-battleshipGrey rounded-t-md">
                 <div className="py-4 flex w-full">
                     {props.title != undefined ? (<h1 className="ml-6 text-xl">{props.title}</h1>) : <></>}
                     {props.addItemHandler != undefined ? (
-                        <span className="inline-block ml-auto mr-5" onClick={props.addItemHandler}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                        <span className="inline-block ml-auto mr-5 " onClick={props.addItemHandler}>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-mainDarkBlue hover:text-vermilion transition ease-out duration-700 cursor-pointer">
                                 <path d="M0 0h24v24H0z" fill="none" />
                                 <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
                             </svg>
@@ -61,11 +61,11 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                 </div>
                 <div className={"pr-5 " + props.dataAreaClass}>
                     {props.data.map(d => (
-                        <div key={d.id} className="paymentRecord bg-battleshipGrey rounded-r-full flex mt-1 hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                        <div key={d.id} className="paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
                             <div className="w-9/12 flex flex-row">
                                 {props.template(d)}
                             </div>
-                            <div className="w-3/12 flex items-center">
+                            <div className="w-3/12 flex items-center border border-vermilion rounded-r-full">
                                 {
                                     props.deleteItemHandler != undefined ? (
                                         <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">

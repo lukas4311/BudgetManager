@@ -58,8 +58,8 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     private renderTemplate = (p: OtherInvestmentViewModel): JSX.Element => {
         return (
             <>
-                <p className="mx-6 my-1 w-1/2">{p.name},-</p>
-                <p className="mx-6 my-1 w-1/2">{p.openingBalance}</p>
+                <p className="w-1/2 border border-vermilion">{p.name},-</p>
+                <p className="w-1/2 border border-vermilion">{p.openingBalance}</p>
             </>
         );
     }
@@ -141,7 +141,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                     <h2 className="text-2xl"></h2>
                     <div className="flex flex-row">
                         <div className="w-2/5">
-                            <div className="pb-10 h-64 overflow-y-scroll pr-4">
+                            <div className="m-5 h-64 overflow-y-scroll">
                                 <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment}></BaseList>
                             </div>
