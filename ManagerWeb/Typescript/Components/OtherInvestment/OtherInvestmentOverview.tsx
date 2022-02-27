@@ -143,7 +143,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         <div className="w-2/5">
                             <div className="m-5 h-64 overflow-y-scroll">
                                 <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
-                                    addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment}></BaseList>
+                                    addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true}></BaseList>
                             </div>
                         </div>
                         <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} /> : <div />}</div>

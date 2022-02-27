@@ -5602,7 +5602,7 @@ const BaseList = (props) => {
                 React.createElement("div", { className: "w-9/12 flex flex-row text-sm" }, props.header)),
             React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
                 React.createElement("div", { className: "w-9/12 flex flex-row" }, props.template(d)),
-                React.createElement("div", { className: "w-3/12 flex items-center border border-vermilion rounded-r-full" }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+                React.createElement("div", { className: "w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "") }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -6760,6 +6760,41 @@ exports.default = Menu;
 
 /***/ }),
 
+/***/ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx":
+/*!******************************************************************************!*\
+  !*** ./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OtherInvestmentBalanceForm = void 0;
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const OtherInvestmentBalanceForm = (props) => {
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const onSubmit = (data) => {
+        props.onSave(data);
+    };
+    return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            react_1.default.createElement("div", { className: "w-1/2" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Balance record date", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "date", defaultValue: props.date, control: control })),
+            react_1.default.createElement("div", { className: "w-1/2" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Balance", type: "text" }, field, { className: "place-self-end w-full" })), name: "balance", control: control }))),
+        react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Save")));
+};
+exports.OtherInvestmentBalanceForm = OtherInvestmentBalanceForm;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx":
 /*!*************************************************************************!*\
   !*** ./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx ***!
@@ -6782,15 +6817,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.OtherInvestmentBalaceHistoryViewModel = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const OtherInvestmentApi_1 = __webpack_require__(/*! ../../ApiClient/Main/apis/OtherInvestmentApi */ "./Typescript/ApiClient/Main/apis/OtherInvestmentApi.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const OtherInvestmentBalanceForm_1 = __webpack_require__(/*! ./OtherInvestmentBalanceForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx");
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
 class OtherInvestmentDetailProps {
 }
 class OtherInvestmentBalaceHistoryViewModel {
 }
+exports.OtherInvestmentBalaceHistoryViewModel = OtherInvestmentBalaceHistoryViewModel;
 class OtherInvestmentDetailState {
 }
 class OtherInvestmentDetail extends react_1.default.Component {
@@ -6839,28 +6887,43 @@ class OtherInvestmentDetail extends react_1.default.Component {
             this.loadData();
         });
         this.addBalance = () => {
+            let viewModel = {
+                onSave: this.saveBalance,
+                balance: 0,
+                date: (0, moment_1.default)().format("YYYY-MM-DD"),
+                otherInvestmentId: this.props.selectedInvestment.id
+            };
+            this.setState({ openedForm: true, selectedModel: viewModel });
+        };
+        this.handleClose = () => {
+            this.setState({ openedForm: false, selectedModel: undefined });
         };
         this.render = () => {
             var _a, _b;
-            return (react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
-                react_1.default.createElement("div", { className: "flex flex-row justify-center" },
-                    react_1.default.createElement("h2", { className: "text-vermilion text-3xl font-bold" }, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 :
-                        _a.code,
-                        " detail"),
-                    react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "Initial invest"),
-                    react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, (_b = this.props.selectedInvestment) === null || _b === void 0 ? void 0 : _b.openingBalance)),
-                react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
-                    react_1.default.createElement("div", null,
-                        react_1.default.createElement("p", null, "Curent value"),
-                        react_1.default.createElement("p", null,
-                            "Overall progress ",
-                            this.state.progressOverall),
-                        react_1.default.createElement("p", null,
-                            "Y/Y progress ",
-                            this.state.progressYY)),
-                    react_1.default.createElement("div", null, "GRAF")),
-                react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
-                    react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance }))));
+            return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
+                    react_1.default.createElement("div", { className: "flex flex-row justify-center" },
+                        react_1.default.createElement("h2", { className: "text-vermilion text-3xl font-bold" }, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 :
+                            _a.code,
+                            " detail"),
+                        react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "Initial invest"),
+                        react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, (_b = this.props.selectedInvestment) === null || _b === void 0 ? void 0 : _b.openingBalance)),
+                    react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement("p", null, "Curent value"),
+                            react_1.default.createElement("p", null,
+                                "Overall progress ",
+                                this.state.progressOverall),
+                            react_1.default.createElement("p", null,
+                                "Y/Y progress ",
+                                this.state.progressYY)),
+                        react_1.default.createElement("div", null, "GRAF")),
+                    react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
+                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true }))),
+                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Balance form"),
+                    react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, Object.assign({}, this.state.selectedModel))))));
         };
         this.state = { balances: [], progressOverall: 0, progressYY: 0, openedForm: false, selectedModel: undefined };
     }
@@ -7061,7 +7124,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "flex flex-row" },
                     react_1.default.createElement("div", { className: "w-2/5" },
                         react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
-                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment }))),
+                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true }))),
                     react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", { className: "w-full" }, "Overview")),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },

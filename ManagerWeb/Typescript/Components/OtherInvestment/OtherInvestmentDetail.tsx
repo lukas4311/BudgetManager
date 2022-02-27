@@ -1,23 +1,35 @@
 import moment from "moment";
 import React from "react";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { RouteComponentProps } from "react-router-dom";
 import { OtherInvestmentApi } from "../../ApiClient/Main/apis/OtherInvestmentApi";
 import { OtherInvestmentBalaceHistoryModel } from "../../ApiClient/Main/models/OtherInvestmentBalaceHistoryModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { BaseList, IBaseModel } from "../BaseList";
+import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
+
+const theme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
 
 class OtherInvestmentDetailProps {
     selectedInvestment: OtherInvestmentViewModel;
     route: RouteComponentProps;
 }
 
-class OtherInvestmentBalaceHistoryViewModel implements IBaseModel {
+export class OtherInvestmentBalaceHistoryViewModel implements IBaseModel {
     id?: number | null;
     date?: string;
     balance?: number;
     otherInvestmentId?: number;
-    onSave: (data: OtherInvestmentViewModel) => void;
+    onSave: (data: OtherInvestmentBalaceHistoryViewModel) => void;
 }
 
 class OtherInvestmentDetailState {
@@ -100,30 +112,50 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     }
 
     private addBalance = () => {
+        let viewModel: OtherInvestmentBalaceHistoryViewModel = {
+            onSave: this.saveBalance,
+            balance: 0,
+            date: moment().format("YYYY-MM-DD"),
+            otherInvestmentId: this.props.selectedInvestment.id
+        };
 
+        this.setState({openedForm: true, selectedModel: viewModel});
+    }
+
+    private handleClose = () => {
+        this.setState({ openedForm: false, selectedModel: undefined });
     }
 
     render = () => {
         return (
-            <div className="bg-lightGray rounded-xl m-6 p-4">
-                <div className="flex flex-row justify-center">
-                    <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
-                    <p className="self-end ml-4 mr-2">Initial invest</p>
-                    <h2 className="text-vermilion text-2xl font-bold self-center">{this.props.selectedInvestment?.openingBalance}</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <p>Curent value</p>
-                        <p>Overall progress {this.state.progressOverall}</p>
-                        <p>Y/Y progress {this.state.progressYY}</p>
+            <ThemeProvider theme={theme}>
+                <div className="bg-lightGray rounded-xl m-6 p-4">
+                    <div className="flex flex-row justify-center">
+                        <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
+                        <p className="self-end ml-4 mr-2">Initial invest</p>
+                        <h2 className="text-vermilion text-2xl font-bold self-center">{this.props.selectedInvestment?.openingBalance}</h2>
                     </div>
-                    <div>GRAF</div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <p>Curent value</p>
+                            <p>Overall progress {this.state.progressOverall}</p>
+                            <p>Y/Y progress {this.state.progressYY}</p>
+                        </div>
+                        <div>GRAF</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
+                            addItemHandler={this.addBalance} useRowBorderColor={true}></BaseList>
+                    </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
-                        addItemHandler={this.addBalance}></BaseList>
-                </div>
-            </div>
+                <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Balance at date"
+                    maxWidth="md" fullWidth={true}>
+                    <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
+                    <DialogContent>
+                        <OtherInvestmentBalanceForm {...this.state.selectedModel} />
+                    </DialogContent>
+                </Dialog>
+            </ThemeProvider>
         );
     }
 }

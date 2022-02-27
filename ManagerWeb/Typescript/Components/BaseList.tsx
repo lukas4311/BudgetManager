@@ -14,6 +14,7 @@ interface IBaseListProps<T extends IBaseModel> {
     itemClickHandler?: (id: number) => void;
     deleteItemHandler?: (id: number) => void;
     dataAreaClass?: string;
+    useRowBorderColor?: boolean;
 }
 
 const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
@@ -65,7 +66,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                             <div className="w-9/12 flex flex-row">
                                 {props.template(d)}
                             </div>
-                            <div className="w-3/12 flex items-center border border-vermilion rounded-r-full">
+                            <div className={"w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "")}>
                                 {
                                     props.deleteItemHandler != undefined ? (
                                         <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
