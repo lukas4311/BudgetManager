@@ -6826,6 +6826,7 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const OtherInvestmentBalanceForm_1 = __webpack_require__(/*! ./OtherInvestmentBalanceForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx");
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6852,9 +6853,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         });
         this.renderTemplate = (p) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" },
-                    p.date,
-                    ",-"),
+                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" }, p.date),
                 react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" }, p.balance)));
         };
         this.renderHeader = () => {
@@ -6871,7 +6870,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
             model.onSave = this.saveBalance;
             return model;
         };
-        this.saveBalance = () => (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
+        this.saveBalance = (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
             const otherInvestmentBalance = {
                 id: otherInvestmentData.id,
                 balance: otherInvestmentData.balance,
@@ -6894,6 +6893,10 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 otherInvestmentId: this.props.selectedInvestment.id
             };
             this.setState({ openedForm: true, selectedModel: viewModel });
+        };
+        this.editInvesment = (id) => {
+            let selectedModel = lodash_1.default.first(this.state.balances.filter(t => t.id == id));
+            this.setState({ openedForm: true, selectedModel });
         };
         this.handleClose = () => {
             this.setState({ openedForm: false, selectedModel: undefined });
@@ -6919,7 +6922,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                                 this.state.progressYY)),
                         react_1.default.createElement("div", null, "GRAF")),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
-                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true }))),
+                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Balance form"),
                     react_1.default.createElement(core_1.DialogContent, null,

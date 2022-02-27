@@ -9,6 +9,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { BaseList, IBaseModel } from "../BaseList";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
+import _ from "lodash";
 
 const theme = createMuiTheme({
     palette: {
@@ -67,7 +68,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
         return (
             <>
-                <p className="w-1/2 border border-vermilion">{p.date},-</p>
+                <p className="w-1/2 border border-vermilion">{p.date}</p>
                 <p className="w-1/2 border border-vermilion">{p.balance}</p>
             </>
         );
@@ -92,7 +93,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         return model;
     }
 
-    private saveBalance = () => async (otherInvestmentData: OtherInvestmentBalaceHistoryViewModel): Promise<void> => {
+    private saveBalance = async (otherInvestmentData: OtherInvestmentBalaceHistoryViewModel) => {
         const otherInvestmentBalance: OtherInvestmentBalaceHistoryModel = {
             id: otherInvestmentData.id,
             balance: otherInvestmentData.balance,
@@ -122,6 +123,11 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         this.setState({openedForm: true, selectedModel: viewModel});
     }
 
+    private editInvesment = (id: number) => {
+        let selectedModel = _.first(this.state.balances.filter(t => t.id == id))
+        this.setState({openedForm: true, selectedModel});
+    }
+
     private handleClose = () => {
         this.setState({ openedForm: false, selectedModel: undefined });
     }
@@ -145,7 +151,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
-                            addItemHandler={this.addBalance} useRowBorderColor={true}></BaseList>
+                            addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
                     </div>
                 </div>
                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Balance at date"
