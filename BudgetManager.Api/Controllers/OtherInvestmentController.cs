@@ -119,6 +119,21 @@ namespace BudgetManager.Api.Controllers
             return Ok(await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId));
         }
 
+        [HttpPost("{id}/tagedPayments/{tagId}")]
+        public IActionResult LinkInvestmentWithTag(int id, int tagId)
+        {
+            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+                return result;
+
+            this.otherInvestmentTagService.Add(new OtherInvestmentTagModel
+            {
+                OtherInvestmentId = id,
+                TagId = tagId
+            });
+
+            return Ok();
+        }
+
         private StatusCodeResult CheckUserRigth(int otherInvestmentId)
         {
             if (!this.otherInvestmentService.UserHasRightToPayment(otherInvestmentId, this.GetUserId()))
