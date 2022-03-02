@@ -7,9 +7,10 @@ import { OtherInvestmentBalaceHistoryModel } from "../../ApiClient/Main/models/O
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { BaseList, IBaseModel } from "../BaseList";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
 import _ from "lodash";
+import { IconsData } from "../../Enums/IconsEnum";
 
 const theme = createMuiTheme({
     palette: {
@@ -43,6 +44,7 @@ class OtherInvestmentDetailState {
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
     private otherInvestmentApi: OtherInvestmentApi;
+    private icons: IconsData = new IconsData();
 
     constructor(props: OtherInvestmentDetailProps) {
         super(props);
@@ -120,12 +122,12 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             otherInvestmentId: this.props.selectedInvestment.id
         };
 
-        this.setState({openedForm: true, selectedModel: viewModel});
+        this.setState({ openedForm: true, selectedModel: viewModel });
     }
 
     private editInvesment = (id: number) => {
         let selectedModel = _.first(this.state.balances.filter(t => t.id == id))
-        this.setState({openedForm: true, selectedModel});
+        this.setState({ openedForm: true, selectedModel });
     }
 
     private handleClose = () => {
@@ -138,7 +140,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                 <div className="bg-lightGray rounded-xl m-6 p-4">
                     <div className="flex flex-row justify-center">
                         <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
-                        <p className="self-end ml-4 mr-2">Initial invest</p>
+                        <p className="self-end ml-4 mr-2">currently invested</p>
                         <h2 className="text-vermilion text-2xl font-bold self-center">{this.props.selectedInvestment?.openingBalance}</h2>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -149,9 +151,15 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                         </div>
                         <div>GRAF</div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 mt-6">
                         <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
                             addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
+                        <div className="flex flex-col p-4">
+                            <p>Base list with payments with specific tags</p>
+                            <Button className='bg-vermilion w-full' onClick={e => console.log("add tag")}>
+                                <span className="w-6">{this.icons.link}</span>
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Balance at date"
