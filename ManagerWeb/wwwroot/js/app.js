@@ -7460,7 +7460,7 @@ class PaymentsOverview extends React.Component {
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
-                    payments: payments, expenseChartData: { dataSets: [{ id: 'Výdej', data: expenses }] },
+                    payments: payments, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }
                 });
@@ -7583,46 +7583,48 @@ class PaymentsOverview extends React.Component {
     }
     render() {
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
-            React.createElement("div", { className: "text-center mt-6 bg-prussianBlue rounded-lg" },
-                this.showErrorMessage(),
-                React.createElement("div", { className: "flex flex-row" },
-                    React.createElement("div", { className: "w-2/5" },
-                        React.createElement("div", { className: "py-4 flex" },
-                            React.createElement("h2", { className: "text-xl ml-12" }, "Platby"),
-                            React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
-                                React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                                    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                                    React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                        React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
-                            React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
-                                return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
-                            })),
-                            React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Pros\u00EDm vyberte kontkr\u00E9tn\u00ED \u00FA\u010Det")),
-                        React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                            React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
-                                var _a;
-                                return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
-                                        + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
-                            })),
-                            React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                        React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
-                            React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                    React.createElement("div", { className: "w-3/5 h-64 mt-4 calendar" },
-                        React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
-                React.createElement("div", { className: "flex flex-row" },
-                    React.createElement("div", { className: "w-1/3 h-64" },
-                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
-                    React.createElement("div", { className: "w-1/3 h-64" },
-                        React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
-                    React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
-                        React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-                React.createElement("div", { className: "flex flex-row p-6" },
-                    React.createElement("div", { className: "w-2/5" },
-                        React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
-                React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Detail platby", maxWidth: "md", fullWidth: true },
-                    React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail platby"),
-                    React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                        React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose, history: this.props.history }))))));
+            React.createElement("div", { className: "" },
+                React.createElement("p", { className: "text-3xl text-center mt-2" }, "Payments overview"),
+                React.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg" },
+                    this.showErrorMessage(),
+                    React.createElement("div", { className: "flex flex-row" },
+                        React.createElement("div", { className: "w-2/5" },
+                            React.createElement("div", { className: "py-4 flex" },
+                                React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
+                                React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
+                                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                            React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
+                                React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
+                                    return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
+                                })),
+                                React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Please select bank account")),
+                            React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                                React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
+                                    var _a;
+                                    return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                            + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
+                                })),
+                                React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
+                            React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                                React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
+                        React.createElement("div", { className: "w-3/5 h-64 mt-4 calendar" },
+                            React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
+                    React.createElement("div", { className: "flex flex-row" },
+                        React.createElement("div", { className: "w-1/3 h-64" },
+                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
+                        React.createElement("div", { className: "w-1/3 h-64" },
+                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                        React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
+                            React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                    React.createElement("div", { className: "flex flex-row p-6" },
+                        React.createElement("div", { className: "w-2/5" },
+                            React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
+                    React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
+                        React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
+                        React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
+                            React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose, history: this.props.history })))))));
     }
 }
 exports.default = PaymentsOverview;
@@ -7650,7 +7652,7 @@ class Crypto extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto overview"),
-            react_1.default.createElement("div", { className: "flex" },
+            react_1.default.createElement("div", { className: "flex w-full text-center mt-6 p-4 bg-prussianBlue rounded-lg" },
                 react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto" },
                     react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
                 react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
