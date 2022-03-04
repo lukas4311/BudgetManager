@@ -52,6 +52,11 @@ export interface OtherInvestmentIdTagedPaymentsTagIdGetRequest {
     tagId: number;
 }
 
+export interface OtherInvestmentIdTagedPaymentsTagIdPostRequest {
+    id: number;
+    tagId: number;
+}
+
 export interface OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest {
     otherInvestmentId: number;
 }
@@ -167,6 +172,20 @@ export interface OtherInvestmentApiInterface {
     /**
      */
     otherInvestmentIdTagedPaymentsTagIdGet(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {number} tagId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentIdTagedPaymentsTagIdPostRaw(requestParameters: OtherInvestmentIdTagedPaymentsTagIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    otherInvestmentIdTagedPaymentsTagIdPost(requestParameters: OtherInvestmentIdTagedPaymentsTagIdPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -454,6 +473,41 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
     async otherInvestmentIdTagedPaymentsTagIdGet(requestParameters: OtherInvestmentIdTagedPaymentsTagIdGetRequest, initOverrides?: RequestInit): Promise<Array<PaymentModel>> {
         const response = await this.otherInvestmentIdTagedPaymentsTagIdGetRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async otherInvestmentIdTagedPaymentsTagIdPostRaw(requestParameters: OtherInvestmentIdTagedPaymentsTagIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdPost.');
+        }
+
+        if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+            throw new runtime.RequiredError('tagId','Required parameter requestParameters.tagId was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdPost.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{id}/tagedPayments/{tagId}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async otherInvestmentIdTagedPaymentsTagIdPost(requestParameters: OtherInvestmentIdTagedPaymentsTagIdPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.otherInvestmentIdTagedPaymentsTagIdPostRaw(requestParameters, initOverrides);
     }
 
     /**
