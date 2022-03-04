@@ -11,6 +11,9 @@ import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
 import _ from "lodash";
 import { IconsData } from "../../Enums/IconsEnum";
+import { TagApi, TagModel } from "../../ApiClient/Main";
+import { OtherInvestmentTagForm } from "./OtherInvestmentTagForm";
+import { TagFormViewModel } from "../../Model/TagFormViewModel";
 
 const theme = createMuiTheme({
     palette: {
@@ -38,17 +41,24 @@ class OtherInvestmentDetailState {
     balances: OtherInvestmentBalaceHistoryViewModel[];
     progressYY: number;
     progressOverall: number;
-    openedForm: boolean;
+    openedFormBalance: boolean;
     selectedModel: OtherInvestmentBalaceHistoryViewModel;
+    openedFormTags: boolean;
+    tagViewModel: TagFormViewModel;
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
     private otherInvestmentApi: OtherInvestmentApi;
     private icons: IconsData = new IconsData();
+    private tagApi: TagApi;
+    private tags: TagModel[];
 
     constructor(props: OtherInvestmentDetailProps) {
         super(props);
-        this.state = { balances: [], progressOverall: 0, progressYY: 0, openedForm: false, selectedModel: undefined };
+        this.state = {
+            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
+            openedFormTags: false, tagViewModel: undefined
+        };
     }
 
     public componentDidMount = () => this.init();
@@ -56,15 +66,17 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.route.history);
         this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        this.tagApi = await apiFactory.getClient(TagApi);
         await this.loadData();
     }
 
     private async loadData() {
         const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
+        this.tags = await this.tagApi.tagsAllUsedGet();
         const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
         const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
         const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: this.props.selectedInvestment.id });
-        this.setState({ balances: viewModels, progressOverall, progressYY });
+        this.setState({ balances: viewModels, progressOverall, progressYY, });
     }
 
     private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
@@ -110,7 +122,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         else
             await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
 
-        this.setState({ openedForm: false, selectedModel: undefined });
+        this.setState({ openedFormBalance: false, selectedModel: undefined });
         this.loadData();
     }
 
@@ -122,16 +134,41 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             otherInvestmentId: this.props.selectedInvestment.id
         };
 
-        this.setState({ openedForm: true, selectedModel: viewModel });
+        this.setState({ openedFormBalance: true, selectedModel: viewModel });
     }
 
     private editInvesment = (id: number) => {
         let selectedModel = _.first(this.state.balances.filter(t => t.id == id))
-        this.setState({ openedForm: true, selectedModel });
+        this.setState({ openedFormBalance: true, selectedModel });
     }
 
-    private handleClose = () => {
-        this.setState({ openedForm: false, selectedModel: undefined });
+    private onCreateConnectionWithPaymentTag = () => {
+        let firstTag = _.first(this.tags);
+
+        if (firstTag != undefined) {
+            let tagModel: TagFormViewModel = {
+                onSave: this.createConnectionWithPaymentTag,
+                tagId: firstTag.id,
+                tags: this.tags
+            };
+
+            this.setState({ openedFormTags: true, tagViewModel: tagModel });
+        }
+    }
+
+    private createConnectionWithPaymentTag = (tagId: number) => {
+        if (tagId != undefined && tagId != 0)
+            this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: this.props.selectedInvestment.id });
+
+        this.setState({ openedFormTags: false, tagViewModel: undefined });
+    }
+
+    private handleCloseBalance = () => {
+        this.setState({ openedFormBalance: false, selectedModel: undefined });
+    }
+
+    private handleCloseTag = () => {
+        this.setState({ openedFormTags: false, tagViewModel: undefined });
     }
 
     render = () => {
@@ -156,17 +193,24 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
                         <div className="flex flex-col p-4">
                             <p>Base list with payments with specific tags</p>
-                            <Button className='bg-vermilion w-full' onClick={e => console.log("add tag")}>
+                            <Button className='bg-vermilion w-full' onClick={this.onCreateConnectionWithPaymentTag}>
                                 <span className="w-6">{this.icons.link}</span>
                             </Button>
                         </div>
                     </div>
                 </div>
-                <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Balance at date"
+                <Dialog open={this.state.openedFormBalance} onClose={this.handleCloseBalance} aria-labelledby="Balance at date"
                     maxWidth="md" fullWidth={true}>
                     <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
                     <DialogContent>
                         <OtherInvestmentBalanceForm {...this.state.selectedModel} />
+                    </DialogContent>
+                </Dialog>
+                <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
+                    maxWidth="md" fullWidth={true}>
+                    <DialogTitle id="form-dialog-title">Tag form</DialogTitle>
+                    <DialogContent>
+                        <OtherInvestmentTagForm {...this.state.tagViewModel} />
                     </DialogContent>
                 </Dialog>
             </ThemeProvider>

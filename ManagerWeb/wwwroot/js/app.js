@@ -1894,6 +1894,37 @@ class OtherInvestmentApi extends runtime.BaseAPI {
     }
     /**
      */
+    otherInvestmentIdTagedPaymentsTagIdPostRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.id === null || requestParameters.id === undefined) {
+                throw new runtime.RequiredError('id', 'Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdPost.');
+            }
+            if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+                throw new runtime.RequiredError('tagId', 'Required parameter requestParameters.tagId was null or undefined when calling otherInvestmentIdTagedPaymentsTagIdPost.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/otherInvestment/{id}/tagedPayments/{tagId}`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)).replace(`{${"tagId"}}`, this.processPathParam(requestParameters.tagId)),
+                method: 'POST',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.VoidApiResponse(response);
+        });
+    }
+    /**
+     */
+    otherInvestmentIdTagedPaymentsTagIdPost(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentIdTagedPaymentsTagIdPostRaw(requestParameters, initOverrides);
+        });
+    }
+    /**
+     */
     otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters, initOverrides) {
         return __awaiter(this, void 0, void 0, function* () {
             if (requestParameters.otherInvestmentId === null || requestParameters.otherInvestmentId === undefined) {
@@ -6828,6 +6859,8 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const OtherInvestmentBalanceForm_1 = __webpack_require__(/*! ./OtherInvestmentBalanceForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx");
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const OtherInvestmentTagForm_1 = __webpack_require__(/*! ./OtherInvestmentTagForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6851,6 +6884,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.route.history);
             this.otherInvestmentApi = yield apiFactory.getClient(OtherInvestmentApi_1.OtherInvestmentApi);
+            this.tagApi = yield apiFactory.getClient(Main_1.TagApi);
             yield this.loadData();
         });
         this.renderTemplate = (p) => {
@@ -6884,7 +6918,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
             else
                 yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
-            this.setState({ openedForm: false, selectedModel: undefined });
+            this.setState({ openedFormBalance: false, selectedModel: undefined });
             this.loadData();
         });
         this.addBalance = () => {
@@ -6894,14 +6928,33 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 date: (0, moment_1.default)().format("YYYY-MM-DD"),
                 otherInvestmentId: this.props.selectedInvestment.id
             };
-            this.setState({ openedForm: true, selectedModel: viewModel });
+            this.setState({ openedFormBalance: true, selectedModel: viewModel });
         };
         this.editInvesment = (id) => {
             let selectedModel = lodash_1.default.first(this.state.balances.filter(t => t.id == id));
-            this.setState({ openedForm: true, selectedModel });
+            this.setState({ openedFormBalance: true, selectedModel });
         };
-        this.handleClose = () => {
-            this.setState({ openedForm: false, selectedModel: undefined });
+        this.onCreateConnectionWithPaymentTag = () => {
+            let firstTag = lodash_1.default.first(this.tags);
+            if (firstTag != undefined) {
+                let tagModel = {
+                    onSave: this.createConnectionWithPaymentTag,
+                    tagId: firstTag.id,
+                    tags: this.tags
+                };
+                this.setState({ openedFormTags: true, tagViewModel: tagModel });
+            }
+        };
+        this.createConnectionWithPaymentTag = (tagId) => {
+            if (tagId != undefined && tagId != 0)
+                this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: this.props.selectedInvestment.id });
+            this.setState({ openedFormTags: false, tagViewModel: undefined });
+        };
+        this.handleCloseBalance = () => {
+            this.setState({ openedFormBalance: false, selectedModel: undefined });
+        };
+        this.handleCloseTag = () => {
+            this.setState({ openedFormTags: false, tagViewModel: undefined });
         };
         this.render = () => {
             var _a, _b;
@@ -6927,22 +6980,30 @@ class OtherInvestmentDetail extends react_1.default.Component {
                         react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }),
                         react_1.default.createElement("div", { className: "flex flex-col p-4" },
                             react_1.default.createElement("p", null, "Base list with payments with specific tags"),
-                            react_1.default.createElement(core_1.Button, { className: 'bg-vermilion w-full', onClick: e => console.log("add tag") },
+                            react_1.default.createElement(core_1.Button, { className: 'bg-vermilion w-full', onClick: this.onCreateConnectionWithPaymentTag },
                                 react_1.default.createElement("span", { className: "w-6" }, this.icons.link))))),
-                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
+                react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormBalance, onClose: this.handleCloseBalance, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Balance form"),
                     react_1.default.createElement(core_1.DialogContent, null,
-                        react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, Object.assign({}, this.state.selectedModel))))));
+                        react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, Object.assign({}, this.state.selectedModel)))),
+                react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormTags, onClose: this.handleCloseTag, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Tag form"),
+                    react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, Object.assign({}, this.state.tagViewModel))))));
         };
-        this.state = { balances: [], progressOverall: 0, progressYY: 0, openedForm: false, selectedModel: undefined };
+        this.state = {
+            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
+            openedFormTags: false, tagViewModel: undefined
+        };
     }
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
+            this.tags = yield this.tagApi.tagsAllUsedGet();
             const viewModels = data.map(d => this.mapDataModelToViewModel(d));
             const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
             const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: this.props.selectedInvestment.id });
-            this.setState({ balances: viewModels, progressOverall, progressYY });
+            this.setState({ balances: viewModels, progressOverall, progressYY, });
         });
     }
 }
@@ -7143,6 +7204,47 @@ class OtherInvestmentOverview extends react_1.default.Component {
     }
 }
 exports.default = OtherInvestmentOverview;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx":
+/*!**************************************************************************!*\
+  !*** ./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OtherInvestmentTagForm = void 0;
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const OtherInvestmentTagForm = (props) => {
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const onSubmit = (data) => {
+        props.onSave(data.tagId);
+    };
+    return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return react_1.default.createElement(core_1.FormControl, { className: "w-full" },
+                            react_1.default.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Connect with tag"),
+                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.tags) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return react_1.default.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    react_1.default.createElement("span", null, p.code));
+                            })));
+                    }, name: "tagId", control: control }))),
+        react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Save")));
+};
+exports.OtherInvestmentTagForm = OtherInvestmentTagForm;
 
 
 /***/ }),
