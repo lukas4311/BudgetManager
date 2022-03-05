@@ -125,12 +125,7 @@ namespace BudgetManager.Api.Controllers
             if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            this.otherInvestmentTagService.Add(new OtherInvestmentTagModel
-            {
-                OtherInvestmentId = id,
-                TagId = tagId
-            });
-
+            this.otherInvestmentTagService.ReplaceTagForOtherInvestment(id,tagId);
             return Ok();
         }
 

@@ -8,5 +8,7 @@ namespace BudgetManager.Services.Contracts
     public interface IOtherInvestmentTagService : IBaseService<OtherInvestmentTagModel, OtherInvestmentTag>
     {
         Task<IEnumerable<PaymentModel>> GetPaymentsForTag(int otherInvestmentId, int tagId);
+
+        int ReplaceTagForOtherInvestment(int otherInvestmentId, int tagId);
     }
 }
