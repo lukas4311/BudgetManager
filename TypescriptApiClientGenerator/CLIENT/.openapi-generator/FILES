@@ -28,6 +28,7 @@ models/OtherInvestmentBalaceHistory.ts
 models/OtherInvestmentBalaceHistoryModel.ts
 models/OtherInvestmentModel.ts
 models/OtherInvestmentTag.ts
+models/OtherInvestmentTagModel.ts
 models/Payment.ts
 models/PaymentCategory.ts
 models/PaymentCategoryModel.ts

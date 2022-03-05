@@ -50,7 +50,7 @@ namespace BudgetManager.Services
                 .Select(t => new TagModel
                 {
                     Code = t.Tag.Code,
-                    Id = t.Id
+                    Id = t.Tag.Id
                 })
                 .Distinct();
         }

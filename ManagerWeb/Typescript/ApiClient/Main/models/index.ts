@@ -20,6 +20,7 @@ export * from './OtherInvestmentBalaceHistory';
 export * from './OtherInvestmentBalaceHistoryModel';
 export * from './OtherInvestmentModel';
 export * from './OtherInvestmentTag';
+export * from './OtherInvestmentTagModel';
 export * from './Payment';
 export * from './PaymentCategory';
 export * from './PaymentCategoryModel';

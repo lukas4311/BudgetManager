@@ -21,6 +21,9 @@ import {
     OtherInvestmentModel,
     OtherInvestmentModelFromJSON,
     OtherInvestmentModelToJSON,
+    OtherInvestmentTagModel,
+    OtherInvestmentTagModelFromJSON,
+    OtherInvestmentTagModelToJSON,
     PaymentModel,
     PaymentModelFromJSON,
     PaymentModelToJSON,
@@ -36,6 +39,10 @@ export interface BalanceHistoryPutRequest {
 
 export interface OtherInvestmentDeleteRequest {
     body?: number;
+}
+
+export interface OtherInvestmentIdLinkedTagGetRequest {
+    id: number;
 }
 
 export interface OtherInvestmentIdProfitOverYearsYearsGetRequest {
@@ -131,6 +138,19 @@ export interface OtherInvestmentApiInterface {
     /**
      */
     otherInvestmentDelete(requestParameters: OtherInvestmentDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentIdLinkedTagGetRaw(requestParameters: OtherInvestmentIdLinkedTagGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<OtherInvestmentTagModel>>;
+
+    /**
+     */
+    otherInvestmentIdLinkedTagGet(requestParameters: OtherInvestmentIdLinkedTagGetRequest, initOverrides?: RequestInit): Promise<OtherInvestmentTagModel>;
 
     /**
      * 
@@ -369,6 +389,38 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
      */
     async otherInvestmentDelete(requestParameters: OtherInvestmentDeleteRequest, initOverrides?: RequestInit): Promise<void> {
         await this.otherInvestmentDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async otherInvestmentIdLinkedTagGetRaw(requestParameters: OtherInvestmentIdLinkedTagGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<OtherInvestmentTagModel>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling otherInvestmentIdLinkedTagGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/{id}/linkedTag`.replace(`{${"id"}}`, this.processPathParam(requestParameters.id)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OtherInvestmentTagModelFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async otherInvestmentIdLinkedTagGet(requestParameters: OtherInvestmentIdLinkedTagGetRequest, initOverrides?: RequestInit): Promise<OtherInvestmentTagModel> {
+        const response = await this.otherInvestmentIdLinkedTagGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

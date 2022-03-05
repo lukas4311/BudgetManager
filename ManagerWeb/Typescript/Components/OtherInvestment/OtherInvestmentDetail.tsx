@@ -11,7 +11,7 @@ import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
 import _ from "lodash";
 import { IconsData } from "../../Enums/IconsEnum";
-import { TagApi, TagModel } from "../../ApiClient/Main";
+import { PaymentModel, TagApi, TagModel } from "../../ApiClient/Main";
 import { OtherInvestmentTagForm } from "./OtherInvestmentTagForm";
 import { TagFormViewModel } from "../../Model/TagFormViewModel";
 
@@ -45,6 +45,8 @@ class OtherInvestmentDetailState {
     selectedModel: OtherInvestmentBalaceHistoryViewModel;
     openedFormTags: boolean;
     tagViewModel: TagFormViewModel;
+    linkedTagCode: string;
+    linkedPayments: PaymentModel[];
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
@@ -57,7 +59,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         super(props);
         this.state = {
             balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
-            openedFormTags: false, tagViewModel: undefined
+            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: []
         };
     }
 
@@ -71,12 +73,22 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     }
 
     private async loadData() {
-        const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: this.props.selectedInvestment.id });
+        const otherinvestmentid = this.props.selectedInvestment.id;
+        const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: otherinvestmentid });
         this.tags = await this.tagApi.tagsAllUsedGet();
+        const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
+        let linkedTagCode = "";
+        let linkedPayments: PaymentModel[] = [];
+
+        if (linkedTag != undefined) {
+            linkedTagCode = _.first(_.filter(this.tags, t => t.id == linkedTag.tagId))?.code ?? "";
+            linkedPayments = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
+        }
+
         const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
-        const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: this.props.selectedInvestment.id, years: 1 });
-        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: this.props.selectedInvestment.id });
-        this.setState({ balances: viewModels, progressOverall, progressYY, });
+        const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
+        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
+        this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments });
     }
 
     private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
@@ -156,11 +168,12 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         }
     }
 
-    private createConnectionWithPaymentTag = (tagId: number) => {
+    private createConnectionWithPaymentTag = async (tagId: number) => {
         if (tagId != undefined && tagId != 0)
             this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: this.props.selectedInvestment.id });
 
         this.setState({ openedFormTags: false, tagViewModel: undefined });
+        await this.loadData();
     }
 
     private handleCloseBalance = () => {
@@ -169,6 +182,18 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     private handleCloseTag = () => {
         this.setState({ openedFormTags: false, tagViewModel: undefined });
+    }
+
+    private renderPaymentTemplate = (p: PaymentModel): JSX.Element => {
+        let iconsData: IconsData = new IconsData();
+
+        return (
+            <>
+                <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
+                <p className="mx-6 my-1 w-2/12">{p.name}</p>
+                <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
+            </>
+        );
     }
 
     render = () => {
@@ -193,8 +218,10 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
                         <div className="flex flex-col p-4">
                             <p>Base list with payments with specific tags</p>
+                            <BaseList<PaymentModel> data={this.state.linkedPayments} template={this.renderPaymentTemplate}></BaseList>
                             <Button className='bg-vermilion w-full' onClick={this.onCreateConnectionWithPaymentTag}>
                                 <span className="w-6">{this.icons.link}</span>
+                                <span className="ml-6 text-xs font-semibold">{this.state.linkedTagCode}</span>
                             </Button>
                         </div>
                     </div>

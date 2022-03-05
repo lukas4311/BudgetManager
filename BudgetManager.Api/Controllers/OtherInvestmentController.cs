@@ -3,6 +3,7 @@ using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BudgetManager.Api.Controllers
@@ -117,6 +118,15 @@ namespace BudgetManager.Api.Controllers
                 return result;
 
             return Ok(await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId));
+        }
+
+        [HttpGet("{id}/linkedTag")]
+        public ActionResult<OtherInvestmentTagModel> GetLinkedTag(int id)
+        {
+            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+                return result;
+
+            return this.otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault();
         }
 
         [HttpPost("{id}/tagedPayments/{tagId}")]
