@@ -73,7 +73,7 @@ const ComoditiesForm = (props: ComoditiesFormViewModel) => {
 
                 <Button type="submit" variant="contained" className="block m-auto w-1/3 bg-vermilion text-white">Save</Button>
             </form>
-            <Button className='bg-red-600' onClick={() => console.log("delete")}>Delete</Button>
+            <Button className='bg-red-600' onClick={() => props.onDelete(props.id)}>Delete</Button>
         </div>
     );
 };

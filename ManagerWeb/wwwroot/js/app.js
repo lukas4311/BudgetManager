@@ -6225,7 +6225,7 @@ class Comodities extends react_1.default.Component {
         this.addNewGold = () => {
             let model = new ComoditiesForm_1.ComoditiesFormViewModel();
             model.onSave = this.saveTrade;
-            model.onDelete = this.deleteTrade;
+            model.onDelete = this.deleteTradeConfirm;
             model.buyTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.comodityTypeName = "Gold";
             model.comodityUnit = this.goldType.comodityUnit;
@@ -6250,7 +6250,7 @@ class Comodities extends react_1.default.Component {
             model.buyTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
             model.comodityAmount = tradeHistory.tradeSize;
             model.onSave = this.saveTrade;
-            model.onDelete = this.deleteTrade;
+            model.onDelete = this.deleteTradeConfirm;
             model.currencies = this.currencies;
             model.company = tradeHistory.company;
             return model;
@@ -6273,10 +6273,10 @@ class Comodities extends react_1.default.Component {
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadGoldData();
         });
-        this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
-            console.log("delete");
-            // TODO: ask for confirmation (do universal confirmation modal window)
-            // await this.comodityApi.comoditiesDelete({body: id});
+        this.deleteTradeConfirm = (id) => __awaiter(this, void 0, void 0, function* () {
+            this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
+        });
+        this.deleteTrade = (res) => __awaiter(this, void 0, void 0, function* () {
         });
         this.handleClose = () => this.setState({ openedForm: false });
         this.showSelectedComponent = () => {
@@ -6292,7 +6292,10 @@ class Comodities extends react_1.default.Component {
             { id: 2, title: "Silver", selected: false },
             { id: 3, title: "Others", selected: false }
         ];
-        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(), comodityMenu: menu };
+        this.state = {
+            goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(),
+            comodityMenu: menu, confirmDialogIsOpen: false, confirmDialogKey: Date.now()
+        };
     }
     componentDidMount() {
         this.init();
@@ -6315,10 +6318,28 @@ class Comodities extends react_1.default.Component {
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Zlat\u00FD slitek"),
                     react_1.default.createElement(core_1.DialogContent, null,
-                        react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))))));
+                        react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
+                react_1.default.createElement(ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen }))));
     }
 }
 exports.default = Comodities;
+var ConfirmationResult;
+(function (ConfirmationResult) {
+    ConfirmationResult[ConfirmationResult["Ok"] = 0] = "Ok";
+    ConfirmationResult[ConfirmationResult["Cancel"] = 1] = "Cancel";
+})(ConfirmationResult || (ConfirmationResult = {}));
+class ConfirmationFormProps {
+}
+const ConfirmationForm = (props) => {
+    return (react_1.default.createElement(core_1.Dialog, { open: props.isOpen, onClose: props.onClose, "aria-labelledby": "ConfirmationDetail", maxWidth: "sm", fullWidth: true },
+        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Confirmation dialog"),
+        react_1.default.createElement(core_1.DialogContent, null,
+            react_1.default.createElement("div", null,
+                react_1.default.createElement("h1", { className: "text-2xl" }, "Do you realy want do this?"),
+                react_1.default.createElement("div", { className: "flex flex-row" },
+                    react_1.default.createElement(core_1.Button, { className: 'bg-vermilion', onClick: () => props.onConfirm(ConfirmationResult.Ok) }, "Ok"),
+                    react_1.default.createElement(core_1.Button, { className: 'bg-gray-700', onClick: () => props.onConfirm(ConfirmationResult.Cancel) }, "Cancel"))))));
+};
 
 
 /***/ }),
@@ -6389,7 +6410,7 @@ const ComoditiesForm = (props) => {
                                 })));
                         }, name: "currencySymbolId", control: control }))),
             React.createElement(core_1.Button, { type: "submit", variant: "contained", className: "block m-auto w-1/3 bg-vermilion text-white" }, "Save")),
-        React.createElement(core_1.Button, { className: 'bg-red-600', onClick: () => console.log("delete") }, "Delete")));
+        React.createElement(core_1.Button, { className: 'bg-red-600', onClick: () => props.onDelete(props.id) }, "Delete")));
 };
 exports.ComoditiesForm = ComoditiesForm;
 

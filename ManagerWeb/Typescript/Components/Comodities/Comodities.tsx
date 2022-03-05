@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { ComodityApi, CurrencyApi } from "../../ApiClient/Main/apis";
 import { ComodityTradeHistoryModel, ComodityTypeModel, CurrencySymbol } from "../../ApiClient/Main/models";
@@ -7,7 +7,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import Gold from "./Gold";
 import { GoldIngot } from "./GoldIngot";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { ComoditiesForm, ComoditiesFormViewModel } from "./ComoditiesForm";
 import moment from "moment";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
@@ -24,7 +24,9 @@ class ComoditiesState {
     dialogTitle: string;
     selectedModel: ComoditiesFormViewModel;
     formKey: number;
-    comodityMenu: Array<ComodityMenuItem>
+    comodityMenu: Array<ComodityMenuItem>;
+    confirmDialogKey: number;
+    confirmDialogIsOpen: boolean;
 }
 
 class ComodityMenuItem {
@@ -46,7 +48,10 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
             { id: 2, title: "Silver", selected: false },
             { id: 3, title: "Others", selected: false }
         ];
-        this.state = { goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(), comodityMenu: menu };
+        this.state = {
+            goldIngots: [], openedForm: false, dialogTitle: "", selectedModel: undefined, formKey: Date.now(),
+            comodityMenu: menu, confirmDialogIsOpen: false, confirmDialogKey: Date.now()
+        };
     }
 
     componentDidMount(): void {
@@ -77,7 +82,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private addNewGold = () => {
         let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
         model.onSave = this.saveTrade;
-        model.onDelete = this.deleteTrade;
+        model.onDelete = this.deleteTradeConfirm;
         model.buyTimeStamp = moment().format("YYYY-MM-DD");
         model.comodityTypeName = "Gold";
         model.comodityUnit = this.goldType.comodityUnit;
@@ -105,7 +110,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
         model.comodityAmount = tradeHistory.tradeSize;
         model.onSave = this.saveTrade;
-        model.onDelete = this.deleteTrade;
+        model.onDelete = this.deleteTradeConfirm;
         model.currencies = this.currencies;
         model.company = tradeHistory.company;
         return model;
@@ -132,10 +137,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         this.loadGoldData();
     }
 
-    private deleteTrade = async (id: number): Promise<void> => {
-        console.log("delete");
-        // TODO: ask for confirmation (do universal confirmation modal window)
-        // await this.comodityApi.comoditiesDelete({body: id});
+    private deleteTradeConfirm = async (id: number): Promise<void> => {
+        this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
+    }
+
+    private deleteTrade = async (res: ConfirmationResult) => {
+
     }
 
     private handleClose = () => this.setState({ openedForm: false });
@@ -186,8 +193,41 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                             <ComoditiesForm {...this.state.selectedModel} />
                         </DialogContent>
                     </Dialog>
+
+                    <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteTrade(ConfirmationResult.Cancel)} onConfirm={this.deleteTrade} isOpen={this.state.confirmDialogIsOpen} />
                 </ThemeProvider>
             </div>
         );
     }
+}
+
+enum ConfirmationResult {
+    Ok,
+    Cancel
+}
+
+class ConfirmationFormProps {
+    onClose: () => void;
+    onConfirm: (confirmationResult: ConfirmationResult) => void;
+    isOpen: boolean;
+}
+
+const ConfirmationForm = (props: ConfirmationFormProps) => {
+    return (
+        <Dialog open={props.isOpen} onClose={props.onClose} aria-labelledby="ConfirmationDetail"
+            maxWidth="sm" fullWidth={true}>
+            <DialogTitle id="form-dialog-title">Confirmation dialog</DialogTitle>
+            <DialogContent>
+                <div>
+                    <h1 className="text-2xl">Do you realy want do this?</h1>
+                    <div className="flex flex-row">
+                        <Button className='bg-vermilion' onClick={() => props.onConfirm(ConfirmationResult.Ok)}>Ok</Button>
+                        <Button className='bg-gray-700' onClick={() => props.onConfirm(ConfirmationResult.Cancel)}>Cancel</Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
+
+
+    );
 }
