@@ -40,6 +40,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private goldCode: string = 'AU';
     private goldType: ComodityTypeModel;
     private currencies: CurrencyTickerSelectModel[];
+    private confirmationDeleteId: number;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -138,11 +139,17 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     }
 
     private deleteTradeConfirm = async (id: number): Promise<void> => {
+        this.confirmationDeleteId = id;
         this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
     }
 
     private deleteTrade = async (res: ConfirmationResult) => {
+        if (res == ConfirmationResult.Ok)
+            await this.comodityApi.comoditiesDelete({ body: this.confirmationDeleteId })
 
+        this.confirmationDeleteId = undefined;
+        this.setState({ confirmDialogIsOpen: false, openedForm: false, selectedModel: undefined });
+        await this.loadGoldData();
     }
 
     private handleClose = () => this.setState({ openedForm: false });
@@ -188,7 +195,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                     </div>
                     <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                         maxWidth="md" fullWidth={true}>
-                        <DialogTitle id="form-dialog-title">Zlatý slitek</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Golden ingots</DialogTitle>
                         <DialogContent>
                             <ComoditiesForm {...this.state.selectedModel} />
                         </DialogContent>
@@ -219,10 +226,9 @@ const ConfirmationForm = (props: ConfirmationFormProps) => {
             <DialogTitle id="form-dialog-title">Confirmation dialog</DialogTitle>
             <DialogContent>
                 <div>
-                    <h1 className="text-2xl">Do you realy want do this?</h1>
-                    <div className="flex flex-row">
+                    <div className="flex flex-row w-3/5 m-auto">
                         <Button className='bg-vermilion' onClick={() => props.onConfirm(ConfirmationResult.Ok)}>Ok</Button>
-                        <Button className='bg-gray-700' onClick={() => props.onConfirm(ConfirmationResult.Cancel)}>Cancel</Button>
+                        <Button className='bg-gray-700 ml-auto' onClick={() => props.onConfirm(ConfirmationResult.Cancel)}>Cancel</Button>
                     </div>
                 </div>
             </DialogContent>

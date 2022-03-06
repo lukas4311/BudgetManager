@@ -5719,7 +5719,7 @@ const BaseList = (props) => {
     };
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex w-full flex-col bg-battleshipGrey rounded-t-md" },
-            React.createElement("div", { className: "py-4 flex w-full" },
+            React.createElement("div", { className: (props.addItemHandler != undefined ? "pt-4" : "") + " flex w-full" },
                 props.title != undefined ? (React.createElement("h1", { className: "ml-6 text-xl" }, props.title)) : React.createElement(React.Fragment, null),
                 props.addItemHandler != undefined ? (React.createElement("span", { className: "inline-block ml-auto mr-5 ", onClick: props.addItemHandler },
                     React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-mainDarkBlue hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
@@ -6274,9 +6274,15 @@ class Comodities extends react_1.default.Component {
             this.loadGoldData();
         });
         this.deleteTradeConfirm = (id) => __awaiter(this, void 0, void 0, function* () {
+            this.confirmationDeleteId = id;
             this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
         });
         this.deleteTrade = (res) => __awaiter(this, void 0, void 0, function* () {
+            if (res == ConfirmationResult.Ok)
+                yield this.comodityApi.comoditiesDelete({ body: this.confirmationDeleteId });
+            this.confirmationDeleteId = undefined;
+            this.setState({ confirmDialogIsOpen: false, openedForm: false, selectedModel: undefined });
+            yield this.loadGoldData();
         });
         this.handleClose = () => this.setState({ openedForm: false });
         this.showSelectedComponent = () => {
@@ -6316,7 +6322,7 @@ class Comodities extends react_1.default.Component {
                         react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
                     react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col justify-start" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Zlat\u00FD slitek"),
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
                     react_1.default.createElement(core_1.DialogContent, null,
                         react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
                 react_1.default.createElement(ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen }))));
@@ -6335,10 +6341,9 @@ const ConfirmationForm = (props) => {
         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Confirmation dialog"),
         react_1.default.createElement(core_1.DialogContent, null,
             react_1.default.createElement("div", null,
-                react_1.default.createElement("h1", { className: "text-2xl" }, "Do you realy want do this?"),
-                react_1.default.createElement("div", { className: "flex flex-row" },
+                react_1.default.createElement("div", { className: "flex flex-row w-3/5 m-auto" },
                     react_1.default.createElement(core_1.Button, { className: 'bg-vermilion', onClick: () => props.onConfirm(ConfirmationResult.Ok) }, "Ok"),
-                    react_1.default.createElement(core_1.Button, { className: 'bg-gray-700', onClick: () => props.onConfirm(ConfirmationResult.Cancel) }, "Cancel"))))));
+                    react_1.default.createElement(core_1.Button, { className: 'bg-gray-700 ml-auto', onClick: () => props.onConfirm(ConfirmationResult.Cancel) }, "Cancel"))))));
 };
 
 
@@ -7084,7 +7089,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-3/12" }, (0, moment_1.default)(p.date).format('DD.MM.YYYY'))));
         };
         this.render = () => {
-            var _a, _b;
+            var _a;
             return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                 react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
                     react_1.default.createElement("div", { className: "flex flex-row justify-center" },
@@ -7092,7 +7097,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                             _a.code,
                             " detail"),
                         react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "currently invested"),
-                        react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, (_b = this.props.selectedInvestment) === null || _b === void 0 ? void 0 : _b.openingBalance)),
+                        react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, this.state.totalInvested)),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
                         react_1.default.createElement("div", null,
                             react_1.default.createElement("p", null, "Curent value"),
@@ -7122,7 +7127,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         };
         this.state = {
             balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
-            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: []
+            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0
         };
     }
     loadData() {
@@ -7134,14 +7139,16 @@ class OtherInvestmentDetail extends react_1.default.Component {
             const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
             let linkedTagCode = "";
             let linkedPayments = [];
+            let totalInvested;
             if (linkedTag != undefined) {
                 linkedTagCode = (_b = (_a = lodash_1.default.first(lodash_1.default.filter(this.tags, t => t.id == linkedTag.tagId))) === null || _a === void 0 ? void 0 : _a.code) !== null && _b !== void 0 ? _b : "";
                 linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
+                totalInvested = lodash_1.default.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
             }
             const viewModels = data.map(d => this.mapDataModelToViewModel(d));
             const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
             const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
-            this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments });
+            this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
         });
     }
 }
@@ -8349,7 +8356,6 @@ class Overview extends React.Component {
     }
     render() {
         return (React.createElement("div", { className: "" },
-            React.createElement("p", { className: "text-3xl text-center mt-2" }, "Z\u00E1kladn\u00ED p\u0159ehled"),
             React.createElement("div", { className: "w-full lg:p-4" },
                 React.createElement(PaymentsOverview_1.default, Object.assign({}, this.props)))));
     }

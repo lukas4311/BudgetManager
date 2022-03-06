@@ -10,7 +10,6 @@ export default class Overview extends React.Component<RouteComponentProps, {}> {
     render() {
         return (
             <div className="">
-                <p className="text-3xl text-center mt-2">Základní přehled</p>
                 <div className="w-full lg:p-4"><PaymentsOverview {...this.props} /></div>
             </div>
         )

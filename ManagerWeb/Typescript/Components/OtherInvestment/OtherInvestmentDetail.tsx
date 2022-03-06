@@ -47,6 +47,7 @@ class OtherInvestmentDetailState {
     tagViewModel: TagFormViewModel;
     linkedTagCode: string;
     linkedPayments: PaymentModel[];
+    totalInvested: number;
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
@@ -59,7 +60,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         super(props);
         this.state = {
             balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
-            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: []
+            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0
         };
     }
 
@@ -79,16 +80,18 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
         let linkedTagCode = "";
         let linkedPayments: PaymentModel[] = [];
+        let totalInvested: number;
 
         if (linkedTag != undefined) {
             linkedTagCode = _.first(_.filter(this.tags, t => t.id == linkedTag.tagId))?.code ?? "";
             linkedPayments = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
+            totalInvested = _.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
         }
 
         const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
         const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
         const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
-        this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments });
+        this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
     }
 
     private renderTemplate = (p: OtherInvestmentBalaceHistoryViewModel): JSX.Element => {
@@ -203,7 +206,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     <div className="flex flex-row justify-center">
                         <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
                         <p className="self-end ml-4 mr-2">currently invested</p>
-                        <h2 className="text-vermilion text-2xl font-bold self-center">{this.props.selectedInvestment?.openingBalance}</h2>
+                        <h2 className="text-vermilion text-2xl font-bold self-center">{this.state.totalInvested}</h2>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
