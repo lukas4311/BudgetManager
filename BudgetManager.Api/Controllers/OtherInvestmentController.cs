@@ -98,18 +98,18 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("{id}/profitOverYears/{years}")]
-        public ActionResult<decimal> ProfitOverYears(int id, int? years = null)
+        public async Task<ActionResult<decimal>> ProfitOverYears(int id, int? years = null)
         {
             if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            decimal profit = this.otherInvestmentService.GetProgressForYears(id, years);
+            decimal profit = await this.otherInvestmentService.GetProgressForYears(id, years);
             return Ok(profit);
         }
 
         [HttpGet("{id}/profitOverall")]
-        public ActionResult<decimal> ProfitOverall(int id)
-            => this.ProfitOverYears(id);
+        public async Task<ActionResult<decimal>> ProfitOverall(int id)
+            => await this.ProfitOverYears(id);
 
         [HttpGet("{id}/tagedPayments/{tagId}")]
         public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)

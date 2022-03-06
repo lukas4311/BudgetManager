@@ -1,6 +1,7 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -10,6 +11,6 @@ namespace BudgetManager.Services.Contracts
 
         bool UserHasRightToPayment(int otherInvestmentId, int userId);
 
-        decimal GetProgressForYears(int id, int? years = null);
+        Task<decimal> GetProgressForYears(int id, int? years = null);
     }
 }
