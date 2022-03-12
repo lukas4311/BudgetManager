@@ -90,7 +90,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
-        this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
+        await this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
     }
 
     private async getPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number) {
@@ -202,7 +202,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         console.log("clone: " + id);
         e.preventDefault();
         e.stopPropagation();
-        // TODO: call client with method clone and open detail with cloned item
+        this.paymentApi.paymentsCloneIdPost({id: id});
     }
 
     private renderTemplate = (p: PaymentModel): JSX.Element => {
