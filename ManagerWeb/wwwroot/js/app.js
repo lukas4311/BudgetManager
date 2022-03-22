@@ -231,6 +231,60 @@ exports.AuthApi = AuthApi;
 
 /***/ }),
 
+/***/ "./Typescript/ApiClient/Auth/apis/index.ts":
+/*!*************************************************!*\
+  !*** ./Typescript/ApiClient/Auth/apis/index.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/* tslint:disable */
+/* eslint-disable */
+__exportStar(__webpack_require__(/*! ./AuthApi */ "./Typescript/ApiClient/Auth/apis/AuthApi.ts"), exports);
+
+
+/***/ }),
+
+/***/ "./Typescript/ApiClient/Auth/index.ts":
+/*!********************************************!*\
+  !*** ./Typescript/ApiClient/Auth/index.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(__webpack_require__(/*! ../runtime */ "./Typescript/ApiClient/runtime.ts"), exports);
+__exportStar(__webpack_require__(/*! ./apis */ "./Typescript/ApiClient/Auth/apis/index.ts"), exports);
+__exportStar(__webpack_require__(/*! ./models */ "./Typescript/ApiClient/Auth/models/index.ts"), exports);
+
+
+/***/ }),
+
 /***/ "./Typescript/ApiClient/Auth/models/AuthResponseModel.ts":
 /*!***************************************************************!*\
   !*** ./Typescript/ApiClient/Auth/models/AuthResponseModel.ts ***!
@@ -7758,7 +7812,7 @@ class PaymentsOverview extends React.Component {
             console.log("clone: " + id);
             e.preventDefault();
             e.stopPropagation();
-            // TODO: call client with method clone and open detail with cloned item
+            this.paymentApi.paymentsCloneIdPost({ id: id });
         };
         this.renderTemplate = (p) => {
             let iconsData = new IconsEnum_1.IconsData();
@@ -7794,7 +7848,7 @@ class PaymentsOverview extends React.Component {
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
-            this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
+            yield this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
         });
     }
     getPaymentData(dateFrom, dateTo, bankAccountId) {
@@ -8830,19 +8884,55 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const Auth_1 = __webpack_require__(/*! ../ApiClient/Auth */ "./Typescript/ApiClient/Auth/index.ts");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ./ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const PrivateRoute = (props) => {
-    const getUserData = () => {
+    const [isValid, setIsValid] = (0, react_1.useState)(undefined);
+    (0, react_1.useEffect)(() => {
         const tokenString = localStorage.getItem('user');
-        const userData = JSON.parse(tokenString);
-        return userData;
-    };
-    const [userData, _] = (0, react_1.useState)(getUserData());
-    return (userData != undefined && userData != null ?
-        react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, props.rest, { component: props.component })) :
-        react_1.default.createElement(react_router_dom_1.Redirect, { to: '/login' }));
+        if (tokenString) {
+            const userData = JSON.parse(tokenString);
+            getToken(userData.token);
+        }
+        else {
+            setIsValid(false);
+        }
+    }, []);
+    const getToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
+        let apiFactory = new ApiClientFactory_1.default(props.history);
+        let authApi = yield apiFactory.getAuthClient(Auth_1.AuthApi);
+        try {
+            const isValid = yield authApi.authValidatePost({ tokenModel: { token: token } });
+            setIsValid(isValid);
+        }
+        catch (error) {
+            setIsValid(false);
+        }
+    });
+    if (isValid != undefined) {
+        if (isValid)
+            return react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, props.rest, { component: props.component }));
+        else
+            return react_1.default.createElement(react_router_dom_1.Redirect, { to: '/login' });
+    }
+    else {
+        return react_1.default.createElement("div", null, "Fetching token");
+    }
 };
 exports.default = PrivateRoute;
 
