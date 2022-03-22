@@ -211,8 +211,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <p>Curent value</p>
-                            <p>Overall progress {this.state.progressOverall}</p>
-                            <p>Y/Y progress {this.state.progressYY}</p>
+                            <p>Overall progress {_.round(this.state.progressOverall, 2)}</p>
+                            <p>Y/Y progress {_.round(this.state.progressYY, 2)}</p>
                         </div>
                         <div>GRAF</div>
                     </div>

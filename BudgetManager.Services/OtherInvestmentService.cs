@@ -64,14 +64,22 @@ namespace BudgetManager.Services
 
         public async Task<decimal> GetProgressForYears(int id, int? years = null)
         {
-            decimal startBalance = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestmentId == id && (years == null || o.Date < DateTime.Now.AddYears(-years.Value))).OrderByDescending(a => a.Date).First().Balance;
-            decimal endBalance = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestmentId == id).OrderBy(a => a.Date).Last().Balance;
+            decimal startBalance = this.otherInvestmentBalaceHistoryRepository
+                .FindByCondition(o => o.OtherInvestmentId == id && (years == null || o.Date > DateTime.Now.AddYears(-years.Value)))
+                .OrderBy(a => a.Date)
+                .First().Balance;
+
+            decimal endBalance = this.otherInvestmentBalaceHistoryRepository
+                .FindByCondition(o => o.OtherInvestmentId == id)
+                .OrderBy(a => a.Date)
+                .Last().Balance;
+
             var tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == id).Select(t => t.TagId).SingleOrDefault();
             var payments = new List<PaymentModel>();
 
             if (tagId != default)
             {
-                payments = (await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId)).Where(p => years == null || p.Date < DateTime.Now.AddYears(-years.Value)).ToList();
+                payments = (await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId)).Where(p => years == null || p.Date > DateTime.Now.AddYears(-years.Value)).ToList();
                 endBalance -= payments.Sum(a => a.Amount);
             }
 
