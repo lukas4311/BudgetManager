@@ -36,6 +36,7 @@
     <Compile Include="Scrapers\MoneyVelocityUS.py" />
     <Compile Include="Scrapers\RepoCZ.py" />
     <Compile Include="Scrapers\TotalAssetsUS.py" />
+    <Compile Include="secret.py" />
     <Compile Include="Services\DatetimeService.py" />
     <Compile Include="Services\InfluxRepository.py" />
     <Compile Include="Services\MoneySupplyCz.py" />
