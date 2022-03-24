@@ -346,3 +346,5 @@ healthchecksdb
 
 appsettings.json
 appsettings.Development.json
+
+secret.py
