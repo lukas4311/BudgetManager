@@ -1,10 +1,10 @@
 import requests
+import secret
 from secret import fmpApiToken
 from typing import List
 import datetime
-from typing import Any
 from dataclasses import dataclass
-import json
+import pyodbc
 
 
 @dataclass
@@ -98,26 +98,37 @@ class FmpScraper:
         self.fmp_service = FmpApiService(fmpApiToken)
 
     def download_profile(self):
-        profile = self.fmp_service.get_company_profile("AAPL")
-        print(profile.companyName)
-        print(profile.price)
-        print(profile.description)
-        print(profile.exchangeShortName)
-        print(profile.state)
-        print(profile.sector)
-        print(profile.ceo)
-        print(profile.address)
-        print(profile.image)
-        print(profile.defaultImage)
-        print(profile.mktCap)
-        print(profile.isin)
-        print(profile.currency)
-        print(profile.industry)
-        print(profile.city)
-        print(profile.country)
-        print(profile.symbol)
-        print(profile.website)
-        print(profile.volAvg)
+        conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('''
+                        INSERT INTO CompanyProfile ([Name], [Currency])
+                        VALUES
+                        ('Apple','USD'),
+                        ('Nio','USD')
+                        ''')
+        conn.commit()
+
+        # profile = self.fmp_service.get_company_profile("AAPL")
+        # print(profile.companyName)
+        # print(profile.description)
+        # print(profile.exchangeShortName)
+        # print(profile.state)
+        # print(profile.sector)
+        # print(profile.ceo)
+        # print(profile.address)
+        # print(profile.image)
+        # print(profile.defaultImage)
+        # print(profile.isin)
+        # print(profile.currency)
+        # print(profile.industry)
+        # print(profile.city)
+        # print(profile.country)
+        # print(profile.symbol)
+        # print(profile.website)
+        #
+        # print(profile.price)
+        # print(profile.volAvg)
+        # print(profile.mktCap)
 
 
 fmpScraper = FmpScraper()
