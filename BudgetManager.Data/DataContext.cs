@@ -43,8 +43,8 @@ namespace BudgetManager.Data
 
         public DbSet<ComodityTradeHistory> ComodityTradeHistory { get; set; }
 
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Address> Address { get; set; }
 
-        public DbSet<CompanyProfile> CompanyProfiles { get; set; }
+        public DbSet<CompanyProfile> CompanyProfile { get; set; }
     }
 }

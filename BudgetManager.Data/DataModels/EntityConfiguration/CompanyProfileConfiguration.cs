@@ -10,8 +10,6 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
             builder.Property(p => p.Symbol).HasMaxLength(10).IsRequired();
             builder.Property(p => p.Currency).HasMaxLength(10).IsRequired();
             builder.Property(p => p.CompanyName).HasMaxLength(50).IsRequired();
-
-            builder.HasOne<Address>().WithMany().HasForeignKey(p => p.AddressId);
         }
     }
 }
