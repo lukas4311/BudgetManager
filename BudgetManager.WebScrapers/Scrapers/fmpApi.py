@@ -1,54 +1,11 @@
+import pyodbc
 import requests
 import secret
+import pandas as pd
+from Models import CompanyProfile
 from secret import fmpApiToken
 from typing import List
 import datetime
-from dataclasses import dataclass
-import pyodbc
-
-
-@dataclass
-class CompanyProfile:
-    symbol: str
-    price: float
-    beta: float
-    volAvg: int
-    mktCap: float
-    lastDiv: float
-    range: str
-    changes: float
-    companyName: str
-    currency: str
-    cik: str
-    isin: str
-    cusip: str
-    exchange: str
-    exchangeShortName: str
-    industry: str
-    website: str
-    description: str
-    ceo: str
-    sector: str
-    country: str
-    fullTimeEmployees: str
-    phone: str
-    address: str
-    city: str
-    state: str
-    zip: str
-    dcfDiff: float
-    dcf: float
-    image: str
-    ipoDate: str
-    defaultImage: bool
-    isEtf: bool
-    isActivelyTrading: bool
-    isAdr: bool
-    isFund: bool
-
-    @staticmethod
-    def create_from_json(data):
-        return CompanyProfile(**data)
 
 
 class FmpApiService:
@@ -99,14 +56,34 @@ class FmpScraper:
 
     def download_profile(self):
         conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-        cursor = conn.cursor()
-        cursor.execute('''
-                        INSERT INTO CompanyProfile ([Name], [Currency])
-                        VALUES
-                        ('Apple','USD'),
-                        ('Nio','USD')
-                        ''')
-        conn.commit()
+
+
+        # INSERT AND SELECT DATA FROM MSSQL
+        # cursor = conn.cursor()
+        # # cursor.execute('''
+        # #                 INSERT INTO [dbo].[CompanyProfile]([Symbol],[CompanyName],[Currency])
+        # #                 VALUES ('AAPL', 'Apple Inc.', 'USD')
+        # #                 ''')
+        # # conn.commit()
+        #
+        # # cursor.execute("select [Id] from [dbo].[CompanyProfile]")
+        # cursor.execute("select [Id], [CompanyName] from [dbo].[CompanyProfile]")
+        # # rows = cursor.fetchall()
+        # rows = cursor.fetchone()
+        # print(rows[0])
+        #
+        # # for row in rows:
+        # #     print(row)
+        # # rows = cursor.fetchall()
+        # # print(rows)
+        # # print(rows[0].id)
+
+        # END INSERT AND SELECT DATA FROM MSSQL
+
+        # READING WITH PANDAS
+        df = pd.read_sql_query('select [Id], [CompanyName] from [dbo].[CompanyProfile]', conn)
+        print(df['Id'][0])
+        # END READING WITH PANDAS
 
         # profile = self.fmp_service.get_company_profile("AAPL")
         # print(profile.companyName)
@@ -125,10 +102,6 @@ class FmpScraper:
         # print(profile.country)
         # print(profile.symbol)
         # print(profile.website)
-        #
-        # print(profile.price)
-        # print(profile.volAvg)
-        # print(profile.mktCap)
 
 
 fmpScraper = FmpScraper()
