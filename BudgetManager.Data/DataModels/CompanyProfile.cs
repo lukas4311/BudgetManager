@@ -1,7 +1,9 @@
 ﻿namespace BudgetManager.Data.DataModels
 {
-    public class CompanyProfile
+    public class CompanyProfile : IDataModel
     {
+        public int Id { get; set; }
+
         public string Symbol { get; set; }
 
         public string CompanyName { get; set; }
