@@ -42,5 +42,9 @@ namespace BudgetManager.Data
         public DbSet<ComodityType> ComodityType { get; set; }
 
         public DbSet<ComodityTradeHistory> ComodityTradeHistory { get; set; }
+
+        public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<CompanyProfile> CompanyProfiles { get; set; }
     }
 }
