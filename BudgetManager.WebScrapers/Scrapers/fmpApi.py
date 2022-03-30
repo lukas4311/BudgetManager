@@ -2,7 +2,7 @@ import pyodbc
 import requests
 import secret
 import pandas as pd
-from Models import CompanyProfile
+from Models.CompanyProfile import CompanyProfile
 from secret import fmpApiToken
 from typing import List
 import datetime
@@ -54,55 +54,32 @@ class FmpScraper:
     def __init__(self):
         self.fmp_service = FmpApiService(fmpApiToken)
 
-    def download_profile(self):
+    def download_profile(self, ticker: str):
         conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        sql = """SELECT [Id], [CompanyName] FROM [dbo].[CompanyProfile] WHERE [Symbol] = ?"""
+        df = pd.read_sql_query(sql, conn, params=[ticker])
 
+        if len(df.index) == 0:
+            profile = self.fmp_service.get_company_profile(ticker)
+            cursor = conn.cursor()
+            params = (profile.country, profile.city, profile.address, profile.state)
+            cursor.execute('''
+                    INSERT INTO [dbo].[Address]([Country],[City],[Street],[State])
+                    OUTPUT INSERTED.ID
+                    VALUES(?, ?, ?, ?)
+                ''', params)
+            myTableId = cursor.fetchone()[0]
+            conn.commit()
 
-        # INSERT AND SELECT DATA FROM MSSQL
-        # cursor = conn.cursor()
-        # # cursor.execute('''
-        # #                 INSERT INTO [dbo].[CompanyProfile]([Symbol],[CompanyName],[Currency])
-        # #                 VALUES ('AAPL', 'Apple Inc.', 'USD')
-        # #                 ''')
-        # # conn.commit()
-        #
-        # # cursor.execute("select [Id] from [dbo].[CompanyProfile]")
-        # cursor.execute("select [Id], [CompanyName] from [dbo].[CompanyProfile]")
-        # # rows = cursor.fetchall()
-        # rows = cursor.fetchone()
-        # print(rows[0])
-        #
-        # # for row in rows:
-        # #     print(row)
-        # # rows = cursor.fetchall()
-        # # print(rows)
-        # # print(rows[0].id)
-
-        # END INSERT AND SELECT DATA FROM MSSQL
-
-        # READING WITH PANDAS
-        df = pd.read_sql_query('select [Id], [CompanyName] from [dbo].[CompanyProfile]', conn)
-        print(df['Id'][0])
-        # END READING WITH PANDAS
-
-        # profile = self.fmp_service.get_company_profile("AAPL")
-        # print(profile.companyName)
-        # print(profile.description)
-        # print(profile.exchangeShortName)
-        # print(profile.state)
-        # print(profile.sector)
-        # print(profile.ceo)
-        # print(profile.address)
-        # print(profile.image)
-        # print(profile.defaultImage)
-        # print(profile.isin)
-        # print(profile.currency)
-        # print(profile.industry)
-        # print(profile.city)
-        # print(profile.country)
-        # print(profile.symbol)
-        # print(profile.website)
+            params = (ticker, profile.companyName, profile.currency, profile.isin, profile.exchangeShortName, profile.industry, profile.website, profile.description, profile.sector, profile.image, myTableId)
+            cursor.execute('''
+                            INSERT INTO [dbo].[CompanyProfile]
+                                        ([Symbol],[CompanyName],[Currency],[Isin],[ExchangeShortName],[Industry],[Website],[Description],[Sector],[Image],[AddressId])
+                            OUTPUT INSERTED.ID
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            ''', params)
+            conn.commit()
 
 
 fmpScraper = FmpScraper()
-fmpScraper.download_profile()
+fmpScraper.download_profile("AAPL")
