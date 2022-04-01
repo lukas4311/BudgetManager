@@ -1,7 +1,7 @@
 import pyodbc
 import pytz
 from influxdb_client import Point, WritePrecision
-
+from datetime import datetime
 import secret
 import pandas as pd
 from Services.InfluxRepository import InfluxRepository
@@ -63,11 +63,21 @@ class FmpScraper:
         self.influx_repository.add_range(points)
         self.influx_repository.save()
 
-    def download_sector_pe(self):
-        self.fmp_service.get_sector_pe(None)
+    def donwload_sector_performance(self):
+        measurement = "SectorPerformance"
+        sector_models = self.fmp_service.get_sector_performance()
+        point = Point(measurement).time(datetime.utcnow(), WritePrecision.NS)
+
+        for sector_data in sector_models:
+            percent_change = float(sector_data.changesPercentage.replace('%', ''))
+            point.field(sector_data.sector, percent_change)
+
+        # self.influx_repository.add(point)
+        # self.influx_repository.save()
+
 
 
 fmpScraper = FmpScraper()
 # fmpScraper.download_profile("AAPL")
 # fmpScraper.download_dividends("AAPL")
-fmpScraper.download_sector_pe()
+fmpScraper.donwload_sector_performance()
