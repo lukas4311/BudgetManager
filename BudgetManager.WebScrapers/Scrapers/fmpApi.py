@@ -63,7 +63,11 @@ class FmpScraper:
         self.influx_repository.add_range(points)
         self.influx_repository.save()
 
+    def download_sector_pe(self):
+        self.fmp_service.get_sector_pe(None)
+
 
 fmpScraper = FmpScraper()
 # fmpScraper.download_profile("AAPL")
 # fmpScraper.download_dividends("AAPL")
+fmpScraper.download_sector_pe()
