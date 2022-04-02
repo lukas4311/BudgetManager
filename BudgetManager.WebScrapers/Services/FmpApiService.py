@@ -37,21 +37,3 @@ class FmpApiService:
             models.append(sector_model)
 
         return models
-
-    def get_stock_news(self, tickers: List[str], limit: int = 100):
-        joinedTicker = str.join(tickers)
-        response = requests.get(f'{self.fmpUri}/api/v3/stock_news?tickers={joinedTicker}&limit={limit}')
-        print(response.json())
-
-    def get_stock_news(self, limit: int = 100):
-        response = requests.get(f'{self.fmpUri}/api/v3/stock_news?limit={limit}')
-        print(response.json())
-
-    # DONT HAVE PERMISION TO THIS ENDPOINT
-    # def get_sector_pe(self, date: datetime):
-    #     response = requests.get(f'{self.fmpUri}/api/v4/sector_price_earning_ratio?date={date.strftime("%m-%d-%Y")}&exchange=NYSE&apikey={self.token}')
-    #     jsonData = response.json()
-    #     models = []
-    #
-    #     for sectorPe in jsonData:
-    #         models.append(SectorPeModel.create_from_json(sectorPe))
