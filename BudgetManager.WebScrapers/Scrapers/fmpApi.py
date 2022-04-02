@@ -72,12 +72,14 @@ class FmpScraper:
             percent_change = float(sector_data.changesPercentage.replace('%', ''))
             point.field(sector_data.sector, percent_change)
 
-        # self.influx_repository.add(point)
-        # self.influx_repository.save()
+        self.influx_repository.add(point)
+        self.influx_repository.save()
 
 
 
 fmpScraper = FmpScraper()
 # fmpScraper.download_profile("AAPL")
 # fmpScraper.download_dividends("AAPL")
-fmpScraper.donwload_sector_performance()
+
+# Every day job
+# fmpScraper.donwload_sector_performance()

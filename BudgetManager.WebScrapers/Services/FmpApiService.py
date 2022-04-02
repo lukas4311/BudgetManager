@@ -27,9 +27,9 @@ class FmpApiService:
         return Dividends.create_from_json(jsonData)
 
     def get_sector_performance(self):
-        # response = requests.get(f'{self.fmpUri}/api/v3/sectors-performance?apikey={self.token}')
-        # jsonData = response.json()
-        jsonData = [{"sector":"BasicMaterials","changesPercentage":"0.9725%"},{"sector":"CommunicationServices","changesPercentage":"0.8804%"},{"sector":"ConsumerCyclical","changesPercentage":"0.5338%"},{"sector":"ConsumerDefensive","changesPercentage":"0.9416%"},{"sector":"Energy","changesPercentage":"1.6889%"},{"sector":"FinancialServices","changesPercentage":"0.3667%"},{"sector":"Healthcare","changesPercentage":"0.6816%"},{"sector":"Industrials","changesPercentage":"0.6143%"},{"sector":"RealEstate","changesPercentage":"0.3742%"},{"sector":"Technology","changesPercentage":"0.7689%"},{"sector":"Utilities","changesPercentage":"0.3905%"}]
+        response = requests.get(f'{self.fmpUri}/api/v3/sectors-performance?apikey={self.token}')
+        jsonData = response.json()
+        # jsonData = [{"sector":"BasicMaterials","changesPercentage":"0.9725%"},{"sector":"CommunicationServices","changesPercentage":"0.8804%"},{"sector":"ConsumerCyclical","changesPercentage":"0.5338%"},{"sector":"ConsumerDefensive","changesPercentage":"0.9416%"},{"sector":"Energy","changesPercentage":"1.6889%"},{"sector":"FinancialServices","changesPercentage":"0.3667%"},{"sector":"Healthcare","changesPercentage":"0.6816%"},{"sector":"Industrials","changesPercentage":"0.6143%"},{"sector":"RealEstate","changesPercentage":"0.3742%"},{"sector":"Technology","changesPercentage":"0.7689%"},{"sector":"Utilities","changesPercentage":"0.3905%"}]
         models = []
 
         for sector_data in jsonData:
