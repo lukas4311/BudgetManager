@@ -1,12 +1,6 @@
-import pytz
 import requests
 from bs4 import BeautifulSoup
-import datetime
-
-from influxdb_client import Point, WritePrecision
-
 from Services.InfluxRepository import InfluxRepository
-from Models.MoneySupplyModel import MoneySupplyModel
 from Services.MoneySupplyCz import MoneySupplyCz
 from configManager import token, organizaiton
 
