@@ -43,8 +43,11 @@ class MacroTrendScraper:
         self.influx_repository = InfluxRepository("http://localhost:8086", "Stocks", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
-        print(self.url_balance_sheet.format(ticker=ticker))
-        url_with_ticker = self.url_balance_sheet.format(ticker=ticker)
+        self.__download_data(self.url_balance_sheet, ticker, frequency, "IncomeStatement")
+
+    def __download_data(self, url: str, ticker: str, frequency: str, measurement: str):
+        print(url.format(ticker=ticker))
+        url_with_ticker = url.format(ticker=ticker)
 
         options = Options()
         options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -84,15 +87,14 @@ class MacroTrendScraper:
                     financial_data_values.append(financialData)
 
             financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
-            self.save_data(financialRecord, ticker)
+            self.save_data(financialRecord, ticker, measurement)
 
     def parse_date_to_pandas_date(self, dateString: str):
         pandas_date = pd.to_datetime(dateString)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
         return pandas_date.tz_convert("utc")
 
-    def save_data(self, financial_record: FinancialRecord, ticker):
-        measurement = "IncomeStatement"
+    def save_data(self, financial_record: FinancialRecord, ticker, measurement):
         points = []
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
         print(fieldName)
