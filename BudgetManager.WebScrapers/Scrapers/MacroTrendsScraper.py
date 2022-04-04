@@ -30,16 +30,21 @@ class FinancialData:
 
 
 class MacroTrendScraper:
-    url: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
+    url_income_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
+    url_balance_sheet: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/balance-sheet?freq=A"
+    url_financial_ratios: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/financial-ratios?freq=A"
+    url_cash_flow_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/cash-flow-statement?freq=A"
+
     pageSourceLocation = "var originalData = "
+    mainJsGridId = "columntablejqxgrid"
     influx_repository: InfluxRepository
 
     def __init__(self):
         self.influx_repository = InfluxRepository("http://localhost:8086", "Stocks", token, organizaiton)
 
-    def download_income_statement(self, ticker: str):
-        print(self.url.format(ticker=ticker))
-        url_with_ticker = self.url.format(ticker=ticker)
+    def download_income_statement(self, ticker: str, frequency: str = "A"):
+        print(self.url_balance_sheet.format(ticker=ticker))
+        url_with_ticker = self.url_balance_sheet.format(ticker=ticker)
 
         options = Options()
         options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -48,45 +53,49 @@ class MacroTrendScraper:
         driver.get(url_with_ticker)
 
         url = driver.current_url
-        newurl = url + "?freq=A"
-        driver.get(newurl)
+        url_with_frequency = url + "?freq=" + frequency
+        driver.get(url_with_frequency)
+        delay = 10
+        json_data_object = None
 
-        delay = 10  # seconds
         try:
-            _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, 'columntablejqxgrid')))
+            _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, self.mainJsGridId)))
             page = driver.page_source
             index = page.find(self.pageSourceLocation)
             index2 = page.rfind("var source") - 1
             substring = page[index + len(self.pageSourceLocation):index2]
             json_substring = substring[substring.find("["):substring.rfind("]") + 1]
-            y = json.loads(json_substring)
-
-            for jsonData in y:
-                field_name = jsonData["field_name"]
-                soup = BeautifulSoup(field_name, "html.parser")
-                financial_data_values = []
-
-                for val in jsonData:
-                    if val != "field_name" and val != "popup_icon":
-                        date = val
-                        value = jsonData[val]
-                        pandas_date = pd.to_datetime(date)
-                        pandas_date = pandas_date.tz_localize("Europe/Prague")
-                        pandas_date = pandas_date.tz_convert("utc")
-                        financialData = FinancialData(pandas_date, value)
-                        financial_data_values.append(financialData)
-
-                financialRecord = FinancialRecord(soup.text, financial_data_values)
-                self.save_financial_data(financialRecord, ticker)
-
+            json_data_object = json.loads(json_substring)
             driver.quit()
         except TimeoutException:
             driver.quit()
 
-    def save_financial_data(self, financial_record: FinancialRecord, ticker):
+        for jsonData in json_data_object:
+            field_name = jsonData["field_name"]
+            parsed_filed_element = BeautifulSoup(field_name, "html.parser")
+            financial_data_values = []
+
+            for val in jsonData:
+                if val != "field_name" and val != "popup_icon":
+                    date = val
+                    value = jsonData[val]
+                    pandas_date = self.parse_date_to_pandas_date(date)
+                    financialData = FinancialData(pandas_date, value)
+                    financial_data_values.append(financialData)
+
+            financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
+            self.save_data(financialRecord, ticker)
+
+    def parse_date_to_pandas_date(self, dateString: str):
+        pandas_date = pd.to_datetime(dateString)
+        pandas_date = pandas_date.tz_localize("Europe/Prague")
+        return pandas_date.tz_convert("utc")
+
+    def save_data(self, financial_record: FinancialRecord, ticker):
         measurement = "IncomeStatement"
         points = []
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
+        print(fieldName)
 
         for data in financial_record.financial_data_values:
             if data.value != "":
