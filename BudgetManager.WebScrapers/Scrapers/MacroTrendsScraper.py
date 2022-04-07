@@ -1,6 +1,6 @@
 import datetime
+import pytz
 from dataclasses import dataclass
-
 from influxdb_client import Point, WritePrecision
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,24 +16,24 @@ from configManager import token, organizaiton
 
 
 @dataclass
-class FinancialRecord:
-    def __init__(self, description, financial_data_values):
-        self.description = description
-        self.financial_data_values = financial_data_values
-
-
-@dataclass
 class FinancialData:
-    def __init__(self, date, value):
+    def __init__(self, date: datetime.datetime, value: float):
         self.date = date
         self.value = value
 
 
+@dataclass
+class FinancialRecord:
+    def __init__(self, description: str, financial_data_values:  list[FinancialData]):
+        self.description = description
+        self.financial_data_values = financial_data_values
+
+
 class MacroTrendScraper:
-    url_income_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
-    url_balance_sheet: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/balance-sheet?freq=A"
-    url_financial_ratios: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/financial-ratios?freq=A"
-    url_cash_flow_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/cash-flow-statement?freq=A"
+    __url_income_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
+    __url_balance_sheet: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/balance-sheet?freq=A"
+    __url_financial_ratios: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/financial-ratios?freq=A"
+    __url_cash_flow_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/cash-flow-statement?freq=A"
 
     pageSourceLocation = "var originalData = "
     mainJsGridId = "columntablejqxgrid"
@@ -43,7 +43,7 @@ class MacroTrendScraper:
         self.influx_repository = InfluxRepository("http://localhost:8086", "Stocks", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
-        self.__download_data(self.url_balance_sheet, ticker, frequency, "IncomeStatement")
+        self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement")
 
     def __download_data(self, url: str, ticker: str, frequency: str, measurement: str):
         print(url.format(ticker=ticker))
@@ -82,35 +82,37 @@ class MacroTrendScraper:
                 if val != "field_name" and val != "popup_icon":
                     date = val
                     value = jsonData[val]
-                    pandas_date = self.parse_date_to_pandas_date(date)
-                    financialData = FinancialData(pandas_date, value)
+                    parsed_date = self.parse_date_to_pandas_date(date)
+                    financialData = FinancialData(parsed_date, value)
                     financial_data_values.append(financialData)
 
             financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
-            self.save_data(financialRecord, ticker, measurement)
+            self.save_data(financialRecord, ticker, measurement, frequency)
 
     def parse_date_to_pandas_date(self, dateString: str):
         pandas_date = pd.to_datetime(dateString)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
-        return pandas_date.tz_convert("utc")
+        pandas_date.tz_convert("utc")
+        return pandas_date.astimezone(pytz.utc)
 
-    def save_data(self, financial_record: FinancialRecord, ticker, measurement):
+    def save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
         points = []
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
         print(fieldName)
 
         for data in financial_record.financial_data_values:
             if data.value != "":
-                print(data.value)
-                point = Point(measurement).time(data.date.utcnow(), WritePrecision.NS)
-                point.field(fieldName, data.value)
+                print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(float(data.value)))
+                point = Point(measurement).time(data.date, WritePrecision.NS)
+                point.field(fieldName, float(data.value))
                 point.tag("ticker", ticker)
+                point.tag("frequency", frequency)
                 points.append(point)
 
         if len(points) != 0:
             print(points)
-        # self.influx_repository.add_range(points)
-        # self.influx_repository.save()
+        self.influx_repository.add_range(points)
+        self.influx_repository.save()
 
 
 test = MacroTrendScraper()
