@@ -102,18 +102,19 @@ class MacroTrendScraper:
 
         for data in financial_record.financial_data_values:
             if data.value != "":
-                print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(float(data.value)))
+                calculatedValue = float(data.value) * 1000000;
+                print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(calculatedValue))
                 point = Point(measurement).time(data.date, WritePrecision.NS)
-                point.field(fieldName, float(data.value))
+                point.field(fieldName, calculatedValue)
                 point.tag("ticker", ticker)
                 point.tag("frequency", frequency)
                 points.append(point)
 
         if len(points) != 0:
             print(points)
-        self.influx_repository.add_range(points)
-        self.influx_repository.save()
+        # self.influx_repository.add_range(points)
+        # self.influx_repository.save()
 
 
 test = MacroTrendScraper()
-test.download_income_statement("AAPL")
+test.download_income_statement("SPOT")
