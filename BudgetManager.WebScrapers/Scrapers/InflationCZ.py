@@ -27,7 +27,7 @@ for tableRow in tableOfValues:
     monetaryRelevantInflation = float(values[5].text.replace(",", "."))
     inflationModels.append(InflationAradModel(date, customerPrice, netInflation, coreInflation, fuelInflation, monetaryRelevantInflation))
 
-minDate = influx_repository.find_last("Inflation", "cz")
+minDate = influx_repository.find_last_for_state_tag("Inflation", "cz")
 filtered = list(filter(lambda inflation: inflation.date.astimezone(pytz.utc) > minDate, inflationModels))
 
 for inflation in filtered:

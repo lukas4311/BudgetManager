@@ -33,7 +33,7 @@ for tableRow in tableOfValues:
         interest_rate_models.append(InterestRateModel(interest_rate, date))
 
 interestRateMeasurement = "InterestRate"
-minDate = influx_repository.find_last(interestRateMeasurement, "cz")
+minDate = influx_repository.find_last_for_state_tag(interestRateMeasurement, "cz")
 filtered = list(filter(lambda i: i.date.astimezone(pytz.utc) > minDate, interest_rate_models))
 
 for repo in filtered:

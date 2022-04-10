@@ -40,7 +40,7 @@ for interest_rate in interest_rates:
         m_models.append(InterestRateModel(float(split_values[1]), pandas_date))
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
-min_date = influx_repository.find_last(measurement, state)
+min_date = influx_repository.find_last_for_state_tag(measurement, state)
 
 filtered = []
 

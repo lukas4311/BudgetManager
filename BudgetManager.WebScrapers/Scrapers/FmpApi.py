@@ -56,8 +56,8 @@ class FmpScraper:
             pandas_date = pd.to_datetime(historical_dividend.date)
             pandas_date = pandas_date.tz_localize("Europe/Prague")
             pandas_date = pandas_date.tz_convert("utc")
-            point = Point(measurement).field("dividend", float(historical_dividend.dividend)).field("adjDividend", float(historical_dividend.adjDividend)).time(
-                pandas_date.astimezone(pytz.utc), WritePrecision.NS).tag("ticker", divided_model.symbol)
+            point = Point(measurement).time(pandas_date.astimezone(pytz.utc), WritePrecision.NS).tag("ticker", divided_model.symbol)\
+                .field("dividend", float(historical_dividend.dividend)).field("adjDividend", float(historical_dividend.adjDividend))
             points.append(point)
 
         self.influx_repository.add_range(points)

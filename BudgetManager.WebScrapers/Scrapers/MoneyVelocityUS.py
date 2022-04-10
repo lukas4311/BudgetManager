@@ -41,7 +41,7 @@ for assets_data in assets_total:
         m_models.append(MoneyVelocityModel(float(split_values[1]), pandas_date))
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
-min_date = influx_repository.find_last(measurement, state)
+min_date = influx_repository.find_last_for_state_tag(measurement, state)
 
 filtered = []
 

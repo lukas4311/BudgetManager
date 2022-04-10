@@ -27,7 +27,7 @@ class InfluxRepository:
         for entity in self.__entities:
             write_api.write(bucket=self.__bucket, record=entity)
 
-    def find_last(self, measurement: str, tag: str):
+    def find_last_for_state_tag(self, measurement: str, tag: str):
         query_api = self.__client.query_api()
         p = {"_start": datetime.MINYEAR,
              "_bucket": self.__bucket,
@@ -48,3 +48,18 @@ class InfluxRepository:
             return tables[0].records[0]["_time"]
         else:
             return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)
+
+    def test(self):
+
+        query_api = self.__client.query_api()
+        tables = query_api.query('''
+                    import "influxdata/influxdb/schema"
+                    
+                    schema.measurementTagValues(
+                        bucket: "Stocks",
+                        tag: "ticker",
+                        measurement: "IncomeStatement",
+                    )
+                ''')
+        return tables
+

@@ -35,7 +35,7 @@ for assets_data in assets_total:
         m_models.append(AssetsModel(float(split_values[1]), date))
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
-min_date = influx_repository.find_last("TotalAssets", state)
+min_date = influx_repository.find_last_for_state_tag("TotalAssets", state)
 filtered = list(filter(lambda m: m.date.astimezone(pytz.utc) > min_date, m_models))
 
 for moneySupply in filtered:

@@ -40,7 +40,7 @@ class MacroTrendScraper:
     influx_repository: InfluxRepository
 
     def __init__(self):
-        self.influx_repository = InfluxRepository("http://localhost:8086", "Stocks", token, organizaiton)
+        self.influx_repository = InfluxRepository("http://localhost:8086", "StockIncome", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement")
@@ -102,18 +102,32 @@ class MacroTrendScraper:
 
         for data in financial_record.financial_data_values:
             if data.value != "":
-                calculatedValue = float(data.value) * 1000000;
+                calculatedValue = float(data.value) * 1000000
                 print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(calculatedValue))
-                point = Point(measurement).time(data.date, WritePrecision.NS)
-                point.field(fieldName, calculatedValue)
-                point.tag("ticker", ticker)
-                point.tag("frequency", frequency)
+                point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker).tag("frequency", frequency).field(fieldName, calculatedValue)
                 points.append(point)
 
-        if len(points) != 0:
-            print(points)
-        # self.influx_repository.add_range(points)
-        # self.influx_repository.save()
+        # if len(points) != 0:
+        #     print(points)
+
+        # line = points[0].to_line_protocol()
+        # print(line)
+
+        for point in points:
+            self.influx_repository.add(point)
+        #     print(point.to_line_protocol())
+
+        # IncomeStatement, frequency = A, ticker = SPOT
+        # BasicEPS = -519599.99999999994
+        # 1546210800000000000
+        # IncomeStatement, frequency = A, ticker = SPOT
+        # BasicEPS = -9201000
+        # 1514674800000000000
+
+        # p = Point(measurement).time(datetime.datetime.utcnow(), WritePrecision.NS).tag("ticker", "AMZN").field("BasicEPS", 9201000)
+        # self.influx_repository.add(p)
+
+        self.influx_repository.save()
 
 
 test = MacroTrendScraper()

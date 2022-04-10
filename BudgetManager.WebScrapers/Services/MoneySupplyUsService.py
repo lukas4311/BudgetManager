@@ -21,7 +21,7 @@ class MoneySupplyUsService:
             split_values = money_data.split()
             self.__parse_data_from_string_array_to_money_supply_model(m_models, split_values)
 
-        min_date = self.influx_repository.find_last(measurement, self.state)
+        min_date = self.influx_repository.find_last_for_state_tag(measurement, self.state)
         utc = pytz.UTC
         filtered = list(filter(lambda m: utc.localize(m.date) > min_date, m_models))
 

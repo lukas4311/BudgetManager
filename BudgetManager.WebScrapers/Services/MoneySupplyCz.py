@@ -23,7 +23,7 @@ class MoneySupplyCz:
             num = float(value.replace(",", "."))
             money_supply_models.append(MoneySupplyModel(num, date))
 
-        min_date = self.influx_repository.find_last(measurement, "cz")
+        min_date = self.influx_repository.find_last_for_state_tag(measurement, "cz")
         filtered = list(filter(lambda number: number.date.astimezone(pytz.utc) > min_date, money_supply_models))
 
         for m1 in filtered:
