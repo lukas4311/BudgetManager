@@ -49,17 +49,16 @@ class InfluxRepository:
         else:
             return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)
 
-    def test(self):
-
+    def find_all_distincted_tag_values(self, measurement: str, tagKey: str):
         query_api = self.__client.query_api()
-        tables = query_api.query('''
-                    import "influxdata/influxdb/schema"
-                    
-                    schema.measurementTagValues(
-                        bucket: "Stocks",
-                        tag: "ticker",
-                        measurement: "IncomeStatement",
-                    )
-                ''')
-        return tables
+        p = {"_tagKey": tagKey, "_measurement": measurement, "_bucket": self.__bucket}
 
+        tables = query_api.query('''
+                    from(bucket: _bucket)
+                      |> range(start: 1)
+                      |> filter(fn: (r) => r["_measurement"] == _measurement)
+                      |> keep(columns: [_tagKey])
+                      |> distinct(column: _tagKey)
+                ''', params=p)
+
+        return tables

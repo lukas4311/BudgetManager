@@ -13,6 +13,7 @@ import json
 import pandas as pd
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton
+from secret import influxDbUrl
 
 
 @dataclass
@@ -40,7 +41,7 @@ class MacroTrendScraper:
     influx_repository: InfluxRepository
 
     def __init__(self):
-        self.influx_repository = InfluxRepository("http://localhost:8086", "StockIncome", token, organizaiton)
+        self.influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement")
@@ -96,7 +97,6 @@ class MacroTrendScraper:
         return pandas_date.astimezone(pytz.utc)
 
     def save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
-        points = []
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
         print(fieldName)
 
@@ -104,31 +104,14 @@ class MacroTrendScraper:
             if data.value != "":
                 calculatedValue = float(data.value) * 1000000
                 print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(calculatedValue))
-                point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker).tag("frequency", frequency).field(fieldName, calculatedValue)
-                points.append(point)
-
-        # if len(points) != 0:
-        #     print(points)
-
-        # line = points[0].to_line_protocol()
-        # print(line)
-
-        for point in points:
-            self.influx_repository.add(point)
-        #     print(point.to_line_protocol())
-
-        # IncomeStatement, frequency = A, ticker = SPOT
-        # BasicEPS = -519599.99999999994
-        # 1546210800000000000
-        # IncomeStatement, frequency = A, ticker = SPOT
-        # BasicEPS = -9201000
-        # 1514674800000000000
-
-        # p = Point(measurement).time(datetime.datetime.utcnow(), WritePrecision.NS).tag("ticker", "AMZN").field("BasicEPS", 9201000)
-        # self.influx_repository.add(p)
+                point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
+                    .tag("frequency", frequency).field(fieldName, calculatedValue)
+                print(point.to_line_protocol())
+                self.influx_repository.add(point)
 
         self.influx_repository.save()
 
 
+
 test = MacroTrendScraper()
-test.download_income_statement("SPOT")
+test.download_income_statement("AAPL")

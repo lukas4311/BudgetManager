@@ -1,4 +1,9 @@
 import csv
+import datetime
+
+import pytz
+from influxdb_client import Point, WritePrecision
+from secret import influxDbUrl
 from configManager import token
 from configManager import organizaiton
 from Services.InfluxRepository import InfluxRepository
@@ -26,17 +31,9 @@ def addTickerFromCsvFile(rows):
 #     addTickerFromCsvFile(csv_file)
 #
 
-influx_repository = InfluxRepository("http://localhost:8086", "Comodity", token, organizaiton)
-data = influx_repository.test()
-# data = data[0].records[0]
+influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
+data = influx_repository.find_all_distincted_tag_values("IncomeStatement", "ticker")
 
 for table in data:
     for record in table.records:
-        print(record)
-
-print(data)
-
-
-#
-# print(tickers)
-# print(len(tickers))
+        print(record["ticker"])
