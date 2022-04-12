@@ -1,12 +1,20 @@
 import csv
+from dataclasses import dataclass
 import datetime
-
+from datetime import timedelta
 import pytz
 from influxdb_client import Point, WritePrecision
 from secret import influxDbUrl
 from configManager import token
 from configManager import organizaiton
 from Services.InfluxRepository import InfluxRepository
+utc=pytz.UTC
+
+@dataclass
+class TickerRecord:
+    ticker: str
+    time: datetime
+
 
 tickers = []
 
@@ -18,22 +26,40 @@ def addTickerFromCsvFile(rows):
             tickers.append(symbol)
 
 
-# with open("..\\SourceFiles\\nasdaq_screener_1649418624867.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     addTickerFromCsvFile(csv_file)
-#
-# with open("..\\SourceFiles\\nasdaq_screener_1649418684428.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     addTickerFromCsvFile(csv_file)
-#
-# with open("..\\SourceFiles\\nasdaq_screener_1649418699710.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     addTickerFromCsvFile(csv_file)
-#
+with open("..\\SourceFiles\\nasdaq_screener_1649418624867.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    addTickerFromCsvFile(csv_file)
+
+with open("..\\SourceFiles\\nasdaq_screener_1649418684428.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    addTickerFromCsvFile(csv_file)
+
+with open("..\\SourceFiles\\nasdaq_screener_1649418699710.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    addTickerFromCsvFile(csv_file)
+
 
 influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
 data = influx_repository.find_all_last_value_for_tag("IncomeStatement", "ticker")
+storedTickers = []
 
 for table in data:
     for record in table.records:
-        print(record)
+        ticker = TickerRecord(record["ticker"], record["_time"])
+        storedTickers.append(ticker)
+
+print(tickers)
+
+for ticker in tickers:
+    founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
+
+    if founded:
+        print(founded[0].time)
+        if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=90)):
+            print(founded)
+    else:
+        a = None
+        # TODO donwload data
+
+# tickerList = [x.ticker for x in storedTickers]
+# print(tickerList)
