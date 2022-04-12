@@ -62,3 +62,18 @@ class InfluxRepository:
                 ''', params=p)
 
         return tables
+
+    def find_all_last_value_for_tag(self, measurement: str, tagKey: str):
+        query_api = self.__client.query_api()
+        p = {"_tagKey": tagKey, "_measurement": measurement, "_bucket": self.__bucket}
+
+        tables = query_api.query('''
+                    from(bucket: _bucket)
+                      |> range(start: 1)
+                      |> filter(fn: (r) => r["_measurement"] == _measurement)
+                      |> keep(columns: [_tagKey, "_time"])
+                      |> sort(columns: ["_time"], desc: true)
+                      |> top(n:1, columns: ["_time"])
+                ''', params=p)
+
+        return tables

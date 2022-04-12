@@ -114,4 +114,4 @@ class MacroTrendScraper:
 
 
 test = MacroTrendScraper()
-test.download_income_statement("AAPL")
+test.download_income_statement("AMZN")

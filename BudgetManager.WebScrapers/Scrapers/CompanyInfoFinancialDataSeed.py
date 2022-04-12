@@ -32,8 +32,8 @@ def addTickerFromCsvFile(rows):
 #
 
 influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
-data = influx_repository.find_all_distincted_tag_values("IncomeStatement", "ticker")
+data = influx_repository.find_all_last_value_for_tag("IncomeStatement", "ticker")
 
 for table in data:
     for record in table.records:
-        print(record["ticker"])
+        print(record)
