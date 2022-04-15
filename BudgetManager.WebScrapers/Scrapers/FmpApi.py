@@ -63,7 +63,7 @@ class FmpScraper:
         self.influx_repository.add_range(points)
         self.influx_repository.save()
 
-    def donwload_sector_performance(self):
+    def download_sector_performance(self):
         measurement = "SectorPerformance"
         sector_models = self.fmp_service.get_sector_performance()
         point = Point(measurement).time(datetime.utcnow(), WritePrecision.NS)

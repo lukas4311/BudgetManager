@@ -4,6 +4,8 @@ import datetime
 from datetime import timedelta
 import pytz
 from influxdb_client import Point, WritePrecision
+
+from Scrapers.MacroTrendsScraper import MacroTrendScraper
 from secret import influxDbUrl
 from configManager import token
 from configManager import organizaiton
@@ -49,6 +51,7 @@ for table in data:
         storedTickers.append(ticker)
 
 print(tickers)
+macroTrend = MacroTrendScraper()
 
 for ticker in tickers:
     founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
@@ -56,10 +59,11 @@ for ticker in tickers:
     if founded:
         print(founded[0].time)
         if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=90)):
-            print(founded)
+            edgeTime = founded[0].time
+            # TODO download new data
     else:
-        a = None
-        # TODO donwload data
+        macroTrend.download_income_statement(ticker)
+
 
 # tickerList = [x.ticker for x in storedTickers]
 # print(tickerList)
