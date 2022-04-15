@@ -1,16 +1,15 @@
 import csv
+import time
 from dataclasses import dataclass
 import datetime
 from datetime import timedelta
 import pytz
-from influxdb_client import Point, WritePrecision
-
 from Scrapers.MacroTrendsScraper import MacroTrendScraper
 from secret import influxDbUrl
 from configManager import token
 from configManager import organizaiton
 from Services.InfluxRepository import InfluxRepository
-utc=pytz.UTC
+utc = pytz.UTC
 
 @dataclass
 class TickerRecord:
@@ -52,18 +51,22 @@ for table in data:
 
 print(tickers)
 macroTrend = MacroTrendScraper()
+# tickers = [tick for tick in tickers if tick == "AMZN"]
 
 for ticker in tickers:
+    print("Searching for ticker: " + ticker)
     founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
 
     if founded:
-        print(founded[0].time)
+        print("Ticker was founded in Influx.")
         if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=90)):
+            print("Company data are old. New data will be downloaded.")
             edgeTime = founded[0].time
-            # TODO download new data
+            # macroTrend.download_income_statement(ticker, edgeTime)
+        else:
+            print("Company data are actual.")
     else:
-        macroTrend.download_income_statement(ticker)
+        print("Ticker data was not found in Influx. All company data will be stored.")
+        # macroTrend.download_income_statement(ticker)
 
-
-# tickerList = [x.ticker for x in storedTickers]
-# print(tickerList)
+    time.sleep(2)

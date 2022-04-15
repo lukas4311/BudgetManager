@@ -14,6 +14,7 @@ import pandas as pd
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton
 from secret import influxDbUrl
+utc = pytz.UTC
 
 
 @dataclass
@@ -44,12 +45,12 @@ class MacroTrendScraper:
         self.influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
-        self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement")
+        self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", None)
 
-    def download_income_statement(self, ticker: str, fromDate: datetime, frequency: str = "A"):
-        self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement")
+    def download_income_statement_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
+        self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", from_date)
 
-    def __download_data(self, url: str, ticker: str, frequency: str, measurement: str):
+    def __download_data(self, url: str, ticker: str, frequency: str, measurement: str, from_date: datetime):
         print(url.format(ticker=ticker))
         url_with_ticker = url.format(ticker=ticker)
 
@@ -87,8 +88,9 @@ class MacroTrendScraper:
                     date = val
                     value = jsonData[val]
                     parsed_date = self.parse_date_to_pandas_date(date)
-                    financialData = FinancialData(parsed_date, value)
-                    financial_data_values.append(financialData)
+                    if from_date is None or utc.localize(from_date) < parsed_date:
+                        financialData = FinancialData(parsed_date, value)
+                        financial_data_values.append(financialData)
 
             financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
             self.save_data(financialRecord, ticker, measurement, frequency)
@@ -110,11 +112,11 @@ class MacroTrendScraper:
                 point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
                     .tag("frequency", frequency).field(fieldName, calculatedValue)
                 print(point.to_line_protocol())
-                self.influx_repository.add(point)
+                # self.influx_repository.add(point)
 
-        self.influx_repository.save()
+        # self.influx_repository.save()
 
 
-
+#
 test = MacroTrendScraper()
-test.download_income_statement("AMZN")
+test.download_income_statement_from_date("AMZN", datetime.datetime(2021, 10, 1))
