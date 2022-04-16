@@ -56,6 +56,7 @@ class MacroTrendScraper:
 
         options = Options()
         options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        options.headless = True
         driver = webdriver.Chrome(chrome_options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
         driver.minimize_window()
         driver.get(url_with_ticker)
@@ -118,5 +119,6 @@ class MacroTrendScraper:
 
 
 # Testing ...
-# test = MacroTrendScraper()
+test = MacroTrendScraper()
 # test.download_income_statement_from_date("AMZN", datetime.datetime(2021, 12, 31))
+test.download_income_statement("AMZN")
