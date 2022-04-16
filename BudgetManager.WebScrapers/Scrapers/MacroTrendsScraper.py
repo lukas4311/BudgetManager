@@ -40,6 +40,7 @@ class MacroTrendScraper:
     pageSourceLocation = "var originalData = "
     mainJsGridId = "columntablejqxgrid"
     influx_repository: InfluxRepository
+    points = []
 
     def __init__(self):
         self.influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
@@ -79,32 +80,38 @@ class MacroTrendScraper:
         except TimeoutException:
             driver.quit()
 
-        for jsonData in json_data_object:
-            field_name = jsonData["field_name"]
-            parsed_filed_element = BeautifulSoup(field_name, "html.parser")
-            financial_data_values = []
+        if json_data_object is not None:
+            for jsonData in json_data_object:
+                field_name = jsonData["field_name"]
+                parsed_filed_element = BeautifulSoup(field_name, "html.parser")
+                financial_data_values = []
 
-            for val in jsonData:
-                if val != "field_name" and val != "popup_icon":
-                    date = val
-                    value = jsonData[val]
-                    parsed_date = self.parse_date_to_pandas_date(date)
-                    from_date = utc.localize(from_date) if from_date is not None and from_date.tzinfo is None else from_date
+                for val in jsonData:
+                    if val != "field_name" and val != "popup_icon":
+                        date = val
+                        value = jsonData[val]
+                        parsed_date = self.__parse_date_to_pandas_date(date)
+                        from_date = utc.localize(from_date) if from_date is not None and from_date.tzinfo is None else from_date
 
-                    if from_date is None or from_date < parsed_date:
-                        financialData = FinancialData(parsed_date, value)
-                        financial_data_values.append(financialData)
+                        if from_date is None or from_date < parsed_date:
+                            financialData = FinancialData(parsed_date, value)
+                            financial_data_values.append(financialData)
 
-            financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
-            self.save_data(financialRecord, ticker, measurement, frequency)
+                financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
+                self.__save_data(financialRecord, ticker, measurement, frequency)
 
-    def parse_date_to_pandas_date(self, dateString: str):
+            self.influx_repository.add_range(self.points)
+            self.influx_repository.save()
+            self.points = []
+
+
+    def __parse_date_to_pandas_date(self, dateString: str):
         pandas_date = pd.to_datetime(dateString)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
         pandas_date.tz_convert("utc")
         return pandas_date.astimezone(pytz.utc)
 
-    def save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
+    def __save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
 
         for data in financial_record.financial_data_values:
@@ -113,12 +120,10 @@ class MacroTrendScraper:
                 point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
                     .tag("frequency", frequency).field(fieldName, calculatedValue)
                 print(f'Data saved ({ticker}): ' + point.to_line_protocol())
-                # self.influx_repository.add(point)
-
-        # self.influx_repository.save()
+                self.points.append(point)
 
 
 # Testing ...
-test = MacroTrendScraper()
+# test = MacroTrendScraper()
 # test.download_income_statement_from_date("AMZN", datetime.datetime(2021, 12, 31))
-test.download_income_statement("AMZN")
+# test.download_income_statement("AMZN")

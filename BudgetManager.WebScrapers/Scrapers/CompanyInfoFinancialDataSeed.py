@@ -1,4 +1,5 @@
 import csv
+import sys
 import time
 from dataclasses import dataclass
 import datetime
@@ -58,19 +59,27 @@ macroTrend = MacroTrendScraper()
 # tickers = [tick for tick in tickers if tick == "AMZN"]
 
 for ticker in sp500:
+    skip_sleep = False
     print("Searching for ticker: " + ticker)
     founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
 
     if founded:
         print("Ticker was founded in Influx.")
-        if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=90)):
+        if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=360)):
             print(f'Company data are old. New data will be downloaded. Last data are form: {founded[0].time}' )
             edgeTime = founded[0].time
             macroTrend.download_income_statement_from_date(ticker, edgeTime)
         else:
             print("Company data are actual.")
+            skip_sleep = True
     else:
         print("Ticker data was not found in Influx. All company data will be stored.")
         macroTrend.download_income_statement(ticker)
 
-    time.sleep(10)
+    if not skip_sleep:
+        print("Waiting before new data:", end="")
+        for i in range(1, 6):
+            print(f'{i} ', end="")
+            time.sleep(1)
+
+        print('\n')
