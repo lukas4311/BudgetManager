@@ -88,7 +88,9 @@ class MacroTrendScraper:
                     date = val
                     value = jsonData[val]
                     parsed_date = self.parse_date_to_pandas_date(date)
-                    if from_date is None or utc.localize(from_date) < parsed_date:
+                    from_date = utc.localize(from_date) if from_date is not None and from_date.tzinfo is None else from_date
+
+                    if from_date is None or from_date < parsed_date:
                         financialData = FinancialData(parsed_date, value)
                         financial_data_values.append(financialData)
 
@@ -103,20 +105,18 @@ class MacroTrendScraper:
 
     def save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
         fieldName = financial_record.description.replace('-', '').replace(' ', '')
-        print(fieldName)
 
         for data in financial_record.financial_data_values:
             if data.value != "":
                 calculatedValue = float(data.value) * 1000000
-                print(data.date.strftime("%Y/%m/%dT%H:%M:%S") + ": " + str(calculatedValue))
                 point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
                     .tag("frequency", frequency).field(fieldName, calculatedValue)
-                print(point.to_line_protocol())
+                print(f'Data saved ({ticker}): ' + point.to_line_protocol())
                 # self.influx_repository.add(point)
 
         # self.influx_repository.save()
 
 
-#
-test = MacroTrendScraper()
-test.download_income_statement_from_date("AMZN", datetime.datetime(2021, 10, 1))
+# Testing ...
+# test = MacroTrendScraper()
+# test.download_income_statement_from_date("AMZN", datetime.datetime(2021, 12, 31))
