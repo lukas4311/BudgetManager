@@ -7037,6 +7037,7 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const OtherInvestmentTagForm_1 = __webpack_require__(/*! ./OtherInvestmentTagForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx");
+const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7072,6 +7073,23 @@ class OtherInvestmentDetail extends react_1.default.Component {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Check date"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Balance")));
+        };
+        this.getActualBalance = () => {
+            let balances = this.state.balances;
+            if ((balances === null || balances === void 0 ? void 0 : balances.length) != 0) {
+                const sortedArray = lodash_1.default.orderBy(balances, [(obj) => new Date(obj.date)], ['desc']);
+                return sortedArray[0].balance.toFixed(0);
+            }
+            return "Any balance";
+        };
+        this.getChartData = () => {
+            let balanceChartData = [{ id: 'Balance', data: [] }];
+            let balances = this.state.balances;
+            if ((balances === null || balances === void 0 ? void 0 : balances.length) != 0) {
+                let balanceData = balances.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.balance }));
+                balanceChartData = [{ id: 'Balance', data: balanceData }];
+            }
+            return balanceChartData;
         };
         this.mapDataModelToViewModel = (otherInvestmentBalance) => {
             let model = new OtherInvestmentBalaceHistoryViewModel();
@@ -7152,20 +7170,25 @@ class OtherInvestmentDetail extends react_1.default.Component {
                             " detail"),
                         react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "currently invested"),
                         react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, this.state.totalInvested)),
-                    react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4" },
+                    react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 pt-4" },
                         react_1.default.createElement("div", null,
-                            react_1.default.createElement("p", null, "Curent value"),
+                            react_1.default.createElement("p", null,
+                                "Curent value ",
+                                this.getActualBalance()),
                             react_1.default.createElement("p", null,
                                 "Overall progress ",
-                                lodash_1.default.round(this.state.progressOverall, 2)),
+                                lodash_1.default.round(this.state.progressOverall, 2),
+                                "%"),
                             react_1.default.createElement("p", null,
                                 "Y/Y progress ",
-                                lodash_1.default.round(this.state.progressYY, 2))),
-                        react_1.default.createElement("div", null, "GRAF")),
+                                lodash_1.default.round(this.state.progressYY, 2),
+                                "%")),
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.getChartData() }))),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mt-6" },
                         react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }),
                         react_1.default.createElement("div", { className: "flex flex-col p-4" },
-                            react_1.default.createElement("p", null, "Base list with payments with specific tags"),
+                            react_1.default.createElement("p", { className: "text-xl mb-2 text-left" }, "Payments to investment"),
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.linkedPayments, template: this.renderPaymentTemplate }),
                             react_1.default.createElement(core_1.Button, { className: 'bg-vermilion w-full', onClick: this.onCreateConnectionWithPaymentTag },
                                 react_1.default.createElement("span", { className: "w-6" }, this.icons.link),

@@ -14,6 +14,9 @@ import { IconsData } from "../../Enums/IconsEnum";
 import { PaymentModel, TagApi, TagModel } from "../../ApiClient/Main";
 import { OtherInvestmentTagForm } from "./OtherInvestmentTagForm";
 import { TagFormViewModel } from "../../Model/TagFormViewModel";
+import { LineChart } from "../Charts/LineChart";
+import { LineChartData } from "../../Model/LineChartData";
+import { LineChartDataSets } from "../../Model/LineChartDataSets";
 
 const theme = createMuiTheme({
     palette: {
@@ -112,6 +115,29 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         );
     }
 
+    private getActualBalance = (): string => {
+        let balances = this.state.balances;
+
+        if (balances?.length != 0) {
+            const sortedArray = _.orderBy(balances, [(obj) => new Date(obj.date)], ['desc'])
+            return sortedArray[0].balance.toFixed(0);
+        }
+
+        return "Any balance";
+    }
+
+    private getChartData = (): LineChartDataSets[] => {
+        let balanceChartData: LineChartDataSets[] = [{ id: 'Balance', data: [] }];
+        let balances = this.state.balances;
+
+        if (balances?.length != 0) {
+            let balanceData: LineChartData[] = balances.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.balance }))
+            balanceChartData = [{ id: 'Balance', data: balanceData }];
+        }
+
+        return balanceChartData;
+    }
+
     private mapDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {
         let model: OtherInvestmentBalaceHistoryViewModel = new OtherInvestmentBalaceHistoryViewModel();
         model.id = otherInvestmentBalance.id;
@@ -208,19 +234,21 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                         <p className="self-end ml-4 mr-2">currently invested</p>
                         <h2 className="text-vermilion text-2xl font-bold self-center">{this.state.totalInvested}</h2>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 pt-4">
                         <div>
-                            <p>Curent value</p>
-                            <p>Overall progress {_.round(this.state.progressOverall, 2)}</p>
-                            <p>Y/Y progress {_.round(this.state.progressYY, 2)}</p>
+                            <p>Curent value {this.getActualBalance()}</p>
+                            <p>Overall progress {_.round(this.state.progressOverall, 2)}%</p>
+                            <p>Y/Y progress {_.round(this.state.progressYY, 2)}%</p>
                         </div>
-                        <div>GRAF</div>
+                        <div>
+                            <LineChart dataSets={this.getChartData()}></LineChart>
+                        </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-6">
                         <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
                             addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
                         <div className="flex flex-col p-4">
-                            <p>Base list with payments with specific tags</p>
+                            <p className="text-xl mb-2 text-left">Payments to investment</p>
                             <BaseList<PaymentModel> data={this.state.linkedPayments} template={this.renderPaymentTemplate}></BaseList>
                             <Button className='bg-vermilion w-full' onClick={this.onCreateConnectionWithPaymentTag}>
                                 <span className="w-6">{this.icons.link}</span>
