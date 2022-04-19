@@ -7183,7 +7183,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                                 "Y/Y progress ",
                                 lodash_1.default.round(this.state.progressYY, 2),
                                 "%")),
-                        react_1.default.createElement("div", null,
+                        react_1.default.createElement("div", { className: "h-48" },
                             react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.getChartData() }))),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mt-6" },
                         react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }),

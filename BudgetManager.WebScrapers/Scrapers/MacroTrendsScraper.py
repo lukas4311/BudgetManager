@@ -51,6 +51,12 @@ class MacroTrendScraper:
     def download_income_statement_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", from_date)
 
+    def download_balance_sheet(self, ticker: str, frequency: str = "A"):
+        self.__download_data(self.__url_balance_sheet, ticker, frequency, "BalanceSheet", None)
+
+    def download_balance_sheet_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
+        self.__download_data(self.__url_income_statement, ticker, frequency, "BalanceSheet", from_date)
+
     def __download_data(self, url: str, ticker: str, frequency: str, measurement: str, from_date: datetime):
         print(url.format(ticker=ticker))
         url_with_ticker = url.format(ticker=ticker)

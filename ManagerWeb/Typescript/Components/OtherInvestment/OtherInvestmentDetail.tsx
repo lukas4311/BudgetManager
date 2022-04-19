@@ -240,7 +240,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             <p>Overall progress {_.round(this.state.progressOverall, 2)}%</p>
                             <p>Y/Y progress {_.round(this.state.progressYY, 2)}%</p>
                         </div>
-                        <div>
+                        <div className="h-48">
                             <LineChart dataSets={this.getChartData()}></LineChart>
                         </div>
                     </div>
