@@ -17,6 +17,8 @@ import { TagFormViewModel } from "../../Model/TagFormViewModel";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
+import { LineSvgProps } from "@nivo/line";
+import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 
 const theme = createMuiTheme({
     palette: {
@@ -234,14 +236,14 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                         <p className="self-end ml-4 mr-2">currently invested</p>
                         <h2 className="text-vermilion text-2xl font-bold self-center">{this.state.totalInvested}</h2>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 pt-4">
-                        <div>
-                            <p>Curent value {this.getActualBalance()}</p>
+                    <div className="flex flex-col pt-4">
+                        <div className="h-64 w-full">
+                            <LineChart dataSets={this.getChartData()} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
+                        </div>
+                        <div className="flex flex-row justify-around">
+                            <p className="text-xl">Curent value {this.getActualBalance()}</p>
                             <p>Overall progress {_.round(this.state.progressOverall, 2)}%</p>
                             <p>Y/Y progress {_.round(this.state.progressYY, 2)}%</p>
-                        </div>
-                        <div className="h-48">
-                            <LineChart dataSets={this.getChartData()}></LineChart>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-6">

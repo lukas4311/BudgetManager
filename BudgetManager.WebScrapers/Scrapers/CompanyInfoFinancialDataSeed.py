@@ -12,6 +12,7 @@ from configManager import organizaiton
 from Services.InfluxRepository import InfluxRepository
 utc = pytz.UTC
 
+
 @dataclass
 class TickerRecord:
     ticker: str
@@ -60,7 +61,7 @@ with open("..\\SourceFiles\\sp500.csv", 'r') as file:
 
 storedTickers = get_tickers_for_measurement("BalanceSheet")
 macroTrend = MacroTrendScraper()
-tickers = [tick for tick in sp500 if tick == "AAPL"]
+# tickers = [tick for tick in sp500 if tick == "AAPL"]
 
 # print(storedTickers)
 # print(tickers)
@@ -92,7 +93,7 @@ tickers = [tick for tick in sp500 if tick == "AAPL"]
 #
 #         print('\n')
 
-for ticker in tickers:
+for ticker in sp500:
     skip_sleep = False
     print("Searching for ticker: " + ticker)
     founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]

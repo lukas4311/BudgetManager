@@ -18,6 +18,7 @@ import { BaseList } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps } from 'react-router-dom';
+import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[],
@@ -202,7 +203,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         console.log("clone: " + id);
         e.preventDefault();
         e.stopPropagation();
-        this.paymentApi.paymentsCloneIdPost({id: id});
+        this.paymentApi.paymentsCloneIdPost({ id: id });
     }
 
     private renderTemplate = (p: PaymentModel): JSX.Element => {
@@ -228,7 +229,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <div className="text-center mt-6 p-4 bg-prussianBlue rounded-lg">
                         {this.showErrorMessage()}
                         <div className="flex flex-row">
-                            <div className="w-2/5">
+                            <div className="w-1/2">
                                 <div className="py-4 flex">
                                     <h2 className="text-xl ml-12">Income/expense</h2>
                                     <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
@@ -268,16 +269,16 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                                 </div>
                             </div>
-                            <div className="w-3/5 h-64 mt-4 calendar">
+                            <div className="w-1/2 h-64 mt-4 calendar">
                                 <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                             </div>
                         </div>
                         <div className="flex flex-row">
                             <div className="w-1/3 h-64">
-                                <LineChart dataSets={this.state.balanceChartData.dataSets}></LineChart>
+                                <LineChart dataSets={this.state.balanceChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSetting()}></LineChart>
                             </div>
                             <div className="w-1/3 h-64">
-                                <LineChart dataSets={this.state.expenseChartData.dataSets}></LineChart>
+                                <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSetting()}></LineChart>
                             </div>
                             <div className="w-1/3 h-64 calendar text-black">
                                 <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>

@@ -6098,57 +6098,124 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.es.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function LineChart({ dataSets }) {
+function LineChart({ dataSets, chartProps }) {
     let allYData = [];
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
     let minY = Math.min(...allYData);
     let maxY = Math.max(...allYData);
     let yScale = (minY / 100);
+    if (chartProps == undefined)
+        chartProps = { data: dataSets };
+    else
+        chartProps.data = dataSets;
     if (yScale < 1000)
         yScale = 1000;
-    return (react_1.default.createElement(line_1.ResponsiveLine, { data: dataSets, margin: { top: 50, right: 50, bottom: 50, left: 100 }, xScale: {
-            type: 'time',
-            format: '%Y-%m-%d',
-            useUTC: false,
-            precision: 'day',
-        }, xFormat: "time:%Y-%m-%d", yScale: { type: 'linear', reverse: false, min: minY - yScale, max: maxY + yScale }, axisLeft: {
-            legend: 'linear scale',
-            legendOffset: 12,
-            tickValues: 6,
-            tickPadding: 15
-        }, axisBottom: {
-            format: '%Y-%m-%d',
-            tickValues: 'every 1 month',
-            legend: 'time scale',
-            legendOffset: -12,
-        }, colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false, pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, areaBaselineValue: minY - yScale, enableSlices: "y", sliceTooltip: ({ slice }) => {
-            return (react_1.default.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (react_1.default.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
-                react_1.default.createElement("span", null, point.data.xFormatted),
-                react_1.default.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
-        }, theme: {
-            axis: {
-                ticks: {
-                    line: {
-                        stroke: "white"
-                    },
-                    text: {
-                        fill: "white"
-                    }
-                }
-            },
-            grid: {
-                line: {
-                    stroke: "white",
-                }
-            },
-            dots: {
-                text: {
-                    fill: 'white',
-                }
-            }
-        } }));
+    return (react_1.default.createElement(line_1.ResponsiveLine, Object.assign({ margin: { top: 50, right: 50, bottom: 50, left: 100 } }, chartProps)));
 }
 exports.LineChart = LineChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Charts/LineChartSettingManager.tsx":
+/*!******************************************************************!*\
+  !*** ./Typescript/Components/Charts/LineChartSettingManager.tsx ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LineChartSettingManager = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+class LineChartSettingManager {
+    static getPaymentChartSetting() {
+        return {
+            data: undefined,
+            xScale: {
+                type: 'time',
+                format: '%Y-%m-%d',
+                useUTC: false,
+                precision: 'day',
+            },
+            xFormat: "time:%Y-%m-%d",
+            yScale: { type: 'linear', reverse: false },
+            axisLeft: {
+                legend: 'linear scale',
+                legendOffset: 12,
+                tickValues: 6,
+                tickPadding: 15
+            },
+            axisBottom: {
+                format: '%Y-%m-%d',
+                tickValues: 'every 1 month',
+                legend: 'time scale',
+                legendOffset: -12,
+            },
+            colors: { scheme: 'set1' },
+            curve: 'linear',
+            enablePoints: false,
+            enablePointLabel: false,
+            pointSize: 7,
+            useMesh: true,
+            enableArea: true,
+            areaOpacity: 0.5,
+            enableSlices: "y",
+            sliceTooltip: ({ slice }) => {
+                return (React.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (React.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
+                    React.createElement("span", null, point.data.xFormatted),
+                    React.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
+            },
+            theme: {
+                axis: {
+                    ticks: {
+                        line: { stroke: "white" },
+                        text: { fill: "white" }
+                    }
+                },
+                grid: {
+                    line: { stroke: "white" }
+                },
+                dots: {
+                    text: { fill: 'white' }
+                }
+            }
+        };
+    }
+    static getOtherInvestmentChartSetting() {
+        return {
+            data: undefined, enableArea: true, areaOpacity: 0.70, isInteractive: true, useMesh: true, enablePoints: true,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
+            pointSize: 8, pointBorderWidth: 1, pointLabelYOffset: -12, pointColor: "black",
+            sliceTooltip: ({ slice }) => {
+                return (React.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (React.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
+                    React.createElement("span", null, point.data.xFormatted),
+                    React.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
+            }
+        };
+    }
+}
+exports.LineChartSettingManager = LineChartSettingManager;
 
 
 /***/ }),
@@ -7038,6 +7105,7 @@ const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescri
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const OtherInvestmentTagForm_1 = __webpack_require__(/*! ./OtherInvestmentTagForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
+const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7170,9 +7238,11 @@ class OtherInvestmentDetail extends react_1.default.Component {
                             " detail"),
                         react_1.default.createElement("p", { className: "self-end ml-4 mr-2" }, "currently invested"),
                         react_1.default.createElement("h2", { className: "text-vermilion text-2xl font-bold self-center" }, this.state.totalInvested)),
-                    react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 pt-4" },
-                        react_1.default.createElement("div", null,
-                            react_1.default.createElement("p", null,
+                    react_1.default.createElement("div", { className: "flex flex-col pt-4" },
+                        react_1.default.createElement("div", { className: "h-64 w-full" },
+                            react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.getChartData(), chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentChartSetting() })),
+                        react_1.default.createElement("div", { className: "flex flex-row justify-around" },
+                            react_1.default.createElement("p", { className: "text-xl" },
                                 "Curent value ",
                                 this.getActualBalance()),
                             react_1.default.createElement("p", null,
@@ -7182,9 +7252,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                             react_1.default.createElement("p", null,
                                 "Y/Y progress ",
                                 lodash_1.default.round(this.state.progressYY, 2),
-                                "%")),
-                        react_1.default.createElement("div", { className: "h-48" },
-                            react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.getChartData() }))),
+                                "%"))),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mt-6" },
                         react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }),
                         react_1.default.createElement("div", { className: "flex flex-col p-4" },
@@ -7761,6 +7829,7 @@ const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7918,7 +7987,7 @@ class PaymentsOverview extends React.Component {
                 React.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg" },
                     this.showErrorMessage(),
                     React.createElement("div", { className: "flex flex-row" },
-                        React.createElement("div", { className: "w-2/5" },
+                        React.createElement("div", { className: "w-1/2" },
                             React.createElement("div", { className: "py-4 flex" },
                                 React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
                                 React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
@@ -7939,13 +8008,13 @@ class PaymentsOverview extends React.Component {
                                 React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                             React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                                 React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                        React.createElement("div", { className: "w-3/5 h-64 mt-4 calendar" },
+                        React.createElement("div", { className: "w-1/2 h-64 mt-4 calendar" },
                             React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                     React.createElement("div", { className: "flex flex-row" },
                         React.createElement("div", { className: "w-1/3 h-64" },
-                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets })),
+                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.balanceChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSetting() })),
                         React.createElement("div", { className: "w-1/3 h-64" },
-                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets })),
+                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSetting() })),
                         React.createElement("div", { className: "w-1/3 h-64 calendar text-black" },
                             React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
                     React.createElement("div", { className: "flex flex-row p-6" },
