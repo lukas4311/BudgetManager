@@ -241,9 +241,9 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             <LineChart dataSets={this.getChartData()} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
                         </div>
                         <div className="flex flex-row justify-around">
-                            <p className="text-xl">Curent value {this.getActualBalance()}</p>
-                            <p>Overall progress {_.round(this.state.progressOverall, 2)}%</p>
-                            <p>Y/Y progress {_.round(this.state.progressYY, 2)}%</p>
+                            <p className="text-xl">Curent value <span className="text-vermilion text-2xl font-medium">{this.getActualBalance()}</span></p>
+                            <p>Overall progress <span className={"font-medium " + (this.state.progressOverall < 0 ? "text-red-700 " : "text-green-700")}>{_.round(this.state.progressOverall, 2)}</span>%</p>
+                            <p>Y/Y progress <span className={"font-medium " + (this.state.progressYY < 0 ? "text-red-700" : "text-green-700")}>{_.round(this.state.progressYY, 2)}</span>%</p>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-6">

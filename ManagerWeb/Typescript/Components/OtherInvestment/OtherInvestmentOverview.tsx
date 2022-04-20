@@ -148,7 +148,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         </div>
                         <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} /> : <div />}</div>
                     </div>
-                    <div className="w-full">Overview</div>
                 </div>
                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
                     maxWidth="md" fullWidth={true}>

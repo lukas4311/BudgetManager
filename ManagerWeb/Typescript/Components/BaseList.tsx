@@ -42,7 +42,6 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
 
     return (
         <React.Fragment>
-
             <div className="flex w-full flex-col bg-battleshipGrey rounded-t-md">
                 <div className={(props.addItemHandler != undefined ? "pt-4" : "") + " flex w-full"}>
                     {props.title != undefined ? (<h1 className="ml-6 text-xl">{props.title}</h1>) : <></>}
