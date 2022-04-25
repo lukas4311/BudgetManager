@@ -19,6 +19,7 @@ import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps } from 'react-router-dom';
 import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
+import _, { max } from 'lodash';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[],
@@ -221,6 +222,17 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         );
     }
 
+    private getExpensesMaxValue = () => {
+        let maxValue = 0;
+        const sourceData = this.state.expenseChartData?.dataSets[0]?.data;
+
+        if (!sourceData || sourceData.length == 0)
+            return maxValue;
+
+        maxValue = _.maxBy(sourceData, o => o.y).y;
+        return maxValue;
+    }
+
     public render() {
         return (
             <ThemeProvider theme={theme}>
@@ -273,14 +285,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                             </div>
                         </div>
-                        <div className="flex flex-row">
-                            <div className="w-1/3 h-64">
-                                <LineChart dataSets={this.state.balanceChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSetting()}></LineChart>
+                        <div className="flex flex-row h-80">
+                            <div className="w-1/2">
+                                <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25)}></LineChart>
                             </div>
-                            <div className="w-1/3 h-64">
-                                <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSetting()}></LineChart>
-                            </div>
-                            <div className="w-1/3 h-64 calendar text-black">
+                            <div className="w-1/2 calendar text-black">
                                 <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
                             </div>
                         </div>

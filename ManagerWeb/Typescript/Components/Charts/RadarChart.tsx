@@ -1,15 +1,16 @@
 import { ResponsiveRadar } from '@nivo/radar'
 import React from 'react'
-import { RadarChartProps } from '../../Model/RadarChartProps';
 
 function RadarChart({ dataSets }: any) {
+  const margin = 30;
+
   return (
     <ResponsiveRadar
       data={dataSets}
       keys={['value']}
       indexBy="key"
       maxValue="auto"
-      margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
+      margin={{ top: margin, right: margin, bottom: margin, left: margin }}
       curve="linearClosed"
       borderWidth={0}
       borderColor={{ from: 'color' }}
