@@ -43,6 +43,6 @@
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {
-    "moment": "^2.27.0"
+    "moment": "^2.29.2"
   }
 }
