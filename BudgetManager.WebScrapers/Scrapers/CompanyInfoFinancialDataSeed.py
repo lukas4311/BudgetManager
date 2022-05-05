@@ -59,7 +59,7 @@ with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
     addTickerFromCsvFile(csv_file, sp500)
 
-storedTickers = get_tickers_for_measurement("BalanceSheet")
+storedTickers = get_tickers_for_measurement("CashFlow")
 macroTrend = MacroTrendScraper()
 # tickers = [tick for tick in sp500 if tick == "AAPL"]
 
@@ -67,6 +67,7 @@ macroTrend = MacroTrendScraper()
 # print(tickers)
 # exit(9)
 
+# INCOME STATEMENT
 # for ticker in tickers:
 #     skip_sleep = False
 #     print("Searching for ticker: " + ticker)
@@ -93,28 +94,65 @@ macroTrend = MacroTrendScraper()
 #
 #         print('\n')
 
+#  BALANCE SHEET
+# for ticker in sp500:
+#     try:
+#         skip_sleep = False
+#         print("Searching for ticker: " + ticker)
+#         founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
+#
+#         if founded:
+#             print("Ticker was founded in Influx.")
+#             if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=360)):
+#                 print(f'Company data are old. New data will be downloaded. Last data are form: {founded[0].time}' )
+#                 edgeTime = founded[0].time
+#                 macroTrend.download_balance_sheet_from_date(ticker, edgeTime)
+#             else:
+#                 print("Company data are actual.")
+#                 skip_sleep = True
+#         else:
+#             print("Ticker data was not found in Influx. All company data will be stored.")
+#             macroTrend.download_balance_sheet(ticker)
+#
+#         if not skip_sleep:
+#             print("Waiting before new data:", end="")
+#             for i in range(1, 6):
+#                 print(f'{i} ', end="")
+#                 time.sleep(1)
+#
+#             print('\n')
+#     except Exception:
+#         print(f'{ticker} cannot be downloaded')
+#
+
+#
 for ticker in sp500:
-    skip_sleep = False
-    print("Searching for ticker: " + ticker)
-    founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
+    try:
+        skip_sleep = False
+        print("Searching for ticker: " + ticker)
+        founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
 
-    if founded:
-        print("Ticker was founded in Influx.")
-        if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=360)):
-            print(f'Company data are old. New data will be downloaded. Last data are form: {founded[0].time}' )
-            edgeTime = founded[0].time
-            macroTrend.download_balance_sheet_from_date(ticker, edgeTime)
+        if founded:
+            print("Ticker was founded in Influx.")
+            if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=360)):
+                print(f'Company data are old. New data will be downloaded. Last data are form: {founded[0].time}')
+                edgeTime = founded[0].time
+                macroTrend.download_cash_flow_from_date(ticker, edgeTime)
+            else:
+                print("Company data are actual.")
+                skip_sleep = True
         else:
-            print("Company data are actual.")
-            skip_sleep = True
-    else:
-        print("Ticker data was not found in Influx. All company data will be stored.")
-        macroTrend.download_balance_sheet(ticker)
+            print("Ticker data was not found in Influx. All company data will be stored.")
+            macroTrend.download_cash_flow(ticker)
 
-    if not skip_sleep:
-        print("Waiting before new data:", end="")
-        for i in range(1, 6):
-            print(f'{i} ', end="")
-            time.sleep(1)
+        if not skip_sleep:
+            print("Waiting before new data:", end="")
+            for i in range(1, 6):
+                print(f'{i} ', end="")
+                time.sleep(1)
 
-        print('\n')
+            print('\n')
+    except Exception:
+        print(f'{ticker} cannot be downloaded')
+
+
