@@ -13,6 +13,6 @@ namespace BudgetManager.Services.Contracts
 
         Task<decimal> GetProgressForYears(int id, int? years = null);
 
-        IEnumerable<OtherInvestmentBalaceHistoryModel> GetAllInvestmentLastBalance();
+        OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary();
     }
 }

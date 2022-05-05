@@ -140,11 +140,9 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("/summary")]
-        public IActionResult GetOtherInvestmentSummary()
+        public ActionResult<OtherInvestmentBalanceSummaryModel> GetOtherInvestmentSummary()
         {
-            this.otherInvestmentService.GetAllInvestmentSummary();
-
-            return Ok();
+            return Ok(this.otherInvestmentService.GetAllInvestmentSummary());
         }
 
         private StatusCodeResult CheckUserRigth(int otherInvestmentId)

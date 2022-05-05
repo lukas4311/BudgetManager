@@ -1,0 +1,5 @@
+﻿using System.Collections.Generic;
+
+namespace BudgetManager.Domain.DTOs;
+
+public record OtherInvestmentBalanceSummaryModel(IEnumerable<OtherInvestmentBalaceHistoryModel> ActualBalanceData, IEnumerable<OtherInvestmentBalaceHistoryModel> OneYearEarlierBalanceData);

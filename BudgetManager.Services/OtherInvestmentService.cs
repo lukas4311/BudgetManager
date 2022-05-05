@@ -74,8 +74,8 @@ namespace BudgetManager.Services
                 .OrderBy(a => a.Date)
                 .Last().Balance;
 
-            var tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == id).Select(t => t.TagId).SingleOrDefault();
-            var payments = new List<PaymentModel>();
+            int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == id).Select(t => t.TagId).SingleOrDefault();
+            List<PaymentModel> payments = new List<PaymentModel>();
 
             if (tagId != default)
             {
@@ -92,10 +92,20 @@ namespace BudgetManager.Services
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
 
-        public IEnumerable<OtherInvestmentBalaceHistoryModel> GetAllInvestmentLastBalance() => this.otherInvestmentBalaceHistoryRepository.FindAll()
+        public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary()
+        {
+            List<OtherInvestmentBalaceHistoryModel> lastData = this.otherInvestmentBalaceHistoryRepository.FindAll()
                 .GroupBy(a => a.OtherInvestmentId)
                 .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
                 .ToList();
+
+            List<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.Date < DateTime.Now.AddYears(-1))
+                .GroupBy(a => a.OtherInvestmentId)
+                .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
+                .ToList();
+
+            return new OtherInvestmentBalanceSummaryModel(lastData, oneYearEarlierData);
+        }
 
         private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
     }
