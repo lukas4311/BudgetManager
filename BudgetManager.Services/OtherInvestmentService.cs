@@ -92,6 +92,11 @@ namespace BudgetManager.Services
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
 
+        public IEnumerable<OtherInvestmentBalaceHistoryModel> GetAllInvestmentLastBalance() => this.otherInvestmentBalaceHistoryRepository.FindAll()
+                .GroupBy(a => a.OtherInvestmentId)
+                .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
+                .ToList();
+
         private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
     }
 }

@@ -139,6 +139,14 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("/summary")]
+        public IActionResult GetOtherInvestmentSummary()
+        {
+            this.otherInvestmentService.GetAllInvestmentSummary();
+
+            return Ok();
+        }
+
         private StatusCodeResult CheckUserRigth(int otherInvestmentId)
         {
             if (!this.otherInvestmentService.UserHasRightToPayment(otherInvestmentId, this.GetUserId()))

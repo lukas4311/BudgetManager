@@ -12,5 +12,7 @@ namespace BudgetManager.Services.Contracts
         bool UserHasRightToPayment(int otherInvestmentId, int userId);
 
         Task<decimal> GetProgressForYears(int id, int? years = null);
+
+        IEnumerable<OtherInvestmentBalaceHistoryModel> GetAllInvestmentLastBalance();
     }
 }
