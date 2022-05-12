@@ -77,6 +77,13 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("otherInvestment/balance")]
+        public ActionResult GetAllBalances()
+        {
+            // TODO: get all my other investments with costs and balances
+            return Ok();
+        }
+
         [HttpPut("/balanceHistory")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
