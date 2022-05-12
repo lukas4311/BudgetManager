@@ -92,14 +92,15 @@ namespace BudgetManager.Services
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
 
-        public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary()
+        public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary(int userId)
         {
-            List<OtherInvestmentBalaceHistoryModel> lastData = this.otherInvestmentBalaceHistoryRepository.FindAll()
-                .GroupBy(a => a.OtherInvestmentId)
+            var baseData = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestment.UserIdentityId == userId).ToList();
+
+            List<OtherInvestmentBalaceHistoryModel> lastData = baseData.GroupBy(a => a.OtherInvestmentId)
                 .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
                 .ToList();
 
-            List<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.Date < DateTime.Now.AddYears(-1))
+            List<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = baseData.Where(o => o.Date < DateTime.Now.AddYears(-1))
                 .GroupBy(a => a.OtherInvestmentId)
                 .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
                 .ToList();
