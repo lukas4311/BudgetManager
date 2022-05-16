@@ -4,13 +4,9 @@ WORKDIR /app
 ENV ASPNETCORE_URLS="https://+;http://+" 
 ENV ASPNETCORE_HTTPS_PORT=6011
 ENV ASPNETCORE_ENVIRONMENT="Development"
-# ENV ASPNETCORE_Kestrel__Certificates__Default__Password=localhost
-# ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 
 EXPOSE 80 
 EXPOSE 443
-
-# ENV ASPNETCORE_URLS=https://+:443;http://+:80
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers
