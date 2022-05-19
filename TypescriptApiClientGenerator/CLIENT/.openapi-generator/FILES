@@ -26,6 +26,7 @@ models/InterestRate.ts
 models/OtherInvestment.ts
 models/OtherInvestmentBalaceHistory.ts
 models/OtherInvestmentBalaceHistoryModel.ts
+models/OtherInvestmentBalanceSummaryModel.ts
 models/OtherInvestmentModel.ts
 models/OtherInvestmentTag.ts
 models/OtherInvestmentTagModel.ts

@@ -18,6 +18,7 @@ export * from './InterestRate';
 export * from './OtherInvestment';
 export * from './OtherInvestmentBalaceHistory';
 export * from './OtherInvestmentBalaceHistoryModel';
+export * from './OtherInvestmentBalanceSummaryModel';
 export * from './OtherInvestmentModel';
 export * from './OtherInvestmentTag';
 export * from './OtherInvestmentTagModel';

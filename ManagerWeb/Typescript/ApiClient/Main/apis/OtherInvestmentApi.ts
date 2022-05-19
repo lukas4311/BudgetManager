@@ -18,6 +18,9 @@ import {
     OtherInvestmentBalaceHistoryModel,
     OtherInvestmentBalaceHistoryModelFromJSON,
     OtherInvestmentBalaceHistoryModelToJSON,
+    OtherInvestmentBalanceSummaryModel,
+    OtherInvestmentBalanceSummaryModelFromJSON,
+    OtherInvestmentBalanceSummaryModelToJSON,
     OtherInvestmentModel,
     OtherInvestmentModelFromJSON,
     OtherInvestmentModelToJSON,
@@ -209,6 +212,18 @@ export interface OtherInvestmentApiInterface {
 
     /**
      * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentOtherInvestmentBalanceGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    otherInvestmentOtherInvestmentBalanceGet(initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
      * @param {number} otherInvestmentId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -259,6 +274,18 @@ export interface OtherInvestmentApiInterface {
     /**
      */
     otherInvestmentPut(requestParameters: OtherInvestmentPutRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OtherInvestmentApiInterface
+     */
+    otherInvestmentSummaryGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<OtherInvestmentBalanceSummaryModel>>;
+
+    /**
+     */
+    otherInvestmentSummaryGet(initOverrides?: RequestInit): Promise<OtherInvestmentBalanceSummaryModel>;
 
 }
 
@@ -564,6 +591,33 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
 
     /**
      */
+    async otherInvestmentOtherInvestmentBalanceGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/otherInvestment/balance`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async otherInvestmentOtherInvestmentBalanceGet(initOverrides?: RequestInit): Promise<void> {
+        await this.otherInvestmentOtherInvestmentBalanceGetRaw(initOverrides);
+    }
+
+    /**
+     */
     async otherInvestmentOtherInvestmentIdBalanceHistoryGetRaw(requestParameters: OtherInvestmentOtherInvestmentIdBalanceHistoryGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<OtherInvestmentBalaceHistoryModel>>> {
         if (requestParameters.otherInvestmentId === null || requestParameters.otherInvestmentId === undefined) {
             throw new runtime.RequiredError('otherInvestmentId','Required parameter requestParameters.otherInvestmentId was null or undefined when calling otherInvestmentOtherInvestmentIdBalanceHistoryGet.');
@@ -686,6 +740,34 @@ export class OtherInvestmentApi extends runtime.BaseAPI implements OtherInvestme
      */
     async otherInvestmentPut(requestParameters: OtherInvestmentPutRequest, initOverrides?: RequestInit): Promise<void> {
         await this.otherInvestmentPutRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async otherInvestmentSummaryGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<OtherInvestmentBalanceSummaryModel>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/otherInvestment/summary`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OtherInvestmentBalanceSummaryModelFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async otherInvestmentSummaryGet(initOverrides?: RequestInit): Promise<OtherInvestmentBalanceSummaryModel> {
+        const response = await this.otherInvestmentSummaryGetRaw(initOverrides);
+        return await response.value();
     }
 
 }

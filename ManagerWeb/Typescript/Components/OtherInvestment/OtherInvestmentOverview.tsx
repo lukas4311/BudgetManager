@@ -4,7 +4,7 @@ import { BaseList } from "../BaseList";
 import moment from "moment";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from 'react-router-dom';
-import { CurrencyApi, OtherInvestmentApi } from "../../ApiClient/Main";
+import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel } from "../../ApiClient/Main";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
@@ -12,6 +12,7 @@ import { OtherInvestmentForm } from "./OtherInvestmentForm";
 import OtherInvestmentDetail from "./OtherInvestmentDetail";
 import { OtherInvestmentModel } from "../../ApiClient/Main/models/OtherInvestmentModel";
 import OtherInvestmentSummary from "./OtherInvestmentSummary";
+import _ from "lodash";
 
 const theme = createMuiTheme({
     palette: {
@@ -25,6 +26,7 @@ const theme = createMuiTheme({
 class OtherInvestmentOverviewState {
     otherInvestments: OtherInvestmentViewModel[];
     selectedModel: OtherInvestmentViewModel;
+    oneYearSummary: Array<OtherInvestmentBalaceHistoryModel>;
     formKey: number;
     openedForm: boolean;
     showDetail: boolean;
@@ -36,7 +38,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, oneYearSummary: [] };
     }
 
     public componentDidMount = () => this.init();
@@ -53,6 +55,9 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     private async loadData() {
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
         const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
+        const oneYearData: Array<OtherInvestmentBalaceHistoryModel> = summary.oneYearEarlierBalanceData;
+
         this.setState({ otherInvestments: viewModels });
     }
 
@@ -61,6 +66,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             <>
                 <p className="w-1/2 border border-vermilion">{p.name},-</p>
                 <p className="w-1/2 border border-vermilion">{p.openingBalance}</p>
+
             </>
         );
     }
