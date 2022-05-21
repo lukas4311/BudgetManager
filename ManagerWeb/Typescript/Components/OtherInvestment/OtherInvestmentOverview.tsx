@@ -53,12 +53,12 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     }
 
     private async loadData() {
-        const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
-        const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
         const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
         const oneYearData: Array<OtherInvestmentBalaceHistoryModel> = summary.oneYearEarlierBalanceData;
+        const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
+        const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
 
-        this.setState({ otherInvestments: viewModels });
+        this.setState({ otherInvestments: viewModels, oneYearSummary: oneYearData });
     }
 
     private renderTemplate = (p: OtherInvestmentViewModel): JSX.Element => {
@@ -66,7 +66,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             <>
                 <p className="w-1/2 border border-vermilion">{p.name},-</p>
                 <p className="w-1/2 border border-vermilion">{p.openingBalance}</p>
-
             </>
         );
     }
@@ -102,6 +101,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     }
 
     private mapDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
+        const investmentSummary = this.state.oneYearSummary.filter(f => f.otherInvestmentId == otherInvestment.id);
         let model: OtherInvestmentViewModel = new OtherInvestmentViewModel();
         model.currencySymbol = this.currencies.find(f => f.id == otherInvestment.currencySymbolId).ticker;
         model.currencySymbolId = otherInvestment.currencySymbolId;
@@ -112,6 +112,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         model.code = otherInvestment.code;
         model.openingBalance = otherInvestment.openingBalance;
         model.onSave = this.saveTrade;
+
         return model;
     }
 

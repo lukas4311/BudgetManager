@@ -78,11 +78,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("otherInvestment/balance")]
-        public ActionResult GetAllBalances()
-        {
-            // TODO: get all my other investments with costs and balances
-            return Ok();
-        }
+        public ActionResult GetAllBalances() => Ok(this.otherInvestmentBalaceHistoryService.Get(b => b.OtherInvestment.UserIdentityId == this.GetUserId()));
 
         [HttpPut("/balanceHistory")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)

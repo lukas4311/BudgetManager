@@ -7,6 +7,7 @@ export default class OtherInvestmentViewModel implements IBaseModel {
     code: string;
     name: string;
     openingBalance: number;
+    oneYearProgress: number;
     currencySymbolId: number;
     currencySymbol: string;
     currencies: CurrencyTickerSelectModel[];
