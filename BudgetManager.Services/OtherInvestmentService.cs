@@ -3,6 +3,7 @@ using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,19 +75,46 @@ namespace BudgetManager.Services
                 .OrderBy(a => a.Date)
                 .Last().Balance;
 
-            int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == id).Select(t => t.TagId).SingleOrDefault();
-            List<PaymentModel> payments = new List<PaymentModel>();
-
-            if (tagId != default)
-            {
-                payments = (await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId)).Where(p => years == null || p.Date > DateTime.Now.AddYears(-years.Value)).ToList();
-                endBalance -= payments.Sum(a => a.Amount);
-            }
+            endBalance -= await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
 
             if (startBalance == endBalance)
                 return 0;
 
             return (endBalance / startBalance) * 100 - 100;
+        }
+
+        public async Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate)
+        {
+            int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == otherinvestmentId).Select(t => t.TagId).SingleOrDefault();
+            decimal totalyInvested = default;
+
+            if (tagId != default)
+                totalyInvested = (await this.otherInvestmentTagService.GetPaymentsForTag(otherinvestmentId, tagId))
+                    .Where(p => p.Date > fromDate)
+                    .Sum(a => a.Amount);
+
+            return totalyInvested;
+        }
+
+        public IEnumerable<(int otherInvestmentId, decimal totalInvested)> GetTotalyInvested(DateTime fromDate)
+        {
+            var data = this.repository.FindAll()
+                .Include(t => t.OtherInvestmentTags)
+                .ThenInclude(t => t.Tag)
+                .ThenInclude(t => t.PaymentTags)
+                .ThenInclude(t => t.Payment)
+                .Select(d => new
+                {
+                    OtherInvestmentId = d.Id,
+                    TotalyInvested = d.OtherInvestmentTags.Select(t => t.Tag)
+                            .SelectMany(t => t.PaymentTags)
+                            .Select(p => p.Payment)
+                            .Where(p => p.Date > fromDate)
+                            .Sum(a => a.Amount)
+                });
+
+            foreach (var item in data)
+                yield return (item.OtherInvestmentId, item.OtherInvestmentId);
         }
 
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
