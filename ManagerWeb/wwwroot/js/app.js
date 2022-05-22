@@ -4010,6 +4010,7 @@ function OtherInvestmentBalaceHistoryModelFromJSONTyped(json, ignoreDiscriminato
         'id': !(0, runtime_1.exists)(json, 'id') ? undefined : json['id'],
         'date': !(0, runtime_1.exists)(json, 'date') ? undefined : (new Date(json['date'])),
         'balance': !(0, runtime_1.exists)(json, 'balance') ? undefined : json['balance'],
+        'invested': !(0, runtime_1.exists)(json, 'invested') ? undefined : json['invested'],
         'otherInvestmentId': !(0, runtime_1.exists)(json, 'otherInvestmentId') ? undefined : json['otherInvestmentId'],
     };
 }
@@ -4025,6 +4026,7 @@ function OtherInvestmentBalaceHistoryModelToJSON(value) {
         'id': value.id,
         'date': value.date === undefined ? undefined : (value.date.toISOString()),
         'balance': value.balance,
+        'invested': value.invested,
         'otherInvestmentId': value.otherInvestmentId,
     };
 }
@@ -5888,6 +5890,7 @@ const BaseList = (props) => {
         let iconsData = new IconsEnum_1.IconsData();
         return iconsData.bin;
     };
+    const showIcons = () => props.hideIconRowPart == undefined || props.hideIconRowPart == false;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: "flex w-full flex-col bg-battleshipGrey rounded-t-md" },
             React.createElement("div", { className: (props.addItemHandler != undefined ? "pt-4" : "") + " flex w-full" },
@@ -5897,10 +5900,10 @@ const BaseList = (props) => {
                         React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                         React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))) : React.createElement(React.Fragment, null)),
             React.createElement("div", { className: "text-center flex pr-5" },
-                React.createElement("div", { className: "w-9/12 flex flex-row text-sm" }, props.header)),
+                React.createElement("div", { className: (showIcons() ? "w-9/12 " : "w-full ") + "flex flex-row text-sm" }, props.header)),
             React.createElement("div", { className: "pr-5 " + props.dataAreaClass }, props.data.map(d => (React.createElement("div", { key: d.id, className: "paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer", onClick: (_) => props.itemClickHandler(d.id) },
-                React.createElement("div", { className: "w-9/12 flex flex-row" }, props.template(d)),
-                React.createElement("div", { className: "w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "") }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))))))),
+                React.createElement("div", { className: (showIcons() ? "w-9/12 " : "w-full ") + "flex flex-row" }, props.template(d)),
+                showIcons() ? (React.createElement("div", { className: "w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "") }, props.deleteItemHandler != undefined ? (React.createElement("div", { onClick: (e) => onDeleteClick(e, d.id), className: "w-6 m-auto" }, renderBinIcon())) : React.createElement(React.Fragment, null))) : React.createElement(React.Fragment, null)))))),
         React.createElement(core_1.Dialog, { open: open, onClose: handleClose, "aria-labelledby": "alert-dialog-title", "aria-describedby": "alert-dialog-description" },
             React.createElement(core_1.DialogTitle, { id: "alert-dialog-title" }, "Opravdu si p\u0159ejete smazat z\u00E1znam?"),
             React.createElement(core_1.DialogActions, null,
@@ -7498,6 +7501,7 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx");
 const OtherInvestmentDetail_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx"));
 const OtherInvestmentSummary_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentSummary */ "./Typescript/Components/OtherInvestment/OtherInvestmentSummary.tsx"));
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7520,16 +7524,24 @@ class OtherInvestmentOverview extends react_1.default.Component {
             yield this.loadData();
         });
         this.renderTemplate = (p) => {
+            const actualBalanceSummary = lodash_1.default.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" },
-                    p.name,
+                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion" }, p.name),
+                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion" },
+                    p.openingBalance,
                     ",-"),
-                react_1.default.createElement("p", { className: "w-1/2 border border-vermilion" }, p.openingBalance)));
+                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion rounded-r-full" },
+                    react_1.default.createElement("div", { className: "bg-gray-600 my-2 w-1/2 mx-auto rounded-md flex flex-row content-start" },
+                        react_1.default.createElement("p", { className: "w-1/2 font-md text-white text-right" },
+                            actualBalanceSummary.balance,
+                            " "),
+                        react_1.default.createElement("p", { className: "w-1/2 font-lg text-2xl ml-2 text-white text-left" }, p.currencySymbol)))));
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Investment name"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Opening balance")));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Opening balance"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Actual balance")));
         };
         this.addInvesment = () => {
             let model = new OtherInvestmentViewModel_1.default();
@@ -7582,15 +7594,15 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.handleClose = () => {
             this.setState({ openedForm: false, selectedModel: undefined });
         };
-        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, oneYearSummary: [] };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, actualSummary: [] };
     }
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {
+            const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
+            const actualSummary = summary.actualBalanceData;
             const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
             const viewModels = data.map(d => this.mapDataModelToViewModel(d));
-            const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
-            const oneYearData = summary.oneYearEarlierBalanceData;
-            this.setState({ otherInvestments: viewModels });
+            this.setState({ otherInvestments: viewModels, actualSummary });
         });
     }
     render() {
@@ -7601,7 +7613,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "flex flex-row" },
                     react_1.default.createElement("div", { className: "w-2/5" },
                         react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
-                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true }))),
+                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
                     react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", null,
                     react_1.default.createElement(OtherInvestmentSummary_1.default, null))),
@@ -7625,15 +7637,34 @@ exports.default = OtherInvestmentOverview;
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class OtherInvestmentSummaryState {
+}
 class OtherInvestmentSummary extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.initData = () => __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    componentDidMount() {
+        this.initData();
+    }
     render() {
         return (react_1.default.createElement("div", null,
-            react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment overview")));
+            react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment summary")));
     }
 }
 exports.default = OtherInvestmentSummary;

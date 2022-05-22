@@ -26,7 +26,7 @@ const theme = createMuiTheme({
 class OtherInvestmentOverviewState {
     otherInvestments: OtherInvestmentViewModel[];
     selectedModel: OtherInvestmentViewModel;
-    oneYearSummary: Array<OtherInvestmentBalaceHistoryModel>;
+    actualSummary: Array<OtherInvestmentBalaceHistoryModel>;
     formKey: number;
     openedForm: boolean;
     showDetail: boolean;
@@ -38,7 +38,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, oneYearSummary: [] };
+        this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, actualSummary: [] };
     }
 
     public componentDidMount = () => this.init();
@@ -54,18 +54,26 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     private async loadData() {
         const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
-        const oneYearData: Array<OtherInvestmentBalaceHistoryModel> = summary.oneYearEarlierBalanceData;
+        const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
         const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
 
-        this.setState({ otherInvestments: viewModels, oneYearSummary: oneYearData });
+        this.setState({ otherInvestments: viewModels, actualSummary });
     }
 
     private renderTemplate = (p: OtherInvestmentViewModel): JSX.Element => {
+        const actualBalanceSummary = _.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
+
         return (
             <>
-                <p className="w-1/2 border border-vermilion">{p.name},-</p>
-                <p className="w-1/2 border border-vermilion">{p.openingBalance}</p>
+                <p className="w-1/3 border border-vermilion">{p.name}</p>
+                <p className="w-1/3 border border-vermilion">{p.openingBalance},-</p>
+                <p className="w-1/3 border border-vermilion rounded-r-full">
+                    <div className="bg-gray-600 my-2 w-1/2 mx-auto rounded-md flex flex-row content-start">
+                        <p className="w-1/2 font-md text-white text-right">{actualBalanceSummary.balance} </p>
+                        <p className="w-1/2 font-lg text-2xl ml-2 text-white text-left">{p.currencySymbol}</p>
+                    </div>
+                </p>
             </>
         );
     }
@@ -75,6 +83,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             <>
                 <p className="mx-6 my-1 w-1/2">Investment name</p>
                 <p className="mx-6 my-1 w-1/2">Opening balance</p>
+                <p className="mx-6 my-1 w-1/2">Actual balance</p>
             </>
         );
     }
@@ -101,7 +110,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     }
 
     private mapDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
-        const investmentSummary = this.state.oneYearSummary.filter(f => f.otherInvestmentId == otherInvestment.id);
         let model: OtherInvestmentViewModel = new OtherInvestmentViewModel();
         model.currencySymbol = this.currencies.find(f => f.id == otherInvestment.currencySymbolId).ticker;
         model.currencySymbolId = otherInvestment.currencySymbolId;
@@ -151,7 +159,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         <div className="w-2/5">
                             <div className="m-5 h-64 overflow-y-scroll">
                                 <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
-                                    addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true}></BaseList>
+                                    addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                             </div>
                         </div>
                         <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} /> : <div />}</div>

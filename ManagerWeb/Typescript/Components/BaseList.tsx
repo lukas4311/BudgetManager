@@ -15,6 +15,7 @@ interface IBaseListProps<T extends IBaseModel> {
     deleteItemHandler?: (id: number) => void;
     dataAreaClass?: string;
     useRowBorderColor?: boolean;
+    hideIconRowPart?: boolean;
 }
 
 const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
@@ -40,6 +41,8 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
         return iconsData.bin;
     }
 
+    const showIcons = (): boolean => props.hideIconRowPart == undefined || props.hideIconRowPart == false;
+
     return (
         <React.Fragment>
             <div className="flex w-full flex-col bg-battleshipGrey rounded-t-md">
@@ -55,25 +58,27 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                     ) : <></>}
                 </div>
                 <div className="text-center flex pr-5">
-                    <div className="w-9/12 flex flex-row text-sm">
+                    <div className={(showIcons() ? "w-9/12 " : "w-full ") + "flex flex-row text-sm"}>
                         {props.header}
                     </div>
                 </div>
                 <div className={"pr-5 " + props.dataAreaClass}>
                     {props.data.map(d => (
                         <div key={d.id} className="paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
-                            <div className="w-9/12 flex flex-row">
+                            <div className={(showIcons() ? "w-9/12 " : "w-full ") + "flex flex-row"}>
                                 {props.template(d)}
                             </div>
-                            <div className={"w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "")}>
-                                {
-                                    props.deleteItemHandler != undefined ? (
-                                        <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
-                                            {renderBinIcon()}
-                                        </div>
-                                    ) : <></>
-                                }
-                            </div>
+                            {showIcons() ? (
+                                <div className={"w-3/12 flex items-center rounded-r-full " + (props.useRowBorderColor ? "border border-vermilion" : "")}>
+                                    {
+                                        props.deleteItemHandler != undefined ? (
+                                            <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
+                                                {renderBinIcon()}
+                                            </div>
+                                        ) : <></>
+                                    }
+                                </div>
+                            ) : <></>}
                         </div>
                     ))}
                 </div>
