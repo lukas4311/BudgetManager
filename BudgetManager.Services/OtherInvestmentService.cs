@@ -114,7 +114,7 @@ namespace BudgetManager.Services
                 });
 
             foreach (var item in data)
-                yield return (item.OtherInvestmentId, item.OtherInvestmentId);
+                yield return (item.OtherInvestmentId, item.TotalyInvested);
         }
 
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
@@ -122,18 +122,37 @@ namespace BudgetManager.Services
 
         public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary(int userId)
         {
-            var baseData = this.otherInvestmentBalaceHistoryRepository.FindByCondition(o => o.OtherInvestment.UserIdentityId == userId).ToList();
+            List<OtherInvestmentBalaceHistory> baseData = this.otherInvestmentBalaceHistoryRepository
+                .FindByCondition(o => o.OtherInvestment.UserIdentityId == userId).ToList();
+            IEnumerable<OtherInvestmentBalaceHistoryModel> lastData = this.FilterBaseBalaceData(baseData, DateTime.MinValue);
+            IEnumerable<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = this.FilterBaseBalaceData(baseData, DateTime.Now.AddYears(-1));
 
-            List<OtherInvestmentBalaceHistoryModel> lastData = baseData.GroupBy(a => a.OtherInvestmentId)
-                .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
-                .ToList();
+            return new OtherInvestmentBalanceSummaryModel(lastData, oneYearEarlierData);
+        }
 
-            List<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = baseData.Where(o => o.Date < DateTime.Now.AddYears(-1))
+        private IEnumerable<OtherInvestmentBalaceHistoryModel> FilterBaseBalaceData(List<OtherInvestmentBalaceHistory> baseData, DateTime balancesFrom)
+        {
+            IEnumerable<(int otherInvestmentId, decimal totalInvested)> totalyInvested = this.GetTotalyInvested(balancesFrom);
+            IEnumerable<OtherInvestmentBalaceHistoryModel> filteredData = baseData.Where(o => (balancesFrom == DateTime.MinValue) || o.Date <= balancesFrom)
                 .GroupBy(a => a.OtherInvestmentId)
                 .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
                 .ToList();
 
-            return new OtherInvestmentBalanceSummaryModel(lastData, oneYearEarlierData);
+            filteredData = filteredData.GroupJoin(
+                    totalyInvested,
+                    investmentData => investmentData.OtherInvestmentId,
+                    totalyInvested => totalyInvested.otherInvestmentId,
+                    (investmentData, totalyInvested) => new { investmentData, totalyInvested }
+                )
+                .SelectMany(
+                    x => x.totalyInvested.DefaultIfEmpty(),
+                    (groupedData, totalyInvested) => {
+                        groupedData.investmentData.Invested = totalyInvested.totalInvested;
+                        return groupedData.investmentData;
+                    }
+                );
+
+            return filteredData;
         }
 
         private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();

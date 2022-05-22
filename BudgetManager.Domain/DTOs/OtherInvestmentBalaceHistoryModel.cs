@@ -10,6 +10,8 @@ namespace BudgetManager.Domain.DTOs
 
         public int Balance { get; set; }
 
+        public decimal? Invested { get; set; }
+
         public int OtherInvestmentId { get; set; }
     }
 }
