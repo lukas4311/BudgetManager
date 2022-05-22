@@ -42,6 +42,12 @@ export class OtherInvestmentBalaceHistoryModel {
      * @type {number}
      * @memberof OtherInvestmentBalaceHistoryModel
      */
+    invested?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof OtherInvestmentBalaceHistoryModel
+     */
     otherInvestmentId?: number;
 }
 
@@ -58,6 +64,7 @@ export function OtherInvestmentBalaceHistoryModelFromJSONTyped(json: any, ignore
         'id': !exists(json, 'id') ? undefined : json['id'],
         'date': !exists(json, 'date') ? undefined : (new Date(json['date'])),
         'balance': !exists(json, 'balance') ? undefined : json['balance'],
+        'invested': !exists(json, 'invested') ? undefined : json['invested'],
         'otherInvestmentId': !exists(json, 'otherInvestmentId') ? undefined : json['otherInvestmentId'],
     };
 }
@@ -74,6 +81,7 @@ export function OtherInvestmentBalaceHistoryModelToJSON(value?: OtherInvestmentB
         'id': value.id,
         'date': value.date === undefined ? undefined : (value.date.toISOString()),
         'balance': value.balance,
+        'invested': value.invested,
         'otherInvestmentId': value.otherInvestmentId,
     };
 }
