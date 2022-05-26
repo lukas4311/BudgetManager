@@ -13,6 +13,7 @@ import OtherInvestmentDetail from "./OtherInvestmentDetail";
 import { OtherInvestmentModel } from "../../ApiClient/Main/models/OtherInvestmentModel";
 import OtherInvestmentSummary from "./OtherInvestmentSummary";
 import _ from "lodash";
+import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
 
 const theme = createMuiTheme({
     palette: {
@@ -35,6 +36,7 @@ class OtherInvestmentOverviewState {
 export default class OtherInvestmentOverview extends React.Component<RouteComponentProps, OtherInvestmentOverviewState>{
     private otherInvestmentApi: OtherInvestmentApi;
     private currencies: CurrencyTickerSelectModel[];
+    private progressCalculator: ProgressCalculatorService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -45,6 +47,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
+        this.progressCalculator = new ProgressCalculatorService();
         this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
@@ -63,17 +66,21 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     private renderTemplate = (p: OtherInvestmentViewModel): JSX.Element => {
         const actualBalanceSummary = _.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
+        const totalInvested = p.openingBalance + actualBalanceSummary?.invested;
+        const totalProgress = this.progressCalculator.calculareProgress(totalInvested, actualBalanceSummary.balance)
 
         return (
             <>
-                <p className="w-1/3 border border-vermilion">{p.name}</p>
-                <p className="w-1/3 border border-vermilion">{p.openingBalance},-</p>
-                <p className="w-1/3 border border-vermilion rounded-r-full">
-                    <div className="bg-gray-600 my-2 w-1/2 mx-auto rounded-md flex flex-row content-start">
-                        <p className="w-1/2 font-md text-white text-right">{actualBalanceSummary.balance} </p>
-                        <p className="w-1/2 font-lg text-2xl ml-2 text-white text-left">{p.currencySymbol}</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{p.name}</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{p.openingBalance},-</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{totalInvested},-</p>
+                <div className="w-1/3 h-full border border-vermilion flex items-center justify-center rounded-r-full">
+                    <div className="bg-gray-600 my-1 w-2/3 mx-auto rounded-md flex flex-row content-start items-center">
+                        <p className="w-1/2 text-white text-right">{actualBalanceSummary.balance} </p>
+                        <p className="w-1/2 font-semibold ml-1 text-white text-left">{p.currencySymbol}</p>
+                        <p className="w-1/2 font-extralight text-xs ml-1 text-white text-left">{totalProgress.toFixed(2)}%</p>
                     </div>
-                </p>
+                </div>
             </>
         );
     }
@@ -83,6 +90,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             <>
                 <p className="mx-6 my-1 w-1/2">Investment name</p>
                 <p className="mx-6 my-1 w-1/2">Opening balance</p>
+                <p className="mx-6 my-1 w-1/2">Total invested</p>
                 <p className="mx-6 my-1 w-1/2">Actual balance</p>
             </>
         );

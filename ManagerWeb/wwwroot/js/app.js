@@ -5635,9 +5635,9 @@ class Auth extends react_1.default.Component {
             this.setState({ password: pass });
         };
         this.render = () => {
-            return (react_1.default.createElement("div", { className: "m-auto text-center" },
+            return (react_1.default.createElement("div", { className: "w-2/5 m-auto text-center mt-6 px-4 py-12 bg-prussianBlue rounded-lg" },
                 react_1.default.createElement("h1", { className: "text-2xl" }, "P\u0159ihl\u00E1\u0161en\u00ED"),
-                react_1.default.createElement("div", { className: "flex flex-col w-2/5 m-auto mt-8" },
+                react_1.default.createElement("div", { className: "flex flex-col w-4/5 m-auto mt-8" },
                     react_1.default.createElement("div", { "asp-validation-summary": "All", className: "text-red-600 mb-4" }),
                     react_1.default.createElement("div", { className: "flex" },
                         react_1.default.createElement("div", { className: "w-1/2" },
@@ -7367,7 +7367,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                                 react_1.default.createElement("span", { className: "font-medium " + (this.state.progressOverall < 0 ? "text-red-700 " : "text-green-700") }, lodash_1.default.round(this.state.progressOverall, 2)),
                                 "%"),
                             react_1.default.createElement("p", null,
-                                "Y/Y progress ",
+                                "YOY progress ",
                                 react_1.default.createElement("span", { className: "font-medium " + (this.state.progressYY < 0 ? "text-red-700" : "text-green-700") }, lodash_1.default.round(this.state.progressYY, 2)),
                                 "%"))),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mt-6" },
@@ -7502,6 +7502,7 @@ const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "
 const OtherInvestmentDetail_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx"));
 const OtherInvestmentSummary_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentSummary */ "./Typescript/Components/OtherInvestment/OtherInvestmentSummary.tsx"));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7518,6 +7519,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.componentDidMount = () => this.init();
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.progressCalculator = new ProgressCalculatorService_1.ProgressCalculatorService();
             this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
             const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
@@ -7525,22 +7527,31 @@ class OtherInvestmentOverview extends react_1.default.Component {
         });
         this.renderTemplate = (p) => {
             const actualBalanceSummary = lodash_1.default.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
+            const totalInvested = p.openingBalance + (actualBalanceSummary === null || actualBalanceSummary === void 0 ? void 0 : actualBalanceSummary.invested);
+            const totalProgress = this.progressCalculator.calculareProgress(totalInvested, actualBalanceSummary.balance);
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion" }, p.name),
-                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion" },
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, p.name),
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" },
                     p.openingBalance,
                     ",-"),
-                react_1.default.createElement("p", { className: "w-1/3 border border-vermilion rounded-r-full" },
-                    react_1.default.createElement("div", { className: "bg-gray-600 my-2 w-1/2 mx-auto rounded-md flex flex-row content-start" },
-                        react_1.default.createElement("p", { className: "w-1/2 font-md text-white text-right" },
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" },
+                    totalInvested,
+                    ",-"),
+                react_1.default.createElement("div", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center rounded-r-full" },
+                    react_1.default.createElement("div", { className: "bg-gray-600 my-1 w-2/3 mx-auto rounded-md flex flex-row content-start items-center" },
+                        react_1.default.createElement("p", { className: "w-1/2 text-white text-right" },
                             actualBalanceSummary.balance,
                             " "),
-                        react_1.default.createElement("p", { className: "w-1/2 font-lg text-2xl ml-2 text-white text-left" }, p.currencySymbol)))));
+                        react_1.default.createElement("p", { className: "w-1/2 font-semibold ml-1 text-white text-left" }, p.currencySymbol),
+                        react_1.default.createElement("p", { className: "w-1/2 font-extralight text-xs ml-1 text-white text-left" },
+                            totalProgress.toFixed(2),
+                            "%")))));
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Investment name"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Opening balance"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Total invested"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Actual balance")));
         };
         this.addInvesment = () => {
@@ -8948,6 +8959,31 @@ class DataLoader {
     }
 }
 exports.default = DataLoader;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/ProgressCalculatorService.ts":
+/*!**********************************************************!*\
+  !*** ./Typescript/Services/ProgressCalculatorService.ts ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProgressCalculatorService = void 0;
+class ProgressCalculatorService {
+    calculareProgress(startValue, endValue) {
+        if (startValue == endValue)
+            return 0;
+        if (startValue == 0)
+            startValue = 1;
+        return (endValue / startValue) * 100 - 100;
+    }
+}
+exports.ProgressCalculatorService = ProgressCalculatorService;
 
 
 /***/ }),

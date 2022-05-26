@@ -50,9 +50,9 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
 
     render = () => {
         return (
-            <div className="m-auto text-center">
+            <div className="w-2/5 m-auto text-center mt-6 px-4 py-12 bg-prussianBlue rounded-lg">
                 <h1 className="text-2xl">Přihlášení</h1>
-                <div className="flex flex-col w-2/5 m-auto mt-8">
+                <div className="flex flex-col w-4/5 m-auto mt-8">
                     <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
                     <div className="flex">
                         <div className="w-1/2">
