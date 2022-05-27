@@ -65,20 +65,19 @@ namespace BudgetManager.Services
 
         public async Task<decimal> GetProgressForYears(int id, int? years = null)
         {
-            decimal startBalance = this.otherInvestmentBalaceHistoryRepository
-                .FindByCondition(o => o.OtherInvestmentId == id && (years == null || o.Date > DateTime.Now.AddYears(-years.Value)))
-                .OrderBy(a => a.Date)
-                .First().Balance;
-
+            decimal startBalance = this.repository.FindByCondition(o => o.Id == id).Single().OpeningBalance;
             decimal endBalance = this.otherInvestmentBalaceHistoryRepository
                 .FindByCondition(o => o.OtherInvestmentId == id)
                 .OrderBy(a => a.Date)
                 .Last().Balance;
 
-            endBalance -= await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
+            startBalance += await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
 
             if (startBalance == endBalance)
                 return 0;
+
+            if (startBalance == 0)
+                startBalance = 1;
 
             return (endBalance / startBalance) * 100 - 100;
         }
