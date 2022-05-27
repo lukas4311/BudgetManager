@@ -237,3 +237,5 @@ const ConfirmationForm = (props: ConfirmationFormProps) => {
 
     );
 }
+
+export { ConfirmationForm, ConfirmationResult }

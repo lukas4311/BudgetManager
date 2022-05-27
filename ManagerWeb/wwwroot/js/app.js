@@ -6420,6 +6420,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConfirmationResult = exports.ConfirmationForm = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
@@ -6572,6 +6573,7 @@ var ConfirmationResult;
     ConfirmationResult[ConfirmationResult["Ok"] = 0] = "Ok";
     ConfirmationResult[ConfirmationResult["Cancel"] = 1] = "Cancel";
 })(ConfirmationResult || (ConfirmationResult = {}));
+exports.ConfirmationResult = ConfirmationResult;
 class ConfirmationFormProps {
 }
 const ConfirmationForm = (props) => {
@@ -6583,6 +6585,7 @@ const ConfirmationForm = (props) => {
                     react_1.default.createElement(core_1.Button, { className: 'bg-vermilion', onClick: () => props.onConfirm(ConfirmationResult.Ok) }, "Ok"),
                     react_1.default.createElement(core_1.Button, { className: 'bg-gray-700 ml-auto', onClick: () => props.onConfirm(ConfirmationResult.Cancel) }, "Cancel"))))));
 };
+exports.ConfirmationForm = ConfirmationForm;
 
 
 /***/ }),
@@ -7223,6 +7226,7 @@ const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/Api
 const OtherInvestmentTagForm_1 = __webpack_require__(/*! ./OtherInvestmentTagForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentTagForm.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
+const Comodities_1 = __webpack_require__(/*! ../Comodities/Comodities */ "./Typescript/Components/Comodities/Comodities.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7345,10 +7349,20 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/12" }, p.name),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-3/12" }, (0, moment_1.default)(p.date).format('DD.MM.YYYY'))));
         };
+        this.deleteOtherInvestment = (res) => __awaiter(this, void 0, void 0, function* () {
+            if (res == Comodities_1.ConfirmationResult.Ok)
+                yield this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id });
+            this.setState({ confirmDialogIsOpen: false });
+            this.props.route.history.push("/other-investment");
+        });
+        this.showDialog = () => {
+            this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
+        };
         this.render = () => {
             var _a;
             return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                 react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
+                    react_1.default.createElement("div", { className: "w-8 binWithAnimation", onClick: this.showDialog }, new IconsEnum_1.IconsData().bin),
                     react_1.default.createElement("div", { className: "flex flex-row justify-center" },
                         react_1.default.createElement("h2", { className: "text-vermilion text-3xl font-bold" }, (_a = this.props.selectedInvestment) === null || _a === void 0 ? void 0 :
                             _a.code,
@@ -7385,11 +7399,12 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormTags, onClose: this.handleCloseTag, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Tag form"),
                     react_1.default.createElement(core_1.DialogContent, null,
-                        react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, Object.assign({}, this.state.tagViewModel))))));
+                        react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, Object.assign({}, this.state.tagViewModel)))),
+                react_1.default.createElement(Comodities_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteOtherInvestment(Comodities_1.ConfirmationResult.Cancel), onConfirm: this.deleteOtherInvestment, isOpen: this.state.confirmDialogIsOpen })));
         };
         this.state = {
-            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
-            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0
+            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined, confirmDialogIsOpen: false,
+            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0, confirmDialogKey: Date.now()
         };
     }
     loadData() {
@@ -7529,6 +7544,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
             const actualBalanceSummary = lodash_1.default.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
             const totalInvested = p.openingBalance + (actualBalanceSummary === null || actualBalanceSummary === void 0 ? void 0 : actualBalanceSummary.invested);
             const totalProgress = this.progressCalculator.calculareProgress(totalInvested, actualBalanceSummary.balance);
+            const bgColor = totalProgress >= 0 ? "bg-green-700" : "bg-red-700";
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, p.name),
                 react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" },
@@ -7538,7 +7554,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                     totalInvested,
                     ",-"),
                 react_1.default.createElement("div", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center rounded-r-full" },
-                    react_1.default.createElement("div", { className: "bg-gray-600 my-1 w-2/3 mx-auto rounded-md flex flex-row content-start items-center" },
+                    react_1.default.createElement("div", { className: bgColor + " my-1 px-1 mx-auto rounded-md flex flex-row content-start items-center" },
                         react_1.default.createElement("p", { className: "w-1/2 text-white text-right" },
                             actualBalanceSummary.balance,
                             " "),

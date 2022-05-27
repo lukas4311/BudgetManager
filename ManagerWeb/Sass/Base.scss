@@ -138,3 +138,10 @@
 .h-70vh{
     height: 70vh;
 }
+
+.binWithAnimation{
+    transition: .3s;
+    &:hover{
+        transform: rotate(15deg);
+    }
+}

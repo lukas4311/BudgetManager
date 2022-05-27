@@ -53,15 +53,16 @@ namespace BudgetManager.Services
             foreach (OtherInvestmentBalaceHistory historyRecord in relatedHistoryRecords)
                 this.otherInvestmentBalaceHistoryRepository.Delete(historyRecord);
 
+            OtherInvestmentTagModel otherInvestmentTagRelation = this.otherInvestmentTagService.Get(t => t.OtherInvestmentId == id).SingleOrDefault();
+
+            if (otherInvestmentTagRelation != null)
+                this.otherInvestmentTagService.Delete(otherInvestmentTagRelation.Id.Value);
+
             this.otherInvestmentBalaceHistoryRepository.Save();
         }
 
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)
-        {
-            return this.repository
-                   .FindByCondition(i => i.UserIdentityId == userId)
-                   .Select(i => this.mapper.Map<OtherInvestmentModel>(i));
-        }
+            => this.repository.FindByCondition(i => i.UserIdentityId == userId).Select(i => this.mapper.Map<OtherInvestmentModel>(i));
 
         public async Task<decimal> GetProgressForYears(int id, int? years = null)
         {
@@ -145,7 +146,8 @@ namespace BudgetManager.Services
                 )
                 .SelectMany(
                     x => x.totalyInvested.DefaultIfEmpty(),
-                    (groupedData, totalyInvested) => {
+                    (groupedData, totalyInvested) =>
+                    {
                         groupedData.investmentData.Invested = totalyInvested.totalInvested;
                         return groupedData.investmentData;
                     }

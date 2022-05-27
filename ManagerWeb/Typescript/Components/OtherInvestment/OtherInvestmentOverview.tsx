@@ -68,6 +68,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         const actualBalanceSummary = _.first(this.state.actualSummary.filter(f => f.otherInvestmentId == p.id));
         const totalInvested = p.openingBalance + actualBalanceSummary?.invested;
         const totalProgress = this.progressCalculator.calculareProgress(totalInvested, actualBalanceSummary.balance)
+        const bgColor: string = totalProgress >= 0 ? "bg-green-700" : "bg-red-700";
 
         return (
             <>
@@ -75,7 +76,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                 <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{p.openingBalance},-</p>
                 <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{totalInvested},-</p>
                 <div className="w-1/3 h-full border border-vermilion flex items-center justify-center rounded-r-full">
-                    <div className="bg-gray-600 my-1 w-2/3 mx-auto rounded-md flex flex-row content-start items-center">
+                    <div className={bgColor + " my-1 px-1 mx-auto rounded-md flex flex-row content-start items-center"}>
                         <p className="w-1/2 text-white text-right">{actualBalanceSummary.balance} </p>
                         <p className="w-1/2 font-semibold ml-1 text-white text-left">{p.currencySymbol}</p>
                         <p className="w-1/2 font-extralight text-xs ml-1 text-white text-left">{totalProgress.toFixed(2)}%</p>

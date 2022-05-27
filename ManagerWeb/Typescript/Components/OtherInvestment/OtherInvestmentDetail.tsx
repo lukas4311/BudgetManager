@@ -19,6 +19,7 @@ import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineSvgProps } from "@nivo/line";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
+import { ConfirmationForm, ConfirmationResult } from "../Comodities/Comodities";
 
 const theme = createMuiTheme({
     palette: {
@@ -53,6 +54,8 @@ class OtherInvestmentDetailState {
     linkedTagCode: string;
     linkedPayments: PaymentModel[];
     totalInvested: number;
+    confirmDialogKey: number;
+    confirmDialogIsOpen: boolean;
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
@@ -64,8 +67,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     constructor(props: OtherInvestmentDetailProps) {
         super(props);
         this.state = {
-            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined,
-            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0
+            balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined, confirmDialogIsOpen: false,
+            openedFormTags: false, tagViewModel: undefined, linkedTagCode: "", linkedPayments: [], totalInvested: 0, confirmDialogKey: Date.now()
         };
     }
 
@@ -227,10 +230,23 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         );
     }
 
+    private deleteOtherInvestment = async (res: ConfirmationResult) => {
+        if (res == ConfirmationResult.Ok)
+            await this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id })
+
+        this.setState({ confirmDialogIsOpen: false });
+        this.props.route.history.push("/other-investment")
+    }
+
+    private showDialog = () => {
+        this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() })
+    }
+
     render = () => {
         return (
             <ThemeProvider theme={theme}>
                 <div className="bg-lightGray rounded-xl m-6 p-4">
+                    <div className="w-8 binWithAnimation" onClick={this.showDialog}>{new IconsData().bin}</div>
                     <div className="flex flex-row justify-center">
                         <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
                         <p className="self-end ml-4 mr-2">currently invested</p>
@@ -273,6 +289,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                         <OtherInvestmentTagForm {...this.state.tagViewModel} />
                     </DialogContent>
                 </Dialog>
+                <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteOtherInvestment(ConfirmationResult.Cancel)} onConfirm={this.deleteOtherInvestment} isOpen={this.state.confirmDialogIsOpen} />
             </ThemeProvider>
         );
     }
