@@ -17,9 +17,9 @@ import { TagFormViewModel } from "../../Model/TagFormViewModel";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
-import { LineSvgProps } from "@nivo/line";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
-import { ConfirmationForm, ConfirmationResult } from "../Comodities/Comodities";
+import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
+
 
 const theme = createMuiTheme({
     palette: {
