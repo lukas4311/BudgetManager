@@ -47,7 +47,6 @@ namespace BudgetManager.Services
 
         public override void Delete(int id)
         {
-            base.Delete(id);
             IEnumerable<OtherInvestmentBalaceHistory> relatedHistoryRecords = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).ToList();
 
             foreach (OtherInvestmentBalaceHistory historyRecord in relatedHistoryRecords)
@@ -58,7 +57,7 @@ namespace BudgetManager.Services
             if (otherInvestmentTagRelation != null)
                 this.otherInvestmentTagService.Delete(otherInvestmentTagRelation.Id.Value);
 
-            this.otherInvestmentBalaceHistoryRepository.Save();
+            base.Delete(id);
         }
 
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)

@@ -158,6 +158,11 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         this.setState({ openedForm: false, selectedModel: undefined });
     }
 
+    private refresh = () => {
+        this.setState({ openedForm: false, selectedModel: undefined, showDetail: false });
+        this.loadData();
+    }
+
     public render() {
         return (
             <ThemeProvider theme={theme}>
@@ -171,7 +176,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                             </div>
                         </div>
-                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} /> : <div />}</div>
+                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                     </div>
                     <div>
                         <OtherInvestmentSummary></OtherInvestmentSummary>

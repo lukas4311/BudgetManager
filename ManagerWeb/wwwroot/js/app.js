@@ -5478,6 +5478,8 @@ class JSONApiResponse {
     }
     value() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.raw.status == 204)
+                return undefined;
             return this.transformer(yield this.raw.json());
         });
     }
@@ -7376,7 +7378,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
             if (res == ConfirmationForm_1.ConfirmationResult.Ok)
                 yield this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id });
             this.setState({ confirmDialogIsOpen: false });
-            this.props.route.history.push("/other-investment");
+            this.props.refreshRecords();
         });
         this.showDialog = () => {
             this.setState({ confirmDialogIsOpen: true, confirmDialogKey: Date.now() });
@@ -7644,6 +7646,10 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.handleClose = () => {
             this.setState({ openedForm: false, selectedModel: undefined });
         };
+        this.refresh = () => {
+            this.setState({ openedForm: false, selectedModel: undefined, showDetail: false });
+            this.loadData();
+        };
         this.state = { otherInvestments: [], formKey: Date.now(), selectedModel: undefined, openedForm: false, showDetail: false, actualSummary: [] };
     }
     loadData() {
@@ -7664,7 +7670,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "w-2/5" },
                         react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
-                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props }) : react_1.default.createElement("div", null))),
+                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", null,
                     react_1.default.createElement(OtherInvestmentSummary_1.default, null))),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },

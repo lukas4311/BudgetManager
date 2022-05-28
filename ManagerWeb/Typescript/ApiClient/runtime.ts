@@ -293,6 +293,9 @@ export class JSONApiResponse<T> {
     constructor(public raw: Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
 
     async value(): Promise<T> {
+        if(this.raw.status == 204)
+            return undefined;
+
         return this.transformer(await this.raw.json());
     }
 }

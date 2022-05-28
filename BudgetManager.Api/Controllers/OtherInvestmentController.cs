@@ -129,7 +129,7 @@ namespace BudgetManager.Api.Controllers
             if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            return this.otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault();
+            return Ok(this.otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault());
         }
 
         [HttpPost("{id}/tagedPayments/{tagId}")]

@@ -33,6 +33,7 @@ const theme = createMuiTheme({
 class OtherInvestmentDetailProps {
     selectedInvestment: OtherInvestmentViewModel;
     route: RouteComponentProps;
+    refreshRecords: () => void;
 }
 
 export class OtherInvestmentBalaceHistoryViewModel implements IBaseModel {
@@ -235,7 +236,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             await this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id })
 
         this.setState({ confirmDialogIsOpen: false });
-        this.props.route.history.push("/other-investment")
+        this.props.refreshRecords();
     }
 
     private showDialog = () => {

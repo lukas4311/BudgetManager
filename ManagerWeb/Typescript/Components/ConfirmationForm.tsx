@@ -29,8 +29,6 @@ const ConfirmationForm = (props: ConfirmationFormProps) => {
                 </div>
             </DialogContent>
         </Dialog>
-
-
     );
 }
 
