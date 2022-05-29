@@ -154,9 +154,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         this.loadData();
     }
 
-    private handleClose = () => {
-        this.setState({ openedForm: false, selectedModel: undefined });
-    }
+    private handleClose = () => this.setState({ openedForm: false, selectedModel: undefined });
 
     private refresh = () => {
         this.setState({ openedForm: false, selectedModel: undefined, showDetail: false });

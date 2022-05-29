@@ -1,7 +1,5 @@
-﻿/* npx tailwindcss build Tailwind/tailwindBase.css -o wwwroot/css/tailwind.css */
+﻿/*npx tailwindcss -i Tailwind/tailwindBase.css -o wwwroot/css/tailwind.css --watch*/
 
-@import "tailwindcss/base";
-
-@import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

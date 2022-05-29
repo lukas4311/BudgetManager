@@ -1,4 +1,5 @@
 module.exports = {
+    content: ["./Typescript/**/*.jsx", "./Typescript/**/*.tsx", "./Typescript/**/*.ts", "./Typescript/**/*.js"],
     important: true,
     theme: {
         extend: {

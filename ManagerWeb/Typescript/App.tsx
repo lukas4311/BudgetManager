@@ -18,7 +18,7 @@ import OtherInvestmentOverview from "./Components/OtherInvestment/OtherInvestmen
 export default function App() {
     return (
         <Router>
-            <div className="bg-mainDarkBlue bg-black h-full flex flex-col overflow-x-hidden">
+            <div className="bg-mainDarkBlue h-full flex flex-col overflow-x-hidden">
                 <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
                     <div>
                         {/* {new IconsData().logo} */}
