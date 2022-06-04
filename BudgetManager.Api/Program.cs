@@ -1,7 +1,6 @@
 using Autofac.Extensions.DependencyInjection;
 using BudgetManager.WebCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;

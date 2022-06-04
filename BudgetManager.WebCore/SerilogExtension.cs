@@ -22,8 +22,7 @@ namespace BudgetManager.WebCore
 
             ConfigureLogging(environment, configuration);
 
-            host = host.UseSerilog();
-            return host;
+            return host.UseSerilog();
         }
 
         private static void ConfigureLogging(string environment, IConfigurationRoot configuration)
