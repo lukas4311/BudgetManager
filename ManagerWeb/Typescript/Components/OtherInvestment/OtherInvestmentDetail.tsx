@@ -97,7 +97,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             totalInvested = _.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
         }
 
-        const viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        viewModels = _.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
         const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
         const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
         this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
@@ -137,7 +138,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         let balances = this.state.balances;
 
         if (balances?.length != 0) {
-            let balanceData: LineChartData[] = balances.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.balance }))
+            const sortedArray = _.orderBy(balances, [(obj) => new Date(obj.date)], ['asc'])
+            let balanceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.balance }))
             balanceChartData = [{ id: 'Balance', data: balanceData }];
         }
 

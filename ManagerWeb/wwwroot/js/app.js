@@ -7300,7 +7300,8 @@ class OtherInvestmentDetail extends react_1.default.Component {
             let balanceChartData = [{ id: 'Balance', data: [] }];
             let balances = this.state.balances;
             if ((balances === null || balances === void 0 ? void 0 : balances.length) != 0) {
-                let balanceData = balances.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.balance }));
+                const sortedArray = lodash_1.default.orderBy(balances, [(obj) => new Date(obj.date)], ['asc']);
+                let balanceData = sortedArray.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.balance }));
                 balanceChartData = [{ id: 'Balance', data: balanceData }];
             }
             return balanceChartData;
@@ -7447,7 +7448,8 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
                 totalInvested = lodash_1.default.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
             }
-            const viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            let viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            viewModels = lodash_1.default.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
             const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
             const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
             this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
@@ -7670,7 +7672,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
                     react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", null,
-                    react_1.default.createElement(OtherInvestmentSummary_1.default, null))),
+                    react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props)))),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
                 react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                 react_1.default.createElement(core_1.DialogContent, null,
@@ -7704,21 +7706,56 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 class OtherInvestmentSummaryState {
 }
 class OtherInvestmentSummary extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.initData = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
+            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            yield this.loadData();
         });
+        this.state = { balanceSum: 0, investedSum: 0 };
     }
     componentDidMount() {
         this.initData();
     }
+    loadData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
+            const actualSummary = summary.actualBalanceData;
+            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
+            console.log(data);
+            console.log(actualSummary);
+            let investedSum = 0;
+            let balanceSum = 0;
+            data.forEach(o => {
+                var _a, _b;
+                const summary = lodash_1.default.first(actualSummary.filter(s => s.otherInvestmentId == o.id));
+                const actualBalance = (_a = summary === null || summary === void 0 ? void 0 : summary.balance) !== null && _a !== void 0 ? _a : 0;
+                const invested = (_b = summary === null || summary === void 0 ? void 0 : summary.invested) !== null && _b !== void 0 ? _b : 0;
+                investedSum += o.openingBalance + invested;
+                balanceSum += actualBalance;
+            });
+            this.setState({ investedSum: investedSum, balanceSum: balanceSum });
+        });
+    }
     render() {
         return (react_1.default.createElement("div", null,
-            react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment summary")));
+            react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment summary"),
+            react_1.default.createElement("p", null,
+                "Balance: ",
+                this.state.balanceSum),
+            react_1.default.createElement("p", null,
+                "Invested: ",
+                this.state.investedSum)));
     }
 }
 exports.default = OtherInvestmentSummary;

@@ -52,7 +52,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         await this.loadData();
-
     }
 
     private async loadData() {
@@ -177,7 +176,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                     </div>
                     <div>
-                        <OtherInvestmentSummary></OtherInvestmentSummary>
+                        <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
                     </div>
                 </div>
                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
