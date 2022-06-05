@@ -7707,9 +7707,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
+const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 class OtherInvestmentSummaryState {
 }
 class OtherInvestmentSummary extends react_1.default.Component {
@@ -7722,7 +7725,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             yield this.loadData();
         });
-        this.state = { balanceSum: 0, investedSum: 0 };
+        this.state = { balanceSum: 0, investedSum: 0, chartData: [] };
     }
     componentDidMount() {
         this.initData();
@@ -7732,19 +7735,34 @@ class OtherInvestmentSummary extends react_1.default.Component {
             const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
             const actualSummary = summary.actualBalanceData;
             const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
-            console.log(data);
-            console.log(actualSummary);
+            let investedChartData = [];
+            let balanceChartData = [];
+            let allPayments = [];
+            let allBalances = [];
+            for (const o of data) {
+                const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: o.id });
+                let linkedPayments = [];
+                if (linkedTag != undefined) {
+                    linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: o.id, tagId: linkedTag.tagId });
+                    allPayments.push(...linkedPayments);
+                }
+                const otherInvestmentBalance = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: o.id });
+                allBalances.push(...otherInvestmentBalance);
+            }
+            ;
             let investedSum = 0;
             let balanceSum = 0;
-            data.forEach(o => {
-                var _a, _b;
-                const summary = lodash_1.default.first(actualSummary.filter(s => s.otherInvestmentId == o.id));
-                const actualBalance = (_a = summary === null || summary === void 0 ? void 0 : summary.balance) !== null && _a !== void 0 ? _a : 0;
-                const invested = (_b = summary === null || summary === void 0 ? void 0 : summary.invested) !== null && _b !== void 0 ? _b : 0;
-                investedSum += o.openingBalance + invested;
-                balanceSum += actualBalance;
-            });
-            this.setState({ investedSum: investedSum, balanceSum: balanceSum });
+            const sortedBalance = lodash_1.default.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
+            balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.balance }));
+            const sortedInvested = lodash_1.default.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
+            let prevInvested = 0;
+            for (const s of sortedInvested) {
+                s.amount += prevInvested;
+                prevInvested = s.amount;
+            }
+            investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.amount }));
+            let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
+            this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
         });
     }
     render() {
@@ -7755,7 +7773,9 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 this.state.balanceSum),
             react_1.default.createElement("p", null,
                 "Invested: ",
-                this.state.investedSum)));
+                this.state.investedSum),
+            react_1.default.createElement("div", { className: "h-64" },
+                react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentChartSetting() }))));
     }
 }
 exports.default = OtherInvestmentSummary;

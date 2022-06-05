@@ -1,14 +1,19 @@
 import _ from "lodash";
+import moment from "moment";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel } from "../../ApiClient/Main";
-import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
+import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel, PaymentModel } from "../../ApiClient/Main";
+import { LineChartData } from "../../Model/LineChartData";
+import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { LineChart } from "../Charts/LineChart";
+import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 
 class OtherInvestmentSummaryState {
     balanceSum: number;
     investedSum: number;
+    chartData: LineChartDataSets[];
 }
 
 export default class OtherInvestmentSummary extends React.Component<RouteComponentProps, OtherInvestmentSummaryState>{
@@ -17,7 +22,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { balanceSum: 0, investedSum: 0 };
+        this.state = { balanceSum: 0, investedSum: 0, chartData: [] };
     }
 
     componentDidMount(): void {
@@ -36,20 +41,41 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
         const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
-        console.log(data);
-        console.log(actualSummary);
+
+        let investedChartData: LineChartData[] = []
+        let balanceChartData: LineChartData[] = []
+        let allPayments: PaymentModel[] = [];
+        let allBalances: OtherInvestmentBalaceHistoryModel[] = [];
+
+        for (const o of data) {
+            const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: o.id });
+            let linkedPayments: PaymentModel[] = [];
+
+            if (linkedTag != undefined) {
+                linkedPayments = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: o.id, tagId: linkedTag.tagId });
+                allPayments.push(...linkedPayments);
+            }
+
+            const otherInvestmentBalance: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: o.id });
+            allBalances.push(...otherInvestmentBalance);
+        };
+
         let investedSum = 0;
         let balanceSum = 0;
-        data.forEach(o => {
-            const summary = _.first(actualSummary.filter(s => s.otherInvestmentId == o.id));
-            const actualBalance = summary?.balance ?? 0;
-            const invested = summary?.invested ?? 0;
 
-            investedSum += o.openingBalance + invested;
-            balanceSum += actualBalance;
-        });
+        const sortedBalance = _.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
+        balanceChartData = sortedBalance.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.balance }));
 
-        this.setState({ investedSum: investedSum, balanceSum: balanceSum });
+        const sortedInvested = _.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
+        let prevInvested = 0;
+        for (const s of sortedInvested) {
+            s.amount += prevInvested;
+            prevInvested = s.amount;
+        }
+        investedChartData = sortedInvested.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.amount }));
+
+        let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
+        this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
     }
 
     public render() {
@@ -58,6 +84,10 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <h3 className="text-xl p-4 text-center">Other investment summary</h3>
                 <p>Balance: {this.state.balanceSum}</p>
                 <p>Invested: {this.state.investedSum}</p>
+
+                <div className="h-64">
+                    <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
+                </div>
             </div>
         );
     }
