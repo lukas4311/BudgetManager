@@ -39,7 +39,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     private async loadData() {
         const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
-        const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
+        // const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
 
         let investedChartData: LineChartData[] = []
@@ -64,15 +64,24 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         let balanceSum = 0;
 
         const sortedBalance = _.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
-        balanceChartData = sortedBalance.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.balance }));
-
         const sortedInvested = _.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
         let prevInvested = 0;
+        balanceSum = _.last(sortedBalance)?.balance ?? 0;
+        investedSum = _.last(sortedInvested)?.amount ?? 0;
+
         for (const s of sortedInvested) {
             s.amount += prevInvested;
             prevInvested = s.amount;
         }
-        investedChartData = sortedInvested.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.amount }));
+
+        let prevBalance = 0;
+        for (const b of sortedBalance) {
+            b.balance += prevBalance;
+            prevBalance = b.balance;
+        }
+
+        investedChartData = sortedInvested.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
+        balanceChartData = sortedBalance.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
 
         let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
         this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });

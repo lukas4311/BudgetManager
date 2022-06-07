@@ -6220,6 +6220,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.es.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const data = [
+    {
+        id: "hours",
+        data: [
+            { x: '2020-03-02 12:00', y: 200000 },
+            { x: '2021-10-04 12:00', y: 220800 },
+            { x: '2021-12-14 12:00', y: 221800 }
+        ]
+    }
+];
 function LineChart({ dataSets, chartProps }) {
     let allYData = [];
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
@@ -6227,7 +6237,39 @@ function LineChart({ dataSets, chartProps }) {
         chartProps = { data: dataSets };
     else
         chartProps.data = dataSets;
-    return (react_1.default.createElement(line_1.ResponsiveLine, Object.assign({ margin: { top: 50, right: 50, bottom: 50, left: 100 } }, chartProps)));
+    return (react_1.default.createElement(line_1.ResponsiveLine, Object.assign({ margin: { top: 50, right: 50, bottom: 50, left: 100 } }, chartProps, { xScale: {
+            type: "time",
+            format: "%Y-%m-%d %H:%M",
+            precision: "day"
+        }, xFormat: "time:%Y-%m-%d", axisBottom: {
+            format: "%Y-%m-%d",
+            // legend: "day hour",
+            // legendOffset: -80,
+            // legendPosition: "middle"
+        } }))
+    // <ResponsiveLine
+    //   data={chartProps.data}
+    //   margin={{ top: 50, right: 60, bottom: 50, left: 120 }}
+    //   yScale={{ type: "point" }}
+    //   xScale={{
+    //     type: "time",
+    //     format: "%Y-%m-%d %H:%M",
+    //     precision: "day"
+    //   }}
+    //   xFormat="time:%Y-%m-%d"
+    //   axisBottom={{
+    //     format: "%Y-%m-%d",
+    //     // legend: "day hour",
+    //     // legendOffset: -80,
+    //     // legendPosition: "middle"
+    //   }}
+    //   pointSize={10}
+    //   pointColor="white"
+    //   pointBorderWidth={2}
+    //   pointBorderColor={{ from: "serieColor" }}
+    //   useMesh={true}
+    // />
+    );
 }
 exports.LineChart = LineChart;
 
@@ -7613,7 +7655,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
             this.showDetail(selectedModel);
         };
         this.showDetail = (selectedModel) => {
-            this.setState({ showDetail: true, selectedModel: selectedModel });
+            this.setState({ showDetail: true, selectedModel: selectedModel, formKey: Date.now() });
         };
         this.mapDataModelToViewModel = (otherInvestment) => {
             let model = new OtherInvestmentViewModel_1.default();
@@ -7670,7 +7712,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "w-2/5" },
                         react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
-                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
+                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", null,
                     react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props)))),
             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
@@ -7731,9 +7773,10 @@ class OtherInvestmentSummary extends react_1.default.Component {
         this.initData();
     }
     loadData() {
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
-            const actualSummary = summary.actualBalanceData;
+            // const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
             const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
             let investedChartData = [];
             let balanceChartData = [];
@@ -7753,14 +7796,21 @@ class OtherInvestmentSummary extends react_1.default.Component {
             let investedSum = 0;
             let balanceSum = 0;
             const sortedBalance = lodash_1.default.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
-            balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.balance }));
             const sortedInvested = lodash_1.default.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
             let prevInvested = 0;
+            balanceSum = (_b = (_a = lodash_1.default.last(sortedBalance)) === null || _a === void 0 ? void 0 : _a.balance) !== null && _b !== void 0 ? _b : 0;
+            investedSum = (_d = (_c = lodash_1.default.last(sortedInvested)) === null || _c === void 0 ? void 0 : _c.amount) !== null && _d !== void 0 ? _d : 0;
             for (const s of sortedInvested) {
                 s.amount += prevInvested;
                 prevInvested = s.amount;
             }
-            investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD'), y: b.amount }));
+            let prevBalance = 0;
+            for (const b of sortedBalance) {
+                b.balance += prevBalance;
+                prevBalance = b.balance;
+            }
+            investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
+            balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
             let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
             this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
         });

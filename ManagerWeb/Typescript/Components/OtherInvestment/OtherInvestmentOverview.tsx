@@ -114,7 +114,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     }
 
     private showDetail = (selectedModel: OtherInvestmentViewModel) => {
-        this.setState({ showDetail: true, selectedModel: selectedModel });
+        this.setState({ showDetail: true, selectedModel: selectedModel, formKey: Date.now() });
     }
 
     private mapDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
@@ -173,7 +173,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                             </div>
                         </div>
-                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
+                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                     </div>
                     <div>
                         <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
