@@ -74,10 +74,18 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
             prevInvested = s.amount;
         }
 
-        let prevBalance = 0;
-        for (const b of sortedBalance) {
-            b.balance += prevBalance;
-            prevBalance = b.balance;
+        if (sortedBalance.length != 0) {
+            let lastBalaceOfType: Dictionary<number> = {};
+            lastBalaceOfType[sortedBalance[0].otherInvestmentId] = sortedBalance[0].balance;
+
+            for (let i = 1; i < sortedBalance.length; i++) {
+                let balanceItem = sortedBalance[i];
+                const lastBalance = lastBalaceOfType[balanceItem.otherInvestmentId] ?? 0;
+                lastBalaceOfType[balanceItem.otherInvestmentId] = balanceItem.balance;
+                const prevBalance = sortedBalance[i - 1];
+                balanceItem.balance = prevBalance.balance + (balanceItem.balance - lastBalance);
+                console.log(balanceItem);
+            }
         }
 
         investedChartData = sortedInvested.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
@@ -95,10 +103,15 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <p>Invested: {this.state.investedSum}</p>
 
                 <div className="h-64">
-                    <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
+                    <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting()}></LineChart>
                 </div>
             </div>
         );
     }
 }
+
+interface Dictionary<T> {
+    [key: string]: T;
+}
+
 

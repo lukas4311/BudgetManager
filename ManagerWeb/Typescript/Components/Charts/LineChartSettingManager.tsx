@@ -88,4 +88,33 @@ export class LineChartSettingManager {
             }
         }
     }
+
+    static getOtherInvestmentSummarySetting(): LineSvgProps {
+        let setting = this.getOtherInvestmentChartSetting();
+
+        setting.xScale = {
+            type: "time",
+            format: "%Y-%m-%d %H:%M",
+            precision: "day"
+        };
+
+        setting.xFormat = "time:%Y-%m-%d"
+        setting.axisBottom = {
+            format: "%Y-%m-%d",
+        }
+
+        setting.theme = {
+            axis: {
+                ticks: {
+                    line: { stroke: "white" },
+                    text: { fill: "white" }
+                }
+            },
+            grid: {
+                line: { stroke: "white" }
+            }
+        }
+
+        return setting;
+    }
 }

@@ -6220,16 +6220,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.es.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const data = [
-    {
-        id: "hours",
-        data: [
-            { x: '2020-03-02 12:00', y: 200000 },
-            { x: '2021-10-04 12:00', y: 220800 },
-            { x: '2021-12-14 12:00', y: 221800 }
-        ]
-    }
-];
 function LineChart({ dataSets, chartProps }) {
     let allYData = [];
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
@@ -6237,39 +6227,7 @@ function LineChart({ dataSets, chartProps }) {
         chartProps = { data: dataSets };
     else
         chartProps.data = dataSets;
-    return (react_1.default.createElement(line_1.ResponsiveLine, Object.assign({ margin: { top: 50, right: 50, bottom: 50, left: 100 } }, chartProps, { xScale: {
-            type: "time",
-            format: "%Y-%m-%d %H:%M",
-            precision: "day"
-        }, xFormat: "time:%Y-%m-%d", axisBottom: {
-            format: "%Y-%m-%d",
-            // legend: "day hour",
-            // legendOffset: -80,
-            // legendPosition: "middle"
-        } }))
-    // <ResponsiveLine
-    //   data={chartProps.data}
-    //   margin={{ top: 50, right: 60, bottom: 50, left: 120 }}
-    //   yScale={{ type: "point" }}
-    //   xScale={{
-    //     type: "time",
-    //     format: "%Y-%m-%d %H:%M",
-    //     precision: "day"
-    //   }}
-    //   xFormat="time:%Y-%m-%d"
-    //   axisBottom={{
-    //     format: "%Y-%m-%d",
-    //     // legend: "day hour",
-    //     // legendOffset: -80,
-    //     // legendPosition: "middle"
-    //   }}
-    //   pointSize={10}
-    //   pointColor="white"
-    //   pointBorderWidth={2}
-    //   pointBorderColor={{ from: "serieColor" }}
-    //   useMesh={true}
-    // />
-    );
+    return (react_1.default.createElement(line_1.ResponsiveLine, Object.assign({ margin: { top: 50, right: 50, bottom: 50, left: 100 } }, chartProps)));
 }
 exports.LineChart = LineChart;
 
@@ -6373,6 +6331,30 @@ class LineChartSettingManager {
                     React.createElement("span", { style: { margin: '0px 8px' } }, point.data.yFormatted))))));
             }
         };
+    }
+    static getOtherInvestmentSummarySetting() {
+        let setting = this.getOtherInvestmentChartSetting();
+        setting.xScale = {
+            type: "time",
+            format: "%Y-%m-%d %H:%M",
+            precision: "day"
+        };
+        setting.xFormat = "time:%Y-%m-%d";
+        setting.axisBottom = {
+            format: "%Y-%m-%d",
+        };
+        setting.theme = {
+            axis: {
+                ticks: {
+                    line: { stroke: "white" },
+                    text: { fill: "white" }
+                }
+            },
+            grid: {
+                line: { stroke: "white" }
+            }
+        };
+        return setting;
     }
 }
 exports.LineChartSettingManager = LineChartSettingManager;
@@ -7773,7 +7755,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
         this.initData();
     }
     loadData() {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
             // const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
@@ -7804,10 +7786,17 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 s.amount += prevInvested;
                 prevInvested = s.amount;
             }
-            let prevBalance = 0;
-            for (const b of sortedBalance) {
-                b.balance += prevBalance;
-                prevBalance = b.balance;
+            if (sortedBalance.length != 0) {
+                let lastBalaceOfType = {};
+                lastBalaceOfType[sortedBalance[0].otherInvestmentId] = sortedBalance[0].balance;
+                for (let i = 1; i < sortedBalance.length; i++) {
+                    let balanceItem = sortedBalance[i];
+                    const lastBalance = (_e = lastBalaceOfType[balanceItem.otherInvestmentId]) !== null && _e !== void 0 ? _e : 0;
+                    lastBalaceOfType[balanceItem.otherInvestmentId] = balanceItem.balance;
+                    const prevBalance = sortedBalance[i - 1];
+                    balanceItem.balance = prevBalance.balance + (balanceItem.balance - lastBalance);
+                    console.log(balanceItem);
+                }
             }
             investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
             balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
@@ -7825,7 +7814,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 "Invested: ",
                 this.state.investedSum),
             react_1.default.createElement("div", { className: "h-64" },
-                react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentChartSetting() }))));
+                react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting() }))));
     }
 }
 exports.default = OtherInvestmentSummary;
