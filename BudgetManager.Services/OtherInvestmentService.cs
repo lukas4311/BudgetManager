@@ -71,6 +71,7 @@ namespace BudgetManager.Services
                 .OrderBy(a => a.Date)
                 .Last().Balance;
 
+            // TODO: opravit vypocet je potreba zjistit totaly invested do te doby to je jako start balance a pak jeste zjisti totaly invested od te toby do konce a o to ocistit endbalance
             startBalance += await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
 
             if (startBalance == endBalance)
@@ -82,7 +83,7 @@ namespace BudgetManager.Services
             return (endBalance / startBalance) * 100 - 100;
         }
 
-        public async Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate)
+        public async Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate, DateTime toDate)
         {
             int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == otherinvestmentId).Select(t => t.TagId).SingleOrDefault();
             decimal totalyInvested = default;
@@ -90,6 +91,7 @@ namespace BudgetManager.Services
             if (tagId != default)
                 totalyInvested = (await this.otherInvestmentTagService.GetPaymentsForTag(otherinvestmentId, tagId))
                     .Where(p => p.Date > fromDate)
+                    .Where(p => p.Date < toDate)
                     .Sum(a => a.Amount);
 
             return totalyInvested;
