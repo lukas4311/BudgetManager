@@ -71,8 +71,8 @@ namespace BudgetManager.Services
                 .OrderBy(a => a.Date)
                 .Last().Balance;
 
-            // TODO: opravit vypocet je potreba zjistit totaly invested do te doby to je jako start balance a pak jeste zjisti totaly invested od te toby do konce a o to ocistit endbalance
-            startBalance += await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
+            startBalance += await GetTotalyInvested(id, DateTime.MinValue, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value));
+            endBalance -= await GetTotalyInvested(id, years is null ? DateTime.MinValue : DateTime.Now.AddYears(-years.Value), DateTime.Now);
 
             if (startBalance == endBalance)
                 return 0;

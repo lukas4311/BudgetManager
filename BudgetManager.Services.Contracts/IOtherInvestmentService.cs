@@ -16,7 +16,7 @@ namespace BudgetManager.Services.Contracts
 
         OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary(int userId);
 
-        Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate);
+        Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate, DateTime toDate);
 
         IEnumerable<(int otherInvestmentId, decimal totalInvested)> GetTotalyInvested(DateTime fromDate);
     }
