@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { forEach } from "lodash";
 import moment from "moment";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -95,15 +95,31 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
     }
 
+    private getMinLineChartData = () => {
+        let minVal: number = Number.MAX_VALUE;
+        let maxVal: number = Number.MAX_VALUE;
+
+        const data = this.state.chartData.forEach(e => {
+            minVal = Math.min(_.minBy(e.data, m => m.y).y, minVal);
+            maxVal = Math.min(_.maxBy(e.data, m => m.y).y, maxVal);
+        })
+
+        return { min: minVal, max: maxVal };
+    }
+
     public render() {
+        const bounds = this.getMinLineChartData();
+
         return (
             <div>
                 <h3 className="text-xl p-4 text-center">Other investment summary</h3>
                 <p>Balance: {this.state.balanceSum}</p>
                 <p>Invested: {this.state.investedSum}</p>
 
-                <div className="h-64">
-                    <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting()}></LineChart>
+                <div className="flex flex-row">
+                    <div className="w-1/2 h-64">
+                        <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
+                    </div>
                 </div>
             </div>
         );

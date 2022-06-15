@@ -89,15 +89,21 @@ export class LineChartSettingManager {
         }
     }
 
-    static getOtherInvestmentSummarySetting(): LineSvgProps {
-        let setting = this.getOtherInvestmentChartSetting();
+    static getOtherInvestmentSummarySetting(min: number, max: number): LineSvgProps {
+        let yScaleSetting: ScaleSpec = { type: 'linear' };
+        const calculatedMin = min - (min * (10 / 100));
+        yScaleSetting["min"] = calculatedMin;
+        yScaleSetting["max"] = max + (max * (10 / 100));
 
+        let setting = this.getOtherInvestmentChartSetting();
+        setting.areaBaselineValue = calculatedMin;
+        setting.enableGridX = setting.enableGridY = true;
         setting.xScale = {
             type: "time",
             format: "%Y-%m-%d %H:%M",
             precision: "day"
         };
-
+        setting.yScale = yScaleSetting;
         setting.xFormat = "time:%Y-%m-%d"
         setting.axisBottom = {
             format: "%Y-%m-%d",

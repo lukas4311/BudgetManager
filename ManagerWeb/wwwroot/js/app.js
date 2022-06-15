@@ -6332,13 +6332,20 @@ class LineChartSettingManager {
             }
         };
     }
-    static getOtherInvestmentSummarySetting() {
+    static getOtherInvestmentSummarySetting(min, max) {
+        let yScaleSetting = { type: 'linear' };
+        const calculatedMin = min - (min * (10 / 100));
+        yScaleSetting["min"] = calculatedMin;
+        yScaleSetting["max"] = max + (max * (10 / 100));
         let setting = this.getOtherInvestmentChartSetting();
+        setting.areaBaselineValue = calculatedMin;
+        setting.enableGridX = setting.enableGridY = true;
         setting.xScale = {
             type: "time",
             format: "%Y-%m-%d %H:%M",
             precision: "day"
         };
+        setting.yScale = yScaleSetting;
         setting.xFormat = "time:%Y-%m-%d";
         setting.axisBottom = {
             format: "%Y-%m-%d",
@@ -7749,6 +7756,15 @@ class OtherInvestmentSummary extends react_1.default.Component {
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             yield this.loadData();
         });
+        this.getMinLineChartData = () => {
+            let minVal = Number.MAX_VALUE;
+            let maxVal = Number.MAX_VALUE;
+            const data = this.state.chartData.forEach(e => {
+                minVal = Math.min(lodash_1.default.minBy(e.data, m => m.y).y, minVal);
+                maxVal = Math.min(lodash_1.default.maxBy(e.data, m => m.y).y, maxVal);
+            });
+            return { min: minVal, max: maxVal };
+        };
         this.state = { balanceSum: 0, investedSum: 0, chartData: [] };
     }
     componentDidMount() {
@@ -7805,6 +7821,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
         });
     }
     render() {
+        const bounds = this.getMinLineChartData();
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment summary"),
             react_1.default.createElement("p", null,
@@ -7813,8 +7830,9 @@ class OtherInvestmentSummary extends react_1.default.Component {
             react_1.default.createElement("p", null,
                 "Invested: ",
                 this.state.investedSum),
-            react_1.default.createElement("div", { className: "h-64" },
-                react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting() }))));
+            react_1.default.createElement("div", { className: "flex flex-row" },
+                react_1.default.createElement("div", { className: "w-1/2 h-64" },
+                    react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })))));
     }
 }
 exports.default = OtherInvestmentSummary;
