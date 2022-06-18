@@ -7774,7 +7774,6 @@ class OtherInvestmentSummary extends react_1.default.Component {
         var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
-            // const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
             const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
             let investedChartData = [];
             let balanceChartData = [];

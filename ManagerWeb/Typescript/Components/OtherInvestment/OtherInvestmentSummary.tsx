@@ -39,7 +39,6 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     private async loadData() {
         const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
-        // const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
         const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
 
         let investedChartData: LineChartData[] = []
