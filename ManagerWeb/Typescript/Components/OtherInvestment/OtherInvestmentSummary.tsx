@@ -6,6 +6,7 @@ import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, Oth
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { Ranking } from "../../Utils/Ranking";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
@@ -116,8 +117,11 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <p>Invested: {this.state.investedSum}</p>
 
                 <div className="flex flex-row">
-                    <div className="w-1/2 h-64">
+                    <div className="w-1/3 h-64">
                         <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
+                    </div>
+                    <div className="w-1/3 p-4">
+                        <Ranking {...[{ name: "Portu", investmentProgress: 10 }]}></Ranking>
                     </div>
                 </div>
             </div>

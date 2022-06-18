@@ -7742,6 +7742,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const Ranking_1 = __webpack_require__(/*! ../../Utils/Ranking */ "./Typescript/Utils/Ranking.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 class OtherInvestmentSummaryState {
@@ -7830,8 +7831,10 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 "Invested: ",
                 this.state.investedSum),
             react_1.default.createElement("div", { className: "flex flex-row" },
-                react_1.default.createElement("div", { className: "w-1/2 h-64" },
-                    react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })))));
+                react_1.default.createElement("div", { className: "w-1/3 h-64" },
+                    react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })),
+                react_1.default.createElement("div", { className: "w-1/3 p-4" },
+                    react_1.default.createElement(Ranking_1.Ranking, Object.assign({}, [{ name: "Portu", investmentProgress: 10 }]))))));
     }
 }
 exports.default = OtherInvestmentSummary;
@@ -9401,6 +9404,52 @@ const PrivateRoute = (props) => {
     }
 };
 exports.default = PrivateRoute;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/Ranking.tsx":
+/*!**************************************!*\
+  !*** ./Typescript/Utils/Ranking.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Ranking = void 0;
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class Investments {
+}
+const Ranking = (props) => {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    const investments = lodash_1.default.orderBy(props, i => i.investmentProgress, "desc");
+    return (react_1.default.createElement("div", { className: "flex flex-row h-full justify-around items-end text-xl" },
+        react_1.default.createElement("div", { className: "w-1/5 bg-vermilion h-4/6 flex flex-col justify-around" },
+            react_1.default.createElement("p", { className: "text-xl" }, "2."),
+            react_1.default.createElement("p", { className: "text-2xl" }, (_a = investments[1]) === null || _a === void 0 ? void 0 : _a.name),
+            react_1.default.createElement("p", { className: "text-3xl" },
+                ((_c = (_b = investments[1]) === null || _b === void 0 ? void 0 : _b.investmentProgress) !== null && _c !== void 0 ? _c : " -"),
+                "%")),
+        react_1.default.createElement("div", { className: "w-1/5 bg-vermilion h-full flex flex-col justify-around" },
+            react_1.default.createElement("p", { className: "text-xl" }, "1."),
+            react_1.default.createElement("p", { className: "text-2xl" }, (_d = investments[0]) === null || _d === void 0 ? void 0 : _d.name),
+            react_1.default.createElement("p", { className: "text-3xl" },
+                ((_f = (_e = investments[0]) === null || _e === void 0 ? void 0 : _e.investmentProgress) !== null && _f !== void 0 ? _f : " -"),
+                "%")),
+        react_1.default.createElement("div", { className: "w-1/5 bg-vermilion h-2/6 flex flex-col justify-around" },
+            react_1.default.createElement("p", { className: "text-xl" }, "3."),
+            react_1.default.createElement("p", { className: "text-2xl" }, (_g = investments[3]) === null || _g === void 0 ? void 0 : _g.name),
+            react_1.default.createElement("p", { className: "text-3xl" },
+                ((_j = (_h = investments[3]) === null || _h === void 0 ? void 0 : _h.investmentProgress) !== null && _j !== void 0 ? _j : " -"),
+                "%"))));
+};
+exports.Ranking = Ranking;
 
 
 /***/ }),
