@@ -108,7 +108,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
             const progress = this.progressCalculator.calculareProgress(totalInvested, a.balance);
             rankingData.push({ name: investmentData.name, investmentProgress: progress });
         });
-
+        rankingData = _.take(_.orderBy(rankingData, o => o.investmentProgress, 'desc'), 3);
         this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData});
     }
 

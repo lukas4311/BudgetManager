@@ -7829,6 +7829,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 const progress = this.progressCalculator.calculareProgress(totalInvested, a.balance);
                 rankingData.push({ name: investmentData.name, investmentProgress: progress });
             });
+            rankingData = lodash_1.default.take(lodash_1.default.orderBy(rankingData, o => o.investmentProgress, 'desc'), 3);
             this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData });
         });
     }
@@ -9448,7 +9449,7 @@ const Ranking = (props) => {
         const height = (props.data.length - (rankingNum - 1)) / props.data.length;
         const heightPercent = height * 100 + "%";
         if (height > 0)
-            return (react_1.default.createElement("div", { className: "w-1/5 bg-vermilion flex flex-col justify-around", style: { height: heightPercent } },
+            return (react_1.default.createElement("div", { className: "w-1/5 bg-vermilion flex flex-col justify-around rounded-xl", style: { height: heightPercent } },
                 react_1.default.createElement("p", { className: "text-xl" },
                     rankingNum,
                     "."),
