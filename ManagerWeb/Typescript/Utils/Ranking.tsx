@@ -21,7 +21,7 @@ const Ranking = (props: RankingProps) => {
                 <div className="w-1/5 bg-vermilion flex flex-col justify-around" style={{ height: heightPercent }}>
                     <p className="text-xl">{rankingNum}.</p>
                     <p className="text-2xl">{investments[rankingNum - 1]?.name}</p>
-                    <p className="text-3xl">{(investments[rankingNum - 1]?.investmentProgress ?? " -")}%</p>
+                    <p className="text-3xl">{(investments[rankingNum - 1]?.investmentProgress.toFixed(2) ?? " -")}%</p>
                 </div>
             )
 
@@ -37,4 +37,4 @@ const Ranking = (props: RankingProps) => {
     );
 }
 
-export { Ranking };
+export { Ranking, Investments};

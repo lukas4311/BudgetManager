@@ -5,8 +5,9 @@ import { RouteComponentProps } from "react-router-dom";
 import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel, PaymentModel } from "../../ApiClient/Main";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
+import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
-import { Ranking } from "../../Utils/Ranking";
+import { Investments, Ranking } from "../../Utils/Ranking";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
@@ -15,15 +16,17 @@ class OtherInvestmentSummaryState {
     balanceSum: number;
     investedSum: number;
     chartData: LineChartDataSets[];
+    rankingData: Investments[];
 }
 
 export default class OtherInvestmentSummary extends React.Component<RouteComponentProps, OtherInvestmentSummaryState>{
     private otherInvestmentApi: OtherInvestmentApi;
     private currencies: CurrencyTickerSelectModel[];
+    private progressCalculator: ProgressCalculatorService;
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { balanceSum: 0, investedSum: 0, chartData: [] };
+        this.state = { balanceSum: 0, investedSum: 0, chartData: [], rankingData: [] };
     }
 
     componentDidMount(): void {
@@ -35,6 +38,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        this.progressCalculator = new ProgressCalculatorService();
         await this.loadData();
     }
 
@@ -92,14 +96,27 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         balanceChartData = sortedBalance.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
 
         let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
-        this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
+
+        let rankingData: Investments[] = [];
+        summary.actualBalanceData.forEach(a => {
+            let totalInvested = a?.invested;
+            const investmentData = _.first(data.filter(o => o.id == a.otherInvestmentId));
+
+            if (investmentData != null && investmentData != undefined)
+                totalInvested += investmentData.openingBalance ?? 0;
+
+            const progress = this.progressCalculator.calculareProgress(totalInvested, a.balance);
+            rankingData.push({ name: investmentData.name, investmentProgress: progress });
+        });
+
+        this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData});
     }
 
     private getMinLineChartData = () => {
         let minVal: number = Number.MAX_VALUE;
         let maxVal: number = Number.MAX_VALUE;
 
-        const data = this.state.chartData.forEach(e => {
+        this.state.chartData.forEach(e => {
             minVal = Math.min(_.minBy(e.data, m => m.y).y, minVal);
             maxVal = Math.min(_.maxBy(e.data, m => m.y).y, maxVal);
         })
@@ -121,7 +138,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                         <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                     </div>
                     <div className="w-1/3 p-4">
-                        <Ranking data={...[{ name: "Portu", investmentProgress: 10 }]}></Ranking>
+                        <Ranking data={this.state.rankingData}></Ranking>
                     </div>
                 </div>
             </div>

@@ -7741,6 +7741,7 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Ranking_1 = __webpack_require__(/*! ../../Utils/Ranking */ "./Typescript/Utils/Ranking.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
@@ -7755,18 +7756,19 @@ class OtherInvestmentSummary extends react_1.default.Component {
             this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
             const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            this.progressCalculator = new ProgressCalculatorService_1.ProgressCalculatorService();
             yield this.loadData();
         });
         this.getMinLineChartData = () => {
             let minVal = Number.MAX_VALUE;
             let maxVal = Number.MAX_VALUE;
-            const data = this.state.chartData.forEach(e => {
+            this.state.chartData.forEach(e => {
                 minVal = Math.min(lodash_1.default.minBy(e.data, m => m.y).y, minVal);
                 maxVal = Math.min(lodash_1.default.maxBy(e.data, m => m.y).y, maxVal);
             });
             return { min: minVal, max: maxVal };
         };
-        this.state = { balanceSum: 0, investedSum: 0, chartData: [] };
+        this.state = { balanceSum: 0, investedSum: 0, chartData: [], rankingData: [] };
     }
     componentDidMount() {
         this.initData();
@@ -7817,7 +7819,17 @@ class OtherInvestmentSummary extends react_1.default.Component {
             investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
             balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
             let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
-            this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData });
+            let rankingData = [];
+            summary.actualBalanceData.forEach(a => {
+                var _a;
+                let totalInvested = a === null || a === void 0 ? void 0 : a.invested;
+                const investmentData = lodash_1.default.first(data.filter(o => o.id == a.otherInvestmentId));
+                if (investmentData != null && investmentData != undefined)
+                    totalInvested += (_a = investmentData.openingBalance) !== null && _a !== void 0 ? _a : 0;
+                const progress = this.progressCalculator.calculareProgress(totalInvested, a.balance);
+                rankingData.push({ name: investmentData.name, investmentProgress: progress });
+            });
+            this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData });
         });
     }
     render() {
@@ -7834,7 +7846,7 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "w-1/3 h-64" },
                     react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })),
                 react_1.default.createElement("div", { className: "w-1/3 p-4" },
-                    react_1.default.createElement(Ranking_1.Ranking, { data: [{ name: "Portu", investmentProgress: 10 }] })))));
+                    react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })))));
     }
 }
 exports.default = OtherInvestmentSummary;
@@ -9421,11 +9433,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Ranking = void 0;
+exports.Investments = exports.Ranking = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 class Investments {
 }
+exports.Investments = Investments;
 class RankingProps {
 }
 const Ranking = (props) => {
@@ -9441,7 +9454,7 @@ const Ranking = (props) => {
                     "."),
                 react_1.default.createElement("p", { className: "text-2xl" }, (_a = investments[rankingNum - 1]) === null || _a === void 0 ? void 0 : _a.name),
                 react_1.default.createElement("p", { className: "text-3xl" },
-                    ((_c = (_b = investments[rankingNum - 1]) === null || _b === void 0 ? void 0 : _b.investmentProgress) !== null && _c !== void 0 ? _c : " -"),
+                    ((_c = (_b = investments[rankingNum - 1]) === null || _b === void 0 ? void 0 : _b.investmentProgress.toFixed(2)) !== null && _c !== void 0 ? _c : " -"),
                     "%")));
         return react_1.default.createElement(react_1.default.Fragment, null);
     };
