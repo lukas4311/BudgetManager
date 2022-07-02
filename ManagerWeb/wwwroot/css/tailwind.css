@@ -699,6 +699,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 24rem !important;
 }
 
+.h-4\/6 {
+  height: 66.666667% !important;
+}
+
+.h-2\/6 {
+  height: 33.333333% !important;
+}
+
 .h-4 {
   height: 1rem !important;
 }
@@ -717,34 +725,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-80 {
   height: 20rem !important;
-}
-
-.h-full {
-  height: 100% !important;
-}
-
-.h-4\/6 {
-  height: 66.666667% !important;
-}
-
-.h-2\/6 {
-  height: 33.333333% !important;
-}
-
-.h-full {
-  height: 100% !important;
-}
-
-.h-4\/6 {
-  height: 66.666667% !important;
-}
-
-.h-2\/6 {
-  height: 33.333333% !important;
-}
-
-.max-h-full {
-  max-height: 100% !important;
 }
 
 .min-h-full {
@@ -855,10 +835,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 8.333333% !important;
 }
 
-.w-1\/5 {
-  width: 20% !important;
-}
-
 .shrink {
   flex-shrink: 1 !important;
 }
@@ -931,10 +907,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-around {
   justify-content: space-around !important;
-}
-
-.justify-items-center {
-  justify-items: center !important;
 }
 
 .gap-4 {
@@ -1098,10 +1070,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-white {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
-}
-
-.bg-mainDarkBlue {
-  background-color: #1b2737ff !important;
 }
 
 .fill-current {

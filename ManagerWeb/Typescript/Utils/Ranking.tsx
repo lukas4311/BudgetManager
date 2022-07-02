@@ -6,27 +6,33 @@ class Investments {
     investmentProgress: number;
 }
 
-const Ranking = (props: Investments[]) => {
+class RankingProps {
+    data: Investments[]
+}
 
-    const investments = _.orderBy(props, i => i.investmentProgress, "desc");
+const Ranking = (props: RankingProps) => {
+    const investments = _.orderBy(props.data, i => i.investmentProgress, "desc");
+    const renderRankingColumn = (rankingNum: number) => {
+        const height = (props.data.length - (rankingNum - 1)) / props.data.length;
+        const heightPercent = height * 100 + "%";
+
+        if (height > 0)
+            return (
+                <div className="w-1/5 bg-vermilion flex flex-col justify-around" style={{ height: heightPercent }}>
+                    <p className="text-xl">{rankingNum}.</p>
+                    <p className="text-2xl">{investments[rankingNum - 1]?.name}</p>
+                    <p className="text-3xl">{(investments[rankingNum - 1]?.investmentProgress ?? " -")}%</p>
+                </div>
+            )
+
+        return <></>;
+    }
 
     return (
         <div className="flex flex-row h-full justify-around items-end text-xl">
-            <div className="w-1/5 bg-vermilion h-4/6 flex flex-col justify-around">
-                <p className="text-xl">2.</p>
-                <p className="text-2xl">{investments[1]?.name}</p>                
-                <p className="text-3xl">{(investments[1]?.investmentProgress ?? " -")}%</p>
-            </div>
-            <div className="w-1/5 bg-vermilion h-full flex flex-col justify-around">
-                <p className="text-xl">1.</p>
-                <p className="text-2xl">{investments[0]?.name}</p>                
-                <p className="text-3xl">{(investments[0]?.investmentProgress ?? " -")}%</p>
-            </div>
-            <div className="w-1/5 bg-vermilion h-2/6 flex flex-col justify-around">
-                <p className="text-xl">3.</p>
-                <p className="text-2xl">{investments[3]?.name}</p>                
-                <p className="text-3xl">{(investments[3]?.investmentProgress ?? " -")}%</p>
-            </div>
+            {renderRankingColumn(2)}
+            {renderRankingColumn(1)}
+            {renderRankingColumn(3)}
         </div>
     );
 }

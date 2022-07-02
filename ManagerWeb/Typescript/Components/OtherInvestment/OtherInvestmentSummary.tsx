@@ -121,7 +121,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                         <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                     </div>
                     <div className="w-1/3 p-4">
-                        <Ranking {...[{ name: "Portu", investmentProgress: 10 }]}></Ranking>
+                        <Ranking data={...[{ name: "Portu", investmentProgress: 10 }]}></Ranking>
                     </div>
                 </div>
             </div>
