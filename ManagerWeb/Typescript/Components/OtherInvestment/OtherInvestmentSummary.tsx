@@ -10,6 +10,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Investments, Ranking } from "../../Utils/Ranking";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
+import { PieChart, PieChartData } from "../Charts/PieChart";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 
 class OtherInvestmentSummaryState {
@@ -17,6 +18,7 @@ class OtherInvestmentSummaryState {
     investedSum: number;
     chartData: LineChartDataSets[];
     rankingData: Investments[];
+    pieData: PieChartData[]
 }
 
 export default class OtherInvestmentSummary extends React.Component<RouteComponentProps, OtherInvestmentSummaryState>{
@@ -26,7 +28,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { balanceSum: 0, investedSum: 0, chartData: [], rankingData: [] };
+        this.state = { balanceSum: 0, investedSum: 0, chartData: [], rankingData: [], pieData: [] };
     }
 
     componentDidMount(): void {
@@ -98,6 +100,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
 
         let rankingData: Investments[] = [];
+        let pieData: PieChartData[] = [];
         summary.actualBalanceData.forEach(a => {
             let totalInvested = a?.invested;
             const investmentData = _.first(data.filter(o => o.id == a.otherInvestmentId));
@@ -107,9 +110,10 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
             const progress = this.progressCalculator.calculareProgress(totalInvested, a.balance);
             rankingData.push({ name: investmentData.name, investmentProgress: progress });
+            pieData.push({ id: investmentData.code, label: "", value: a?.balance });
         });
         rankingData = _.take(_.orderBy(rankingData, o => o.investmentProgress, 'desc'), 3);
-        this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData});
+        this.setState({ investedSum: investedSum, balanceSum: balanceSum, chartData, rankingData, pieData });
     }
 
     private getMinLineChartData = () => {
@@ -133,12 +137,15 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <p>Balance: {this.state.balanceSum}</p>
                 <p>Invested: {this.state.investedSum}</p>
 
-                <div className="flex flex-row">
-                    <div className="w-1/3 h-64">
+                <div className="flex flex-row h-80">
+                    <div className="w-1/3 p-4">
                         <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                     </div>
                     <div className="w-1/3 p-4">
                         <Ranking data={this.state.rankingData}></Ranking>
+                    </div>
+                    <div className="w-1/3 p-4">
+                        <PieChart data={this.state.pieData}></PieChart>
                     </div>
                 </div>
             </div>
