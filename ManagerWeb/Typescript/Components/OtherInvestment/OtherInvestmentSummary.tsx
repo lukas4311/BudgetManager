@@ -132,8 +132,8 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         const profit = (this.state.balanceSum - this.state.investedSum) ?? 0;
         let profitPct = 0;
 
-        if (this.state.balanceSum != 0 && this.state.investedSum != 0)
-            profitPct = this.state.investedSum / this.state.balanceSum;
+        if (this.state.balanceSum != 0 && profit != 0)
+            profitPct = (profit / this.state.investedSum) * 100;
 
         const profitColor = profit < 0 ? "text-red-800" : "text-green-800";
 

@@ -7840,8 +7840,8 @@ class OtherInvestmentSummary extends react_1.default.Component {
         const bounds = this.getMinLineChartData();
         const profit = (_a = (this.state.balanceSum - this.state.investedSum)) !== null && _a !== void 0 ? _a : 0;
         let profitPct = 0;
-        if (this.state.balanceSum != 0 && this.state.investedSum != 0)
-            profitPct = this.state.investedSum / this.state.balanceSum;
+        if (this.state.balanceSum != 0 && profit != 0)
+            profitPct = (profit / this.state.investedSum) * 100;
         const profitColor = profit < 0 ? "text-red-800" : "text-green-800";
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h3", { className: "text-2xl p-4 text-center" }, "Other investment summary"),
