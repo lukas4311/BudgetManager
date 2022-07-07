@@ -90,7 +90,6 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 lastBalaceOfType[balanceItem.otherInvestmentId] = balanceItem.balance;
                 const prevBalance = sortedBalance[i - 1];
                 balanceItem.balance = prevBalance.balance + (balanceItem.balance - lastBalance);
-                console.log(balanceItem);
             }
         }
 
@@ -133,18 +132,20 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
         return (
             <div>
-                <h3 className="text-xl p-4 text-center">Other investment summary</h3>
-                <p>Balance: {this.state.balanceSum}</p>
-                <p>Invested: {this.state.investedSum}</p>
+                <h3 className="text-2xl p-4 text-center">Other investment summary</h3>
+                <div className="flex flex-row justify-around w-1/3 m-auto my-10">
+                    <p className="text-xl">Balance: {this.state.balanceSum}</p>
+                    <p className="text-xl">Invested: {this.state.investedSum}</p>
+                </div>
 
                 <div className="flex flex-row h-80">
-                    <div className="w-1/3 p-4">
+                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
                         <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                     </div>
-                    <div className="w-1/3 p-4">
+                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
                         <Ranking data={this.state.rankingData}></Ranking>
                     </div>
-                    <div className="w-1/3 p-4">
+                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
                         <PieChart data={this.state.pieData}></PieChart>
                     </div>
                 </div>

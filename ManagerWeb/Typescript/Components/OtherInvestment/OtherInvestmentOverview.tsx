@@ -163,7 +163,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     public render() {
         return (
             <ThemeProvider theme={theme}>
-                <h2 className="text-xl p-4 text-center">Other investments</h2>
+                <h2 className="text-3xl p-4 text-center">Other investments</h2>
                 <div className="text-center mt-4 bg-prussianBlue rounded-lg">
                     <h2 className="text-2xl"></h2>
                     <div className="flex flex-row">

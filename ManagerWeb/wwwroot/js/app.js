@@ -7694,7 +7694,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-            react_1.default.createElement("h2", { className: "text-xl p-4 text-center" }, "Other investments"),
+            react_1.default.createElement("h2", { className: "text-3xl p-4 text-center" }, "Other investments"),
             react_1.default.createElement("div", { className: "text-center mt-4 bg-prussianBlue rounded-lg" },
                 react_1.default.createElement("h2", { className: "text-2xl" }),
                 react_1.default.createElement("div", { className: "flex flex-row" },
@@ -7814,7 +7814,6 @@ class OtherInvestmentSummary extends react_1.default.Component {
                     lastBalaceOfType[balanceItem.otherInvestmentId] = balanceItem.balance;
                     const prevBalance = sortedBalance[i - 1];
                     balanceItem.balance = prevBalance.balance + (balanceItem.balance - lastBalance);
-                    console.log(balanceItem);
                 }
             }
             investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
@@ -7839,19 +7838,20 @@ class OtherInvestmentSummary extends react_1.default.Component {
     render() {
         const bounds = this.getMinLineChartData();
         return (react_1.default.createElement("div", null,
-            react_1.default.createElement("h3", { className: "text-xl p-4 text-center" }, "Other investment summary"),
-            react_1.default.createElement("p", null,
-                "Balance: ",
-                this.state.balanceSum),
-            react_1.default.createElement("p", null,
-                "Invested: ",
-                this.state.investedSum),
+            react_1.default.createElement("h3", { className: "text-2xl p-4 text-center" }, "Other investment summary"),
+            react_1.default.createElement("div", { className: "flex flex-row justify-around w-1/3 m-auto my-10" },
+                react_1.default.createElement("p", { className: "text-xl" },
+                    "Balance: ",
+                    this.state.balanceSum),
+                react_1.default.createElement("p", { className: "text-xl" },
+                    "Invested: ",
+                    this.state.investedSum)),
             react_1.default.createElement("div", { className: "flex flex-row h-80" },
-                react_1.default.createElement("div", { className: "w-1/3 p-4" },
+                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
                     react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })),
-                react_1.default.createElement("div", { className: "w-1/3 p-4" },
+                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
                     react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })),
-                react_1.default.createElement("div", { className: "w-1/3 p-4" },
+                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
                     react_1.default.createElement(PieChart_1.PieChart, { data: this.state.pieData })))));
     }
 }

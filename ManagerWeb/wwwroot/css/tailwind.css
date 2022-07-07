@@ -542,6 +542,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1.25rem !important;
 }
 
+.m-auto {
+  margin: auto !important;
+}
+
 .mx-auto {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -565,6 +569,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .my-4 {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
+}
+
+.my-10 {
+  margin-top: 2.5rem !important;
+  margin-bottom: 2.5rem !important;
 }
 
 .mt-6 {
@@ -699,20 +708,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 24rem !important;
 }
 
-.h-4\/6 {
-  height: 66.666667% !important;
-}
-
-.h-2\/6 {
-  height: 33.333333% !important;
-}
-
 .h-4 {
   height: 1rem !important;
 }
 
 .h-64 {
   height: 16rem !important;
+}
+
+.h-80 {
+  height: 20rem !important;
 }
 
 .h-auto {
@@ -833,6 +838,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-1\/12 {
   width: 8.333333% !important;
+}
+
+.w-1\/3 {
+  width: 33.333333% !important;
 }
 
 .shrink {
@@ -1096,6 +1105,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 1.5rem !important;
 }
 
+.p-4 {
+  padding: 1rem !important;
+}
+
 .px-12 {
   padding-left: 3rem !important;
   padding-right: 3rem !important;
@@ -1232,6 +1245,16 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-7xl {
   font-size: 4.5rem !important;
   line-height: 1 !important;
+}
+
+.text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+.text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
 }
 
 .font-semibold {
