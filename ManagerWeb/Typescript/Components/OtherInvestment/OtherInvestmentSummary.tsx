@@ -72,8 +72,6 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         const sortedBalance = _.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
         const sortedInvested = _.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
         let prevInvested = 0;
-        balanceSum = _.last(sortedBalance)?.balance ?? 0;
-        investedSum = _.last(sortedInvested)?.amount ?? 0;
 
         for (const s of sortedInvested) {
             s.amount += prevInvested;
@@ -93,6 +91,8 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
             }
         }
 
+        balanceSum = _.last(sortedBalance)?.balance ?? 0;
+        investedSum = _.last(sortedInvested)?.amount ?? 0;
         investedChartData = sortedInvested.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
         balanceChartData = sortedBalance.map(b => ({ x: moment(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
 
@@ -129,13 +129,25 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     public render() {
         const bounds = this.getMinLineChartData();
+        const profit = (this.state.balanceSum - this.state.investedSum) ?? 0;
+        let profitPct = 0;
+
+        if (this.state.balanceSum != 0 && this.state.investedSum != 0)
+            profitPct = this.state.investedSum / this.state.balanceSum;
+
+        const profitColor = profit < 0 ? "text-red-800" : "text-green-800";
 
         return (
             <div>
                 <h3 className="text-2xl p-4 text-center">Other investment summary</h3>
-                <div className="flex flex-row justify-around w-1/3 m-auto my-10">
-                    <p className="text-xl">Balance: {this.state.balanceSum}</p>
-                    <p className="text-xl">Invested: {this.state.investedSum}</p>
+                <div className="flex flex-col w-1/3 m-auto my-10 bg-battleshipGrey px-4 py-10 rounded-xl">
+                    <div className="flex flex-row justify-around">
+                        <p className="text-2xl text-mainDarkBlue font-black">Balance: {this.state.balanceSum}</p>
+                        <p className="text-2xl text-mainDarkBlue font-black">Invested: {this.state.investedSum}</p>
+                    </div>
+                    <div className="mt-4">
+                        <p className={"text-2xl font-black " + profitColor}>Profit: {profit} ({profitPct.toFixed(1)})%</p>
+                    </div>
                 </div>
 
                 <div className="flex flex-row">

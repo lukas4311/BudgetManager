@@ -546,6 +546,26 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: auto !important;
 }
 
+.m-5 {
+  margin: 1.25rem !important;
+}
+
+.m-auto {
+  margin: auto !important;
+}
+
+.m-5 {
+  margin: 1.25rem !important;
+}
+
+.m-auto {
+  margin: auto !important;
+}
+
+.m-5 {
+  margin: 1.25rem !important;
+}
+
 .mx-auto {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -564,6 +584,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .my-2 {
   margin-top: 0.5rem !important;
   margin-bottom: 0.5rem !important;
+}
+
+.my-10 {
+  margin-top: 2.5rem !important;
+  margin-bottom: 2.5rem !important;
 }
 
 .my-4 {
@@ -974,6 +999,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-radius: 9999px !important;
 }
 
+.rounded-xl {
+  border-radius: 0.75rem !important;
+}
+
 .rounded-t-md {
   border-top-left-radius: 0.375rem !important;
   border-top-right-radius: 0.375rem !important;
@@ -1081,6 +1110,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
 }
 
+.bg-battleshipGrey {
+  background-color: #707F99ff !important;
+}
+
 .fill-current {
   fill: currentColor !important;
 }
@@ -1167,6 +1200,36 @@ Ensure the default browser behavior of the `hidden` attribute.
 .py-4 {
   padding-top: 1rem !important;
   padding-bottom: 1rem !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.py-10 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.py-10 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
+.px-4 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.py-10 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
 }
 
 .pt-4 {
@@ -1257,6 +1320,15 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.75rem !important;
 }
 
+.text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+.font-black {
+  font-weight: 900 !important;
+}
+
 .font-semibold {
   font-weight: 600 !important;
 }
@@ -1269,12 +1341,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 700 !important;
 }
 
-.font-black {
-  font-weight: 900 !important;
-}
-
 .font-extralight {
   font-weight: 200 !important;
+}
+
+.font-black {
+  font-weight: 900 !important;
 }
 
 .text-white {
@@ -1312,6 +1384,38 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-rufous {
   color: #b00000ff !important;
+}
+
+.text-mainDarkBlue {
+  color: #1b2737ff !important;
+}
+
+.text-red-600 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(220 38 38 / var(--tw-text-opacity)) !important;
+}
+
+.text-green-600 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(22 163 74 / var(--tw-text-opacity)) !important;
+}
+
+.text-mainDarkBlue {
+  color: #1b2737ff !important;
+}
+
+.text-red-800 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(153 27 27 / var(--tw-text-opacity)) !important;
+}
+
+.text-green-800 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(22 101 52 / var(--tw-text-opacity)) !important;
+}
+
+.text-mainDarkBlue {
+  color: #1b2737ff !important;
 }
 
 .opacity-100 {

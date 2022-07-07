@@ -7699,7 +7699,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 react_1.default.createElement("h2", { className: "text-2xl" }),
                 react_1.default.createElement("div", { className: "flex flex-row" },
                     react_1.default.createElement("div", { className: "w-2/5" },
-                        react_1.default.createElement("div", { className: "m-5 h-64 overflow-y-scroll" },
+                        react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
                     react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
                 react_1.default.createElement("div", null,
@@ -7799,8 +7799,6 @@ class OtherInvestmentSummary extends react_1.default.Component {
             const sortedBalance = lodash_1.default.orderBy(allBalances, [(obj) => new Date(obj.date)], ['asc']);
             const sortedInvested = lodash_1.default.orderBy(allPayments, [(obj) => new Date(obj.date)], ['asc']);
             let prevInvested = 0;
-            balanceSum = (_b = (_a = lodash_1.default.last(sortedBalance)) === null || _a === void 0 ? void 0 : _a.balance) !== null && _b !== void 0 ? _b : 0;
-            investedSum = (_d = (_c = lodash_1.default.last(sortedInvested)) === null || _c === void 0 ? void 0 : _c.amount) !== null && _d !== void 0 ? _d : 0;
             for (const s of sortedInvested) {
                 s.amount += prevInvested;
                 prevInvested = s.amount;
@@ -7810,12 +7808,14 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 lastBalaceOfType[sortedBalance[0].otherInvestmentId] = sortedBalance[0].balance;
                 for (let i = 1; i < sortedBalance.length; i++) {
                     let balanceItem = sortedBalance[i];
-                    const lastBalance = (_e = lastBalaceOfType[balanceItem.otherInvestmentId]) !== null && _e !== void 0 ? _e : 0;
+                    const lastBalance = (_a = lastBalaceOfType[balanceItem.otherInvestmentId]) !== null && _a !== void 0 ? _a : 0;
                     lastBalaceOfType[balanceItem.otherInvestmentId] = balanceItem.balance;
                     const prevBalance = sortedBalance[i - 1];
                     balanceItem.balance = prevBalance.balance + (balanceItem.balance - lastBalance);
                 }
             }
+            balanceSum = (_c = (_b = lodash_1.default.last(sortedBalance)) === null || _b === void 0 ? void 0 : _b.balance) !== null && _c !== void 0 ? _c : 0;
+            investedSum = (_e = (_d = lodash_1.default.last(sortedInvested)) === null || _d === void 0 ? void 0 : _d.amount) !== null && _e !== void 0 ? _e : 0;
             investedChartData = sortedInvested.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.amount }));
             balanceChartData = sortedBalance.map(b => ({ x: (0, moment_1.default)(b.date).format('YYYY-MM-DD hh:ss'), y: b.balance }));
             let chartData = [{ id: 'Invested', data: investedChartData }, { id: 'Balance', data: balanceChartData }];
@@ -7836,16 +7836,30 @@ class OtherInvestmentSummary extends react_1.default.Component {
         });
     }
     render() {
+        var _a;
         const bounds = this.getMinLineChartData();
+        const profit = (_a = (this.state.balanceSum - this.state.investedSum)) !== null && _a !== void 0 ? _a : 0;
+        let profitPct = 0;
+        if (this.state.balanceSum != 0 && this.state.investedSum != 0)
+            profitPct = this.state.investedSum / this.state.balanceSum;
+        const profitColor = profit < 0 ? "text-red-800" : "text-green-800";
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h3", { className: "text-2xl p-4 text-center" }, "Other investment summary"),
-            react_1.default.createElement("div", { className: "flex flex-row justify-around w-1/3 m-auto my-10" },
-                react_1.default.createElement("p", { className: "text-xl" },
-                    "Balance: ",
-                    this.state.balanceSum),
-                react_1.default.createElement("p", { className: "text-xl" },
-                    "Invested: ",
-                    this.state.investedSum)),
+            react_1.default.createElement("div", { className: "flex flex-col w-1/3 m-auto my-10 bg-battleshipGrey px-4 py-10 rounded-xl" },
+                react_1.default.createElement("div", { className: "flex flex-row justify-around" },
+                    react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                        "Balance: ",
+                        this.state.balanceSum),
+                    react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                        "Invested: ",
+                        this.state.investedSum)),
+                react_1.default.createElement("div", { className: "mt-4" },
+                    react_1.default.createElement("p", { className: "text-2xl font-black " + profitColor },
+                        "Profit: ",
+                        profit,
+                        " (",
+                        profitPct.toFixed(1),
+                        ")%"))),
             react_1.default.createElement("div", { className: "flex flex-row" },
                 react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
                     react_1.default.createElement("div", { className: "flex flex-col" },

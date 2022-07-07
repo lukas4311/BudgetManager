@@ -168,7 +168,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                     <h2 className="text-2xl"></h2>
                     <div className="flex flex-row">
                         <div className="w-2/5">
-                            <div className="m-5 h-64 overflow-y-scroll">
+                            <div className="m-5 overflow-y-scroll">
                                 <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
                                     addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                             </div>
