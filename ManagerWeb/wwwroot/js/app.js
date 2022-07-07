@@ -7846,13 +7846,22 @@ class OtherInvestmentSummary extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "text-xl" },
                     "Invested: ",
                     this.state.investedSum)),
-            react_1.default.createElement("div", { className: "flex flex-row h-80" },
+            react_1.default.createElement("div", { className: "flex flex-row" },
                 react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })),
+                    react_1.default.createElement("div", { className: "flex flex-col" },
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investment balance progress"),
+                        react_1.default.createElement("div", { className: "h-80" },
+                            react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })))),
                 react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })),
+                    react_1.default.createElement("div", { className: "flex flex-col" },
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Top 3"),
+                        react_1.default.createElement("div", { className: "h-80" },
+                            react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })))),
                 react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement(PieChart_1.PieChart, { data: this.state.pieData })))));
+                    react_1.default.createElement("div", { className: "flex flex-col" },
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investments diversification"),
+                        react_1.default.createElement("div", { className: "h-80" },
+                            react_1.default.createElement(PieChart_1.PieChart, { data: this.state.pieData })))))));
     }
 }
 exports.default = OtherInvestmentSummary;
@@ -9455,11 +9464,11 @@ const Ranking = (props) => {
         const heightPercent = height * 100 + "%";
         if (height > 0)
             return (react_1.default.createElement("div", { className: "w-1/5 bg-vermilion flex flex-col justify-around rounded-xl", style: { height: heightPercent } },
-                react_1.default.createElement("p", { className: "text-xl" },
+                react_1.default.createElement("p", { className: "text-xl font-black" },
                     rankingNum,
                     "."),
-                react_1.default.createElement("p", { className: "text-2xl" }, (_a = investments[rankingNum - 1]) === null || _a === void 0 ? void 0 : _a.name),
-                react_1.default.createElement("p", { className: "text-3xl" },
+                react_1.default.createElement("p", { className: "text-xl" }, (_a = investments[rankingNum - 1]) === null || _a === void 0 ? void 0 : _a.name),
+                react_1.default.createElement("p", { className: "text-xl font-black" },
                     ((_c = (_b = investments[rankingNum - 1]) === null || _b === void 0 ? void 0 : _b.investmentProgress.toFixed(2)) !== null && _c !== void 0 ? _c : " -"),
                     "%")));
         return react_1.default.createElement(react_1.default.Fragment, null);

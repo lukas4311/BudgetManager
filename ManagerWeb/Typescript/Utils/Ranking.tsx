@@ -19,9 +19,9 @@ const Ranking = (props: RankingProps) => {
         if (height > 0)
             return (
                 <div className="w-1/5 bg-vermilion flex flex-col justify-around rounded-xl" style={{ height: heightPercent }}>
-                    <p className="text-xl">{rankingNum}.</p>
-                    <p className="text-2xl">{investments[rankingNum - 1]?.name}</p>
-                    <p className="text-3xl">{(investments[rankingNum - 1]?.investmentProgress.toFixed(2) ?? " -")}%</p>
+                    <p className="text-xl font-black">{rankingNum}.</p>
+                    <p className="text-xl">{investments[rankingNum - 1]?.name}</p>
+                    <p className="text-xl font-black">{(investments[rankingNum - 1]?.investmentProgress.toFixed(2) ?? " -")}%</p>
                 </div>
             )
 

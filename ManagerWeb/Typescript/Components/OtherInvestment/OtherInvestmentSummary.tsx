@@ -138,15 +138,30 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                     <p className="text-xl">Invested: {this.state.investedSum}</p>
                 </div>
 
-                <div className="flex flex-row h-80">
+                <div className="flex flex-row">
                     <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
+                        <div className="flex flex-col">
+                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investment balance progress</h4>
+                            <div className="h-80">
+                                <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
+                            </div>
+                        </div>
                     </div>
                     <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <Ranking data={this.state.rankingData}></Ranking>
+                        <div className="flex flex-col">
+                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Top 3</h4>
+                            <div className="h-80">
+                                <Ranking data={this.state.rankingData}></Ranking>
+                            </div>
+                        </div>
                     </div>
                     <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <PieChart data={this.state.pieData}></PieChart>
+                        <div className="flex flex-col">
+                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investments diversification</h4>
+                            <div className="h-80">
+                                <PieChart data={this.state.pieData}></PieChart>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
