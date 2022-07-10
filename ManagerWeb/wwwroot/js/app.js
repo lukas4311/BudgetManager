@@ -7732,7 +7732,6 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 name: otherInvestmentData.name,
                 openingBalance: otherInvestmentData.openingBalance
             };
-            console.log(otherInvestmentData);
             if (otherInvestmentData.id)
                 yield this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
             else

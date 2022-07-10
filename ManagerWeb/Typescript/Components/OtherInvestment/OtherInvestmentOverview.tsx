@@ -142,8 +142,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             openingBalance: otherInvestmentData.openingBalance
         };
 
-        console.log(otherInvestmentData);
-
         if (otherInvestmentData.id)
             await this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
         else
