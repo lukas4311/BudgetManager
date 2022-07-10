@@ -6159,6 +6159,73 @@ exports.BudgetForm2 = BudgetForm;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Charts/BarChart.tsx":
+/*!***************************************************!*\
+  !*** ./Typescript/Components/Charts/BarChart.tsx ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BarChart = exports.BarChartProps = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const bar_1 = __webpack_require__(/*! @nivo/bar */ "./node_modules/@nivo/bar/dist/nivo-bar.es.js");
+class BarChartProps {
+}
+exports.BarChartProps = BarChartProps;
+function BarChart({ dataSets, chartProps }) {
+    return (
+    // <ResponsiveLine margin={{ top: 50, right: 50, bottom: 50, left: 100 }} {...chartProps}
+    // />
+    react_1.default.createElement(bar_1.Bar, Object.assign({}, chartProps, { data: dataSets })));
+}
+exports.BarChart = BarChart;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Charts/BarChartSettingManager.tsx":
+/*!*****************************************************************!*\
+  !*** ./Typescript/Components/Charts/BarChartSettingManager.tsx ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BarChartSettingManager = void 0;
+class BarChartSettingManager {
+    static getPaymentCategoryBarChartProps() {
+        return {
+            data: undefined,
+            width: 600,
+            height: 400,
+            margin: { top: 60, right: 80, bottom: 60, left: 80 },
+            indexBy: "category",
+            keys: ["amount"],
+            theme: {
+                axis: {
+                    ticks: {
+                        text: {
+                            fill: "white"
+                        }
+                    }
+                }
+            }
+        };
+    }
+}
+exports.BarChartSettingManager = BarChartSettingManager;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Charts/CalendarChart.tsx":
 /*!********************************************************!*\
   !*** ./Typescript/Components/Charts/CalendarChart.tsx ***!
@@ -8216,6 +8283,8 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const BarChart_1 = __webpack_require__(/*! ../Charts/BarChart */ "./Typescript/Components/Charts/BarChart.tsx");
+const BarChartSettingManager_1 = __webpack_require__(/*! ../Charts/BarChartSettingManager */ "./Typescript/Components/Charts/BarChartSettingManager.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8236,12 +8305,10 @@ class PaymentsOverview extends React.Component {
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
                 let dateTo;
-                if (this.state.selectedFilter != undefined) {
+                if (this.state.selectedFilter != undefined)
                     dateTo = ((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
-                }
-                else {
+                else
                     dateTo = this.state.filterDateTo;
-                }
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 this.setState({
@@ -8271,9 +8338,7 @@ class PaymentsOverview extends React.Component {
         this.paymentEdit = (id) => {
             this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
         };
-        this.hideModal = () => {
-            this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
-        };
+        this.hideModal = () => this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
         this.handleConfirmationClose = () => {
             this.hideModal();
             this.getFilteredPaymentData(this.state.selectedBankAccount);
@@ -8352,12 +8417,10 @@ class PaymentsOverview extends React.Component {
     getFilteredPaymentData(bankId) {
         if (bankId == -1)
             bankId = null;
-        if (this.state.selectedFilter != undefined) {
+        if (this.state.selectedFilter != undefined)
             this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), bankId);
-        }
-        else {
+        else
             this.getPaymentData((0, moment_1.default)(this.state.filterDateFrom).toDate(), (0, moment_1.default)(this.state.filterDateTo).toDate(), bankId);
-        }
     }
     showErrorMessage() {
         let tag = React.createElement(React.Fragment, null);
@@ -8410,6 +8473,9 @@ class PaymentsOverview extends React.Component {
                             React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
                         React.createElement("div", { className: "w-1/2 calendar text-black" },
                             React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                    React.createElement("div", { className: "flex flex-row h-80" },
+                        React.createElement("div", { className: "w-1/2" },
+                            React.createElement(BarChart_1.BarChart, { dataSets: [{ category: "Investment", amount: 80000 }, { category: "Housing", amount: 35000 }], chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() }))),
                     React.createElement("div", { className: "flex flex-row p-6" },
                         React.createElement("div", { className: "w-2/5" },
                             React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
@@ -21233,6 +21299,700 @@ var refType = prop_types__WEBPACK_IMPORTED_MODULE_0___default.a.oneOfType([prop_
 
 /***/ }),
 
+/***/ "./node_modules/@nivo/annotations/dist/nivo-annotations.es.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@nivo/annotations/dist/nivo-annotations.es.js ***!
+  \********************************************************************/
+/*! exports provided: Annotation, bindAnnotations, computeAnnotation, defaultProps, getLinkAngle, isCanvasNote, isCircleAnnotation, isDotAnnotation, isRectAnnotation, isSvgNote, renderAnnotationsToCanvas, useAnnotations, useComputedAnnotation, useComputedAnnotations */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Annotation", function() { return Annotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindAnnotations", function() { return bindAnnotations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "computeAnnotation", function() { return computeAnnotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultProps", function() { return defaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLinkAngle", function() { return getLinkAngle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCanvasNote", function() { return isCanvasNote; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isCircleAnnotation", function() { return isCircleAnnotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDotAnnotation", function() { return isDotAnnotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isRectAnnotation", function() { return isRectAnnotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSvgNote", function() { return isSvgNote; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderAnnotationsToCanvas", function() { return renderAnnotationsToCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useAnnotations", function() { return useAnnotations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useComputedAnnotation", function() { return useComputedAnnotation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useComputedAnnotations", function() { return useComputedAnnotations; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/omit */ "./node_modules/lodash/omit.js");
+/* harmony import */ var lodash_omit__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_omit__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var lodash_isNumber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash/isNumber */ "./node_modules/lodash/isNumber.js");
+/* harmony import */ var lodash_isNumber__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash_isNumber__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var lodash_filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash/filter */ "./node_modules/lodash/filter.js");
+/* harmony import */ var lodash_filter__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_filter__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
+/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
+
+
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+var defaultProps = {
+  dotSize: 4,
+  noteWidth: 120,
+  noteTextOffset: 8,
+  animate: true,
+  motionStiffness: 90,
+  motionDamping: 13
+};
+
+var isSvgNote = function isSvgNote(note) {
+  var noteType = typeof note;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["isValidElement"])(note) || noteType === 'string' || noteType === 'function' || noteType === 'object';
+};
+var isCanvasNote = function isCanvasNote(note) {
+  var noteType = typeof note;
+  return noteType === 'string' || noteType === 'function';
+};
+var isCircleAnnotation = function isCircleAnnotation(annotationSpec) {
+  return annotationSpec.type === 'circle';
+};
+var isDotAnnotation = function isDotAnnotation(annotationSpec) {
+  return annotationSpec.type === 'dot';
+};
+var isRectAnnotation = function isRectAnnotation(annotationSpec) {
+  return annotationSpec.type === 'rect';
+};
+
+var bindAnnotations = function bindAnnotations(_ref) {
+  var data = _ref.data,
+      annotations = _ref.annotations,
+      getPosition = _ref.getPosition,
+      getDimensions = _ref.getDimensions;
+  return annotations.reduce(function (acc, annotation) {
+    var offset = annotation.offset || 0;
+    return [].concat(_toConsumableArray(acc), _toConsumableArray(lodash_filter__WEBPACK_IMPORTED_MODULE_3___default()(data, annotation.match).map(function (datum) {
+      var position = getPosition(datum);
+      var dimensions = getDimensions(datum);
+
+      if (isCircleAnnotation(annotation) || isRectAnnotation(annotation)) {
+        dimensions.size = dimensions.size + offset * 2;
+        dimensions.width = dimensions.width + offset * 2;
+        dimensions.height = dimensions.height + offset * 2;
+      }
+
+      return _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, lodash_omit__WEBPACK_IMPORTED_MODULE_1___default()(annotation, ['match', 'offset'])), position), dimensions), {}, {
+        size: annotation.size || dimensions.size,
+        datum: datum
+      });
+    })));
+  }, []);
+};
+var getLinkAngle = function getLinkAngle(sourceX, sourceY, targetX, targetY) {
+  var angle = Math.atan2(targetY - sourceY, targetX - sourceX);
+  return Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["absoluteAngleDegrees"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["radiansToDegrees"])(angle));
+};
+var computeAnnotation = function computeAnnotation(annotation) {
+  var x = annotation.x,
+      y = annotation.y,
+      noteX = annotation.noteX,
+      noteY = annotation.noteY,
+      _annotation$noteWidth = annotation.noteWidth,
+      noteWidth = _annotation$noteWidth === void 0 ? defaultProps.noteWidth : _annotation$noteWidth,
+      _annotation$noteTextO = annotation.noteTextOffset,
+      noteTextOffset = _annotation$noteTextO === void 0 ? defaultProps.noteTextOffset : _annotation$noteTextO;
+  var computedNoteX;
+  var computedNoteY;
+
+  if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_2___default()(noteX)) {
+    computedNoteX = x + noteX;
+  } else if (noteX.abs !== undefined) {
+    computedNoteX = noteX.abs;
+  } else {
+    throw new Error("noteX should be either a number or an object containing an 'abs' property");
+  }
+
+  if (lodash_isNumber__WEBPACK_IMPORTED_MODULE_2___default()(noteY)) {
+    computedNoteY = y + noteY;
+  } else if (noteY.abs !== undefined) {
+    computedNoteY = noteY.abs;
+  } else {
+    throw new Error("noteY should be either a number or an object containing an 'abs' property");
+  }
+
+  var computedX = x;
+  var computedY = y;
+  var angle = getLinkAngle(x, y, computedNoteX, computedNoteY);
+
+  if (isCircleAnnotation(annotation)) {
+    var position = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["positionFromAngle"])(Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["degreesToRadians"])(angle), annotation.size / 2);
+    computedX += position.x;
+    computedY += position.y;
+  }
+
+  if (isRectAnnotation(annotation)) {
+    var eighth = Math.round((angle + 90) / 45) % 8;
+
+    if (eighth === 0) {
+      computedY -= annotation.height / 2;
+    }
+
+    if (eighth === 1) {
+      computedX += annotation.width / 2;
+      computedY -= annotation.height / 2;
+    }
+
+    if (eighth === 2) {
+      computedX += annotation.width / 2;
+    }
+
+    if (eighth === 3) {
+      computedX += annotation.width / 2;
+      computedY += annotation.height / 2;
+    }
+
+    if (eighth === 4) {
+      computedY += annotation.height / 2;
+    }
+
+    if (eighth === 5) {
+      computedX -= annotation.width / 2;
+      computedY += annotation.height / 2;
+    }
+
+    if (eighth === 6) {
+      computedX -= annotation.width / 2;
+    }
+
+    if (eighth === 7) {
+      computedX -= annotation.width / 2;
+      computedY -= annotation.height / 2;
+    }
+  }
+
+  var textX = computedNoteX;
+  var textY = computedNoteY - noteTextOffset;
+  var noteLineX = computedNoteX;
+  var noteLineY = computedNoteY;
+
+  if ((angle + 90) % 360 > 180) {
+    textX -= noteWidth;
+    noteLineX -= noteWidth;
+  } else {
+    noteLineX += noteWidth;
+  }
+
+  return {
+    points: [[computedX, computedY], [computedNoteX, computedNoteY], [noteLineX, noteLineY]],
+    text: [textX, textY],
+    angle: angle + 90
+  };
+};
+
+var useAnnotations = function useAnnotations(_ref) {
+  var data = _ref.data,
+      annotations = _ref.annotations,
+      getPosition = _ref.getPosition,
+      getDimensions = _ref.getDimensions;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return bindAnnotations({
+      data: data,
+      annotations: annotations,
+      getPosition: getPosition,
+      getDimensions: getDimensions
+    });
+  }, [data, annotations, getPosition, getDimensions]);
+};
+var useComputedAnnotations = function useComputedAnnotations(_ref2) {
+  var annotations = _ref2.annotations;
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return annotations.map(function (annotation) {
+      return _objectSpread2(_objectSpread2({}, annotation), {}, {
+        computed: computeAnnotation(_objectSpread2({}, annotation))
+      });
+    });
+  }, [annotations]);
+};
+var useComputedAnnotation = function useComputedAnnotation(annotation) {
+  return Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    return computeAnnotation(annotation);
+  }, [annotation]);
+};
+
+var AnnotationNote = function AnnotationNote(_ref) {
+  var datum = _ref.datum,
+      x = _ref.x,
+      y = _ref.y,
+      note = _ref.note;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["useSpring"])({
+    x: x,
+    y: y,
+    config: springConfig,
+    immediate: !animate
+  });
+
+  if (typeof note === 'function') {
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(note, {
+      x: x,
+      y: y,
+      datum: datum
+    });
+  }
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
+    children: [theme.annotations.text.outlineWidth > 0 && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].text, {
+      x: animatedProps.x,
+      y: animatedProps.y,
+      style: _objectSpread2(_objectSpread2({}, theme.annotations.text), {}, {
+        strokeLinejoin: 'round',
+        strokeWidth: theme.annotations.text.outlineWidth * 2,
+        stroke: theme.annotations.text.outlineColor
+      }),
+      children: note
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].text, {
+      x: animatedProps.x,
+      y: animatedProps.y,
+      style: lodash_omit__WEBPACK_IMPORTED_MODULE_1___default()(theme.annotations.text, ['outlineWidth', 'outlineColor']),
+      children: note
+    })]
+  });
+};
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+  return _arr;
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+function _toArray(arr) {
+  return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest();
+}
+
+var AnnotationLink = function AnnotationLink(_ref) {
+  var points = _ref.points,
+      _ref$isOutline = _ref.isOutline,
+      isOutline = _ref$isOutline === void 0 ? false : _ref$isOutline;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+  var path = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(function () {
+    var _points = _toArray(points),
+        firstPoint = _points[0],
+        otherPoints = _points.slice(1);
+
+    return otherPoints.reduce(function (acc, _ref2) {
+      var _ref3 = _slicedToArray(_ref2, 2),
+          x = _ref3[0],
+          y = _ref3[1];
+
+      return "".concat(acc, " L").concat(x, ",").concat(y);
+    }, "M".concat(firstPoint[0], ",").concat(firstPoint[1]));
+  }, [points]);
+  var animatedPath = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useAnimatedPath"])(path);
+
+  if (isOutline && theme.annotations.link.outlineWidth <= 0) {
+    return null;
+  }
+
+  var style = _objectSpread2({}, theme.annotations.link);
+
+  if (isOutline) {
+    style.strokeLinecap = 'square';
+    style.strokeWidth = theme.annotations.link.strokeWidth + theme.annotations.link.outlineWidth * 2;
+    style.stroke = theme.annotations.link.outlineColor;
+  }
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].path, {
+    fill: "none",
+    d: animatedPath,
+    style: style
+  });
+};
+
+var CircleAnnotationOutline = function CircleAnnotationOutline(_ref) {
+  var x = _ref.x,
+      y = _ref.y,
+      size = _ref.size;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["useSpring"])({
+    x: x,
+    y: y,
+    radius: size / 2,
+    config: springConfig,
+    immediate: !animate
+  });
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
+    children: [theme.annotations.outline.outlineWidth > 0 && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].circle, {
+      cx: animatedProps.x,
+      cy: animatedProps.y,
+      r: animatedProps.radius,
+      style: _objectSpread2(_objectSpread2({}, theme.annotations.outline), {}, {
+        fill: 'none',
+        strokeWidth: theme.annotations.outline.strokeWidth + theme.annotations.outline.outlineWidth * 2,
+        stroke: theme.annotations.outline.outlineColor
+      })
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].circle, {
+      cx: animatedProps.x,
+      cy: animatedProps.y,
+      r: animatedProps.radius,
+      style: theme.annotations.outline
+    })]
+  });
+};
+
+var DotAnnotationOutline = function DotAnnotationOutline(_ref) {
+  var x = _ref.x,
+      y = _ref.y,
+      _ref$size = _ref.size,
+      size = _ref$size === void 0 ? defaultProps.dotSize : _ref$size;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["useSpring"])({
+    x: x,
+    y: y,
+    radius: size / 2,
+    config: springConfig,
+    immediate: !animate
+  });
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
+    children: [theme.annotations.outline.outlineWidth > 0 && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].circle, {
+      cx: animatedProps.x,
+      cy: animatedProps.y,
+      r: animatedProps.radius,
+      style: _objectSpread2(_objectSpread2({}, theme.annotations.outline), {}, {
+        fill: 'none',
+        strokeWidth: theme.annotations.outline.outlineWidth * 2,
+        stroke: theme.annotations.outline.outlineColor
+      })
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].circle, {
+      cx: animatedProps.x,
+      cy: animatedProps.y,
+      r: animatedProps.radius,
+      style: theme.annotations.symbol
+    })]
+  });
+};
+
+var RectAnnotationOutline = function RectAnnotationOutline(_ref) {
+  var x = _ref.x,
+      y = _ref.y,
+      width = _ref.width,
+      height = _ref.height;
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var animatedProps = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["useSpring"])({
+    x: x - width / 2,
+    y: y - height / 2,
+    width: width,
+    height: height,
+    config: springConfig,
+    immediate: !animate
+  });
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
+    children: [theme.annotations.outline.outlineWidth > 0 && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].rect, {
+      x: animatedProps.x,
+      y: animatedProps.y,
+      width: animatedProps.width,
+      height: animatedProps.height,
+      style: _objectSpread2(_objectSpread2({}, theme.annotations.outline), {}, {
+        fill: 'none',
+        strokeWidth: theme.annotations.outline.strokeWidth + theme.annotations.outline.outlineWidth * 2,
+        stroke: theme.annotations.outline.outlineColor
+      })
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_5__["animated"].rect, {
+      x: animatedProps.x,
+      y: animatedProps.y,
+      width: animatedProps.width,
+      height: animatedProps.height,
+      style: theme.annotations.outline
+    })]
+  });
+};
+
+var Annotation = function Annotation(annotation) {
+  var datum = annotation.datum,
+      x = annotation.x,
+      y = annotation.y,
+      note = annotation.note;
+  var computed = useComputedAnnotation(annotation);
+
+  if (!isSvgNote(note)) {
+    throw new Error('note should be a valid react element');
+  }
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsxs"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["Fragment"], {
+    children: [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(AnnotationLink, {
+      points: computed.points,
+      isOutline: true
+    }), isCircleAnnotation(annotation) && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(CircleAnnotationOutline, {
+      x: x,
+      y: y,
+      size: annotation.size
+    }), isDotAnnotation(annotation) && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(DotAnnotationOutline, {
+      x: x,
+      y: y,
+      size: annotation.size
+    }), isRectAnnotation(annotation) && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(RectAnnotationOutline, {
+      x: x,
+      y: y,
+      width: annotation.width,
+      height: annotation.height
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(AnnotationLink, {
+      points: computed.points
+    }), Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__["jsx"])(AnnotationNote, {
+      datum: datum,
+      x: computed.text[0],
+      y: computed.text[1],
+      note: note
+    })]
+  });
+};
+
+var drawPoints = function drawPoints(ctx, points) {
+  points.forEach(function (_ref, index) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        x = _ref2[0],
+        y = _ref2[1];
+
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+};
+
+var renderAnnotationsToCanvas = function renderAnnotationsToCanvas(ctx, _ref3) {
+  var annotations = _ref3.annotations,
+      theme = _ref3.theme;
+  if (annotations.length === 0) return;
+  ctx.save();
+  annotations.forEach(function (annotation) {
+    if (!isCanvasNote(annotation.note)) {
+      throw new Error('note is invalid for canvas implementation');
+    }
+
+    if (theme.annotations.link.outlineWidth > 0) {
+      ctx.lineCap = 'square';
+      ctx.strokeStyle = theme.annotations.link.outlineColor;
+      ctx.lineWidth = theme.annotations.link.strokeWidth + theme.annotations.link.outlineWidth * 2;
+      ctx.beginPath();
+      drawPoints(ctx, annotation.computed.points);
+      ctx.stroke();
+      ctx.lineCap = 'butt';
+    }
+
+    if (isCircleAnnotation(annotation) && theme.annotations.outline.outlineWidth > 0) {
+      ctx.strokeStyle = theme.annotations.outline.outlineColor;
+      ctx.lineWidth = theme.annotations.outline.strokeWidth + theme.annotations.outline.outlineWidth * 2;
+      ctx.beginPath();
+      ctx.arc(annotation.x, annotation.y, annotation.size / 2, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    if (isDotAnnotation(annotation) && theme.annotations.symbol.outlineWidth > 0) {
+      ctx.strokeStyle = theme.annotations.symbol.outlineColor;
+      ctx.lineWidth = theme.annotations.symbol.outlineWidth * 2;
+      ctx.beginPath();
+      ctx.arc(annotation.x, annotation.y, annotation.size / 2, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    if (isRectAnnotation(annotation) && theme.annotations.outline.outlineWidth > 0) {
+      ctx.strokeStyle = theme.annotations.outline.outlineColor;
+      ctx.lineWidth = theme.annotations.outline.strokeWidth + theme.annotations.outline.outlineWidth * 2;
+      ctx.beginPath();
+      ctx.rect(annotation.x - annotation.width / 2, annotation.y - annotation.height / 2, annotation.width, annotation.height);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = theme.annotations.link.stroke;
+    ctx.lineWidth = theme.annotations.link.strokeWidth;
+    ctx.beginPath();
+    drawPoints(ctx, annotation.computed.points);
+    ctx.stroke();
+
+    if (isCircleAnnotation(annotation)) {
+      ctx.strokeStyle = theme.annotations.outline.stroke;
+      ctx.lineWidth = theme.annotations.outline.strokeWidth;
+      ctx.beginPath();
+      ctx.arc(annotation.x, annotation.y, annotation.size / 2, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    if (isDotAnnotation(annotation)) {
+      ctx.fillStyle = theme.annotations.symbol.fill;
+      ctx.beginPath();
+      ctx.arc(annotation.x, annotation.y, annotation.size / 2, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    if (isRectAnnotation(annotation)) {
+      ctx.strokeStyle = theme.annotations.outline.stroke;
+      ctx.lineWidth = theme.annotations.outline.strokeWidth;
+      ctx.beginPath();
+      ctx.rect(annotation.x - annotation.width / 2, annotation.y - annotation.height / 2, annotation.width, annotation.height);
+      ctx.stroke();
+    }
+
+    if (typeof annotation.note === 'function') {
+      annotation.note(ctx, {
+        datum: annotation.datum,
+        x: annotation.computed.text[0],
+        y: annotation.computed.text[1],
+        theme: theme
+      });
+    } else {
+      ctx.font = "".concat(theme.annotations.text.fontSize, "px ").concat(theme.annotations.text.fontFamily);
+      ctx.fillStyle = theme.annotations.text.fill;
+      ctx.strokeStyle = theme.annotations.text.outlineColor;
+      ctx.lineWidth = theme.annotations.text.outlineWidth * 2;
+
+      if (theme.annotations.text.outlineWidth > 0) {
+        ctx.lineJoin = 'round';
+        ctx.strokeText(annotation.note, annotation.computed.text[0], annotation.computed.text[1]);
+        ctx.lineJoin = 'miter';
+      }
+
+      ctx.fillText(annotation.note, annotation.computed.text[0], annotation.computed.text[1]);
+    }
+  });
+  ctx.restore();
+};
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/@nivo/arcs/dist/nivo-arcs.es.js":
 /*!******************************************************!*\
   !*** ./node_modules/@nivo/arcs/dist/nivo-arcs.es.js ***!
@@ -23787,6 +24547,1892 @@ __webpack_require__.r(__webpack_exports__);
   step = Math.abs(step), max = Math.abs(max) - step;
   return Math.max(0, Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(max) - Object(_exponent_js__WEBPACK_IMPORTED_MODULE_0__["default"])(step)) + 1;
 });
+
+
+/***/ }),
+
+/***/ "./node_modules/@nivo/bar/dist/nivo-bar.es.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@nivo/bar/dist/nivo-bar.es.js ***!
+  \****************************************************/
+/*! exports provided: Bar, BarCanvas, BarItem, ResponsiveBar, ResponsiveBarCanvas, canvasDefaultProps, defaultProps, svgDefaultProps */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Bar", function() { return Bar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BarCanvas", function() { return BarCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BarItem", function() { return BarItem; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveBar", function() { return ResponsiveBar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResponsiveBarCanvas", function() { return ResponsiveBarCanvas; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canvasDefaultProps", function() { return canvasDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultProps", function() { return defaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "svgDefaultProps", function() { return svgDefaultProps; });
+/* harmony import */ var _nivo_axes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @nivo/axes */ "./node_modules/@nivo/axes/dist/nivo-axes.es.js");
+/* harmony import */ var _nivo_annotations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/annotations */ "./node_modules/@nivo/annotations/dist/nivo-annotations.es.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
+/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/react-spring-web.esm.js");
+/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
+/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
+/* harmony import */ var _nivo_scales__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @nivo/scales */ "./node_modules/@nivo/scales/dist/nivo-scales.es.js");
+/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/index.js");
+/* harmony import */ var lodash_uniqBy__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash/uniqBy */ "./node_modules/lodash/uniqBy.js");
+/* harmony import */ var lodash_uniqBy__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash_uniqBy__WEBPACK_IMPORTED_MODULE_11__);
+
+
+
+
+
+
+
+
+
+
+
+
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+
+var BarAnnotations = function BarAnnotations(_ref) {
+  var bars = _ref.bars,
+      annotations = _ref.annotations;
+  var boundAnnotations = Object(_nivo_annotations__WEBPACK_IMPORTED_MODULE_1__["useAnnotations"])({
+    data: bars,
+    annotations: annotations,
+    getPosition: function getPosition(bar) {
+      return {
+        x: bar.x + bar.width / 2,
+        y: bar.y + bar.height / 2
+      };
+    },
+    getDimensions: function getDimensions(_ref2) {
+      var height = _ref2.height,
+          width = _ref2.width;
+      return {
+        width: width,
+        height: height,
+        size: Math.max(width, height)
+      };
+    }
+  });
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["Fragment"], {
+    children: boundAnnotations.map(function (annotation, i) {
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_annotations__WEBPACK_IMPORTED_MODULE_1__["Annotation"], _objectSpread2({}, annotation), i);
+    })
+  });
+};
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+  return _arr;
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+  return arr2;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+var BarLegends = function BarLegends(_ref) {
+  var width = _ref.width,
+      height = _ref.height,
+      legends = _ref.legends,
+      toggleSerie = _ref.toggleSerie;
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["Fragment"], {
+    children: legends.map(function (_ref2, i) {
+      var _legend$data;
+
+      var _ref3 = _slicedToArray(_ref2, 2),
+          legend = _ref3[0],
+          data = _ref3[1];
+
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["BoxLegendSvg"], _objectSpread2(_objectSpread2({}, legend), {}, {
+        containerWidth: width,
+        containerHeight: height,
+        data: (_legend$data = legend.data) !== null && _legend$data !== void 0 ? _legend$data : data,
+        toggleSerie: legend.toggleSerie && legend.dataFrom === 'keys' ? toggleSerie : undefined
+      }), i);
+    })
+  });
+};
+
+var BarItem = function BarItem(_ref) {
+  var _data$fill;
+
+  var _ref$bar = _ref.bar,
+      data = _ref$bar.data,
+      bar = _objectWithoutProperties(_ref$bar, ["data"]),
+      _ref$style = _ref.style,
+      borderColor = _ref$style.borderColor,
+      color = _ref$style.color,
+      height = _ref$style.height,
+      labelColor = _ref$style.labelColor,
+      labelOpacity = _ref$style.labelOpacity,
+      labelX = _ref$style.labelX,
+      labelY = _ref$style.labelY,
+      transform = _ref$style.transform,
+      width = _ref$style.width,
+      borderRadius = _ref.borderRadius,
+      borderWidth = _ref.borderWidth,
+      label = _ref.label,
+      shouldRenderLabel = _ref.shouldRenderLabel,
+      isInteractive = _ref.isInteractive,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      tooltip = _ref.tooltip,
+      isFocusable = _ref.isFocusable,
+      ariaLabel = _ref.ariaLabel,
+      ariaLabelledBy = _ref.ariaLabelledBy,
+      ariaDescribedBy = _ref.ariaDescribedBy;
+
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      showTooltipAt = _useTooltip.showTooltipAt,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var renderTooltip = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return function () {
+      return Object(react__WEBPACK_IMPORTED_MODULE_5__["createElement"])(tooltip, _objectSpread2(_objectSpread2({}, bar), data));
+    };
+  }, [tooltip, bar, data]);
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    onClick === null || onClick === void 0 ? void 0 : onClick(_objectSpread2({
+      color: bar.color
+    }, data), event);
+  }, [bar, data, onClick]);
+  var handleTooltip = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    return showTooltipFromEvent(renderTooltip(), event);
+  }, [showTooltipFromEvent, renderTooltip]);
+  var handleMouseEnter = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(data, event);
+    showTooltipFromEvent(renderTooltip(), event);
+  }, [data, onMouseEnter, showTooltipFromEvent, renderTooltip]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(data, event);
+    hideTooltip();
+  }, [data, hideTooltip, onMouseLeave]);
+  var handleFocus = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function () {
+    showTooltipAt(renderTooltip(), [bar.absX + bar.width / 2, bar.absY]);
+  }, [showTooltipAt, renderTooltip, bar]);
+  var handleBlur = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function () {
+    hideTooltip();
+  }, [hideTooltip]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsxs"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["animated"].g, {
+    transform: transform,
+    children: [Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["animated"].rect, {
+      width: Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["to"])(width, function (value) {
+        return Math.max(value, 0);
+      }),
+      height: Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["to"])(height, function (value) {
+        return Math.max(value, 0);
+      }),
+      rx: borderRadius,
+      ry: borderRadius,
+      fill: (_data$fill = data.fill) !== null && _data$fill !== void 0 ? _data$fill : color,
+      strokeWidth: borderWidth,
+      stroke: borderColor,
+      focusable: isFocusable,
+      tabIndex: isFocusable ? 0 : undefined,
+      "aria-label": ariaLabel ? ariaLabel(data) : undefined,
+      "aria-labelledby": ariaLabelledBy ? ariaLabelledBy(data) : undefined,
+      "aria-describedby": ariaDescribedBy ? ariaDescribedBy(data) : undefined,
+      onMouseEnter: isInteractive ? handleMouseEnter : undefined,
+      onMouseMove: isInteractive ? handleTooltip : undefined,
+      onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+      onClick: isInteractive ? handleClick : undefined,
+      onFocus: isInteractive && isFocusable ? handleFocus : undefined,
+      onBlur: isInteractive && isFocusable ? handleBlur : undefined
+    }), shouldRenderLabel && Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["animated"].text, {
+      x: labelX,
+      y: labelY,
+      textAnchor: "middle",
+      dominantBaseline: "central",
+      fillOpacity: labelOpacity,
+      style: _objectSpread2(_objectSpread2({}, theme.labels.text), {}, {
+        pointerEvents: 'none',
+        fill: labelColor
+      }),
+      children: label
+    })]
+  });
+};
+
+var BarTooltip = function BarTooltip(_ref) {
+  var color = _ref.color,
+      label = _ref.label,
+      data = _objectWithoutProperties(_ref, ["color", "label"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["BasicTooltip"], {
+    id: label,
+    value: data.formattedValue,
+    enableChip: true,
+    color: color
+  });
+};
+
+var _window$devicePixelRa;
+var defaultProps = {
+  indexBy: 'id',
+  keys: ['value'],
+  groupMode: 'stacked',
+  layout: 'vertical',
+  reverse: false,
+  minValue: 'auto',
+  maxValue: 'auto',
+  valueScale: {
+    type: 'linear'
+  },
+  indexScale: {
+    type: 'band',
+    round: true
+  },
+  padding: 0.1,
+  innerPadding: 0,
+  axisBottom: {},
+  axisLeft: {},
+  enableGridX: false,
+  enableGridY: true,
+  enableLabel: true,
+  label: 'formattedValue',
+  labelSkipWidth: 0,
+  labelSkipHeight: 0,
+  labelTextColor: {
+    from: 'theme',
+    theme: 'labels.text.fill'
+  },
+  colorBy: 'id',
+  colors: {
+    scheme: 'nivo'
+  },
+  borderRadius: 0,
+  borderWidth: 0,
+  borderColor: {
+    from: 'color'
+  },
+  isInteractive: true,
+  tooltip: BarTooltip,
+  tooltipLabel: function tooltipLabel(datum) {
+    return "".concat(datum.id, " - ").concat(datum.indexValue);
+  },
+  legends: [],
+  initialHiddenIds: [],
+  annotations: [],
+  markers: []
+};
+var svgDefaultProps = _objectSpread2(_objectSpread2({}, defaultProps), {}, {
+  layers: ['grid', 'axes', 'bars', 'markers', 'legends', 'annotations'],
+  barComponent: BarItem,
+  defs: [],
+  fill: [],
+  animate: true,
+  motionConfig: 'default',
+  role: 'img',
+  isFocusable: false
+});
+var canvasDefaultProps = _objectSpread2(_objectSpread2({}, defaultProps), {}, {
+  layers: ['grid', 'axes', 'bars', 'legends', 'annotations'],
+  pixelRatio: typeof window !== 'undefined' ? (_window$devicePixelRa = window.devicePixelRatio) !== null && _window$devicePixelRa !== void 0 ? _window$devicePixelRa : 1 : 1
+});
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+var getIndexScale = function getIndexScale(data, getIndex, padding, indexScale, size, axis) {
+  return Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_9__["computeScale"])(indexScale, {
+    all: data.map(getIndex),
+    min: 0,
+    max: 0
+  }, size, axis).padding(padding);
+};
+var normalizeData = function normalizeData(data, keys) {
+  return data.map(function (item) {
+    return _objectSpread2(_objectSpread2({}, keys.reduce(function (acc, key) {
+      acc[key] = null;
+      return acc;
+    }, {})), item);
+  });
+};
+var filterNullValues = function filterNullValues(data) {
+  return Object.keys(data).reduce(function (acc, key) {
+    if (data[key]) {
+      acc[key] = data[key];
+    }
+
+    return acc;
+  }, {});
+};
+var coerceValue = function coerceValue(value) {
+  return [value, Number(value)];
+};
+
+var gt = function gt(value, other) {
+  return value > other;
+};
+
+var lt = function lt(value, other) {
+  return value < other;
+};
+
+var range = function range(start, end) {
+  return Array.from(' '.repeat(end - start), function (_, index) {
+    return start + index;
+  });
+};
+
+var clampToZero = function clampToZero(value) {
+  return gt(value, 0) ? 0 : value;
+};
+
+var zeroIfNotFinite = function zeroIfNotFinite(value) {
+  return isFinite(value) ? value : 0;
+};
+
+var generateVerticalGroupedBars = function generateVerticalGroupedBars(_ref, barWidth, reverse, yRef) {
+  var data = _ref.data,
+      formatValue = _ref.formatValue,
+      getColor = _ref.getColor,
+      getIndex = _ref.getIndex,
+      getTooltipLabel = _ref.getTooltipLabel,
+      _ref$innerPadding = _ref.innerPadding,
+      innerPadding = _ref$innerPadding === void 0 ? 0 : _ref$innerPadding,
+      keys = _ref.keys,
+      xScale = _ref.xScale,
+      yScale = _ref.yScale,
+      margin = _ref.margin;
+  var compare = reverse ? lt : gt;
+
+  var getY = function getY(d) {
+    var _yScale;
+
+    return compare(d, 0) ? (_yScale = yScale(d)) !== null && _yScale !== void 0 ? _yScale : 0 : yRef;
+  };
+
+  var getHeight = function getHeight(d, y) {
+    var _yScale2;
+
+    return compare(d, 0) ? yRef - y : ((_yScale2 = yScale(d)) !== null && _yScale2 !== void 0 ? _yScale2 : 0) - yRef;
+  };
+
+  var cleanedData = data.map(filterNullValues);
+  var bars = [];
+  keys.forEach(function (key, i) {
+    return range(0, xScale.domain().length).forEach(function (index) {
+      var _xScale;
+
+      var _coerceValue = coerceValue(data[index][key]),
+          _coerceValue2 = _slicedToArray(_coerceValue, 2),
+          rawValue = _coerceValue2[0],
+          value = _coerceValue2[1];
+
+      var indexValue = getIndex(data[index]);
+      var x = ((_xScale = xScale(indexValue)) !== null && _xScale !== void 0 ? _xScale : 0) + barWidth * i + innerPadding * i;
+      var y = getY(value);
+      var barHeight = getHeight(value, y);
+      var barData = {
+        id: key,
+        value: rawValue === null ? rawValue : value,
+        formattedValue: formatValue(value),
+        hidden: false,
+        index: index,
+        indexValue: indexValue,
+        data: cleanedData[index]
+      };
+      bars.push({
+        key: "".concat(key, ".").concat(barData.indexValue),
+        index: bars.length,
+        data: barData,
+        x: x,
+        y: y,
+        absX: margin.left + x,
+        absY: margin.top + y,
+        width: barWidth,
+        height: barHeight,
+        color: getColor(barData),
+        label: getTooltipLabel(barData)
+      });
+    });
+  });
+  return bars;
+};
+
+var generateHorizontalGroupedBars = function generateHorizontalGroupedBars(_ref2, barHeight, reverse, xRef) {
+  var data = _ref2.data,
+      formatValue = _ref2.formatValue,
+      getIndex = _ref2.getIndex,
+      getColor = _ref2.getColor,
+      getTooltipLabel = _ref2.getTooltipLabel,
+      keys = _ref2.keys,
+      _ref2$innerPadding = _ref2.innerPadding,
+      innerPadding = _ref2$innerPadding === void 0 ? 0 : _ref2$innerPadding,
+      xScale = _ref2.xScale,
+      yScale = _ref2.yScale,
+      margin = _ref2.margin;
+  var compare = reverse ? lt : gt;
+
+  var getX = function getX(d) {
+    var _xScale2;
+
+    return compare(d, 0) ? xRef : (_xScale2 = xScale(d)) !== null && _xScale2 !== void 0 ? _xScale2 : 0;
+  };
+
+  var getWidth = function getWidth(d, x) {
+    var _xScale3;
+
+    return compare(d, 0) ? ((_xScale3 = xScale(d)) !== null && _xScale3 !== void 0 ? _xScale3 : 0) - xRef : xRef - x;
+  };
+
+  var cleanedData = data.map(filterNullValues);
+  var bars = [];
+  keys.forEach(function (key, i) {
+    return range(0, yScale.domain().length).forEach(function (index) {
+      var _yScale3;
+
+      var _coerceValue3 = coerceValue(data[index][key]),
+          _coerceValue4 = _slicedToArray(_coerceValue3, 2),
+          rawValue = _coerceValue4[0],
+          value = _coerceValue4[1];
+
+      var indexValue = getIndex(data[index]);
+      var x = getX(value);
+      var y = ((_yScale3 = yScale(indexValue)) !== null && _yScale3 !== void 0 ? _yScale3 : 0) + barHeight * i + innerPadding * i;
+      var barWidth = getWidth(value, x);
+      var barData = {
+        id: key,
+        value: rawValue === null ? rawValue : value,
+        formattedValue: formatValue(value),
+        hidden: false,
+        index: index,
+        indexValue: indexValue,
+        data: cleanedData[index]
+      };
+      bars.push({
+        key: "".concat(key, ".").concat(barData.indexValue),
+        index: bars.length,
+        data: barData,
+        x: x,
+        y: y,
+        absX: margin.left + x,
+        absY: margin.top + y,
+        width: barWidth,
+        height: barHeight,
+        color: getColor(barData),
+        label: getTooltipLabel(barData)
+      });
+    });
+  });
+  return bars;
+};
+
+var generateGroupedBars = function generateGroupedBars(_ref3) {
+  var _scale;
+
+  var layout = _ref3.layout,
+      minValue = _ref3.minValue,
+      maxValue = _ref3.maxValue,
+      reverse = _ref3.reverse,
+      width = _ref3.width,
+      height = _ref3.height,
+      _ref3$padding = _ref3.padding,
+      padding = _ref3$padding === void 0 ? 0 : _ref3$padding,
+      _ref3$innerPadding = _ref3.innerPadding,
+      innerPadding = _ref3$innerPadding === void 0 ? 0 : _ref3$innerPadding,
+      valueScale = _ref3.valueScale,
+      indexScaleConfig = _ref3.indexScale,
+      _ref3$hiddenIds = _ref3.hiddenIds,
+      hiddenIds = _ref3$hiddenIds === void 0 ? [] : _ref3$hiddenIds,
+      props = _objectWithoutProperties(_ref3, ["layout", "minValue", "maxValue", "reverse", "width", "height", "padding", "innerPadding", "valueScale", "indexScale", "hiddenIds"]);
+
+  var keys = props.keys.filter(function (key) {
+    return !hiddenIds.includes(key);
+  });
+  var data = normalizeData(props.data, keys);
+
+  var _ref4 = layout === 'vertical' ? ['y', 'x', width] : ['x', 'y', height],
+      _ref5 = _slicedToArray(_ref4, 3),
+      axis = _ref5[0],
+      otherAxis = _ref5[1],
+      size = _ref5[2];
+
+  var indexScale = getIndexScale(data, props.getIndex, padding, indexScaleConfig, size, otherAxis);
+
+  var scaleSpec = _objectSpread2({
+    max: maxValue,
+    min: minValue,
+    reverse: reverse
+  }, valueScale);
+
+  var clampMin = scaleSpec.min === 'auto' ? clampToZero : function (value) {
+    return value;
+  };
+  var values = data.reduce(function (acc, entry) {
+    return [].concat(_toConsumableArray(acc), _toConsumableArray(keys.map(function (k) {
+      return entry[k];
+    })));
+  }, []).filter(Boolean);
+  var min = clampMin(Math.min.apply(Math, _toConsumableArray(values)));
+  var max = zeroIfNotFinite(Math.max.apply(Math, _toConsumableArray(values)));
+  var scale = Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_9__["computeScale"])(scaleSpec, {
+    all: values,
+    min: min,
+    max: max
+  }, axis === 'x' ? width : height, axis);
+
+  var _ref6 = layout === 'vertical' ? [indexScale, scale] : [scale, indexScale],
+      _ref7 = _slicedToArray(_ref6, 2),
+      xScale = _ref7[0],
+      yScale = _ref7[1];
+
+  var bandwidth = (indexScale.bandwidth() - innerPadding * (keys.length - 1)) / keys.length;
+  var params = [_objectSpread2(_objectSpread2({}, props), {}, {
+    data: data,
+    keys: keys,
+    innerPadding: innerPadding,
+    xScale: xScale,
+    yScale: yScale
+  }), bandwidth, scaleSpec.reverse, (_scale = scale(0)) !== null && _scale !== void 0 ? _scale : 0];
+  var bars = bandwidth > 0 ? layout === 'vertical' ? generateVerticalGroupedBars.apply(void 0, params) : generateHorizontalGroupedBars.apply(void 0, params) : [];
+  return {
+    xScale: xScale,
+    yScale: yScale,
+    bars: bars
+  };
+};
+
+var flattenDeep = function flattenDeep(arr) {
+  var _ref;
+
+  return arr.some(Array.isArray) ? flattenDeep((_ref = []).concat.apply(_ref, _toConsumableArray(arr))) : arr;
+};
+
+var filterZerosIfLog = function filterZerosIfLog(array, type) {
+  return type === 'log' ? array.filter(function (num) {
+    return num !== 0;
+  }) : array;
+};
+
+var generateVerticalStackedBars = function generateVerticalStackedBars(_ref2, barWidth, reverse) {
+  var formatValue = _ref2.formatValue,
+      getColor = _ref2.getColor,
+      getIndex = _ref2.getIndex,
+      getTooltipLabel = _ref2.getTooltipLabel,
+      innerPadding = _ref2.innerPadding,
+      stackedData = _ref2.stackedData,
+      xScale = _ref2.xScale,
+      yScale = _ref2.yScale,
+      margin = _ref2.margin;
+
+  var getY = function getY(d) {
+    return yScale(d[reverse ? 0 : 1]);
+  };
+
+  var getHeight = function getHeight(d, y) {
+    var _yScale;
+
+    return ((_yScale = yScale(d[reverse ? 1 : 0])) !== null && _yScale !== void 0 ? _yScale : 0) - y;
+  };
+
+  var bars = [];
+  stackedData.forEach(function (stackedDataItem) {
+    return xScale.domain().forEach(function (index, i) {
+      var _xScale, _getY;
+
+      var d = stackedDataItem[i];
+      var x = (_xScale = xScale(getIndex(d.data))) !== null && _xScale !== void 0 ? _xScale : 0;
+      var y = ((_getY = getY(d)) !== null && _getY !== void 0 ? _getY : 0) + innerPadding * 0.5;
+      var barHeight = getHeight(d, y) - innerPadding;
+
+      var _coerceValue = coerceValue(d.data[stackedDataItem.key]),
+          _coerceValue2 = _slicedToArray(_coerceValue, 2),
+          rawValue = _coerceValue2[0],
+          value = _coerceValue2[1];
+
+      var barData = {
+        id: stackedDataItem.key,
+        value: rawValue === null ? rawValue : value,
+        formattedValue: formatValue(value),
+        hidden: false,
+        index: i,
+        indexValue: index,
+        data: filterNullValues(d.data)
+      };
+      bars.push({
+        key: "".concat(stackedDataItem.key, ".").concat(index),
+        index: bars.length,
+        data: barData,
+        x: x,
+        y: y,
+        absX: margin.left + x,
+        absY: margin.top + y,
+        width: barWidth,
+        height: barHeight,
+        color: getColor(barData),
+        label: getTooltipLabel(barData)
+      });
+    });
+  });
+  return bars;
+};
+
+var generateHorizontalStackedBars = function generateHorizontalStackedBars(_ref3, barHeight, reverse) {
+  var formatValue = _ref3.formatValue,
+      getColor = _ref3.getColor,
+      getIndex = _ref3.getIndex,
+      getTooltipLabel = _ref3.getTooltipLabel,
+      innerPadding = _ref3.innerPadding,
+      stackedData = _ref3.stackedData,
+      xScale = _ref3.xScale,
+      yScale = _ref3.yScale,
+      margin = _ref3.margin;
+
+  var getX = function getX(d) {
+    return xScale(d[reverse ? 1 : 0]);
+  };
+
+  var getWidth = function getWidth(d, x) {
+    var _xScale2;
+
+    return ((_xScale2 = xScale(d[reverse ? 0 : 1])) !== null && _xScale2 !== void 0 ? _xScale2 : 0) - x;
+  };
+
+  var bars = [];
+  stackedData.forEach(function (stackedDataItem) {
+    return yScale.domain().forEach(function (index, i) {
+      var _yScale2, _getX;
+
+      var d = stackedDataItem[i];
+      var y = (_yScale2 = yScale(getIndex(d.data))) !== null && _yScale2 !== void 0 ? _yScale2 : 0;
+      var x = ((_getX = getX(d)) !== null && _getX !== void 0 ? _getX : 0) + innerPadding * 0.5;
+      var barWidth = getWidth(d, x) - innerPadding;
+
+      var _coerceValue3 = coerceValue(d.data[stackedDataItem.key]),
+          _coerceValue4 = _slicedToArray(_coerceValue3, 2),
+          rawValue = _coerceValue4[0],
+          value = _coerceValue4[1];
+
+      var barData = {
+        id: stackedDataItem.key,
+        value: rawValue === null ? rawValue : value,
+        formattedValue: formatValue(value),
+        hidden: false,
+        index: i,
+        indexValue: index,
+        data: filterNullValues(d.data)
+      };
+      bars.push({
+        key: "".concat(stackedDataItem.key, ".").concat(index),
+        index: bars.length,
+        data: barData,
+        x: x,
+        y: y,
+        absX: margin.left + x,
+        absY: margin.top + y,
+        width: barWidth,
+        height: barHeight,
+        color: getColor(barData),
+        label: getTooltipLabel(barData)
+      });
+    });
+  });
+  return bars;
+};
+
+var generateStackedBars = function generateStackedBars(_ref4) {
+  var data = _ref4.data,
+      layout = _ref4.layout,
+      minValue = _ref4.minValue,
+      maxValue = _ref4.maxValue,
+      reverse = _ref4.reverse,
+      width = _ref4.width,
+      height = _ref4.height,
+      _ref4$padding = _ref4.padding,
+      padding = _ref4$padding === void 0 ? 0 : _ref4$padding,
+      valueScale = _ref4.valueScale,
+      indexScaleConfig = _ref4.indexScale,
+      _ref4$hiddenIds = _ref4.hiddenIds,
+      hiddenIds = _ref4$hiddenIds === void 0 ? [] : _ref4$hiddenIds,
+      props = _objectWithoutProperties(_ref4, ["data", "layout", "minValue", "maxValue", "reverse", "width", "height", "padding", "valueScale", "indexScale", "hiddenIds"]);
+
+  var keys = props.keys.filter(function (key) {
+    return !hiddenIds.includes(key);
+  });
+  var stackedData = Object(d3_shape__WEBPACK_IMPORTED_MODULE_10__["stack"])().keys(keys).offset(d3_shape__WEBPACK_IMPORTED_MODULE_10__["stackOffsetDiverging"])(normalizeData(data, keys));
+
+  var _ref5 = layout === 'vertical' ? ['y', 'x', width] : ['x', 'y', height],
+      _ref6 = _slicedToArray(_ref5, 3),
+      axis = _ref6[0],
+      otherAxis = _ref6[1],
+      size = _ref6[2];
+
+  var indexScale = getIndexScale(data, props.getIndex, padding, indexScaleConfig, size, otherAxis);
+
+  var scaleSpec = _objectSpread2({
+    max: maxValue,
+    min: minValue,
+    reverse: reverse
+  }, valueScale);
+
+  var values = filterZerosIfLog(flattenDeep(stackedData), valueScale.type);
+  var min = Math.min.apply(Math, _toConsumableArray(values));
+  var max = Math.max.apply(Math, _toConsumableArray(values));
+  var scale = Object(_nivo_scales__WEBPACK_IMPORTED_MODULE_9__["computeScale"])(scaleSpec, {
+    all: values,
+    min: min,
+    max: max
+  }, axis === 'x' ? width : height, axis);
+
+  var _ref7 = layout === 'vertical' ? [indexScale, scale] : [scale, indexScale],
+      _ref8 = _slicedToArray(_ref7, 2),
+      xScale = _ref8[0],
+      yScale = _ref8[1];
+
+  var innerPadding = props.innerPadding > 0 ? props.innerPadding : 0;
+  var bandwidth = indexScale.bandwidth();
+  var params = [_objectSpread2(_objectSpread2({}, props), {}, {
+    innerPadding: innerPadding,
+    stackedData: stackedData,
+    xScale: xScale,
+    yScale: yScale
+  }), bandwidth, scaleSpec.reverse];
+  var bars = bandwidth > 0 ? layout === 'vertical' ? generateVerticalStackedBars.apply(void 0, params) : generateHorizontalStackedBars.apply(void 0, params) : [];
+  return {
+    xScale: xScale,
+    yScale: yScale,
+    bars: bars
+  };
+};
+
+var getLegendDataForKeys = function getLegendDataForKeys(bars, layout, direction, groupMode, reverse, getLegendLabel) {
+  var data = lodash_uniqBy__WEBPACK_IMPORTED_MODULE_11___default()(bars.map(function (bar) {
+    var _bar$color;
+
+    return {
+      id: bar.data.id,
+      label: getLegendLabel(bar.data),
+      hidden: bar.data.hidden,
+      color: (_bar$color = bar.color) !== null && _bar$color !== void 0 ? _bar$color : '#000'
+    };
+  }), function (_ref) {
+    var id = _ref.id;
+    return id;
+  });
+
+  if (layout === 'vertical' && groupMode === 'stacked' && direction === 'column' && reverse !== true || layout === 'horizontal' && groupMode === 'stacked' && reverse === true) {
+    data.reverse();
+  }
+
+  return data;
+};
+var getLegendDataForIndexes = function getLegendDataForIndexes(bars, layout, getLegendLabel) {
+  var data = lodash_uniqBy__WEBPACK_IMPORTED_MODULE_11___default()(bars.map(function (bar) {
+    var _bar$data$indexValue, _bar$color2;
+
+    return {
+      id: (_bar$data$indexValue = bar.data.indexValue) !== null && _bar$data$indexValue !== void 0 ? _bar$data$indexValue : '',
+      label: getLegendLabel(bar.data),
+      hidden: bar.data.hidden,
+      color: (_bar$color2 = bar.color) !== null && _bar$color2 !== void 0 ? _bar$color2 : '#000'
+    };
+  }), function (_ref2) {
+    var id = _ref2.id;
+    return id;
+  });
+
+  if (layout === 'horizontal') {
+    data.reverse();
+  }
+
+  return data;
+};
+var getLegendData = function getLegendData(_ref3) {
+  var bars = _ref3.bars,
+      direction = _ref3.direction,
+      from = _ref3.from,
+      groupMode = _ref3.groupMode,
+      layout = _ref3.layout,
+      legendLabel = _ref3.legendLabel,
+      reverse = _ref3.reverse;
+  var getLegendLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["getPropertyAccessor"])(legendLabel !== null && legendLabel !== void 0 ? legendLabel : from === 'indexes' ? 'indexValue' : 'id');
+
+  if (from === 'indexes') {
+    return getLegendDataForIndexes(bars, layout, getLegendLabel);
+  }
+
+  return getLegendDataForKeys(bars, layout, direction, groupMode, reverse, getLegendLabel);
+};
+
+var useBar = function useBar(_ref) {
+  var _ref$indexBy = _ref.indexBy,
+      indexBy = _ref$indexBy === void 0 ? defaultProps.indexBy : _ref$indexBy,
+      _ref$keys = _ref.keys,
+      keys = _ref$keys === void 0 ? defaultProps.keys : _ref$keys,
+      _ref$label = _ref.label,
+      label = _ref$label === void 0 ? defaultProps.label : _ref$label,
+      _ref$tooltipLabel = _ref.tooltipLabel,
+      tooltipLabel = _ref$tooltipLabel === void 0 ? defaultProps.tooltipLabel : _ref$tooltipLabel,
+      valueFormat = _ref.valueFormat,
+      _ref$colors = _ref.colors,
+      colors = _ref$colors === void 0 ? defaultProps.colors : _ref$colors,
+      _ref$colorBy = _ref.colorBy,
+      colorBy = _ref$colorBy === void 0 ? defaultProps.colorBy : _ref$colorBy,
+      _ref$borderColor = _ref.borderColor,
+      borderColor = _ref$borderColor === void 0 ? defaultProps.borderColor : _ref$borderColor,
+      _ref$labelTextColor = _ref.labelTextColor,
+      labelTextColor = _ref$labelTextColor === void 0 ? defaultProps.labelTextColor : _ref$labelTextColor,
+      _ref$groupMode = _ref.groupMode,
+      groupMode = _ref$groupMode === void 0 ? defaultProps.groupMode : _ref$groupMode,
+      _ref$layout = _ref.layout,
+      layout = _ref$layout === void 0 ? defaultProps.layout : _ref$layout,
+      _ref$reverse = _ref.reverse,
+      reverse = _ref$reverse === void 0 ? defaultProps.reverse : _ref$reverse,
+      data = _ref.data,
+      _ref$minValue = _ref.minValue,
+      minValue = _ref$minValue === void 0 ? defaultProps.minValue : _ref$minValue,
+      _ref$maxValue = _ref.maxValue,
+      maxValue = _ref$maxValue === void 0 ? defaultProps.maxValue : _ref$maxValue,
+      margin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      _ref$padding = _ref.padding,
+      padding = _ref$padding === void 0 ? defaultProps.padding : _ref$padding,
+      _ref$innerPadding = _ref.innerPadding,
+      innerPadding = _ref$innerPadding === void 0 ? defaultProps.innerPadding : _ref$innerPadding,
+      _ref$valueScale = _ref.valueScale,
+      valueScale = _ref$valueScale === void 0 ? defaultProps.valueScale : _ref$valueScale,
+      _ref$indexScale = _ref.indexScale,
+      indexScale = _ref$indexScale === void 0 ? defaultProps.indexScale : _ref$indexScale,
+      _ref$initialHiddenIds = _ref.initialHiddenIds,
+      initialHiddenIds = _ref$initialHiddenIds === void 0 ? defaultProps.initialHiddenIds : _ref$initialHiddenIds,
+      _ref$enableLabel = _ref.enableLabel,
+      enableLabel = _ref$enableLabel === void 0 ? defaultProps.enableLabel : _ref$enableLabel,
+      _ref$labelSkipWidth = _ref.labelSkipWidth,
+      labelSkipWidth = _ref$labelSkipWidth === void 0 ? defaultProps.labelSkipWidth : _ref$labelSkipWidth,
+      _ref$labelSkipHeight = _ref.labelSkipHeight,
+      labelSkipHeight = _ref$labelSkipHeight === void 0 ? defaultProps.labelSkipHeight : _ref$labelSkipHeight,
+      _ref$legends = _ref.legends,
+      legends = _ref$legends === void 0 ? defaultProps.legends : _ref$legends,
+      legendLabel = _ref.legendLabel;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_5__["useState"])(initialHiddenIds !== null && initialHiddenIds !== void 0 ? initialHiddenIds : []),
+      _useState2 = _slicedToArray(_useState, 2),
+      hiddenIds = _useState2[0],
+      setHiddenIds = _useState2[1];
+
+  var toggleSerie = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (id) {
+    setHiddenIds(function (state) {
+      return state.indexOf(id) > -1 ? state.filter(function (item) {
+        return item !== id;
+      }) : [].concat(_toConsumableArray(state), [id]);
+    });
+  }, []);
+  var getIndex = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["usePropertyAccessor"])(indexBy);
+  var getLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["usePropertyAccessor"])(label);
+  var getTooltipLabel = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["usePropertyAccessor"])(tooltipLabel);
+  var formatValue = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useValueFormatter"])(valueFormat);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+  var getColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_8__["useOrdinalColorScale"])(colors, colorBy);
+  var getBorderColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_8__["useInheritedColor"])(borderColor, theme);
+  var getLabelColor = Object(_nivo_colors__WEBPACK_IMPORTED_MODULE_8__["useInheritedColor"])(labelTextColor, theme);
+  var generateBars = groupMode === 'grouped' ? generateGroupedBars : generateStackedBars;
+
+  var _generateBars = generateBars({
+    layout: layout,
+    reverse: reverse,
+    data: data,
+    getIndex: getIndex,
+    keys: keys,
+    minValue: minValue,
+    maxValue: maxValue,
+    width: width,
+    height: height,
+    getColor: getColor,
+    padding: padding,
+    innerPadding: innerPadding,
+    valueScale: valueScale,
+    indexScale: indexScale,
+    hiddenIds: hiddenIds,
+    formatValue: formatValue,
+    getTooltipLabel: getTooltipLabel,
+    margin: margin
+  }),
+      bars = _generateBars.bars,
+      xScale = _generateBars.xScale,
+      yScale = _generateBars.yScale;
+
+  var barsWithValue = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return bars.filter(function (bar) {
+      return bar.data.value !== null;
+    }).map(function (bar, index) {
+      return _objectSpread2(_objectSpread2({}, bar), {}, {
+        index: index
+      });
+    });
+  }, [bars]);
+  var shouldRenderBarLabel = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (_ref2) {
+    var width = _ref2.width,
+        height = _ref2.height;
+    if (!enableLabel) return false;
+    if (labelSkipWidth > 0 && width < labelSkipWidth) return false;
+    if (labelSkipHeight > 0 && height < labelSkipHeight) return false;
+    return true;
+  }, [enableLabel, labelSkipWidth, labelSkipHeight]);
+  var legendData = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return keys.map(function (key) {
+      var bar = bars.find(function (bar) {
+        return bar.data.id === key;
+      });
+      return _objectSpread2(_objectSpread2({}, bar), {}, {
+        data: _objectSpread2(_objectSpread2({
+          id: key
+        }, bar === null || bar === void 0 ? void 0 : bar.data), {}, {
+          hidden: hiddenIds.includes(key)
+        })
+      });
+    });
+  }, [hiddenIds, keys, bars]);
+  var legendsWithData = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return legends.map(function (legend) {
+      var data = getLegendData({
+        bars: legend.dataFrom === 'keys' ? legendData : bars,
+        direction: legend.direction,
+        from: legend.dataFrom,
+        groupMode: groupMode,
+        layout: layout,
+        legendLabel: legendLabel,
+        reverse: reverse
+      });
+      return [legend, data];
+    });
+  }, [legends, legendData, bars, groupMode, layout, legendLabel, reverse]);
+  return {
+    bars: bars,
+    barsWithValue: barsWithValue,
+    xScale: xScale,
+    yScale: yScale,
+    getIndex: getIndex,
+    getLabel: getLabel,
+    getTooltipLabel: getTooltipLabel,
+    formatValue: formatValue,
+    getColor: getColor,
+    getBorderColor: getBorderColor,
+    getLabelColor: getLabelColor,
+    shouldRenderBarLabel: shouldRenderBarLabel,
+    hiddenIds: hiddenIds,
+    toggleSerie: toggleSerie,
+    legendsWithData: legendsWithData
+  };
+};
+
+var InnerBar = function InnerBar(_ref) {
+  var data = _ref.data,
+      indexBy = _ref.indexBy,
+      keys = _ref.keys,
+      partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      groupMode = _ref.groupMode,
+      layout = _ref.layout,
+      reverse = _ref.reverse,
+      minValue = _ref.minValue,
+      maxValue = _ref.maxValue,
+      valueScale = _ref.valueScale,
+      indexScale = _ref.indexScale,
+      padding = _ref.padding,
+      innerPadding = _ref.innerPadding,
+      axisTop = _ref.axisTop,
+      axisRight = _ref.axisRight,
+      _ref$axisBottom = _ref.axisBottom,
+      axisBottom = _ref$axisBottom === void 0 ? svgDefaultProps.axisBottom : _ref$axisBottom,
+      _ref$axisLeft = _ref.axisLeft,
+      axisLeft = _ref$axisLeft === void 0 ? svgDefaultProps.axisLeft : _ref$axisLeft,
+      _ref$enableGridX = _ref.enableGridX,
+      enableGridX = _ref$enableGridX === void 0 ? svgDefaultProps.enableGridX : _ref$enableGridX,
+      _ref$enableGridY = _ref.enableGridY,
+      enableGridY = _ref$enableGridY === void 0 ? svgDefaultProps.enableGridY : _ref$enableGridY,
+      gridXValues = _ref.gridXValues,
+      gridYValues = _ref.gridYValues,
+      _ref$layers = _ref.layers,
+      layers = _ref$layers === void 0 ? svgDefaultProps.layers : _ref$layers,
+      _ref$barComponent = _ref.barComponent,
+      barComponent = _ref$barComponent === void 0 ? svgDefaultProps.barComponent : _ref$barComponent,
+      enableLabel = _ref.enableLabel,
+      label = _ref.label,
+      labelSkipWidth = _ref.labelSkipWidth,
+      labelSkipHeight = _ref.labelSkipHeight,
+      labelTextColor = _ref.labelTextColor,
+      _ref$markers = _ref.markers,
+      markers = _ref$markers === void 0 ? svgDefaultProps.markers : _ref$markers,
+      colorBy = _ref.colorBy,
+      colors = _ref.colors,
+      _ref$defs = _ref.defs,
+      defs = _ref$defs === void 0 ? svgDefaultProps.defs : _ref$defs,
+      _ref$fill = _ref.fill,
+      fill = _ref$fill === void 0 ? svgDefaultProps.fill : _ref$fill,
+      _ref$borderRadius = _ref.borderRadius,
+      borderRadius = _ref$borderRadius === void 0 ? svgDefaultProps.borderRadius : _ref$borderRadius,
+      _ref$borderWidth = _ref.borderWidth,
+      borderWidth = _ref$borderWidth === void 0 ? svgDefaultProps.borderWidth : _ref$borderWidth,
+      borderColor = _ref.borderColor,
+      _ref$annotations = _ref.annotations,
+      annotations = _ref$annotations === void 0 ? svgDefaultProps.annotations : _ref$annotations,
+      legendLabel = _ref.legendLabel,
+      tooltipLabel = _ref.tooltipLabel,
+      valueFormat = _ref.valueFormat,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? svgDefaultProps.isInteractive : _ref$isInteractive,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? svgDefaultProps.tooltip : _ref$tooltip,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      legends = _ref.legends,
+      _ref$role = _ref.role,
+      role = _ref$role === void 0 ? svgDefaultProps.role : _ref$role,
+      ariaLabel = _ref.ariaLabel,
+      ariaLabelledBy = _ref.ariaLabelledBy,
+      ariaDescribedBy = _ref.ariaDescribedBy,
+      _ref$isFocusable = _ref.isFocusable,
+      isFocusable = _ref$isFocusable === void 0 ? svgDefaultProps.isFocusable : _ref$isFocusable,
+      barAriaLabel = _ref.barAriaLabel,
+      barAriaLabelledBy = _ref.barAriaLabelledBy,
+      barAriaDescribedBy = _ref.barAriaDescribedBy,
+      initialHiddenIds = _ref.initialHiddenIds;
+
+  var _useMotionConfig = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useMotionConfig"])(),
+      animate = _useMotionConfig.animate,
+      springConfig = _useMotionConfig.config;
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useDimensions"])(width, height, partialMargin),
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight,
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight;
+
+  var _useBar = useBar({
+    indexBy: indexBy,
+    label: label,
+    tooltipLabel: tooltipLabel,
+    valueFormat: valueFormat,
+    colors: colors,
+    colorBy: colorBy,
+    borderColor: borderColor,
+    labelTextColor: labelTextColor,
+    groupMode: groupMode,
+    layout: layout,
+    reverse: reverse,
+    data: data,
+    keys: keys,
+    minValue: minValue,
+    maxValue: maxValue,
+    margin: margin,
+    width: innerWidth,
+    height: innerHeight,
+    padding: padding,
+    innerPadding: innerPadding,
+    valueScale: valueScale,
+    indexScale: indexScale,
+    enableLabel: enableLabel,
+    labelSkipWidth: labelSkipWidth,
+    labelSkipHeight: labelSkipHeight,
+    legends: legends,
+    legendLabel: legendLabel,
+    initialHiddenIds: initialHiddenIds
+  }),
+      bars = _useBar.bars,
+      barsWithValue = _useBar.barsWithValue,
+      xScale = _useBar.xScale,
+      yScale = _useBar.yScale,
+      getLabel = _useBar.getLabel,
+      getTooltipLabel = _useBar.getTooltipLabel,
+      getBorderColor = _useBar.getBorderColor,
+      getLabelColor = _useBar.getLabelColor,
+      shouldRenderBarLabel = _useBar.shouldRenderBarLabel,
+      toggleSerie = _useBar.toggleSerie,
+      legendsWithData = _useBar.legendsWithData;
+
+  var transition = Object(_react_spring_web__WEBPACK_IMPORTED_MODULE_6__["useTransition"])(barsWithValue, {
+    keys: function keys(bar) {
+      return bar.key;
+    },
+    from: function from(bar) {
+      return _objectSpread2({
+        borderColor: getBorderColor(bar),
+        color: bar.color,
+        height: 0,
+        labelColor: getLabelColor(bar),
+        labelOpacity: 0,
+        labelX: bar.width / 2,
+        labelY: bar.height / 2,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y + bar.height, ")"),
+        width: bar.width
+      }, layout === 'vertical' ? {} : {
+        height: bar.height,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y, ")"),
+        width: 0
+      });
+    },
+    enter: function enter(bar) {
+      return {
+        borderColor: getBorderColor(bar),
+        color: bar.color,
+        height: bar.height,
+        labelColor: getLabelColor(bar),
+        labelOpacity: 1,
+        labelX: bar.width / 2,
+        labelY: bar.height / 2,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y, ")"),
+        width: bar.width
+      };
+    },
+    update: function update(bar) {
+      return {
+        borderColor: getBorderColor(bar),
+        color: bar.color,
+        height: bar.height,
+        labelColor: getLabelColor(bar),
+        labelOpacity: 1,
+        labelX: bar.width / 2,
+        labelY: bar.height / 2,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y, ")"),
+        width: bar.width
+      };
+    },
+    leave: function leave(bar) {
+      return _objectSpread2({
+        borderColor: getBorderColor(bar),
+        color: bar.color,
+        height: 0,
+        labelColor: getLabelColor(bar),
+        labelOpacity: 0,
+        labelX: bar.width / 2,
+        labelY: 0,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y + bar.height, ")"),
+        width: bar.width
+      }, layout === 'vertical' ? {} : {
+        labelX: 0,
+        labelY: bar.height / 2,
+        height: bar.height,
+        transform: "translate(".concat(bar.x, ", ").concat(bar.y, ")"),
+        width: 0
+      });
+    },
+    config: springConfig,
+    immediate: !animate
+  });
+  var commonProps = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return {
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      enableLabel: enableLabel,
+      isInteractive: isInteractive,
+      labelSkipWidth: labelSkipWidth,
+      labelSkipHeight: labelSkipHeight,
+      onClick: onClick,
+      onMouseEnter: onMouseEnter,
+      onMouseLeave: onMouseLeave,
+      getTooltipLabel: getTooltipLabel,
+      tooltip: tooltip,
+      isFocusable: isFocusable,
+      ariaLabel: barAriaLabel,
+      ariaLabelledBy: barAriaLabelledBy,
+      ariaDescribedBy: barAriaDescribedBy
+    };
+  }, [borderRadius, borderWidth, enableLabel, getTooltipLabel, isInteractive, labelSkipHeight, labelSkipWidth, onClick, onMouseEnter, onMouseLeave, tooltip, isFocusable, barAriaLabel, barAriaLabelledBy, barAriaDescribedBy]);
+  var boundDefs = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["bindDefs"])(defs, bars, fill, {
+    dataKey: 'data',
+    targetKey: 'data.fill'
+  });
+  var layerById = {
+    annotations: null,
+    axes: null,
+    bars: null,
+    grid: null,
+    legends: null,
+    markers: null
+  };
+
+  if (layers.includes('annotations')) {
+    layerById.annotations = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(BarAnnotations, {
+      bars: bars,
+      annotations: annotations
+    }, "annotations");
+  }
+
+  if (layers.includes('axes')) {
+    layerById.axes = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_axes__WEBPACK_IMPORTED_MODULE_0__["Axes"], {
+      xScale: xScale,
+      yScale: yScale,
+      width: innerWidth,
+      height: innerHeight,
+      top: axisTop,
+      right: axisRight,
+      bottom: axisBottom,
+      left: axisLeft
+    }, "axes");
+  }
+
+  if (layers.includes('bars')) {
+    layerById.bars = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_5__["Fragment"], {
+      children: transition(function (style, bar) {
+        return Object(react__WEBPACK_IMPORTED_MODULE_5__["createElement"])(barComponent, _objectSpread2(_objectSpread2({}, commonProps), {}, {
+          bar: bar,
+          style: style,
+          shouldRenderLabel: shouldRenderBarLabel(bar),
+          label: getLabel(bar.data)
+        }));
+      })
+    }, "bars");
+  }
+
+  if (layers.includes('grid')) {
+    layerById.grid = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_axes__WEBPACK_IMPORTED_MODULE_0__["Grid"], {
+      width: innerWidth,
+      height: innerHeight,
+      xScale: enableGridX ? xScale : null,
+      yScale: enableGridY ? yScale : null,
+      xValues: gridXValues,
+      yValues: gridYValues
+    }, "grid");
+  }
+
+  if (layers.includes('legends')) {
+    layerById.legends = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(BarLegends, {
+      width: innerWidth,
+      height: innerHeight,
+      legends: legendsWithData,
+      toggleSerie: toggleSerie
+    }, "legends");
+  }
+
+  if (layers.includes('markers')) {
+    layerById.markers = Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["CartesianMarkers"], {
+      markers: markers,
+      width: innerWidth,
+      height: innerHeight,
+      xScale: xScale,
+      yScale: yScale
+    }, "markers");
+  }
+
+  var layerContext = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return _objectSpread2(_objectSpread2({}, commonProps), {}, {
+      margin: margin,
+      innerWidth: innerWidth,
+      innerHeight: innerHeight,
+      width: width,
+      height: height,
+      bars: bars,
+      xScale: xScale,
+      yScale: yScale
+    });
+  }, [commonProps, margin, innerWidth, innerHeight, width, height, bars, xScale, yScale]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["SvgWrapper"], {
+    width: outerWidth,
+    height: outerHeight,
+    margin: margin,
+    defs: boundDefs,
+    role: role,
+    ariaLabel: ariaLabel,
+    ariaLabelledBy: ariaLabelledBy,
+    ariaDescribedBy: ariaDescribedBy,
+    isFocusable: isFocusable,
+    children: layers.map(function (layer, i) {
+      var _layerById$layer;
+
+      if (typeof layer === 'function') {
+        return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(react__WEBPACK_IMPORTED_MODULE_5__["Fragment"], {
+          children: Object(react__WEBPACK_IMPORTED_MODULE_5__["createElement"])(layer, layerContext)
+        }, i);
+      }
+
+      return (_layerById$layer = layerById === null || layerById === void 0 ? void 0 : layerById[layer]) !== null && _layerById$layer !== void 0 ? _layerById$layer : null;
+    })
+  });
+};
+
+var Bar = function Bar(_ref2) {
+  var _ref2$isInteractive = _ref2.isInteractive,
+      isInteractive = _ref2$isInteractive === void 0 ? svgDefaultProps.isInteractive : _ref2$isInteractive,
+      _ref2$animate = _ref2.animate,
+      animate = _ref2$animate === void 0 ? svgDefaultProps.animate : _ref2$animate,
+      _ref2$motionConfig = _ref2.motionConfig,
+      motionConfig = _ref2$motionConfig === void 0 ? svgDefaultProps.motionConfig : _ref2$motionConfig,
+      theme = _ref2.theme,
+      renderWrapper = _ref2.renderWrapper,
+      otherProps = _objectWithoutProperties(_ref2, ["isInteractive", "animate", "motionConfig", "theme", "renderWrapper"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["Container"], {
+    animate: animate,
+    isInteractive: isInteractive,
+    motionConfig: motionConfig,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(InnerBar, _objectSpread2({
+      isInteractive: isInteractive
+    }, otherProps))
+  });
+};
+
+var findBarUnderCursor = function findBarUnderCursor(nodes, margin, x, y) {
+  return nodes.find(function (node) {
+    return Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["isCursorInRect"])(node.x + margin.left, node.y + margin.top, node.width, node.height, x, y);
+  });
+};
+
+var isNumber = function isNumber(value) {
+  return typeof value === 'number';
+};
+
+var InnerBarCanvas = function InnerBarCanvas(_ref) {
+  var data = _ref.data,
+      indexBy = _ref.indexBy,
+      keys = _ref.keys,
+      partialMargin = _ref.margin,
+      width = _ref.width,
+      height = _ref.height,
+      groupMode = _ref.groupMode,
+      layout = _ref.layout,
+      reverse = _ref.reverse,
+      minValue = _ref.minValue,
+      maxValue = _ref.maxValue,
+      valueScale = _ref.valueScale,
+      indexScale = _ref.indexScale,
+      padding = _ref.padding,
+      innerPadding = _ref.innerPadding,
+      axisTop = _ref.axisTop,
+      axisRight = _ref.axisRight,
+      _ref$axisBottom = _ref.axisBottom,
+      axisBottom = _ref$axisBottom === void 0 ? canvasDefaultProps.axisBottom : _ref$axisBottom,
+      _ref$axisLeft = _ref.axisLeft,
+      axisLeft = _ref$axisLeft === void 0 ? canvasDefaultProps.axisLeft : _ref$axisLeft,
+      _ref$enableGridX = _ref.enableGridX,
+      enableGridX = _ref$enableGridX === void 0 ? canvasDefaultProps.enableGridX : _ref$enableGridX,
+      _ref$enableGridY = _ref.enableGridY,
+      enableGridY = _ref$enableGridY === void 0 ? canvasDefaultProps.enableGridY : _ref$enableGridY,
+      gridXValues = _ref.gridXValues,
+      gridYValues = _ref.gridYValues,
+      _ref$layers = _ref.layers,
+      layers = _ref$layers === void 0 ? canvasDefaultProps.layers : _ref$layers,
+      _ref$renderBar = _ref.renderBar,
+      renderBar = _ref$renderBar === void 0 ? function (ctx, _ref2) {
+    var _ref2$bar = _ref2.bar,
+        color = _ref2$bar.color,
+        height = _ref2$bar.height,
+        width = _ref2$bar.width,
+        x = _ref2$bar.x,
+        y = _ref2$bar.y,
+        borderColor = _ref2.borderColor,
+        borderRadius = _ref2.borderRadius,
+        borderWidth = _ref2.borderWidth,
+        label = _ref2.label,
+        labelColor = _ref2.labelColor,
+        shouldRenderLabel = _ref2.shouldRenderLabel;
+    ctx.fillStyle = color;
+
+    if (borderWidth > 0) {
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = borderWidth;
+    }
+
+    ctx.beginPath();
+
+    if (borderRadius > 0) {
+      var radius = Math.min(borderRadius, height);
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    } else {
+      ctx.rect(x, y, width, height);
+    }
+
+    ctx.fill();
+
+    if (borderWidth > 0) {
+      ctx.stroke();
+    }
+
+    if (shouldRenderLabel) {
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = labelColor;
+      ctx.fillText(label, x + width / 2, y + height / 2);
+    }
+  } : _ref$renderBar,
+      enableLabel = _ref.enableLabel,
+      label = _ref.label,
+      labelSkipWidth = _ref.labelSkipWidth,
+      labelSkipHeight = _ref.labelSkipHeight,
+      labelTextColor = _ref.labelTextColor,
+      colorBy = _ref.colorBy,
+      colors = _ref.colors,
+      _ref$borderRadius = _ref.borderRadius,
+      borderRadius = _ref$borderRadius === void 0 ? canvasDefaultProps.borderRadius : _ref$borderRadius,
+      _ref$borderWidth = _ref.borderWidth,
+      borderWidth = _ref$borderWidth === void 0 ? canvasDefaultProps.borderWidth : _ref$borderWidth,
+      borderColor = _ref.borderColor,
+      _ref$annotations = _ref.annotations,
+      annotations = _ref$annotations === void 0 ? canvasDefaultProps.annotations : _ref$annotations,
+      legendLabel = _ref.legendLabel,
+      tooltipLabel = _ref.tooltipLabel,
+      valueFormat = _ref.valueFormat,
+      _ref$isInteractive = _ref.isInteractive,
+      isInteractive = _ref$isInteractive === void 0 ? canvasDefaultProps.isInteractive : _ref$isInteractive,
+      _ref$tooltip = _ref.tooltip,
+      tooltip = _ref$tooltip === void 0 ? canvasDefaultProps.tooltip : _ref$tooltip,
+      onClick = _ref.onClick,
+      onMouseEnter = _ref.onMouseEnter,
+      onMouseLeave = _ref.onMouseLeave,
+      legends = _ref.legends,
+      _ref$pixelRatio = _ref.pixelRatio,
+      pixelRatio = _ref$pixelRatio === void 0 ? canvasDefaultProps.pixelRatio : _ref$pixelRatio,
+      canvasRef = _ref.canvasRef;
+  var canvasEl = Object(react__WEBPACK_IMPORTED_MODULE_5__["useRef"])(null);
+  var theme = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useTheme"])();
+
+  var _useDimensions = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["useDimensions"])(width, height, partialMargin),
+      margin = _useDimensions.margin,
+      innerWidth = _useDimensions.innerWidth,
+      innerHeight = _useDimensions.innerHeight,
+      outerWidth = _useDimensions.outerWidth,
+      outerHeight = _useDimensions.outerHeight;
+
+  var _useBar = useBar({
+    indexBy: indexBy,
+    label: label,
+    tooltipLabel: tooltipLabel,
+    valueFormat: valueFormat,
+    colors: colors,
+    colorBy: colorBy,
+    borderColor: borderColor,
+    labelTextColor: labelTextColor,
+    groupMode: groupMode,
+    layout: layout,
+    reverse: reverse,
+    data: data,
+    keys: keys,
+    minValue: minValue,
+    maxValue: maxValue,
+    margin: margin,
+    width: innerWidth,
+    height: innerHeight,
+    padding: padding,
+    innerPadding: innerPadding,
+    valueScale: valueScale,
+    indexScale: indexScale,
+    enableLabel: enableLabel,
+    labelSkipWidth: labelSkipWidth,
+    labelSkipHeight: labelSkipHeight,
+    legends: legends,
+    legendLabel: legendLabel
+  }),
+      bars = _useBar.bars,
+      barsWithValue = _useBar.barsWithValue,
+      xScale = _useBar.xScale,
+      yScale = _useBar.yScale,
+      getLabel = _useBar.getLabel,
+      getTooltipLabel = _useBar.getTooltipLabel,
+      getBorderColor = _useBar.getBorderColor,
+      getLabelColor = _useBar.getLabelColor,
+      shouldRenderBarLabel = _useBar.shouldRenderBarLabel,
+      legendsWithData = _useBar.legendsWithData;
+
+  var _useTooltip = Object(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_7__["useTooltip"])(),
+      showTooltipFromEvent = _useTooltip.showTooltipFromEvent,
+      hideTooltip = _useTooltip.hideTooltip;
+
+  var boundAnnotations = Object(_nivo_annotations__WEBPACK_IMPORTED_MODULE_1__["useComputedAnnotations"])({
+    annotations: Object(_nivo_annotations__WEBPACK_IMPORTED_MODULE_1__["useAnnotations"])({
+      data: bars,
+      annotations: annotations,
+      getPosition: function getPosition(node) {
+        return {
+          x: node.x,
+          y: node.y
+        };
+      },
+      getDimensions: function getDimensions(_ref3) {
+        var width = _ref3.width,
+            height = _ref3.height;
+        return {
+          width: width,
+          height: height,
+          size: Math.max(width, height)
+        };
+      }
+    })
+  });
+  var layerContext = Object(react__WEBPACK_IMPORTED_MODULE_5__["useMemo"])(function () {
+    return {
+      borderRadius: borderRadius,
+      borderWidth: borderWidth,
+      enableLabel: enableLabel,
+      isInteractive: isInteractive,
+      labelSkipWidth: labelSkipWidth,
+      labelSkipHeight: labelSkipHeight,
+      onClick: onClick,
+      onMouseEnter: onMouseEnter,
+      onMouseLeave: onMouseLeave,
+      getTooltipLabel: getTooltipLabel,
+      tooltip: tooltip,
+      margin: margin,
+      innerWidth: innerWidth,
+      innerHeight: innerHeight,
+      width: width,
+      height: height,
+      bars: bars,
+      xScale: xScale,
+      yScale: yScale
+    };
+  }, [borderRadius, borderWidth, enableLabel, getTooltipLabel, height, innerHeight, innerWidth, isInteractive, labelSkipHeight, labelSkipWidth, margin, onClick, onMouseEnter, onMouseLeave, bars, xScale, yScale, tooltip, width]);
+  Object(react__WEBPACK_IMPORTED_MODULE_5__["useEffect"])(function () {
+    var _canvasEl$current;
+
+    var ctx = (_canvasEl$current = canvasEl.current) === null || _canvasEl$current === void 0 ? void 0 : _canvasEl$current.getContext('2d');
+    if (!canvasEl.current) return;
+    if (!ctx) return;
+    canvasEl.current.width = outerWidth * pixelRatio;
+    canvasEl.current.height = outerHeight * pixelRatio;
+    ctx.scale(pixelRatio, pixelRatio);
+    ctx.fillStyle = theme.background;
+    ctx.fillRect(0, 0, outerWidth, outerHeight);
+    ctx.translate(margin.left, margin.top);
+    layers.forEach(function (layer) {
+      if (layer === 'grid') {
+        if (isNumber(theme.grid.line.strokeWidth) && theme.grid.line.strokeWidth > 0) {
+          ctx.lineWidth = theme.grid.line.strokeWidth;
+          ctx.strokeStyle = theme.grid.line.stroke;
+
+          if (enableGridX) {
+            Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_0__["renderGridLinesToCanvas"])(ctx, {
+              width: width,
+              height: height,
+              scale: xScale,
+              axis: 'x',
+              values: gridXValues
+            });
+          }
+
+          if (enableGridY) {
+            Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_0__["renderGridLinesToCanvas"])(ctx, {
+              width: width,
+              height: height,
+              scale: yScale,
+              axis: 'y',
+              values: gridYValues
+            });
+          }
+        }
+      } else if (layer === 'axes') {
+        Object(_nivo_axes__WEBPACK_IMPORTED_MODULE_0__["renderAxesToCanvas"])(ctx, {
+          xScale: xScale,
+          yScale: yScale,
+          width: innerWidth,
+          height: innerHeight,
+          top: axisTop,
+          right: axisRight,
+          bottom: axisBottom,
+          left: axisLeft,
+          theme: theme
+        });
+      } else if (layer === 'bars') {
+        barsWithValue.forEach(function (bar) {
+          renderBar(ctx, {
+            bar: bar,
+            borderColor: getBorderColor(bar),
+            borderRadius: borderRadius,
+            borderWidth: borderWidth,
+            label: getLabel(bar.data),
+            labelColor: getLabelColor(bar),
+            shouldRenderLabel: shouldRenderBarLabel(bar)
+          });
+        });
+      } else if (layer === 'legends') {
+        legendsWithData.forEach(function (_ref4) {
+          var _ref5 = _slicedToArray(_ref4, 2),
+              legend = _ref5[0],
+              data = _ref5[1];
+
+          Object(_nivo_legends__WEBPACK_IMPORTED_MODULE_3__["renderLegendToCanvas"])(ctx, _objectSpread2(_objectSpread2({}, legend), {}, {
+            data: data,
+            containerWidth: innerWidth,
+            containerHeight: innerHeight,
+            theme: theme
+          }));
+        });
+      } else if (layer === 'annotations') {
+        Object(_nivo_annotations__WEBPACK_IMPORTED_MODULE_1__["renderAnnotationsToCanvas"])(ctx, {
+          annotations: boundAnnotations,
+          theme: theme
+        });
+      } else if (typeof layer === 'function') {
+        layer(ctx, layerContext);
+      }
+    });
+    ctx.save();
+  }, [axisBottom, axisLeft, axisRight, axisTop, barsWithValue, borderRadius, borderWidth, boundAnnotations, enableGridX, enableGridY, getBorderColor, getLabel, getLabelColor, gridXValues, gridYValues, groupMode, height, innerHeight, innerWidth, layerContext, layers, layout, legendsWithData, margin.left, margin.top, outerHeight, outerWidth, pixelRatio, renderBar, xScale, yScale, reverse, shouldRenderBarLabel, theme, width]);
+  var handleMouseHover = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    if (!bars) return;
+    if (!canvasEl.current) return;
+
+    var _getRelativeCursor = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["getRelativeCursor"])(canvasEl.current, event),
+        _getRelativeCursor2 = _slicedToArray(_getRelativeCursor, 2),
+        x = _getRelativeCursor2[0],
+        y = _getRelativeCursor2[1];
+
+    var bar = findBarUnderCursor(bars, margin, x, y);
+
+    if (bar !== undefined) {
+      showTooltipFromEvent(Object(react__WEBPACK_IMPORTED_MODULE_5__["createElement"])(tooltip, _objectSpread2(_objectSpread2({}, bar.data), {}, {
+        color: bar.color,
+        label: bar.label,
+        value: Number(bar.data.value)
+      })), event);
+
+      if (event.type === 'mouseenter') {
+        onMouseEnter === null || onMouseEnter === void 0 ? void 0 : onMouseEnter(bar.data, event);
+      }
+    } else {
+      hideTooltip();
+    }
+  }, [hideTooltip, margin, onMouseEnter, bars, showTooltipFromEvent, tooltip]);
+  var handleMouseLeave = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    if (!bars) return;
+    if (!canvasEl.current) return;
+    hideTooltip();
+
+    var _getRelativeCursor3 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["getRelativeCursor"])(canvasEl.current, event),
+        _getRelativeCursor4 = _slicedToArray(_getRelativeCursor3, 2),
+        x = _getRelativeCursor4[0],
+        y = _getRelativeCursor4[1];
+
+    var bar = findBarUnderCursor(bars, margin, x, y);
+
+    if (bar) {
+      onMouseLeave === null || onMouseLeave === void 0 ? void 0 : onMouseLeave(bar.data, event);
+    }
+  }, [hideTooltip, margin, onMouseLeave, bars]);
+  var handleClick = Object(react__WEBPACK_IMPORTED_MODULE_5__["useCallback"])(function (event) {
+    if (!bars) return;
+    if (!canvasEl.current) return;
+
+    var _getRelativeCursor5 = Object(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["getRelativeCursor"])(canvasEl.current, event),
+        _getRelativeCursor6 = _slicedToArray(_getRelativeCursor5, 2),
+        x = _getRelativeCursor6[0],
+        y = _getRelativeCursor6[1];
+
+    var bar = findBarUnderCursor(bars, margin, x, y);
+
+    if (bar !== undefined) {
+      onClick === null || onClick === void 0 ? void 0 : onClick(_objectSpread2(_objectSpread2({}, bar.data), {}, {
+        color: bar.color
+      }), event);
+    }
+  }, [margin, onClick, bars]);
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])("canvas", {
+    ref: function ref(canvas) {
+      canvasEl.current = canvas;
+      if (canvasRef && 'current' in canvasRef) canvasRef.current = canvas;
+    },
+    width: outerWidth * pixelRatio,
+    height: outerHeight * pixelRatio,
+    style: {
+      width: outerWidth,
+      height: outerHeight,
+      cursor: isInteractive ? 'auto' : 'normal'
+    },
+    onMouseEnter: isInteractive ? handleMouseHover : undefined,
+    onMouseMove: isInteractive ? handleMouseHover : undefined,
+    onMouseLeave: isInteractive ? handleMouseLeave : undefined,
+    onClick: isInteractive ? handleClick : undefined
+  });
+};
+
+var BarCanvas = Object(react__WEBPACK_IMPORTED_MODULE_5__["forwardRef"])(function (_ref6, ref) {
+  var isInteractive = _ref6.isInteractive,
+      renderWrapper = _ref6.renderWrapper,
+      theme = _ref6.theme,
+      props = _objectWithoutProperties(_ref6, ["isInteractive", "renderWrapper", "theme"]);
+
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["Container"], {
+    isInteractive: isInteractive,
+    renderWrapper: renderWrapper,
+    theme: theme,
+    animate: false,
+    children: Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(InnerBarCanvas, _objectSpread2(_objectSpread2({}, props), {}, {
+      canvasRef: ref
+    }))
+  });
+});
+
+var ResponsiveBar = function ResponsiveBar(props) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(Bar, _objectSpread2({
+        width: width,
+        height: height
+      }, props));
+    }
+  });
+};
+
+var ResponsiveBarCanvas = Object(react__WEBPACK_IMPORTED_MODULE_5__["forwardRef"])(function ResponsiveBarCanvas(props, ref) {
+  return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(_nivo_core__WEBPACK_IMPORTED_MODULE_4__["ResponsiveWrapper"], {
+    children: function children(_ref) {
+      var width = _ref.width,
+          height = _ref.height;
+      return Object(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__["jsx"])(BarCanvas, _objectSpread2(_objectSpread2({
+        width: width,
+        height: height
+      }, props), {}, {
+        ref: ref
+      }));
+    }
+  });
+});
+
+
 
 
 /***/ }),
@@ -61971,6 +64617,39 @@ module.exports = apply;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_arrayEach.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_arrayEach.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * A specialized version of `_.forEach` for arrays without support for
+ * iteratee shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @returns {Array} Returns `array`.
+ */
+function arrayEach(array, iteratee) {
+  var index = -1,
+      length = array == null ? 0 : array.length;
+
+  while (++index < length) {
+    if (iteratee(array[index], index, array) === false) {
+      break;
+    }
+  }
+  return array;
+}
+
+module.exports = arrayEach;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_arrayFilter.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash/_arrayFilter.js ***!
@@ -62327,6 +65006,62 @@ module.exports = assocIndexOf;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseAssign.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseAssign.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var copyObject = __webpack_require__(/*! ./_copyObject */ "./node_modules/lodash/_copyObject.js"),
+    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js");
+
+/**
+ * The base implementation of `_.assign` without support for multiple sources
+ * or `customizer` functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @returns {Object} Returns `object`.
+ */
+function baseAssign(object, source) {
+  return object && copyObject(source, keys(source), object);
+}
+
+module.exports = baseAssign;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseAssignIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_baseAssignIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var copyObject = __webpack_require__(/*! ./_copyObject */ "./node_modules/lodash/_copyObject.js"),
+    keysIn = __webpack_require__(/*! ./keysIn */ "./node_modules/lodash/keysIn.js");
+
+/**
+ * The base implementation of `_.assignIn` without support for multiple sources
+ * or `customizer` functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @returns {Object} Returns `object`.
+ */
+function baseAssignIn(object, source) {
+  return object && copyObject(source, keysIn(source), object);
+}
+
+module.exports = baseAssignIn;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseAssignValue.js":
 /*!*************************************************!*\
   !*** ./node_modules/lodash/_baseAssignValue.js ***!
@@ -62359,6 +65094,183 @@ function baseAssignValue(object, key, value) {
 }
 
 module.exports = baseAssignValue;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseClone.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseClone.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Stack = __webpack_require__(/*! ./_Stack */ "./node_modules/lodash/_Stack.js"),
+    arrayEach = __webpack_require__(/*! ./_arrayEach */ "./node_modules/lodash/_arrayEach.js"),
+    assignValue = __webpack_require__(/*! ./_assignValue */ "./node_modules/lodash/_assignValue.js"),
+    baseAssign = __webpack_require__(/*! ./_baseAssign */ "./node_modules/lodash/_baseAssign.js"),
+    baseAssignIn = __webpack_require__(/*! ./_baseAssignIn */ "./node_modules/lodash/_baseAssignIn.js"),
+    cloneBuffer = __webpack_require__(/*! ./_cloneBuffer */ "./node_modules/lodash/_cloneBuffer.js"),
+    copyArray = __webpack_require__(/*! ./_copyArray */ "./node_modules/lodash/_copyArray.js"),
+    copySymbols = __webpack_require__(/*! ./_copySymbols */ "./node_modules/lodash/_copySymbols.js"),
+    copySymbolsIn = __webpack_require__(/*! ./_copySymbolsIn */ "./node_modules/lodash/_copySymbolsIn.js"),
+    getAllKeys = __webpack_require__(/*! ./_getAllKeys */ "./node_modules/lodash/_getAllKeys.js"),
+    getAllKeysIn = __webpack_require__(/*! ./_getAllKeysIn */ "./node_modules/lodash/_getAllKeysIn.js"),
+    getTag = __webpack_require__(/*! ./_getTag */ "./node_modules/lodash/_getTag.js"),
+    initCloneArray = __webpack_require__(/*! ./_initCloneArray */ "./node_modules/lodash/_initCloneArray.js"),
+    initCloneByTag = __webpack_require__(/*! ./_initCloneByTag */ "./node_modules/lodash/_initCloneByTag.js"),
+    initCloneObject = __webpack_require__(/*! ./_initCloneObject */ "./node_modules/lodash/_initCloneObject.js"),
+    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
+    isBuffer = __webpack_require__(/*! ./isBuffer */ "./node_modules/lodash/isBuffer.js"),
+    isMap = __webpack_require__(/*! ./isMap */ "./node_modules/lodash/isMap.js"),
+    isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
+    isSet = __webpack_require__(/*! ./isSet */ "./node_modules/lodash/isSet.js"),
+    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js"),
+    keysIn = __webpack_require__(/*! ./keysIn */ "./node_modules/lodash/keysIn.js");
+
+/** Used to compose bitmasks for cloning. */
+var CLONE_DEEP_FLAG = 1,
+    CLONE_FLAT_FLAG = 2,
+    CLONE_SYMBOLS_FLAG = 4;
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to identify `toStringTag` values supported by `_.clone`. */
+var cloneableTags = {};
+cloneableTags[argsTag] = cloneableTags[arrayTag] =
+cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =
+cloneableTags[boolTag] = cloneableTags[dateTag] =
+cloneableTags[float32Tag] = cloneableTags[float64Tag] =
+cloneableTags[int8Tag] = cloneableTags[int16Tag] =
+cloneableTags[int32Tag] = cloneableTags[mapTag] =
+cloneableTags[numberTag] = cloneableTags[objectTag] =
+cloneableTags[regexpTag] = cloneableTags[setTag] =
+cloneableTags[stringTag] = cloneableTags[symbolTag] =
+cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+cloneableTags[errorTag] = cloneableTags[funcTag] =
+cloneableTags[weakMapTag] = false;
+
+/**
+ * The base implementation of `_.clone` and `_.cloneDeep` which tracks
+ * traversed objects.
+ *
+ * @private
+ * @param {*} value The value to clone.
+ * @param {boolean} bitmask The bitmask flags.
+ *  1 - Deep clone
+ *  2 - Flatten inherited properties
+ *  4 - Clone symbols
+ * @param {Function} [customizer] The function to customize cloning.
+ * @param {string} [key] The key of `value`.
+ * @param {Object} [object] The parent object of `value`.
+ * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
+ * @returns {*} Returns the cloned value.
+ */
+function baseClone(value, bitmask, customizer, key, object, stack) {
+  var result,
+      isDeep = bitmask & CLONE_DEEP_FLAG,
+      isFlat = bitmask & CLONE_FLAT_FLAG,
+      isFull = bitmask & CLONE_SYMBOLS_FLAG;
+
+  if (customizer) {
+    result = object ? customizer(value, key, object, stack) : customizer(value);
+  }
+  if (result !== undefined) {
+    return result;
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  var isArr = isArray(value);
+  if (isArr) {
+    result = initCloneArray(value);
+    if (!isDeep) {
+      return copyArray(value, result);
+    }
+  } else {
+    var tag = getTag(value),
+        isFunc = tag == funcTag || tag == genTag;
+
+    if (isBuffer(value)) {
+      return cloneBuffer(value, isDeep);
+    }
+    if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
+      result = (isFlat || isFunc) ? {} : initCloneObject(value);
+      if (!isDeep) {
+        return isFlat
+          ? copySymbolsIn(value, baseAssignIn(result, value))
+          : copySymbols(value, baseAssign(result, value));
+      }
+    } else {
+      if (!cloneableTags[tag]) {
+        return object ? value : {};
+      }
+      result = initCloneByTag(value, tag, isDeep);
+    }
+  }
+  // Check for circular references and return its corresponding clone.
+  stack || (stack = new Stack);
+  var stacked = stack.get(value);
+  if (stacked) {
+    return stacked;
+  }
+  stack.set(value, result);
+
+  if (isSet(value)) {
+    value.forEach(function(subValue) {
+      result.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+    });
+  } else if (isMap(value)) {
+    value.forEach(function(subValue, key) {
+      result.set(key, baseClone(subValue, bitmask, customizer, key, value, stack));
+    });
+  }
+
+  var keysFunc = isFull
+    ? (isFlat ? getAllKeysIn : getAllKeys)
+    : (isFlat ? keysIn : keys);
+
+  var props = isArr ? undefined : keysFunc(value);
+  arrayEach(props || value, function(subValue, key) {
+    if (props) {
+      key = subValue;
+      subValue = value[key];
+    }
+    // Recursively populate clone (susceptible to call stack limits).
+    assignValue(result, key, baseClone(subValue, bitmask, customizer, key, value, stack));
+  });
+  return result;
+}
+
+module.exports = baseClone;
 
 
 /***/ }),
@@ -62503,6 +65415,38 @@ var baseForOwn = __webpack_require__(/*! ./_baseForOwn */ "./node_modules/lodash
 var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseFilter.js":
+/*!********************************************!*\
+  !*** ./node_modules/lodash/_baseFilter.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseEach = __webpack_require__(/*! ./_baseEach */ "./node_modules/lodash/_baseEach.js");
+
+/**
+ * The base implementation of `_.filter` without support for iteratee shorthands.
+ *
+ * @private
+ * @param {Array|Object} collection The collection to iterate over.
+ * @param {Function} predicate The function invoked per iteration.
+ * @returns {Array} Returns the new filtered array.
+ */
+function baseFilter(collection, predicate) {
+  var result = [];
+  baseEach(collection, function(value, index, collection) {
+    if (predicate(value, index, collection)) {
+      result.push(value);
+    }
+  });
+  return result;
+}
+
+module.exports = baseFilter;
 
 
 /***/ }),
@@ -62996,6 +65940,35 @@ module.exports = baseIsEqualDeep;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseIsMap.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseIsMap.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getTag = __webpack_require__(/*! ./_getTag */ "./node_modules/lodash/_getTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
+
+/** `Object#toString` result references. */
+var mapTag = '[object Map]';
+
+/**
+ * The base implementation of `_.isMap` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a map, else `false`.
+ */
+function baseIsMap(value) {
+  return isObjectLike(value) && getTag(value) == mapTag;
+}
+
+module.exports = baseIsMap;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseIsMatch.js":
 /*!*********************************************!*\
   !*** ./node_modules/lodash/_baseIsMatch.js ***!
@@ -63146,6 +66119,35 @@ function baseIsNative(value) {
 }
 
 module.exports = baseIsNative;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_baseIsSet.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseIsSet.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getTag = __webpack_require__(/*! ./_getTag */ "./node_modules/lodash/_getTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
+
+/** `Object#toString` result references. */
+var setTag = '[object Set]';
+
+/**
+ * The base implementation of `_.isSet` without Node.js optimizations.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a set, else `false`.
+ */
+function baseIsSet(value) {
+  return isObjectLike(value) && getTag(value) == setTag;
+}
+
+module.exports = baseIsSet;
 
 
 /***/ }),
@@ -63961,6 +66963,48 @@ module.exports = baseSetToString;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseSlice.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseSlice.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * The base implementation of `_.slice` without an iteratee call guard.
+ *
+ * @private
+ * @param {Array} array The array to slice.
+ * @param {number} [start=0] The start position.
+ * @param {number} [end=array.length] The end position.
+ * @returns {Array} Returns the slice of `array`.
+ */
+function baseSlice(array, start, end) {
+  var index = -1,
+      length = array.length;
+
+  if (start < 0) {
+    start = -start > length ? 0 : (length + start);
+  }
+  end = end > length ? length : end;
+  if (end < 0) {
+    end += length;
+  }
+  length = start > end ? 0 : ((end - start) >>> 0);
+  start >>>= 0;
+
+  var result = Array(length);
+  while (++index < length) {
+    result[index] = array[index + start];
+  }
+  return result;
+}
+
+module.exports = baseSlice;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_baseSortBy.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_baseSortBy.js ***!
@@ -64210,6 +67254,37 @@ module.exports = baseUniq;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_baseUnset.js":
+/*!*******************************************!*\
+  !*** ./node_modules/lodash/_baseUnset.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var castPath = __webpack_require__(/*! ./_castPath */ "./node_modules/lodash/_castPath.js"),
+    last = __webpack_require__(/*! ./last */ "./node_modules/lodash/last.js"),
+    parent = __webpack_require__(/*! ./_parent */ "./node_modules/lodash/_parent.js"),
+    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
+
+/**
+ * The base implementation of `_.unset`.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {Array|string} path The property path to unset.
+ * @returns {boolean} Returns `true` if the property is deleted, else `false`.
+ */
+function baseUnset(object, path) {
+  path = castPath(path, object);
+  object = parent(object, path);
+  return object == null || delete object[toKey(last(path))];
+}
+
+module.exports = baseUnset;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_cacheHas.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_cacheHas.js ***!
@@ -64337,6 +67412,90 @@ function cloneBuffer(buffer, isDeep) {
 module.exports = cloneBuffer;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module)))
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneDataView.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_cloneDataView.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var cloneArrayBuffer = __webpack_require__(/*! ./_cloneArrayBuffer */ "./node_modules/lodash/_cloneArrayBuffer.js");
+
+/**
+ * Creates a clone of `dataView`.
+ *
+ * @private
+ * @param {Object} dataView The data view to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the cloned data view.
+ */
+function cloneDataView(dataView, isDeep) {
+  var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+  return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+}
+
+module.exports = cloneDataView;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneRegExp.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_cloneRegExp.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/** Used to match `RegExp` flags from their coerced string values. */
+var reFlags = /\w*$/;
+
+/**
+ * Creates a clone of `regexp`.
+ *
+ * @private
+ * @param {Object} regexp The regexp to clone.
+ * @returns {Object} Returns the cloned regexp.
+ */
+function cloneRegExp(regexp) {
+  var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+  result.lastIndex = regexp.lastIndex;
+  return result;
+}
+
+module.exports = cloneRegExp;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_cloneSymbol.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_cloneSymbol.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js");
+
+/** Used to convert symbols to primitives and strings. */
+var symbolProto = Symbol ? Symbol.prototype : undefined,
+    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+
+/**
+ * Creates a clone of the `symbol` object.
+ *
+ * @private
+ * @param {Object} symbol The symbol object to clone.
+ * @returns {Object} Returns the cloned symbol object.
+ */
+function cloneSymbol(symbol) {
+  return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
+}
+
+module.exports = cloneSymbol;
+
 
 /***/ }),
 
@@ -64556,6 +67715,60 @@ module.exports = copyObject;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_copySymbols.js":
+/*!*********************************************!*\
+  !*** ./node_modules/lodash/_copySymbols.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var copyObject = __webpack_require__(/*! ./_copyObject */ "./node_modules/lodash/_copyObject.js"),
+    getSymbols = __webpack_require__(/*! ./_getSymbols */ "./node_modules/lodash/_getSymbols.js");
+
+/**
+ * Copies own symbols of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy symbols from.
+ * @param {Object} [object={}] The object to copy symbols to.
+ * @returns {Object} Returns `object`.
+ */
+function copySymbols(source, object) {
+  return copyObject(source, getSymbols(source), object);
+}
+
+module.exports = copySymbols;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_copySymbolsIn.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash/_copySymbolsIn.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var copyObject = __webpack_require__(/*! ./_copyObject */ "./node_modules/lodash/_copyObject.js"),
+    getSymbolsIn = __webpack_require__(/*! ./_getSymbolsIn */ "./node_modules/lodash/_getSymbolsIn.js");
+
+/**
+ * Copies own and inherited symbols of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy symbols from.
+ * @param {Object} [object={}] The object to copy symbols to.
+ * @returns {Object} Returns `object`.
+ */
+function copySymbolsIn(source, object) {
+  return copyObject(source, getSymbolsIn(source), object);
+}
+
+module.exports = copySymbolsIn;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_coreJsData.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_coreJsData.js ***!
@@ -64767,6 +67980,33 @@ var createSet = !(Set && (1 / setToArray(new Set([,-0]))[1]) == INFINITY) ? noop
 };
 
 module.exports = createSet;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_customOmitClone.js":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_customOmitClone.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isPlainObject = __webpack_require__(/*! ./isPlainObject */ "./node_modules/lodash/isPlainObject.js");
+
+/**
+ * Used by `_.omit` to customize its `_.cloneDeep` use to only clone plain
+ * objects.
+ *
+ * @private
+ * @param {*} value The value to inspect.
+ * @param {string} key The key of the property to inspect.
+ * @returns {*} Returns the uncloned value or `undefined` to defer cloning to `_.cloneDeep`.
+ */
+function customOmitClone(value) {
+  return isPlainObject(value) ? undefined : value;
+}
+
+module.exports = customOmitClone;
 
 
 /***/ }),
@@ -65182,6 +68422,34 @@ module.exports = getAllKeys;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_getAllKeysIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_getAllKeysIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetAllKeys = __webpack_require__(/*! ./_baseGetAllKeys */ "./node_modules/lodash/_baseGetAllKeys.js"),
+    getSymbolsIn = __webpack_require__(/*! ./_getSymbolsIn */ "./node_modules/lodash/_getSymbolsIn.js"),
+    keysIn = __webpack_require__(/*! ./keysIn */ "./node_modules/lodash/keysIn.js");
+
+/**
+ * Creates an array of own and inherited enumerable property names and
+ * symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names and symbols.
+ */
+function getAllKeysIn(object) {
+  return baseGetAllKeys(object, keysIn, getSymbolsIn);
+}
+
+module.exports = getAllKeysIn;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_getMapData.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_getMapData.js ***!
@@ -65385,6 +68653,42 @@ var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
 };
 
 module.exports = getSymbols;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_getSymbolsIn.js":
+/*!**********************************************!*\
+  !*** ./node_modules/lodash/_getSymbolsIn.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayPush = __webpack_require__(/*! ./_arrayPush */ "./node_modules/lodash/_arrayPush.js"),
+    getPrototype = __webpack_require__(/*! ./_getPrototype */ "./node_modules/lodash/_getPrototype.js"),
+    getSymbols = __webpack_require__(/*! ./_getSymbols */ "./node_modules/lodash/_getSymbols.js"),
+    stubArray = __webpack_require__(/*! ./stubArray */ "./node_modules/lodash/stubArray.js");
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeGetSymbols = Object.getOwnPropertySymbols;
+
+/**
+ * Creates an array of the own and inherited enumerable symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of symbols.
+ */
+var getSymbolsIn = !nativeGetSymbols ? stubArray : function(object) {
+  var result = [];
+  while (object) {
+    arrayPush(result, getSymbols(object));
+    object = getPrototype(object);
+  }
+  return result;
+};
+
+module.exports = getSymbolsIn;
 
 
 /***/ }),
@@ -65691,6 +68995,131 @@ function hashSet(key, value) {
 }
 
 module.exports = hashSet;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_initCloneArray.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_initCloneArray.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Initializes an array clone.
+ *
+ * @private
+ * @param {Array} array The array to clone.
+ * @returns {Array} Returns the initialized clone.
+ */
+function initCloneArray(array) {
+  var length = array.length,
+      result = new array.constructor(length);
+
+  // Add properties assigned by `RegExp#exec`.
+  if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
+    result.index = array.index;
+    result.input = array.input;
+  }
+  return result;
+}
+
+module.exports = initCloneArray;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/_initCloneByTag.js":
+/*!************************************************!*\
+  !*** ./node_modules/lodash/_initCloneByTag.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var cloneArrayBuffer = __webpack_require__(/*! ./_cloneArrayBuffer */ "./node_modules/lodash/_cloneArrayBuffer.js"),
+    cloneDataView = __webpack_require__(/*! ./_cloneDataView */ "./node_modules/lodash/_cloneDataView.js"),
+    cloneRegExp = __webpack_require__(/*! ./_cloneRegExp */ "./node_modules/lodash/_cloneRegExp.js"),
+    cloneSymbol = __webpack_require__(/*! ./_cloneSymbol */ "./node_modules/lodash/_cloneSymbol.js"),
+    cloneTypedArray = __webpack_require__(/*! ./_cloneTypedArray */ "./node_modules/lodash/_cloneTypedArray.js");
+
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/**
+ * Initializes an object clone based on its `toStringTag`.
+ *
+ * **Note:** This function only supports cloning values with tags of
+ * `Boolean`, `Date`, `Error`, `Map`, `Number`, `RegExp`, `Set`, or `String`.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @param {string} tag The `toStringTag` of the object to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneByTag(object, tag, isDeep) {
+  var Ctor = object.constructor;
+  switch (tag) {
+    case arrayBufferTag:
+      return cloneArrayBuffer(object);
+
+    case boolTag:
+    case dateTag:
+      return new Ctor(+object);
+
+    case dataViewTag:
+      return cloneDataView(object, isDeep);
+
+    case float32Tag: case float64Tag:
+    case int8Tag: case int16Tag: case int32Tag:
+    case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+      return cloneTypedArray(object, isDeep);
+
+    case mapTag:
+      return new Ctor;
+
+    case numberTag:
+    case stringTag:
+      return new Ctor(object);
+
+    case regexpTag:
+      return cloneRegExp(object);
+
+    case setTag:
+      return new Ctor;
+
+    case symbolTag:
+      return cloneSymbol(object);
+  }
+}
+
+module.exports = initCloneByTag;
 
 
 /***/ }),
@@ -66606,6 +70035,33 @@ module.exports = overRest;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/_parent.js":
+/*!****************************************!*\
+  !*** ./node_modules/lodash/_parent.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGet = __webpack_require__(/*! ./_baseGet */ "./node_modules/lodash/_baseGet.js"),
+    baseSlice = __webpack_require__(/*! ./_baseSlice */ "./node_modules/lodash/_baseSlice.js");
+
+/**
+ * Gets the parent value at `path` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array} path The path to get the parent value of.
+ * @returns {*} Returns the parent value.
+ */
+function parent(object, path) {
+  return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
+}
+
+module.exports = parent;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_root.js":
 /*!**************************************!*\
   !*** ./node_modules/lodash/_root.js ***!
@@ -67221,6 +70677,69 @@ module.exports = eq;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/filter.js":
+/*!***************************************!*\
+  !*** ./node_modules/lodash/filter.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayFilter = __webpack_require__(/*! ./_arrayFilter */ "./node_modules/lodash/_arrayFilter.js"),
+    baseFilter = __webpack_require__(/*! ./_baseFilter */ "./node_modules/lodash/_baseFilter.js"),
+    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
+    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js");
+
+/**
+ * Iterates over elements of `collection`, returning an array of all elements
+ * `predicate` returns truthy for. The predicate is invoked with three
+ * arguments: (value, index|key, collection).
+ *
+ * **Note:** Unlike `_.remove`, this method returns a new array.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Collection
+ * @param {Array|Object} collection The collection to iterate over.
+ * @param {Function} [predicate=_.identity] The function invoked per iteration.
+ * @returns {Array} Returns the new filtered array.
+ * @see _.reject
+ * @example
+ *
+ * var users = [
+ *   { 'user': 'barney', 'age': 36, 'active': true },
+ *   { 'user': 'fred',   'age': 40, 'active': false }
+ * ];
+ *
+ * _.filter(users, function(o) { return !o.active; });
+ * // => objects for ['fred']
+ *
+ * // The `_.matches` iteratee shorthand.
+ * _.filter(users, { 'age': 36, 'active': true });
+ * // => objects for ['barney']
+ *
+ * // The `_.matchesProperty` iteratee shorthand.
+ * _.filter(users, ['active', false]);
+ * // => objects for ['fred']
+ *
+ * // The `_.property` iteratee shorthand.
+ * _.filter(users, 'active');
+ * // => objects for ['barney']
+ *
+ * // Combining several predicates using `_.overEvery` or `_.overSome`.
+ * _.filter(users, _.overSome([{ 'age': 36 }, ['age', 40]]));
+ * // => objects for ['fred', 'barney']
+ */
+function filter(collection, predicate) {
+  var func = isArray(collection) ? arrayFilter : baseFilter;
+  return func(collection, baseIteratee(predicate, 3));
+}
+
+module.exports = filter;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/flatten.js":
 /*!****************************************!*\
   !*** ./node_modules/lodash/flatten.js ***!
@@ -67775,6 +71294,93 @@ module.exports = isLength;
 
 /***/ }),
 
+/***/ "./node_modules/lodash/isMap.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/isMap.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsMap = __webpack_require__(/*! ./_baseIsMap */ "./node_modules/lodash/_baseIsMap.js"),
+    baseUnary = __webpack_require__(/*! ./_baseUnary */ "./node_modules/lodash/_baseUnary.js"),
+    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ "./node_modules/lodash/_nodeUtil.js");
+
+/* Node.js helper references. */
+var nodeIsMap = nodeUtil && nodeUtil.isMap;
+
+/**
+ * Checks if `value` is classified as a `Map` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.3.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a map, else `false`.
+ * @example
+ *
+ * _.isMap(new Map);
+ * // => true
+ *
+ * _.isMap(new WeakMap);
+ * // => false
+ */
+var isMap = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;
+
+module.exports = isMap;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isNumber.js":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isNumber.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
+
+/** `Object#toString` result references. */
+var numberTag = '[object Number]';
+
+/**
+ * Checks if `value` is classified as a `Number` primitive or object.
+ *
+ * **Note:** To exclude `Infinity`, `-Infinity`, and `NaN`, which are
+ * classified as numbers, use the `_.isFinite` method.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a number, else `false`.
+ * @example
+ *
+ * _.isNumber(3);
+ * // => true
+ *
+ * _.isNumber(Number.MIN_VALUE);
+ * // => true
+ *
+ * _.isNumber(Infinity);
+ * // => true
+ *
+ * _.isNumber('3');
+ * // => false
+ */
+function isNumber(value) {
+  return typeof value == 'number' ||
+    (isObjectLike(value) && baseGetTag(value) == numberTag);
+}
+
+module.exports = isNumber;
+
+
+/***/ }),
+
 /***/ "./node_modules/lodash/isObject.js":
 /*!*****************************************!*\
   !*** ./node_modules/lodash/isObject.js ***!
@@ -67926,6 +71532,44 @@ function isPlainObject(value) {
 }
 
 module.exports = isPlainObject;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/isSet.js":
+/*!**************************************!*\
+  !*** ./node_modules/lodash/isSet.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsSet = __webpack_require__(/*! ./_baseIsSet */ "./node_modules/lodash/_baseIsSet.js"),
+    baseUnary = __webpack_require__(/*! ./_baseUnary */ "./node_modules/lodash/_baseUnary.js"),
+    nodeUtil = __webpack_require__(/*! ./_nodeUtil */ "./node_modules/lodash/_nodeUtil.js");
+
+/* Node.js helper references. */
+var nodeIsSet = nodeUtil && nodeUtil.isSet;
+
+/**
+ * Checks if `value` is classified as a `Set` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.3.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a set, else `false`.
+ * @example
+ *
+ * _.isSet(new Set);
+ * // => true
+ *
+ * _.isSet(new WeakSet);
+ * // => false
+ */
+var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+
+module.exports = isSet;
 
 
 /***/ }),
@@ -68329,6 +71973,74 @@ function noop() {
 }
 
 module.exports = noop;
+
+
+/***/ }),
+
+/***/ "./node_modules/lodash/omit.js":
+/*!*************************************!*\
+  !*** ./node_modules/lodash/omit.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayMap = __webpack_require__(/*! ./_arrayMap */ "./node_modules/lodash/_arrayMap.js"),
+    baseClone = __webpack_require__(/*! ./_baseClone */ "./node_modules/lodash/_baseClone.js"),
+    baseUnset = __webpack_require__(/*! ./_baseUnset */ "./node_modules/lodash/_baseUnset.js"),
+    castPath = __webpack_require__(/*! ./_castPath */ "./node_modules/lodash/_castPath.js"),
+    copyObject = __webpack_require__(/*! ./_copyObject */ "./node_modules/lodash/_copyObject.js"),
+    customOmitClone = __webpack_require__(/*! ./_customOmitClone */ "./node_modules/lodash/_customOmitClone.js"),
+    flatRest = __webpack_require__(/*! ./_flatRest */ "./node_modules/lodash/_flatRest.js"),
+    getAllKeysIn = __webpack_require__(/*! ./_getAllKeysIn */ "./node_modules/lodash/_getAllKeysIn.js");
+
+/** Used to compose bitmasks for cloning. */
+var CLONE_DEEP_FLAG = 1,
+    CLONE_FLAT_FLAG = 2,
+    CLONE_SYMBOLS_FLAG = 4;
+
+/**
+ * The opposite of `_.pick`; this method creates an object composed of the
+ * own and inherited enumerable property paths of `object` that are not omitted.
+ *
+ * **Note:** This method is considerably slower than `_.pick`.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The source object.
+ * @param {...(string|string[])} [paths] The property paths to omit.
+ * @returns {Object} Returns the new object.
+ * @example
+ *
+ * var object = { 'a': 1, 'b': '2', 'c': 3 };
+ *
+ * _.omit(object, ['a', 'c']);
+ * // => { 'b': '2' }
+ */
+var omit = flatRest(function(object, paths) {
+  var result = {};
+  if (object == null) {
+    return result;
+  }
+  var isDeep = false;
+  paths = arrayMap(paths, function(path) {
+    path = castPath(path, object);
+    isDeep || (isDeep = path.length > 1);
+    return path;
+  });
+  copyObject(object, getAllKeysIn(object), result);
+  if (isDeep) {
+    result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
+  }
+  var length = paths.length;
+  while (length--) {
+    baseUnset(result, paths[length]);
+  }
+  return result;
+});
+
+module.exports = omit;
 
 
 /***/ }),

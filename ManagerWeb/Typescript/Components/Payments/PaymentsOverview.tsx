@@ -20,6 +20,8 @@ import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceM
 import { RouteComponentProps } from 'react-router-dom';
 import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 import _, { max } from 'lodash';
+import { BarChart } from '../Charts/BarChart';
+import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[],
@@ -111,11 +113,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
             let dateTo: string;
 
-            if (this.state.selectedFilter != undefined) {
+            if (this.state.selectedFilter != undefined)
                 dateTo = (moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
-            } else {
+            else
                 dateTo = this.state.filterDateTo;
-            }
+
 
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
@@ -150,9 +152,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
 
-    private hideModal = () => {
-        this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
-    };
+    private hideModal = () => this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
 
     private handleConfirmationClose = () => {
         this.hideModal();
@@ -169,12 +169,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         if (bankId == -1)
             bankId = null;
 
-        if (this.state.selectedFilter != undefined) {
+        if (this.state.selectedFilter != undefined)
             this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), bankId);
-        }
-        else {
+        else
             this.getPaymentData(moment(this.state.filterDateFrom).toDate(), moment(this.state.filterDateTo).toDate(), bankId);
-        }
     }
 
     private showErrorMessage() {
@@ -291,6 +289,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                             </div>
                             <div className="w-1/2 calendar text-black">
                                 <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
+                            </div>
+                        </div>
+                        <div className="flex flex-row h-80">
+                            <div className="w-1/2">
+                                <BarChart dataSets={[{category: "Investment", amount: 80000}, {category: "Housing", amount: 35000}]} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                             </div>
                         </div>
                         <div className="flex flex-row p-6">

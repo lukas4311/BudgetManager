@@ -12,6 +12,7 @@
   "devDependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@nivo/bar": "^0.74.0",
     "@nivo/calendar": "^0.74.0",
     "@nivo/core": "^0.74.0",
     "@nivo/line": "^0.74.0",

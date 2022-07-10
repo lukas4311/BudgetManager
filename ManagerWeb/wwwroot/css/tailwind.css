@@ -542,30 +542,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1.25rem !important;
 }
 
-.m-auto {
-  margin: auto !important;
-}
-
-.m-5 {
-  margin: 1.25rem !important;
-}
-
-.m-auto {
-  margin: auto !important;
-}
-
-.m-5 {
-  margin: 1.25rem !important;
-}
-
-.m-auto {
-  margin: auto !important;
-}
-
-.m-5 {
-  margin: 1.25rem !important;
-}
-
 .mx-auto {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -594,11 +570,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .my-4 {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
-}
-
-.my-10 {
-  margin-top: 2.5rem !important;
-  margin-bottom: 2.5rem !important;
 }
 
 .mt-6 {
@@ -753,10 +724,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2rem !important;
 }
 
-.h-80 {
-  height: 20rem !important;
-}
-
 .min-h-full {
   min-height: 100% !important;
 }
@@ -863,10 +830,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-1\/12 {
   width: 8.333333% !important;
-}
-
-.w-1\/3 {
-  width: 33.333333% !important;
 }
 
 .shrink {
@@ -999,10 +962,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-radius: 9999px !important;
 }
 
-.rounded-xl {
-  border-radius: 0.75rem !important;
-}
-
 .rounded-t-md {
   border-top-left-radius: 0.375rem !important;
   border-top-right-radius: 0.375rem !important;
@@ -1110,10 +1069,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
 }
 
-.bg-battleshipGrey {
-  background-color: #707F99ff !important;
-}
-
 .fill-current {
   fill: currentColor !important;
 }
@@ -1136,10 +1091,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .p-6 {
   padding: 1.5rem !important;
-}
-
-.p-4 {
-  padding: 1rem !important;
 }
 
 .px-12 {
@@ -1182,6 +1133,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-right: 0.25rem !important;
 }
 
+.py-10 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+}
+
 .px-8 {
   padding-left: 2rem !important;
   padding-right: 2rem !important;
@@ -1200,36 +1156,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .py-4 {
   padding-top: 1rem !important;
   padding-bottom: 1rem !important;
-}
-
-.px-4 {
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
-.py-10 {
-  padding-top: 2.5rem !important;
-  padding-bottom: 2.5rem !important;
-}
-
-.px-4 {
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
-.py-10 {
-  padding-top: 2.5rem !important;
-  padding-bottom: 2.5rem !important;
-}
-
-.px-4 {
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
-.py-10 {
-  padding-top: 2.5rem !important;
-  padding-bottom: 2.5rem !important;
 }
 
 .pt-4 {
@@ -1310,21 +1236,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1 !important;
 }
 
-.text-2xl {
-  font-size: 1.5rem !important;
-  line-height: 2rem !important;
-}
-
-.text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-2xl {
-  font-size: 1.5rem !important;
-  line-height: 2rem !important;
-}
-
 .font-black {
   font-weight: 900 !important;
 }
@@ -1343,10 +1254,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-extralight {
   font-weight: 200 !important;
-}
-
-.font-black {
-  font-weight: 900 !important;
 }
 
 .text-white {
@@ -1382,28 +1289,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(21 128 61 / var(--tw-text-opacity)) !important;
 }
 
-.text-rufous {
-  color: #b00000ff !important;
-}
-
-.text-mainDarkBlue {
-  color: #1b2737ff !important;
-}
-
-.text-red-600 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(220 38 38 / var(--tw-text-opacity)) !important;
-}
-
-.text-green-600 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(22 163 74 / var(--tw-text-opacity)) !important;
-}
-
-.text-mainDarkBlue {
-  color: #1b2737ff !important;
-}
-
 .text-red-800 {
   --tw-text-opacity: 1 !important;
   color: rgb(153 27 27 / var(--tw-text-opacity)) !important;
@@ -1414,8 +1299,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(22 101 52 / var(--tw-text-opacity)) !important;
 }
 
-.text-mainDarkBlue {
-  color: #1b2737ff !important;
+.text-rufous {
+  color: #b00000ff !important;
 }
 
 .opacity-100 {
