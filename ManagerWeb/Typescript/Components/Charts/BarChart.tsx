@@ -9,13 +9,10 @@ export class BarChartProps {
 
 function BarChart({ dataSets, chartProps }: BarChartProps) {
     return (
-        // <ResponsiveLine margin={{ top: 50, right: 50, bottom: 50, left: 100 }} {...chartProps}
-        // />
         <Bar
             {...chartProps}
             data={dataSets}
         />
-
     )
 }
 

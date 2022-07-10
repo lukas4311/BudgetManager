@@ -6179,10 +6179,7 @@ class BarChartProps {
 }
 exports.BarChartProps = BarChartProps;
 function BarChart({ dataSets, chartProps }) {
-    return (
-    // <ResponsiveLine margin={{ top: 50, right: 50, bottom: 50, left: 100 }} {...chartProps}
-    // />
-    react_1.default.createElement(bar_1.Bar, Object.assign({}, chartProps, { data: dataSets })));
+    return (react_1.default.createElement(bar_1.Bar, Object.assign({}, chartProps, { data: dataSets })));
 }
 exports.BarChart = BarChart;
 
