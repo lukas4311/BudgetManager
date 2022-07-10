@@ -1,15 +1,15 @@
 
 import React from 'react'
-import { Bar, BarSvgProps } from '@nivo/bar'
+import { Bar, BarSvgProps, ResponsiveBar } from '@nivo/bar'
 
 export class BarChartProps {
     dataSets: any[];
     chartProps?: BarSvgProps<any>
 }
 
-function BarChart({ dataSets, chartProps }: BarChartProps) {
+function BarChart({ dataSets, chartProps }: any) {
     return (
-        <Bar
+        <ResponsiveBar
             {...chartProps}
             data={dataSets}
         />

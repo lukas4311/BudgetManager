@@ -7,6 +7,8 @@ import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { ComponentPanel } from "../../Utils/ComponentPanel";
+import Dictionary from "../../Utils/Dictionary";
 import { Investments, Ranking } from "../../Utils/Ranking";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
@@ -140,49 +142,45 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         return (
             <div>
                 <h3 className="text-2xl p-4 text-center">Other investment summary</h3>
-                <div className="flex flex-col w-1/3 m-auto my-10 bg-battleshipGrey px-4 py-10 rounded-xl">
-                    <div className="flex flex-row justify-around">
-                        <p className="text-2xl text-mainDarkBlue font-black">Balance: {this.state.balanceSum}</p>
-                        <p className="text-2xl text-mainDarkBlue font-black">Invested: {this.state.investedSum}</p>
-                    </div>
-                    <div className="mt-4">
-                        <p className={"text-2xl font-black " + profitColor}>Profit: {profit} ({profitPct.toFixed(1)})%</p>
-                    </div>
-                </div>
+                <ComponentPanel classStyle="mx-auto w-1/3">
+                    <React.Fragment>
+                        <div className="flex flex-row justify-around">
+                            <p className="text-2xl text-mainDarkBlue font-black">Balance: {this.state.balanceSum}</p>
+                            <p className="text-2xl text-mainDarkBlue font-black">Invested: {this.state.investedSum}</p>
+                        </div>
+                        <div className="mt-4">
+                            <p className={"text-2xl font-black " + profitColor}>Profit: {profit} ({profitPct.toFixed(1)})%</p>
+                        </div>
+                    </React.Fragment>
+                </ComponentPanel>
 
                 <div className="flex flex-row">
-                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <div className="flex flex-col">
+                    <ComponentPanel classStyle="w-1/3">
+                        <React.Fragment>
                             <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investment balance progress</h4>
                             <div className="h-80">
                                 <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                             </div>
-                        </div>
-                    </div>
-                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <div className="flex flex-col">
+                        </React.Fragment>
+                    </ComponentPanel>
+                    <ComponentPanel classStyle="w-1/3">
+                        <React.Fragment>
                             <h4 className="text-left text-2xl text-mainDarkBlue font-black">Top 3</h4>
                             <div className="h-80">
                                 <Ranking data={this.state.rankingData}></Ranking>
                             </div>
-                        </div>
-                    </div>
-                    <div className="w-1/3 p-4 rounded-xl bg-battleshipGrey m-5">
-                        <div className="flex flex-col">
+                        </React.Fragment>
+                    </ComponentPanel>
+                    <ComponentPanel classStyle="w-1/3">
+                        <React.Fragment>
                             <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investments diversification</h4>
                             <div className="h-80">
                                 <PieChart data={this.state.pieData}></PieChart>
                             </div>
-                        </div>
-                    </div>
+                        </React.Fragment>
+                    </ComponentPanel>
                 </div>
             </div>
         );
     }
 }
-
-interface Dictionary<T> {
-    [key: string]: T;
-}
-
-

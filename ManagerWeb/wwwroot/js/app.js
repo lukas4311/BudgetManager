@@ -6179,7 +6179,7 @@ class BarChartProps {
 }
 exports.BarChartProps = BarChartProps;
 function BarChart({ dataSets, chartProps }) {
-    return (react_1.default.createElement(bar_1.Bar, Object.assign({}, chartProps, { data: dataSets })));
+    return (react_1.default.createElement(bar_1.ResponsiveBar, Object.assign({}, chartProps, { data: dataSets })));
 }
 exports.BarChart = BarChart;
 
@@ -6201,8 +6201,6 @@ class BarChartSettingManager {
     static getPaymentCategoryBarChartProps() {
         return {
             data: undefined,
-            width: 600,
-            height: 400,
             margin: { top: 60, right: 80, bottom: 60, left: 80 },
             indexBy: "category",
             keys: ["amount"],
@@ -7806,6 +7804,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const Ranking_1 = __webpack_require__(/*! ../../Utils/Ranking */ "./Typescript/Utils/Ranking.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
@@ -7908,34 +7907,35 @@ class OtherInvestmentSummary extends react_1.default.Component {
         const profitColor = profit < 0 ? "text-red-800" : "text-green-800";
         return (react_1.default.createElement("div", null,
             react_1.default.createElement("h3", { className: "text-2xl p-4 text-center" }, "Other investment summary"),
-            react_1.default.createElement("div", { className: "flex flex-col w-1/3 m-auto my-10 bg-battleshipGrey px-4 py-10 rounded-xl" },
-                react_1.default.createElement("div", { className: "flex flex-row justify-around" },
-                    react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
-                        "Balance: ",
-                        this.state.balanceSum),
-                    react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
-                        "Invested: ",
-                        this.state.investedSum)),
-                react_1.default.createElement("div", { className: "mt-4" },
-                    react_1.default.createElement("p", { className: "text-2xl font-black " + profitColor },
-                        "Profit: ",
-                        profit,
-                        " (",
-                        profitPct.toFixed(1),
-                        ")%"))),
+            react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "mx-auto w-1/3" },
+                react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("div", { className: "flex flex-row justify-around" },
+                        react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                            "Balance: ",
+                            this.state.balanceSum),
+                        react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                            "Invested: ",
+                            this.state.investedSum)),
+                    react_1.default.createElement("div", { className: "mt-4" },
+                        react_1.default.createElement("p", { className: "text-2xl font-black " + profitColor },
+                            "Profit: ",
+                            profit,
+                            " (",
+                            profitPct.toFixed(1),
+                            ")%")))),
             react_1.default.createElement("div", { className: "flex flex-row" },
-                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement("div", { className: "flex flex-col" },
+                react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
+                    react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investment balance progress"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })))),
-                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement("div", { className: "flex flex-col" },
+                react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
+                    react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Top 3"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })))),
-                react_1.default.createElement("div", { className: "w-1/3 p-4 rounded-xl bg-battleshipGrey m-5" },
-                    react_1.default.createElement("div", { className: "flex flex-col" },
+                react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
+                    react_1.default.createElement(react_1.default.Fragment, null,
                         react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investments diversification"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(PieChart_1.PieChart, { data: this.state.pieData })))))));
@@ -8281,6 +8281,7 @@ const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSet
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const BarChart_1 = __webpack_require__(/*! ../Charts/BarChart */ "./Typescript/Components/Charts/BarChart.tsx");
 const BarChartSettingManager_1 = __webpack_require__(/*! ../Charts/BarChartSettingManager */ "./Typescript/Components/Charts/BarChartSettingManager.tsx");
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8464,13 +8465,13 @@ class PaymentsOverview extends React.Component {
                                 React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
                         React.createElement("div", { className: "w-1/2 h-64 mt-4 calendar" },
                             React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
-                    React.createElement("div", { className: "flex flex-row h-80" },
-                        React.createElement("div", { className: "w-1/2" },
+                    React.createElement("div", { className: "flex flex-row" },
+                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                             React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
-                        React.createElement("div", { className: "w-1/2 calendar text-black" },
+                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
                             React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-                    React.createElement("div", { className: "flex flex-row h-80" },
-                        React.createElement("div", { className: "w-1/2" },
+                    React.createElement("div", { className: "flex flex-row" },
+                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                             React.createElement(BarChart_1.BarChart, { dataSets: [{ category: "Investment", amount: 80000 }, { category: "Housing", amount: 35000 }], chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() }))),
                     React.createElement("div", { className: "flex flex-row p-6" },
                         React.createElement("div", { className: "w-2/5" },
@@ -9324,6 +9325,31 @@ class ApiClientFactory {
     }
 }
 exports.default = ApiClientFactory;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/ComponentPanel.tsx":
+/*!*********************************************!*\
+  !*** ./Typescript/Utils/ComponentPanel.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ComponentPanel = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const ComponentPanel = (props) => {
+    var _a;
+    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " p-4 rounded-xl bg-battleshipGrey m-5" },
+        react_1.default.createElement("div", { className: "flex flex-col h-full" }, props.children)));
+};
+exports.ComponentPanel = ComponentPanel;
 
 
 /***/ }),

@@ -22,6 +22,7 @@ import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 import _, { max } from 'lodash';
 import { BarChart } from '../Charts/BarChart';
 import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
+import { ComponentPanel } from '../../Utils/ComponentPanel';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[],
@@ -283,18 +284,18 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                             </div>
                         </div>
-                        <div className="flex flex-row h-80">
-                            <div className="w-1/2">
+                        <div className="flex flex-row">
+                            <ComponentPanel classStyle="w-1/2 h-80">
                                 <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25)}></LineChart>
-                            </div>
-                            <div className="w-1/2 calendar text-black">
+                            </ComponentPanel>
+                            <ComponentPanel classStyle="w-1/2 calendar text-black h-80">
                                 <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
-                            </div>
+                            </ComponentPanel>
                         </div>
-                        <div className="flex flex-row h-80">
-                            <div className="w-1/2">
-                                <BarChart dataSets={[{category: "Investment", amount: 80000}, {category: "Housing", amount: 35000}]} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
-                            </div>
+                        <div className="flex flex-row">
+                            <ComponentPanel classStyle="w-1/2 h-80">
+                                <BarChart dataSets={[{ category: "Investment", amount: 80000 }, { category: "Housing", amount: 35000 }]} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
+                            </ComponentPanel>
                         </div>
                         <div className="flex flex-row p-6">
                             <div className="w-2/5">
