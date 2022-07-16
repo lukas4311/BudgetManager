@@ -6,6 +6,7 @@ import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceRe
 import DataLoader from "./DataLoader";
 import { RadarChartData } from "../Model/RadarChartData";
 import { BankBalanceModel, PaymentModel } from "../ApiClient/Main";
+import _ from "lodash";
 
 export class ChartDataProcessor{
     dataLoader: DataLoader;
@@ -79,7 +80,7 @@ export class ChartDataProcessor{
             res[val.paymentCategoryCode].value += val.amount;
             return res;
         }, {});
-
+        categoryGroups = _.orderBy(categoryGroups, a => a.value, ['desc'])
         return categoryGroups;
     }
 }

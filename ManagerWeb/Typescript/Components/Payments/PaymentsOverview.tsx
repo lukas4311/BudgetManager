@@ -11,7 +11,6 @@ import { RadarChart } from '../Charts/RadarChart';
 import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
 import BudgetComponent from '../Budget/BudgetComponent';
-import ErrorBoundary from '../../Utils/ErrorBoundry';
 import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
@@ -19,8 +18,8 @@ import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps } from 'react-router-dom';
 import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
-import _, { max } from 'lodash';
-import { BarChart } from '../Charts/BarChart';
+import _ from 'lodash';
+import { BarChart, BarData } from '../Charts/BarChart';
 import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 
@@ -39,7 +38,8 @@ interface PaymentsOverviewState {
     expenseChartData: LineChartProps,
     balanceChartData: LineChartProps,
     calendarChartData: CalendarChartProps,
-    radarChartData: RadarChartProps
+    radarChartData: RadarChartProps,
+    barChartData: BarData[]
 }
 
 interface DateFilter {
@@ -78,7 +78,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: []
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -122,10 +122,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
+            const barChartData = radarData.map(d => ({key: d.key, value: d.value}));
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                radarChartData: { dataSets: radarData }
+                radarChartData: { dataSets: radarData }, barChartData
             });
         } else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -294,7 +295,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         </div>
                         <div className="flex flex-row">
                             <ComponentPanel classStyle="w-1/2 h-80">
-                                <BarChart dataSets={[{ category: "Investment", amount: 80000 }, { category: "Housing", amount: 35000 }]} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
+                                <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                             </ComponentPanel>
                         </div>
                         <div className="flex flex-row p-6">

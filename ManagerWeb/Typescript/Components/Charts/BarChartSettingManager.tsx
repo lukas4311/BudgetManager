@@ -5,8 +5,9 @@ export class BarChartSettingManager {
         return {
             data: undefined,
             margin: { top: 60, right: 80, bottom: 60, left: 80 },
-            indexBy: "category",
-            keys: ["amount"],
+            indexBy: "key",
+            keys: ["value"],
+            isInteractive: false,
             theme: {
                 axis: {
                     ticks: {
@@ -15,7 +16,7 @@ export class BarChartSettingManager {
                         }
                     }
                 }
-            }
+            },
         };
     }
 }

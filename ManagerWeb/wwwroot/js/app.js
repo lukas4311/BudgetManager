@@ -6172,9 +6172,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BarChart = exports.BarChartProps = void 0;
+exports.BarChart = exports.BarChartProps = exports.BarData = void 0;
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const bar_1 = __webpack_require__(/*! @nivo/bar */ "./node_modules/@nivo/bar/dist/nivo-bar.es.js");
+class BarData {
+}
+exports.BarData = BarData;
 class BarChartProps {
 }
 exports.BarChartProps = BarChartProps;
@@ -6202,8 +6205,9 @@ class BarChartSettingManager {
         return {
             data: undefined,
             margin: { top: 60, right: 80, bottom: 60, left: 80 },
-            indexBy: "category",
-            keys: ["amount"],
+            indexBy: "key",
+            keys: ["value"],
+            isInteractive: false,
             theme: {
                 axis: {
                     ticks: {
@@ -6212,7 +6216,7 @@ class BarChartSettingManager {
                         }
                     }
                 }
-            }
+            },
         };
     }
 }
@@ -8308,10 +8312,11 @@ class PaymentsOverview extends React.Component {
                     dateTo = this.state.filterDateTo;
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
+                const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
                 this.setState({
                     payments: payments, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                    radarChartData: { dataSets: radarData }
+                    radarChartData: { dataSets: radarData }, barChartData
                 });
             }
             else {
@@ -8383,7 +8388,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: ''
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: []
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -8472,7 +8477,7 @@ class PaymentsOverview extends React.Component {
                             React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
                     React.createElement("div", { className: "flex flex-row" },
                         React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                            React.createElement(BarChart_1.BarChart, { dataSets: [{ category: "Investment", amount: 80000 }, { category: "Housing", amount: 35000 }], chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() }))),
+                            React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() }))),
                     React.createElement("div", { className: "flex flex-row p-6" },
                         React.createElement("div", { className: "w-2/5" },
                             React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
@@ -8993,6 +8998,7 @@ exports.ChartDataProcessor = void 0;
 const CalendarChartData_1 = __webpack_require__(/*! ../Model/CalendarChartData */ "./Typescript/Model/CalendarChartData.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ./DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 class ChartDataProcessor {
     constructor() {
         this.dataLoader = new DataLoader_1.default();
@@ -9055,6 +9061,7 @@ class ChartDataProcessor {
             res[val.paymentCategoryCode].value += val.amount;
             return res;
         }, {});
+        categoryGroups = lodash_1.default.orderBy(categoryGroups, a => a.value, ['desc']);
         return categoryGroups;
     }
 }

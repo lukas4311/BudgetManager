@@ -2,8 +2,13 @@
 import React from 'react'
 import { Bar, BarSvgProps, ResponsiveBar } from '@nivo/bar'
 
+export class BarData{
+    key: string;
+    value: number;
+}
+
 export class BarChartProps {
-    dataSets: any[];
+    dataSets: BarData[];
     chartProps?: BarSvgProps<any>
 }
 
