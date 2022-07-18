@@ -6416,6 +6416,7 @@ class LineChartSettingManager {
         setting.axisBottom = {
             format: "%Y-%m-%d",
         };
+        setting.enableSlices = 'x';
         setting.theme = {
             axis: {
                 ticks: {
