@@ -122,7 +122,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
-            const barChartData = radarData.map(d => ({key: d.key, value: d.value}));
+            const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
             this.setState({
                 payments: payments, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
@@ -296,6 +296,19 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <div className="flex flex-row">
                             <ComponentPanel classStyle="w-1/2 h-80">
                                 <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
+                            </ComponentPanel>
+                            <ComponentPanel classStyle="w-1/2 h-80">
+                                <div className='flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 content-evenly h-full'>
+                                    <div>
+                                        <p>Totaly earned:</p>
+                                    </div>
+                                    <div>
+                                        <p>Totaly spent:</p>
+                                    </div>
+                                    <div>
+                                        <p>Totaly saved:</p>
+                                    </div>
+                                </div>
                             </ComponentPanel>
                         </div>
                         <div className="flex flex-row p-6">
