@@ -8311,11 +8311,12 @@ class PaymentsOverview extends React.Component {
                     dateTo = ((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
                 else
                     dateTo = this.state.filterDateTo;
+                const fromLastOrderder = lodash_1.default.orderBy(payments, a => a.date, "desc");
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
                 this.setState({
-                    payments: payments, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
+                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData
                 });
@@ -8442,6 +8443,10 @@ class PaymentsOverview extends React.Component {
         }
     }
     render() {
+        let expenses = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Expense'), e => e.amount);
+        let income = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
+        let saved = income - expenses;
+        let savedPct = income == 0 ? 0 : (saved / income) * 100;
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
             React.createElement("div", { className: "" },
                 React.createElement("p", { className: "text-3xl text-center mt-2" }, "Payments overview"),
@@ -8480,13 +8485,22 @@ class PaymentsOverview extends React.Component {
                         React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                             React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
                         React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                            React.createElement("div", { className: 'flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 content-evenly h-full' },
+                            React.createElement("div", { className: 'flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 justify-evenly h-full' },
                                 React.createElement("div", null,
-                                    React.createElement("p", null, "Totaly earned:")),
+                                    React.createElement("p", null,
+                                        "Totaly earned: ",
+                                        income)),
                                 React.createElement("div", null,
-                                    React.createElement("p", null, "Totaly spent:")),
+                                    React.createElement("p", null,
+                                        "Totaly spent: ",
+                                        expenses)),
                                 React.createElement("div", null,
-                                    React.createElement("p", null, "Totaly saved:"))))),
+                                    React.createElement("p", null,
+                                        "Totaly saved: ",
+                                        saved,
+                                        " (", savedPct === null || savedPct === void 0 ? void 0 :
+                                        savedPct.toFixed(1),
+                                        "%)"))))),
                     React.createElement("div", { className: "flex flex-row p-6" },
                         React.createElement("div", { className: "w-2/5" },
                             React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
