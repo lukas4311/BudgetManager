@@ -49,6 +49,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             let exhangeRate: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+            cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
             that.setState({ allCryptoSum: cryptoSums });
         });
     }
@@ -74,7 +75,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                 <h2 className="text-xl ml-12 p-4">Crypto portfolio</h2>
                 {this.state.allCryptoSum != undefined ?
                     <div className="pb-10 overflow-y-scroll">
-                        <div className="font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                        <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1">
                             <p className="mx-6 my-1 w-1/3">Ticker</p>
                             <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
                             <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>

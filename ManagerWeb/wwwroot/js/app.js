@@ -6944,6 +6944,7 @@ class CryptoPortfolio extends react_1.default.Component {
                     let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
                     let exhangeRate = yield that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
                     cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+                    cryptoSums = lodash_1.default.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
                     that.setState({ allCryptoSum: cryptoSums });
                 });
             });
@@ -6967,7 +6968,7 @@ class CryptoPortfolio extends react_1.default.Component {
             react_1.default.createElement("h2", { className: "text-xl ml-12 p-4" }, "Crypto portfolio"),
             this.state.allCryptoSum != undefined ?
                 react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
-                    react_1.default.createElement("div", { className: "font-bold paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                    react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1" },
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
                         react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
@@ -8566,8 +8567,8 @@ class Crypto extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Crypto' },
-                react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto" },
+                react_1.default.createElement("div", { className: "flex flex-row" },
+                    react_1.default.createElement("div", { className: "w-6/12 p-4 overflow-y-auto" },
                         react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
                     react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
                         react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props)))))));

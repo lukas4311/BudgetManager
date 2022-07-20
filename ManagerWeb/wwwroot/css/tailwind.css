@@ -827,6 +827,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 8.333333% !important;
 }
 
+.w-6\/12 {
+  width: 50% !important;
+}
+
+.w-5\/12 {
+  width: 41.666667% !important;
+}
+
 .shrink {
   flex-shrink: 1 !important;
 }
@@ -1090,6 +1098,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .p-6 {
   padding: 1.5rem !important;
+}
+
+.p-4 {
+  padding: 1rem !important;
 }
 
 .px-12 {
