@@ -9,6 +9,7 @@ import { BankAccountForm } from "./BankAccountForm";
 import { BankAccount } from "../../Model/BankAccount";
 import { RouteComponentProps } from "react-router-dom";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { MainFrame } from "../MainFrame";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
@@ -84,8 +85,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         this.setState({ showForm: true, selectedBankAccount: selectedBankAccount, selectedId: id });
     }
 
-    private hideForm = (): void => 
-        this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });        
+    private hideForm = (): void =>
+        this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
 
     private saveFormData = async (model: BankAccountViewModel) => {
         let bankModel: BankAccount = {
@@ -111,12 +112,11 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
 
     render() {
         return (
-            <div className="">
-                <p className="text-3xl text-center mt-6">Bank accounts overview</p>
-                <div className="flex">
-                    <div className="w-full p-4 overflow-y-auto">
-                        <div className="h-full">
-                            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
+                <MainFrame header='Bank accounts overview'>
+                    <div className="flex">
+                        <div className="w-full p-4 overflow-y-auto">
+                            <div className="h-full">
                                 <div className="w-full lg:w-1/2">
                                     <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
                                         header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
@@ -132,11 +132,11 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
                                         </div>
                                     </DialogContent>
                                 </Dialog>
-                            </ThemeProvider>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </MainFrame>
+            </ThemeProvider>
         );
     }
 }

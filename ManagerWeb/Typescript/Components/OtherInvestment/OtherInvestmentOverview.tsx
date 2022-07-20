@@ -14,6 +14,7 @@ import { OtherInvestmentModel } from "../../ApiClient/Main/models/OtherInvestmen
 import OtherInvestmentSummary from "./OtherInvestmentSummary";
 import _ from "lodash";
 import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
+import { MainFrame } from "../MainFrame";
 
 const theme = createMuiTheme({
     palette: {
@@ -161,29 +162,30 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     public render() {
         return (
             <ThemeProvider theme={theme}>
-                <h2 className="text-3xl p-4 text-center">Other investments</h2>
-                <div className="text-center mt-4 bg-prussianBlue rounded-lg">
-                    <h2 className="text-2xl"></h2>
-                    <div className="flex flex-row">
-                        <div className="w-2/5">
-                            <div className="m-5 overflow-y-scroll">
-                                <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
-                                    addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
+                <MainFrame header='Other investments'>
+                    <>
+                        <h2 className="text-2xl"></h2>
+                        <div className="flex flex-row">
+                            <div className="w-2/5">
+                                <div className="m-5 overflow-y-scroll">
+                                    <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
+                                        addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
+                                </div>
                             </div>
+                            <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                         </div>
-                        <div className="w-3/5">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
-                    </div>
-                    <div>
-                        <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
-                    </div>
-                </div>
-                <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
-                    maxWidth="md" fullWidth={true}>
-                    <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
-                    <DialogContent>
-                        <OtherInvestmentForm {...this.state.selectedModel} />
-                    </DialogContent>
-                </Dialog>
+                        <div>
+                            <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
+                        </div>
+                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
+                            <DialogContent>
+                                <OtherInvestmentForm {...this.state.selectedModel} />
+                            </DialogContent>
+                        </Dialog>
+                    </>
+                </MainFrame>
             </ThemeProvider>
         );
     }

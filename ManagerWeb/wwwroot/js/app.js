@@ -5696,8 +5696,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BankAccountFromViewModel = exports.BankAccountForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 class BankAccountFromViewModel {
 }
 exports.BankAccountFromViewModel = BankAccountFromViewModel;
@@ -5744,12 +5744,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const BankAccountViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/BankAccountViewModel */ "./Typescript/Model/BankAccountViewModel.ts"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const BankAccountForm_1 = __webpack_require__(/*! ./BankAccountForm */ "./Typescript/Components/BankAccount/BankAccountForm.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 class BankAccountOverviewState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -5821,12 +5822,11 @@ class BankAccountOverview extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Bank accounts overview"),
-            react_1.default.createElement("div", { className: "flex" },
-                react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
-                    react_1.default.createElement("div", { className: "h-full" },
-                        react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+        return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+            react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Bank accounts overview' },
+                react_1.default.createElement("div", { className: "flex" },
+                    react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
+                        react_1.default.createElement("div", { className: "h-full" },
                             react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
                                 react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
                             react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Bank account detail", maxWidth: "sm", fullWidth: true },
@@ -5871,7 +5871,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseList = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const IconsEnum_1 = __webpack_require__(/*! ../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const BaseList = (props) => {
@@ -6012,14 +6012,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6132,7 +6132,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BudgetForm2 = exports.BudgetFormModel = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 class BudgetFormModel {
 }
 exports.BudgetFormModel = BudgetFormModel;
@@ -6523,13 +6523,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold_1 = __importDefault(__webpack_require__(/*! ./Gold */ "./Typescript/Components/Comodities/Gold.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const ComoditiesForm_1 = __webpack_require__(/*! ./ComoditiesForm */ "./Typescript/Components/Comodities/ComoditiesForm.tsx");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6655,16 +6656,17 @@ class Comodities extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-                react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Comodities overview"),
-                react_1.default.createElement("div", { className: "flex" },
-                    react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
-                        react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
-                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col justify-start" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
-                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
-                    react_1.default.createElement(core_1.DialogContent, null,
-                        react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
-                react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen }))));
+                react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Comodities overview' },
+                    react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement("div", { className: "flex" },
+                            react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
+                                react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
+                            react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col justify-start" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
+                        react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                            react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
+                            react_1.default.createElement(core_1.DialogContent, null,
+                                react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
+                        react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen }))))));
     }
 }
 exports.default = Comodities;
@@ -6704,8 +6706,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComoditiesFormViewModel = exports.ComoditiesForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 class ComoditiesFormViewModel {
 }
 exports.ComoditiesFormViewModel = ComoditiesFormViewModel;
@@ -7021,8 +7023,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CryptoTradeViewModel = exports.CryptoTradeForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 class CryptoTradeViewModel {
 }
 exports.CryptoTradeViewModel = CryptoTradeViewModel;
@@ -7088,12 +7090,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 class CryptoTradesState {
@@ -7214,6 +7216,32 @@ exports.default = CryptoTrades;
 
 /***/ }),
 
+/***/ "./Typescript/Components/MainFrame.tsx":
+/*!*********************************************!*\
+  !*** ./Typescript/Components/MainFrame.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MainFrame = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const MainFrame = (props) => {
+    var _a;
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-3xl p-4 text-center" }, props.header),
+        react_1.default.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg" }, props.children)));
+};
+exports.MainFrame = MainFrame;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Menu.tsx":
 /*!****************************************!*\
   !*** ./Typescript/Components/Menu.tsx ***!
@@ -7291,7 +7319,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtherInvestmentBalanceForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const OtherInvestmentBalanceForm = (props) => {
@@ -7337,11 +7365,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtherInvestmentBalaceHistoryViewModel = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const OtherInvestmentApi_1 = __webpack_require__(/*! ../../ApiClient/Main/apis/OtherInvestmentApi */ "./Typescript/ApiClient/Main/apis/OtherInvestmentApi.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const OtherInvestmentBalanceForm_1 = __webpack_require__(/*! ./OtherInvestmentBalanceForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx");
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
@@ -7573,7 +7601,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtherInvestmentForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const OtherInvestmentForm = (props) => {
@@ -7631,18 +7659,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const OtherInvestmentViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/OtherInvestmentViewModel */ "./Typescript/Model/OtherInvestmentViewModel.ts"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx");
 const OtherInvestmentDetail_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx"));
 const OtherInvestmentSummary_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentSummary */ "./Typescript/Components/OtherInvestment/OtherInvestmentSummary.tsx"));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7760,20 +7789,20 @@ class OtherInvestmentOverview extends react_1.default.Component {
     }
     render() {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-            react_1.default.createElement("h2", { className: "text-3xl p-4 text-center" }, "Other investments"),
-            react_1.default.createElement("div", { className: "text-center mt-4 bg-prussianBlue rounded-lg" },
-                react_1.default.createElement("h2", { className: "text-2xl" }),
-                react_1.default.createElement("div", { className: "flex flex-row" },
-                    react_1.default.createElement("div", { className: "w-2/5" },
-                        react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
-                            react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
-                    react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
-                react_1.default.createElement("div", null,
-                    react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props)))),
-            react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
-                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
-                react_1.default.createElement(core_1.DialogContent, null,
-                    react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, Object.assign({}, this.state.selectedModel))))));
+            react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Other investments' },
+                react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("h2", { className: "text-2xl" }),
+                    react_1.default.createElement("div", { className: "flex flex-row" },
+                        react_1.default.createElement("div", { className: "w-2/5" },
+                            react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
+                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
+                        react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
+                    react_1.default.createElement("div", null,
+                        react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props))),
+                    react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
+                        react_1.default.createElement(core_1.DialogContent, null,
+                            react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, Object.assign({}, this.state.selectedModel))))))));
     }
 }
 exports.default = OtherInvestmentOverview;
@@ -7965,7 +7994,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtherInvestmentTagForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const OtherInvestmentTagForm = (props) => {
@@ -8096,7 +8125,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
@@ -8277,8 +8306,8 @@ const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescri
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
@@ -8287,6 +8316,7 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const BarChart_1 = __webpack_require__(/*! ../Charts/BarChart */ "./Typescript/Components/Charts/BarChart.tsx");
 const BarChartSettingManager_1 = __webpack_require__(/*! ../Charts/BarChartSettingManager */ "./Typescript/Components/Charts/BarChartSettingManager.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8449,65 +8479,65 @@ class PaymentsOverview extends React.Component {
         let savedPct = income == 0 ? 0 : (saved / income) * 100;
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
             React.createElement("div", { className: "" },
-                React.createElement("p", { className: "text-3xl text-center mt-2" }, "Payments overview"),
-                React.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg" },
-                    this.showErrorMessage(),
-                    React.createElement("div", { className: "flex flex-row" },
-                        React.createElement("div", { className: "w-1/2" },
-                            React.createElement("div", { className: "py-4 flex" },
-                                React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
-                                React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
-                                    React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                                        React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                                        React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                            React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
-                                React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
-                                    return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
-                                })),
-                                React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Please select bank account")),
-                            React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                                React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
-                                    var _a;
-                                    return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
-                                            + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
-                                })),
-                                React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                            React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
-                                React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                        React.createElement("div", { className: "w-1/2 h-64 mt-4 calendar" },
-                            React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
-                    React.createElement("div", { className: "flex flex-row" },
-                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                            React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
-                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
-                            React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-                    React.createElement("div", { className: "flex flex-row" },
-                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                            React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
-                        React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                            React.createElement("div", { className: 'flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 justify-evenly h-full' },
-                                React.createElement("div", null,
-                                    React.createElement("p", null,
-                                        "Totaly earned: ",
-                                        income)),
-                                React.createElement("div", null,
-                                    React.createElement("p", null,
-                                        "Totaly spent: ",
-                                        expenses)),
-                                React.createElement("div", null,
-                                    React.createElement("p", null,
-                                        "Totaly saved: ",
-                                        saved,
-                                        " (", savedPct === null || savedPct === void 0 ? void 0 :
-                                        savedPct.toFixed(1),
-                                        "%)"))))),
-                    React.createElement("div", { className: "flex flex-row p-6" },
-                        React.createElement("div", { className: "w-2/5" },
-                            React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
-                    React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
-                        React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
-                        React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                            React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose, history: this.props.history })))))));
+                React.createElement(MainFrame_1.MainFrame, { header: 'Payments overview' },
+                    React.createElement(React.Fragment, null,
+                        this.showErrorMessage(),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement("div", { className: "w-1/2" },
+                                React.createElement("div", { className: "py-4 flex" },
+                                    React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
+                                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
+                                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                                React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
+                                    React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
+                                        return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
+                                    })),
+                                    React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Please select bank account")),
+                                React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                                    React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
+                                        var _a;
+                                        return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                                + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
+                                    })),
+                                    React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
+                                React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                                    React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
+                            React.createElement("div", { className: "w-1/2 h-64 mt-4 calendar" },
+                                React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
+                                React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement("div", { className: 'flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 justify-evenly h-full' },
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Totaly earned: ",
+                                            income)),
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Totaly spent: ",
+                                            expenses)),
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Totaly saved: ",
+                                            saved,
+                                            " (", savedPct === null || savedPct === void 0 ? void 0 :
+                                            savedPct.toFixed(1),
+                                            "%)"))))),
+                        React.createElement("div", { className: "flex flex-row p-6" },
+                            React.createElement("div", { className: "w-2/5" },
+                                React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
+                        React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
+                            React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
+                            React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
+                                React.createElement(PaymentForm_1.default, { key: this.state.formKey, paymentId: this.state.paymentId, bankAccountId: this.state.selectedBankAccount, handleClose: this.handleConfirmationClose, history: this.props.history }))))))));
     }
 }
 exports.default = PaymentsOverview;
@@ -8531,15 +8561,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const CryptoPortfolio_1 = __importDefault(__webpack_require__(/*! ./Components/Crypto/CryptoPortfolio */ "./Typescript/Components/Crypto/CryptoPortfolio.tsx"));
 const CryptoTrades_1 = __importDefault(__webpack_require__(/*! ./Components/Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx"));
+const MainFrame_1 = __webpack_require__(/*! ./Components/MainFrame */ "./Typescript/Components/MainFrame.tsx");
 class Crypto extends react_1.default.Component {
     render() {
         return (react_1.default.createElement("div", { className: "" },
-            react_1.default.createElement("p", { className: "text-3xl text-center mt-6" }, "Crypto overview"),
-            react_1.default.createElement("div", { className: "flex w-full text-center mt-6 p-4 bg-prussianBlue rounded-lg" },
-                react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto" },
-                    react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
-                react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
-                    react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props))))));
+            react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Crypto' },
+                react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto" },
+                        react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
+                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
+                        react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props)))))));
     }
 }
 exports.default = Crypto;
@@ -9413,7 +9444,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 class DateRangeState {
 }
@@ -83244,7 +83275,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "@material-ui/core":
+/***/ "@material-ui/core/styles":
 /*!*****************************!*\
   !*** external "MaterialUI" ***!
   \*****************************/
