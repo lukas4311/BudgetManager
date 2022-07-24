@@ -8,10 +8,15 @@ from datetime import datetime
 from configManager import token
 from configManager import organizaiton
 
-
 from typing import List
 from typing import Any
 from dataclasses import dataclass
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
 
 @dataclass
@@ -47,7 +52,8 @@ class FearAndGreed:
         _previous_1_week = float(obj.get("previous_1_week"))
         _previous_1_month = float(obj.get("previous_1_month"))
         _previous_1_year = float(obj.get("previous_1_year"))
-        return FearAndGreed(_score, _rating, _timestamp, _previous_close, _previous_1_week, _previous_1_month, _previous_1_year)
+        return FearAndGreed(_score, _rating, _timestamp, _previous_close, _previous_1_week, _previous_1_month,
+                            _previous_1_year)
 
 
 @dataclass
@@ -237,36 +243,65 @@ class Root:
         _market_volatility_vix_50 = MarketVolatilityVix50.from_dict(obj.get("market_volatility_vix_50"))
         _junk_bond_demand = JunkBondDemand.from_dict(obj.get("junk_bond_demand"))
         _safe_haven_demand = SafeHavenDemand.from_dict(obj.get("safe_haven_demand"))
-        return Root(_fear_and_greed, _fear_and_greed_historical, _market_momentum_sp500, _market_momentum_sp125, _stock_price_strength, _stock_price_breadth, _put_call_options, _market_volatility_vix, _market_volatility_vix_50, _junk_bond_demand, _safe_haven_demand)
+        return Root(_fear_and_greed, _fear_and_greed_historical, _market_momentum_sp500, _market_momentum_sp125,
+                    _stock_price_strength, _stock_price_breadth, _put_call_options, _market_volatility_vix,
+                    _market_volatility_vix_50, _junk_bond_demand, _safe_haven_demand)
+
 
 # Example Usage
 # jsonstring = json.loads(myjsonstring)
 # root = Root.from_dict(jsonstring)
 
 
-response = requests.get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata")
+options = Options()
+options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+options.headless = True
+driver = webdriver.Chrome(chrome_options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
+driver.minimize_window()
+driver.get("https://edition.cnn.com/markets/fear-and-greed")
+
+# url = driver.current_url
+# url_with_frequency = url + "?freq=" + frequency
+# driver.get(url_with_frequency)
+delay = 10
+json_data_object = None
+
+try:
+    _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, "")))
+    page = driver.page_source
+    print(page)
+    # index = page.find(self.pageSourceLocation)
+    # index2 = page.rfind("var source") - 1
+    # substring = page[index + len(self.pageSourceLocation):index2]
+    # json_substring = substring[substring.find("["):substring.rfind("]") + 1]
+    # json_data_object = json.loads(json_substring)
+    driver.quit()
+except TimeoutException:
+    driver.quit()
+
+# response = requests.get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata")
 # IT recognize bot test it through Chromium
 
-jsonData = response.text
+# jsonData = response.text
 # soup = BeautifulSoup(page.content, 'html.parser')
 #
 # feerAndGreed = soup.findAll("span", {"class": "market-fng-gauge__dial-number-value"})[0]
 
-print(jsonData)
+# print(jsonData)
 
-    # allValues = list(needleChart.find_all('li'))
-    # todayValue = str(allValues[0])
-    #
-    # searchedString = "Now: "
-    # index = todayValue.find(searchedString)
-    # startIndex = index + len(searchedString)
-    #
-    # fearAndGreedStocks = todayValue[startIndex:startIndex + 2]
-    # print(fearAndGreedStocks)
-    #
-    # bucket = "StockFearAndGreed"
-    # client = InfluxDBClient(url="http://localhost:8086", token=token, org=organizaiton)
-    #
-    # write_api = client.write_api(write_options=SYNCHRONOUS)
-    # p = Point("fearAndGreed").field("value", float(fearAndGreedStocks)).time(datetime.utcnow(), WritePrecision.NS)
-    # write_api.write(bucket=bucket, record=p)
+# allValues = list(needleChart.find_all('li'))
+# todayValue = str(allValues[0])
+#
+# searchedString = "Now: "
+# index = todayValue.find(searchedString)
+# startIndex = index + len(searchedString)
+#
+# fearAndGreedStocks = todayValue[startIndex:startIndex + 2]
+# print(fearAndGreedStocks)
+#
+# bucket = "StockFearAndGreed"
+# client = InfluxDBClient(url="http://localhost:8086", token=token, org=organizaiton)
+#
+# write_api = client.write_api(write_options=SYNCHRONOUS)
+# p = Point("fearAndGreed").field("value", float(fearAndGreedStocks)).time(datetime.utcnow(), WritePrecision.NS)
+# write_api.write(bucket=bucket, record=p)
