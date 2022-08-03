@@ -253,36 +253,33 @@ class Root:
 # root = Root.from_dict(jsonstring)
 
 
-options = Options()
-options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-options.headless = True
-driver = webdriver.Chrome(chrome_options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
-driver.minimize_window()
-driver.get("https://edition.cnn.com/markets/fear-and-greed")
+# options = Options()
+# options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+# options.headless = True
+# driver = webdriver.Chrome(chrome_options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
+# driver.minimize_window()
+# driver.get("https://edition.cnn.com/markets/fear-and-greed")
+#
+# # url = driver.current_url
+# # url_with_frequency = url + "?freq=" + frequency
+# # driver.get(url_with_frequency)
+# delay = 10
+# json_data_object = None
+#
+# try:
+#     _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, "")))
+#     page = driver.page_source
+#     print(page)
+#     # index = page.find(self.pageSourceLocation)
+#     # index2 = page.rfind("var source") - 1
+#     # substring = page[index + len(self.pageSourceLocation):index2]
+#     # json_substring = substring[substring.find("["):substring.rfind("]") + 1]
+#     # json_data_object = json.loads(json_substring)
+#     driver.quit()
+# except TimeoutException:
+#     driver.quit()
 
-# url = driver.current_url
-# url_with_frequency = url + "?freq=" + frequency
-# driver.get(url_with_frequency)
-delay = 10
-json_data_object = None
 
-try:
-    _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, "")))
-    page = driver.page_source
-    print(page)
-    # index = page.find(self.pageSourceLocation)
-    # index2 = page.rfind("var source") - 1
-    # substring = page[index + len(self.pageSourceLocation):index2]
-    # json_substring = substring[substring.find("["):substring.rfind("]") + 1]
-    # json_data_object = json.loads(json_substring)
-    driver.quit()
-except TimeoutException:
-    driver.quit()
-
-# response = requests.get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata")
-# IT recognize bot test it through Chromium
-
-# jsonData = response.text
 # soup = BeautifulSoup(page.content, 'html.parser')
 #
 # feerAndGreed = soup.findAll("span", {"class": "market-fng-gauge__dial-number-value"})[0]
