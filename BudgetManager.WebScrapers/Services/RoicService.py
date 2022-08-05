@@ -63,7 +63,7 @@ class RoicService:
                 data.append(model)
 
         data = list(filter(lambda v: v.value != '' and v.value != '- -', data))
-        print(data)
+        return data
 
     def get_main_summary(self, ticker: str):
         request = requests.get(f'https://roic.ai/financials/{ticker}')
@@ -82,7 +82,7 @@ class RoicService:
         div_yield = baseSpans[8].text
 
         finSummary = FinSummary(pe, fwd_pe, pe_to_sp, div_yield, market_cap)
-        print(finSummary)
+        return finSummary
 
     def get_fin_summary(self, ticker: str):
         request = requests.get(f'https://roic.ai/company/{ticker}')
@@ -100,9 +100,7 @@ class RoicService:
         for year in years:
             yearData.append(year.text)
 
-        print(yearData)
         data: list[FinData] = []
-        print(fin_data_base_html)
 
         for value in fin_data_base_html:
             text = value.findAll("span")[0]
@@ -115,7 +113,7 @@ class RoicService:
                 data.append(model)
 
         data = list(filter(lambda v: v.value != '' and v.value != '- -', data))
-        print(data)
+        return data
 
     def get_main_company_data(self, ticker: str):
         request = requests.get(f'https://roic.ai/company/{ticker}')
@@ -151,4 +149,4 @@ class RoicService:
                 elif desc == "City":
                     company.city = companyData
 
-        print(company)
+        return company
