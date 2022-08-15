@@ -17,17 +17,19 @@ def download_fin_summary(ticker: str):
     print(data)
     points = []
 
+    # TODO: get data from timeseries and compare dates which one to save and which one to omit saving
+
     for pointData in data:
         point = Point('FinSummary')\
             .tag("ticker", ticker).field(pointData.name, float(pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str = None
 
         if pointData.year != 'TTM':
-            pandas_date = pd.to_datetime(f"{pointData.year}-01-01")
+            pandas_date = pd.to_datetime(f"{pointData.year}-31-12")
             point = point.tag("prediction", "N")
         else:
-            now = datetime.now() + relativedelta(years=1)
-            now_str = now.strftime("%Y-%m-%d")
+            now = datetime.now()
+            now_str = now.strftime("%Y-12-31")
             pandas_date = pd.to_datetime(now_str)
             point = point.tag("prediction", "Y")
 
@@ -38,7 +40,7 @@ def download_fin_summary(ticker: str):
         points.append(point)
 
     influx_repository.add_range(points)
-    influx_repository.save()
+    # influx_repository.save()
 
 # TEST CODE
 download_fin_summary('AAPL')
