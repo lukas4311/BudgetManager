@@ -52,6 +52,7 @@ namespace BudgetManager.TestingConsole
             //processManager.ParseCoinbaseReport();
 
             // download forex
+            Console.WriteLine("Donwload forex");
             await processManager.DownloadForexHistory(ForexTicker.EurCzk);
             //await processManager.DownloadForexHistory(ForexTicker.CzkEur);
             await processManager.DownloadForexHistory(ForexTicker.UsdCzk);

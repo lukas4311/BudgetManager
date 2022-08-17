@@ -1,7 +1,7 @@
 import pytz
 from influxdb_client import Point, WritePrecision
 import pandas as pd
-from Services.InfluxRepository import InfluxRepository
+from Services.InfluxRepository import InfluxRepository, FilterTuple
 from Services.RoicService import RoicService
 from configManager import token, organizaiton
 from secret import influxDbUrl
@@ -20,8 +20,9 @@ def download_fin_summary(ticker: str):
     # TODO: get data from timeseries and compare dates which one to save and which one to omit saving
 
     for pointData in data:
-        point = Point('FinSummary')\
-            .tag("ticker", ticker).field(pointData.name, float(pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
+        point = Point('FinSummary') \
+            .tag("ticker", ticker).field(pointData.name, float(
+            pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str = None
 
         if pointData.year != 'TTM':
@@ -42,5 +43,10 @@ def download_fin_summary(ticker: str):
     influx_repository.add_range(points)
     # influx_repository.save()
 
+
 # TEST CODE
-download_fin_summary('AAPL')
+# download_fin_summary('AAPL')
+
+
+filters: list[FilterTuple] = [FilterTuple('_field', 'Revenue per share'), FilterTuple('ticker', 'AAPL')]
+influx_repository.filter_last_value('FinSummary', filters)

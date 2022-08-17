@@ -1,8 +1,14 @@
+from dataclasses import dataclass
 import pytz
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 import datetime
 from typing import List
+
+@dataclass
+class FilterTuple:
+    key: str
+    value: str
 
 
 class InfluxRepository:
@@ -48,6 +54,25 @@ class InfluxRepository:
             return tables[0].records[0]["_time"]
         else:
             return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)
+
+    def filter_last_value(self, measurement: str, filters: List[FilterTuple]):
+        print("jsem tu")
+        query_api = self.__client.query_api()
+        queryParams = {"_bucket": self.__bucket, "_measurement": measurement}
+        for filter in filters:
+            print(filter.key)
+            queryParams[filter.key] = filter.value
+
+        print(queryParams)
+        # tables = query_api.query('''
+        #                     from(bucket: _bucket)
+        #                       |> range(start: 1)
+        #                       |> filter(fn: (r) => r["_measurement"] == _measurement)
+        #                       |> keep(columns: [_tagKey])
+        #                       |> distinct(column: _tagKey)
+        #                 ''', params=p)
+        #
+        # return tables
 
     def find_all_distincted_tag_values(self, measurement: str, tagKey: str):
         query_api = self.__client.query_api()
