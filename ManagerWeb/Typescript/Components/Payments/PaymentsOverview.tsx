@@ -15,7 +15,7 @@ import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
-import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentCategoryModel, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps } from 'react-router-dom';
 import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 import _ from 'lodash';
@@ -67,6 +67,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
     private paymentApi: PaymentApi;
+    private categories: PaymentCategoryModel[];
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -95,6 +96,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+        this.categories = await this.paymentApi.paymentsCategoriesGet();
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         await this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
     }
@@ -239,6 +241,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let income = _.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
         let saved = income - expenses;
         let savedPct = income == 0 ? 0 : (saved / income) * 100;
+        let categoryInvested = this.categories?.filter(a => a.name == "Investice")[0];
+        let invested = 0;
+        let investedPct = 0;
+
+        if(categoryInvested){
+            invested = _.sumBy(this.state.payments.filter(p => p.paymentCategoryId == categoryInvested.id), s => s.amount);
+            investedPct = income == 0 ? 0 : (invested / income) * 100;
+        }
 
         return (
             <ThemeProvider theme={theme}>
@@ -313,6 +323,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                         <div>
                                             <p>Totaly saved: {saved} ({savedPct?.toFixed(1)}%)</p>
+                                        </div>
+                                        <div>
+                                            <p>Totaly invested: {invested} ({investedPct?.toFixed(1)}%)</p>
                                         </div>
                                     </div>
                                 </ComponentPanel>

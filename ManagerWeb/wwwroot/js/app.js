@@ -8434,6 +8434,7 @@ class PaymentsOverview extends React.Component {
             let bankAccounts = [];
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+            this.categories = yield this.paymentApi.paymentsCategoriesGet();
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             yield this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
         });
@@ -8474,10 +8475,18 @@ class PaymentsOverview extends React.Component {
         }
     }
     render() {
+        var _a;
         let expenses = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Expense'), e => e.amount);
         let income = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
         let saved = income - expenses;
         let savedPct = income == 0 ? 0 : (saved / income) * 100;
+        let categoryInvested = (_a = this.categories) === null || _a === void 0 ? void 0 : _a.filter(a => a.name == "Investice")[0];
+        let invested = 0;
+        let investedPct = 0;
+        if (categoryInvested) {
+            invested = lodash_1.default.sumBy(this.state.payments.filter(p => p.paymentCategoryId == categoryInvested.id), s => s.amount);
+            investedPct = income == 0 ? 0 : (invested / income) * 100;
+        }
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
             React.createElement("div", { className: "" },
                 React.createElement(MainFrame_1.MainFrame, { header: 'Payments overview' },
@@ -8531,6 +8540,13 @@ class PaymentsOverview extends React.Component {
                                             saved,
                                             " (", savedPct === null || savedPct === void 0 ? void 0 :
                                             savedPct.toFixed(1),
+                                            "%)")),
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Totaly invested: ",
+                                            invested,
+                                            " (", investedPct === null || investedPct === void 0 ? void 0 :
+                                            investedPct.toFixed(1),
                                             "%)"))))),
                         React.createElement("div", { className: "flex flex-row p-6" },
                             React.createElement("div", { className: "w-2/5" },
