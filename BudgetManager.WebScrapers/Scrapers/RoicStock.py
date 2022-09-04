@@ -18,12 +18,11 @@ def download_fin_summary(ticker: str):
     points = []
 
     # TODO: get data from timeseries and compare dates which one to save and which one to omit saving
-
     for pointData in data:
         point = Point('FinSummary') \
             .tag("ticker", ticker).field(pointData.name, float(
             pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
-        pandas_date: str = None
+        pandas_date: str
 
         if pointData.year != 'TTM':
             pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
@@ -44,9 +43,35 @@ def download_fin_summary(ticker: str):
     influx_repository.save()
 
 
-# TEST CODE
-download_fin_summary('AAPL')
+def download_fin_data(ticker: str):
+    data = roic_service.get_main_financial_history(ticker)
+    print(data)
+    points = []
 
+    for pointData in data:
+        point = Point('FinSummary') \
+            .tag("ticker", ticker).field(pointData.name, float(
+            pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
+        pandas_date: str
+
+        if pointData.year != 'TTM':
+            pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
+            point = point.tag("prediction", "N")
+        else:
+            now = datetime.now()
+            now_str = now.strftime("%Y-12-31")
+            pandas_date = pd.to_datetime(now_str)
+            point = point.tag("prediction", "Y")
+
+        pandas_date = pandas_date.tz_localize("Europe/Prague")
+        pandas_date.tz_convert("utc")
+        date = pandas_date.astimezone(pytz.utc)
+        point = point.time(date, WritePrecision.NS)
+        points.append(point)
+
+# TEST CODE
+# download_fin_summary('AAPL')
+download_fin_data('AAPL')
 
 # filters: list[FilterTuple] = [FilterTuple('_field', 'Revenue per share'), FilterTuple('ticker', 'AAPL')]
 # influx_repository.filter_last_value('FinSummary', filters)
