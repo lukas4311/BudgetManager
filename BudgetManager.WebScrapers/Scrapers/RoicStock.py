@@ -26,7 +26,7 @@ def download_fin_summary(ticker: str):
         pandas_date: str = None
 
         if pointData.year != 'TTM':
-            pandas_date = pd.to_datetime(f"{pointData.year}-31-12")
+            pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
             point = point.tag("prediction", "N")
         else:
             now = datetime.now()
@@ -41,12 +41,12 @@ def download_fin_summary(ticker: str):
         points.append(point)
 
     influx_repository.add_range(points)
-    # influx_repository.save()
+    influx_repository.save()
 
 
 # TEST CODE
-# download_fin_summary('AAPL')
+download_fin_summary('AAPL')
 
 
-filters: list[FilterTuple] = [FilterTuple('_field', 'Revenue per share'), FilterTuple('ticker', 'AAPL')]
-influx_repository.filter_last_value('FinSummary', filters)
+# filters: list[FilterTuple] = [FilterTuple('_field', 'Revenue per share'), FilterTuple('ticker', 'AAPL')]
+# influx_repository.filter_last_value('FinSummary', filters)
