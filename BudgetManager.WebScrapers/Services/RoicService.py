@@ -59,6 +59,10 @@ class RoicService:
             for i in range(0, len(yearData)):
                 year = yearData[i]
                 fin_data = allFindData[i]
+
+                if text.text == 'SEC Link':
+                    continue
+
                 model = FinData(year, text.text, fin_data.text)
                 data.append(model)
 

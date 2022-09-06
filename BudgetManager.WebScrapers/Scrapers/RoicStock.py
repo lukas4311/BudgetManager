@@ -49,7 +49,7 @@ def download_fin_data(ticker: str):
     points = []
 
     for pointData in data:
-        point = Point('FinSummary') \
+        point = Point('FinData') \
             .tag("ticker", ticker).field(pointData.name, float(
             pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str
@@ -68,6 +68,10 @@ def download_fin_data(ticker: str):
         date = pandas_date.astimezone(pytz.utc)
         point = point.time(date, WritePrecision.NS)
         points.append(point)
+
+    print(points)
+    influx_repository.add_range(points)
+    influx_repository.save()
 
 # TEST CODE
 # download_fin_summary('AAPL')
