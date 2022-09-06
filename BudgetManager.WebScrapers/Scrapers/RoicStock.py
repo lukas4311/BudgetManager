@@ -21,7 +21,7 @@ def download_fin_summary(ticker: str):
     for pointData in data:
         point = Point('FinSummary') \
             .tag("ticker", ticker).field(pointData.name, float(
-            pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
+            pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str
 
         if pointData.year != 'TTM':
@@ -51,7 +51,7 @@ def download_fin_data(ticker: str):
     for pointData in data:
         point = Point('FinData') \
             .tag("ticker", ticker).field(pointData.name, float(
-            pointData.value.replace(',', '.').replace('(', '').replace(')', '').replace('%', '')))
+            pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str
 
         if pointData.year != 'TTM':
