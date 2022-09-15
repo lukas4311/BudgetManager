@@ -55,25 +55,6 @@ class InfluxRepository:
         else:
             return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)
 
-    def filter_last_value(self, measurement: str, filters: List[FilterTuple]):
-        print("jsem tu")
-        query_api = self.__client.query_api()
-        queryParams = {"_bucket": self.__bucket, "_measurement": measurement}
-        for filter in filters:
-            print(filter.key)
-            queryParams[filter.key] = filter.value
-
-        print(queryParams)
-        # tables = query_api.query('''
-        #                     from(bucket: _bucket)
-        #                       |> range(start: 1)
-        #                       |> filter(fn: (r) => r["_measurement"] == _measurement)
-        #                       |> keep(columns: [_tagKey])
-        #                       |> distinct(column: _tagKey)
-        #                 ''', params=p)
-        #
-        # return tables
-
     def find_all_distincted_tag_values(self, measurement: str, tagKey: str):
         query_api = self.__client.query_api()
         p = {"_tagKey": tagKey, "_measurement": measurement, "_bucket": self.__bucket}
@@ -102,3 +83,56 @@ class InfluxRepository:
                 ''', params=p)
 
         return tables
+
+    def filter_last_value(self, measurement: str, filters: List[FilterTuple]):
+        query_api = self.__client.query_api()
+        queryParams = {"_bucket": self.__bucket, "_measurement": measurement}
+        for filter in filters:
+            print(filter.key)
+            queryParams[filter.key] = filter.value
+
+        print(queryParams)
+        tables = query_api.query('''
+                            from(bucket: _bucket)
+                              |> range(start: 2020-01-01)
+                              |> filter(fn: (r) => r["_measurement"] == _measurement)
+                              |> filter(fn: (r) => r["_field"] == _field)
+                              |> filter(fn: (r) => r["ticker"] == ticker)
+                              |> sort(columns: ["_time"], desc: true)
+                              |> top(n: 1)
+                        ''', params=queryParams)
+        return tables
+
+
+class InfluxQueryBuilder:
+    _query: str
+    _bucket: str
+    _measurement: str
+    _filters: list[FilterTuple]
+    _top: int
+    _orderColumns: list[str]
+    _orderDesc: bool
+
+    def __init__(self):
+        _query = ""
+        _top = None
+        _orderColumns: None
+        _orderDesc: None
+
+    def set_bucket(self, bucket: str):
+        self._bucket = bucket
+
+    def set_measurement(self, measurement: str):
+        self._measurement = measurement
+
+    def set_field(self, filter: FilterTuple):
+        self._filters.append(filter)
+
+    def set_top(self, top: int):
+        self._top = top
+
+    def set_order(self, columns: list[str], desc: bool):
+        self._orderDesc = desc
+        self._orderColumns = columns
+
+
