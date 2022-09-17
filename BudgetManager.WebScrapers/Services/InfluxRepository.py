@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import pytz
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-import datetime
+from datetime import datetime
 from typing import List
 
 @dataclass
@@ -84,49 +84,60 @@ class InfluxRepository:
 
         return tables
 
-    def filter_last_value(self, measurement: str, filters: List[FilterTuple]):
+    def filter_last_value(self, measurement: str, filters: List[FilterTuple], start: datetime):
         query_api = self.__client.query_api()
-        queryParams = {"_bucket": self.__bucket, "_measurement": measurement}
-        for filter in filters:
-            print(filter.key)
-            queryParams[filter.key] = filter.value
 
-        print(queryParams)
-        tables = query_api.query('''
-                            from(bucket: _bucket)
-                              |> range(start: 2020-01-01)
-                              |> filter(fn: (r) => r["_measurement"] == _measurement)
-                              |> filter(fn: (r) => r["_field"] == _field)
-                              |> filter(fn: (r) => r["ticker"] == ticker)
-                              |> sort(columns: ["_time"], desc: true)
-                              |> top(n: 1)
-                        ''', params=queryParams)
+        queryBuilder = InfluxQueryBuilder()
+        queryBuilder.set_bucket(self.__bucket)
+        queryBuilder.set_start(start)
+        queryBuilder.set_measurement(measurement)
+        queryBuilder.set_order(["_time"], True)
+
+        for filterItem in filters:
+            queryBuilder.set_filter(filterItem)
+
+        queryBuilder.set_top(1)
+        query_data = queryBuilder.build()
+        tables = query_api.query(query_data[0], params=query_data[1])
         return tables
 
 
 class InfluxQueryBuilder:
+    _end: str
+    _start: str
     _query: str
     _bucket: str
     _measurement: str
-    _filters: list[FilterTuple]
+    _conditions: list[str]
     _top: int
     _orderColumns: list[str]
     _orderDesc: bool
 
     def __init__(self):
-        _query = ""
-        _top = None
-        _orderColumns: None
-        _orderDesc: None
+        self._query = ""
+        self._top = None
+        self._orderColumns = None
+        self._orderDesc = None
+        self._bucket = None
+        self._measurement = None
+        self._start = None
+        self._end = None
+        self._conditions = []
 
     def set_bucket(self, bucket: str):
         self._bucket = bucket
 
+    def set_start(self, start: datetime):
+        self._start = start
+        
+    def set_end(self, end: datetime):
+        self._end = end
+
     def set_measurement(self, measurement: str):
         self._measurement = measurement
 
-    def set_field(self, filter: FilterTuple):
-        self._filters.append(filter)
+    def set_filter(self, filterItem: FilterTuple):
+        self._conditions.append(filterItem)
 
     def set_top(self, top: int):
         self._top = top
@@ -135,4 +146,40 @@ class InfluxQueryBuilder:
         self._orderDesc = desc
         self._orderColumns = columns
 
+    def build(self):
+        queryParams = {"_bucket": self._bucket, "_measurement": self._measurement}
+
+        self._query += 'from(bucket: _bucket)'
+
+        if self._start is not None or self._end is not None:
+            self._query += ' |> range('
+
+            if self._start is not None:
+                self._query += 'start: _start'
+                queryParams['_start'] = self._start
+
+            if self._end is not None:
+                self._query += 'stop: _stop'
+                queryParams['_stop'] = self._end
+
+            self._query += ')'
+
+        self._query += ' |> filter(fn: (r) => r["_measurement"] == _measurement)'
+
+        for filterItem in self._conditions:
+            filterName = filterItem.key
+            self._query += f' |> filter(fn: (r) => r["{filterName}"] == _{filterName})'
+            queryParams[f'_{filterName}'] = filterItem.value
+
+        if self._top is not None:
+            self._query += ' |> sort(columns: ["_time"], desc: _orderDesc)'
+            queryParams['_orderDesc'] = self._orderDesc
+
+        if self._top is not None:
+            self._query += ' |> top(n:_top)'
+            queryParams['_top'] = self._top
+
+        returnQuery = self._query
+        self._query = ''
+        return returnQuery, queryParams
 

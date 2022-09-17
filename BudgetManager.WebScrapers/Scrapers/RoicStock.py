@@ -77,7 +77,8 @@ def download_fin_data(ticker: str):
 # download_fin_summary('AAPL')
 # download_fin_data('AAPL')
 filters: list[FilterTuple] = [FilterTuple('_field', 'EBITDA'), FilterTuple('ticker', 'AAPL')]
-data = influx_repository.filter_last_value('FinData', filters)
+date = datetime(2019, 1, 1)
+data = influx_repository.filter_last_value('FinData', filters, date)
 record = data[0].records[0]
 print(data[0].columns)
 print(record['_time'])
