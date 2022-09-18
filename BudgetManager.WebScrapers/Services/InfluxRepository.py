@@ -30,16 +30,16 @@ class InfluxRepository:
 
     def find_last_for_state_tag(self, measurement: str, tag: str):
         query_api = self.__client.query_api()
-        p = {"_start": datetime.MINYEAR,
-             "_bucket": self.__bucket,
-             "_measurement": measurement,
+        p = {"__start": datetime.MINYEAR,
+             "__bucket": self.__bucket,
+             "__measurement": measurement,
              "_tag": tag,
              "_desc": True
              }
 
         tables = query_api.query('''
-            from(bucket:_bucket) |> range(start: _start)
-                |> filter(fn: (r) => r["_measurement"] == _measurement)
+            from(bucket:__bucket) |> range(start: __start)
+                |> filter(fn: (r) => r["__measurement"] == __measurement)
                 |> filter(fn: (r) => r["state"] == _tag)
                 |> sort(columns: ["_time"], desc: _desc)
                 |> top(n:1, columns: ["_time"])
@@ -52,10 +52,10 @@ class InfluxRepository:
 
     def find_all_distincted_tag_values(self, measurement: str, tagKey: str):
         query_api = self.__client.query_api()
-        p = {"_tagKey": tagKey, "_measurement": measurement, "_bucket": self.__bucket}
+        p = {"_tagKey": tagKey, "_measurement": measurement, "__bucket": self.__bucket}
 
         tables = query_api.query('''
-                    from(bucket: _bucket)
+                    from(bucket: __bucket)
                       |> range(start: 1)
                       |> filter(fn: (r) => r["_measurement"] == _measurement)
                       |> keep(columns: [_tagKey])
@@ -66,10 +66,10 @@ class InfluxRepository:
 
     def find_all_last_value_for_tag(self, measurement: str, tagKey: str):
         query_api = self.__client.query_api()
-        p = {"_tagKey": tagKey, "_measurement": measurement, "_bucket": self.__bucket}
+        p = {"_tagKey": tagKey, "_measurement": measurement, "__bucket": self.__bucket}
 
         tables = query_api.query('''
-                    from(bucket: _bucket)
+                    from(bucket: __bucket)
                       |> range(start: 1)
                       |> filter(fn: (r) => r["_measurement"] == _measurement)
                       |> keep(columns: [_tagKey, "_time"])
@@ -86,8 +86,8 @@ class InfluxRepository:
         queryBuilder.set_bucket(self.__bucket)
         queryBuilder.set_start(start)
         queryBuilder.set_measurement(measurement)
-        queryBuilder.set_order(["_time"], True)
-        queryBuilder.set_top(1)
+        queryBuilder.set_do_pivot()
+        queryBuilder.set_highestMax("_time")
         query_data = queryBuilder.build()
 
         tables = query_api.query(query_data[0], params=query_data[1])

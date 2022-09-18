@@ -2,85 +2,82 @@ import pytz
 from influxdb_client import Point, WritePrecision
 import pandas as pd
 from Services.InfluxRepository import InfluxRepository
-from Services.RoicService import RoicService
+from Services.RoicService import RoicService, FinData
 from configManager import token, organizaiton
 from secret import influxDbUrl
 from datetime import datetime
 import pandas as pd
-from dateutil.relativedelta import relativedelta
 
 roic_service = RoicService()
 influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton)
 
 
-def download_fin_summary(ticker: str):
-    data = roic_service.get_fin_summary(ticker)
-    print(data)
-    points = []
-
-    # TODO: get data from timeseries and compare dates which one to save and which one to omit saving
-    for pointData in data:
-        point = Point('FinSummary') \
-            .tag("ticker", ticker).field(pointData.name, float(
-            pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
-        pandas_date: str
-
-        if pointData.year != 'TTM':
-            pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
-            point = point.tag("prediction", "N")
-        else:
-            now = datetime.now()
-            now_str = now.strftime("%Y-12-31")
-            pandas_date = pd.to_datetime(now_str)
-            point = point.tag("prediction", "Y")
-
-        pandas_date = pandas_date.tz_localize("Europe/Prague")
-        pandas_date.tz_convert("utc")
-        date = pandas_date.astimezone(pytz.utc)
-        point = point.time(date, WritePrecision.NS)
-        points.append(point)
-
-    influx_repository.add_range(points)
-    influx_repository.save()
-
-
-def isRecordToSave(dataYear:str, fluxYear:int):
+def isRecordToSave(dataYear: str, fluxYear: int):
     try:
+        if dataYear == 'TTM':
+            dataYear = datetime.now().year
+
         convertedYear = int(dataYear)
         return convertedYear > fluxYear
     except:
         return False
 
 
+def filterFinancialData(bucketName, data):
+    date = datetime.min
+    data_time = influx_repository.filter_last_value(bucketName, date)
+    time: datetime = datetime.min
+    filtered_data: list[FinData] = data
+    if len(data_time) > 0:
+        time: datetime = data_time[0].records[0]['_time']
+        filtered_data = list(filter(lambda c: isRecordToSave(c.year, time.year), data))
+    return filtered_data
+
+
+def processFinancialDataPoint(bucketName, pointData, points, ticker):
+    point = Point(bucketName) \
+        .tag("ticker", ticker).field(pointData.name, float(
+        pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
+    pandas_date: str
+    if pointData.year != 'TTM':
+        pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
+        point = point.tag("prediction", "N")
+    else:
+        now = datetime.now()
+        now_str = now.strftime("%Y-12-31")
+        pandas_date = pd.to_datetime(now_str)
+        point = point.tag("prediction", "Y")
+    pandas_date = pandas_date.tz_localize("Europe/Prague")
+    pandas_date.tz_convert("utc")
+    date = pandas_date.astimezone(pytz.utc)
+    point = point.time(date, WritePrecision.NS)
+    points.append(point)
+
+
+def download_fin_summary(ticker: str):
+    bucketName = 'FinSummary'
+    data = roic_service.get_fin_summary(ticker)
+    points = []
+    filtered_data = filterFinancialData(bucketName, data)
+
+    print(filtered_data)
+    return
+    for pointData in filtered_data:
+        processFinancialDataPoint(bucketName, pointData, points, ticker)
+
+    print(points)
+    # influx_repository.add_range(points)
+    # influx_repository.save()
+
+
 def download_fin_data(ticker: str):
+    bucketName = 'FinData'
     data = roic_service.get_main_financial_history(ticker)
     points = []
-
-    date = datetime.min
-    data_time = influx_repository.filter_last_value('FinData', date)
-    time: datetime = data_time[0].records[0]['_time']
-    filtered_data = list(filter(lambda c: isRecordToSave(c.year, time.year), data))
+    filtered_data = filterFinancialData(bucketName, data)
 
     for pointData in filtered_data:
-        point = Point('FinData') \
-            .tag("ticker", ticker).field(pointData.name, float(
-            pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
-        pandas_date: str
-
-        if pointData.year != 'TTM':
-            pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
-            point = point.tag("prediction", "N")
-        else:
-            now = datetime.now()
-            now_str = now.strftime("%Y-12-31")
-            pandas_date = pd.to_datetime(now_str)
-            point = point.tag("prediction", "Y")
-
-        pandas_date = pandas_date.tz_localize("Europe/Prague")
-        pandas_date.tz_convert("utc")
-        date = pandas_date.astimezone(pytz.utc)
-        point = point.time(date, WritePrecision.NS)
-        points.append(point)
+        processFinancialDataPoint(bucketName, pointData, points, ticker)
 
     print(points)
     # influx_repository.add_range(points)
@@ -88,11 +85,11 @@ def download_fin_data(ticker: str):
 
 
 # TEST CODE
-# download_fin_summary('AAPL')
-download_fin_data('AAPL')
+download_fin_summary('AAPL')
+# download_fin_data('AAPL')
 
 # TEST filter last value from influx
-# filters: list[FilterTuple] = [FilterTuple('_field', 'EBITDA'), FilterTuple('ticker', 'AAPL')]
+# filters: list[F ilterTuple] = [FilterTuple('_field', 'EBITDA'), FilterTuple('ticker', 'AAPL')]
 # date = datetime(2019, 1, 1)
 # data = influx_repository.filter_last_value('FinData', filters, date)
 # record = data[0].records[0]
