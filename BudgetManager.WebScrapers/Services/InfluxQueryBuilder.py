@@ -70,6 +70,9 @@ class InfluxQueryBuilder:
                 queryParams['_start'] = self.__start
 
             if self.__end is not None:
+                if self.__start is not None:
+                    self.__query += ','
+
                 self.__query += 'stop: _stop'
                 queryParams['_stop'] = self.__end
 

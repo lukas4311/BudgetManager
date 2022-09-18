@@ -85,8 +85,9 @@ class InfluxRepository:
         queryBuilder = InfluxQueryBuilder()
         queryBuilder.set_bucket(self.__bucket)
         queryBuilder.set_start(start)
+        queryBuilder.set_end(datetime(9999,12,31))
         queryBuilder.set_measurement(measurement)
-        queryBuilder.set_do_pivot()
+        # queryBuilder.set_do_pivot()
         queryBuilder.set_highestMax("_time")
         query_data = queryBuilder.build()
 

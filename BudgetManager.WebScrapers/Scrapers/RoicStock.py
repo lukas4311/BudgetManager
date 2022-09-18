@@ -60,8 +60,6 @@ def download_fin_summary(ticker: str):
     points = []
     filtered_data = filterFinancialData(bucketName, data)
 
-    print(filtered_data)
-    return
     for pointData in filtered_data:
         processFinancialDataPoint(bucketName, pointData, points, ticker)
 
