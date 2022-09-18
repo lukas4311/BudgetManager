@@ -84,7 +84,7 @@ def download_fin_data(ticker: str):
 
 # TEST CODE
 download_fin_summary('AAPL')
-# download_fin_data('AAPL')
+download_fin_data('AAPL')
 
 # TEST filter last value from influx
 # filters: list[F ilterTuple] = [FilterTuple('_field', 'EBITDA'), FilterTuple('ticker', 'AAPL')]
