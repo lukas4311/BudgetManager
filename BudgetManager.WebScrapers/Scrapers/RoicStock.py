@@ -96,9 +96,7 @@ def download_main_fin(ticker: str):
 
     now = datetime.now()
     now_str = now.strftime("%Y-%m-%d")
-    print(now)
     pandas_date = pd.to_datetime(now_str)
-    point = point.tag("prediction", "Y")
     pandas_date = pandas_date.tz_localize("Europe/Prague")
     pandas_date.tz_convert("utc")
     date = pandas_date.astimezone(pytz.utc)
@@ -109,7 +107,6 @@ def download_main_fin(ticker: str):
 # TEST CODE
 # download_fin_summary('AAPL')
 # download_fin_data('AAPL')
-
 download_main_fin('AAPL')
 
 # TEST filter last value from influx
