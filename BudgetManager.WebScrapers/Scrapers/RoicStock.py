@@ -1,6 +1,5 @@
 import pytz
 from influxdb_client import Point, WritePrecision
-import pandas as pd
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
 from configManager import token, organizaiton
@@ -82,9 +81,36 @@ def download_fin_data(ticker: str):
     # influx_repository.save()
 
 
+def download_main_fin(ticker: str):
+    #TODO: add loading last value for this ticker
+
+    mainInfo = roic_service.get_main_summary('AAPL')
+    bucketName = 'FinMain'
+    point = Point(bucketName) \
+        .tag("ticker", ticker)\
+        .field('Pe', float(mainInfo.pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', '')))\
+        .field('Fw_Pe', float(mainInfo.fw_pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', '')))\
+        .field('Pe_To_Sp', float(mainInfo.pe_to_sp.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', '')))\
+        .field('Div_Yield', float(mainInfo.div_yield.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', '')))\
+        .field('MarketCap', float(mainInfo.market_cap.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', '')))
+
+    now = datetime.now()
+    now_str = now.strftime("%Y-%m-%d")
+    print(now)
+    pandas_date = pd.to_datetime(now_str)
+    point = point.tag("prediction", "Y")
+    pandas_date = pandas_date.tz_localize("Europe/Prague")
+    pandas_date.tz_convert("utc")
+    date = pandas_date.astimezone(pytz.utc)
+    point = point.time(date, WritePrecision.NS)
+    influx_repository.add(point)
+    influx_repository.save()
+
 # TEST CODE
-download_fin_summary('AAPL')
-download_fin_data('AAPL')
+# download_fin_summary('AAPL')
+# download_fin_data('AAPL')
+
+download_main_fin('AAPL')
 
 # TEST filter last value from influx
 # filters: list[F ilterTuple] = [FilterTuple('_field', 'EBITDA'), FilterTuple('ticker', 'AAPL')]
