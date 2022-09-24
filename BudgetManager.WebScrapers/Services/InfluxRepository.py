@@ -3,6 +3,8 @@ from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
 from datetime import datetime
 from typing import List
+
+from Models.FilterTuple import FilterTuple
 from Services.InfluxQueryBuilder import InfluxQueryBuilder
 
 
@@ -79,19 +81,17 @@ class InfluxRepository:
 
         return tables
 
-    def filter_last_value(self, measurement: str, start: datetime):
+    def filter_last_value(self, measurement: str, ticker: str, start: datetime):
         query_api = self.__client.query_api()
 
         queryBuilder = InfluxQueryBuilder()
         queryBuilder.set_bucket(self.__bucket)
         queryBuilder.set_start(start)
-        queryBuilder.set_end(datetime(9999,12,31))
+        queryBuilder.set_end(datetime(9999, 12, 31))
         queryBuilder.set_measurement(measurement)
-        # queryBuilder.set_do_pivot()
+        queryBuilder.set_filter(FilterTuple("ticker", ticker))
         queryBuilder.set_highestMax("_time")
         query_data = queryBuilder.build()
 
         tables = query_api.query(query_data[0], params=query_data[1])
         return tables
-
-
