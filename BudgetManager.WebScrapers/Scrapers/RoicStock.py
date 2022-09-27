@@ -6,6 +6,7 @@ from configManager import token, organizaiton
 from secret import influxDbUrl
 from datetime import datetime
 import pandas as pd
+import csv
 
 roic_service = RoicService()
 influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton)
@@ -123,7 +124,23 @@ def download_main_fin(ticker: str):
 
 
 # TEST CODE
-download_fin_summary('MSFT')
+# download_fin_summary('MSFT')
 # download_fin_data('AAPL')
 # download_main_fin('AAPL')
 
+sp500 = []
+
+
+def addTickerFromCsvFile(rows, destination: list):
+    for row in rows:
+        symbol = row["Symbol"]
+        if "^" not in symbol:
+            destination.append(symbol)
+
+
+with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    addTickerFromCsvFile(csv_file, sp500)
+
+
+# for ticker in sp500:
