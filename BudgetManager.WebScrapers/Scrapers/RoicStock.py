@@ -8,6 +8,7 @@ from datetime import datetime
 import pandas as pd
 import csv
 import logging
+import time
 
 # logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
@@ -69,10 +70,11 @@ def download_fin_summary(ticker: str):
         processFinancialDataPoint(bucketName, pointData, points, ticker)
 
     if len(points) > 0:
-        print('Saving fin summary about ' + ticker)
-
-    influx_repository.add_range(points)
-    influx_repository.save()
+        logging.info('Saving fin summary about ' + ticker)
+        influx_repository.add_range(points)
+        influx_repository.save()
+    else:
+        logging.info('Fin summary already saved ' + ticker)
 
 
 def download_fin_data(ticker: str):
@@ -85,10 +87,11 @@ def download_fin_data(ticker: str):
         processFinancialDataPoint(bucketName, pointData, points, ticker)
 
     if len(points) > 0:
-        print('Saving fin data about ' + ticker)
-
-    influx_repository.add_range(points)
-    influx_repository.save()
+        logging.info('Saving fin data about ' + ticker)
+        influx_repository.add_range(points)
+        influx_repository.save()
+    else:
+        logging.info('Fin data already saved ' + ticker)
 
 
 def download_main_fin(ticker: str):
@@ -121,9 +124,11 @@ def download_main_fin(ticker: str):
         date = pandas_date.astimezone(pytz.utc)
         point = point.time(date, WritePrecision.NS)
 
-        print('Saving main data about ' + ticker)
+        logging.info('Saving main data about ' + ticker)
         influx_repository.add(point)
         influx_repository.save()
+    else:
+        logging.info('Main fin data already saved ' + ticker)
 
 
 # TEST CODE
@@ -158,6 +163,8 @@ for ticker in sp500:
         logging.info('Error while downloading financial summary for ticker: ' + ticker)
         logging.error(e)
 
+    time.sleep(3)
+
     try:
         download_fin_data(ticker)
         logging.info('Downloaded financial data for company: ' + ticker)
@@ -165,9 +172,13 @@ for ticker in sp500:
         logging.info('Error while downloading financial data for ticker: ' + ticker)
         logging.error(e)
 
+    time.sleep(3)
+
     try:
         download_main_fin(ticker)
         logging.info('Downloaded main financial indicators for company: ' + ticker)
     except Exception as e:
         logging.info('Error while downloading main financial indicators for ticker: ' + ticker)
         logging.error(e)
+
+    time.sleep(3)
