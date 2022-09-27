@@ -7,7 +7,10 @@ from secret import influxDbUrl
 from datetime import datetime
 import pandas as pd
 import csv
+import logging
 
+# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 roic_service = RoicService()
 influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton)
 
@@ -134,6 +137,8 @@ sp500 = []
 def addTickerFromCsvFile(rows, destination: list):
     for row in rows:
         symbol = row["Symbol"]
+        logging.debug('Loaded ticker: ' + symbol)
+
         if "^" not in symbol:
             destination.append(symbol)
 
@@ -143,4 +148,26 @@ with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     addTickerFromCsvFile(csv_file, sp500)
 
 
-# for ticker in sp500:
+for ticker in sp500:
+    logging.debug('Processing of ticker:' + ticker)
+
+    try:
+        download_fin_summary(ticker)
+        logging.info('Downloaded financial summary for company: ' + ticker)
+    except Exception as e:
+        logging.info('Error while downloading financial summary for ticker: ' + ticker)
+        logging.error(e)
+
+    try:
+        download_fin_data(ticker)
+        logging.info('Downloaded financial data for company: ' + ticker)
+    except Exception as e:
+        logging.info('Error while downloading financial data for ticker: ' + ticker)
+        logging.error(e)
+
+    try:
+        download_main_fin(ticker)
+        logging.info('Downloaded main financial indicators for company: ' + ticker)
+    except Exception as e:
+        logging.info('Error while downloading main financial indicators for ticker: ' + ticker)
+        logging.error(e)
