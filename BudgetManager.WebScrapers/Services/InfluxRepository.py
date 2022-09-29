@@ -1,3 +1,5 @@
+import logging
+
 import pytz
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -8,27 +10,54 @@ from Models.FilterTuple import FilterTuple
 from Services.InfluxQueryBuilder import InfluxQueryBuilder
 
 
+def get_datetime_to_log():
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+
 class InfluxRepository:
     __client: InfluxDBClient
     __bucket: str
     __entities: List[Point]
+    __logger: logging
 
-    def __init__(self, influxUrl: str, bucket: str, token: str, organization: str):
+    def __init__(self, influxUrl: str, bucket: str, token: str, organization: str, logger=None):
         self.__client = InfluxDBClient(url=influxUrl, token=token, org=organization)
         self.__bucket = bucket
         self.__entities = []
+        self.__logger = logger
 
     def add(self, point: Point):
         self.__entities.append(point)
+        self.__logger and self.__logger.debug(
+            'Add point to save (count: ' + str(len(self.__entities)) + '):' + get_datetime_to_log())
 
     def add_range(self, points: List[Point]):
         self.__entities.extend(points)
+        self.__logger and self.__logger.debug(
+            'Add points to save (count: ' + str(len(self.__entities)) + '):' + get_datetime_to_log())
 
     def save(self):
         write_api = self.__client.write_api(write_options=SYNCHRONOUS)
+        self.__logger and self.__logger.debug(
+            'START: Influx save' + get_datetime_to_log())
+        write_api.write(self.__bucket, record=self.__entities)
+        self.__entities.clear()
+        self.__logger and self.__logger.debug(
+            'END: Influx save' + get_datetime_to_log())
 
-        for entity in self.__entities:
-            write_api.write(bucket=self.__bucket, record=entity)
+        # for entity in self.__entities:
+        #     write_api.write(bucket=self.__bucket, record=entity)
+
+    def save_batch(self, saveAfter: int = 10):
+        write_api = self.__client.write_api(write_options=SYNCHRONOUS)
+        self.__logger and self.__logger.debug(
+            'START: Influx batch save' + get_datetime_to_log())
+        if len(self.__entities) > saveAfter:
+            write_api.write(bucket=self.__bucket, record=self.__entities)
+            self.__entities.clear()
+            self.__logger and self.__logger.debug(
+                'END: Influx batch save' + get_datetime_to_log())
+
+
 
     def find_last_for_state_tag(self, measurement: str, tag: str):
         query_api = self.__client.query_api()

@@ -11,9 +11,10 @@ import logging
 import time
 
 # logging.basicConfig(level=logging.DEBUG)
-logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+log_name = 'app.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 roic_service = RoicService()
-influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton)
+influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton, logging)
 
 
 def isRecordToSave(dataYear: str, fluxYear: int):
@@ -28,6 +29,7 @@ def isRecordToSave(dataYear: str, fluxYear: int):
 
 
 def filterFinancialData(bucketName, ticker, data):
+    logging.debug('START: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
     date = datetime.min
     data_time = influx_repository.filter_last_value(bucketName, ticker, date)
     time: datetime = datetime.min
@@ -36,6 +38,8 @@ def filterFinancialData(bucketName, ticker, data):
     if len(data_time) > 0:
         time: datetime = data_time[0].records[0]['_time']
         filtered_data = list(filter(lambda c: isRecordToSave(c.year, time.year), data))
+
+    logging.debug('END: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
     return filtered_data
 
 
@@ -71,8 +75,10 @@ def download_fin_summary(ticker: str):
 
     if len(points) > 0:
         logging.info('Saving fin summary about ' + ticker)
+        logging.debug('START: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         influx_repository.add_range(points)
-        influx_repository.save()
+        influx_repository.save_batch(saveAfter=100)
+        logging.debug('END: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
     else:
         logging.info('Fin summary already saved ' + ticker)
 
@@ -88,8 +94,10 @@ def download_fin_data(ticker: str):
 
     if len(points) > 0:
         logging.info('Saving fin data about ' + ticker)
+        logging.debug('START: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         influx_repository.add_range(points)
-        influx_repository.save()
+        influx_repository.save_batch(saveAfter=100)
+        logging.debug('END: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
     else:
         logging.info('Fin data already saved ' + ticker)
 
@@ -125,8 +133,10 @@ def download_main_fin(ticker: str):
         point = point.time(date, WritePrecision.NS)
 
         logging.info('Saving main data about ' + ticker)
+        logging.debug('START: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         influx_repository.add(point)
-        influx_repository.save()
+        influx_repository.save_batch(saveAfter=100)
+        logging.debug('END: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
     else:
         logging.info('Main fin data already saved ' + ticker)
 
@@ -163,7 +173,7 @@ for ticker in sp500:
         logging.info('Error while downloading financial summary for ticker: ' + ticker)
         logging.error(e)
 
-    time.sleep(3)
+    time.sleep(2)
 
     try:
         download_fin_data(ticker)
@@ -172,7 +182,7 @@ for ticker in sp500:
         logging.info('Error while downloading financial data for ticker: ' + ticker)
         logging.error(e)
 
-    time.sleep(3)
+    time.sleep(2)
 
     try:
         download_main_fin(ticker)
@@ -181,4 +191,7 @@ for ticker in sp500:
         logging.info('Error while downloading main financial indicators for ticker: ' + ticker)
         logging.error(e)
 
-    time.sleep(3)
+    time.sleep(2)
+
+influx_repository.save()
+print('Job is done')
