@@ -46,5 +46,9 @@ namespace BudgetManager.Data
         public DbSet<Address> Address { get; set; }
 
         public DbSet<CompanyProfile> CompanyProfile { get; set; }
+
+        public DbSet<StockTicker> StockTicker { get; set; }
+
+        public DbSet<StockTradeHistory> StockTradeHistory { get; set; }
     }
 }
