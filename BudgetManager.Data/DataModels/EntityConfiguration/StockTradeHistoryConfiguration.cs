@@ -10,7 +10,7 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
             builder.Property(i => i.StockTickerId)
                         .IsRequired();
 
-            builder.HasOne<StockTicker>()
+            builder.HasOne(e => e.StockTicker)
                .WithMany()
                .HasForeignKey(e => e.StockTickerId);
 

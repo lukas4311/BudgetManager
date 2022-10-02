@@ -16,9 +16,6 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
             builder.Property(b => b.Code)
                 .HasMaxLength(MaxLengthCode)
                 .IsRequired();
-
-            builder.Property(b => b.UserIdentityId)
-                .HasDefaultValue();
         }
     }
 }
