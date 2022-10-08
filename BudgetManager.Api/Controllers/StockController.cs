@@ -11,10 +11,12 @@ namespace BudgetManager.Api.Controllers
     public class StockController : BaseController
     {
         private readonly IStockTickerService stockTickerService;
+        private readonly IStockTradeHistoryService stockTradeHistoryService;
 
-        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService) : base(httpContextAccessor)
+        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
+            this.stockTradeHistoryService = stockTradeHistoryService;
         }
 
         [HttpGet]
@@ -23,6 +25,38 @@ namespace BudgetManager.Api.Controllers
         {
             IEnumerable<StockTickerModel> tags = this.stockTickerService.GetAll();
             return Ok(tags);
+        }
+
+        [HttpGet("stockTradeHistory")]
+        public ActionResult<IEnumerable<OtherInvestmentModel>> Get()
+        {
+            return Ok(this.stockTradeHistoryService.GetAll(this.GetUserId()));
+        }
+
+        [HttpPost("stockTradeHistory")]
+        public IActionResult Add([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
+        {
+            stockTradeHistoryModel.UserIdentityId = this.GetUserId();
+            this.stockTradeHistoryService.Add(stockTradeHistoryModel);
+            return Ok();
+        }
+
+        [HttpPut("stockTradeHistory")]
+        public IActionResult Update([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
+        {
+            stockTradeHistoryModel.UserIdentityId = this.GetUserId();
+            this.stockTradeHistoryService.Update(stockTradeHistoryModel);
+            return Ok();
+        }
+
+        [HttpDelete("stockTradeHistory")]
+        public IActionResult Delete([FromBody] int id)
+        {
+            if (!this.stockTradeHistoryService.UserHasRightToPayment(id, this.GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            this.stockTradeHistoryService.Delete(id);
+            return Ok();
         }
     }
 }

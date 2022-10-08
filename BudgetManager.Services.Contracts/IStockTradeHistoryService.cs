@@ -1,9 +1,13 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IStockTickerService : IBaseService<StockTickerModel, StockTicker>
+    public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, StockTradeHistory>
     {
+        IEnumerable<StockTradeHistoryModel> GetAll(int userId);
+
+        public bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
     }
 }
