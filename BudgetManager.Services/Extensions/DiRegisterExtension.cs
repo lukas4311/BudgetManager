@@ -49,7 +49,9 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<OtherInvestmentTag, OtherInvestmentTagModel>();
                     cfg.CreateMap<OtherInvestmentTagModel, OtherInvestmentTag>();
                     cfg.CreateMap<StockTickerModel, StockTicker>();
+                    cfg.CreateMap<StockTicker, StockTickerModel>();
                     cfg.CreateMap<StockTradeHistoryModel, StockTradeHistory>();
+                    cfg.CreateMap<StockTradeHistory, StockTradeHistoryModel>();
                 }
             );
 
