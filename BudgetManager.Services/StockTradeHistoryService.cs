@@ -18,7 +18,7 @@ namespace BudgetManager.Services
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => this.repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
-                .Select(MapToViewModel);
+                .Select(d => this.mapper.Map<StockTradeHistoryGetModel>(d));
 
         public bool UserHasRightToPayment(int stockTradeHistoruId, int userId)
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;

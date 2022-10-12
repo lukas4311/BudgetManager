@@ -52,7 +52,12 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockTicker, StockTickerModel>();
                     cfg.CreateMap<StockTradeHistoryModel, StockTradeHistory>();
                     cfg.CreateMap<StockTradeHistory, StockTradeHistoryModel>();
-                    cfg.CreateMap<StockTradeHistory, StockTradeHistoryGetModel>();
+                    cfg.CreateMap<StockTradeHistory, StockTradeHistoryGetModel>()
+                    .ForMember(dest => dest.CurrencySymbol, opt => {
+                        opt.PreCondition(src => src.CurrencySymbol is not null );
+                        opt.MapFrom(x => x.CurrencySymbol.Symbol);
+                    });
+                    //.ForMember(a => a.CurrencySymbol, o => o.MapFrom(x => x.CurrencySymbol.Symbol));
                     cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
                 }
             );
