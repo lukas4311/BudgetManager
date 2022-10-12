@@ -28,7 +28,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("stockTradeHistory")]
-        public ActionResult<IEnumerable<OtherInvestmentModel>> Get()
+        public ActionResult<IEnumerable<StockTradeHistoryModel>> Get()
         {
             return Ok(this.stockTradeHistoryService.GetAll(this.GetUserId()));
         }
