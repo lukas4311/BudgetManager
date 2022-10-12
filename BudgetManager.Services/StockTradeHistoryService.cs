@@ -3,6 +3,7 @@ using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,10 +15,19 @@ namespace BudgetManager.Services
         {
         }
 
-        public IEnumerable<StockTradeHistoryModel> GetAll(int userId)
-            => this.repository.FindByCondition(i => i.UserIdentityId == userId).Select(i => this.mapper.Map<StockTradeHistoryModel>(i));
+        public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => this.repository
+                .FindByCondition(i => i.UserIdentityId == userId)
+                .Include(t => t.CurrencySymbol)
+                .Select(MapToViewModel);
 
         public bool UserHasRightToPayment(int stockTradeHistoruId, int userId)
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
+
+        private StockTradeHistoryGetModel MapToViewModel(StockTradeHistory dataModel)
+        {
+            var mappedBaseModel = this.mapper.Map<StockTradeHistoryGetModel>(dataModel);
+            mappedBaseModel.CurrencySymbol = dataModel.CurrencySymbol.Symbol;
+            return mappedBaseModel;
+        }
     }
 }

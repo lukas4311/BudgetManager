@@ -6,7 +6,7 @@ namespace BudgetManager.Services.Contracts
 {
     public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, StockTradeHistory>
     {
-        IEnumerable<StockTradeHistoryModel> GetAll(int userId);
+        IEnumerable<StockTradeHistoryGetModel> GetAll(int userId);
 
         public bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
     }
