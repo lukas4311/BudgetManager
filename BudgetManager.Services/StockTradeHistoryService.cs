@@ -22,12 +22,5 @@ namespace BudgetManager.Services
 
         public bool UserHasRightToPayment(int stockTradeHistoruId, int userId)
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
-
-        private StockTradeHistoryGetModel MapToViewModel(StockTradeHistory dataModel)
-        {
-            var mappedBaseModel = this.mapper.Map<StockTradeHistoryGetModel>(dataModel);
-            mappedBaseModel.CurrencySymbol = dataModel.CurrencySymbol.Symbol;
-            return mappedBaseModel;
-        }
     }
 }
