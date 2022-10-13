@@ -5,10 +5,12 @@ from Services.RoicService import RoicService, FinData
 from configManager import token, organizaiton
 from secret import influxDbUrl
 from datetime import datetime
+import secret
 import pandas as pd
 import csv
 import logging
 import time
+import pyodbc
 
 # logging.basicConfig(level=logging.DEBUG)
 log_name = 'app.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -141,12 +143,20 @@ def download_main_fin(ticker: str):
         logging.info('Main fin data already saved ' + ticker)
 
 
-# TEST CODE
-# download_fin_summary('MSFT')
-# download_fin_data('AAPL')
-# download_main_fin('AAPL')
+def storeTickers(tickerShortcut: str):
+    conn = pyodbc.connect(
+        f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+    sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
+    df = pd.read_sql_query(sql, conn, params=[tickerShortcut])
 
-sp500 = []
+    if len(df.index) == 0:
+        cursor = conn.cursor()
+        params = (tickerShortcut)
+        cursor.execute('''
+                            INSERT INTO [dbo].[StockTicker]([Ticker])
+                            VALUES(?)
+                        ''', params)
+        conn.commit()
 
 
 def addTickerFromCsvFile(rows, destination: list):
@@ -157,6 +167,8 @@ def addTickerFromCsvFile(rows, destination: list):
         if "^" not in symbol:
             destination.append(symbol)
 
+
+sp500 = []
 
 with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
