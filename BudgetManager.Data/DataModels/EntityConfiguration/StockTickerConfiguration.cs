@@ -10,6 +10,10 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
 
         public void Configure(EntityTypeBuilder<StockTicker> builder)
         {
+            builder.Property(b => b.Name)
+                .HasMaxLength(NameMaxLenght)
+                .IsRequired();
+
             builder.Property(b => b.Ticker)
                 .HasMaxLength(TickerMaxLenght)
                 .IsRequired();

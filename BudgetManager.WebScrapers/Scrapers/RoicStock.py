@@ -143,7 +143,7 @@ def download_main_fin(ticker: str):
         logging.info('Main fin data already saved ' + ticker)
 
 
-def storeTickers(tickerShortcut: str):
+def storeTickers(tickerShortcut: str, companyName: str):
     conn = pyodbc.connect(
         f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
     sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
@@ -151,12 +151,19 @@ def storeTickers(tickerShortcut: str):
 
     if len(df.index) == 0:
         cursor = conn.cursor()
-        params = (tickerShortcut)
+        params = (tickerShortcut, companyName)
         cursor.execute('''
-                            INSERT INTO [dbo].[StockTicker]([Ticker])
-                            VALUES(?)
+                            INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
+                            VALUES(?,?)
                         ''', params)
         conn.commit()
+
+
+def processTickersToStoreToDb(rows):
+    for row in rows:
+        symbol = row["Symbol"]
+        name = row["Name"]
+        storeTickers(symbol, name)
 
 
 def addTickerFromCsvFile(rows, destination: list):
@@ -172,8 +179,8 @@ sp500 = []
 
 with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
+    # processTickersToStoreToDb(csv_file)
     addTickerFromCsvFile(csv_file, sp500)
-
 
 for ticker in sp500:
     logging.debug('Processing of ticker:' + ticker)
