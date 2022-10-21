@@ -1,5 +1,7 @@
 import pytz
 from influxdb_client import Point, WritePrecision
+
+from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
 from configManager import token, organizaiton
@@ -159,11 +161,20 @@ def storeTickers(tickerShortcut: str, companyName: str):
         conn.commit()
 
 
+def storeCompanyProfile(ticker: str):
+    fmpScraper = FmpScraper()
+    fmpScraper.download_profile(ticker)
+
+
 def processTickersToStoreToDb(rows):
     for row in rows:
         symbol = row["Symbol"]
         name = row["Name"]
-        storeTickers(symbol, name)
+        # storeTickers(symbol, name)
+        try:
+            storeCompanyProfile(symbol)
+        except Exception:
+            print(symbol + " - error")
 
 
 def addTickerFromCsvFile(rows, destination: list):
@@ -177,40 +188,41 @@ def addTickerFromCsvFile(rows, destination: list):
 
 sp500 = []
 
+
 with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
-    # processTickersToStoreToDb(csv_file)
-    addTickerFromCsvFile(csv_file, sp500)
+    processTickersToStoreToDb(csv_file)
+    # addTickerFromCsvFile(csv_file, sp500)
 
-for ticker in sp500:
-    logging.debug('Processing of ticker:' + ticker)
-
-    try:
-        download_fin_summary(ticker)
-        logging.info('Downloaded financial summary for company: ' + ticker)
-    except Exception as e:
-        logging.info('Error while downloading financial summary for ticker: ' + ticker)
-        logging.error(e)
-
-    time.sleep(2)
-
-    try:
-        download_fin_data(ticker)
-        logging.info('Downloaded financial data for company: ' + ticker)
-    except Exception as e:
-        logging.info('Error while downloading financial data for ticker: ' + ticker)
-        logging.error(e)
-
-    time.sleep(2)
-
-    try:
-        download_main_fin(ticker)
-        logging.info('Downloaded main financial indicators for company: ' + ticker)
-    except Exception as e:
-        logging.info('Error while downloading main financial indicators for ticker: ' + ticker)
-        logging.error(e)
-
-    time.sleep(2)
-
-influx_repository.save()
-print('Job is done')
+# for ticker in sp500:
+#     logging.debug('Processing of ticker:' + ticker)
+#
+#     try:
+#         download_fin_summary(ticker)
+#         logging.info('Downloaded financial summary for company: ' + ticker)
+#     except Exception as e:
+#         logging.info('Error while downloading financial summary for ticker: ' + ticker)
+#         logging.error(e)
+#
+#     time.sleep(2)
+#
+#     try:
+#         download_fin_data(ticker)
+#         logging.info('Downloaded financial data for company: ' + ticker)
+#     except Exception as e:
+#         logging.info('Error while downloading financial data for ticker: ' + ticker)
+#         logging.error(e)
+#
+#     time.sleep(2)
+#
+#     try:
+#         download_main_fin(ticker)
+#         logging.info('Downloaded main financial indicators for company: ' + ticker)
+#     except Exception as e:
+#         logging.info('Error while downloading main financial indicators for ticker: ' + ticker)
+#         logging.error(e)
+#
+#     time.sleep(2)
+#
+# influx_repository.save()
+# print('Job is done')
