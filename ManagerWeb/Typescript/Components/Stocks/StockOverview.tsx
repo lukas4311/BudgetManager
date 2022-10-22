@@ -3,6 +3,10 @@ import { RouteComponentProps } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { MainFrame } from "../MainFrame";
 import { BaseList, IBaseModel } from "../BaseList";
+import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { StockApi } from "../../ApiClient/Main/apis";
+import { StockTickerModel, StockTradeHistoryGetModel } from "../../ApiClient/Main/models";
+import moment from "moment";
 
 const theme = createMuiTheme({
     palette: {
@@ -21,6 +25,7 @@ class StockViewModel implements IBaseModel {
     id: number;
     tradeTimeStamp: string;
     stockTickerId: number;
+    stockTicker: string;
     tradeSize: number;
     tradeValue: number;
     currencySymbolId: number;
@@ -29,23 +34,69 @@ class StockViewModel implements IBaseModel {
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
+    private tickers: StockTickerModel[] = [];
 
     constructor(props: RouteComponentProps) {
         super(props);
     }
 
-    private renderTemplate = (): JSX.Element => {
-        return (<p>Template</p>);
+    public componentDidMount = () => this.init();
+
+    private async init() {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        const stockApi = await apiFactory.getClient(StockApi);
+        this.tickers = await stockApi.stockStockTickerGet();
+        const stockTrades = await stockApi.stockStockTradeHistoryGet();
+        const stocks = stockTrades.map(s => this.mapToViewModel(s));
+        this.setState({ stocks });
+    }
+
+    private mapToViewModel = (s: StockTradeHistoryGetModel): StockViewModel => {
+        return {
+            currencySymbol: s.currencySymbol,
+            currencySymbolId: s.currencySymbolId,
+            id: s.id,
+            onSave: this.saveStockTrade,
+            stockTickerId: s.stockTickerId,
+            tradeSize: s.tradeSize,
+            tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
+            tradeValue: s.tradeValue,
+            stockTicker: "MISSING"
+        };
+    }
+
+    private saveStockTrade = async (data: StockViewModel) => {
+        console.log("Save stock");
+    }
+
+    private renderTemplate = (s: StockViewModel): JSX.Element => {
+        return (
+            <>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.stockTicker}</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeSize}</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeValue} ({s.currencySymbol})</p>
+                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeTimeStamp}</p>
+            </>
+        );
     }
 
     private renderHeader = (): JSX.Element => {
-        return (<p>Header</p>);
+        return (
+            <>
+                <p className="mx-6 my-1 w-1/2">Stock ticker</p>
+                <p className="mx-6 my-1 w-1/2">Size</p>
+                <p className="mx-6 my-1 w-1/2">Value</p>
+                <p className="mx-6 my-1 w-1/2">Time</p>
+            </>
+        );
     }
 
     private addStockTrade = (): void => {
+        console.log("Show add stock trade")
     }
 
     private editStock = (id: number): void => {
+        console.log("Edit stock trade")
     }
 
     render() {
