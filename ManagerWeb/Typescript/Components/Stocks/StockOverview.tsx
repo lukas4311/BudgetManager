@@ -7,6 +7,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { StockApi } from "../../ApiClient/Main/apis";
 import { StockTickerModel, StockTradeHistoryGetModel } from "../../ApiClient/Main/models";
 import moment from "moment";
+import _ from "lodash";
 
 const theme = createMuiTheme({
     palette: {
@@ -31,6 +32,20 @@ class StockViewModel implements IBaseModel {
     currencySymbolId: number;
     currencySymbol: string;
     onSave: (data: StockViewModel) => void;
+
+    static mapFromDataModel(s: StockTradeHistoryGetModel): StockViewModel {
+        return {
+            currencySymbol: s.currencySymbol,
+            currencySymbolId: s.currencySymbolId,
+            id: s.id,
+            stockTickerId: s.stockTickerId,
+            tradeSize: s.tradeSize,
+            tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
+            tradeValue: s.tradeValue,
+            stockTicker: undefined,
+            onSave: undefined
+        };
+    }
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -38,6 +53,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
+        this.state = {stocks: []};
     }
 
     public componentDidMount = () => this.init();
@@ -47,22 +63,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stockApi = await apiFactory.getClient(StockApi);
         this.tickers = await stockApi.stockStockTickerGet();
         const stockTrades = await stockApi.stockStockTradeHistoryGet();
-        const stocks = stockTrades.map(s => this.mapToViewModel(s));
+        const stocks = stockTrades.map(s => {
+            let viewModel = StockViewModel.mapFromDataModel(s);
+            viewModel.onSave = this.saveStockTrade;
+            viewModel.stockTicker = _.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined" 
+            return viewModel;
+        });
         this.setState({ stocks });
-    }
-
-    private mapToViewModel = (s: StockTradeHistoryGetModel): StockViewModel => {
-        return {
-            currencySymbol: s.currencySymbol,
-            currencySymbolId: s.currencySymbolId,
-            id: s.id,
-            onSave: this.saveStockTrade,
-            stockTickerId: s.stockTickerId,
-            tradeSize: s.tradeSize,
-            tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: s.tradeValue,
-            stockTicker: "MISSING"
-        };
     }
 
     private saveStockTrade = async (data: StockViewModel) => {

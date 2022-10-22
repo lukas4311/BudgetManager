@@ -5974,6 +5974,7 @@ const PrivateRoute_1 = __importDefault(__webpack_require__(/*! ./Utils/PrivateRo
 const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Components/BankAccount/BankAccountOverview */ "./Typescript/Components/BankAccount/BankAccountOverview.tsx"));
 const Comodities_1 = __importDefault(__webpack_require__(/*! ./Components/Comodities/Comodities */ "./Typescript/Components/Comodities/Comodities.tsx"));
 const OtherInvestmentOverview_1 = __importDefault(__webpack_require__(/*! ./Components/OtherInvestment/OtherInvestmentOverview */ "./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx"));
+const StockOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Stocks/StockOverview */ "./Typescript/Components/Stocks/StockOverview.tsx"));
 function App() {
     return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
         react_1.default.createElement("div", { className: "bg-mainDarkBlue h-full flex flex-col overflow-x-hidden" },
@@ -5993,6 +5994,7 @@ function App() {
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/other-investment", component: OtherInvestmentOverview_1.default }),
+                        react_1.default.createElement(PrivateRoute_1.default, { path: "/stock", component: StockOverview_1.default }),
                         react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
             react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
                 react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
@@ -8980,6 +8982,124 @@ class PaymentsOverview extends React.Component {
     }
 }
 exports.default = PaymentsOverview;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Stocks/StockOverview.tsx":
+/*!********************************************************!*\
+  !*** ./Typescript/Components/Stocks/StockOverview.tsx ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
+class StockViewModel {
+    static mapFromDataModel(s) {
+        return {
+            currencySymbol: s.currencySymbol,
+            currencySymbolId: s.currencySymbolId,
+            id: s.id,
+            stockTickerId: s.stockTickerId,
+            tradeSize: s.tradeSize,
+            tradeTimeStamp: (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD"),
+            tradeValue: s.tradeValue,
+            stockTicker: undefined,
+            onSave: undefined
+        };
+    }
+}
+class StockOverview extends react_1.default.Component {
+    constructor(props) {
+        super(props);
+        this.tickers = [];
+        this.componentDidMount = () => this.init();
+        this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
+            console.log("Save stock");
+        });
+        this.renderTemplate = (s) => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.stockTicker),
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.tradeSize),
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" },
+                    s.tradeValue,
+                    " (",
+                    s.currencySymbol,
+                    ")"),
+                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.tradeTimeStamp)));
+        };
+        this.renderHeader = () => {
+            return (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Stock ticker"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Size"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Value"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Time")));
+        };
+        this.addStockTrade = () => {
+            console.log("Show add stock trade");
+        };
+        this.editStock = (id) => {
+            console.log("Edit stock trade");
+        };
+        this.state = { stocks: [] };
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            const stockApi = yield apiFactory.getClient(apis_1.StockApi);
+            this.tickers = yield stockApi.stockStockTickerGet();
+            const stockTrades = yield stockApi.stockStockTradeHistoryGet();
+            const stocks = stockTrades.map(s => {
+                var _a, _b;
+                let viewModel = StockViewModel.mapFromDataModel(s);
+                viewModel.onSave = this.saveStockTrade;
+                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
+                return viewModel;
+            });
+            this.setState({ stocks });
+        });
+    }
+    render() {
+        return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+            react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Stocks' },
+                react_1.default.createElement(react_1.default.Fragment, null,
+                    react_1.default.createElement("div", { className: "flex flex-row" },
+                        react_1.default.createElement("div", { className: "w-2/5" },
+                            react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
+                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, hideIconRowPart: true }))))))));
+    }
+}
+exports.default = StockOverview;
 
 
 /***/ }),

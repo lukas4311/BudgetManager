@@ -13,6 +13,7 @@ import PrivateRoute from "./Utils/PrivateRoute";
 import BankAccountOverview from "./Components/BankAccount/BankAccountOverview";
 import Comodities from "./Components/Comodities/Comodities";
 import OtherInvestmentOverview from "./Components/OtherInvestment/OtherInvestmentOverview";
+import StockOverview from "./Components/Stocks/StockOverview";
 
 
 export default function App() {
@@ -39,6 +40,7 @@ export default function App() {
                             <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />
                             <PrivateRoute path="/comodity" component={Comodities} />
                             <PrivateRoute path="/other-investment" component={OtherInvestmentOverview} />
+                            <PrivateRoute path="/stock" component={StockOverview} />
                             <PrivateRoute path="/" component={Overview} />
                         </Switch>
                     </main>
