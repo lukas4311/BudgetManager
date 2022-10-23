@@ -9009,16 +9009,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
-const Dialog_1 = __importDefault(__webpack_require__(/*! @material-ui/core/Dialog */ "./node_modules/@material-ui/core/esm/Dialog/index.js"));
-const DialogTitle_1 = __importDefault(__webpack_require__(/*! @material-ui/core/DialogTitle */ "./node_modules/@material-ui/core/esm/DialogTitle/index.js"));
-const DialogContent_1 = __importDefault(__webpack_require__(/*! @material-ui/core/DialogContent */ "./node_modules/@material-ui/core/esm/DialogContent/index.js"));
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const StockViewModel_1 = __webpack_require__(/*! ../../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9027,25 +9026,11 @@ const theme = (0, styles_1.createMuiTheme)({
         }
     }
 });
-class StockViewModel {
-    static mapFromDataModel(s) {
-        return {
-            currencySymbol: s.currencySymbol,
-            currencySymbolId: s.currencySymbolId,
-            id: s.id,
-            stockTickerId: s.stockTickerId,
-            tradeSize: s.tradeSize,
-            tradeTimeStamp: (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: s.tradeValue,
-            stockTicker: undefined,
-            onSave: undefined
-        };
-    }
-}
 class StockOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.tickers = [];
+        this.currencies = [];
         this.componentDidMount = () => this.init();
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             console.log("Save stock");
@@ -9069,19 +9054,20 @@ class StockOverview extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Time")));
         };
         this.addStockTrade = () => {
-            let model = new StockViewModel();
+            let model = new StockViewModel_1.StockViewModel();
             model.onSave = this.saveStockTrade;
             model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.tradeSize = 0;
             model.tradeValue = 0;
-            // model.currencies = this.currencies;
             model.currencySymbolId = this.currencies[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
         this.editStock = (id) => {
-            console.log("Edit stock trade");
+            let selectedModel = this.state.stocks.filter(t => t.id == id)[0];
+            this.showDetail(selectedModel);
         };
-        this.handleClose = () => this.setState({ openedForm: false, selectedModel: undefined });
+        this.showDetail = (selectedModel) => this.setState({ openedForm: true, selectedModel: selectedModel, formKey: Date.now() });
+        this.handleClose = () => this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
         this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
     init() {
@@ -9094,7 +9080,7 @@ class StockOverview extends react_1.default.Component {
             const stockTrades = yield stockApi.stockStockTradeHistoryGet();
             const stocks = stockTrades.map(s => {
                 var _a, _b;
-                let viewModel = StockViewModel.mapFromDataModel(s);
+                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
                 viewModel.onSave = this.saveStockTrade;
                 viewModel.stockTicker = (_b = (_a = lodash_1.default.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
                 return viewModel;
@@ -9110,9 +9096,9 @@ class StockOverview extends react_1.default.Component {
                         react_1.default.createElement("div", { className: "w-2/5" },
                             react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
                                 react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, hideIconRowPart: true })))),
-                    react_1.default.createElement(Dialog_1.default, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
-                        react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title" }, "Investment form"),
-                        react_1.default.createElement(DialogContent_1.default, null))))));
+                    react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
+                        react_1.default.createElement(core_1.DialogContent, null))))));
     }
 }
 exports.default = StockOverview;
@@ -9548,6 +9534,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class OtherInvestmentViewModel {
 }
 exports.default = OtherInvestmentViewModel;
+
+
+/***/ }),
+
+/***/ "./Typescript/Model/StockViewModel.tsx":
+/*!*********************************************!*\
+  !*** ./Typescript/Model/StockViewModel.tsx ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StockViewModel = void 0;
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+class StockViewModel {
+    static mapFromDataModel(s) {
+        return {
+            currencySymbol: s.currencySymbol,
+            currencySymbolId: s.currencySymbolId,
+            id: s.id,
+            stockTickerId: s.stockTickerId,
+            tradeSize: s.tradeSize,
+            tradeTimeStamp: (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD"),
+            tradeValue: s.tradeValue,
+            stockTicker: undefined,
+            onSave: undefined
+        };
+    }
+}
+exports.StockViewModel = StockViewModel;
 
 
 /***/ }),
@@ -13449,106 +13470,6 @@ var DialogContent = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__["forwardRef"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DialogContent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DialogContent */ "./node_modules/@material-ui/core/esm/DialogContent/DialogContent.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _DialogContent__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-
-
-/***/ }),
-
-/***/ "./node_modules/@material-ui/core/esm/DialogTitle/DialogTitle.js":
-/*!***********************************************************************!*\
-  !*** ./node_modules/@material-ui/core/esm/DialogTitle/DialogTitle.js ***!
-  \***********************************************************************/
-/*! exports provided: styles, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "styles", function() { return styles; });
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.m.js");
-/* harmony import */ var _styles_withStyles__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../styles/withStyles */ "./node_modules/@material-ui/core/esm/styles/withStyles.js");
-/* harmony import */ var _Typography__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Typography */ "./node_modules/@material-ui/core/esm/Typography/index.js");
-
-
-
-
-
-
-
-var styles = {
-  /* Styles applied to the root element. */
-  root: {
-    margin: 0,
-    padding: '16px 24px',
-    flex: '0 0 auto'
-  }
-};
-var DialogTitle = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__["forwardRef"](function DialogTitle(props, ref) {
-  var children = props.children,
-      classes = props.classes,
-      className = props.className,
-      _props$disableTypogra = props.disableTypography,
-      disableTypography = _props$disableTypogra === void 0 ? false : _props$disableTypogra,
-      other = Object(_babel_runtime_helpers_esm_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_1__["default"])(props, ["children", "classes", "className", "disableTypography"]);
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
-    className: Object(clsx__WEBPACK_IMPORTED_MODULE_4__["default"])(classes.root, className),
-    ref: ref
-  }, other), disableTypography ? children : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__["createElement"](_Typography__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    component: "h2",
-    variant: "h6"
-  }, children));
-});
- true ? DialogTitle.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // |     To update them edit the d.ts file and run "yarn proptypes"     |
-  // ----------------------------------------------------------------------
-
-  /**
-   * The content of the component.
-   */
-  children: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.node,
-
-  /**
-   * Override or extend the styles applied to the component.
-   * See [CSS API](#css) below for more details.
-   */
-  classes: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.object,
-
-  /**
-   * @ignore
-   */
-  className: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.string,
-
-  /**
-   * If `true`, the children won't be wrapped by a typography component.
-   * For instance, this can be useful to render an h4 instead of the default h2.
-   */
-  disableTypography: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.bool
-} : undefined;
-/* harmony default export */ __webpack_exports__["default"] = (Object(_styles_withStyles__WEBPACK_IMPORTED_MODULE_5__["default"])(styles, {
-  name: 'MuiDialogTitle'
-})(DialogTitle));
-
-/***/ }),
-
-/***/ "./node_modules/@material-ui/core/esm/DialogTitle/index.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/@material-ui/core/esm/DialogTitle/index.js ***!
-  \*****************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DialogTitle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DialogTitle */ "./node_modules/@material-ui/core/esm/DialogTitle/DialogTitle.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _DialogTitle__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
 
 

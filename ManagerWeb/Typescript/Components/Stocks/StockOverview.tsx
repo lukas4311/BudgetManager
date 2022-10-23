@@ -1,16 +1,17 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { MainFrame } from "../MainFrame";
-import { BaseList, IBaseModel } from "../BaseList";
+import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
-import { CurrencySymbol, StockTickerModel, StockTradeHistoryGetModel } from "../../ApiClient/Main/models";
+import { CurrencySymbol, StockTickerModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _ from "lodash";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
+import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { StockViewModel } from "../../Model/StockViewModel";
+import { StockTradeForm } from "./StockTradeForm";
+import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
+import { TextField } from "@material-ui/core";
 
 const theme = createMuiTheme({
     palette: {
@@ -28,35 +29,9 @@ interface StockOverviewState {
     selectedModel: StockViewModel;
 }
 
-class StockViewModel implements IBaseModel {
-    id: number;
-    tradeTimeStamp: string;
-    stockTickerId: number;
-    stockTicker: string;
-    tradeSize: number;
-    tradeValue: number;
-    currencySymbolId: number;
-    currencySymbol: string;
-    onSave: (data: StockViewModel) => void;
-
-    static mapFromDataModel(s: StockTradeHistoryGetModel): StockViewModel {
-        return {
-            currencySymbol: s.currencySymbol,
-            currencySymbolId: s.currencySymbolId,
-            id: s.id,
-            stockTickerId: s.stockTickerId,
-            tradeSize: s.tradeSize,
-            tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: s.tradeValue,
-            stockTicker: undefined,
-            onSave: undefined
-        };
-    }
-}
-
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
     private tickers: StockTickerModel[] = [];
-    private currencies: CurrencySymbol[];
+    private currencies: CurrencySymbol[] = [];
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -113,16 +88,20 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         model.tradeTimeStamp = moment().format("YYYY-MM-DD");
         model.tradeSize = 0;
         model.tradeValue = 0;
-        // model.currencies = this.currencies;
         model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
 
     private editStock = (id: number): void => {
-        console.log("Edit stock trade")
+        let selectedModel = this.state.stocks.filter(t => t.id == id)[0];
+        this.showDetail(selectedModel);
     }
 
-    private handleClose = () => this.setState({ openedForm: false, selectedModel: undefined });
+    private showDetail = (selectedModel: StockViewModel) =>
+        this.setState({ openedForm: true, selectedModel: selectedModel, formKey: Date.now() });
+
+    private handleClose = () =>
+        this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
 
     render() {
         return (
@@ -137,11 +116,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                 </div>
                             </div>
                         </div>
-                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
+                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
                             <DialogContent>
-                                {/* <OtherInvestmentForm {...this.state.selectedModel} /> */}
+                                {/* <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers}/> */}
                             </DialogContent>
                         </Dialog>
                     </>
