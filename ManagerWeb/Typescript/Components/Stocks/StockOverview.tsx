@@ -4,10 +4,13 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { MainFrame } from "../MainFrame";
 import { BaseList, IBaseModel } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
-import { StockApi } from "../../ApiClient/Main/apis";
-import { StockTickerModel, StockTradeHistoryGetModel } from "../../ApiClient/Main/models";
+import { CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
+import { CurrencySymbol, StockTickerModel, StockTradeHistoryGetModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _ from "lodash";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 
 const theme = createMuiTheme({
     palette: {
@@ -20,6 +23,9 @@ const theme = createMuiTheme({
 
 interface StockOverviewState {
     stocks: StockViewModel[];
+    formKey: number;
+    openedForm: boolean;
+    selectedModel: StockViewModel;
 }
 
 class StockViewModel implements IBaseModel {
@@ -50,10 +56,11 @@ class StockViewModel implements IBaseModel {
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
     private tickers: StockTickerModel[] = [];
+    private currencies: CurrencySymbol[];
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = {stocks: []};
+        this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
 
     public componentDidMount = () => this.init();
@@ -61,12 +68,14 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private async init() {
         const apiFactory = new ApiClientFactory(this.props.history);
         const stockApi = await apiFactory.getClient(StockApi);
+        const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.tickers = await stockApi.stockStockTickerGet();
+        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         const stockTrades = await stockApi.stockStockTradeHistoryGet();
         const stocks = stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
             viewModel.onSave = this.saveStockTrade;
-            viewModel.stockTicker = _.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined" 
+            viewModel.stockTicker = _.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
             return viewModel;
         });
         this.setState({ stocks });
@@ -99,12 +108,21 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private addStockTrade = (): void => {
-        console.log("Show add stock trade")
+        let model: StockViewModel = new StockViewModel();
+        model.onSave = this.saveStockTrade;
+        model.tradeTimeStamp = moment().format("YYYY-MM-DD");
+        model.tradeSize = 0;
+        model.tradeValue = 0;
+        // model.currencies = this.currencies;
+        model.currencySymbolId = this.currencies[0].id;
+        this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
 
     private editStock = (id: number): void => {
         console.log("Edit stock trade")
     }
+
+    private handleClose = () => this.setState({ openedForm: false, selectedModel: undefined });
 
     render() {
         return (
@@ -119,6 +137,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                 </div>
                             </div>
                         </div>
+                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
+                            <DialogContent>
+                                {/* <OtherInvestmentForm {...this.state.selectedModel} /> */}
+                            </DialogContent>
+                        </Dialog>
                     </>
                 </MainFrame>
             </ThemeProvider>
