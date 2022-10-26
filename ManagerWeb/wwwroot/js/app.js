@@ -9017,6 +9017,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const StockViewModel_1 = __webpack_require__(/*! ../../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
+const StockTradeForm_1 = __webpack_require__(/*! ./StockTradeForm */ "./Typescript/Components/Stocks/StockTradeForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
@@ -9076,7 +9077,7 @@ class StockOverview extends react_1.default.Component {
             const stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
             this.tickers = yield stockApi.stockStockTickerGet();
-            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
             const stockTrades = yield stockApi.stockStockTradeHistoryGet();
             const stocks = stockTrades.map(s => {
                 var _a, _b;
@@ -9098,10 +9099,80 @@ class StockOverview extends react_1.default.Component {
                                 react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, hideIconRowPart: true })))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
-                        react_1.default.createElement(core_1.DialogContent, null))))));
+                        react_1.default.createElement(core_1.DialogContent, null,
+                            react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers })))))));
     }
 }
 exports.default = StockOverview;
+
+
+/***/ }),
+
+/***/ "./Typescript/Components/Stocks/StockTradeForm.tsx":
+/*!*********************************************************!*\
+  !*** ./Typescript/Components/Stocks/StockTradeForm.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StockTradeForm = void 0;
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const theme = (0, styles_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
+class StockTradeFormProps {
+}
+const StockTradeForm = (props) => {
+    var _a;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props.stockTradeViewModel) });
+    const onSubmit = (data) => {
+        props.stockTradeViewModel.onSave(data);
+    };
+    return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
+        react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
+            react_1.default.createElement("div", { className: "col-span-2 w-1/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: (_a = props.stockTradeViewModel) === null || _a === void 0 ? void 0 : _a.tradeTimeStamp, control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return react_1.default.createElement(core_1.FormControl, { className: "w-full" },
+                            react_1.default.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Stock ticker"),
+                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.stockTickers) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return react_1.default.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    react_1.default.createElement("span", null, p.ticker));
+                            })));
+                    }, name: "stockTickerId", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Velikost tradu", type: "text" }, field, { className: "place-self-end w-full" })), name: "tradeSize", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Hodnota tradu", type: "text" }, field, { className: "place-self-end w-full" })), name: "tradeValue", control: control })),
+            react_1.default.createElement("div", { className: "w-2/3" },
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
+                        var _a;
+                        return react_1.default.createElement(core_1.FormControl, { className: "w-full" },
+                            react_1.default.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Zdrojov\u00E1 m\u011Bna tradu"),
+                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.currencies) === null || _a === void 0 ? void 0 : _a.map(p => {
+                                return react_1.default.createElement(core_1.MenuItem, { key: p.id, value: p.id },
+                                    react_1.default.createElement("span", null, p.symbol));
+                            })));
+                    }, name: "currencySymbolId", control: control }))),
+        react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
+};
+exports.StockTradeForm = StockTradeForm;
 
 
 /***/ }),

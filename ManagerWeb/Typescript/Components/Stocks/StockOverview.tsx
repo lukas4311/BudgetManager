@@ -45,7 +45,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.tickers = await stockApi.stockStockTickerGet();
-        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
         const stockTrades = await stockApi.stockStockTradeHistoryGet();
         const stocks = stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
@@ -120,7 +120,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
                             <DialogContent>
-                                {/* <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers}/> */}
+                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers}/>
                             </DialogContent>
                         </Dialog>
                     </>
