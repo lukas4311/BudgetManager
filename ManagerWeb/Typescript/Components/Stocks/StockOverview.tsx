@@ -4,7 +4,7 @@ import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
-import { CurrencySymbol, StockTickerModel } from "../../ApiClient/Main/models";
+import { CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _ from "lodash";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
@@ -32,6 +32,7 @@ interface StockOverviewState {
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
     private tickers: StockTickerModel[] = [];
     private currencies: CurrencySymbol[] = [];
+    private stockApi: StockApi = undefined;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -42,11 +43,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private async init() {
         const apiFactory = new ApiClientFactory(this.props.history);
-        const stockApi = await apiFactory.getClient(StockApi);
+        this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        this.tickers = await stockApi.stockStockTickerGet();
+        this.tickers = await this.stockApi.stockStockTickerGet();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
-        const stockTrades = await stockApi.stockStockTradeHistoryGet();
+        const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
         const stocks = stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
             viewModel.onSave = this.saveStockTrade;
@@ -57,7 +58,22 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private saveStockTrade = async (data: StockViewModel) => {
-        console.log("Save stock");
+        const stockHistoryTrade: StockTradeHistoryModel = {
+            id: data.id,
+            currencySymbolId: data.currencySymbolId,
+            stockTickerId: data.stockTickerId,
+            tradeSize: data.tradeSize,
+            tradeTimeStamp: new Date(data.tradeTimeStamp),
+            tradeValue: data.tradeValue
+        };
+
+        if (data.id)
+            await this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+        else
+            await this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+
+        this.setState({ openedForm: false, selectedModel: undefined });
+        // this.loadData();
     }
 
     private renderTemplate = (s: StockViewModel): JSX.Element => {

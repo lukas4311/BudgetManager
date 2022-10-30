@@ -164,8 +164,6 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             otherInvestmentId: otherInvestmentData.otherInvestmentId
         };
 
-        console.log(otherInvestmentData);
-
         if (otherInvestmentData.id)
             await this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
         else
