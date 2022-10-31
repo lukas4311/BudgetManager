@@ -7873,7 +7873,6 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 date: new Date(otherInvestmentData.date),
                 otherInvestmentId: otherInvestmentData.otherInvestmentId
             };
-            console.log(otherInvestmentData);
             if (otherInvestmentData.id)
                 yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
             else
@@ -9032,9 +9031,34 @@ class StockOverview extends react_1.default.Component {
         super(props);
         this.tickers = [];
         this.currencies = [];
+        this.stockApi = undefined;
         this.componentDidMount = () => this.init();
+        this.loadStockData = () => __awaiter(this, void 0, void 0, function* () {
+            const stockTrades = yield this.stockApi.stockStockTradeHistoryGet();
+            const stocks = stockTrades.map(s => {
+                var _a, _b;
+                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
+                viewModel.onSave = this.saveStockTrade;
+                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
+                return viewModel;
+            });
+            this.setState({ stocks });
+        });
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
-            console.log("Save stock");
+            const stockHistoryTrade = {
+                id: data.id,
+                currencySymbolId: data.currencySymbolId,
+                stockTickerId: data.stockTickerId,
+                tradeSize: data.tradeSize,
+                tradeTimeStamp: new Date(data.tradeTimeStamp),
+                tradeValue: data.tradeValue
+            };
+            if (data.id)
+                yield this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+            else
+                yield this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+            this.setState({ openedForm: false, selectedModel: undefined });
+            this.loadStockData();
         });
         this.renderTemplate = (s) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
@@ -9061,6 +9085,7 @@ class StockOverview extends react_1.default.Component {
             model.tradeSize = 0;
             model.tradeValue = 0;
             model.currencySymbolId = this.currencies[0].id;
+            model.stockTickerId = this.tickers[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
         this.editStock = (id) => {
@@ -9074,19 +9099,11 @@ class StockOverview extends react_1.default.Component {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            const stockApi = yield apiFactory.getClient(apis_1.StockApi);
+            this.stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
-            this.tickers = yield stockApi.stockStockTickerGet();
+            this.tickers = yield this.stockApi.stockStockTickerGet();
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
-            const stockTrades = yield stockApi.stockStockTradeHistoryGet();
-            const stocks = stockTrades.map(s => {
-                var _a, _b;
-                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
-                viewModel.onSave = this.saveStockTrade;
-                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
-                return viewModel;
-            });
-            this.setState({ stocks });
+            this.loadStockData();
         });
     }
     render() {

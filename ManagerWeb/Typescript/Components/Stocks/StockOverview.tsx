@@ -47,6 +47,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.tickers = await this.stockApi.stockStockTickerGet();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
+        this.loadStockData();
+    }
+
+    private loadStockData = async () => {
         const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
         const stocks = stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
@@ -73,7 +77,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             await this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
 
         this.setState({ openedForm: false, selectedModel: undefined });
-        // this.loadData();
+        this.loadStockData();
     }
 
     private renderTemplate = (s: StockViewModel): JSX.Element => {
@@ -105,6 +109,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         model.tradeSize = 0;
         model.tradeValue = 0;
         model.currencySymbolId = this.currencies[0].id;
+        model.stockTickerId = this.tickers[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
 
