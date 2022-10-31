@@ -124,6 +124,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private handleClose = () =>
         this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
 
+    private deleteTrade = async (id: number): Promise<void> => {
+        this.stockApi.stockStockTradeHistoryDelete({ body: id });
+        this.loadStockData();
+    }
+
     render() {
         return (
             <ThemeProvider theme={theme}>
@@ -133,7 +138,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <div className="w-2/5">
                                 <div className="m-5 overflow-y-scroll">
                                     <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
-                                        addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
+                                        addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +146,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
                             <DialogContent>
-                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers}/>
+                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} />
                             </DialogContent>
                         </Dialog>
                     </>

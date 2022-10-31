@@ -9094,6 +9094,10 @@ class StockOverview extends react_1.default.Component {
         };
         this.showDetail = (selectedModel) => this.setState({ openedForm: true, selectedModel: selectedModel, formKey: Date.now() });
         this.handleClose = () => this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
+        this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
+            this.stockApi.stockStockTradeHistoryDelete({ body: id });
+            this.loadStockData();
+        });
         this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
     init() {
@@ -9113,7 +9117,7 @@ class StockOverview extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "flex flex-row" },
                         react_1.default.createElement("div", { className: "w-2/5" },
                             react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
-                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, hideIconRowPart: true })))),
+                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade })))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,
