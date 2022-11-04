@@ -18,7 +18,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
         this.state = { login: '', password: '' };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.initServies();
     }
 
@@ -26,7 +26,8 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
         this.apiFactory = new ApiClientFactory(this.props.history);
     }
 
-    private login = async () => {
+    private login = async (event: any) => {
+        event.preventDefault();
         let authApi: AuthApi = await this.apiFactory.getAuthClient(AuthApi);
 
         try {
@@ -37,6 +38,10 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
             console.log(error);
         }
     }
+
+    // private submit = async (e: React.FormEventHandler<HTMLFormElement>) => {
+
+    // }
 
     private onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         let login = e.target.value;
@@ -53,24 +58,26 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
             <div className="w-2/5 m-auto text-center mt-6 px-4 py-12 bg-prussianBlue rounded-lg">
                 <h1 className="text-2xl">Přihlášení</h1>
                 <div className="flex flex-col w-4/5 m-auto mt-8">
-                    <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
-                    <div className="flex">
-                        <div className="w-1/2">
-                            <div className="relative inline-block w-2/3 m-auto">
-                                <input className="effect-11 w-full" placeholder="Login" value={this.state.login} onChange={e => this.onChangeLogin(e)} />
-                                <span className="focus-bg"></span>
+                    <form onSubmit={this.login}>
+                        <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
+                        <div className="flex">
+                            <div className="w-1/2">
+                                <div className="relative inline-block w-2/3 m-auto">
+                                    <input className="effect-11 w-full" placeholder="Login" value={this.state.login} onChange={e => this.onChangeLogin(e)} />
+                                    <span className="focus-bg"></span>
+                                </div>
+                            </div>
+                            <div className="w-1/2">
+                                <div className="relative inline-block w-2/3 m-auto">
+                                    <input type="password" className="effect-11 w-full" placeholder="Heslo" value={this.state.password} onChange={(e) => this.onChangePassword(e)} />
+                                    <span className="focus-bg"></span>
+                                </div>
                             </div>
                         </div>
-                        <div className="w-1/2">
-                            <div className="relative inline-block w-2/3 m-auto">
-                                <input type="password" className="effect-11 w-full" placeholder="Heslo" value={this.state.password} onChange={(e) => this.onChangePassword(e)} />
-                                <span className="focus-bg"></span>
-                            </div>
+                        <div className="flex mt-8">
+                            <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Potvrdit" />
                         </div>
-                    </div>
-                    <div className="flex mt-8">
-                        <button onClick={this.login} className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         );

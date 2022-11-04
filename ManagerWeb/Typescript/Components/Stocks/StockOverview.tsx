@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
-import { TextField } from "@material-ui/core";
 
 const theme = createMuiTheme({
     palette: {
@@ -125,8 +124,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
 
     private deleteTrade = async (id: number): Promise<void> => {
-        this.stockApi.stockStockTradeHistoryDelete({ body: id });
-        this.loadStockData();
+        await this.stockApi.stockStockTradeHistoryDelete({ body: id });
+        await this.loadStockData();
     }
 
     render() {

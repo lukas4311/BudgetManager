@@ -6041,7 +6041,8 @@ class Auth extends react_1.default.Component {
         this.initServies = () => __awaiter(this, void 0, void 0, function* () {
             this.apiFactory = new ApiClientFactory_1.default(this.props.history);
         });
-        this.login = () => __awaiter(this, void 0, void 0, function* () {
+        this.login = (event) => __awaiter(this, void 0, void 0, function* () {
+            event.preventDefault();
             let authApi = yield this.apiFactory.getAuthClient(AuthApi_1.AuthApi);
             try {
                 let authModel = yield authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
@@ -6052,6 +6053,8 @@ class Auth extends react_1.default.Component {
                 console.log(error);
             }
         });
+        // private submit = async (e: React.FormEventHandler<HTMLFormElement>) => {
+        // }
         this.onChangeLogin = (e) => {
             let login = e.target.value;
             this.setState({ login: login });
@@ -6064,18 +6067,19 @@ class Auth extends react_1.default.Component {
             return (react_1.default.createElement("div", { className: "w-2/5 m-auto text-center mt-6 px-4 py-12 bg-prussianBlue rounded-lg" },
                 react_1.default.createElement("h1", { className: "text-2xl" }, "P\u0159ihl\u00E1\u0161en\u00ED"),
                 react_1.default.createElement("div", { className: "flex flex-col w-4/5 m-auto mt-8" },
-                    react_1.default.createElement("div", { "asp-validation-summary": "All", className: "text-red-600 mb-4" }),
-                    react_1.default.createElement("div", { className: "flex" },
-                        react_1.default.createElement("div", { className: "w-1/2" },
-                            react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
-                                react_1.default.createElement("input", { className: "effect-11 w-full", placeholder: "Login", value: this.state.login, onChange: e => this.onChangeLogin(e) }),
-                                react_1.default.createElement("span", { className: "focus-bg" }))),
-                        react_1.default.createElement("div", { className: "w-1/2" },
-                            react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
-                                react_1.default.createElement("input", { type: "password", className: "effect-11 w-full", placeholder: "Heslo", value: this.state.password, onChange: (e) => this.onChangePassword(e) }),
-                                react_1.default.createElement("span", { className: "focus-bg" })))),
-                    react_1.default.createElement("div", { className: "flex mt-8" },
-                        react_1.default.createElement("button", { onClick: this.login, className: "m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" }, "Potvrdit")))));
+                    react_1.default.createElement("form", { onSubmit: this.login },
+                        react_1.default.createElement("div", { "asp-validation-summary": "All", className: "text-red-600 mb-4" }),
+                        react_1.default.createElement("div", { className: "flex" },
+                            react_1.default.createElement("div", { className: "w-1/2" },
+                                react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
+                                    react_1.default.createElement("input", { className: "effect-11 w-full", placeholder: "Login", value: this.state.login, onChange: e => this.onChangeLogin(e) }),
+                                    react_1.default.createElement("span", { className: "focus-bg" }))),
+                            react_1.default.createElement("div", { className: "w-1/2" },
+                                react_1.default.createElement("div", { className: "relative inline-block w-2/3 m-auto" },
+                                    react_1.default.createElement("input", { type: "password", className: "effect-11 w-full", placeholder: "Heslo", value: this.state.password, onChange: (e) => this.onChangePassword(e) }),
+                                    react_1.default.createElement("span", { className: "focus-bg" })))),
+                        react_1.default.createElement("div", { className: "flex mt-8" },
+                            react_1.default.createElement("input", { type: "submit", className: "m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500", value: "Potvrdit" }))))));
         };
         this.state = { login: '', password: '' };
     }
@@ -9095,8 +9099,8 @@ class StockOverview extends react_1.default.Component {
         this.showDetail = (selectedModel) => this.setState({ openedForm: true, selectedModel: selectedModel, formKey: Date.now() });
         this.handleClose = () => this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
         this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
-            this.stockApi.stockStockTradeHistoryDelete({ body: id });
-            this.loadStockData();
+            yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
+            yield this.loadStockData();
         });
         this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
