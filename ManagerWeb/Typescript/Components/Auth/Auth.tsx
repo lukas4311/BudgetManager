@@ -39,10 +39,6 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
         }
     }
 
-    // private submit = async (e: React.FormEventHandler<HTMLFormElement>) => {
-
-    // }
-
     private onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
         let login = e.target.value;
         this.setState({ login: login });

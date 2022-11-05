@@ -134,7 +134,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                 <MainFrame header='Stocks'>
                     <>
                         <div className="flex flex-row">
-                            <div className="w-2/5">
+                            <div className="w-7/12">
                                 <div className="m-5 overflow-y-scroll">
                                     <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
                                         addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>

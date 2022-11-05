@@ -6053,8 +6053,6 @@ class Auth extends react_1.default.Component {
                 console.log(error);
             }
         });
-        // private submit = async (e: React.FormEventHandler<HTMLFormElement>) => {
-        // }
         this.onChangeLogin = (e) => {
             let login = e.target.value;
             this.setState({ login: login });
@@ -9119,7 +9117,7 @@ class StockOverview extends react_1.default.Component {
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Stocks' },
                 react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement("div", { className: "flex flex-row" },
-                        react_1.default.createElement("div", { className: "w-2/5" },
+                        react_1.default.createElement("div", { className: "w-7/12" },
                             react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
                                 react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade })))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
