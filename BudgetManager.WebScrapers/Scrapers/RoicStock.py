@@ -166,13 +166,24 @@ def storeCompanyProfile(ticker: str):
     fmpScraper.download_profile(ticker)
 
 
+def processTickersToCompanyProfileToDb(rows):
+    for row in rows:
+        symbol = row["Symbol"]
+        name = row["Name"]
+
+        try:
+            storeCompanyProfile(symbol)
+        except Exception:
+            print(symbol + " - error")
+
+
 def processTickersToStoreToDb(rows):
     for row in rows:
         symbol = row["Symbol"]
         name = row["Name"]
-        # storeTickers(symbol, name)
+
         try:
-            storeCompanyProfile(symbol)
+            storeTickers(symbol, name)
         except Exception:
             print(symbol + " - error")
 
