@@ -1,6 +1,6 @@
 from datetime import datetime
 import logging
-from configManager import alphaVantageToken
+from secret import alphaVantageToken
 
 from Services.AlphaVantage import AlphaVantageService
 
