@@ -28,21 +28,21 @@ class InfluxRepository:
     def add(self, point: Point):
         self.__entities.append(point)
         self.__logger and self.__logger.debug(
-            'Add point to save (count: ' + str(len(self.__entities)) + '):' + get_datetime_to_log())
+            'Add point to save (count: ' + str(len(self.__entities)) + '): ' + get_datetime_to_log())
 
     def add_range(self, points: List[Point]):
         self.__entities.extend(points)
         self.__logger and self.__logger.debug(
-            'Add points to save (count: ' + str(len(self.__entities)) + '):' + get_datetime_to_log())
+            'Add points to save (count: ' + str(len(self.__entities)) + '): ' + get_datetime_to_log())
 
     def save(self):
         write_api = self.__client.write_api(write_options=SYNCHRONOUS)
         self.__logger and self.__logger.debug(
-            'START: Influx save' + get_datetime_to_log())
+            'START: Influx save ' + get_datetime_to_log())
         write_api.write(self.__bucket, record=self.__entities)
         self.__entities.clear()
         self.__logger and self.__logger.debug(
-            'END: Influx save' + get_datetime_to_log())
+            'END: Influx save ' + get_datetime_to_log())
 
         # for entity in self.__entities:
         #     write_api.write(bucket=self.__bucket, record=entity)
@@ -50,7 +50,7 @@ class InfluxRepository:
     def save_batch(self, saveAfter: int = 10):
         write_api = self.__client.write_api(write_options=SYNCHRONOUS)
         self.__logger and self.__logger.debug(
-            'START: Influx batch save' + get_datetime_to_log())
+            'START: Influx batch save ' + get_datetime_to_log())
         if len(self.__entities) > saveAfter:
             write_api.write(bucket=self.__bucket, record=self.__entities)
             self.__entities.clear()
