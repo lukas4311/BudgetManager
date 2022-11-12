@@ -43,4 +43,4 @@ class StockPriceScraper:
 
 
 stockPriceScraper = StockPriceScraper()
-stockPriceScraper.scrape_stocks_prices('Price', 'AAPL')
+stockPriceScraper.scrape_stocks_prices('Price', 'MSFT')
