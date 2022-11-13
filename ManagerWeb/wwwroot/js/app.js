@@ -5955,12 +5955,41 @@ exports.TextApiResponse = TextApiResponse;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-dom"));
+const AppCtx_1 = __webpack_require__(/*! ./Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 const Menu_1 = __importDefault(__webpack_require__(/*! ./Components/Menu */ "./Typescript/Components/Menu.tsx"));
 const Overview_1 = __importDefault(__webpack_require__(/*! ./Overview */ "./Typescript/Overview.tsx"));
@@ -5975,31 +6004,51 @@ const BankAccountOverview_1 = __importDefault(__webpack_require__(/*! ./Componen
 const Comodities_1 = __importDefault(__webpack_require__(/*! ./Components/Comodities/Comodities */ "./Typescript/Components/Comodities/Comodities.tsx"));
 const OtherInvestmentOverview_1 = __importDefault(__webpack_require__(/*! ./Components/OtherInvestment/OtherInvestmentOverview */ "./Typescript/Components/OtherInvestment/OtherInvestmentOverview.tsx"));
 const StockOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Stocks/StockOverview */ "./Typescript/Components/Stocks/StockOverview.tsx"));
+const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
+const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
 function App() {
-    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
-        react_1.default.createElement("div", { className: "bg-mainDarkBlue h-full flex flex-col overflow-x-hidden" },
-            react_1.default.createElement("header", { className: "bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12" },
-                react_1.default.createElement("div", null,
-                    react_1.default.createElement("img", { src: "./images/logo.png", alt: "logo", className: "w-2/12 inline-block" }),
-                    react_1.default.createElement("nav", { id: "navMenu" },
-                        react_1.default.createElement(Menu_1.default, null))),
-                react_1.default.createElement("nav", { id: "navMenu" })),
-            react_1.default.createElement("div", { className: "baseContainer mx-auto lg:w-11/12 w-full" },
-                react_1.default.createElement("main", { role: "main", className: "pb-3 text-white" },
-                    react_1.default.createElement(react_router_dom_1.Switch, null,
-                        react_1.default.createElement(react_router_dom_1.Route, { path: "/login", component: Auth_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/payments", component: PaymentsOverview_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/crypto-overview", component: Crypto_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/budget", component: BudgetComponent_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/other-investment", component: OtherInvestmentOverview_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/stock", component: StockOverview_1.default }),
-                        react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
-            react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
-                react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
-            react_1.default.createElement("script", { src: "~/js/site.js", "asp-append-version": "true" }),
-            react_1.default.createElement("script", { src: "~/js/menu.js" }))));
+    const [isLoaded, setIsLoaded] = (0, react_1.useState)(false);
+    const [context, setContext] = (0, react_1.useState)({ apiUrls: { authApi: "aaa", mainApi: "bbb" } });
+    (0, react_1.useEffect)(() => {
+        function getSetting() {
+            return __awaiter(this, void 0, void 0, function* () {
+                let settingLoader = new DataLoader_1.default();
+                let setting = yield settingLoader.getSetting();
+                setContext({ apiUrls: setting });
+                setIsLoaded(true);
+            });
+        }
+        ;
+        getSetting();
+    }, []);
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(AppCtx_1.AppCtx.Provider, { value: context }, isLoaded
+            ? (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
+                react_1.default.createElement("div", { className: "bg-mainDarkBlue h-full flex flex-col overflow-x-hidden" },
+                    react_1.default.createElement("header", { className: "bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12" },
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement("img", { src: "./images/logo.png", alt: "logo", className: "w-2/12 inline-block" }),
+                            react_1.default.createElement("nav", { id: "navMenu" },
+                                react_1.default.createElement(Menu_1.default, null))),
+                        react_1.default.createElement("nav", { id: "navMenu" })),
+                    react_1.default.createElement("div", { className: "baseContainer mx-auto lg:w-11/12 w-full" },
+                        react_1.default.createElement("main", { role: "main", className: "pb-3 text-white" },
+                            react_1.default.createElement(react_router_dom_1.Switch, null,
+                                react_1.default.createElement(react_router_dom_1.Route, { path: "/login", component: Auth_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/payments", component: PaymentsOverview_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/crypto-overview", component: Crypto_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/budget", component: BudgetComponent_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/bankaccount-overview", component: BankAccountOverview_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/other-investment", component: OtherInvestmentOverview_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/stock", component: StockOverview_1.default }),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
+                    react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
+                        react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
+                    react_1.default.createElement("script", { src: "~/js/site.js", "asp-append-version": "true" }),
+                    react_1.default.createElement("script", { src: "~/js/menu.js" }))))
+            : (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
+                react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }))))));
 }
 exports.default = App;
 react_dom_1.default.render(react_1.default.createElement(ErrorBoundry_1.default, null,
@@ -9015,11 +9064,12 @@ const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Componen
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
-const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const StockViewModel_1 = __webpack_require__(/*! ../../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
 const StockTradeForm_1 = __webpack_require__(/*! ./StockTradeForm */ "./Typescript/Components/Stocks/StockTradeForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const AppCtx_1 = __webpack_require__(/*! ../../Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
+const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9034,16 +9084,10 @@ class StockOverview extends react_1.default.Component {
         this.tickers = [];
         this.currencies = [];
         this.stockApi = undefined;
+        this.stockService = undefined;
         this.componentDidMount = () => this.init();
         this.loadStockData = () => __awaiter(this, void 0, void 0, function* () {
-            const stockTrades = yield this.stockApi.stockStockTradeHistoryGet();
-            const stocks = stockTrades.map(s => {
-                var _a, _b;
-                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
-                viewModel.onSave = this.saveStockTrade;
-                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
-                return viewModel;
-            });
+            const stocks = yield this.stockService.getStockTradeHistory();
             this.setState({ stocks });
         });
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
@@ -9082,7 +9126,6 @@ class StockOverview extends react_1.default.Component {
         };
         this.addStockTrade = () => {
             let model = new StockViewModel_1.StockViewModel();
-            model.onSave = this.saveStockTrade;
             model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.tradeSize = 0;
             model.tradeValue = 0;
@@ -9104,10 +9147,12 @@ class StockOverview extends react_1.default.Component {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            const appContext = this.context;
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
-            this.tickers = yield this.stockApi.stockStockTickerGet();
+            this.stockService = new StockService_1.default(this.props.history, appContext.apiUrls);
+            this.tickers = yield this.stockService.getStockTickers();
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
             this.loadStockData();
         });
@@ -9123,9 +9168,10 @@ class StockOverview extends react_1.default.Component {
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,
-                            react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers })))))));
+                            react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers, onSave: this.saveStockTrade })))))));
     }
 }
+StockOverview.contextType = AppCtx_1.AppCtx;
 exports.default = StockOverview;
 
 
@@ -9163,7 +9209,7 @@ const StockTradeForm = (props) => {
     var _a;
     const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props.stockTradeViewModel) });
     const onSubmit = (data) => {
-        props.stockTradeViewModel.onSave(data);
+        props.onSave(data);
     };
     return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
@@ -9196,6 +9242,29 @@ const StockTradeForm = (props) => {
         react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Ulo\u017Eit")));
 };
 exports.StockTradeForm = StockTradeForm;
+
+
+/***/ }),
+
+/***/ "./Typescript/Context/AppCtx.ts":
+/*!**************************************!*\
+  !*** ./Typescript/Context/AppCtx.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppCtx = exports.AppContext = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class AppContext {
+}
+exports.AppContext = AppContext;
+exports.AppCtx = react_1.default.createContext({ apiUrls: { authApi: "aaa", mainApi: "bbb" } });
 
 
 /***/ }),
@@ -9648,6 +9717,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StockViewModel = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 class StockViewModel {
+    // onSave: (data: StockViewModel) => void;
     static mapFromDataModel(s) {
         return {
             currencySymbol: s.currencySymbol,
@@ -9658,7 +9728,7 @@ class StockViewModel {
             tradeTimeStamp: (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD"),
             tradeValue: s.tradeValue,
             stockTicker: undefined,
-            onSave: undefined
+            // onSave: undefined
         };
     }
 }
@@ -10002,6 +10072,56 @@ exports.ProgressCalculatorService = ProgressCalculatorService;
 
 /***/ }),
 
+/***/ "./Typescript/Services/StockService.ts":
+/*!*********************************************!*\
+  !*** ./Typescript/Services/StockService.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const apis_1 = __webpack_require__(/*! ../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
+const StockViewModel_1 = __webpack_require__(/*! ../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+class StockService {
+    constructor(history, setting) {
+        this.getStockTickers = () => __awaiter(this, void 0, void 0, function* () {
+            return yield this.stockApi.stockStockTickerGet();
+        });
+        this.getStockTradeHistory = () => __awaiter(this, void 0, void 0, function* () {
+            const tickers = yield this.getStockTickers();
+            const stockTrades = yield this.stockApi.stockStockTradeHistoryGet();
+            return stockTrades.map(s => {
+                var _a, _b;
+                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
+                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
+                return viewModel;
+            });
+        });
+        const apiFactory = new ApiClientFactory_1.default(history);
+        this.stockApi = apiFactory.getClientWithSetting(apis_1.StockApi, setting);
+    }
+}
+exports.default = StockService;
+
+
+/***/ }),
+
 /***/ "./Typescript/Utils/ApiClientFactory.tsx":
 /*!***********************************************!*\
   !*** ./Typescript/Utils/ApiClientFactory.tsx ***!
@@ -10030,14 +10150,14 @@ const UnauthorizedMiddleware_1 = __importDefault(__webpack_require__(/*! ./Unaut
 class ApiClientFactory {
     constructor(history) {
         this.setting = undefined;
-        this.getApiConfiguration = (baseUrl) => __awaiter(this, void 0, void 0, function* () {
+        this.getApiConfiguration = (baseUrl) => {
             let authHeader = null;
             authHeader = this.getAuthHeader(authHeader);
             let unauthorizedMiddleware = new UnauthorizedMiddleware_1.default(this.history);
             let middleware = [unauthorizedMiddleware];
             let apiConfiguration = new Main_1.Configuration({ headers: authHeader, basePath: baseUrl, middleware: middleware });
             return apiConfiguration;
-        });
+        };
         this.getApiUrls = () => __awaiter(this, void 0, void 0, function* () {
             if (this.setting == undefined) {
                 let settingLoader = new DataLoader_1.default();
@@ -10060,7 +10180,7 @@ class ApiClientFactory {
         return __awaiter(this, void 0, void 0, function* () {
             let setting = yield this.getApiUrls();
             let apiUrl = setting.mainApi;
-            let apiConfiguration = yield this.getApiConfiguration(apiUrl);
+            let apiConfiguration = this.getApiConfiguration(apiUrl);
             let client = new type(apiConfiguration);
             return client;
         });
@@ -10069,10 +10189,16 @@ class ApiClientFactory {
         return __awaiter(this, void 0, void 0, function* () {
             let setting = yield this.getApiUrls();
             let apiUrl = setting.authApi;
-            let apiConfiguration = yield this.getApiConfiguration(apiUrl);
+            let apiConfiguration = this.getApiConfiguration(apiUrl);
             let client = new type(apiConfiguration);
             return client;
         });
+    }
+    getClientWithSetting(type, setting) {
+        let apiUrl = setting.mainApi;
+        let apiConfiguration = this.getApiConfiguration(apiUrl);
+        let client = new type(apiConfiguration);
+        return client;
     }
 }
 exports.default = ApiClientFactory;
@@ -10250,6 +10376,7 @@ const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const Auth_1 = __webpack_require__(/*! ../ApiClient/Auth */ "./Typescript/ApiClient/Auth/index.ts");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ./ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
 const PrivateRoute = (props) => {
     const [isValid, setIsValid] = (0, react_1.useState)(undefined);
     (0, react_1.useEffect)(() => {
@@ -10280,7 +10407,8 @@ const PrivateRoute = (props) => {
             return react_1.default.createElement(react_router_dom_1.Redirect, { to: '/login' });
     }
     else {
-        return react_1.default.createElement("div", null, "Fetching token");
+        return (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
+            react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" })));
     }
 };
 exports.default = PrivateRoute;
@@ -83789,6 +83917,628 @@ function resolvePathname(to, from) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (resolvePathname);
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerCircular.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerCircular.js ***!
+  \****************************************************************/
+/*! exports provided: SpinnerCircular */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircular", function() { return SpinnerCircular; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-circular{0%{stroke-dashoffset:306}50%{stroke-dasharray:40,134}to{stroke-dasharray:1,174;stroke-dashoffset:132}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var Component = function (_a) {
+    var secondaryColor = _a.secondaryColor, speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["secondaryColor", "speed", "still", "thickness"]);
+    var strokeWidth = 4 * (thickness / 100);
+    var circleStyle = !still
+        ? { animation: "spinners-react-circular " + 140 / speed + "s linear infinite" }
+        : {};
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: secondaryColor, strokeWidth: strokeWidth }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: "currentColor", strokeDasharray: "1, 174", strokeDashoffset: "306", strokeLinecap: "round", strokeWidth: strokeWidth, style: circleStyle })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["a"];
+var SpinnerCircular = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerCircularFixed.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerCircularFixed.js ***!
+  \*********************************************************************/
+/*! exports provided: SpinnerCircularFixed */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircularFixed", function() { return SpinnerCircularFixed; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-circular-fixed{0%{stroke-dashoffset:325}to{stroke-dashoffset:151}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var Component = function (_a) {
+    var secondaryColor = _a.secondaryColor, speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["secondaryColor", "speed", "still", "thickness"]);
+    var strokeWidth = 4 * (thickness / 100);
+    var circleStyle = !still
+        ? { animation: "spinners-react-circular-fixed " + 140 / speed + "s linear infinite" }
+        : {};
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: secondaryColor, strokeWidth: strokeWidth }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: "currentColor", strokeDasharray: "40, 134", strokeDashoffset: "325", strokeLinecap: "round", strokeWidth: strokeWidth, style: circleStyle })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["a"];
+var SpinnerCircularFixed = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerCircularSplit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerCircularSplit.js ***!
+  \*********************************************************************/
+/*! exports provided: SpinnerCircularSplit */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircularSplit", function() { return SpinnerCircularSplit; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-circular-split{0%{stroke-dashoffset:1;stroke-dasharray:5,170}10%{stroke-dashoffset:13;stroke-dasharray:30,145}13%{stroke-dashoffset:-11;stroke-dasharray:5,145}50%{stroke-dasharray:5,0,5,165;stroke-dashoffset:-82}51%{stroke-dasharray:2,0,2,139;stroke-dashoffset:-85}61%{stroke-dasharray:15,0,15,165;stroke-dashoffset:-72}64%{stroke-dasharray:5,20,5,145;stroke-dashoffset:-72}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var Component = function (_a) {
+    var secondaryColor = _a.secondaryColor, speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["secondaryColor", "speed", "still", "thickness"]);
+    var strokeWidth = 4 * (thickness / 100);
+    var circleStyle = !still
+        ? { animation: "spinners-react-circular-split " + 140 / speed + "s linear infinite" }
+        : {};
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: secondaryColor, strokeWidth: strokeWidth }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: "28", stroke: "currentColor", strokeDasharray: "5, 170", strokeDashoffset: "1", strokeLinecap: "round", strokeWidth: strokeWidth, style: circleStyle, transform: "rotate(-90 33 33)" })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["a"];
+var SpinnerCircularSplit = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerDiamond.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerDiamond.js ***!
+  \***************************************************************/
+/*! exports provided: SpinnerDiamond, SpinnerRomb */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerDiamond", function() { return SpinnerDiamond; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerRomb", function() { return SpinnerRomb; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-diamond{25%{transform:translate(30px,-30px)}50%{transform:translate(60px)}75%{transform:translate(30px,30px)}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var coords = [
+    { x: 3, y: 48 },
+    { x: 18, y: 33 },
+    { x: 18, y: 48 },
+    { x: 18, y: 63 },
+    { x: 33, y: 48 },
+    // -------------
+    { x: 33, y: 18 },
+    { x: 33, y: 33 },
+    { x: 33, y: 63 },
+    { x: 33, y: 78 },
+    { x: 48, y: 3 },
+    { x: 48, y: 18 },
+    { x: 48, y: 33 },
+    { x: 48, y: 48 },
+    { x: 48, y: 63 },
+    { x: 48, y: 78 },
+    { x: 48, y: 93 },
+    { x: 63, y: 18 },
+    { x: 63, y: 33 },
+    { x: 63, y: 48 },
+    { x: 63, y: 63 },
+    { x: 63, y: 78 },
+    { x: 78, y: 33 },
+    { x: 78, y: 48 },
+    { x: 78, y: 63 },
+    { x: 93, y: 48 },
+];
+var Component = function (_a) {
+    var secondaryColor = _a.secondaryColor, speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["secondaryColor", "speed", "still", "thickness"]);
+    var diamondStyle = {
+        animation: "spinners-react-diamond " + 140 / speed + "s steps(2, end) infinite",
+    };
+    if (still)
+        diamondStyle.animation = 'none';
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "currentColor" }, svgProps, { viewBox: "0 0 96 96" }),
+        coords.map(function (c) { return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { key: c.x + "-" + c.y, cx: c.x, cy: c.y, fill: secondaryColor, r: 2.5 * (thickness / 100) })); }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("g", { style: diamondStyle }, coords.filter(function (c, i) { return i < 5; }).map(function (c) { return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { key: "h-" + c.x + "-" + c.y, cx: c.x, cy: c.y, r: 3.5 * (thickness / 100) })); }))));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["a"];
+var SpinnerRomb = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+var SpinnerDiamond = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerDotted.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerDotted.js ***!
+  \**************************************************************/
+/*! exports provided: Component, SpinnerDotted */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return Component; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerDotted", function() { return SpinnerDotted; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-dotted-center{0%,15%,85%,to{transform:scale(0)}40%,50%{transform:scale(1)}84%{transform:scale(.45)}}@keyframes spinners-react-dotted-shrink{50%{transform:translate(0)}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var coords = [
+    { x: 22, y: -20 },
+    { x: 29, y: 0 },
+    { x: 22, y: 20 },
+    { x: 0, y: 30 },
+    { x: -23, y: 20 },
+    { x: -30, y: 0 },
+    { x: -23, y: -20 },
+    { x: 0, y: -30 },
+];
+var Component = function (_a) {
+    var speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["speed", "still", "thickness"]);
+    var duration = 200 / speed;
+    var generateCircleStyle = function (i) { return (!still
+        ? { animation: "spinners-react-dotted-shrink " + duration + "s cubic-bezier(0, 0.9, 0, 0.9) " + (duration / 20) * i + "s infinite" }
+        : {}); };
+    var centerStyle = !still
+        ? {
+            animation: "spinners-react-dotted-center " + duration + "s ease-out infinite",
+            transformOrigin: 'center',
+        }
+        : { display: 'none' };
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none", viewBox: "0 0 66 66" }, svgProps),
+        coords.map(function (c, i) { return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { key: c.x + "-" + c.y, cx: "33", cy: "33", fill: "currentColor", r: 3 * (thickness / 100), style: Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ transform: "translate(" + c.x + "px, " + c.y + "px)" }, generateCircleStyle(i)) })); }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "currentColor", r: 6 * (thickness / 100), style: centerStyle })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["d"];
+var SpinnerDotted = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerInfinity.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerInfinity.js ***!
+  \****************************************************************/
+/*! exports provided: SpinnerInfinity */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerInfinity", function() { return SpinnerInfinity; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-infinity{0%{stroke-dasharray:1,347;stroke-dashoffset:75}25%,75%{stroke-dasharray:17,330}50%{stroke-dasharray:1,347}to{stroke-dasharray:1,347;stroke-dashoffset:423}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var Component = function (_a) {
+    var secondaryColor = _a.secondaryColor, speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["secondaryColor", "speed", "still", "thickness"]);
+    var strokeWidth = 7 * (thickness / 100);
+    var dashStyle = !still
+        ? { animation: "spinners-react-infinity " + 140 / speed + "s linear infinite" }
+        : {};
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none", viewBox: "0 0 131 55" }, svgProps),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("defs", null,
+            react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("path", { d: "M46.57 45.5138C36.346 55.4954 19.8919 55.4954 9.66794 45.5138C-0.55598 35.5321 -0.55598 19.4678 9.66794 9.48624C19.8919 -0.495412 36.346 -0.495412 46.57 9.48624L84.4303 45.5138C94.6543 55.4954 111.108 55.4954 121.332 45.5138C131.556 35.5321 131.556 19.4678 121.332 9.48624C111.108 -0.495412 94.6543 -0.495412 84.4303 9.48624L46.57 45.5138Z", id: "spinners-react-infinity-path" })),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("use", { stroke: secondaryColor, strokeWidth: strokeWidth, xlinkHref: "#spinners-react-infinity-path" }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("use", { fill: "none", stroke: "currentColor", strokeDasharray: "1, 347", strokeDashoffset: "75", strokeLinecap: "round", strokeWidth: strokeWidth, style: dashStyle, xlinkHref: "#spinners-react-infinity-path" })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["a"];
+var SpinnerInfinity = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerRound.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerRound.js ***!
+  \*************************************************************/
+/*! exports provided: SpinnerRound */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerRound", function() { return SpinnerRound; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-round{27%,73%{r:2px;stroke-width:4}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var Component = function (_a) {
+    var speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["speed", "still", "thickness"]);
+    var strokeWidth = 3 * (thickness / 100);
+    var circleStyle = {
+        animation: "spinners-react-round " + 140 / speed + "s ease-in-out infinite",
+        transformOrigin: 'center',
+    };
+    if (still)
+        circleStyle.animation = 'none';
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }),
+        react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { cx: "33", cy: "33", fill: "none", r: 28, stroke: "currentColor", strokeWidth: strokeWidth, style: circleStyle })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["d"];
+var SpinnerRound = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerRoundFilled.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerRoundFilled.js ***!
+  \*******************************************************************/
+/*! exports provided: SpinnerRoundFilled */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerRoundFilled", function() { return SpinnerRoundFilled; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-round-filled-outer{40%,60%{transform:scale(0)}}@keyframes spinners-react-round-filled-center{30%,70%{transform:scale(0)}}@keyframes spinners-react-round-filled-inner{20%,80%{transform:scale(0)}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var animations = [
+    { r: 4 },
+    {
+        name: 'spinners-react-round-filled-inner',
+        r: 12.66,
+    },
+    {
+        name: 'spinners-react-round-filled-center',
+        r: 20.32,
+    },
+    {
+        name: 'spinners-react-round-filled-outer',
+        r: 27.5,
+    },
+];
+var Component = function (_a) {
+    var speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["speed", "still", "thickness"]);
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }), animations.map(function (animation) { return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { key: animation.name || 'still', cx: "33", cy: "33", fill: "currentColor", r: animation.r * (animation.name ? (thickness / 100) : 1), style: {
+            opacity: animation.name ? 0.25 : 1,
+            transformOrigin: 'center',
+            animation: (!animation.name || still)
+                ? 'none'
+                : animation.name + " " + 140 / speed + "s ease-in-out infinite",
+        } })); })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["d"];
+var SpinnerRoundFilled = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/SpinnerRoundOutlined.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/SpinnerRoundOutlined.js ***!
+  \*********************************************************************/
+/*! exports provided: SpinnerRoundOutlined */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SpinnerRoundOutlined", function() { return SpinnerRoundOutlined; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+var css_248z = "@keyframes spinners-react-round-outlined{35%,65%{r:2px;stroke-width:4}}";
+Object(_style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["s"])(css_248z);
+
+var animations = [
+    {
+        r: 2,
+    },
+    {
+        name: 'spinners-react-round-outlined',
+        r: 14,
+    },
+    {
+        name: 'spinners-react-round-outlined',
+        r: 28,
+    },
+];
+var Component = function (_a) {
+    var speed = _a.speed, still = _a.still, thickness = _a.thickness, svgProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["_"])(_a, ["speed", "still", "thickness"]);
+    var strokeWidth = 3 * (thickness / 100);
+    return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("svg", Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({ fill: "none" }, svgProps, { viewBox: "0 0 66 66" }), animations.map(function (animation, i) { return (react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("circle", { key: "spinner-round-outlined-r" + animation.r, cx: "33", cy: "33", fill: "none", r: animation.r, stroke: "currentColor", strokeWidth: i ? strokeWidth : 4, style: animation.name && !still
+            ? { animation: animation.name + " " + 140 / speed + "s ease-in-out infinite" }
+            : {} })); })));
+};
+Component.defaultProps = _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_2__["d"];
+var SpinnerRoundOutlined = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["w"])(Component);
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/index.js ***!
+  \******************************************************/
+/*! exports provided: SpinnerCircular, SpinnerCircularFixed, SpinnerCircularSplit, SpinnerInfinity, Component, SpinnerDotted, SpinnerRound, SpinnerRoundOutlined, SpinnerRoundFilled, SpinnerDiamond, SpinnerRomb */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SpinnerCircular_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SpinnerCircular.js */ "./node_modules/spinners-react/lib/esm/SpinnerCircular.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircular", function() { return _SpinnerCircular_js__WEBPACK_IMPORTED_MODULE_0__["SpinnerCircular"]; });
+
+/* harmony import */ var _SpinnerCircularFixed_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SpinnerCircularFixed.js */ "./node_modules/spinners-react/lib/esm/SpinnerCircularFixed.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircularFixed", function() { return _SpinnerCircularFixed_js__WEBPACK_IMPORTED_MODULE_1__["SpinnerCircularFixed"]; });
+
+/* harmony import */ var _SpinnerCircularSplit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SpinnerCircularSplit.js */ "./node_modules/spinners-react/lib/esm/SpinnerCircularSplit.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerCircularSplit", function() { return _SpinnerCircularSplit_js__WEBPACK_IMPORTED_MODULE_2__["SpinnerCircularSplit"]; });
+
+/* harmony import */ var _SpinnerInfinity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SpinnerInfinity.js */ "./node_modules/spinners-react/lib/esm/SpinnerInfinity.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerInfinity", function() { return _SpinnerInfinity_js__WEBPACK_IMPORTED_MODULE_3__["SpinnerInfinity"]; });
+
+/* harmony import */ var _SpinnerDotted_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SpinnerDotted.js */ "./node_modules/spinners-react/lib/esm/SpinnerDotted.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return _SpinnerDotted_js__WEBPACK_IMPORTED_MODULE_4__["Component"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerDotted", function() { return _SpinnerDotted_js__WEBPACK_IMPORTED_MODULE_4__["SpinnerDotted"]; });
+
+/* harmony import */ var _SpinnerRound_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SpinnerRound.js */ "./node_modules/spinners-react/lib/esm/SpinnerRound.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerRound", function() { return _SpinnerRound_js__WEBPACK_IMPORTED_MODULE_5__["SpinnerRound"]; });
+
+/* harmony import */ var _SpinnerRoundOutlined_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SpinnerRoundOutlined.js */ "./node_modules/spinners-react/lib/esm/SpinnerRoundOutlined.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerRoundOutlined", function() { return _SpinnerRoundOutlined_js__WEBPACK_IMPORTED_MODULE_6__["SpinnerRoundOutlined"]; });
+
+/* harmony import */ var _SpinnerRoundFilled_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SpinnerRoundFilled.js */ "./node_modules/spinners-react/lib/esm/SpinnerRoundFilled.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerRoundFilled", function() { return _SpinnerRoundFilled_js__WEBPACK_IMPORTED_MODULE_7__["SpinnerRoundFilled"]; });
+
+/* harmony import */ var _SpinnerDiamond_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./SpinnerDiamond.js */ "./node_modules/spinners-react/lib/esm/SpinnerDiamond.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerDiamond", function() { return _SpinnerDiamond_js__WEBPACK_IMPORTED_MODULE_8__["SpinnerDiamond"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SpinnerRomb", function() { return _SpinnerDiamond_js__WEBPACK_IMPORTED_MODULE_8__["SpinnerRomb"]; });
+
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _style_inject_es_fc9e633e_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./style-inject.es-fc9e633e.js */ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/style-inject.es-fc9e633e.js ***!
+  \*************************************************************************/
+/*! exports provided: a, d, s */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return secondaryColorDefaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return defaultProps; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "s", function() { return styleInject; });
+/* harmony import */ var _withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withSharedProps-a1728349.js */ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js");
+
+
+var defaultProps = {
+    speed: 100,
+    still: false,
+    thickness: 100,
+};
+var secondaryColorDefaultProps = Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])(Object(_withSharedProps_a1728349_js__WEBPACK_IMPORTED_MODULE_0__["a"])({}, defaultProps), { secondaryColor: 'rgba(0,0,0,0.44)' });
+
+function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/spinners-react/lib/esm/withSharedProps-a1728349.js ***!
+  \*************************************************************************/
+/*! exports provided: _, a, w */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_", function() { return __rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __assign; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "w", function() { return withSharedProps; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+var defaultProps = {
+    color: '#38ad48',
+    enabled: true,
+    size: 50,
+    style: {},
+};
+var normalizeSize = function (size) { return (parseFloat(size.toString()).toString() === size.toString()
+    ? size + "px"
+    : size.toString()); };
+var withSharedProps = function (Component) {
+    var Wrapper = function (props) {
+        var color = props.color, enabled = props.enabled, size = props.size, style = props.style, otherProps = __rest(props, ["color", "enabled", "size", "style"]);
+        var componentProps = __assign(__assign({}, otherProps), { style: __assign({ color: color, overflow: 'visible', width: normalizeSize(size) }, style) });
+        if (!enabled)
+            return null;
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, __assign({}, componentProps));
+    };
+    Wrapper.defaultProps = defaultProps;
+    return Wrapper;
+};
+
+
 
 
 /***/ }),

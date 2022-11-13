@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AuthApi, AuthResponseModel } from "../ApiClient/Auth";
 import { Route, Redirect } from "react-router-dom";
 import ApiClientFactory from './ApiClientFactory';
+import { SpinnerCircularSplit } from 'spinners-react';
 
 const PrivateRoute = (props: any) => {
     const [isValid, setIsValid] = useState<boolean>(undefined);
@@ -36,7 +37,11 @@ const PrivateRoute = (props: any) => {
             return <Redirect to='/login' />;
     }
     else {
-        return <div>Fetching token</div>
+        return (
+            <div className="flex text-center justify-center h-full">
+                <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
+            </div>
+        )
     }
 }
 

@@ -11,6 +11,8 @@ import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
+import { AppContext, AppCtx } from "../../Context/AppCtx";
+import StockService from "../../Services/StockService";
 
 const theme = createMuiTheme({
     palette: {
@@ -32,6 +34,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private tickers: StockTickerModel[] = [];
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
+    private stockService: StockService = undefined;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -41,22 +44,19 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     public componentDidMount = () => this.init();
 
     private async init() {
+        const appContext: AppContext = this.context;
         const apiFactory = new ApiClientFactory(this.props.history);
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        this.tickers = await this.stockApi.stockStockTickerGet();
+        this.stockService = new StockService(this.props.history, appContext.apiUrls);
+
+        this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
         this.loadStockData();
     }
 
-    private loadStockData = async () => {
-        const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
-        const stocks = stockTrades.map(s => {
-            let viewModel = StockViewModel.mapFromDataModel(s);
-            viewModel.onSave = this.saveStockTrade;
-            viewModel.stockTicker = _.first(this.tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
-            return viewModel;
-        });
+    private loadStockData = async () => {        
+        const stocks = await this.stockService.getStockTradeHistory();
         this.setState({ stocks });
     }
 
@@ -103,7 +103,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private addStockTrade = (): void => {
         let model: StockViewModel = new StockViewModel();
-        model.onSave = this.saveStockTrade;
         model.tradeTimeStamp = moment().format("YYYY-MM-DD");
         model.tradeSize = 0;
         model.tradeValue = 0;
@@ -145,7 +144,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
                             <DialogContent>
-                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} />
+                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} onSave={this.saveStockTrade}/>
                             </DialogContent>
                         </Dialog>
                     </>
@@ -154,5 +153,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         );
     }
 }
+
+StockOverview.contextType = AppCtx;
 
 export default StockOverview;

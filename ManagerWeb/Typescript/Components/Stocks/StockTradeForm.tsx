@@ -3,7 +3,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CurrencySymbol, StockTickerModel } from "../../ApiClient/Main/models";
 import { StockViewModel } from "../../Model/StockViewModel";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
     palette: {
@@ -18,13 +18,14 @@ class StockTradeFormProps {
     stockTradeViewModel: StockViewModel;
     stockTickers: StockTickerModel[];
     currencies: CurrencySymbol[];
+    onSave: (data: StockViewModel) => void;
 }
 
 const StockTradeForm = (props: StockTradeFormProps) => {
     const { handleSubmit, control } = useForm<StockViewModel>({ defaultValues: { ...props.stockTradeViewModel } });
 
     const onSubmit = (data: StockViewModel) => {
-        props.stockTradeViewModel.onSave(data);
+        props.onSave(data);
     };
 
     return (

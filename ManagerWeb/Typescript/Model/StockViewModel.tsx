@@ -11,7 +11,7 @@ export class StockViewModel implements IBaseModel {
     tradeValue: number;
     currencySymbolId: number;
     currencySymbol: string;
-    onSave: (data: StockViewModel) => void;
+    // onSave: (data: StockViewModel) => void;
 
     static mapFromDataModel(s: StockTradeHistoryGetModel): StockViewModel {
         return {
@@ -23,7 +23,7 @@ export class StockViewModel implements IBaseModel {
             tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
             tradeValue: s.tradeValue,
             stockTicker: undefined,
-            onSave: undefined
+            // onSave: undefined
         };
     }
 }

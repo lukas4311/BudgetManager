@@ -542,10 +542,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1.5rem !important;
 }
 
-.m-5 {
-  margin: 1.25rem !important;
-}
-
 .mx-auto {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -569,16 +565,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .my-4 {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
-}
-
-.mx-6 {
-  margin-left: 1.5rem !important;
-  margin-right: 1.5rem !important;
-}
-
-.my-1 {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.25rem !important;
 }
 
 .ml-auto {
@@ -733,10 +719,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2rem !important;
 }
 
-.h-full {
-  height: 100% !important;
-}
-
 .min-h-full {
   min-height: 100% !important;
 }
@@ -847,18 +829,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-1\/12 {
   width: 8.333333% !important;
-}
-
-.w-1\/3 {
-  width: 33.333333% !important;
-}
-
-.w-1\/2 {
-  width: 50% !important;
-}
-
-.w-4\/6 {
-  width: 66.666667% !important;
 }
 
 .shrink {
@@ -1032,10 +1002,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .border-blueSapphire {
   border-color: #275068ff !important;
-}
-
-.border-vermilion {
-  border-color: #e03d15ff !important;
 }
 
 .bg-mainDarkBlue {
