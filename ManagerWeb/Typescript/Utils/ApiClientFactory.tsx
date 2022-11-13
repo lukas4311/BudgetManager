@@ -18,7 +18,7 @@ export default class ApiClientFactory {
     public async getClient<TClient extends BaseAPI>(type: new (config: Configuration) => TClient): Promise<TClient> {
         let setting: ApiUrls = await this.getApiUrls();
         let apiUrl = setting.mainApi;
-        let apiConfiguration = await this.getApiConfiguration(apiUrl);
+        let apiConfiguration = this.getApiConfiguration(apiUrl);
         let client: TClient = new type(apiConfiguration);
 
         return client;
@@ -27,13 +27,20 @@ export default class ApiClientFactory {
     public async getAuthClient<TClient extends BaseAPI>(type: new (config: Configuration) => TClient): Promise<TClient> {
         let setting: ApiUrls = await this.getApiUrls();
         let apiUrl = setting.authApi;
-        let apiConfiguration = await this.getApiConfiguration(apiUrl);
+        let apiConfiguration = this.getApiConfiguration(apiUrl);
         let client: TClient = new type(apiConfiguration);
 
         return client;
     }
 
-    private getApiConfiguration = async (baseUrl: string) => {
+    public getClientWithSetting<TClient extends BaseAPI>(type: new (config: Configuration) => TClient, setting: ApiUrls): TClient {
+        let apiUrl = setting.mainApi;
+        let apiConfiguration = this.getApiConfiguration(apiUrl);
+        let client: TClient = new type(apiConfiguration);
+        return client;
+    }
+
+    private getApiConfiguration = (baseUrl: string) => {
         let authHeader: { [key: string]: string } = null;
         authHeader = this.getAuthHeader(authHeader);
 
