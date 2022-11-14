@@ -25,9 +25,17 @@ const theme = createMuiTheme({
 
 interface StockOverviewState {
     stocks: StockViewModel[];
+    stockGrouped: StockGroupModel[];
     formKey: number;
     openedForm: boolean;
     selectedModel: StockViewModel;
+}
+
+class StockGroupModel {
+    tickerId: number;
+    tickerName: string;
+    size: number;
+    stockValues: number;
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -38,7 +46,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
 
     public componentDidMount = () => this.init();
@@ -55,9 +63,26 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.loadStockData();
     }
 
-    private loadStockData = async () => {        
+    private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
-        this.setState({ stocks });
+        let stockGrouped = this.groupeStocks(stocks);
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'desc');
+        this.setState({ stocks, stockGrouped });
+    }
+
+    private groupeStocks = (stocks: StockViewModel[]): StockGroupModel[] => {
+        let values: StockGroupModel[] = _.chain(stocks)
+            .groupBy(g => g.stockTickerId)
+            .map((group) => {
+                let groupModel: StockGroupModel = new StockGroupModel();
+                groupModel.tickerId = group[0].stockTickerId;
+                groupModel.tickerName = _.first(this.tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
+                groupModel.size = _.sumBy(group, s => s.tradeSize);
+                groupModel.stockValues = _.sumBy(group, s => s.tradeValue);
+                return groupModel;
+            })
+            .value();
+        return values;
     }
 
     private saveStockTrade = async (data: StockViewModel) => {
@@ -139,12 +164,26 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                         addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
                                 </div>
                             </div>
+                            <div className="w-5/12">
+                                <div className="flex flex-wrap justify-around">
+                                    {this.state.stockGrouped.map(g =>
+                                        <div key={g.tickerId} className="w-3/12 bg-vermilion p-4 mx-2 mb-6">
+                                            <div className="grid grid-cols-2">
+                                                <p className="text-xl font-bold text-left">{g.tickerName}</p>
+                                                <div>
+                                                    <p className="text-lg ext-left">{g.size.toFixed(2)}</p>
+                                                    <p className="text-lg text-left">{g.stockValues.toFixed(2)} Kč</p>
+                                                </div>
+                                            </div>
+                                        </div>)}
+                                </div>
+                            </div>
                         </div>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
                             <DialogContent>
-                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} onSave={this.saveStockTrade}/>
+                                <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} onSave={this.saveStockTrade} />
                             </DialogContent>
                         </Dialog>
                     </>

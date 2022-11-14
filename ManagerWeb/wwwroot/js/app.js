@@ -7710,7 +7710,7 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const MainFrame = (props) => {
     var _a;
     return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-3xl p-4 text-center" }, props.header),
+        react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-5xl p-4 text-center" }, props.header),
         react_1.default.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg" }, props.children)));
 };
 exports.MainFrame = MainFrame;
@@ -9064,6 +9064,7 @@ const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Componen
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const StockViewModel_1 = __webpack_require__(/*! ../../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
 const StockTradeForm_1 = __webpack_require__(/*! ./StockTradeForm */ "./Typescript/Components/Stocks/StockTradeForm.tsx");
@@ -9078,6 +9079,8 @@ const theme = (0, styles_1.createMuiTheme)({
         }
     }
 });
+class StockGroupModel {
+}
 class StockOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
@@ -9088,8 +9091,24 @@ class StockOverview extends react_1.default.Component {
         this.componentDidMount = () => this.init();
         this.loadStockData = () => __awaiter(this, void 0, void 0, function* () {
             const stocks = yield this.stockService.getStockTradeHistory();
-            this.setState({ stocks });
+            let stockGrouped = this.groupeStocks(stocks);
+            stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'desc');
+            this.setState({ stocks, stockGrouped });
         });
+        this.groupeStocks = (stocks) => {
+            let values = lodash_1.default.chain(stocks)
+                .groupBy(g => g.stockTickerId)
+                .map((group) => {
+                let groupModel = new StockGroupModel();
+                groupModel.tickerId = group[0].stockTickerId;
+                groupModel.tickerName = lodash_1.default.first(this.tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
+                groupModel.size = lodash_1.default.sumBy(group, s => s.tradeSize);
+                groupModel.stockValues = lodash_1.default.sumBy(group, s => s.tradeValue);
+                return groupModel;
+            })
+                .value();
+            return values;
+        };
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const stockHistoryTrade = {
                 id: data.id,
@@ -9143,7 +9162,7 @@ class StockOverview extends react_1.default.Component {
             yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
             yield this.loadStockData();
         });
-        this.state = { stocks: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -9164,7 +9183,16 @@ class StockOverview extends react_1.default.Component {
                     react_1.default.createElement("div", { className: "flex flex-row" },
                         react_1.default.createElement("div", { className: "w-7/12" },
                             react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
-                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade })))),
+                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade }))),
+                        react_1.default.createElement("div", { className: "w-5/12" },
+                            react_1.default.createElement("div", { className: "flex flex-wrap justify-around" }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-vermilion p-4 mx-2 mb-6" },
+                                react_1.default.createElement("div", { className: "grid grid-cols-2" },
+                                    react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
+                                    react_1.default.createElement("div", null,
+                                        react_1.default.createElement("p", { className: "text-lg ext-left" }, g.size.toFixed(2)),
+                                        react_1.default.createElement("p", { className: "text-lg text-left" },
+                                            g.stockValues.toFixed(2),
+                                            " K\u010D")))))))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,
