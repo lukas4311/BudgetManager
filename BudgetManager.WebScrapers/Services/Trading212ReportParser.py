@@ -27,15 +27,19 @@ class TradingReportData:
 
 class Trading212ReportParser:
     def read_report_csv_file(self):
-        parsedData: list(TradingReportData) = [];
+        parsedData: list(TradingReportData) = []
         with open("..\\BrokerReports\\Trading212_1.csv", 'r') as file:
             rows = csv.DictReader(file)
             for row in rows:
+                action = row["Action"]
                 time = row["Time"]
                 ticker = row["Ticker"]
                 name = row["Name"]
                 number_of_shares = row["No. of shares"]
-                total = row["Total (CZK)"]
+                total = float(row["Total (CZK)"])
+
+                if action == "Market buy":
+                    total = total * -1
 
                 pandas_date = pd.to_datetime(time)
                 pandas_date = pandas_date.tz_localize("Europe/Prague")
