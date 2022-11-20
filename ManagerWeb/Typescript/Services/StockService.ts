@@ -3,8 +3,15 @@ import _ from 'lodash';
 import { StockApi } from '../ApiClient/Main/apis';
 import { StockTickerModel } from '../ApiClient/Main/models';
 import ApiUrls from '../Model/Setting/ApiUrl';
-import { StockViewModel } from '../Model/StockViewModel';
+import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import ApiClientFactory from "../Utils/ApiClientFactory";
+
+export class StockGroupModel {
+    tickerId: number;
+    tickerName: string;
+    size: number;
+    stockValues: number;
+}
 
 export default class StockService {
     private stockApi: StockApi;
@@ -18,7 +25,7 @@ export default class StockService {
         return await this.stockApi.stockStockTickerGet();
     }
 
-    public getStockTradeHistory = async () => {
+    public getStockTradeHistory = async (): Promise<StockViewModel[]> => {
         const tickers = await this.getStockTickers();
         const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
         return stockTrades.map(s => {
@@ -26,5 +33,28 @@ export default class StockService {
             viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
             return viewModel;
         });
+    }
+
+    public getGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
+        const stocks = await this.getStockTradeHistory();
+        const tickers = await this.getStockTickers();
+        let values: StockGroupModel[] = _.chain(stocks)
+            .groupBy(g => g.stockTickerId)
+            .map((group) => {
+                let groupModel: StockGroupModel = new StockGroupModel();
+                groupModel.tickerId = group[0].stockTickerId;
+                groupModel.tickerName = _.first(tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
+                groupModel.size = _.sumBy(group, s => {
+                    if (s.action == TradeAction.Buy)
+                        return s.tradeSize * -1;
+                    else
+                        return s.tradeSize;
+                });
+                groupModel.stockValues = _.sumBy(group, s => s.tradeValue);
+                return groupModel;
+            })
+            .value();
+
+        return values.filter(s => s.size > 0.00001);
     }
 }

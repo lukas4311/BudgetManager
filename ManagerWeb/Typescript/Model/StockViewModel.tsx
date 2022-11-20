@@ -2,28 +2,35 @@ import { IBaseModel } from "../Components/BaseList";
 import { StockTradeHistoryGetModel } from "../ApiClient/Main/models";
 import moment from "moment";
 
+export enum TradeAction {
+    Buy,
+    Sell
+}
+
 export class StockViewModel implements IBaseModel {
-    id: number;
-    tradeTimeStamp: string;
-    stockTickerId: number;
-    stockTicker: string;
-    tradeSize: number;
-    tradeValue: number;
-    currencySymbolId: number;
-    currencySymbol: string;
-    // onSave: (data: StockViewModel) => void;
+    public id: number;
+    public tradeTimeStamp: string;
+    public stockTickerId: number;
+    public stockTicker: string;
+    public tradeSize: number;
+    public tradeValue: number;
+    public currencySymbolId: number;
+    public currencySymbol: string;
+    get action(): TradeAction {
+        return this.tradeValue >= 0 ? TradeAction.Buy : TradeAction.Sell;
+    }
 
     static mapFromDataModel(s: StockTradeHistoryGetModel): StockViewModel {
-        return {
-            currencySymbol: s.currencySymbol,
-            currencySymbolId: s.currencySymbolId,
-            id: s.id,
-            stockTickerId: s.stockTickerId,
-            tradeSize: s.tradeSize,
-            tradeTimeStamp: moment(s.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: s.tradeValue,
-            stockTicker: undefined,
-            // onSave: undefined
-        };
+        let viewModel = new StockViewModel();
+        viewModel.currencySymbol = s.currencySymbol;
+        viewModel.currencySymbolId = s.currencySymbolId;
+        viewModel.id = s.id;
+        viewModel.stockTickerId = s.stockTickerId;
+        viewModel.tradeSize = s.tradeSize;
+        viewModel.tradeTimeStamp = moment(s.tradeTimeStamp).format("YYYY-MM-DD");
+        viewModel.tradeValue = s.tradeValue;
+        viewModel.stockTicker = undefined;
+
+        return viewModel;
     }
 }

@@ -12,7 +12,7 @@ import { StockViewModel } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
-import StockService from "../../Services/StockService";
+import StockService, { StockGroupModel } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 
 const theme = createMuiTheme({
@@ -30,13 +30,6 @@ interface StockOverviewState {
     formKey: number;
     openedForm: boolean;
     selectedModel: StockViewModel;
-}
-
-class StockGroupModel {
-    tickerId: number;
-    tickerName: string;
-    size: number;
-    stockValues: number;
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -66,24 +59,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
-        let stockGrouped = this.groupeStocks(stocks);
-        stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'desc');
+        let stockGrouped = await this.stockService.getGroupedTradeHistory();
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
         this.setState({ stocks, stockGrouped });
-    }
-
-    private groupeStocks = (stocks: StockViewModel[]): StockGroupModel[] => {
-        let values: StockGroupModel[] = _.chain(stocks)
-            .groupBy(g => g.stockTickerId)
-            .map((group) => {
-                let groupModel: StockGroupModel = new StockGroupModel();
-                groupModel.tickerId = group[0].stockTickerId;
-                groupModel.tickerName = _.first(this.tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
-                groupModel.size = _.sumBy(group, s => s.tradeSize);
-                groupModel.stockValues = _.sumBy(group, s => s.tradeValue);
-                return groupModel;
-            })
-            .value();
-        return values;
     }
 
     private saveStockTrade = async (data: StockViewModel) => {
@@ -179,7 +157,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                                 <div className="grid grid-cols-2">
                                                     <p className="text-xl font-bold text-left">{g.tickerName}</p>
                                                     <div>
-                                                        <p className="text-lg text-left">{g.size.toFixed(2)}</p>
+                                                        <p className="text-lg text-left">{g.size.toFixed(3)}</p>
                                                         <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
                                                     </div>
                                                 </div>

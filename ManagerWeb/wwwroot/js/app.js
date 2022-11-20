@@ -9084,8 +9084,6 @@ const theme = (0, styles_1.createMuiTheme)({
         }
     }
 });
-class StockGroupModel {
-}
 class StockOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
@@ -9096,24 +9094,10 @@ class StockOverview extends react_1.default.Component {
         this.componentDidMount = () => this.init();
         this.loadStockData = () => __awaiter(this, void 0, void 0, function* () {
             const stocks = yield this.stockService.getStockTradeHistory();
-            let stockGrouped = this.groupeStocks(stocks);
-            stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'desc');
+            let stockGrouped = yield this.stockService.getGroupedTradeHistory();
+            stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'asc');
             this.setState({ stocks, stockGrouped });
         });
-        this.groupeStocks = (stocks) => {
-            let values = lodash_1.default.chain(stocks)
-                .groupBy(g => g.stockTickerId)
-                .map((group) => {
-                let groupModel = new StockGroupModel();
-                groupModel.tickerId = group[0].stockTickerId;
-                groupModel.tickerName = lodash_1.default.first(this.tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
-                groupModel.size = lodash_1.default.sumBy(group, s => s.tradeSize);
-                groupModel.stockValues = lodash_1.default.sumBy(group, s => s.tradeValue);
-                return groupModel;
-            })
-                .value();
-            return values;
-        };
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const stockHistoryTrade = {
                 id: data.id,
@@ -9201,7 +9185,7 @@ class StockOverview extends react_1.default.Component {
                                     react_1.default.createElement("div", { className: "grid grid-cols-2" },
                                         react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
                                         react_1.default.createElement("div", null,
-                                            react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(2)),
+                                            react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(3)),
                                             react_1.default.createElement("p", { className: "text-lg text-left" },
                                                 Math.abs(g.stockValues).toFixed(2),
                                                 " K\u010D"))))))))),
@@ -9754,22 +9738,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StockViewModel = void 0;
+exports.StockViewModel = exports.TradeAction = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+var TradeAction;
+(function (TradeAction) {
+    TradeAction[TradeAction["Buy"] = 0] = "Buy";
+    TradeAction[TradeAction["Sell"] = 1] = "Sell";
+})(TradeAction = exports.TradeAction || (exports.TradeAction = {}));
 class StockViewModel {
-    // onSave: (data: StockViewModel) => void;
+    get action() {
+        return this.tradeValue >= 0 ? TradeAction.Buy : TradeAction.Sell;
+    }
     static mapFromDataModel(s) {
-        return {
-            currencySymbol: s.currencySymbol,
-            currencySymbolId: s.currencySymbolId,
-            id: s.id,
-            stockTickerId: s.stockTickerId,
-            tradeSize: s.tradeSize,
-            tradeTimeStamp: (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD"),
-            tradeValue: s.tradeValue,
-            stockTicker: undefined,
-            // onSave: undefined
-        };
+        let viewModel = new StockViewModel();
+        viewModel.currencySymbol = s.currencySymbol;
+        viewModel.currencySymbolId = s.currencySymbolId;
+        viewModel.id = s.id;
+        viewModel.stockTickerId = s.stockTickerId;
+        viewModel.tradeSize = s.tradeSize;
+        viewModel.tradeTimeStamp = (0, moment_1.default)(s.tradeTimeStamp).format("YYYY-MM-DD");
+        viewModel.tradeValue = s.tradeValue;
+        viewModel.stockTicker = undefined;
+        return viewModel;
     }
 }
 exports.StockViewModel = StockViewModel;
@@ -10134,10 +10124,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StockGroupModel = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const apis_1 = __webpack_require__(/*! ../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const StockViewModel_1 = __webpack_require__(/*! ../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+class StockGroupModel {
+}
+exports.StockGroupModel = StockGroupModel;
 class StockService {
     constructor(history, setting) {
         this.getStockTickers = () => __awaiter(this, void 0, void 0, function* () {
@@ -10152,6 +10146,27 @@ class StockService {
                 viewModel.stockTicker = (_b = (_a = lodash_1.default.first(tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
                 return viewModel;
             });
+        });
+        this.getGroupedTradeHistory = () => __awaiter(this, void 0, void 0, function* () {
+            const stocks = yield this.getStockTradeHistory();
+            const tickers = yield this.getStockTickers();
+            let values = lodash_1.default.chain(stocks)
+                .groupBy(g => g.stockTickerId)
+                .map((group) => {
+                let groupModel = new StockGroupModel();
+                groupModel.tickerId = group[0].stockTickerId;
+                groupModel.tickerName = lodash_1.default.first(tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
+                groupModel.size = lodash_1.default.sumBy(group, s => {
+                    if (s.action == StockViewModel_1.TradeAction.Buy)
+                        return s.tradeSize * -1;
+                    else
+                        return s.tradeSize;
+                });
+                groupModel.stockValues = lodash_1.default.sumBy(group, s => s.tradeValue);
+                return groupModel;
+            })
+                .value();
+            return values.filter(s => s.size > 0.00001);
         });
         const apiFactory = new ApiClientFactory_1.default(history);
         this.stockApi = apiFactory.getClientWithSetting(apis_1.StockApi, setting);
