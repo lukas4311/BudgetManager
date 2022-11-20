@@ -7566,6 +7566,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuySellBadge = void 0;
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
@@ -7658,9 +7659,10 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.cryptoTicker.toUpperCase()),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeSize),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/10" }, (0, moment_1.default)(p.tradeTimeStamp).format('DD.MM.YYYY')),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, p.tradeValue.toFixed(2)),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-3/10" }, Math.abs(p.tradeValue).toFixed(2)),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, p.currencySymbol),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" }, this.renderTradeBadge(p.tradeValue))));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" },
+                    react_1.default.createElement(exports.BuySellBadge, { tradeValue: p.tradeValue }))));
         };
         this.renderTradeBadge = (tradeValue) => react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
@@ -7688,6 +7690,8 @@ class CryptoTrades extends react_1.default.Component {
     }
 }
 exports.default = CryptoTrades;
+const BuySellBadge = (props) => (react_1.default.createElement("span", { className: (props.tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, props.tradeValue > 0 ? "SELL" : "BUY"));
+exports.BuySellBadge = BuySellBadge;
 
 
 /***/ }),
@@ -9071,6 +9075,7 @@ const StockTradeForm_1 = __webpack_require__(/*! ./StockTradeForm */ "./Typescri
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const AppCtx_1 = __webpack_require__(/*! ../../Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
 const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
+const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9127,21 +9132,24 @@ class StockOverview extends react_1.default.Component {
         });
         this.renderTemplate = (s) => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.stockTicker),
-                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.tradeSize),
-                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" },
-                    s.tradeValue,
+                react_1.default.createElement("p", { className: "w-1/5 h-full border border-vermilion flex items-center justify-center" }, s.stockTicker),
+                react_1.default.createElement("p", { className: "w-1/5 h-full border border-vermilion flex items-center justify-center" }, s.tradeSize),
+                react_1.default.createElement("p", { className: "w-1/5 h-full border border-vermilion flex items-center justify-center" },
+                    Math.abs(s.tradeValue).toFixed(2),
                     " (",
                     s.currencySymbol,
                     ")"),
-                react_1.default.createElement("p", { className: "w-1/3 h-full border border-vermilion flex items-center justify-center" }, s.tradeTimeStamp)));
+                react_1.default.createElement("p", { className: "w-1/5 h-full border border-vermilion flex items-center justify-center" }, s.tradeTimeStamp),
+                react_1.default.createElement("p", { className: "w-1/5 h-full border border-vermilion flex items-center justify-center py-1" },
+                    react_1.default.createElement(CryptoTrades_1.BuySellBadge, { tradeValue: s.tradeValue }))));
         };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Stock ticker"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Size"),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Value"),
-                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Time")));
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" }, "Time"),
+                react_1.default.createElement("p", { className: "mx-6 my-1 w-1/2" })));
         };
         this.addStockTrade = () => {
             let model = new StockViewModel_1.StockViewModel();
@@ -9182,17 +9190,21 @@ class StockOverview extends react_1.default.Component {
                 react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement("div", { className: "flex flex-row" },
                         react_1.default.createElement("div", { className: "w-7/12" },
-                            react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
-                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade }))),
+                            react_1.default.createElement("div", { className: "m-5 flex flex-col" },
+                                react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
+                                react_1.default.createElement("div", { className: "overflow-y-scroll" },
+                                    react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade })))),
                         react_1.default.createElement("div", { className: "w-5/12" },
-                            react_1.default.createElement("div", { className: "flex flex-wrap justify-around" }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-vermilion p-4 mx-2 mb-6" },
-                                react_1.default.createElement("div", { className: "grid grid-cols-2" },
-                                    react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
-                                    react_1.default.createElement("div", null,
-                                        react_1.default.createElement("p", { className: "text-lg ext-left" }, g.size.toFixed(2)),
-                                        react_1.default.createElement("p", { className: "text-lg text-left" },
-                                            g.stockValues.toFixed(2),
-                                            " K\u010D")))))))),
+                            react_1.default.createElement("div", { className: "m-5 flex flex-col" },
+                                react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Current portfolio"),
+                                react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" },
+                                    react_1.default.createElement("div", { className: "grid grid-cols-2" },
+                                        react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
+                                        react_1.default.createElement("div", null,
+                                            react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(2)),
+                                            react_1.default.createElement("p", { className: "text-lg text-left" },
+                                                Math.abs(g.stockValues).toFixed(2),
+                                                " K\u010D"))))))))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,

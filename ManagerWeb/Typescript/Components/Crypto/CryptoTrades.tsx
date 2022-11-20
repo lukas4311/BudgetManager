@@ -109,8 +109,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         this.setState({ selectedTrade: tradeHistory, openedForm: true });
     }
 
-    private deleteTrade = async (id: number) =>{
-        await this.cryptoApi.cryptosDelete({body: id});
+    private deleteTrade = async (id: number) => {
+        await this.cryptoApi.cryptosDelete({ body: id });
         this.loadCryptoTradesData();
     }
 
@@ -135,9 +135,9 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                 <p className="mx-6 my-1 w-1/10">{p.cryptoTicker.toUpperCase()}</p>
                 <p className="mx-6 my-1 w-3/10">{p.tradeSize}</p>
                 <p className="mx-6 my-1 w-2/10">{moment(p.tradeTimeStamp).format('DD.MM.YYYY')}</p>
-                <p className="mx-6 my-1 w-3/10">{p.tradeValue.toFixed(2)}</p>
+                <p className="mx-6 my-1 w-3/10">{Math.abs(p.tradeValue).toFixed(2)}</p>
                 <p className="mx-6 my-1 w-1/10">{p.currencySymbol}</p>
-                <p className="mx-6 my-1 w-1/10">{this.renderTradeBadge(p.tradeValue)}</p>
+                <p className="mx-6 my-1 w-1/10"><BuySellBadge tradeValue={p.tradeValue} /></p>
             </>
         );
     }
@@ -168,3 +168,6 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 }
+
+export const BuySellBadge = (props: { tradeValue: number }) =>
+    (<span className={(props.tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{props.tradeValue > 0 ? "SELL" : "BUY"}</span>);

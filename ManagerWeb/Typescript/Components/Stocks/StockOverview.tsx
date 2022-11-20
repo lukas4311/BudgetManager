@@ -13,6 +13,7 @@ import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import StockService from "../../Services/StockService";
+import { BuySellBadge } from "../Crypto/CryptoTrades";
 
 const theme = createMuiTheme({
     palette: {
@@ -107,10 +108,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private renderTemplate = (s: StockViewModel): JSX.Element => {
         return (
             <>
-                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.stockTicker}</p>
-                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeSize}</p>
-                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeValue} ({s.currencySymbol})</p>
-                <p className="w-1/3 h-full border border-vermilion flex items-center justify-center">{s.tradeTimeStamp}</p>
+                <p className="w-1/5 h-full border border-vermilion flex items-center justify-center">{s.stockTicker}</p>
+                <p className="w-1/5 h-full border border-vermilion flex items-center justify-center">{s.tradeSize}</p>
+                <p className="w-1/5 h-full border border-vermilion flex items-center justify-center">{Math.abs(s.tradeValue).toFixed(2)} ({s.currencySymbol})</p>
+                <p className="w-1/5 h-full border border-vermilion flex items-center justify-center">{s.tradeTimeStamp}</p>
+                <p className="w-1/5 h-full border border-vermilion flex items-center justify-center py-1"><BuySellBadge tradeValue={s.tradeValue} /></p>
             </>
         );
     }
@@ -122,6 +124,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                 <p className="mx-6 my-1 w-1/2">Size</p>
                 <p className="mx-6 my-1 w-1/2">Value</p>
                 <p className="mx-6 my-1 w-1/2">Time</p>
+                <p className="mx-6 my-1 w-1/2"></p>
             </>
         );
     }
@@ -159,23 +162,29 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     <>
                         <div className="flex flex-row">
                             <div className="w-7/12">
-                                <div className="m-5 overflow-y-scroll">
-                                    <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
-                                        addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
+                                <div className="m-5 flex flex-col">
+                                    <h2 className="text-xl font-semibold mb-6">All trades</h2>
+                                    <div className="overflow-y-scroll">
+                                        <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
+                                            addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-5/12">
-                                <div className="flex flex-wrap justify-around">
-                                    {this.state.stockGrouped.map(g =>
-                                        <div key={g.tickerId} className="w-3/12 bg-vermilion p-4 mx-2 mb-6">
-                                            <div className="grid grid-cols-2">
-                                                <p className="text-xl font-bold text-left">{g.tickerName}</p>
-                                                <div>
-                                                    <p className="text-lg ext-left">{g.size.toFixed(2)}</p>
-                                                    <p className="text-lg text-left">{g.stockValues.toFixed(2)} Kč</p>
+                                <div className="m-5 flex flex-col">
+                                    <h2 className="text-xl font-semibold mb-6">Current portfolio</h2>
+                                    <div className="flex flex-wrap justify-around ">
+                                        {this.state.stockGrouped.map(g =>
+                                            <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl">
+                                                <div className="grid grid-cols-2">
+                                                    <p className="text-xl font-bold text-left">{g.tickerName}</p>
+                                                    <div>
+                                                        <p className="text-lg text-left">{g.size.toFixed(2)}</p>
+                                                        <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>)}
+                                            </div>)}
+                                    </div>
                                 </div>
                             </div>
                         </div>
