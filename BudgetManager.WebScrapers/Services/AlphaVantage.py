@@ -13,7 +13,7 @@ class AlphaVantageService:
 
     def get_stock_price_history(self, ticker: str):
         print('Downloading ' + ticker)
-        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={self.token}&outputsize=full'
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={ticker}&apikey={self.token}&outputsize=full'
         r = requests.get(url)
         data = r.json()
         timeSeriesData = data[self.timeSeriesKey]
