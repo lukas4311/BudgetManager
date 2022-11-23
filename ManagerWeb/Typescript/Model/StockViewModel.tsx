@@ -17,7 +17,7 @@ export class StockViewModel implements IBaseModel {
     public currencySymbolId: number;
     public currencySymbol: string;
     get action(): TradeAction {
-        return this.tradeValue >= 0 ? TradeAction.Buy : TradeAction.Sell;
+        return this.tradeValue >= 0 ? TradeAction.Sell : TradeAction.Buy;
     }
 
     static mapFromDataModel(s: StockTradeHistoryGetModel): StockViewModel {

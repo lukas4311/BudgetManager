@@ -9076,6 +9076,7 @@ const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-
 const AppCtx_1 = __webpack_require__(/*! ../../Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
 const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
 const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx");
+const Loading_1 = __webpack_require__(/*! ../../Utils/Loading */ "./Typescript/Utils/Loading.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9084,6 +9085,8 @@ const theme = (0, styles_1.createMuiTheme)({
         }
     }
 });
+class StockSummary {
+}
 class StockOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
@@ -9096,7 +9099,9 @@ class StockOverview extends react_1.default.Component {
             const stocks = yield this.stockService.getStockTradeHistory();
             let stockGrouped = yield this.stockService.getGroupedTradeHistory();
             stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'asc');
-            this.setState({ stocks, stockGrouped });
+            const stockSummaryBuy = Math.abs(lodash_1.default.sumBy(stocks.filter(s => s.action == StockViewModel_1.TradeAction.Buy), a => a.tradeValue));
+            const stockSummarySell = Math.abs(lodash_1.default.sumBy(stocks.filter(s => s.action == StockViewModel_1.TradeAction.Sell), a => a.tradeValue));
+            this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell } });
         });
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const stockHistoryTrade = {
@@ -9154,7 +9159,7 @@ class StockOverview extends react_1.default.Component {
             yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
             yield this.loadStockData();
         });
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined };
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -9172,23 +9177,32 @@ class StockOverview extends react_1.default.Component {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Stocks' },
                 react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("div", { className: "flex flex-row" },
+                    react_1.default.createElement("div", { className: "flex flex-row pt-5" },
                         react_1.default.createElement("div", { className: "w-7/12" },
-                            react_1.default.createElement("div", { className: "m-5 flex flex-col" },
-                                react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
-                                react_1.default.createElement("div", { className: "overflow-y-scroll" },
-                                    react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade })))),
+                            react_1.default.createElement("div", { className: "flex flex-col" },
+                                react_1.default.createElement("div", { className: "flex flex-col" },
+                                    react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Current portfolio"),
+                                    react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" },
+                                        react_1.default.createElement("div", { className: "grid grid-cols-2" },
+                                            react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
+                                            react_1.default.createElement("div", null,
+                                                react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(3)),
+                                                react_1.default.createElement("p", { className: "text-lg text-left" },
+                                                    Math.abs(g.stockValues).toFixed(2),
+                                                    " K\u010D"))))))),
+                                react_1.default.createElement("div", { className: "m-5 flex flex-col" },
+                                    react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
+                                    react_1.default.createElement("div", { className: "overflow-y-scroll" },
+                                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade }))))),
                         react_1.default.createElement("div", { className: "w-5/12" },
-                            react_1.default.createElement("div", { className: "m-5 flex flex-col" },
-                                react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Current portfolio"),
-                                react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" },
-                                    react_1.default.createElement("div", { className: "grid grid-cols-2" },
-                                        react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
-                                        react_1.default.createElement("div", null,
-                                            react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(3)),
-                                            react_1.default.createElement("p", { className: "text-lg text-left" },
-                                                Math.abs(g.stockValues).toFixed(2),
-                                                " K\u010D"))))))))),
+                            react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Stock summary"),
+                            this.state.stockSummary == undefined ? react_1.default.createElement(Loading_1.Loading, { className: "m-auto mt-4" }) : (react_1.default.createElement("div", { className: 'flex flex-col text-white font-semibold text-left px-4 justify-evenly' },
+                                react_1.default.createElement("p", { className: "" },
+                                    "Totaly bought: ",
+                                    this.state.stockSummary.totalyBought),
+                                react_1.default.createElement("p", { className: "mt-2" },
+                                    "Totaly sold: ",
+                                    this.state.stockSummary.totalySold))))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,
@@ -9747,7 +9761,7 @@ var TradeAction;
 })(TradeAction = exports.TradeAction || (exports.TradeAction = {}));
 class StockViewModel {
     get action() {
-        return this.tradeValue >= 0 ? TradeAction.Buy : TradeAction.Sell;
+        return this.tradeValue >= 0 ? TradeAction.Sell : TradeAction.Buy;
     }
     static mapFromDataModel(s) {
         let viewModel = new StockViewModel();
@@ -10382,6 +10396,30 @@ class ErrorBoundary extends react_1.default.Component {
     }
 }
 exports.default = ErrorBoundary;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/Loading.tsx":
+/*!**************************************!*\
+  !*** ./Typescript/Utils/Loading.tsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Loading = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
+const Loading = (props) => {
+    return react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, Object.assign({}, props, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }));
+};
+exports.Loading = Loading;
 
 
 /***/ }),

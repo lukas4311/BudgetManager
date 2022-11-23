@@ -8,12 +8,13 @@ import { CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../
 import moment from "moment";
 import _ from "lodash";
 import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
-import { StockViewModel } from "../../Model/StockViewModel";
+import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import StockService, { StockGroupModel } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
+import { Loading } from "../../Utils/Loading";
 
 const theme = createMuiTheme({
     palette: {
@@ -24,12 +25,18 @@ const theme = createMuiTheme({
     }
 });
 
+class StockSummary {
+    totalyBought: number;
+    totalySold: number;
+}
+
 interface StockOverviewState {
     stocks: StockViewModel[];
     stockGrouped: StockGroupModel[];
     formKey: number;
     openedForm: boolean;
     selectedModel: StockViewModel;
+    stockSummary: StockSummary;
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -40,7 +47,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined };
     }
 
     public componentDidMount = () => this.init();
@@ -61,7 +68,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
         stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
-        this.setState({ stocks, stockGrouped });
+        const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
+        const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell } });
     }
 
     private saveStockTrade = async (data: StockViewModel) => {
@@ -138,32 +147,41 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             <ThemeProvider theme={theme}>
                 <MainFrame header='Stocks'>
                     <>
-                        <div className="flex flex-row">
+                        <div className="flex flex-row pt-5">
                             <div className="w-7/12">
-                                <div className="m-5 flex flex-col">
-                                    <h2 className="text-xl font-semibold mb-6">All trades</h2>
-                                    <div className="overflow-y-scroll">
-                                        <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
-                                            addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
+                                <div className="flex flex-col">
+                                    <div className="flex flex-col">
+                                        <h2 className="text-xl font-semibold mb-6">Current portfolio</h2>
+                                        <div className="flex flex-wrap justify-around ">
+                                            {this.state.stockGrouped.map(g =>
+                                                <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl">
+                                                    <div className="grid grid-cols-2">
+                                                        <p className="text-xl font-bold text-left">{g.tickerName}</p>
+                                                        <div>
+                                                            <p className="text-lg text-left">{g.size.toFixed(3)}</p>
+                                                            <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
+                                                        </div>
+                                                    </div>
+                                                </div>)}
+                                        </div>
+                                    </div>
+                                    <div className="m-5 flex flex-col">
+                                        <h2 className="text-xl font-semibold mb-6">All trades</h2>
+                                        <div className="overflow-y-scroll">
+                                            <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
+                                                addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="w-5/12">
-                                <div className="m-5 flex flex-col">
-                                    <h2 className="text-xl font-semibold mb-6">Current portfolio</h2>
-                                    <div className="flex flex-wrap justify-around ">
-                                        {this.state.stockGrouped.map(g =>
-                                            <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl">
-                                                <div className="grid grid-cols-2">
-                                                    <p className="text-xl font-bold text-left">{g.tickerName}</p>
-                                                    <div>
-                                                        <p className="text-lg text-left">{g.size.toFixed(3)}</p>
-                                                        <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
-                                                    </div>
-                                                </div>
-                                            </div>)}
+                                <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
+                                {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
+                                    <div className='flex flex-col text-white font-semibold text-left px-4 justify-evenly'>
+                                        <p className="">Totaly bought: {this.state.stockSummary.totalyBought}</p>
+                                        <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
