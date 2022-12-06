@@ -8,8 +8,8 @@ from selenium.common.exceptions import TimeoutException
 
 class EquityActualPriceScraper:
 
-    def get_stock_price(self):
-        price = self.__donwload_price('AAPL')
+    def get_stock_price(self, ticker):
+        price = self.__donwload_price(ticker)
         print(price[0])
         print(price[1])
 
@@ -26,7 +26,6 @@ class EquityActualPriceScraper:
         try:
             _ = WebDriverWait(driver, delay, poll_frequency=7)
             page = driver.page_source
-            print(page)
             driver.quit()
         except TimeoutException:
             driver.quit()
@@ -42,4 +41,7 @@ class EquityActualPriceScraper:
 
 
 equity = EquityActualPriceScraper()
-equity.get_stock_price()
+equity.get_stock_price('VUSA')
+equity.get_stock_price('MSCHI')
+equity.get_stock_price('GOOG')
+equity.get_stock_price('BRK')
