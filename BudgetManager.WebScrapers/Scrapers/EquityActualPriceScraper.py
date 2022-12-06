@@ -3,40 +3,43 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 
-request = requests.get(f'https://www.google.com/search?q=vusa+price')
-soup = BeautifulSoup(request.text, "html.parser")
-children = soup.find('div', attrs={'data-attrid': 'Price'})
 
-print(soup)
+class EquityActualPriceScraper:
 
-options = Options()
-options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-options.headless = True
-driver = webdriver.Chrome(chrome_options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
-driver.minimize_window()
-driver.get('https://www.google.com/search?q=vusa+price')
+    def get_stock_price(self):
+        price = self.__donwload_price('AAPL')
+        print(price[0])
+        print(price[1])
 
-delay = 10
-json_data_object = None
+    def __donwload_price(self, ticker):
+        options = Options()
+        options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        options.headless = True
+        driver = webdriver.Chrome(chrome_options=options,
+                                  executable_path=r"D:\chromedriver_win32\chromedriver.exe", )
+        driver.minimize_window()
+        driver.get(f'https://www.google.com/search?q={ticker}+price')
+        delay = 10
 
-try:
-    _ = WebDriverWait(driver, delay, poll_frequency=7)
-    page = driver.page_source
-    print(page)
-    driver.quit()
-except TimeoutException:
-    driver.quit()
+        try:
+            _ = WebDriverWait(driver, delay, poll_frequency=7)
+            page = driver.page_source
+            print(page)
+            driver.quit()
+        except TimeoutException:
+            driver.quit()
 
-soup = BeautifulSoup(page)
+        soup = BeautifulSoup(page)
 
-priceHtml = soup.find('div', attrs={'data-attrid': 'Price'})
-spanMainPrice = priceHtml.findAll("span", recursive=False)[0]
-spanPrice = spanMainPrice.findAll("span", recursive=False)[0]
-price = spanPrice.findAll("span", recursive=False)[0]
-currency = spanPrice.findAll("span", recursive=False)[1]
-print(spanMainPrice)
-print((price.text, currency.text))
+        priceHtml = soup.find('div', attrs={'data-attrid': 'Price'})
+        spanMainPrice = priceHtml.findAll("span", recursive=False)[0]
+        spanPrice = spanMainPrice.findAll("span", recursive=False)[0]
+        price = spanPrice.findAll("span", recursive=False)[0]
+        currency = spanPrice.findAll("span", recursive=False)[1]
+        return price.text, currency.text
+
+
+equity = EquityActualPriceScraper()
+equity.get_stock_price()
