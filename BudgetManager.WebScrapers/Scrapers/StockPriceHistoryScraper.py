@@ -2,6 +2,7 @@ from datetime import datetime
 import logging
 from influxdb_client import Point, WritePrecision
 import csv
+import time
 from Models.Fmp import StockPriceData
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton
@@ -41,18 +42,26 @@ class StockPriceScraper:
 
 
 stockPriceScraper = StockPriceScraper()
-stockPriceScraper.scrape_stocks_prices('Price', 'ZTS')
+# stockPriceScraper.scrape_stocks_prices('Price', 'ZTS')
 
-# def processTickers(rows):
-#     for row in rows:
-#         symbol = row["Symbol"]
-#
-#         try:
-#             stockPriceScraper.scrape_stocks_prices('Price', symbol)
-#         except Exception:
-#             print(symbol + " - error")
-#
-#
-# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     processTickers(csv_file)
+
+def processTickers(rows):
+    for row in rows:
+        symbol = row["Symbol"]
+        message = 'Loading data for ' + symbol
+        print(message)
+        logging.info(message)
+
+        try:
+            stockPriceScraper.scrape_stocks_prices('Price', symbol)
+        except Exception:
+            print(symbol + " - error")
+
+        print("Sleeping for 30 seconds")
+        time.sleep(30)
+        print("Sleeping is done.")
+
+
+with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    processTickers(csv_file)
