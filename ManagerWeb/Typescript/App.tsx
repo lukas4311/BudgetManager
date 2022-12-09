@@ -42,8 +42,7 @@ export default function App() {
                         <Router>
                             <div className="bg-mainDarkBlue h-full flex flex-col overflow-x-hidden">
                                 <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
-                                    <div>
-                                        <img src="./images/logo.png" alt="logo" className="w-2/12 inline-block" />
+                                    <div>                                        
                                         <nav id="navMenu">
                                             <Menu></Menu>
                                         </nav>
@@ -76,6 +75,7 @@ export default function App() {
                     )
                     : (
                         <div className="flex text-center justify-center h-full">
+                            {/* <div id="loading"></div> */}
                             <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
                         </div>
                     )

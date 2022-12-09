@@ -83,7 +83,7 @@
     z-index: 1;
 }
 
-.effect-11 ~ .focus-bg {
+.effect-11~.focus-bg {
     position: absolute;
     left: 0;
     top: 0;
@@ -93,7 +93,8 @@
     transition: 0.3s;
     z-index: 0;
 }
-.effect-11:focus ~ .focus-bg {
+
+.effect-11:focus~.focus-bg {
     transition: 0.3s;
     width: 100%;
 }
@@ -135,13 +136,48 @@
     font-size: 0.5em;
 }
 
-.h-70vh{
+.h-70vh {
     height: 70vh;
 }
 
-.binWithAnimation{
+.binWithAnimation {
     transition: .3s;
-    &:hover{
+
+    &:hover {
         transform: rotate(15deg);
     }
+}
+
+.s0 {
+    fill: url(#g1)
+}
+
+.s1 {
+    fill: #e03d15
+}
+
+.s2 {
+    fill: #ffffff
+}
+
+#loading {
+    background: url('../images/loading.gif') no-repeat center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999999;
+}
+
+.s0T {
+    fill: #e03d15
+}
+
+.s1T {
+    fill: #ffffff
+}
+
+.s2T {
+    fill: #000000
 }

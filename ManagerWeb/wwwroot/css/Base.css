@@ -503,3 +503,37 @@
 .binWithAnimation:hover {
   transform: rotate(15deg);
 }
+
+.s0 {
+  fill: url(#g1);
+}
+
+.s1 {
+  fill: #e03d15;
+}
+
+.s2 {
+  fill: #ffffff;
+}
+
+#loading {
+  background: url("../images/loading.gif") no-repeat center center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9999999;
+}
+
+.s0T {
+  fill: #e03d15;
+}
+
+.s1T {
+  fill: #ffffff;
+}
+
+.s2T {
+  fill: #000000;
+}
