@@ -27,7 +27,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                 </svg>
             </div>
             <h2 className={(props.classStyle ?? "") + "text-5xl pb-4 text-center"}>{props.header}</h2>
-            <div className="text-center mt-6 p-4 bg-prussianBlue rounded-lg">
+            <div className="text-center mt-6 p-4 bg-prussianBlue rounded-lg boxShadow">
                 {props.children}
             </div>
         </div>
