@@ -245,7 +245,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let invested = 0;
         let investedPct = 0;
 
-        if(categoryInvested){
+        if (categoryInvested) {
             invested = _.sumBy(this.state.payments.filter(p => p.paymentCategoryId == categoryInvested.id), s => s.amount);
             investedPct = income == 0 ? 0 : (invested / income) * 100;
         }
@@ -257,49 +257,51 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <React.Fragment>
                             {this.showErrorMessage()}
                             <div className="flex flex-row">
-                                <div className="w-1/2">
-                                    <div className="py-4 flex">
-                                        <h2 className="text-xl ml-12">Income/expense</h2>
-                                        <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                                <path d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-row items-center mb-3 ml-6">
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={this.state.selectedBankAccount}
-                                            onChange={this.bankAccountChange}
-                                            className="py-1 w-1/3">
-                                            {this.state.bankAccounts.map((b, i) => {
-                                                return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
-                                            })}
-                                        </Select>
-                                        <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Please select bank account</span>
-                                    </div>
-                                    <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
-                                        <div className="text-left m-auto w-2/5">
-                                            {this.filters.map((f) =>
-                                                <span key={f.key}
-                                                    className={"px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
-                                                        + (f.key == this.state.selectedFilter?.key ? "bg-vermilion" : "")}
-                                                    onClick={() => this.filterClick(f.key)}>
-                                                    {f.caption}
-                                                </span>
-                                            )}
+                                <ComponentPanel classStyle="w-1/2">
+                                    <>
+                                        <div className="py-4 flex">
+                                            <h2 className="text-xl ml-12">Income/expense</h2>
+                                            <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                                    <path d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                </svg>
+                                            </span>
                                         </div>
-                                        <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
-                                    </div>
-                                    <div className="pb-10 h-64 overflow-y-scroll pr-4">
-                                        <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
-                                    </div>
-                                </div>
-                                <div className="w-1/2 h-64 mt-4 calendar">
+                                        <div className="flex flex-row items-center mb-3 ml-6">
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                value={this.state.selectedBankAccount}
+                                                onChange={this.bankAccountChange}
+                                                className="py-1 w-1/3">
+                                                {this.state.bankAccounts.map((b, i) => {
+                                                    return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
+                                                })}
+                                            </Select>
+                                            <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Please select bank account</span>
+                                        </div>
+                                        <div className="flex flex-tow text-black mb-3 ml-6 cursor-pointer">
+                                            <div className="text-left m-auto w-2/5">
+                                                {this.filters.map((f) =>
+                                                    <span key={f.key}
+                                                        className={"px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                                            + (f.key == this.state.selectedFilter?.key ? "bg-vermilion" : "")}
+                                                        onClick={() => this.filterClick(f.key)}>
+                                                        {f.caption}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
+                                        </div>
+                                        <div className="pb-10 h-64 overflow-y-scroll pr-4">
+                                            <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
+                                        </div>
+                                    </>
+                                </ComponentPanel>
+                                <ComponentPanel classStyle="w-1/2 calendar">
                                     <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
-                                </div>
+                                </ComponentPanel>
                             </div>
                             <div className="flex flex-row">
                                 <ComponentPanel classStyle="w-1/2 h-80">
@@ -314,7 +316,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                                 </ComponentPanel>
                                 <ComponentPanel classStyle="w-1/2 h-80">
-                                    <div className='flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 justify-evenly h-full'>
+                                    <div className='flex flex-col text-2xl text-white font-black text-left px-4 justify-evenly h-full'>
                                         <div>
                                             <p>Totaly earned: {income}</p>
                                         </div>

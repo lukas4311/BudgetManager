@@ -7739,7 +7739,7 @@ const MainFrame = (props) => {
                 react_1.default.createElement("path", { id: "$", className: "s2", "aria-label": "$", d: "m16.7 42.8v6h6.7v-6.1q2.7-0.4 4.7-2 2.1-1.7 2.9-3.8 0.8-1.7 0.8-3.5 0-3.9-2.8-6.6-3-2.8-7-2.8h-4q-1.3 0-2.2-1-0.8-1-0.8-2.2 0-1.3 0.8-2.3 0.9-1 2.2-1h9.6l3.1-6.1h-7.3v-6h-6.7v6.1q-2.8 0.4-4.8 2-2 1.7-2.9 3.8-0.7 1.7-0.7 3.5 0 1.8 0.7 3.6 1 2.3 3.4 4 2.4 1.7 5.6 1.7h4q1.3 0 2.2 1.1 0.8 1 0.8 2.2 0 1.2-0.8 2.2-0.9 1-2.2 1h-10l-3.8 6.2z" }),
                 react_1.default.createElement("path", { id: "\u20AC", className: "s2", "aria-label": "\u20AC", d: "m0.2 79.6h6.3q1.7 4.4 5.8 7.5 4.1 3.1 9.7 3.1 5.3 0 9.9-3.2l0.1-0.1v-7.9l-0.8 1q-0.1 0.1-0.2 0.3-0.1 0.1-0.3 0.3-0.1 0.2-0.2 0.2-0.1 0.2-0.3 0.4-0.3 0.3-0.4 0.4-3.3 3.2-7.8 3.2-3 0-5.5-1.4-2.4-1.5-3.9-3.8h11.7l3.1-5.2h-16.4v-0.6-0.5h17l3.1-5.3h-18.5q1.5-2.3 3.9-3.7 2.5-1.5 5.5-1.5 5.4 0 8.8 4.3l0.4 0.6 3-5.1-0.2-0.1q-5-5.1-12-5.1-5.6 0-9.7 3.2-4.1 3.1-5.8 7.4h-3.2l-3.1 5.3h5.2v0.1 1h-2.1z" }))),
         react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-5xl pb-4 text-center" }, props.header),
-        react_1.default.createElement("div", { className: "text-center mt-6 p-4 bg-prussianBlue rounded-lg boxShadow" }, props.children)));
+        react_1.default.createElement("div", { className: "text-center mt-6 p-4 rounded-lg" }, props.children)));
 };
 exports.MainFrame = MainFrame;
 
@@ -8995,28 +8995,29 @@ class PaymentsOverview extends React.Component {
                     React.createElement(React.Fragment, null,
                         this.showErrorMessage(),
                         React.createElement("div", { className: "flex flex-row" },
-                            React.createElement("div", { className: "w-1/2" },
-                                React.createElement("div", { className: "py-4 flex" },
-                                    React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
-                                    React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
-                                        React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
-                                            React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-                                            React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
-                                React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
-                                    React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
-                                        return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
-                                    })),
-                                    React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Please select bank account")),
-                                React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
-                                    React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
-                                        var _a;
-                                        return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
-                                                + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
-                                    })),
-                                    React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
-                                React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
-                                    React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit }))),
-                            React.createElement("div", { className: "w-1/2 h-64 mt-4 calendar" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
+                                React.createElement(React.Fragment, null,
+                                    React.createElement("div", { className: "py-4 flex" },
+                                        React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
+                                        React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewPayment },
+                                            React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
+                                                React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+                                                React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" })))),
+                                    React.createElement("div", { className: "flex flex-row items-center mb-3 ml-6" },
+                                        React.createElement(core_1.Select, { labelId: "demo-simple-select-label", id: "demo-simple-select", value: this.state.selectedBankAccount, onChange: this.bankAccountChange, className: "py-1 w-1/3" }, this.state.bankAccounts.map((b, i) => {
+                                            return React.createElement(core_1.MenuItem, { key: i, value: b.id }, b.code);
+                                        })),
+                                        React.createElement("span", { className: "text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0') }, "Please select bank account")),
+                                    React.createElement("div", { className: "flex flex-tow text-black mb-3 ml-6 cursor-pointer" },
+                                        React.createElement("div", { className: "text-left m-auto w-2/5" }, this.filters.map((f) => {
+                                            var _a;
+                                            return React.createElement("span", { key: f.key, className: "px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                                    + (f.key == ((_a = this.state.selectedFilter) === null || _a === void 0 ? void 0 : _a.key) ? "bg-vermilion" : ""), onClick: () => this.filterClick(f.key) }, f.caption);
+                                        })),
+                                        React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
+                                    React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
+                                        React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit })))),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar" },
                                 React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
@@ -9027,7 +9028,7 @@ class PaymentsOverview extends React.Component {
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                                 React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                                React.createElement("div", { className: 'flex flex-col text-2xl text-mainDarkBlue font-black text-left px-4 justify-evenly h-full' },
+                                React.createElement("div", { className: 'flex flex-col text-2xl text-white font-black text-left px-4 justify-evenly h-full' },
                                     React.createElement("div", null,
                                         React.createElement("p", null,
                                             "Totaly earned: ",
@@ -10316,7 +10317,7 @@ exports.ComponentPanel = void 0;
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ComponentPanel = (props) => {
     var _a;
-    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " p-4 rounded-xl bg-battleshipGrey m-5" },
+    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " p-4 rounded-xl bg-prussianBlue m-5 boxShadow" },
         react_1.default.createElement("div", { className: "flex flex-col h-full" }, props.children)));
 };
 exports.ComponentPanel = ComponentPanel;
