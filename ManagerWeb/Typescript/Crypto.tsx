@@ -10,8 +10,8 @@ export default class Crypto extends React.Component<RouteComponentProps, {}>{
             <div className="">
                 <MainFrame header='Crypto'>
                         <div className="flex flex-row">
-                            <div className="w-6/12 p-4 overflow-y-auto"><CryptoPayments {...this.props}></CryptoPayments></div>
-                            <div className="w-5/12 p-4 overflow-y-auto"><CryptoPortfolio {...this.props}></CryptoPortfolio></div>
+                            <div className="w-6/12 p-4"><CryptoPayments {...this.props}></CryptoPayments></div>
+                            <div className="w-5/12 p-4"><CryptoPortfolio {...this.props}></CryptoPortfolio></div>
                         </div>
                 </MainFrame>
             </div>

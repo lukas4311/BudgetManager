@@ -145,8 +145,8 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <ComponentPanel classStyle="mx-auto w-1/3">
                     <React.Fragment>
                         <div className="flex flex-row justify-around">
-                            <p className="text-2xl text-mainDarkBlue font-black">Balance: {this.state.balanceSum}</p>
-                            <p className="text-2xl text-mainDarkBlue font-black">Invested: {this.state.investedSum}</p>
+                            <p className="text-2xl text-white font-black">Balance: {this.state.balanceSum}</p>
+                            <p className="text-2xl text-white font-black">Invested: {this.state.investedSum}</p>
                         </div>
                         <div className="mt-4">
                             <p className={"text-2xl font-black " + profitColor}>Profit: {profit} ({profitPct.toFixed(1)})%</p>
@@ -157,7 +157,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 <div className="flex flex-row">
                     <ComponentPanel classStyle="w-1/3">
                         <React.Fragment>
-                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investment balance progress</h4>
+                            <h4 className="text-left text-2xl text-white font-black">Investment balance progress</h4>
                             <div className="h-80">
                                 <LineChart dataSets={this.state.chartData} chartProps={LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max)}></LineChart>
                             </div>
@@ -165,7 +165,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                     </ComponentPanel>
                     <ComponentPanel classStyle="w-1/3">
                         <React.Fragment>
-                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Top 3</h4>
+                            <h4 className="text-left text-2xl text-white font-black">Top 3</h4>
                             <div className="h-80">
                                 <Ranking data={this.state.rankingData}></Ranking>
                             </div>
@@ -173,7 +173,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                     </ComponentPanel>
                     <ComponentPanel classStyle="w-1/3">
                         <React.Fragment>
-                            <h4 className="text-left text-2xl text-mainDarkBlue font-black">Investments diversification</h4>
+                            <h4 className="text-left text-2xl text-white font-black">Investments diversification</h4>
                             <div className="h-80">
                                 <PieChart data={this.state.pieData}></PieChart>
                             </div>

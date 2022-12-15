@@ -4,6 +4,7 @@ import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
+import { ComponentPanel } from "../../Utils/ComponentPanel";
 
 const usdSymbol = "USD";
 
@@ -71,29 +72,31 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
     render() {
         return (
-            <div>
-                <h2 className="text-xl ml-12 p-4">Crypto portfolio</h2>
-                {this.state.allCryptoSum != undefined ?
-                    <div className="pb-10 overflow-y-scroll">
-                        <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1">
-                            <p className="mx-6 my-1 w-1/3">Ticker</p>
-                            <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
-                            <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>
-                        </div>
-                        {this.state.allCryptoSum.map(p =>
-                            <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
-                                <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
-                                <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
+            <ComponentPanel>
+                <div>
+                    <h2 className="text-xl ml-12 p-4">Crypto portfolio</h2>
+                    {this.state.allCryptoSum != undefined ?
+                        <div className="pb-10 overflow-y-scroll">
+                            <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1">
+                                <p className="mx-6 my-1 w-1/3">Ticker</p>
+                                <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
+                                <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>
                             </div>
-                        )}
-                    </div>
-                    : <div>
-                        <p>Probíhá načátíní</p>
-                    </div>
-                }
-                {this.renderChart()}
-            </div>
+                            {this.state.allCryptoSum.map(p =>
+                                <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
+                                    <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
+                                </div>
+                            )}
+                        </div>
+                        : <div>
+                            <p>Probíhá načátíní</p>
+                        </div>
+                    }
+                    {this.renderChart()}
+                </div>
+            </ComponentPanel>
         );
     }
 }

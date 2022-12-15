@@ -257,7 +257,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <React.Fragment>
                             {this.showErrorMessage()}
                             <div className="flex flex-row">
-                                <ComponentPanel classStyle="w-1/2">
+                                <ComponentPanel classStyle="w-7/12">
                                     <>
                                         <div className="py-4 flex">
                                             <h2 className="text-xl ml-12">Income/expense</h2>
@@ -299,7 +299,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </>
                                 </ComponentPanel>
-                                <ComponentPanel classStyle="w-1/2 calendar">
+                                <ComponentPanel classStyle="w-5/12 calendar">
                                     <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                                 </ComponentPanel>
                             </div>

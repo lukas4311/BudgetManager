@@ -6233,6 +6233,7 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const BankAccountForm_1 = __webpack_require__(/*! ./BankAccountForm */ "./Typescript/Components/BankAccount/BankAccountForm.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 class BankAccountOverviewState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -6306,16 +6307,17 @@ class BankAccountOverview extends react_1.default.Component {
     render() {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Bank accounts overview' },
-                react_1.default.createElement("div", { className: "flex" },
-                    react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
-                        react_1.default.createElement("div", { className: "h-full" },
-                            react_1.default.createElement("div", { className: "w-full lg:w-1/2" },
-                                react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
-                            react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Bank account detail", maxWidth: "sm", fullWidth: true },
-                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Bank account detail"),
-                                react_1.default.createElement(core_1.DialogContent, null,
-                                    react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
-                                        react_1.default.createElement(BankAccountForm_1.BankAccountForm, Object.assign({ key: this.state.formKey }, this.state.selectedBankAccount, { onSave: this.saveFormData })))))))))));
+                react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-2/3 mx-auto" },
+                    react_1.default.createElement("div", { className: "flex" },
+                        react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
+                            react_1.default.createElement("div", { className: "h-full" },
+                                react_1.default.createElement("div", { className: "" },
+                                    react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
+                                react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Bank account detail", maxWidth: "sm", fullWidth: true },
+                                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Bank account detail"),
+                                    react_1.default.createElement(core_1.DialogContent, null,
+                                        react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
+                                            react_1.default.createElement(BankAccountForm_1.BankAccountForm, Object.assign({ key: this.state.formKey }, this.state.selectedBankAccount, { onSave: this.saveFormData }))))))))))));
     }
 }
 exports.default = BankAccountOverview;
@@ -7013,6 +7015,7 @@ const ComoditiesForm_1 = __webpack_require__(/*! ./ComoditiesForm */ "./Typescri
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7139,16 +7142,18 @@ class Comodities extends react_1.default.Component {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                 react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Comodities overview' },
-                    react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement("div", { className: "flex" },
-                            react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
-                                react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
-                            react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col justify-start" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) }, c.title))))),
-                        react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                            react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
-                            react_1.default.createElement(core_1.DialogContent, null,
-                                react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
-                        react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen }))))));
+                    react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-2/3 mx-auto" },
+                        react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement("div", { className: "flex" },
+                                react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
+                                    react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
+                                react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col items-stretch content-between" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) },
+                                    react_1.default.createElement("span", { className: "" }, c.title)))))),
+                            react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
+                                react_1.default.createElement(core_1.DialogContent, null,
+                                    react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
+                            react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen })))))));
     }
 }
 exports.default = Comodities;
@@ -7404,6 +7409,7 @@ const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/Api
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const PieChart_1 = __webpack_require__(/*! ../Charts/PieChart */ "./Typescript/Components/Charts/PieChart.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const usdSymbol = "USD";
 class CryptoSum {
 }
@@ -7446,27 +7452,28 @@ class CryptoPortfolio extends react_1.default.Component {
         this.load();
     }
     render() {
-        return (react_1.default.createElement("div", null,
-            react_1.default.createElement("h2", { className: "text-xl ml-12 p-4" }, "Crypto portfolio"),
-            this.state.allCryptoSum != undefined ?
-                react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
-                    react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1" },
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
-                    this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker.toUpperCase()),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
-                            p.tradeSizeSum.toFixed(3),
-                            "(",
-                            p.usdPriceTrade.toFixed(2),
-                            " USD)"),
-                        react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
-                            p.tradeValueSum.toFixed(2),
-                            " USD"))))
-                : react_1.default.createElement("div", null,
-                    react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
-            this.renderChart()));
+        return (react_1.default.createElement(ComponentPanel_1.ComponentPanel, null,
+            react_1.default.createElement("div", null,
+                react_1.default.createElement("h2", { className: "text-xl ml-12 p-4" }, "Crypto portfolio"),
+                this.state.allCryptoSum != undefined ?
+                    react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
+                        react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1" },
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Ticker"),
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum velikosti"),
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, "Sum hodnoty")),
+                        this.state.allCryptoSum.map(p => react_1.default.createElement("div", { key: p.ticker, className: "paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer" },
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.ticker.toUpperCase()),
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                                p.tradeSizeSum.toFixed(3),
+                                "(",
+                                p.usdPriceTrade.toFixed(2),
+                                " USD)"),
+                            react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" },
+                                p.tradeValueSum.toFixed(2),
+                                " USD"))))
+                    : react_1.default.createElement("div", null,
+                        react_1.default.createElement("p", null, "Prob\u00EDh\u00E1 na\u010D\u00E1t\u00EDn\u00ED")),
+                this.renderChart())));
     }
 }
 exports.default = CryptoPortfolio;
@@ -7582,6 +7589,7 @@ const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typesc
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 class CryptoTradesState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -7686,14 +7694,15 @@ class CryptoTrades extends react_1.default.Component {
         });
     }
     render() {
-        return (react_1.default.createElement("div", { className: "pr-5 h-full" },
-            react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
-                react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, deleteItemHandler: this.deleteTrade, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
-                react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
-                    react_1.default.createElement(core_1.DialogContent, null,
-                        react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
-                            react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade))))))));
+        return (react_1.default.createElement(ComponentPanel_1.ComponentPanel, null,
+            react_1.default.createElement("div", { className: "pr-5 h-full" },
+                react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+                    react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, deleteItemHandler: this.deleteTrade, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
+                    react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
+                        react_1.default.createElement(core_1.DialogContent, null,
+                            react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
+                                react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade)))))))));
     }
 }
 exports.default = CryptoTrades;
@@ -8175,6 +8184,7 @@ const OtherInvestmentSummary_1 = __importDefault(__webpack_require__(/*! ./Other
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8294,14 +8304,16 @@ class OtherInvestmentOverview extends react_1.default.Component {
         return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Other investments' },
                 react_1.default.createElement(react_1.default.Fragment, null,
-                    react_1.default.createElement("h2", { className: "text-2xl" }),
-                    react_1.default.createElement("div", { className: "flex flex-row" },
-                        react_1.default.createElement("div", { className: "w-2/5" },
-                            react_1.default.createElement("div", { className: "m-5 overflow-y-scroll" },
-                                react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))),
-                        react_1.default.createElement("div", { className: "w-3/5" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null))),
-                    react_1.default.createElement("div", null,
-                        react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props))),
+                    react_1.default.createElement("div", { className: "flex flex-row mb-6" },
+                        react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-3/5 ml-4" },
+                            react_1.default.createElement(react_1.default.Fragment, null,
+                                react_1.default.createElement("h2", { className: "text-2xl" }),
+                                react_1.default.createElement("div", { className: "flex flex-row" },
+                                    react_1.default.createElement("div", { className: "m-5 overflow-y-scroll w-full" },
+                                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.otherInvestments, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addInvesment, itemClickHandler: this.editInvesment, useRowBorderColor: true, hideIconRowPart: true }))))),
+                        react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-2/5" },
+                            react_1.default.createElement("div", { className: "w-full" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null)))),
+                    react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props)),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,
@@ -8447,10 +8459,10 @@ class OtherInvestmentSummary extends react_1.default.Component {
             react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "mx-auto w-1/3" },
                 react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement("div", { className: "flex flex-row justify-around" },
-                        react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                        react_1.default.createElement("p", { className: "text-2xl text-white font-black" },
                             "Balance: ",
                             this.state.balanceSum),
-                        react_1.default.createElement("p", { className: "text-2xl text-mainDarkBlue font-black" },
+                        react_1.default.createElement("p", { className: "text-2xl text-white font-black" },
                             "Invested: ",
                             this.state.investedSum)),
                     react_1.default.createElement("div", { className: "mt-4" },
@@ -8463,17 +8475,17 @@ class OtherInvestmentSummary extends react_1.default.Component {
             react_1.default.createElement("div", { className: "flex flex-row" },
                 react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
                     react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investment balance progress"),
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-white font-black" }, "Investment balance progress"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(LineChart_1.LineChart, { dataSets: this.state.chartData, chartProps: LineChartSettingManager_1.LineChartSettingManager.getOtherInvestmentSummarySetting(bounds.min, bounds.max) })))),
                 react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
                     react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Top 3"),
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-white font-black" }, "Top 3"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(Ranking_1.Ranking, { data: this.state.rankingData })))),
                 react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3" },
                     react_1.default.createElement(react_1.default.Fragment, null,
-                        react_1.default.createElement("h4", { className: "text-left text-2xl text-mainDarkBlue font-black" }, "Investments diversification"),
+                        react_1.default.createElement("h4", { className: "text-left text-2xl text-white font-black" }, "Investments diversification"),
                         react_1.default.createElement("div", { className: "h-80" },
                             react_1.default.createElement(PieChart_1.PieChart, { data: this.state.pieData })))))));
     }
@@ -8995,7 +9007,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement(React.Fragment, null,
                         this.showErrorMessage(),
                         React.createElement("div", { className: "flex flex-row" },
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-7/12" },
                                 React.createElement(React.Fragment, null,
                                     React.createElement("div", { className: "py-4 flex" },
                                         React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
@@ -9017,7 +9029,7 @@ class PaymentsOverview extends React.Component {
                                         React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                                         React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit })))),
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-5/12 calendar" },
                                 React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
@@ -9354,9 +9366,9 @@ class Crypto extends react_1.default.Component {
         return (react_1.default.createElement("div", { className: "" },
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Crypto' },
                 react_1.default.createElement("div", { className: "flex flex-row" },
-                    react_1.default.createElement("div", { className: "w-6/12 p-4 overflow-y-auto" },
+                    react_1.default.createElement("div", { className: "w-6/12 p-4" },
                         react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
-                    react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto" },
+                    react_1.default.createElement("div", { className: "w-5/12 p-4" },
                         react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props)))))));
     }
 }

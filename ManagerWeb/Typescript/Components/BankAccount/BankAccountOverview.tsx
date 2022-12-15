@@ -10,6 +10,7 @@ import { BankAccount } from "../../Model/BankAccount";
 import { RouteComponentProps } from "react-router-dom";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { MainFrame } from "../MainFrame";
+import { ComponentPanel } from "../../Utils/ComponentPanel";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
@@ -114,27 +115,29 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         return (
             <ThemeProvider theme={theme}>
                 <MainFrame header='Bank accounts overview'>
-                    <div className="flex">
-                        <div className="w-full p-4 overflow-y-auto">
-                            <div className="h-full">
-                                <div className="w-full lg:w-1/2">
-                                    <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
-                                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
-                                        deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
-                                    </BaseList>
+                    <ComponentPanel classStyle="w-2/3 mx-auto">
+                        <div className="flex">
+                            <div className="w-full p-4 overflow-y-auto">
+                                <div className="h-full">
+                                    <div className="">
+                                        <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
+                                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
+                                            deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
+                                        </BaseList>
+                                    </div>
+                                    <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
+                                        maxWidth="sm" fullWidth={true}>
+                                        <DialogTitle id="form-dialog-title">Bank account detail</DialogTitle>
+                                        <DialogContent>
+                                            <div className="p-2 overflow-y-auto">
+                                                <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
-                                <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
-                                    maxWidth="sm" fullWidth={true}>
-                                    <DialogTitle id="form-dialog-title">Bank account detail</DialogTitle>
-                                    <DialogContent>
-                                        <div className="p-2 overflow-y-auto">
-                                            <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
-                                        </div>
-                                    </DialogContent>
-                                </Dialog>
                             </div>
                         </div>
-                    </div>
+                    </ComponentPanel>
                 </MainFrame>
             </ThemeProvider>
         );

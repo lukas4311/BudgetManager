@@ -9,6 +9,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
 import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
 import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
+import { ComponentPanel } from "../../Utils/ComponentPanel";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -147,24 +148,26 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
 
     render() {
         return (
-            <div className="pr-5 h-full">
-                <ThemeProvider theme={theme}>
-                    <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
-                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
-                    </BaseList>
-                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
-                        maxWidth="md" fullWidth={true}>
-                        <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
-                        <DialogContent>
-                            <div className="p-2 overflow-y-auto">
-                                <CryptoTradeForm
-                                    {...this.state.selectedTrade}
-                                ></CryptoTradeForm>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
-                </ThemeProvider>
-            </div>
+            <ComponentPanel>
+                <div className="pr-5 h-full">
+                    <ThemeProvider theme={theme}>
+                        <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
+                        </BaseList>
+                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
+                            <DialogContent>
+                                <div className="p-2 overflow-y-auto">
+                                    <CryptoTradeForm
+                                        {...this.state.selectedTrade}
+                                    ></CryptoTradeForm>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </ThemeProvider>
+                </div>
+            </ComponentPanel>
         );
     }
 }
