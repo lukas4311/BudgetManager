@@ -9368,7 +9368,7 @@ class Crypto extends react_1.default.Component {
                 react_1.default.createElement("div", { className: "flex flex-row" },
                     react_1.default.createElement("div", { className: "w-6/12 p-4" },
                         react_1.default.createElement(CryptoTrades_1.default, Object.assign({}, this.props))),
-                    react_1.default.createElement("div", { className: "w-5/12 p-4" },
+                    react_1.default.createElement("div", { className: "w-6/12 p-4" },
                         react_1.default.createElement(CryptoPortfolio_1.default, Object.assign({}, this.props)))))));
     }
 }
