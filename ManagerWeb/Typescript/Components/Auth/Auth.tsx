@@ -62,7 +62,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
                     </svg>
                 </div>
                 <div className="w-2/5 m-auto text-center my-12 px-4 py-12 bg-prussianBlue rounded-lg boxShadow">
-                    <h1 className="text-2xl">Přihlášení</h1>
+                    <h1 className="text-2xl">Sign in</h1>
                     <div className="flex flex-col w-4/5 m-auto mt-8">
                         <form onSubmit={this.login}>
                             <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
@@ -75,13 +75,13 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
                                 </div>
                                 <div className="w-1/2">
                                     <div className="relative inline-block w-2/3 m-auto">
-                                        <input type="password" className="effect-11 w-full" placeholder="Heslo" value={this.state.password} onChange={(e) => this.onChangePassword(e)} />
+                                        <input type="password" className="effect-11 w-full" placeholder="Pass" value={this.state.password} onChange={(e) => this.onChangePassword(e)} />
                                         <span className="focus-bg"></span>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex mt-8">
-                                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Potvrdit" />
+                                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Confirm" />
                             </div>
                         </form>
                     </div>
