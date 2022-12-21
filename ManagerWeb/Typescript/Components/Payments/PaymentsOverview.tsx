@@ -331,12 +331,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </div>
                                 </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row p-6">
-                                <div className="w-2/5">
-                                    <BudgetComponent history={this.props.history}></BudgetComponent>
-                                </div>
-                            </div>
+                            </div>                            
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>
                                 <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Payment detail</DialogTitle>

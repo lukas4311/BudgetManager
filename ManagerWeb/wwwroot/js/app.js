@@ -8820,7 +8820,6 @@ const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Ty
 const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
-const BudgetComponent_1 = __importDefault(__webpack_require__(/*! ../Budget/BudgetComponent */ "./Typescript/Components/Budget/BudgetComponent.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
@@ -9063,9 +9062,6 @@ class PaymentsOverview extends React.Component {
                                             " (", investedPct === null || investedPct === void 0 ? void 0 :
                                             investedPct.toFixed(1),
                                             "%)"))))),
-                        React.createElement("div", { className: "flex flex-row p-6" },
-                            React.createElement("div", { className: "w-2/5" },
-                                React.createElement(BudgetComponent_1.default, { history: this.props.history }))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
                             React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
                             React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
