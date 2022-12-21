@@ -1,0 +1,13 @@
+@font-face {
+    font-family: biHeader;
+    src: url(Blackpast.ttf);
+    // src: url('LeagueGothic-Regular.otf');
+}
+
+body {
+    // font-family: myFont;
+}
+
+h1,h2,h3,h4,h5{
+    font-family: biHeader;
+}

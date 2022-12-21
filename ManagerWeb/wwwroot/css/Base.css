@@ -365,6 +365,14 @@
     transform: rotate(360deg);
   }
 }
+@font-face {
+  font-family: biHeader;
+  src: url(Blackpast.ttf);
+}
+h1, h2, h3, h4, h5 {
+  font-family: biHeader;
+}
+
 *:focus {
   outline: none !important;
 }
