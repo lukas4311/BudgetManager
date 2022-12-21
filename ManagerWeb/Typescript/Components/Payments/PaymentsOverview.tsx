@@ -219,8 +219,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
                 <p className="mx-6 my-1 w-2/12">{p.name}</p>
                 <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
-                <span className="mx-6 my-1 w-1/12 categoryIcon">{iconsData[p.paymentCategoryIcon]}</span>
-                <span className="ml-auto my-1 w-2/12 categoryIcon" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
+                <span className="mx-6 my-1 w-1/12 categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
+                <span className="ml-auto my-1 w-2/12 categoryIcon fill-white" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
             </>
         );
     }
