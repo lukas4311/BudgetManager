@@ -49,7 +49,7 @@ export default function App() {
                                     </div>
                                     <nav id="navMenu"></nav>
                                 </header>
-                                <div className="baseContainer mx-auto lg:w-11/12 w-full">
+                                <div className="baseContainer mx-auto lg:w-11/12 w-full flex-grow">
                                     <main role="main" className="pb-3 text-white">
                                         <Switch>
                                             <Route path="/login" component={Auth} />

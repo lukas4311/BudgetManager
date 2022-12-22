@@ -6030,7 +6030,7 @@ function App() {
                             react_1.default.createElement("nav", { id: "navMenu" },
                                 react_1.default.createElement(Menu_1.default, null))),
                         react_1.default.createElement("nav", { id: "navMenu" })),
-                    react_1.default.createElement("div", { className: "baseContainer mx-auto lg:w-11/12 w-full" },
+                    react_1.default.createElement("div", { className: "baseContainer mx-auto lg:w-11/12 w-full flex-grow" },
                         react_1.default.createElement("main", { role: "main", className: "pb-3 text-white" },
                             react_1.default.createElement(react_router_dom_1.Switch, null,
                                 react_1.default.createElement(react_router_dom_1.Route, { path: "/login", component: Auth_1.default }),
