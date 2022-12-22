@@ -316,7 +316,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                                 </ComponentPanel>
                                 <ComponentPanel classStyle="w-1/2 h-80">
-                                    <div className='flex flex-col text-2xl text-white font-black text-left px-4 justify-evenly h-full'>
+                                    <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
                                         <div>
                                             <p>Totaly earned: {income}</p>
                                         </div>

@@ -165,7 +165,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                     </ComponentPanel>
                     <ComponentPanel classStyle="w-1/3">
                         <React.Fragment>
-                            <h4 className="text-left text-2xl text-white font-black">Top 3</h4>
+                            <h4 className="text-left text-2xl text-white font-black">Top</h4>
                             <div className="h-80">
                                 <Ranking data={this.state.rankingData}></Ranking>
                             </div>

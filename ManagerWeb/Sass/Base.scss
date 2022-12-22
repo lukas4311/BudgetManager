@@ -35,14 +35,10 @@
 
 .paymentRecord {
     position: relative;
-    left: 0;
-    transition: left 0.5s ease-out;
-    -webkit-transition: left 0.5s ease-out;
-    -moz-transition: left 0.5s ease-out;
-    -o-transition: left 0.5s ease-out;
+    transition: .5s;
 
     &:hover {
-        left: 10px;
+        transform: translateX(10px);
     }
 }
 
