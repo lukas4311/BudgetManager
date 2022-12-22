@@ -9110,6 +9110,7 @@ const AppCtx_1 = __webpack_require__(/*! ../../Context/AppCtx */ "./Typescript/C
 const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
 const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx");
 const Loading_1 = __webpack_require__(/*! ../../Utils/Loading */ "./Typescript/Utils/Loading.tsx");
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9211,8 +9212,8 @@ class StockOverview extends react_1.default.Component {
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Stocks' },
                 react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement("div", { className: "flex flex-row pt-5" },
-                        react_1.default.createElement("div", { className: "w-7/12" },
-                            react_1.default.createElement("div", { className: "flex flex-col" },
+                        react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-7/12" },
+                            react_1.default.createElement("div", { className: "flex flex-col h-full" },
                                 react_1.default.createElement("div", { className: "flex flex-col" },
                                     react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Current portfolio"),
                                     react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" },
@@ -9226,16 +9227,17 @@ class StockOverview extends react_1.default.Component {
                                 react_1.default.createElement("div", { className: "m-5 flex flex-col" },
                                     react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
                                     react_1.default.createElement("div", { className: "overflow-y-scroll" },
-                                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade }))))),
-                        react_1.default.createElement("div", { className: "w-5/12" },
-                            react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Stock summary"),
-                            this.state.stockSummary == undefined ? react_1.default.createElement(Loading_1.Loading, { className: "m-auto mt-4" }) : (react_1.default.createElement("div", { className: 'flex flex-col text-white font-semibold text-left px-4 justify-evenly' },
-                                react_1.default.createElement("p", { className: "" },
-                                    "Totaly bought: ",
-                                    this.state.stockSummary.totalyBought),
-                                react_1.default.createElement("p", { className: "mt-2" },
-                                    "Totaly sold: ",
-                                    this.state.stockSummary.totalySold))))),
+                                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.stocks, template: this.renderTemplate, header: this.renderHeader(), dataAreaClass: "h-70vh overflow-y-auto", addItemHandler: this.addStockTrade, itemClickHandler: this.editStock, useRowBorderColor: true, deleteItemHandler: this.deleteTrade }))))),
+                        react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-5/12" },
+                            react_1.default.createElement(react_1.default.Fragment, null,
+                                react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Stock summary"),
+                                this.state.stockSummary == undefined ? react_1.default.createElement(Loading_1.Loading, { className: "m-auto mt-4" }) : (react_1.default.createElement("div", { className: 'flex flex-col text-white font-semibold text-left px-4 justify-evenly' },
+                                    react_1.default.createElement("p", { className: "" },
+                                        "Totaly bought: ",
+                                        this.state.stockSummary.totalyBought),
+                                    react_1.default.createElement("p", { className: "mt-2" },
+                                        "Totaly sold: ",
+                                        this.state.stockSummary.totalySold)))))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, null,

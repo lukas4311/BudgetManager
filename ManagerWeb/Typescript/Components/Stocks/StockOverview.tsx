@@ -15,6 +15,7 @@ import { AppContext, AppCtx } from "../../Context/AppCtx";
 import StockService, { StockGroupModel } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
+import { ComponentPanel } from "../../Utils/ComponentPanel";
 
 const theme = createMuiTheme({
     palette: {
@@ -148,8 +149,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                 <MainFrame header='Stocks'>
                     <>
                         <div className="flex flex-row pt-5">
-                            <div className="w-7/12">
-                                <div className="flex flex-col">
+                            <ComponentPanel classStyle="w-7/12">
+                                <div className="flex flex-col h-full">
                                     <div className="flex flex-col">
                                         <h2 className="text-xl font-semibold mb-6">Current portfolio</h2>
                                         <div className="flex flex-wrap justify-around ">
@@ -168,21 +169,23 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     <div className="m-5 flex flex-col">
                                         <h2 className="text-xl font-semibold mb-6">All trades</h2>
                                         <div className="overflow-y-scroll">
-                                            <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()}
-                                                addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade}></BaseList>
+                                            <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()} dataAreaClass="h-70vh overflow-y-auto"
+                                                addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade} ></BaseList>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="w-5/12">
-                                <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
-                                {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
-                                    <div className='flex flex-col text-white font-semibold text-left px-4 justify-evenly'>
-                                        <p className="">Totaly bought: {this.state.stockSummary.totalyBought}</p>
-                                        <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
-                                    </div>
-                                )}
-                            </div>
+                            </ComponentPanel>
+                            <ComponentPanel classStyle="w-5/12">
+                                <>
+                                    <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
+                                    {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
+                                        <div className='flex flex-col text-white font-semibold text-left px-4 justify-evenly'>
+                                            <p className="">Totaly bought: {this.state.stockSummary.totalyBought}</p>
+                                            <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
+                                        </div>
+                                    )}
+                                </>
+                            </ComponentPanel>
                         </div>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
                             maxWidth="md" fullWidth={true}>
