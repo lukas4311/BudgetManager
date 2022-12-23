@@ -29,7 +29,7 @@ export default class Menu extends React.Component<{}, MenuState> {
             { icon: icons.crypto, linkUri: "crypto-overview" },
             { icon: icons.budget, linkUri: "budget" },
             { icon: icons.debts, linkUri: "other-investment" },
-            { icon: icons.statistics, linkUri: "stats" },
+            { icon: icons.statistics, linkUri: "stock" },
             { icon: icons.budget, linkUri: "bankaccount-overview" },
             { icon: icons.ingot, linkUri: "comodity" },
         ];

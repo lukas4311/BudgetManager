@@ -26,8 +26,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     <path id="€" className="s2" aria-label="€" d="m0.2 79.6h6.3q1.7 4.4 5.8 7.5 4.1 3.1 9.7 3.1 5.3 0 9.9-3.2l0.1-0.1v-7.9l-0.8 1q-0.1 0.1-0.2 0.3-0.1 0.1-0.3 0.3-0.1 0.2-0.2 0.2-0.1 0.2-0.3 0.4-0.3 0.3-0.4 0.4-3.3 3.2-7.8 3.2-3 0-5.5-1.4-2.4-1.5-3.9-3.8h11.7l3.1-5.2h-16.4v-0.6-0.5h17l3.1-5.3h-18.5q1.5-2.3 3.9-3.7 2.5-1.5 5.5-1.5 5.4 0 8.8 4.3l0.4 0.6 3-5.1-0.2-0.1q-5-5.1-12-5.1-5.6 0-9.7 3.2-4.1 3.1-5.8 7.4h-3.2l-3.1 5.3h5.2v0.1 1h-2.1z" />
                 </svg>
             </div>
-            <h2 className={(props.classStyle ?? "") + "text-5xl pb-4 text-center"}>{props.header}</h2>
-            <div className="text-center mt-6 p-4 rounded-lg">
+            <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
+            <div className="text-center p-2 rounded-lg">
                 {props.children}
             </div>
         </div>

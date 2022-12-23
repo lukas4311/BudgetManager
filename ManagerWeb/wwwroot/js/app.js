@@ -6309,7 +6309,7 @@ class BankAccountOverview extends react_1.default.Component {
             react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Bank accounts overview' },
                 react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-2/3 mx-auto" },
                     react_1.default.createElement("div", { className: "flex" },
-                        react_1.default.createElement("div", { className: "w-full p-4 overflow-y-auto" },
+                        react_1.default.createElement("div", { className: "w-full overflow-y-auto" },
                             react_1.default.createElement("div", { className: "h-full" },
                                 react_1.default.createElement("div", { className: "" },
                                     react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
@@ -6443,7 +6443,7 @@ class ActualBudgetCardProps {
 }
 exports.ActualBudgetCardProps = ActualBudgetCardProps;
 function ActualBudgetCard(props) {
-    return (React.createElement("div", { className: "w-full bg-blueSapphire p-2 mt-2 budgetCard" },
+    return (React.createElement("div", { className: "w-full bg-blueSapphire mt-2 budgetCard" },
         React.createElement("div", { className: "flex" },
             React.createElement("span", { className: "text-xs font-semibold" }, (0, moment_1.default)(props.from).format("YYYY.MM.DD")),
             React.createElement("span", { className: "text-sm ml-auto" }, props.limit)),
@@ -6565,7 +6565,7 @@ class BudgetComponent extends React.Component {
         return (React.createElement(React.Fragment, null,
             React.createElement(styles_1.ThemeProvider, { theme: theme },
                 React.createElement("div", null,
-                    React.createElement("div", { className: "flex flex-col mt-6 w-2/3 m-auto" },
+                    React.createElement("div", { className: "flex flex-col w-2/3 m-auto" },
                         React.createElement("h2", { className: "ml-6 text-xl text-left" }, "Actual budgets"),
                         React.createElement("span", { className: "inline-block ml-auto mr-5", onClick: this.addNewBudget },
                             React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", height: "24", viewBox: "0 0 24 24", width: "24", className: "fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer" },
@@ -7145,9 +7145,9 @@ class Comodities extends react_1.default.Component {
                     react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-2/3 mx-auto" },
                         react_1.default.createElement(react_1.default.Fragment, null,
                             react_1.default.createElement("div", { className: "flex" },
-                                react_1.default.createElement("div", { className: "w-7/12 p-4 overflow-y-auto flex" },
+                                react_1.default.createElement("div", { className: "w-7/12 overflow-y-auto flex p-4" },
                                     react_1.default.createElement("div", { className: "w-4/5 mx-auto px-10" }, this.showSelectedComponent())),
-                                react_1.default.createElement("div", { className: "w-5/12 p-4 overflow-y-auto flex flex-col items-stretch content-between" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) },
+                                react_1.default.createElement("div", { className: "w-5/12 overflow-y-auto flex flex-col items-stretch content-between" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) },
                                     react_1.default.createElement("span", { className: "" }, c.title)))))),
                             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                                 react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
@@ -7304,7 +7304,7 @@ const Gold = (props) => {
         calculateTotalActualPrice();
     }, [props.comoditiesViewModels]);
     return (react_1.default.createElement("div", { id: "goldCards" },
-        react_1.default.createElement("h3", { className: "text-xl text-center" }, "Gold"),
+        react_1.default.createElement("h3", { className: "text-2xl text-center mb-6" }, "Gold"),
         react_1.default.createElement("div", { className: "mt-3 flex flex-row justify-center flex-nowrap text-center cursor-default" },
             goldIngots.map((g, i) => (react_1.default.createElement("div", { key: g.id, className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap"), onClick: () => props.editIngot(g.id) },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
@@ -7454,7 +7454,7 @@ class CryptoPortfolio extends react_1.default.Component {
     render() {
         return (react_1.default.createElement(ComponentPanel_1.ComponentPanel, null,
             react_1.default.createElement("div", null,
-                react_1.default.createElement("h2", { className: "text-xl ml-12 p-4" }, "Crypto portfolio"),
+                react_1.default.createElement("h2", { className: "text-xl ml-12" }, "Crypto portfolio"),
                 this.state.allCryptoSum != undefined ?
                     react_1.default.createElement("div", { className: "pb-10 overflow-y-scroll" },
                         react_1.default.createElement("div", { className: "font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1" },
@@ -7747,8 +7747,8 @@ const MainFrame = (props) => {
                 react_1.default.createElement("path", { id: "Tvar 2", className: "s2", d: "m50.5 401.9h-5v-403.1h5z" }),
                 react_1.default.createElement("path", { id: "$", className: "s2", "aria-label": "$", d: "m16.7 42.8v6h6.7v-6.1q2.7-0.4 4.7-2 2.1-1.7 2.9-3.8 0.8-1.7 0.8-3.5 0-3.9-2.8-6.6-3-2.8-7-2.8h-4q-1.3 0-2.2-1-0.8-1-0.8-2.2 0-1.3 0.8-2.3 0.9-1 2.2-1h9.6l3.1-6.1h-7.3v-6h-6.7v6.1q-2.8 0.4-4.8 2-2 1.7-2.9 3.8-0.7 1.7-0.7 3.5 0 1.8 0.7 3.6 1 2.3 3.4 4 2.4 1.7 5.6 1.7h4q1.3 0 2.2 1.1 0.8 1 0.8 2.2 0 1.2-0.8 2.2-0.9 1-2.2 1h-10l-3.8 6.2z" }),
                 react_1.default.createElement("path", { id: "\u20AC", className: "s2", "aria-label": "\u20AC", d: "m0.2 79.6h6.3q1.7 4.4 5.8 7.5 4.1 3.1 9.7 3.1 5.3 0 9.9-3.2l0.1-0.1v-7.9l-0.8 1q-0.1 0.1-0.2 0.3-0.1 0.1-0.3 0.3-0.1 0.2-0.2 0.2-0.1 0.2-0.3 0.4-0.3 0.3-0.4 0.4-3.3 3.2-7.8 3.2-3 0-5.5-1.4-2.4-1.5-3.9-3.8h11.7l3.1-5.2h-16.4v-0.6-0.5h17l3.1-5.3h-18.5q1.5-2.3 3.9-3.7 2.5-1.5 5.5-1.5 5.4 0 8.8 4.3l0.4 0.6 3-5.1-0.2-0.1q-5-5.1-12-5.1-5.6 0-9.7 3.2-4.1 3.1-5.8 7.4h-3.2l-3.1 5.3h5.2v0.1 1h-2.1z" }))),
-        react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-5xl pb-4 text-center" }, props.header),
-        react_1.default.createElement("div", { className: "text-center mt-6 p-4 rounded-lg" }, props.children)));
+        react_1.default.createElement("h2", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + "text-5xl pb-2 text-center" }, props.header),
+        react_1.default.createElement("div", { className: "text-center p-2 rounded-lg" }, props.children)));
 };
 exports.MainFrame = MainFrame;
 
@@ -7796,7 +7796,7 @@ class Menu extends react_1.default.Component {
             { icon: icons.crypto, linkUri: "crypto-overview" },
             { icon: icons.budget, linkUri: "budget" },
             { icon: icons.debts, linkUri: "other-investment" },
-            { icon: icons.statistics, linkUri: "stats" },
+            { icon: icons.statistics, linkUri: "stock" },
             { icon: icons.budget, linkUri: "bankaccount-overview" },
             { icon: icons.ingot, linkUri: "comodity" },
         ];
@@ -10327,7 +10327,7 @@ exports.ComponentPanel = void 0;
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ComponentPanel = (props) => {
     var _a;
-    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " p-4 rounded-xl bg-prussianBlue m-5 boxShadow" },
+    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " rounded-xl bg-prussianBlue m-5 boxShadow" },
         react_1.default.createElement("div", { className: "flex flex-col h-full" }, props.children)));
 };
 exports.ComponentPanel = ComponentPanel;

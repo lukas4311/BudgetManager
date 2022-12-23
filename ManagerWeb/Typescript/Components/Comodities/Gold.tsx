@@ -29,7 +29,7 @@ const Gold = (props: GoldListProps) => {
 
     return (
         <div id="goldCards">
-            <h3 className="text-xl text-center">Gold</h3>
+            <h3 className="text-2xl text-center mb-6">Gold</h3>
             <div className="mt-3 flex flex-row justify-center flex-nowrap text-center cursor-default">
                 {goldIngots.map((g, i) => (
                     <div key={g.id} className={"relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden" + (i == 0 ? "" : " cardOverlap")}

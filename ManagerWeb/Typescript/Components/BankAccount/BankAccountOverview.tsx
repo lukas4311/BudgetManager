@@ -117,7 +117,7 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
                 <MainFrame header='Bank accounts overview'>
                     <ComponentPanel classStyle="w-2/3 mx-auto">
                         <div className="flex">
-                            <div className="w-full p-4 overflow-y-auto">
+                            <div className="w-full overflow-y-auto">
                                 <div className="h-full">
                                     <div className="">
                                         <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}

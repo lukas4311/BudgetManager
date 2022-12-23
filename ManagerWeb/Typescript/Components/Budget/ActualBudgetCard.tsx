@@ -11,7 +11,7 @@ class ActualBudgetCardProps {
 
 export default function ActualBudgetCard(props: ActualBudgetCardProps) {
     return (
-        <div className="w-full bg-blueSapphire p-2 mt-2 budgetCard">
+        <div className="w-full bg-blueSapphire mt-2 budgetCard">
             <div className="flex">
                 <span className="text-xs font-semibold">{moment(props.from).format("YYYY.MM.DD")}</span>
                 <span className="text-sm ml-auto">{props.limit}</span>

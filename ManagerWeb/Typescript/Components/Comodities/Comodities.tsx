@@ -187,12 +187,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                         <ComponentPanel classStyle="w-2/3 mx-auto">
                             <>
                                 <div className="flex">
-                                    <div className="w-7/12 p-4 overflow-y-auto flex">
+                                    <div className="w-7/12 overflow-y-auto flex p-4">
                                         <div className="w-4/5 mx-auto px-10">
                                             {this.showSelectedComponent()}
                                         </div>
                                     </div>
-                                    <div className="w-5/12 p-4 overflow-y-auto flex flex-col items-stretch content-between">
+                                    <div className="w-5/12 overflow-y-auto flex flex-col items-stretch content-between">
                                         {this.state.comodityMenu.map(c =>
                                         (
                                             <div className={"p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>

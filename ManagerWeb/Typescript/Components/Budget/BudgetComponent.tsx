@@ -87,7 +87,7 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
             <React.Fragment>
                 <ThemeProvider theme={theme}>
                     <div>
-                        <div className="flex flex-col mt-6 w-2/3 m-auto">
+                        <div className="flex flex-col w-2/3 m-auto">
                             <h2 className="ml-6 text-xl text-left">Actual budgets</h2>
                             <span className="inline-block ml-auto mr-5" onClick={this.addNewBudget}>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
