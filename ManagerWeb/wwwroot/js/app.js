@@ -10207,15 +10207,16 @@ class StockService {
                 groupModel.tickerName = lodash_1.default.first(tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
                 groupModel.size = lodash_1.default.sumBy(group, s => {
                     if (s.action == StockViewModel_1.TradeAction.Buy)
-                        return s.tradeSize * -1;
-                    else
                         return s.tradeSize;
+                    else
+                        return s.tradeSize * -1;
                 });
                 groupModel.stockValues = lodash_1.default.sumBy(group, s => s.tradeValue);
                 return groupModel;
             })
                 .value();
             return values.filter(s => s.size > 0.00001);
+            return values;
         });
         const apiFactory = new ApiClientFactory_1.default(history);
         this.stockApi = apiFactory.getClientWithSetting(apis_1.StockApi, setting);

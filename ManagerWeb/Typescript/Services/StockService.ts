@@ -46,9 +46,9 @@ export default class StockService {
                 groupModel.tickerName = _.first(tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
                 groupModel.size = _.sumBy(group, s => {
                     if (s.action == TradeAction.Buy)
-                        return s.tradeSize * -1;
-                    else
                         return s.tradeSize;
+                    else
+                        return s.tradeSize * -1;
                 });
                 groupModel.stockValues = _.sumBy(group, s => s.tradeValue);
                 return groupModel;
@@ -56,5 +56,6 @@ export default class StockService {
             .value();
 
         return values.filter(s => s.size > 0.00001);
+        return values;
     }
 }
