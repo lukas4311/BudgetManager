@@ -183,8 +183,8 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         </div>
                         <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form" maxWidth="md" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
-                            <DialogContent>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
                                 <OtherInvestmentForm {...this.state.selectedModel} />
                             </DialogContent>
                         </Dialog>

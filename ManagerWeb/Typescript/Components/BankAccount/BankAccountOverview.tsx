@@ -127,8 +127,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
                                     </div>
                                     <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
                                         maxWidth="sm" fullWidth={true}>
-                                        <DialogTitle id="form-dialog-title">Bank account detail</DialogTitle>
-                                        <DialogContent>
+                                        <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Bank account detail</DialogTitle>
+                                        <DialogContent className="bg-prussianBlue">
                                             <div className="p-2 overflow-y-auto">
                                                 <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
                                             </div>

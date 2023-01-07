@@ -19,8 +19,8 @@ const ConfirmationForm = (props: ConfirmationFormProps) => {
     return (
         <Dialog open={props.isOpen} onClose={props.onClose} aria-labelledby="ConfirmationDetail"
             maxWidth="sm" fullWidth={true}>
-            <DialogTitle id="form-dialog-title">Confirmation dialog</DialogTitle>
-            <DialogContent>
+            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Confirmation dialog</DialogTitle>
+            <DialogContent className="bg-prussianBlue">
                 <div>
                     <div className="flex flex-row w-3/5 m-auto">
                         <Button className='bg-vermilion' onClick={() => props.onConfirm(ConfirmationResult.Ok)}>Ok</Button>

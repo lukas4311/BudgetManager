@@ -101,8 +101,8 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
                         </div>
                         <Dialog open={this.state.showBudgetFormModal} onClose={this.hideBudgetModal} aria-labelledby="Detail rozpočtu"
                             maxWidth="sm" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title">Detail rozpočtu</DialogTitle>
-                            <DialogContent>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail rozpočtu</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
                                 <div className="p-2 overflow-y-auto">
                                     <BudgetForm2 key={this.state.budgetFormKey} onSave={this.saveFormData} {...this.state.selectedBudget} ></BudgetForm2>
                                 </div>

@@ -204,8 +204,8 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                                 </div>
                                 <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                                     maxWidth="md" fullWidth={true}>
-                                    <DialogTitle id="form-dialog-title">Golden ingots</DialogTitle>
-                                    <DialogContent>
+                                    <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Golden ingots</DialogTitle>
+                                    <DialogContent className="bg-prussianBlue">
                                         <ComoditiesForm {...this.state.selectedModel} />
                                     </DialogContent>
                                 </Dialog>

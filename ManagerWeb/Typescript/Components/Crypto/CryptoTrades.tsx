@@ -156,8 +156,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                         </BaseList>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                             maxWidth="md" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title">Detail transakce</DialogTitle>
-                            <DialogContent>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
                                 <div className="p-2 overflow-y-auto">
                                     <CryptoTradeForm
                                         {...this.state.selectedTrade}

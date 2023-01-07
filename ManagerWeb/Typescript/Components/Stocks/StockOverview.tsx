@@ -189,8 +189,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                         </div>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
                             maxWidth="md" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title">Investment form</DialogTitle>
-                            <DialogContent>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
                                 <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} onSave={this.saveStockTrade} />
                             </DialogContent>
                         </Dialog>

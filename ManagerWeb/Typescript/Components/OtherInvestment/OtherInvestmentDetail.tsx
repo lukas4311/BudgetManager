@@ -279,14 +279,14 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                 <Dialog open={this.state.openedFormBalance} onClose={this.handleCloseBalance} aria-labelledby="Balance at date"
                     maxWidth="md" fullWidth={true}>
                     <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
-                    <DialogContent>
+                    <DialogContent className="bg-prussianBlue">
                         <OtherInvestmentBalanceForm {...this.state.selectedModel} />
                     </DialogContent>
                 </Dialog>
                 <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
                     maxWidth="md" fullWidth={true}>
-                    <DialogTitle id="form-dialog-title">Tag form</DialogTitle>
-                    <DialogContent>
+                    <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Tag form</DialogTitle>
+                    <DialogContent className="bg-prussianBlue">
                         <OtherInvestmentTagForm {...this.state.tagViewModel} />
                     </DialogContent>
                 </Dialog>

@@ -593,10 +593,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: 1.25rem !important;
 }
 
-.mt-6 {
-  margin-top: 1.5rem !important;
-}
-
 .mb-4 {
   margin-bottom: 1rem !important;
 }
@@ -647,6 +643,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .mt-4 {
   margin-top: 1rem !important;
+}
+
+.mt-6 {
+  margin-top: 1.5rem !important;
 }
 
 .mt-12 {
@@ -1200,10 +1200,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pr-5 {
   padding-right: 1.25rem !important;
-}
-
-.pb-4 {
-  padding-bottom: 1rem !important;
 }
 
 .pl-6 {

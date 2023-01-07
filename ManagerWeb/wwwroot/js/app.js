@@ -6314,8 +6314,8 @@ class BankAccountOverview extends react_1.default.Component {
                                 react_1.default.createElement("div", { className: "" },
                                     react_1.default.createElement(BaseList_1.BaseList, { title: "Bank account", data: this.state.bankAccounts, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.bankEdit, deleteItemHandler: this.deleteBank, dataAreaClass: "h-70vh overflow-y-auto" })),
                                 react_1.default.createElement(core_1.Dialog, { open: this.state.showForm, onClose: this.hideForm, "aria-labelledby": "Bank account detail", maxWidth: "sm", fullWidth: true },
-                                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Bank account detail"),
-                                    react_1.default.createElement(core_1.DialogContent, null,
+                                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Bank account detail"),
+                                    react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                                         react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
                                             react_1.default.createElement(BankAccountForm_1.BankAccountForm, Object.assign({ key: this.state.formKey }, this.state.selectedBankAccount, { onSave: this.saveFormData }))))))))))));
     }
@@ -6573,8 +6573,8 @@ class BudgetComponent extends React.Component {
                                 React.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))),
                         React.createElement("div", { className: "flex flex-row flex-wrap justify-around" }, this.state.budgets.map(b => this.renderCard(b)))),
                     React.createElement(core_1.Dialog, { open: this.state.showBudgetFormModal, onClose: this.hideBudgetModal, "aria-labelledby": "Detail rozpo\u010Dtu", maxWidth: "sm", fullWidth: true },
-                        React.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail rozpo\u010Dtu"),
-                        React.createElement(core_1.DialogContent, null,
+                        React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail rozpo\u010Dtu"),
+                        React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                             React.createElement("div", { className: "p-2 overflow-y-auto" },
                                 React.createElement(BudgetForm_1.BudgetForm2, Object.assign({ key: this.state.budgetFormKey, onSave: this.saveFormData }, this.state.selectedBudget)))))))));
     }
@@ -7150,8 +7150,8 @@ class Comodities extends react_1.default.Component {
                                 react_1.default.createElement("div", { className: "w-5/12 overflow-y-auto flex flex-col items-stretch content-between" }, this.state.comodityMenu.map(c => (react_1.default.createElement("div", { className: "p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : ""), onClick: _ => this.comodityMenuClick(c.id) },
                                     react_1.default.createElement("span", { className: "" }, c.title)))))),
                             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Golden ingots"),
-                                react_1.default.createElement(core_1.DialogContent, null,
+                                react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Golden ingots"),
+                                react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                                     react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
                             react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen })))))));
     }
@@ -7370,8 +7370,8 @@ class ConfirmationFormProps {
 }
 const ConfirmationForm = (props) => {
     return (react_1.default.createElement(Dialog_1.default, { open: props.isOpen, onClose: props.onClose, "aria-labelledby": "ConfirmationDetail", maxWidth: "sm", fullWidth: true },
-        react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title" }, "Confirmation dialog"),
-        react_1.default.createElement(DialogContent_1.default, null,
+        react_1.default.createElement(DialogTitle_1.default, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Confirmation dialog"),
+        react_1.default.createElement(DialogContent_1.default, { className: "bg-prussianBlue" },
             react_1.default.createElement("div", null,
                 react_1.default.createElement("div", { className: "flex flex-row w-3/5 m-auto" },
                     react_1.default.createElement(Button_1.default, { className: 'bg-vermilion', onClick: () => props.onConfirm(ConfirmationResult.Ok) }, "Ok"),
@@ -7699,8 +7699,8 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
                     react_1.default.createElement(BaseList_1.BaseList, { title: "Trade list", data: this.state.trades, template: this.renderTemplate, deleteItemHandler: this.deleteTrade, header: this.renderHeader(), addItemHandler: this.addNewItem, itemClickHandler: this.budgetEdit, dataAreaClass: "h-70vh overflow-y-auto" }),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
-                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Detail transakce"),
-                        react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail transakce"),
+                        react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                             react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
                                 react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade)))))))));
     }
@@ -8058,11 +8058,11 @@ class OtherInvestmentDetail extends react_1.default.Component {
                                 react_1.default.createElement("span", { className: "ml-6 text-xs font-semibold" }, this.state.linkedTagCode))))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormBalance, onClose: this.handleCloseBalance, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Balance form"),
-                    react_1.default.createElement(core_1.DialogContent, null,
+                    react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                         react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, Object.assign({}, this.state.selectedModel)))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormTags, onClose: this.handleCloseTag, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
-                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Tag form"),
-                    react_1.default.createElement(core_1.DialogContent, null,
+                    react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Tag form"),
+                    react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                         react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, Object.assign({}, this.state.tagViewModel)))),
                 react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteOtherInvestment(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteOtherInvestment, isOpen: this.state.confirmDialogIsOpen })));
         };
@@ -8315,8 +8315,8 @@ class OtherInvestmentOverview extends react_1.default.Component {
                             react_1.default.createElement("div", { className: "w-full" }, this.state.showDetail ? react_1.default.createElement(OtherInvestmentDetail_1.default, { key: this.state.formKey, selectedInvestment: this.state.selectedModel, route: this.props, refreshRecords: this.refresh }) : react_1.default.createElement("div", null)))),
                     react_1.default.createElement(OtherInvestmentSummary_1.default, Object.assign({}, this.props)),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
-                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
-                        react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Investment form"),
+                        react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                             react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, Object.assign({}, this.state.selectedModel))))))));
     }
 }
@@ -9239,8 +9239,8 @@ class StockOverview extends react_1.default.Component {
                                         "Totaly sold: ",
                                         this.state.stockSummary.totalySold)))))),
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
-                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Investment form"),
-                        react_1.default.createElement(core_1.DialogContent, null,
+                        react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Investment form"),
+                        react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                             react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers, onSave: this.saveStockTrade })))))));
     }
 }
@@ -10327,7 +10327,7 @@ exports.ComponentPanel = void 0;
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const ComponentPanel = (props) => {
     var _a;
-    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " rounded-xl bg-prussianBlue m-5 boxShadow" },
+    return (react_1.default.createElement("div", { className: ((_a = props.classStyle) !== null && _a !== void 0 ? _a : "") + " rounded-xl bg-prussianBlue m-5 p-4 boxShadow" },
         react_1.default.createElement("div", { className: "flex flex-col h-full" }, props.children)));
 };
 exports.ComponentPanel = ComponentPanel;
