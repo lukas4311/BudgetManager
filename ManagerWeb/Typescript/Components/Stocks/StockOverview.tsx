@@ -7,7 +7,7 @@ import { CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _ from "lodash";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
@@ -16,6 +16,7 @@ import StockService, { StockGroupModel } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import { IconsData } from "../../Enums/IconsEnum";
 
 const theme = createMuiTheme({
     palette: {
@@ -45,6 +46,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
     private stockService: StockService = undefined;
+    private icons: IconsData = new IconsData();
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -152,7 +154,18 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <ComponentPanel classStyle="w-7/12">
                                 <div className="flex flex-col h-full">
                                     <div className="flex flex-col">
-                                        <h2 className="text-xl font-semibold mb-6">Current portfolio</h2>
+                                        <h2 className="text-xl font-semibold">Current portfolio</h2>
+                                        <div className="text-right mb-6">
+                                            <Button className='bg-vermilion text-mainDarkBlue text-xs'>
+                                                <span className="w-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-current cursor-pointer">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                    </svg>
+                                                </span>
+                                                <span>New ticker request</span>
+                                            </Button>
+                                        </div>
                                         <div className="flex flex-wrap justify-around ">
                                             {this.state.stockGrouped.map(g =>
                                                 <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl">
