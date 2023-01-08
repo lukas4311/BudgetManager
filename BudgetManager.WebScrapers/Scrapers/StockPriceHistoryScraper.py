@@ -5,6 +5,7 @@ import csv
 import time
 from Models.Fmp import StockPriceData
 from Services.InfluxRepository import InfluxRepository
+from Services.YahooService import YahooService
 from configManager import token, organizaiton
 from secret import alphaVantageToken, influxDbUrl
 from Services.AlphaVantage import AlphaVantageService
@@ -19,8 +20,9 @@ class StockPriceScraper:
 
     def scrape_stocks_prices(self, bucketName: str, ticker: str):
         try:
-            alphaVantageService = AlphaVantageService(alphaVantageToken)
-            stockPriceData = alphaVantageService.get_stock_price_history(ticker)
+            # alphaVantageService = AlphaVantageService(alphaVantageToken)
+            yahooService = YahooService()
+            stockPriceData = yahooService.get_stock_price_history(ticker)
             self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
@@ -38,11 +40,11 @@ class StockPriceScraper:
             pointsToSave.append(point)
 
         influx_repository.add_range(pointsToSave)
-        influx_repository.save_batch(saveAfter=100)
+        influx_repository.save()
 
 
 stockPriceScraper = StockPriceScraper()
-# stockPriceScraper.scrape_stocks_prices('Price', 'ZTS')
+# stockPriceScraper.scrape_stocks_prices('Price', 'AAPL')
 
 
 def processTickers(rows):
@@ -57,8 +59,8 @@ def processTickers(rows):
         except Exception:
             print(symbol + " - error")
 
-        print("Sleeping for 30 seconds")
-        time.sleep(30)
+        print("Sleeping for 5 seconds")
+        time.sleep(5)
         print("Sleeping is done.")
 
 
