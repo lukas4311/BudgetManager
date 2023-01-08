@@ -2,7 +2,7 @@ import selenium.webdriver
 from selenium.webdriver.chrome.options import ChromiumOptions
 from bs4 import BeautifulSoup
 import time
-import influxdb
+import influxdb_client
 from datetime import datetime
 
 class GoogleStockScraper:
@@ -12,18 +12,22 @@ class GoogleStockScraper:
     def get_equity_price(self, ticker: str) -> float:
         options = ChromiumOptions()
         options.add_argument('--headless')
-        driver = selenium.webdriver.Chrome(options=options)
+        options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        driver = selenium.webdriver.Chrome(options=options, executable_path=r"D:\chromedriver_win32\chromedriver.exe")
         driver.get(f'https://www.google.com/search?q={ticker}+ticker')
         time.sleep(2)
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
         results = soup.find_all('div', class_='g')
+        print(results)
+        price = 0
         for result in results:
             price_label_element = result.find('span', text=lambda x: x and 'Price:' in x)
             if price_label_element:
                 price_element = price_label_element.next_sibling
                 price_text = price_element.text
                 price = float(price_text)
+                print(price)
                 break
         driver.close()
         return price
@@ -33,7 +37,7 @@ class GoogleStockScraper:
 
 class InfluxService:
     def __init__(self, host: str, port: int, username: str, password: str, database: str):
-        self.client = influxdb.InfluxDBClient(host=host, port=port, username=username, password=password)
+        self.client = influxdb_client.InfluxDBClient(host=host, port=port, username=username, password=password)
         self.database = database
 
     def store_equity_price(self, ticker: str):
@@ -59,3 +63,7 @@ class InfluxService:
                 }
             ]
             self.client.write_points(data)
+
+influx = GoogleStockScraper(None)
+aapl = influx.get_equity_price('AAPL')
+print(aapl)
