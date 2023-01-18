@@ -1042,6 +1042,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: #707F99ff !important;
 }
 
+.bg-prussianBlue {
+  background-color: #032b4aff !important;
+}
+
 .bg-vermilion {
   background-color: #e03d15ff !important;
 }
@@ -1049,10 +1053,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-gray-700 {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(55 65 81 / var(--tw-bg-opacity)) !important;
-}
-
-.bg-prussianBlue {
-  background-color: #032b4aff !important;
 }
 
 .bg-blueSapphire {

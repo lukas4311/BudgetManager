@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from influxdb_client import Point, WritePrecision
 import csv
@@ -22,7 +22,16 @@ class StockPriceScraper:
         try:
             # alphaVantageService = AlphaVantageService(alphaVantageToken)
             yahooService = YahooService()
-            stockPriceData = yahooService.get_stock_price_history(ticker)
+
+            last_downloaded = None
+            date_to = datetime.now()
+            lastValue = influx_repository.filter_last_value(bucketName, ticker, datetime.min)
+            if len(lastValue) != 0:
+                last_downloaded = lastValue[0].records[0]["_time"] + timedelta(days=2)
+
+            unix_timestamp_from = '511056000' if last_downloaded is None else str(self.__convert_to_unix_timestamp(last_downloaded))
+            unix_timestamp_to = str(self.__convert_to_unix_timestamp(date_to))
+            stockPriceData = yahooService.get_stock_price_history(ticker, unix_timestamp_from, unix_timestamp_to)
             self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
@@ -42,28 +51,31 @@ class StockPriceScraper:
         influx_repository.add_range(pointsToSave)
         influx_repository.save()
 
+    def __convert_to_unix_timestamp(self, date: datetime):
+        return int(time.mktime(date.timetuple()))
 
 stockPriceScraper = StockPriceScraper()
-# stockPriceScraper.scrape_stocks_prices('Price', 'AAPL')
+stockPriceScraper.scrape_stocks_prices('Price', 'SEA')
 
 
-def processTickers(rows):
-    for row in rows:
-        symbol = row["Symbol"]
-        message = 'Loading data for ' + symbol
-        print(message)
-        logging.info(message)
-
-        try:
-            stockPriceScraper.scrape_stocks_prices('Price', symbol)
-        except Exception:
-            print(symbol + " - error")
-
-        print("Sleeping for 5 seconds")
-        time.sleep(5)
-        print("Sleeping is done.")
-
-
-with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-    csv_file = csv.DictReader(file)
-    processTickers(csv_file)
+# def processTickers(rows):
+#     for row in rows:
+#         symbol = row["Symbol"]
+#         message = 'Loading data for ' + symbol
+#         print(message)
+#         logging.info(message)
+#
+#         try:
+#             stockPriceScraper.scrape_stocks_prices('Price', symbol)
+#         except Exception:
+#             influx_repository.clear()
+#             print(symbol + " - error")
+#
+#         print("Sleeping for 5 seconds")
+#         time.sleep(5)
+#         print("Sleeping is done.")
+#
+#
+# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+#     csv_file = csv.DictReader(file)
+#     processTickers(csv_file)
