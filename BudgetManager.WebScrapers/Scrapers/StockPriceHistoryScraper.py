@@ -21,31 +21,28 @@ class StockPriceScraper:
     def scrape_stocks_prices(self, bucketName: str, ticker: str):
         try:
             # alphaVantageService = AlphaVantageService(alphaVantageToken)
-            yahooService = YahooService()
-
-            last_downloaded = None
+            stockPriceData: list[StockPriceData] = []
             date_to = datetime.now()
             lastValue = influx_repository.filter_last_value(bucketName, ticker, datetime.min)
-            last_downloaded_time = None
 
             if len(lastValue) != 0:
                 last_downloaded_time = lastValue[0].records[0]["_time"]
-                last_downloaded = last_downloaded_time + timedelta(days=2)
+                now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=1)
 
-            now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=2)
-            if last_downloaded_time is None or last_downloaded_time < now_datetime_with_offset:
-                # unix_timestamp_from = '511056000' if last_downloaded is None else str(self.__convert_to_unix_timestamp(last_downloaded))
-                # unix_timestamp_to = str(self.__convert_to_unix_timestamp(date_to))
-                # stockPriceData = yahooService.get_stock_price_history(ticker, unix_timestamp_from, unix_timestamp_to)
-                stockPriceData = self.__scrape_stock_data(ticker, last_downloaded, date_to)
-                self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
+                if last_downloaded_time < now_datetime_with_offset:
+                    stockPriceData = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
+            else:
+                stockPriceData = self.__scrape_stock_data(ticker, None, date_to)
+
+            self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
 
     def __scrape_stock_data(self, ticker: str, date_from: datetime, date_to: datetime):
         yahooService = YahooService()
-        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from))
+        date_from_with_offset = date_from + timedelta(days=2)
+        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from_with_offset))
         unix_to = str(self.__convert_to_unix_timestamp(date_to))
         return yahooService.get_stock_price_history(ticker, unix_from, unix_to)
 
@@ -66,37 +63,40 @@ class StockPriceScraper:
     def __convert_to_unix_timestamp(self, date: datetime):
         return int(time.mktime(date.timetuple()))
 
+
 stockPriceScraper = StockPriceScraper()
-stockPriceScraper.scrape_stocks_prices('Price', 'SE')
-stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
-stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
-stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
-stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
-stockPriceScraper.scrape_stocks_prices('Price', 'O')
-stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
-stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
-stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
-stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
 
 
-# def processTickers(rows):
-#     for row in rows:
-#         symbol = row["Symbol"]
-#         message = 'Loading data for ' + symbol
-#         print(message)
-#         logging.info(message)
-#
-#         try:
-#             stockPriceScraper.scrape_stocks_prices('Price', symbol)
-#         except Exception:
-#             influx_repository.clear()
-#             print(symbol + " - error")
-#
-#         print("Sleeping for 5 seconds")
-#         time.sleep(2)
-#         print("Sleeping is done.")
-#
-#
-# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     processTickers(csv_file)
+# stockPriceScraper.scrape_stocks_prices('Price', 'SE')
+# stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
+# stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
+# stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
+# stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
+# stockPriceScraper.scrape_stocks_prices('Price', 'O')
+# stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
+# stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
+# stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
+# stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
+
+
+def processTickers(rows):
+    for row in rows:
+        symbol = row["Symbol"]
+        message = 'Loading data for ' + symbol
+        print(message)
+        logging.info(message)
+
+        try:
+            stockPriceScraper.scrape_stocks_prices('Price', symbol)
+        except Exception:
+            influx_repository.clear()
+            print(symbol + " - error")
+
+        print("Sleeping for 5 seconds")
+        time.sleep(2)
+        print("Sleeping is done.")
+
+
+with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+    csv_file = csv.DictReader(file)
+    processTickers(csv_file)
