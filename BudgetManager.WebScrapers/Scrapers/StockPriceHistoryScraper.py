@@ -26,16 +26,28 @@ class StockPriceScraper:
             last_downloaded = None
             date_to = datetime.now()
             lastValue = influx_repository.filter_last_value(bucketName, ticker, datetime.min)
-            if len(lastValue) != 0:
-                last_downloaded = lastValue[0].records[0]["_time"] + timedelta(days=2)
+            last_downloaded_time = None
 
-            unix_timestamp_from = '511056000' if last_downloaded is None else str(self.__convert_to_unix_timestamp(last_downloaded))
-            unix_timestamp_to = str(self.__convert_to_unix_timestamp(date_to))
-            stockPriceData = yahooService.get_stock_price_history(ticker, unix_timestamp_from, unix_timestamp_to)
-            self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
+            if len(lastValue) != 0:
+                last_downloaded_time = lastValue[0].records[0]["_time"]
+                last_downloaded = last_downloaded_time + timedelta(days=2)
+
+            now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=2)
+            if last_downloaded_time is None or last_downloaded_time < now_datetime_with_offset:
+                # unix_timestamp_from = '511056000' if last_downloaded is None else str(self.__convert_to_unix_timestamp(last_downloaded))
+                # unix_timestamp_to = str(self.__convert_to_unix_timestamp(date_to))
+                # stockPriceData = yahooService.get_stock_price_history(ticker, unix_timestamp_from, unix_timestamp_to)
+                stockPriceData = self.__scrape_stock_data(ticker, last_downloaded, date_to)
+                self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
+
+    def __scrape_stock_data(self, ticker: str, date_from: datetime, date_to: datetime):
+        yahooService = YahooService()
+        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from))
+        unix_to = str(self.__convert_to_unix_timestamp(date_to))
+        return yahooService.get_stock_price_history(ticker, unix_from, unix_to)
 
     def __save_price_data_to_influx(self, measurement: str, ticker: str, priceData: list):
         priceModel: StockPriceData
@@ -55,7 +67,16 @@ class StockPriceScraper:
         return int(time.mktime(date.timetuple()))
 
 stockPriceScraper = StockPriceScraper()
-stockPriceScraper.scrape_stocks_prices('Price', 'SEA')
+stockPriceScraper.scrape_stocks_prices('Price', 'SE')
+stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
+stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
+stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
+stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
+stockPriceScraper.scrape_stocks_prices('Price', 'O')
+stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
+stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
+stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
+stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
 
 
 # def processTickers(rows):
@@ -72,7 +93,7 @@ stockPriceScraper.scrape_stocks_prices('Price', 'SEA')
 #             print(symbol + " - error")
 #
 #         print("Sleeping for 5 seconds")
-#         time.sleep(5)
+#         time.sleep(2)
 #         print("Sleeping is done.")
 #
 #
