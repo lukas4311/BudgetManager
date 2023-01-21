@@ -8,7 +8,7 @@ from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
 from configManager import token, organizaiton
 from secret import alphaVantageToken, influxDbUrl
-from Services.AlphaVantage import AlphaVantageService
+import pytz
 
 log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
@@ -31,6 +31,7 @@ class StockPriceScraper:
 
                 if last_downloaded_time < now_datetime_with_offset:
                     stockPriceData = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
+                    stockPriceData = [d for d in stockPriceData if d.date > last_downloaded_time]
             else:
                 stockPriceData = self.__scrape_stock_data(ticker, None, date_to)
 
@@ -41,8 +42,7 @@ class StockPriceScraper:
 
     def __scrape_stock_data(self, ticker: str, date_from: datetime, date_to: datetime):
         yahooService = YahooService()
-        date_from_with_offset = date_from + timedelta(days=2)
-        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from_with_offset))
+        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from + timedelta(days=1)))
         unix_to = str(self.__convert_to_unix_timestamp(date_to))
         return yahooService.get_stock_price_history(ticker, unix_from, unix_to)
 
@@ -65,18 +65,16 @@ class StockPriceScraper:
 
 
 stockPriceScraper = StockPriceScraper()
-
-
-# stockPriceScraper.scrape_stocks_prices('Price', 'SE')
-# stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
-# stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
-# stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
-# stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
-# stockPriceScraper.scrape_stocks_prices('Price', 'O')
-# stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
-# stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
-# stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
-# stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
+stockPriceScraper.scrape_stocks_prices('Price', 'SE')
+stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
+stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
+stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
+stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
+stockPriceScraper.scrape_stocks_prices('Price', 'O')
+stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
+stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
+stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
+stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
 
 
 def processTickers(rows):
