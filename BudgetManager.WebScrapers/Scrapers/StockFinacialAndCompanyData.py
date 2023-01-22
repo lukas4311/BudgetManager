@@ -1,6 +1,5 @@
 import pytz
 from influxdb_client import Point, WritePrecision
-
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
