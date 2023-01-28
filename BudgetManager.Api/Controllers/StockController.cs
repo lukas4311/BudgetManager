@@ -1,8 +1,10 @@
 ﻿using BudgetManager.Domain.DTOs;
+using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -57,11 +59,13 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("stock/{ticker}/price")]
-        public IActionResult GetStockPriceData(string ticker)
+        public ActionResult<IEnumerable<StockPrice>> GetStockPriceData(string ticker)
         {
-            // TODO: check if stock data exists
-            // TODO: find stock data from influx
-            return null;
+            if (this.stockTickerService.Get(t => string.Compare(t.Ticker, ticker, true) == 0).Count() == 0)
+                return StatusCode(StatusCodes.Status204NoContent);
+
+            IEnumerable<StockPrice> data = this.stockTradeHistoryService.GetStockPriceHistory(ticker);
+            return Ok(data);
         }
     }
 }

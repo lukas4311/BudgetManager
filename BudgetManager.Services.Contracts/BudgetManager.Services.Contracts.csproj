@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
     <ProjectReference Include="..\BudgetManager.Domain\BudgetManager.Domain.csproj" />
+    <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.InfluxDbData.Models;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
@@ -8,6 +9,8 @@ namespace BudgetManager.Services.Contracts
     {
         IEnumerable<StockTradeHistoryGetModel> GetAll(int userId);
 
-        public bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
+        bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
+
+        IEnumerable<StockPrice> GetStockPriceHistory(string ticker);
     }
 }
