@@ -13,11 +13,11 @@ namespace BudgetManager.InfluxDbData
 
         Task DeleteAll(DataSourceIdentification dataSourceIdentification);
 
-        Task<List<TModel>> GetPastDaysData(DataSourceIdentification dataSourceIdentification, int days);
+        Task<IEnumerable<TModel>> GetPastDaysData(DataSourceIdentification dataSourceIdentification, int days);
 
-        Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour);
+        Task<IEnumerable<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour);
 
-        Task<List<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification);
+        Task<IEnumerable<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification);
 
         Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification);
 

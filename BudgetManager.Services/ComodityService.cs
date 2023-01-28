@@ -78,7 +78,7 @@ namespace BudgetManager.Services
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketComodity);
-            List<ComodityData> data = await this.comodityRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
+            IEnumerable<ComodityData> data = await this.comodityRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, Gold))?.Price ?? 0;
         }
     }

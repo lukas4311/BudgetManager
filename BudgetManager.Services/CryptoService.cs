@@ -67,7 +67,7 @@ namespace BudgetManager.Services
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
-            List<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
+            IEnumerable<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
     }

@@ -49,7 +49,7 @@ namespace BudgetManager.InfluxDbData
             await writeContext.WriteMeasurementsAsync(dataSourceIdentification.Bucket, dataSourceIdentification.Organization, WritePrecision.Ns, model).ConfigureAwait(false);
         }
 
-        public async Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour)
+        public async Task<IEnumerable<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour)
         {
             FluxQueryBuilder queryBulder = this.GetHourDataQuery(dataSourceIdentification, hour);
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(queryBulder.CreateQuery(), dataSourceIdentification.Organization);
@@ -57,7 +57,7 @@ namespace BudgetManager.InfluxDbData
             return this.ParseData(data);
         }
 
-        public async Task<List<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour, string cryptoTicker)
+        public async Task<IEnumerable<TModel>> GetPastHoursData(DataSourceIdentification dataSourceIdentification, int hour, string cryptoTicker)
         {
             FluxQueryBuilder queryBulder = this.GetHourDataQuery(dataSourceIdentification, hour).AddFilter("ticker", cryptoTicker);
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(queryBulder.CreateQuery(), dataSourceIdentification.Organization);
@@ -65,7 +65,7 @@ namespace BudgetManager.InfluxDbData
             return this.ParseData(data);
         }
 
-        public async Task<List<TModel>> GetPastDaysData(DataSourceIdentification dataSourceIdentification, int days)
+        public async Task<IEnumerable<TModel>> GetPastDaysData(DataSourceIdentification dataSourceIdentification, int days)
         {
             if (dataSourceIdentification is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
@@ -81,7 +81,7 @@ namespace BudgetManager.InfluxDbData
             return this.ParseData(data);
         }
 
-        public async Task<List<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification)
+        public async Task<IEnumerable<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification)
         {
             if (dataSourceIdentification is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
@@ -132,8 +132,16 @@ namespace BudgetManager.InfluxDbData
 
         public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification)
         {
-            throw new NotImplementedException();
+            if (dataSourceIdentification is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
+
+            return this.GetPastDaysData(dataSourceIdentification, int.MaxValue);
         }
+
+        //public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, )
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
         {

@@ -44,7 +44,7 @@ namespace BudgetManager.TestingConsole
             InfluxConfig config = GetSecretToken();
 
             InfluxDbData.Repository<CryptoData> repo = new(new InfluxContext(config.Url, config.Token));
-            List<CryptoData> lastRecords = await repo.GetLastWrittenRecordsTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
+            IEnumerable<CryptoData> lastRecords = await repo.GetLastWrittenRecordsTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
             CryptoData lastTickerRecord = lastRecords.SingleOrDefault(r => r.Ticker == cryptoTicker.ToString());
 
             CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
