@@ -55,5 +55,13 @@ namespace BudgetManager.Api.Controllers
             this.stockTradeHistoryService.Delete(id);
             return Ok();
         }
+
+        [HttpGet("stock/{ticker}/price")]
+        public IActionResult GetStockPriceData(string ticker)
+        {
+            // TODO: check if stock data exists
+            // TODO: find stock data from influx
+            return null;
+        }
     }
 }
