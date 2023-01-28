@@ -1,6 +1,7 @@
 ﻿using InfluxDB.Client.Api.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BudgetManager.InfluxDbData
@@ -20,6 +21,8 @@ namespace BudgetManager.InfluxDbData
         Task<IEnumerable<TModel>> GetLastWrittenRecordsTime(DataSourceIdentification dataSourceIdentification);
 
         Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification);
+
+        Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Expression<Func<TModel, bool>> filterPredicate);
 
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
 

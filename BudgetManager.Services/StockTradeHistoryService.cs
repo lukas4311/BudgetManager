@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
@@ -12,6 +13,8 @@ namespace BudgetManager.Services
 {
     public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
     {
+        private const string bucket = "StockPrice";
+        private const string organizationId = "8f46f33452affe4a";
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
 
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo) : base(repository, mapper)
@@ -30,7 +33,7 @@ namespace BudgetManager.Services
         public IEnumerable<StockPrice> GetStockPriceHistory(string ticker)
         {
             //this.stockDataInfluxRepo.
-
+            this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), f => f.Ticker == ticker);
             return null;
         }
     }

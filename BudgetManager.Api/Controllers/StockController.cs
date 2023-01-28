@@ -61,7 +61,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("stock/{ticker}/price")]
         public ActionResult<IEnumerable<StockPrice>> GetStockPriceData(string ticker)
         {
-            if (this.stockTickerService.Get(t => string.Compare(t.Ticker, ticker, true) == 0).Count() == 0)
+            if (this.stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
                 return StatusCode(StatusCodes.Status204NoContent);
 
             IEnumerable<StockPrice> data = this.stockTradeHistoryService.GetStockPriceHistory(ticker);

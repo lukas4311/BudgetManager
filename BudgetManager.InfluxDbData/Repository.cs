@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace BudgetManager.InfluxDbData
 {
@@ -138,10 +139,21 @@ namespace BudgetManager.InfluxDbData
             return this.GetPastDaysData(dataSourceIdentification, int.MaxValue);
         }
 
-        //public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, )
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Expression<Func<TModel, bool>> filterPredicate)
+        {
+            //var left = filterPredicate.Body.Left;
+            var expresssionLambda = filterPredicate as LambdaExpression;
+            //var expressionBinary = filterPredicate as System.Linq.Expressions.BinaryExpression;
+            var bodyExpression = expresssionLambda.Body as System.Linq.Expressions.BinaryExpression;
+            var memberExpr = bodyExpression.Right as System.Linq.Expressions.MemberExpression;
+            var field = memberExpr.Member as FieldInfo;
+            if (field != null)
+            {
+                var a = field.GetValue(bodyExpression.Right);
+            }
+
+            throw new NotImplementedException();
+        }
 
         private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
         {
