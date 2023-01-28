@@ -130,6 +130,11 @@ namespace BudgetManager.InfluxDbData
             await this.Delete(dataSourceIdentification, new DateTimeRange());
         }
 
+        public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification)
+        {
+            throw new NotImplementedException();
+        }
+
         private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
         {
             if (dataSourceIdentification is null)
@@ -181,5 +186,6 @@ namespace BudgetManager.InfluxDbData
 
             property?.SetValue(model, pair.Value);
         }
+
     }
 }

@@ -30,6 +30,7 @@ namespace BudgetManager.Services
         public IEnumerable<StockPrice> GetStockPriceHistory(string ticker)
         {
             //this.stockDataInfluxRepo.
+
             return null;
         }
     }
