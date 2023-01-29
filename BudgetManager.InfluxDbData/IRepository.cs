@@ -22,7 +22,7 @@ namespace BudgetManager.InfluxDbData
 
         Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification);
 
-        Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Expression<Func<TModel, bool>> filterPredicate);
+        Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters);
 
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
 

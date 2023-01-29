@@ -131,28 +131,30 @@ namespace BudgetManager.InfluxDbData
             await this.Delete(dataSourceIdentification, new DateTimeRange());
         }
 
-        public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification)
+        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification)
         {
             if (dataSourceIdentification is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
-            return this.GetPastDaysData(dataSourceIdentification, int.MaxValue);
+            return await this.GetPastDaysData(dataSourceIdentification, int.MaxValue);
         }
 
-        public Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Expression<Func<TModel, bool>> filterPredicate)
+        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters)
         {
-            //var left = filterPredicate.Body.Left;
-            var expresssionLambda = filterPredicate as LambdaExpression;
-            //var expressionBinary = filterPredicate as System.Linq.Expressions.BinaryExpression;
-            var bodyExpression = expresssionLambda.Body as System.Linq.Expressions.BinaryExpression;
-            var memberExpr = bodyExpression.Right as System.Linq.Expressions.MemberExpression;
-            var field = memberExpr.Member as FieldInfo;
-            if (field != null)
-            {
-                var a = field.GetValue(bodyExpression.Right);
-            }
+            if (dataSourceIdentification is null)
+                throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
-            throw new NotImplementedException();
+            FluxQueryBuilder queryBuilder = new FluxQueryBuilder();
+            FluxQueryBuilder query = queryBuilder
+                .From(dataSourceIdentification.Bucket)
+                .RangePastDays(int.MaxValue)
+                .AddMeasurementFilter(this.measurementName);
+
+            foreach (var filter in filters)
+                query.AddFilter(filter.Key, filter.Value);
+
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
+            return this.ParseData(data);
         }
 
         private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
