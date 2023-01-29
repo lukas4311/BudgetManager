@@ -6,6 +6,7 @@ using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,10 @@ namespace BudgetManager.Services
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker) 
-            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });
+            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });\
+
+        public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from)
+            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), from, new() { { "ticker", ticker } });
+
     }
 }

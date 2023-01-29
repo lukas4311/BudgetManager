@@ -3,6 +3,7 @@ using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,6 +67,16 @@ namespace BudgetManager.Api.Controllers
                 return StatusCode(StatusCodes.Status204NoContent);
 
             IEnumerable<StockPrice> data = await this.stockTradeHistoryService.GetStockPriceHistory(ticker);
+            return Ok(data);
+        }
+
+        [HttpGet("stock/{ticker}/price")]
+        public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker, [FromQuery] DateTime from)
+        {
+            if (this.stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
+                return StatusCode(StatusCodes.Status204NoContent);
+
+            IEnumerable<StockPrice> data = await this.stockTradeHistoryService.GetStockPriceHistory(ticker, from);
             return Ok(data);
         }
     }

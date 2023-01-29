@@ -24,6 +24,8 @@ namespace BudgetManager.InfluxDbData
 
         Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters);
 
+        Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, DateTime from, Dictionary<string, object> filters);
+
         Task Write(TModel model, DataSourceIdentification dataSourceIdentification);
 
         Task WriteAll(IEnumerable<TModel> model, DataSourceIdentification dataSourceIdentification);

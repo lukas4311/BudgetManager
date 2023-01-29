@@ -21,7 +21,6 @@ namespace BudgetManager.InfluxDbData
         public Repository(IInfluxContext context)
         {
             this.context = context;
-
             Measurement measurementAttribute = typeof(TModel).GetCustomAttributes(typeof(Measurement)).Single() as Measurement;
             this.measurementName = measurementAttribute.Name;
         }
@@ -141,6 +140,21 @@ namespace BudgetManager.InfluxDbData
 
         public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters)
         {
+            var query = this.PrepareQueryBuilder(dataSourceIdentification, filters);
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
+            return this.ParseData(data);
+        }
+
+        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, DateTime from, Dictionary<string, object> filters)
+        {
+            var query = this.PrepareQueryBuilder(dataSourceIdentification, filters);
+            query.Range(new DateTimeRange { From = from });
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
+            return this.ParseData(data);
+        }
+
+        private FluxQueryBuilder PrepareQueryBuilder(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters)
+        {
             if (dataSourceIdentification is null)
                 throw new ArgumentException(ParameterErrorMessage, nameof(dataSourceIdentification));
 
@@ -153,8 +167,7 @@ namespace BudgetManager.InfluxDbData
             foreach (var filter in filters)
                 query.AddFilter(filter.Key, filter.Value);
 
-            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
-            return this.ParseData(data);
+            return query;
         }
 
         private FluxQueryBuilder GetHourDataQuery(DataSourceIdentification dataSourceIdentification, int hour)
