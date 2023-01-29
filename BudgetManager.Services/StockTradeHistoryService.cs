@@ -8,13 +8,14 @@ using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
     public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
-        private const string organizationId = "8f46f33452affe4a";
+        private const string organizationId = "f209a688c8dcfff3";
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
 
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo) : base(repository, mapper)
@@ -30,11 +31,7 @@ namespace BudgetManager.Services
         public bool UserHasRightToPayment(int stockTradeHistoruId, int userId)
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
-        public IEnumerable<StockPrice> GetStockPriceHistory(string ticker)
-        {
-            //this.stockDataInfluxRepo.
-            this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), f => f.Ticker == ticker);
-            return null;
-        }
+        public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker) 
+            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });
     }
 }

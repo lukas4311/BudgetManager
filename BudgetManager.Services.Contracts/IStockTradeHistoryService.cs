@@ -2,6 +2,7 @@
 using BudgetManager.Domain.DTOs;
 using BudgetManager.InfluxDbData.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -11,6 +12,6 @@ namespace BudgetManager.Services.Contracts
 
         bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
 
-        IEnumerable<StockPrice> GetStockPriceHistory(string ticker);
+        Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker);
     }
 }
