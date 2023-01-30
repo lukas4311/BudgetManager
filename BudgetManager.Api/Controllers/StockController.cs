@@ -70,8 +70,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
-        [HttpGet("stock/{ticker}/price")]
-        public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker, [FromQuery] DateTime from)
+        [HttpGet("stock/{ticker}/price/{from}")]
+        public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker, DateTime from)
         {
             if (this.stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
                 return StatusCode(StatusCodes.Status204NoContent);

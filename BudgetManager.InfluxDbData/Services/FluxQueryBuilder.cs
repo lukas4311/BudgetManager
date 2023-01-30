@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BudgetManager.InfluxDbData.Services
@@ -26,7 +27,10 @@ namespace BudgetManager.InfluxDbData.Services
 
         public FluxQueryBuilder Range(DateTimeRange dateTimeRange)
         {
-            this.range = string.Format(rangeStartStopAbsoluteClause, dateTimeRange.From, dateTimeRange.To);
+            this.range = dateTimeRange.To != DateTime.MaxValue
+                ? string.Format(rangeStartStopAbsoluteClause, dateTimeRange.From.ToString("yyyy-MM-dd"), dateTimeRange.To.ToString("yyyy-MM-dd"))
+                : string.Format(rangeStartRelativeClause, dateTimeRange.From.ToString("yyyy-MM-dd"));
+
             return this;
         }
 
