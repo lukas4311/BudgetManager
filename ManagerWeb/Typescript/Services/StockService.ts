@@ -68,10 +68,10 @@ export default class StockService {
     public async getLastMonthTickersPrice(tickers: string[]): Promise<TickersWithPriceHistory[]> {
         let tickersWithPrice: TickersWithPriceHistory[] = [];
 
-        tickers.forEach(async ticker => {
+        for (const ticker of tickers) {
             const priceHistory = await this.getStockPriceHistory(ticker);
             tickersWithPrice.push({ ticker: ticker, price: priceHistory });
-        });
+        }
 
         return tickersWithPrice;
     }

@@ -9265,7 +9265,9 @@ class StockOverview extends react_1.default.Component {
             stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'asc');
             const stockSummaryBuy = Math.abs(lodash_1.default.sumBy(stocks.filter(s => s.action == StockViewModel_1.TradeAction.Buy), a => a.tradeValue));
             const stockSummarySell = Math.abs(lodash_1.default.sumBy(stocks.filter(s => s.action == StockViewModel_1.TradeAction.Sell), a => a.tradeValue));
-            this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell } });
+            const tickers = stockGrouped.map(a => a.tickerName);
+            const tickersPrice = yield this.stockService.getLastMonthTickersPrice(tickers);
+            this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
         });
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const stockHistoryTrade = {
@@ -9323,7 +9325,7 @@ class StockOverview extends react_1.default.Component {
             yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
             yield this.loadStockData();
         });
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -10368,10 +10370,10 @@ class StockService {
     getLastMonthTickersPrice(tickers) {
         return __awaiter(this, void 0, void 0, function* () {
             let tickersWithPrice = [];
-            tickers.forEach((ticker) => __awaiter(this, void 0, void 0, function* () {
+            for (const ticker of tickers) {
                 const priceHistory = yield this.getStockPriceHistory(ticker);
                 tickersWithPrice.push({ ticker: ticker, price: priceHistory });
-            }));
+            }
             return tickersWithPrice;
         });
     }

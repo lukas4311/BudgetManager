@@ -12,7 +12,7 @@ import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
-import StockService, { StockGroupModel } from "../../Services/StockService";
+import StockService, { StockGroupModel, TickersWithPriceHistory } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
@@ -39,6 +39,7 @@ interface StockOverviewState {
     openedForm: boolean;
     selectedModel: StockViewModel;
     stockSummary: StockSummary;
+    stockPrice: TickersWithPriceHistory[];
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -50,7 +51,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
     }
 
     public componentDidMount = () => this.init();
@@ -73,7 +74,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
         const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
         const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
-        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell } });
+        const tickers = stockGrouped.map(a => a.tickerName);
+        const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
     }
 
     private saveStockTrade = async (data: StockViewModel) => {
