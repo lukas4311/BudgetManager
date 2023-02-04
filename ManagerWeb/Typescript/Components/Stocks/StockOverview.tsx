@@ -17,6 +17,10 @@ import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { IconsData } from "../../Enums/IconsEnum";
+import { LineChartDataSets } from "../../Model/LineChartDataSets";
+import { LineChartData } from "../../Model/LineChartData";
+import { LineChart } from "../Charts/LineChart";
+import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 
 const theme = createMuiTheme({
     palette: {
@@ -148,6 +152,24 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         await this.loadStockData();
     }
 
+    private renderChart = (ticker: string) => {
+        let priceChart: LineChartDataSets[] = [{ id: 'Price', data: [] }];
+        let tradeHistory = _.first(this.state.stockPrice.filter(f => f.ticker == ticker));
+
+        if (tradeHistory != undefined && tradeHistory.price.length > 5) {
+            let prices = tradeHistory.price;
+            const sortedArray = _.orderBy(prices, [(obj) => new Date(obj.time)], ['asc'])
+            let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.time).format('YYYY-MM-DD'), y: b.price }))
+            priceChart = [{ id: 'Price', data: priceData }];
+        }
+
+        return (
+            <div className="h-16">
+                <LineChart dataSets={priceChart} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
+            </div>
+        );
+    }
+
     render() {
         return (
             <ThemeProvider theme={theme}>
@@ -179,6 +201,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                                             <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
                                                         </div>
                                                     </div>
+                                                    {this.renderChart(g.tickerName)}
                                                 </div>)}
                                         </div>
                                     </div>

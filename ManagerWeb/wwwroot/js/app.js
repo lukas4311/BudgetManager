@@ -7010,6 +7010,13 @@ class LineChartSettingManager {
             }
         };
     }
+    static getStockChartSetting() {
+        return {
+            data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
+            axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 }
+        };
+    }
     static getOtherInvestmentSummarySetting(min, max) {
         let yScaleSetting = { type: 'linear' };
         const calculatedMin = min - (min * (10 / 100));
@@ -9240,6 +9247,8 @@ const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Type
 const Loading_1 = __webpack_require__(/*! ../../Utils/Loading */ "./Typescript/Utils/Loading.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
+const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
+const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9325,6 +9334,18 @@ class StockOverview extends react_1.default.Component {
             yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
             yield this.loadStockData();
         });
+        this.renderChart = (ticker) => {
+            let priceChart = [{ id: 'Price', data: [] }];
+            let tradeHistory = lodash_1.default.first(this.state.stockPrice.filter(f => f.ticker == ticker));
+            if (tradeHistory != undefined && tradeHistory.price.length > 5) {
+                let prices = tradeHistory.price;
+                const sortedArray = lodash_1.default.orderBy(prices, [(obj) => new Date(obj.time)], ['asc']);
+                let priceData = sortedArray.map(b => ({ x: (0, moment_1.default)(b.time).format('YYYY-MM-DD'), y: b.price }));
+                priceChart = [{ id: 'Price', data: priceData }];
+            }
+            return (react_1.default.createElement("div", { className: "h-16" },
+                react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSetting() })));
+        };
         this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
     }
     init() {
@@ -9362,7 +9383,8 @@ class StockOverview extends react_1.default.Component {
                                                 react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(3)),
                                                 react_1.default.createElement("p", { className: "text-lg text-left" },
                                                     Math.abs(g.stockValues).toFixed(2),
-                                                    " K\u010D"))))))),
+                                                    " K\u010D"))),
+                                        this.renderChart(g.tickerName))))),
                                 react_1.default.createElement("div", { className: "m-5 flex flex-col" },
                                     react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
                                     react_1.default.createElement("div", { className: "overflow-y-scroll" },
