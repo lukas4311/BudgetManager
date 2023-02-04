@@ -1,7 +1,8 @@
 import * as H from 'history';
 import _ from 'lodash';
+import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
-import { StockTickerModel } from '../ApiClient/Main/models';
+import { InterestRate, StockPrice, StockTickerModel } from '../ApiClient/Main/models';
 import ApiUrls from '../Model/Setting/ApiUrl';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import ApiClientFactory from "../Utils/ApiClientFactory";
@@ -56,6 +57,27 @@ export default class StockService {
             .value();
 
         return values.filter(s => s.size > 0.00001);
-        return values;
     }
+
+    public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
+        const fromDate = from ?? moment(new Date()).subtract(30, "d").toDate();
+        const priceHistory = await this.stockApi.stockStockTickerPriceFromGet({ from: fromDate, ticker: ticker });
+        return priceHistory;
+    }
+
+    public async getLastMonthTickersPrice(tickers: string[]): Promise<TickersWithPriceHistory[]> {
+        let tickersWithPrice: TickersWithPriceHistory[] = [];
+
+        tickers.forEach(async ticker => {
+            const priceHistory = await this.getStockPriceHistory(ticker);
+            tickersWithPrice.push({ ticker: ticker, price: priceHistory });
+        });
+
+        return tickersWithPrice;
+    }
+}
+
+export interface TickersWithPriceHistory {
+    ticker: string;
+    price: StockPrice[];
 }
