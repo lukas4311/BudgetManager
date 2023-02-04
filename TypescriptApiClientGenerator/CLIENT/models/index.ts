@@ -29,6 +29,7 @@ export * from './PaymentModel';
 export * from './PaymentTag';
 export * from './PaymentType';
 export * from './PaymentTypeModel';
+export * from './StockPrice';
 export * from './StockTickerModel';
 export * from './StockTradeHistoryGetModel';
 export * from './StockTradeHistoryModel';

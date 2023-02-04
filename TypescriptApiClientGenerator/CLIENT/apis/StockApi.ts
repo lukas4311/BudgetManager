@@ -15,6 +15,9 @@
 
 import * as runtime from '../../runtime';
 import {
+    StockPrice,
+    StockPriceFromJSON,
+    StockPriceToJSON,
     StockTickerModel,
     StockTickerModelFromJSON,
     StockTickerModelToJSON,
@@ -25,6 +28,15 @@ import {
     StockTradeHistoryModelFromJSON,
     StockTradeHistoryModelToJSON,
 } from '../models';
+
+export interface StockStockTickerPriceFromGetRequest {
+    ticker: string | null;
+    from: Date;
+}
+
+export interface StockStockTickerPriceGetRequest {
+    ticker: string | null;
+}
 
 export interface StockStockTradeHistoryDeleteRequest {
     body?: number;
@@ -56,6 +68,33 @@ export interface StockApiInterface {
     /**
      */
     stockStockTickerGet(initOverrides?: RequestInit): Promise<Array<StockTickerModel>>;
+
+    /**
+     * 
+     * @param {string} ticker 
+     * @param {Date} from 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTickerPriceFromGetRaw(requestParameters: StockStockTickerPriceFromGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>>;
+
+    /**
+     */
+    stockStockTickerPriceFromGet(requestParameters: StockStockTickerPriceFromGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>>;
+
+    /**
+     * 
+     * @param {string} ticker 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTickerPriceGetRaw(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>>;
+
+    /**
+     */
+    stockStockTickerPriceGet(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>>;
 
     /**
      * 
@@ -146,6 +185,74 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
      */
     async stockStockTickerGet(initOverrides?: RequestInit): Promise<Array<StockTickerModel>> {
         const response = await this.stockStockTickerGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async stockStockTickerPriceFromGetRaw(requestParameters: StockStockTickerPriceFromGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>> {
+        if (requestParameters.ticker === null || requestParameters.ticker === undefined) {
+            throw new runtime.RequiredError('ticker','Required parameter requestParameters.ticker was null or undefined when calling stockStockTickerPriceFromGet.');
+        }
+
+        if (requestParameters.from === null || requestParameters.from === undefined) {
+            throw new runtime.RequiredError('from','Required parameter requestParameters.from was null or undefined when calling stockStockTickerPriceFromGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stock/{ticker}/price/{from}`.replace(`{${"ticker"}}`, this.processPathParam(requestParameters.ticker)).replace(`{${"from"}}`, this.processPathParam(requestParameters.from)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockPriceFromJSON));
+    }
+
+    /**
+     */
+    async stockStockTickerPriceFromGet(requestParameters: StockStockTickerPriceFromGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>> {
+        const response = await this.stockStockTickerPriceFromGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async stockStockTickerPriceGetRaw(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>> {
+        if (requestParameters.ticker === null || requestParameters.ticker === undefined) {
+            throw new runtime.RequiredError('ticker','Required parameter requestParameters.ticker was null or undefined when calling stockStockTickerPriceGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stock/{ticker}/price`.replace(`{${"ticker"}}`, this.processPathParam(requestParameters.ticker)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockPriceFromJSON));
+    }
+
+    /**
+     */
+    async stockStockTickerPriceGet(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>> {
+        const response = await this.stockStockTickerPriceGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

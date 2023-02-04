@@ -38,6 +38,7 @@ models/PaymentModel.ts
 models/PaymentTag.ts
 models/PaymentType.ts
 models/PaymentTypeModel.ts
+models/StockPrice.ts
 models/StockTickerModel.ts
 models/StockTradeHistoryGetModel.ts
 models/StockTradeHistoryModel.ts
