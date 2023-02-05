@@ -93,7 +93,8 @@ export class LineChartSettingManager {
         return {
             data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
             colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
-            axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 }
+            axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 },
+            yScale:{ type: 'linear', min: 'auto', max: 'auto', reverse: false }
         }
     }
 

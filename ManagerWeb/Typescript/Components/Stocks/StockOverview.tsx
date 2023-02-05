@@ -164,7 +164,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         }
 
         return (
-            <div className="h-16">
+            <div className="h-12">
                 <LineChart dataSets={priceChart} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
             </div>
         );

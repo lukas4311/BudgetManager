@@ -7014,7 +7014,8 @@ class LineChartSettingManager {
         return {
             data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
             colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
-            axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 }
+            axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 },
+            yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false }
         };
     }
     static getOtherInvestmentSummarySetting(min, max) {
@@ -9343,7 +9344,7 @@ class StockOverview extends react_1.default.Component {
                 let priceData = sortedArray.map(b => ({ x: (0, moment_1.default)(b.time).format('YYYY-MM-DD'), y: b.price }));
                 priceChart = [{ id: 'Price', data: priceData }];
             }
-            return (react_1.default.createElement("div", { className: "h-16" },
+            return (react_1.default.createElement("div", { className: "h-12" },
                 react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSetting() })));
         };
         this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
