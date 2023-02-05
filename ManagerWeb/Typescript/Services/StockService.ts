@@ -12,6 +12,7 @@ export class StockGroupModel {
     tickerName: string;
     size: number;
     stockValues: number;
+    stocksActualPrice: number;
 }
 
 export default class StockService {

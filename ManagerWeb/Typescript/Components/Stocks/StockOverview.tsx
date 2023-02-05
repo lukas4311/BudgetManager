@@ -3,10 +3,10 @@ import { RouteComponentProps } from "react-router-dom";
 import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
-import { CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
+import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
-import _ from "lodash";
+import _, { forIn } from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
@@ -52,6 +52,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private stockApi: StockApi = undefined;
     private stockService: StockService = undefined;
     private icons: IconsData = new IconsData();
+    private cryptoApi: CryptoApi;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -65,6 +66,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const apiFactory = new ApiClientFactory(this.props.history);
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
+        this.cryptoApi = await apiFactory.getClient(CryptoApi);
         this.stockService = new StockService(this.props.history, appContext.apiUrls);
 
         this.tickers = await this.stockService.getStockTickers();
@@ -80,6 +82,17 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
+
+        for (const stock of stockGrouped) {
+            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+
+            if (tickerPrices != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                const actualPriceCzk = await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: "USD", toCurrency: "CZK" });
+                stock.stocksActualPrice = stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+            }
+        }
+
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
     }
 
@@ -170,6 +183,15 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         );
     }
 
+    private calculareProfit = (actualPrice: number, buyPrice: number) => {
+        let profit = -100;
+
+        if (actualPrice != 0)
+            profit = ((actualPrice / (buyPrice * -1)) - 1) * 100;
+
+        return profit;
+    }
+
     render() {
         return (
             <ThemeProvider theme={theme}>
@@ -199,6 +221,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                                         <div>
                                                             <p className="text-lg text-left">{g.size.toFixed(3)}</p>
                                                             <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
+                                                            {g.stocksActualPrice != 0 ? (
+                                                                <p className="text-lg text-left">{(this.calculareProfit(g.stocksActualPrice, g.stockValues)).toFixed(2)} %</p>
+                                                            ) : <></>}
                                                         </div>
                                                     </div>
                                                     {this.renderChart(g.tickerName)}
@@ -234,8 +259,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             </DialogContent>
                         </Dialog>
                     </>
-                </MainFrame>
-            </ThemeProvider>
+                </MainFrame >
+            </ThemeProvider >
         );
     }
 }

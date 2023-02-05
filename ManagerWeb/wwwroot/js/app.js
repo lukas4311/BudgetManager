@@ -9270,6 +9270,7 @@ class StockOverview extends react_1.default.Component {
         this.icons = new IconsEnum_1.IconsData();
         this.componentDidMount = () => this.init();
         this.loadStockData = () => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const stocks = yield this.stockService.getStockTradeHistory();
             let stockGrouped = yield this.stockService.getGroupedTradeHistory();
             stockGrouped = lodash_1.default.orderBy(stockGrouped, a => a.stockValues, 'asc');
@@ -9277,6 +9278,14 @@ class StockOverview extends react_1.default.Component {
             const stockSummarySell = Math.abs(lodash_1.default.sumBy(stocks.filter(s => s.action == StockViewModel_1.TradeAction.Sell), a => a.tradeValue));
             const tickers = stockGrouped.map(a => a.tickerName);
             const tickersPrice = yield this.stockService.getLastMonthTickersPrice(tickers);
+            for (const stock of stockGrouped) {
+                const tickerPrices = lodash_1.default.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+                if (tickerPrices != undefined) {
+                    const actualPrice = lodash_1.default.first(lodash_1.default.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                    const actualPriceCzk = yield this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: "USD", toCurrency: "CZK" });
+                    stock.stocksActualPrice = stock.size * ((_a = actualPrice === null || actualPrice === void 0 ? void 0 : actualPrice.price) !== null && _a !== void 0 ? _a : 0) * actualPriceCzk;
+                }
+            }
             this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
         });
         this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
@@ -9347,6 +9356,12 @@ class StockOverview extends react_1.default.Component {
             return (react_1.default.createElement("div", { className: "h-12" },
                 react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSetting() })));
         };
+        this.calculareProfit = (actualPrice, buyPrice) => {
+            let profit = -100;
+            if (actualPrice != 0)
+                profit = ((actualPrice / (buyPrice * -1)) - 1) * 100;
+            return profit;
+        };
         this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
     }
     init() {
@@ -9355,6 +9370,7 @@ class StockOverview extends react_1.default.Component {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            this.cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
             this.stockService = new StockService_1.default(this.props.history, appContext.apiUrls);
             this.tickers = yield this.stockService.getStockTickers();
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
@@ -9384,7 +9400,10 @@ class StockOverview extends react_1.default.Component {
                                                 react_1.default.createElement("p", { className: "text-lg text-left" }, g.size.toFixed(3)),
                                                 react_1.default.createElement("p", { className: "text-lg text-left" },
                                                     Math.abs(g.stockValues).toFixed(2),
-                                                    " K\u010D"))),
+                                                    " K\u010D"),
+                                                g.stocksActualPrice != 0 ? (react_1.default.createElement("p", { className: "text-lg text-left" },
+                                                    (this.calculareProfit(g.stocksActualPrice, g.stockValues)).toFixed(2),
+                                                    " %")) : react_1.default.createElement(react_1.default.Fragment, null))),
                                         this.renderChart(g.tickerName))))),
                                 react_1.default.createElement("div", { className: "m-5 flex flex-col" },
                                     react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "All trades"),
