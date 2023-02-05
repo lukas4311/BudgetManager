@@ -75,6 +75,11 @@ stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
 stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
 stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
 stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
+stockPriceScraper.scrape_stocks_prices('Price', 'META')
+stockPriceScraper.scrape_stocks_prices('Price', 'TSM')
+stockPriceScraper.scrape_stocks_prices('Price', 'TLRY')
+stockPriceScraper.scrape_stocks_prices('Price', 'SIE.DE')
+stockPriceScraper.scrape_stocks_prices('Price', 'NESN')
 
 
 def processTickers(rows):

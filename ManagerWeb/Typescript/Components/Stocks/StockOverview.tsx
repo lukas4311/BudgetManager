@@ -218,7 +218,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                 <>
                                     <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
                                     {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
-                                        <div className='flex flex-col text-white font-semibold text-left px-4 justify-evenly'>
+                                        <div className='flex flex-col text-2xl text-white font-semibold text-left px-4 justify-evenly'>
+                                            {/* <p className="">Actual value: {this.state.stockSummary.totalyBought}</p> */}
                                             <p className="">Totaly bought: {this.state.stockSummary.totalyBought}</p>
                                             <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
                                         </div>

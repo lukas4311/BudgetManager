@@ -9393,7 +9393,7 @@ class StockOverview extends react_1.default.Component {
                         react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-5/12" },
                             react_1.default.createElement(react_1.default.Fragment, null,
                                 react_1.default.createElement("h2", { className: "text-xl font-semibold mb-6" }, "Stock summary"),
-                                this.state.stockSummary == undefined ? react_1.default.createElement(Loading_1.Loading, { className: "m-auto mt-4" }) : (react_1.default.createElement("div", { className: 'flex flex-col text-white font-semibold text-left px-4 justify-evenly' },
+                                this.state.stockSummary == undefined ? react_1.default.createElement(Loading_1.Loading, { className: "m-auto mt-4" }) : (react_1.default.createElement("div", { className: 'flex flex-col text-2xl text-white font-semibold text-left px-4 justify-evenly' },
                                     react_1.default.createElement("p", { className: "" },
                                         "Totaly bought: ",
                                         this.state.stockSummary.totalyBought),
