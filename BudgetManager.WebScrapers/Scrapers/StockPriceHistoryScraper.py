@@ -80,6 +80,7 @@ stockPriceScraper.scrape_stocks_prices('Price', 'TSM')
 stockPriceScraper.scrape_stocks_prices('Price', 'TLRY')
 stockPriceScraper.scrape_stocks_prices('Price', 'SIE.DE')
 stockPriceScraper.scrape_stocks_prices('Price', 'NESN')
+stockPriceScraper.scrape_stocks_prices('Price', 'VUAA.L')
 
 
 def processTickers(rows):
