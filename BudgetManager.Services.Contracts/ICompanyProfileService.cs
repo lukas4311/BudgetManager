@@ -1,6 +1,9 @@
-﻿namespace BudgetManager.Services.Contracts
+﻿using BudgetManager.Data.DataModels;
+using BudgetManager.Domain.DTOs;
+
+namespace BudgetManager.Services.Contracts
 {
-    public interface ICompanyProfileService
+    public interface ICompanyProfileService : IBaseService<CompanyProfileModel, CompanyProfile>
     {
     }
 }

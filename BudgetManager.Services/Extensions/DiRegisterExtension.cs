@@ -59,6 +59,8 @@ namespace BudgetManager.Services.Extensions
                     });
                     //.ForMember(a => a.CurrencySymbol, o => o.MapFrom(x => x.CurrencySymbol.Symbol));
                     cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
+                    cfg.CreateMap<CompanyProfile, CompanyProfileModel>();
+                    cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
                 }
             );
 

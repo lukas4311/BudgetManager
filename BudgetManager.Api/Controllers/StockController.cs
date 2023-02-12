@@ -3,6 +3,7 @@ using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly IStockTickerService stockTickerService;
         private readonly IStockTradeHistoryService stockTradeHistoryService;
+        private readonly ICompanyProfileService companyProfileService;
 
-        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService) : base(httpContextAccessor)
+        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService, ICompanyProfileService companyProfileService) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
+            this.companyProfileService = companyProfileService;
         }
 
         [HttpGet]
@@ -78,6 +81,17 @@ namespace BudgetManager.Api.Controllers
 
             IEnumerable<StockPrice> data = await this.stockTradeHistoryService.GetStockPriceHistory(ticker, from);
             return Ok(data);
+        }
+
+        [HttpGet("stock/{ticker}/companyProfile")]
+        public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
+        {
+            CompanyProfileModel companyProfile = this.companyProfileService.Get(c => ticker == c.Symbol).SingleOrDefault();
+            
+            if (companyProfile is null)
+                return StatusCode(StatusCodes.Status204NoContent);
+
+            return companyProfile;
         }
     }
 }
