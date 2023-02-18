@@ -21,6 +21,7 @@ import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
+import { CompanyProfile } from "./CompanyProfile";
 
 const theme = createMuiTheme({
     palette: {
@@ -44,6 +45,7 @@ interface StockOverviewState {
     selectedModel: StockViewModel;
     stockSummary: StockSummary;
     stockPrice: TickersWithPriceHistory[];
+    selectedCompany: string;
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -56,7 +58,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined };
     }
 
     public componentDidMount = () => this.init();
@@ -192,6 +194,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         return profit;
     }
 
+    private showCompanyProfile = (companyTicker: string) =>
+        this.setState({ selectedCompany: companyTicker });
+
+    private handleCloseCompanyProfile = () =>
+        this.setState({ selectedCompany: undefined });
+
     render() {
         return (
             <ThemeProvider theme={theme}>
@@ -215,7 +223,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                         </div>
                                         <div className="flex flex-wrap justify-around ">
                                             {this.state.stockGrouped.map(g =>
-                                                <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl">
+                                                <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(g.tickerName)}>
                                                     <div className="grid grid-cols-2">
                                                         <p className="text-xl font-bold text-left">{g.tickerName}</p>
                                                         <div>
@@ -256,6 +264,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
                             <DialogContent className="bg-prussianBlue">
                                 <StockTradeForm stockTradeViewModel={this.state.selectedModel} currencies={this.currencies} stockTickers={this.tickers} onSave={this.saveStockTrade} />
+                            </DialogContent>
+                        </Dialog>
+                        <Dialog open={this.state.selectedCompany != undefined} onClose={this.handleCloseCompanyProfile} aria-labelledby="" maxWidth="lg" fullWidth={true}>
+                            <DialogContent className="bg-prussianBlue">
+                                <CompanyProfile ticker={this.state.selectedCompany}></CompanyProfile>
                             </DialogContent>
                         </Dialog>
                     </>

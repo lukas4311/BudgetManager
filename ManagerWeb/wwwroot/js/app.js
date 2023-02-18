@@ -9209,6 +9209,34 @@ exports.default = PaymentsOverview;
 
 /***/ }),
 
+/***/ "./Typescript/Components/Stocks/CompanyProfile.tsx":
+/*!*********************************************************!*\
+  !*** ./Typescript/Components/Stocks/CompanyProfile.tsx ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CompanyProfile = void 0;
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+class CompanyProfileProps {
+}
+const CompanyProfile = (props) => {
+    return (react_1.default.createElement("div", null,
+        react_1.default.createElement("h2", { className: "text-xl font-semibold" }, "Company profile"),
+        react_1.default.createElement("h3", { className: "text-md font-semibold text-vermilion" }, props.ticker),
+        react_1.default.createElement("div", null)));
+};
+exports.CompanyProfile = CompanyProfile;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/Stocks/StockOverview.tsx":
 /*!********************************************************!*\
   !*** ./Typescript/Components/Stocks/StockOverview.tsx ***!
@@ -9250,6 +9278,7 @@ const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
+const CompanyProfile_1 = __webpack_require__(/*! ./CompanyProfile */ "./Typescript/Components/Stocks/CompanyProfile.tsx");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9362,7 +9391,9 @@ class StockOverview extends react_1.default.Component {
                 profit = ((actualPrice / (buyPrice * -1)) - 1) * 100;
             return profit;
         };
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [] };
+        this.showCompanyProfile = (companyTicker) => this.setState({ selectedCompany: companyTicker });
+        this.handleCloseCompanyProfile = () => this.setState({ selectedCompany: undefined });
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined };
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -9393,7 +9424,7 @@ class StockOverview extends react_1.default.Component {
                                                     react_1.default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
                                                     react_1.default.createElement("path", { d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" }))),
                                             react_1.default.createElement("span", null, "New ticker request"))),
-                                    react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" },
+                                    react_1.default.createElement("div", { className: "flex flex-wrap justify-around " }, this.state.stockGrouped.map(g => react_1.default.createElement("div", { key: g.tickerId, className: "w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl", onClick: _ => this.showCompanyProfile(g.tickerName) },
                                         react_1.default.createElement("div", { className: "grid grid-cols-2" },
                                             react_1.default.createElement("p", { className: "text-xl font-bold text-left" }, g.tickerName),
                                             react_1.default.createElement("div", null,
@@ -9422,7 +9453,10 @@ class StockOverview extends react_1.default.Component {
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Stock form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                            react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers, onSave: this.saveStockTrade })))))));
+                            react_1.default.createElement(StockTradeForm_1.StockTradeForm, { stockTradeViewModel: this.state.selectedModel, currencies: this.currencies, stockTickers: this.tickers, onSave: this.saveStockTrade }))),
+                    react_1.default.createElement(core_1.Dialog, { open: this.state.selectedCompany != undefined, onClose: this.handleCloseCompanyProfile, "aria-labelledby": "", maxWidth: "lg", fullWidth: true },
+                        react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
+                            react_1.default.createElement(CompanyProfile_1.CompanyProfile, { ticker: this.state.selectedCompany })))))));
     }
 }
 StockOverview.contextType = AppCtx_1.AppCtx;
