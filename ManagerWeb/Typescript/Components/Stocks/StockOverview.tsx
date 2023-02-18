@@ -4,7 +4,7 @@ import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
-import { CompanyProfileModel, CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
+import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _, { forIn } from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
@@ -45,7 +45,13 @@ interface StockOverviewState {
     selectedModel: StockViewModel;
     stockSummary: StockSummary;
     stockPrice: TickersWithPriceHistory[];
-    selectedCompany: CompanyProfileModel;
+    selectedCompany: StockComplexModel;
+}
+
+export class StockComplexModel {
+    ticker: string;
+    companyInfo: CompanyProfileModel;
+    company5YPrice: StockPrice[];
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -196,9 +202,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private showCompanyProfile = async (companyTicker: string) => {
         const companyProfile = await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
+        const last5YearDate = moment(new Date()).subtract(5, "y").toDate();
+        const companyPrice = await this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
+        let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice };
 
         if (companyProfile != undefined) {
-            this.setState({ selectedCompany: companyProfile });
+            this.setState({ selectedCompany: complexModel });
         }
     }
 

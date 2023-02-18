@@ -7128,6 +7128,30 @@ class LineChartSettingManager {
             yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false }
         };
     }
+    static getStockChartSettingForCompanyInfo() {
+        return {
+            data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
+            margin: { bottom: 40, left: 40, right: 10, top: 10 },
+            axisLeft: { legend: 'linear scale', legendOffset: 5 },
+            axisBottom: { format: '%Y', tickValues: 'every year', legend: 'time scale', legendOffset: -5, },
+            axisRight: null,
+            axisTop: null,
+            yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false },
+            xScale: { type: "time", format: "%Y-%m-%d", precision: "day" }, xFormat: "time:%Y-%m-%d",
+            theme: {
+                axis: {
+                    ticks: {
+                        line: { stroke: "white" },
+                        text: { fill: "white" }
+                    }
+                },
+                grid: {
+                    line: { stroke: "white" }
+                }
+            }
+        };
+    }
     static getOtherInvestmentSummarySetting(min, max) {
         let yScaleSetting = { type: 'linear' };
         const calculatedMin = min - (min * (10 / 100));
@@ -9333,30 +9357,47 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompanyProfile = void 0;
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
+const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 class CompanyProfileProps {
 }
 const CompanyProfile = (props) => {
-    return (react_1.default.createElement("div", { className: "p-4" }, props.companyProfile ? (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement("div", { className: "flex flex-row" },
-            react_1.default.createElement("h2", { className: "text-xl font-semibold mb-2 mr-2" }, "Company profile"),
-            react_1.default.createElement("h3", { className: "text-md font-semibold text-vermilion" },
-                "(",
-                props.companyProfile.symbol,
-                ")")),
-        react_1.default.createElement("div", null,
-            react_1.default.createElement("h4", null, props.companyProfile.companyName),
-            react_1.default.createElement("div", { className: "flex flex-row justify-evenly text-center mt-4" },
-                react_1.default.createElement("div", { className: "w-1/3" },
-                    react_1.default.createElement("p", { className: "text-xs" }, "Sector"),
-                    react_1.default.createElement("p", { className: "text-md" }, props.companyProfile.sector)),
-                react_1.default.createElement("div", { className: "w-1/3" },
-                    react_1.default.createElement("p", { className: "text-xs" }, "Exchange"),
-                    react_1.default.createElement("p", { className: "text-md" }, props.companyProfile.exchangeShortName)),
-                react_1.default.createElement("div", { className: "w-1/3" },
-                    react_1.default.createElement("p", { className: "text-xs" }, "Currency"),
-                    react_1.default.createElement("p", { className: "text-md" }, props.companyProfile.currency))),
-            react_1.default.createElement("p", { className: "mt-4" }, props.companyProfile.description)))) : react_1.default.createElement(react_1.default.Fragment, null)));
+    var _a, _b;
+    let profile = (_a = props === null || props === void 0 ? void 0 : props.companyProfile) === null || _a === void 0 ? void 0 : _a.companyInfo;
+    let priceChart = [{ id: 'Price', data: [] }];
+    if (((_b = props === null || props === void 0 ? void 0 : props.companyProfile) === null || _b === void 0 ? void 0 : _b.company5YPrice.length) > 5) {
+        let prices = props.companyProfile.company5YPrice;
+        const sortedArray = lodash_1.default.orderBy(prices, [(obj) => new Date(obj.time)], ['asc']);
+        let priceData = sortedArray.map(b => ({ x: (0, moment_1.default)(b.time).format('YYYY-MM-DD'), y: b.price }));
+        priceChart = [{ id: 'Price', data: priceData }];
+    }
+    return (react_1.default.createElement("div", { className: "p-4" },
+        react_1.default.createElement("div", { className: "flex flex-col" },
+            profile ? (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("div", { className: "flex flex-row" },
+                    react_1.default.createElement("h2", { className: "text-xl font-semibold mb-2 mr-2" }, "Company profile"),
+                    react_1.default.createElement("h3", { className: "text-md font-semibold text-vermilion" },
+                        "(",
+                        profile.symbol,
+                        ")")),
+                react_1.default.createElement("div", null,
+                    react_1.default.createElement("h4", null, profile.companyName),
+                    react_1.default.createElement("div", { className: "flex flex-row justify-evenly text-center mt-4" },
+                        react_1.default.createElement("div", { className: "w-1/3" },
+                            react_1.default.createElement("p", { className: "text-xs" }, "Sector"),
+                            react_1.default.createElement("p", { className: "text-md" }, profile.sector)),
+                        react_1.default.createElement("div", { className: "w-1/3" },
+                            react_1.default.createElement("p", { className: "text-xs" }, "Exchange"),
+                            react_1.default.createElement("p", { className: "text-md" }, profile.exchangeShortName)),
+                        react_1.default.createElement("div", { className: "w-1/3" },
+                            react_1.default.createElement("p", { className: "text-xs" }, "Currency"),
+                            react_1.default.createElement("p", { className: "text-md" }, profile.currency))),
+                    react_1.default.createElement("p", { className: "mt-4" }, profile.description)))) : react_1.default.createElement(react_1.default.Fragment, null),
+            react_1.default.createElement("div", { className: "h-52 mt-6" },
+                react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSettingForCompanyInfo() })))));
 };
 exports.CompanyProfile = CompanyProfile;
 
@@ -9385,6 +9426,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StockComplexModel = void 0;
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
@@ -9415,6 +9457,9 @@ const theme = (0, styles_1.createMuiTheme)({
 });
 class StockSummary {
 }
+class StockComplexModel {
+}
+exports.StockComplexModel = StockComplexModel;
 class StockOverview extends react_1.default.Component {
     constructor(props) {
         super(props);
@@ -9519,8 +9564,11 @@ class StockOverview extends react_1.default.Component {
         };
         this.showCompanyProfile = (companyTicker) => __awaiter(this, void 0, void 0, function* () {
             const companyProfile = yield this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
+            const last5YearDate = (0, moment_1.default)(new Date()).subtract(5, "y").toDate();
+            const companyPrice = yield this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
+            let complexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice };
             if (companyProfile != undefined) {
-                this.setState({ selectedCompany: companyProfile });
+                this.setState({ selectedCompany: complexModel });
             }
         });
         this.handleCloseCompanyProfile = () => this.setState({ selectedCompany: undefined });

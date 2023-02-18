@@ -94,7 +94,32 @@ export class LineChartSettingManager {
             data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
             colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
             axisLeft: null, axisBottom: null, axisRight: null, axisTop: null, margin: { bottom: 0, left: 0, right: 0, top: 0 },
-            yScale:{ type: 'linear', min: 'auto', max: 'auto', reverse: false }
+            yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false }
+        }
+    }
+
+    static getStockChartSettingForCompanyInfo(): LineSvgProps {
+        return {
+            data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: false,
+            margin: { bottom: 40, left: 40, right: 10, top: 10 },
+            axisLeft: { legend: 'linear scale', legendOffset: 5 },
+            axisBottom: { format: '%Y', tickValues: 'every year', legend: 'time scale', legendOffset: -5, },
+            axisRight: null,
+            axisTop: null,
+            yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false },
+            xScale: { type: "time", format: "%Y-%m-%d", precision: "day" }, xFormat: "time:%Y-%m-%d",
+            theme: {
+                axis: {
+                    ticks: {
+                        line: { stroke: "white" },
+                        text: { fill: "white" }
+                    }
+                },
+                grid: {
+                    line: { stroke: "white" }
+                }
+            }
         }
     }
 
