@@ -11,6 +11,7 @@ export * from './ComodityType';
 export * from './ComodityTypeModel';
 export * from './ComodityUnit';
 export * from './ComodityUnitModel';
+export * from './CompanyProfileModel';
 export * from './CryptoTicker';
 export * from './CryptoTradeHistory';
 export * from './CurrencySymbol';

@@ -20,6 +20,7 @@ models/ComodityType.ts
 models/ComodityTypeModel.ts
 models/ComodityUnit.ts
 models/ComodityUnitModel.ts
+models/CompanyProfileModel.ts
 models/CryptoTicker.ts
 models/CryptoTradeHistory.ts
 models/CurrencySymbol.ts

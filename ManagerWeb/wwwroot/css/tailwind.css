@@ -673,6 +673,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 0.75rem !important;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-4 {
+  margin-top: 1rem !important;
+}
+
 .block {
   display: block !important;
 }
@@ -929,6 +937,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-center {
   justify-content: center !important;
+}
+
+.justify-between {
+  justify-content: space-between !important;
 }
 
 .justify-around {
@@ -1282,6 +1294,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.75rem !important;
 }
 
+.text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
 .font-black {
   font-weight: 900 !important;
 }
@@ -1300,6 +1317,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-extralight {
   font-weight: 200 !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
 }
 
 .text-white {
@@ -1347,6 +1368,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-rufous {
   color: #b00000ff !important;
+}
+
+.text-vermilion {
+  color: #e03d15ff !important;
 }
 
 .opacity-100 {

@@ -4,7 +4,7 @@ import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
-import { CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
+import { CompanyProfileModel, CurrencySymbol, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _, { forIn } from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
@@ -45,7 +45,7 @@ interface StockOverviewState {
     selectedModel: StockViewModel;
     stockSummary: StockSummary;
     stockPrice: TickersWithPriceHistory[];
-    selectedCompany: string;
+    selectedCompany: CompanyProfileModel;
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -194,8 +194,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         return profit;
     }
 
-    private showCompanyProfile = (companyTicker: string) =>
-        this.setState({ selectedCompany: companyTicker });
+    private showCompanyProfile = async (companyTicker: string) => {
+        const companyProfile = await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
+
+        if (companyProfile != undefined) {
+            this.setState({ selectedCompany: companyProfile });
+        }
+    }
 
     private handleCloseCompanyProfile = () =>
         this.setState({ selectedCompany: undefined });
@@ -268,7 +273,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                         </Dialog>
                         <Dialog open={this.state.selectedCompany != undefined} onClose={this.handleCloseCompanyProfile} aria-labelledby="" maxWidth="lg" fullWidth={true}>
                             <DialogContent className="bg-prussianBlue">
-                                <CompanyProfile ticker={this.state.selectedCompany}></CompanyProfile>
+                                <CompanyProfile companyProfile={this.state.selectedCompany}></CompanyProfile>
                             </DialogContent>
                         </Dialog>
                     </>

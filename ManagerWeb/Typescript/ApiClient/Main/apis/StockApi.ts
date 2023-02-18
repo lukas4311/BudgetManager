@@ -15,6 +15,9 @@
 
 import * as runtime from '../../runtime';
 import {
+    CompanyProfileModel,
+    CompanyProfileModelFromJSON,
+    CompanyProfileModelToJSON,
     StockPrice,
     StockPriceFromJSON,
     StockPriceToJSON,
@@ -28,6 +31,10 @@ import {
     StockTradeHistoryModelFromJSON,
     StockTradeHistoryModelToJSON,
 } from '../models';
+
+export interface StockStockTickerCompanyProfileGetRequest {
+    ticker: string | null;
+}
 
 export interface StockStockTickerPriceFromGetRequest {
     ticker: string | null;
@@ -57,6 +64,19 @@ export interface StockStockTradeHistoryPutRequest {
  * @interface StockApiInterface
  */
 export interface StockApiInterface {
+    /**
+     * 
+     * @param {string} ticker 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTickerCompanyProfileGetRaw(requestParameters: StockStockTickerCompanyProfileGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<CompanyProfileModel>>;
+
+    /**
+     */
+    stockStockTickerCompanyProfileGet(requestParameters: StockStockTickerCompanyProfileGetRequest, initOverrides?: RequestInit): Promise<CompanyProfileModel>;
+
     /**
      * 
      * @param {*} [options] Override http request option.
@@ -158,6 +178,38 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
             return encodeURIComponent(String(param.toISOString()));
 
         return encodeURIComponent(String(param));
+    }
+
+    /**
+     */
+    async stockStockTickerCompanyProfileGetRaw(requestParameters: StockStockTickerCompanyProfileGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<CompanyProfileModel>> {
+        if (requestParameters.ticker === null || requestParameters.ticker === undefined) {
+            throw new runtime.RequiredError('ticker','Required parameter requestParameters.ticker was null or undefined when calling stockStockTickerCompanyProfileGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stock/{ticker}/companyProfile`.replace(`{${"ticker"}}`, this.processPathParam(requestParameters.ticker)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CompanyProfileModelFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async stockStockTickerCompanyProfileGet(requestParameters: StockStockTickerCompanyProfileGetRequest, initOverrides?: RequestInit): Promise<CompanyProfileModel> {
+        const response = await this.stockStockTickerCompanyProfileGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
