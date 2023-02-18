@@ -6,6 +6,7 @@ import time
 from Models.Fmp import StockPriceData
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
+from SourceFiles.stockList import stockToDownload
 from configManager import token, organizaiton
 from secret import alphaVantageToken, influxDbUrl
 import pytz
@@ -64,23 +65,11 @@ class StockPriceScraper:
         return int(time.mktime(date.timetuple()))
 
 
+tickersToScrape = stockToDownload;
 stockPriceScraper = StockPriceScraper()
-stockPriceScraper.scrape_stocks_prices('Price', 'SE')
-stockPriceScraper.scrape_stocks_prices('Price', 'KWEB')
-stockPriceScraper.scrape_stocks_prices('Price', 'CNYA')
-stockPriceScraper.scrape_stocks_prices('Price', 'ABNB')
-stockPriceScraper.scrape_stocks_prices('Price', 'BABA')
-stockPriceScraper.scrape_stocks_prices('Price', 'O')
-stockPriceScraper.scrape_stocks_prices('Price', 'NEST')
-stockPriceScraper.scrape_stocks_prices('Price', 'MDLZ')
-stockPriceScraper.scrape_stocks_prices('Price', 'UPST')
-stockPriceScraper.scrape_stocks_prices('Price', 'SIE')
-stockPriceScraper.scrape_stocks_prices('Price', 'META')
-stockPriceScraper.scrape_stocks_prices('Price', 'TSM')
-stockPriceScraper.scrape_stocks_prices('Price', 'TLRY')
-stockPriceScraper.scrape_stocks_prices('Price', 'SIE.DE')
-stockPriceScraper.scrape_stocks_prices('Price', 'NESN')
-stockPriceScraper.scrape_stocks_prices('Price', 'VUAA.L')
+
+for ticker in tickersToScrape:
+    stockPriceScraper.scrape_stocks_prices('Price', ticker)
 
 
 def processTickers(rows):
