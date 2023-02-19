@@ -57,6 +57,10 @@ export interface StockStockTradeHistoryPutRequest {
     stockTradeHistoryModel?: StockTradeHistoryModel;
 }
 
+export interface StockStockTradeHistoryTickerGetRequest {
+    ticker: string | null;
+}
+
 /**
  * StockApi - interface
  * 
@@ -166,6 +170,19 @@ export interface StockApiInterface {
     /**
      */
     stockStockTradeHistoryPut(requestParameters: StockStockTradeHistoryPutRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {string} ticker 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTradeHistoryTickerGetRaw(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradeHistoryGetModel>>>;
+
+    /**
+     */
+    stockStockTradeHistoryTickerGet(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<Array<StockTradeHistoryGetModel>>;
 
 }
 
@@ -424,6 +441,38 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
      */
     async stockStockTradeHistoryPut(requestParameters: StockStockTradeHistoryPutRequest, initOverrides?: RequestInit): Promise<void> {
         await this.stockStockTradeHistoryPutRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async stockStockTradeHistoryTickerGetRaw(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradeHistoryGetModel>>> {
+        if (requestParameters.ticker === null || requestParameters.ticker === undefined) {
+            throw new runtime.RequiredError('ticker','Required parameter requestParameters.ticker was null or undefined when calling stockStockTradeHistoryTickerGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stockTradeHistory/{ticker}`.replace(`{${"ticker"}}`, this.processPathParam(requestParameters.ticker)),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockTradeHistoryGetModelFromJSON));
+    }
+
+    /**
+     */
+    async stockStockTradeHistoryTickerGet(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<Array<StockTradeHistoryGetModel>> {
+        const response = await this.stockStockTradeHistoryTickerGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }
