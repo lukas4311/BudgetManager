@@ -673,50 +673,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 0.75rem !important;
 }
 
-.mb-6 {
-  margin-bottom: 1.5rem !important;
-}
-
-.mt-4 {
-  margin-top: 1rem !important;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem !important;
-}
-
-.mr-2 {
-  margin-right: 0.5rem !important;
-}
-
-.mt-4 {
-  margin-top: 1rem !important;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem !important;
-}
-
-.mr-2 {
-  margin-right: 0.5rem !important;
-}
-
-.mt-4 {
-  margin-top: 1rem !important;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem !important;
-}
-
-.mr-2 {
-  margin-right: 0.5rem !important;
-}
-
-.mt-4 {
-  margin-top: 1rem !important;
-}
-
 .block {
   display: block !important;
 }
@@ -773,28 +729,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2rem !important;
 }
 
-.h-12 {
-  height: 3rem !important;
-}
-
-.h-24 {
-  height: 6rem !important;
-}
-
-.h-12 {
-  height: 3rem !important;
-}
-
-.h-36 {
-  height: 9rem !important;
-}
-
-.h-12 {
-  height: 3rem !important;
-}
-
 .h-52 {
   height: 13rem !important;
+}
+
+.h-12 {
+  height: 3rem !important;
 }
 
 .min-h-full {
@@ -913,10 +853,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 8.333333% !important;
 }
 
-.w-1\/3 {
-  width: 33.333333% !important;
-}
-
 .shrink {
   flex-shrink: 1 !important;
 }
@@ -997,10 +933,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .justify-center {
   justify-content: center !important;
-}
-
-.justify-between {
-  justify-content: space-between !important;
 }
 
 .justify-around {
@@ -1202,10 +1134,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.25rem !important;
 }
 
-.p-4 {
-  padding: 1rem !important;
-}
-
 .px-12 {
   padding-left: 3rem !important;
   padding-right: 3rem !important;
@@ -1358,36 +1286,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.75rem !important;
 }
 
-.text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-xs {
-  font-size: 0.75rem !important;
-  line-height: 1rem !important;
-}
-
-.text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-xs {
-  font-size: 0.75rem !important;
-  line-height: 1rem !important;
-}
-
-.text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-xs {
-  font-size: 0.75rem !important;
-  line-height: 1rem !important;
-}
-
 .font-black {
   font-weight: 900 !important;
 }
@@ -1406,10 +1304,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .font-extralight {
   font-weight: 200 !important;
-}
-
-.font-semibold {
-  font-weight: 600 !important;
 }
 
 .text-white {
@@ -1457,10 +1351,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-rufous {
   color: #b00000ff !important;
-}
-
-.text-vermilion {
-  color: #e03d15ff !important;
 }
 
 .opacity-100 {

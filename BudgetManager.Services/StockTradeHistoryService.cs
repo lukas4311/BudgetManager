@@ -29,7 +29,17 @@ namespace BudgetManager.Services
                 .Include(t => t.CurrencySymbol)
                 .Select(d => this.mapper.Map<StockTradeHistoryGetModel>(d));
 
-        public bool UserHasRightToPayment(int stockTradeHistoruId, int userId)
+        public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
+        {
+            return this.repository
+                .FindByCondition(i => i.UserIdentityId == userId)
+                .Include(t => t.CurrencySymbol)
+                .Include(t => t.StockTicker)
+                .Where(t => t.StockTicker.Ticker == stockTicker)
+                .Select(d => this.mapper.Map<StockTradeHistoryGetModel>(d));
+        }
+
+        public bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId)
             => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker) 

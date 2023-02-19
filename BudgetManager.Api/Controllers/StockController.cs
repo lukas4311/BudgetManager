@@ -37,6 +37,9 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("stockTradeHistory")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(this.stockTradeHistoryService.GetAll(this.GetUserId()));
 
+        [HttpGet("stockTradeHistory/{ticker}")]
+        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker) => Ok(this.stockTradeHistoryService.GetTradeHistory(this.GetUserId(), ticker));
+
         [HttpPost("stockTradeHistory")]
         public IActionResult Add([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
         {
@@ -56,7 +59,7 @@ namespace BudgetManager.Api.Controllers
         [HttpDelete("stockTradeHistory")]
         public IActionResult Delete([FromBody] int id)
         {
-            if (!this.stockTradeHistoryService.UserHasRightToPayment(id, this.GetUserId()))
+            if (!this.stockTradeHistoryService.UserHasRightToStockTradeHistory(id, this.GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             this.stockTradeHistoryService.Delete(id);

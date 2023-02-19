@@ -11,10 +11,12 @@ namespace BudgetManager.Services.Contracts
     {
         IEnumerable<StockTradeHistoryGetModel> GetAll(int userId);
 
-        bool UserHasRightToPayment(int stockTradeHistoruId, int userId);
+        bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId);
 
         Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker);
 
         Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from);
+
+        IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker);
     }
 }
