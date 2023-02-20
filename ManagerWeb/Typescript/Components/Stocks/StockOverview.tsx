@@ -52,6 +52,7 @@ export class StockComplexModel {
     ticker: string;
     companyInfo: CompanyProfileModel;
     company5YPrice: StockPrice[];
+    trades: StockViewModel[];
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
@@ -204,7 +205,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const companyProfile = await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
         const last5YearDate = moment(new Date()).subtract(5, "y").toDate();
         const companyPrice = await this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
-        let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice };
+        const companyTrades = await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: companyTicker });
+        const tradesViewModel = companyTrades.map(c => StockViewModel.mapFromDataModel(c));
+        let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
 
         if (companyProfile != undefined) {
             this.setState({ selectedCompany: complexModel });

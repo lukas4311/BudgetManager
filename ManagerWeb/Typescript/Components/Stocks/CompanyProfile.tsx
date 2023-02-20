@@ -3,8 +3,11 @@ import moment from "moment";
 import React from "react";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
+import { StockViewModel } from "../../Model/StockViewModel";
+import { BaseList } from "../BaseList";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
+import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { StockComplexModel } from "./StockOverview";
 
 class CompanyProfileProps {
@@ -13,7 +16,7 @@ class CompanyProfileProps {
 
 
 export const CompanyProfile = (props: CompanyProfileProps) => {
-    
+
     let profile = props?.companyProfile?.companyInfo;
     let priceChart: LineChartDataSets[] = [{ id: 'Price', data: [] }];
 
@@ -22,6 +25,17 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
         const sortedArray = _.orderBy(prices, [(obj) => new Date(obj.time)], ['asc'])
         let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.time).format('YYYY-MM-DD'), y: b.price }))
         priceChart = [{ id: 'Price', data: priceData }];
+    }
+
+    const renderTemplate = (s: StockViewModel): JSX.Element => {
+        return (
+            <>
+                <p className="w-1/4 h-full border border-vermilion flex items-center justify-center">{s.tradeSize}</p>
+                <p className="w-1/4 h-full border border-vermilion flex items-center justify-center">{Math.abs(s.tradeValue).toFixed(2)} ({s.currencySymbol})</p>
+                <p className="w-1/4 h-full border border-vermilion flex items-center justify-center">{s.tradeTimeStamp}</p>
+                <p className="w-1/4 h-full border border-vermilion flex items-center justify-center py-1"><BuySellBadge tradeValue={s.tradeValue} /></p>
+            </>
+        );
     }
 
     return (
@@ -54,8 +68,11 @@ export const CompanyProfile = (props: CompanyProfileProps) => {
                         </div>
                     </>
                 ) : <></>}
-                <div className="h-52 mt-6">
+                <div className="h-52 mt-6 mb-12">
                     <LineChart dataSets={priceChart} chartProps={LineChartSettingManager.getStockChartSettingForCompanyInfo()}></LineChart>
+                </div>
+                <div className="flex flex-col justify-center">
+                    <BaseList<StockViewModel> data={props.companyProfile?.trades ?? []} template={renderTemplate} hideIconRowPart={true}></BaseList>
                 </div>
             </div>
         </div>

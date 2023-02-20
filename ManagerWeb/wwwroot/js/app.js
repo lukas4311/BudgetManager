@@ -2788,6 +2788,35 @@ class StockApi extends runtime.BaseAPI {
             yield this.stockStockTradeHistoryPutRaw(requestParameters, initOverrides);
         });
     }
+    /**
+     */
+    stockStockTradeHistoryTickerGetRaw(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (requestParameters.ticker === null || requestParameters.ticker === undefined) {
+                throw new runtime.RequiredError('ticker', 'Required parameter requestParameters.ticker was null or undefined when calling stockStockTradeHistoryTickerGet.');
+            }
+            const queryParameters = {};
+            const headerParameters = {};
+            if (this.configuration && this.configuration.apiKey) {
+                headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+            }
+            const response = yield this.request({
+                path: `/stock/stockTradeHistory/{ticker}`.replace(`{${"ticker"}}`, this.processPathParam(requestParameters.ticker)),
+                method: 'GET',
+                headers: headerParameters,
+                query: queryParameters,
+            }, initOverrides);
+            return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(models_1.StockTradeHistoryGetModelFromJSON));
+        });
+    }
+    /**
+     */
+    stockStockTradeHistoryTickerGet(requestParameters, initOverrides) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.stockStockTradeHistoryTickerGetRaw(requestParameters, initOverrides);
+            return yield response.value();
+        });
+    }
 }
 exports.StockApi = StockApi;
 
@@ -9360,12 +9389,14 @@ exports.CompanyProfile = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
+const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx");
 class CompanyProfileProps {
 }
 const CompanyProfile = (props) => {
-    var _a, _b;
+    var _a, _b, _c, _d;
     let profile = (_a = props === null || props === void 0 ? void 0 : props.companyProfile) === null || _a === void 0 ? void 0 : _a.companyInfo;
     let priceChart = [{ id: 'Price', data: [] }];
     if (((_b = props === null || props === void 0 ? void 0 : props.companyProfile) === null || _b === void 0 ? void 0 : _b.company5YPrice.length) > 5) {
@@ -9374,6 +9405,18 @@ const CompanyProfile = (props) => {
         let priceData = sortedArray.map(b => ({ x: (0, moment_1.default)(b.time).format('YYYY-MM-DD'), y: b.price }));
         priceChart = [{ id: 'Price', data: priceData }];
     }
+    const renderTemplate = (s) => {
+        return (react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("p", { className: "w-1/4 h-full border border-vermilion flex items-center justify-center" }, s.tradeSize),
+            react_1.default.createElement("p", { className: "w-1/4 h-full border border-vermilion flex items-center justify-center" },
+                Math.abs(s.tradeValue).toFixed(2),
+                " (",
+                s.currencySymbol,
+                ")"),
+            react_1.default.createElement("p", { className: "w-1/4 h-full border border-vermilion flex items-center justify-center" }, s.tradeTimeStamp),
+            react_1.default.createElement("p", { className: "w-1/4 h-full border border-vermilion flex items-center justify-center py-1" },
+                react_1.default.createElement(CryptoTrades_1.BuySellBadge, { tradeValue: s.tradeValue }))));
+    };
     return (react_1.default.createElement("div", { className: "p-4" },
         react_1.default.createElement("div", { className: "flex flex-col" },
             profile ? (react_1.default.createElement(react_1.default.Fragment, null,
@@ -9396,8 +9439,10 @@ const CompanyProfile = (props) => {
                             react_1.default.createElement("p", { className: "text-xs" }, "Currency"),
                             react_1.default.createElement("p", { className: "text-md" }, profile.currency))),
                     react_1.default.createElement("p", { className: "mt-4" }, profile.description)))) : react_1.default.createElement(react_1.default.Fragment, null),
-            react_1.default.createElement("div", { className: "h-52 mt-6" },
-                react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSettingForCompanyInfo() })))));
+            react_1.default.createElement("div", { className: "h-52 mt-6 mb-12" },
+                react_1.default.createElement(LineChart_1.LineChart, { dataSets: priceChart, chartProps: LineChartSettingManager_1.LineChartSettingManager.getStockChartSettingForCompanyInfo() })),
+            react_1.default.createElement("div", { className: "flex flex-col justify-center" },
+                react_1.default.createElement(BaseList_1.BaseList, { data: (_d = (_c = props.companyProfile) === null || _c === void 0 ? void 0 : _c.trades) !== null && _d !== void 0 ? _d : [], template: renderTemplate, hideIconRowPart: true })))));
 };
 exports.CompanyProfile = CompanyProfile;
 
@@ -9566,7 +9611,9 @@ class StockOverview extends react_1.default.Component {
             const companyProfile = yield this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
             const last5YearDate = (0, moment_1.default)(new Date()).subtract(5, "y").toDate();
             const companyPrice = yield this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
-            let complexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice };
+            const companyTrades = yield this.stockApi.stockStockTradeHistoryTickerGet({ ticker: companyTicker });
+            const tradesViewModel = companyTrades.map(c => StockViewModel_1.StockViewModel.mapFromDataModel(c));
+            let complexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
             if (companyProfile != undefined) {
                 this.setState({ selectedCompany: complexModel });
             }
