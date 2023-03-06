@@ -28,7 +28,6 @@ const theme = createMuiTheme({
 });
 
 export default class BankAccountOverview extends React.Component<RouteComponentProps, BankAccountOverviewState> {
-    private bankAccountApi: BankAccountApiInterface;
     private bankAccountService: BankAccountService;
 
     constructor(props: RouteComponentProps) {
@@ -40,8 +39,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
 
     private async init(): Promise<void> {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
-        this.bankAccountService = new BankAccountService(this.bankAccountApi);
+        const bankAccountApi = await apiFactory.getClient(BankAccountApi);
+        this.bankAccountService = new BankAccountService(bankAccountApi);
         await this.loadBankAccounts();
     }
 
