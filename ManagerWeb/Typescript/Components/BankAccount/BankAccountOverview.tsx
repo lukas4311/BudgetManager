@@ -11,6 +11,7 @@ import { RouteComponentProps } from "react-router-dom";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import BankAccountService from "../../Services/BankAccountService";
 
 class BankAccountOverviewState {
     bankAccounts: BankAccountViewModel[];
@@ -27,36 +28,26 @@ const theme = createMuiTheme({
 });
 
 export default class BankAccountOverview extends React.Component<RouteComponentProps, BankAccountOverviewState> {
-    bankAccountApi: BankAccountApiInterface;
+    private bankAccountApi: BankAccountApiInterface;
+    private bankAccountService: BankAccountService;
 
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
-
+    
     public componentDidMount = () => this.init();
-
+    
     private async init(): Promise<void> {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
+        this.bankAccountService = new BankAccountService(this.bankAccountApi);
         await this.loadBankAccounts();
     }
 
     private loadBankAccounts = async () => {
-        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountsAllGet();
-        let bankViewModels: BankAccountViewModel[] = this.getMappedViewModels(bankAccounts);
+        let bankViewModels = await this.bankAccountService.getAllBankAccounts();
         this.setState({ bankAccounts: bankViewModels });
-    }
-
-    private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] =>
-        bankAccountModels.map(b => this.mapDataModelToViewModel(b));
-
-    private mapDataModelToViewModel = (bankAccountModels: BankAccountModel): BankAccountViewModel => {
-        let viewModel = new BankAccountViewModel();
-        viewModel.code = bankAccountModels.code;
-        viewModel.id = bankAccountModels.id;
-        viewModel.openingBalance = bankAccountModels.openingBalance;
-        return viewModel;
     }
 
     private renderHeader = (): JSX.Element => {
@@ -77,9 +68,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         );
     }
 
-    private addNewItem = (): void => {
+    private addNewItem = (): void => 
         this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
-    }
 
     private bankEdit = async (id: number): Promise<void> => {
         let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
@@ -96,9 +86,9 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
 
         try {
             if (model.id != undefined)
-                await this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
+                await this.bankAccountService.updateBankAccount(bankModel);
             else
-                await this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
+                await this.bankAccountService.createBankAccount(bankModel);
         } catch (error) {
             console.log(error);
         }

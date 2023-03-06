@@ -1,11 +1,11 @@
-import { BankAccountApi } from "../ApiClient/Main/apis";
+import { BankAccountApiInterface } from "../ApiClient/Main/apis";
 import { BankAccount, BankAccountModel } from "../ApiClient/Main/models";
 import BankAccountViewModel from "../Model/BankAccountViewModel";
 
 export default class BankAccountService {
-    private bankAccountApi: BankAccountApi;
+    private bankAccountApi: BankAccountApiInterface;
 
-    constructor(bankAccountApi: BankAccountApi) {
+    constructor(bankAccountApi: BankAccountApiInterface) {
         this.bankAccountApi = bankAccountApi;
     }
 
