@@ -1,9 +1,8 @@
 import React from "react";
-import { BankAccountApi, BankAccountApiInterface, Configuration, CryptoApi, CryptoApiInterface } from "../../ApiClient/Main";
+import { BankAccountApi } from "../../ApiClient/Main";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
-import { BankAccountModel } from "../../ApiClient/Main/models/BankAccountModel";
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import { BankAccountForm } from "./BankAccountForm";
 import { BankAccount } from "../../Model/BankAccount";
@@ -79,15 +78,11 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
 
     private saveFormData = async (model: BankAccountViewModel) => {
-        let bankModel: BankAccount = {
-            code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
-        };
-
         try {
             if (model.id != undefined)
-                await this.bankAccountService.updateBankAccount(bankModel);
+                await this.bankAccountService.updateBankAccount(model);
             else
-                await this.bankAccountService.createBankAccount(bankModel);
+                await this.bankAccountService.createBankAccount(model);
         } catch (error) {
             console.log(error);
         }

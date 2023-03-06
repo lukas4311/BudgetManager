@@ -9,6 +9,7 @@ import { BudgetComponentState } from './BudgetComponentState';
 import { BudgetForm2, BudgetFormModel } from './BudgetForm';
 import { BudgetViewModel } from './BudgetViewModel';
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import BudgetService from '../../Services/BudgetService';
 
 const theme = createMuiTheme({
     palette: {
@@ -17,7 +18,7 @@ const theme = createMuiTheme({
 });
 
 export default class BudgetComponent extends React.Component<BudgetComponentProps, BudgetComponentState> {
-    private budgetApi: BudgetApi;
+    private budgetService: BudgetService;
 
     constructor(props: BudgetComponentProps) {
         super(props);
@@ -25,21 +26,19 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     public componentDidMount() {
-        this.loadData();
+        this.init();
     }
 
-    public loadData = async (): Promise<void> => {
+    private init = async () => {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        const budgetApi = await apiFactory.getClient(BudgetApi);
+        this.budgetService = new BudgetService(budgetApi);
+
         await this.loadBudget();
     }
 
     private async loadBudget(): Promise<void> {
-        const apiFactory = new ApiClientFactory(this.props.history);
-        this.budgetApi = await apiFactory.getClient(BudgetApi);
-        let budgets = await this.budgetApi.budgetsActualGet();
-        let budgetViewModels: BudgetViewModel[] = budgets.map(b => ({
-            id: b.id, amount: b.amount, dateFrom: moment(b.dateFrom).toDate(),
-            dateTo: moment(b.dateTo).toDate(), name: b.name
-        }));
+        let budgetViewModels = await this.budgetService.getAllBudgets();
         this.setState({ budgets: budgetViewModels });
     }
 
@@ -48,15 +47,10 @@ export default class BudgetComponent extends React.Component<BudgetComponentProp
     }
 
     private saveFormData = (model: BudgetFormModel) => {
-        let budgetModel: BudgetModel = {
-            amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
-            dateTo: new Date(model.to), id: model.id, name: model.name
-        };
-
         if (model.id != undefined) {
-            this.budgetApi.budgetsPut({ budgetModel: budgetModel });
+            this.budgetService.updateBudget(model);
         } else {
-            this.budgetApi.budgetsPost({ budgetModel: budgetModel });
+            this.budgetService.createBudget(model);
         }
 
         this.hideBudgetModal();
