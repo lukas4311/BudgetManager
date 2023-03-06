@@ -31,6 +31,9 @@ export default class BankAccountService {
         await this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
     }
 
+    public deleteBankAccount = async (id: number) =>
+        await this.bankAccountApi.bankAccountsDelete({ body: id });
+
     private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] =>
         bankAccountModels.map(b => this.mapDataModelToViewModel(b));
 

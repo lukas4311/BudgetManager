@@ -35,9 +35,9 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         super(props);
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
-    
+
     public componentDidMount = () => this.init();
-    
+
     private async init(): Promise<void> {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
@@ -68,7 +68,7 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         );
     }
 
-    private addNewItem = (): void => 
+    private addNewItem = (): void =>
         this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
 
     private bankEdit = async (id: number): Promise<void> => {
@@ -97,9 +97,8 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
         await this.loadBankAccounts();
     }
 
-    private deleteBank = (id: number) => {
-        this.bankAccountApi.bankAccountsDelete({ body: id });
-    }
+    private deleteBank = (id: number) =>
+        this.bankAccountService.deleteBankAccount(id);
 
     render() {
         return (
