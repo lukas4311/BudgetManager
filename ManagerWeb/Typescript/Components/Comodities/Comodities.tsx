@@ -1,13 +1,12 @@
 import _ from "lodash";
-import React, { useState } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { ComodityApi, CurrencyApi } from "../../ApiClient/Main/apis";
-import { ComodityTradeHistoryModel, ComodityTypeModel, CurrencySymbol } from "../../ApiClient/Main/models";
+import { ComodityTradeHistoryModel, ComodityTypeModel } from "../../ApiClient/Main/models";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import Gold from "./Gold";
-import { GoldIngot } from "./GoldIngot";
-import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { ComoditiesForm, ComoditiesFormViewModel } from "./ComoditiesForm";
 import moment from "moment";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
