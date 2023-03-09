@@ -1,4 +1,6 @@
-import { ComodityApiInterface, ComodityTypeModel } from "../ApiClient/Main";
+import moment from "moment";
+import { ComodityApiInterface, ComodityTradeHistoryModel, ComodityTypeModel } from "../ApiClient/Main";
+import { ComoditiesFormViewModel } from "../Components/Comodities/ComoditiesForm";
 
 export default class ComodityService {
     comodityApi: ComodityApiInterface;
@@ -7,19 +9,37 @@ export default class ComodityService {
         this.comodityApi = comodityApi;
     }
 
-    public async GetComodityTypes() {
+    public async getComodityTypes() {
         const comodityTypes: ComodityTypeModel[] = await this.comodityApi.comoditiesComodityTypeAllGet();
         return comodityTypes.map(c => this.mapComodityTypeToViewModel(c))
     }
 
-    private mapComodityTypeToViewModel(comodityType: ComodityTypeModel){
+    public async getAllComodityTrades(comodityId: number) {
+        const comodities = await this.comodityApi.comoditiesAllGet();
+        const allComodityTradeData = comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g))
+        return allComodityTradeData;
+    }
+
+    private mapComodityTypeToViewModel(comodityType: ComodityTypeModel) {
         let comodityTypeModel = new ComodityTypeViewModel();
-        comodityType.code = comodityType.code;
-        comodityType.comodityUnit = comodityType.comodityUnit;
-        comodityType.comodityUnitId = comodityType.comodityUnitId;
-        comodityType.id = comodityType.id;
-        comodityType.name = comodityType.name;
+        comodityTypeModel.code = comodityType.code;
+        comodityTypeModel.comodityUnit = comodityType.comodityUnit;
+        comodityTypeModel.comodityUnitId = comodityType.comodityUnitId;
+        comodityTypeModel.id = comodityType.id;
+        comodityTypeModel.name = comodityType.name;
         return comodityTypeModel;
+    }
+
+    private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
+        let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
+        model.currencySymbol = tradeHistory.currencySymbol;
+        model.currencySymbolId = tradeHistory.currencySymbolId;
+        model.id = tradeHistory.id;
+        model.price = tradeHistory.tradeValue;
+        model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+        model.comodityAmount = tradeHistory.tradeSize;
+        model.company = tradeHistory.company;
+        return model;
     }
 }
 

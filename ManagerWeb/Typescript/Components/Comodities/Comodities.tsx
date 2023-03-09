@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { ComodityApi, CurrencyApi } from "../../ApiClient/Main/apis";
+import { ComodityApi, ComodityApiInterface, CurrencyApi } from "../../ApiClient/Main/apis";
 import { ComodityTradeHistoryModel, ComodityTypeModel } from "../../ApiClient/Main/models";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
@@ -13,6 +13,7 @@ import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
 import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import ComodityService from "../../Services/ComodityService";
 
 const theme = createMuiTheme({
     palette: {
@@ -38,11 +39,12 @@ class ComodityMenuItem {
 }
 
 export default class Comodities extends React.Component<RouteComponentProps, ComoditiesState>{
-    private comodityApi: ComodityApi;
+    private comodityApi: ComodityApiInterface;
     private goldCode: string = 'AU';
     private goldType: ComodityTypeModel;
     private currencies: CurrencyTickerSelectModel[];
     private confirmationDeleteId: number;
+    private comodityService: ComodityService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -64,35 +66,39 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.comodityApi = await apiFactory.getClient(ComodityApi);
+        this.comodityService = new ComodityService(this.comodityApi);
         this.loadData();
     }
 
     private loadData = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
-        this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
+        // const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
+        // this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
+        const comodityTypes = await this.comodityService.getComodityTypes();
+        this.goldType = _.first(comodityTypes.filter(c => c.code == this.goldCode));
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
         await this.loadGoldData();
     }
 
     private loadGoldData = async () => {
-        let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
-        const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
+        // let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
+        // const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
+        const goldIngots = await this.comodityService.getAllComodityTrades(this.goldType.id);
         this.setState({ goldIngots: goldIngots });
     }
 
     private addNewGold = () => {
         let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-        model.onSave = this.saveTrade;
-        model.onDelete = this.deleteTradeConfirm;
+        // model.onSave = this.saveTrade;
+        // model.onDelete = this.deleteTradeConfirm;
         model.buyTimeStamp = moment().format("YYYY-MM-DD");
         model.comodityTypeName = "Gold";
         model.comodityUnit = this.goldType.comodityUnit;
         model.price = 0;
         model.company = "";
         model.comodityAmount = 0;
-        model.currencies = this.currencies;
+        // model.currencies = this.currencies;
         model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
@@ -104,20 +110,20 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         this.setState({ openedForm: true, dialogTitle: "Gold" });
     }
 
-    private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
-        let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-        model.currencySymbol = tradeHistory.currencySymbol;
-        model.currencySymbolId = tradeHistory.currencySymbolId;
-        model.id = tradeHistory.id;
-        model.price = tradeHistory.tradeValue;
-        model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-        model.comodityAmount = tradeHistory.tradeSize;
-        model.onSave = this.saveTrade;
-        model.onDelete = this.deleteTradeConfirm;
-        model.currencies = this.currencies;
-        model.company = tradeHistory.company;
-        return model;
-    }
+    // private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
+    //     let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
+    //     model.currencySymbol = tradeHistory.currencySymbol;
+    //     model.currencySymbolId = tradeHistory.currencySymbolId;
+    //     model.id = tradeHistory.id;
+    //     model.price = tradeHistory.tradeValue;
+    //     model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+    //     model.comodityAmount = tradeHistory.tradeSize;
+    //     model.onSave = this.saveTrade;
+    //     model.onDelete = this.deleteTradeConfirm;
+    //     model.currencies = this.currencies;
+    //     model.company = tradeHistory.company;
+    //     return model;
+    // }
 
     private saveTrade = async (data: ComoditiesFormViewModel): Promise<void> => {
         const tradeHistory: ComodityTradeHistoryModel = {
@@ -205,10 +211,12 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
                                     maxWidth="md" fullWidth={true}>
                                     <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Golden ingots</DialogTitle>
                                     <DialogContent className="bg-prussianBlue">
-                                        <ComoditiesForm {...this.state.selectedModel} />
+                                        {this.state.selectedModel != undefined ?
+                                            <ComoditiesForm viewModel={this.state.selectedModel} onSave={this.saveTrade} onDelete={this.deleteTradeConfirm} currencies={this.currencies} /> :
+                                            <></>
+                                        }
                                     </DialogContent>
                                 </Dialog>
-
                                 <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteTrade(ConfirmationResult.Cancel)} onConfirm={this.deleteTrade} isOpen={this.state.confirmDialogIsOpen} />
                             </>
                         </ComponentPanel>

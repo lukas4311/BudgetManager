@@ -6495,12 +6495,12 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
-const BankAccountViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/BankAccountViewModel */ "./Typescript/Model/BankAccountViewModel.ts"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const BankAccountForm_1 = __webpack_require__(/*! ./BankAccountForm */ "./Typescript/Components/BankAccount/BankAccountForm.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
+const BankAccountService_1 = __importDefault(__webpack_require__(/*! ../../Services/BankAccountService */ "./Typescript/Services/BankAccountService.ts"));
 class BankAccountOverviewState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -6513,18 +6513,9 @@ class BankAccountOverview extends react_1.default.Component {
         super(props);
         this.componentDidMount = () => this.init();
         this.loadBankAccounts = () => __awaiter(this, void 0, void 0, function* () {
-            let bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
-            let bankViewModels = this.getMappedViewModels(bankAccounts);
+            let bankViewModels = yield this.bankAccountService.getAllBankAccounts();
             this.setState({ bankAccounts: bankViewModels });
         });
-        this.getMappedViewModels = (bankAccountModels) => bankAccountModels.map(b => this.mapDataModelToViewModel(b));
-        this.mapDataModelToViewModel = (bankAccountModels) => {
-            let viewModel = new BankAccountViewModel_1.default();
-            viewModel.code = bankAccountModels.code;
-            viewModel.id = bankAccountModels.id;
-            viewModel.openingBalance = bankAccountModels.openingBalance;
-            return viewModel;
-        };
         this.renderHeader = () => {
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3 text-left" }, "Account name"),
@@ -6535,23 +6526,18 @@ class BankAccountOverview extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/3" }, p.code.toUpperCase()),
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/3" }, p.openingBalance)));
         };
-        this.addNewItem = () => {
-            this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
-        };
+        this.addNewItem = () => this.setState({ showForm: true, formKey: Date.now(), selectedBankAccount: undefined });
         this.bankEdit = (id) => __awaiter(this, void 0, void 0, function* () {
             let selectedBankAccount = this.state.bankAccounts.filter(t => t.id == id)[0];
             this.setState({ showForm: true, selectedBankAccount: selectedBankAccount, selectedId: id });
         });
         this.hideForm = () => this.setState({ showForm: false, formKey: Date.now(), selectedId: undefined });
         this.saveFormData = (model) => __awaiter(this, void 0, void 0, function* () {
-            let bankModel = {
-                code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
-            };
             try {
                 if (model.id != undefined)
-                    yield this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
+                    yield this.bankAccountService.updateBankAccount(model);
                 else
-                    yield this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
+                    yield this.bankAccountService.createBankAccount(model);
             }
             catch (error) {
                 console.log(error);
@@ -6559,15 +6545,14 @@ class BankAccountOverview extends react_1.default.Component {
             this.hideForm();
             yield this.loadBankAccounts();
         });
-        this.deleteBank = (id) => {
-            this.bankAccountApi.bankAccountsDelete({ body: id });
-        };
+        this.deleteBank = (id) => this.bankAccountService.deleteBankAccount(id);
         this.state = { bankAccounts: [], selectedBankAccount: undefined, showForm: false, formKey: Date.now(), selectedId: undefined };
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
+            const bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
+            this.bankAccountService = new BankAccountService_1.default(bankAccountApi);
             yield this.loadBankAccounts();
         });
     }
@@ -6771,6 +6756,7 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
 const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
+const BudgetService_1 = __importDefault(__webpack_require__(/*! ../../Services/BudgetService */ "./Typescript/Services/BudgetService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -6779,22 +6765,21 @@ const theme = (0, styles_1.createMuiTheme)({
 class BudgetComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.loadData = () => __awaiter(this, void 0, void 0, function* () {
+        this.init = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            const budgetApi = yield apiFactory.getClient(Main_1.BudgetApi);
+            this.budgetService = new BudgetService_1.default(budgetApi);
             yield this.loadBudget();
         });
         this.hideBudgetModal = () => {
             this.setState({ showBudgetFormModal: false, budgetFormKey: Date.now(), selectedBudgetId: undefined });
         };
         this.saveFormData = (model) => {
-            let budgetModel = {
-                amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
-                dateTo: new Date(model.to), id: model.id, name: model.name
-            };
             if (model.id != undefined) {
-                this.budgetApi.budgetsPut({ budgetModel: budgetModel });
+                this.budgetService.updateBudget(model);
             }
             else {
-                this.budgetApi.budgetsPost({ budgetModel: budgetModel });
+                this.budgetService.createBudget(model);
             }
             this.hideBudgetModal();
         };
@@ -6814,17 +6799,11 @@ class BudgetComponent extends React.Component {
         this.state = { showBudgetFormModal: false, budgetFormKey: Date.now(), budgets: [], selectedBudgetId: undefined, selectedBudget: undefined };
     }
     componentDidMount() {
-        this.loadData();
+        this.init();
     }
     loadBudget() {
         return __awaiter(this, void 0, void 0, function* () {
-            const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.budgetApi = yield apiFactory.getClient(Main_1.BudgetApi);
-            let budgets = yield this.budgetApi.budgetsActualGet();
-            let budgetViewModels = budgets.map(b => ({
-                id: b.id, amount: b.amount, dateFrom: (0, moment_1.default)(b.dateFrom).toDate(),
-                dateTo: (0, moment_1.default)(b.dateTo).toDate(), name: b.name
-            }));
+            let budgetViewModels = yield this.budgetService.getAllBudgets();
             this.setState({ budgets: budgetViewModels });
         });
     }
@@ -7315,6 +7294,7 @@ const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
+const ComodityService_1 = __importDefault(__webpack_require__(/*! ../../Services/ComodityService */ "./Typescript/Services/ComodityService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7331,32 +7311,36 @@ class Comodities extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.comodityApi = yield apiFactory.getClient(apis_1.ComodityApi);
+            this.comodityService = new ComodityService_1.default(this.comodityApi);
             this.loadData();
         });
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
-            const comodityTypes = yield this.comodityApi.comoditiesComodityTypeAllGet();
-            this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
+            // const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
+            // this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
+            const comodityTypes = yield this.comodityService.getComodityTypes();
+            this.goldType = lodash_1.default.first(comodityTypes.filter(c => c.code == this.goldCode));
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             yield this.loadGoldData();
         });
         this.loadGoldData = () => __awaiter(this, void 0, void 0, function* () {
-            let data = yield this.comodityApi.comoditiesAllGet();
-            const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
+            // let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
+            // const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
+            const goldIngots = yield this.comodityService.getAllComodityTrades(this.goldType.id);
             this.setState({ goldIngots: goldIngots });
         });
         this.addNewGold = () => {
             let model = new ComoditiesForm_1.ComoditiesFormViewModel();
-            model.onSave = this.saveTrade;
-            model.onDelete = this.deleteTradeConfirm;
+            // model.onSave = this.saveTrade;
+            // model.onDelete = this.deleteTradeConfirm;
             model.buyTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.comodityTypeName = "Gold";
             model.comodityUnit = this.goldType.comodityUnit;
             model.price = 0;
             model.company = "";
             model.comodityAmount = 0;
-            model.currencies = this.currencies;
+            // model.currencies = this.currencies;
             model.currencySymbolId = this.currencies[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
@@ -7365,20 +7349,20 @@ class Comodities extends react_1.default.Component {
             this.setState({ selectedModel: tradeHistory, openedForm: true });
             this.setState({ openedForm: true, dialogTitle: "Gold" });
         };
-        this.mapDataModelToViewModel = (tradeHistory) => {
-            let model = new ComoditiesForm_1.ComoditiesFormViewModel();
-            model.currencySymbol = tradeHistory.currencySymbol;
-            model.currencySymbolId = tradeHistory.currencySymbolId;
-            model.id = tradeHistory.id;
-            model.price = tradeHistory.tradeValue;
-            model.buyTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-            model.comodityAmount = tradeHistory.tradeSize;
-            model.onSave = this.saveTrade;
-            model.onDelete = this.deleteTradeConfirm;
-            model.currencies = this.currencies;
-            model.company = tradeHistory.company;
-            return model;
-        };
+        // private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
+        //     let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
+        //     model.currencySymbol = tradeHistory.currencySymbol;
+        //     model.currencySymbolId = tradeHistory.currencySymbolId;
+        //     model.id = tradeHistory.id;
+        //     model.price = tradeHistory.tradeValue;
+        //     model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+        //     model.comodityAmount = tradeHistory.tradeSize;
+        //     model.onSave = this.saveTrade;
+        //     model.onDelete = this.deleteTradeConfirm;
+        //     model.currencies = this.currencies;
+        //     model.company = tradeHistory.company;
+        //     return model;
+        // }
         this.saveTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const tradeHistory = {
                 comodityTypeId: this.goldType.id,
@@ -7450,8 +7434,9 @@ class Comodities extends react_1.default.Component {
                                     react_1.default.createElement("span", { className: "" }, c.title)))))),
                             react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Detail transakce", maxWidth: "md", fullWidth: true },
                                 react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Golden ingots"),
-                                react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                                    react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, Object.assign({}, this.state.selectedModel)))),
+                                react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" }, this.state.selectedModel != undefined ?
+                                    react_1.default.createElement(ComoditiesForm_1.ComoditiesForm, { viewModel: this.state.selectedModel, onSave: this.saveTrade, onDelete: this.deleteTradeConfirm, currencies: this.currencies }) :
+                                    react_1.default.createElement(react_1.default.Fragment, null))),
                             react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteTrade(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteTrade, isOpen: this.state.confirmDialogIsOpen })))))));
     }
 }
@@ -7494,25 +7479,28 @@ const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+class ComoditiesFormProps {
+}
 class ComoditiesFormViewModel {
 }
 exports.ComoditiesFormViewModel = ComoditiesFormViewModel;
 const ComoditiesForm = (props) => {
-    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, viewModel) });
     const onSubmit = (data) => {
         props.onSave(data);
     };
     return (React.createElement("div", null,
         React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
-            React.createElement("h1", { className: 'text-center text-3xl mb-5' }, props.comodityTypeName),
+            React.createElement("h1", { className: 'text-center text-3xl mb-5' }, viewModel.comodityTypeName),
             React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center gap-y-8" },
                 React.createElement("div", { className: "col-span-2 w-2/3 flex flex-row items-center" },
                     React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Company", type: "text" }, field, { className: "place-self-end w-full" })), name: "company", control: control })),
                 React.createElement("div", { className: "w-2/3 flex justify-start" },
-                    React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum n\u00E1kupu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "buyTimeStamp", defaultValue: props.buyTimeStamp, control: control })),
+                    React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum n\u00E1kupu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "buyTimeStamp", defaultValue: viewModel.buyTimeStamp, control: control })),
                 React.createElement("div", { className: "w-2/3 flex flex-row items-center" },
                     React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Amount", type: "text" }, field, { className: "place-self-end w-full" })), name: "comodityAmount", control: control }),
-                    React.createElement("p", { className: 'ml-3' }, props.comodityUnit)),
+                    React.createElement("p", { className: 'ml-3' }, viewModel.comodityUnit)),
                 React.createElement("div", { className: "w-2/3" },
                     React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Price", type: "text" }, field, { className: "place-self-end w-full" })), name: "price", control: control })),
                 React.createElement("div", { className: "w-2/3" },
@@ -7526,7 +7514,7 @@ const ComoditiesForm = (props) => {
                                 })));
                         }, name: "currencySymbolId", control: control }))),
             React.createElement(core_1.Button, { type: "submit", variant: "contained", className: "block m-auto w-1/3 bg-vermilion text-white" }, "Save")),
-        React.createElement(core_1.Button, { className: 'bg-red-600', onClick: () => props.onDelete(props.id) }, "Delete")));
+        React.createElement(core_1.Button, { className: 'bg-red-600', onClick: () => props.onDelete(viewModel.id) }, "Delete")));
 };
 exports.ComoditiesForm = ComoditiesForm;
 
@@ -10306,6 +10294,133 @@ exports.default = Overview;
 
 /***/ }),
 
+/***/ "./Typescript/Services/BankAccountService.ts":
+/*!***************************************************!*\
+  !*** ./Typescript/Services/BankAccountService.ts ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const BankAccountViewModel_1 = __importDefault(__webpack_require__(/*! ../Model/BankAccountViewModel */ "./Typescript/Model/BankAccountViewModel.ts"));
+class BankAccountService {
+    constructor(bankAccountApi) {
+        this.deleteBankAccount = (id) => __awaiter(this, void 0, void 0, function* () { return yield this.bankAccountApi.bankAccountsDelete({ body: id }); });
+        this.getMappedViewModels = (bankAccountModels) => bankAccountModels.map(b => this.mapDataModelToViewModel(b));
+        this.mapDataModelToViewModel = (bankAccountModels) => {
+            let viewModel = new BankAccountViewModel_1.default();
+            viewModel.code = bankAccountModels.code;
+            viewModel.id = bankAccountModels.id;
+            viewModel.openingBalance = bankAccountModels.openingBalance;
+            return viewModel;
+        };
+        this.bankAccountApi = bankAccountApi;
+    }
+    getAllBankAccounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
+            let bankViewModels = this.getMappedViewModels(bankAccounts);
+            return bankViewModels;
+        });
+    }
+    updateBankAccount(model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let bankModel = {
+                code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
+            };
+            yield this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
+        });
+    }
+    createBankAccount(model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let bankModel = {
+                code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
+            };
+            yield this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
+        });
+    }
+}
+exports.default = BankAccountService;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/BudgetService.ts":
+/*!**********************************************!*\
+  !*** ./Typescript/Services/BudgetService.ts ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+class BudgetService {
+    constructor(budgetApi) {
+        this.getMappedViewModels = (bankAccountModels) => bankAccountModels.map(b => ({
+            id: b.id, amount: b.amount, dateFrom: (0, moment_1.default)(b.dateFrom).toDate(),
+            dateTo: (0, moment_1.default)(b.dateTo).toDate(), name: b.name
+        }));
+        this.budgetApi = budgetApi;
+    }
+    getAllBudgets() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let budgets = yield this.budgetApi.budgetsActualGet();
+            let budgetViewModels = this.getMappedViewModels(budgets);
+            return budgetViewModels;
+        });
+    }
+    updateBudget(model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let budgetModel = {
+                amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
+                dateTo: new Date(model.to), id: model.id, name: model.name
+            };
+            yield this.budgetApi.budgetsPut({ budgetModel: budgetModel });
+        });
+    }
+    createBudget(model) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let budgetModel = {
+                amount: parseInt(model.amount.toString()), dateFrom: new Date(model.from),
+                dateTo: new Date(model.to), id: model.id, name: model.name
+            };
+            yield this.budgetApi.budgetsPost({ budgetModel: budgetModel });
+        });
+    }
+}
+exports.default = BudgetService;
+
+
+/***/ }),
+
 /***/ "./Typescript/Services/ChartDataProcessor.ts":
 /*!***************************************************!*\
   !*** ./Typescript/Services/ChartDataProcessor.ts ***!
@@ -10400,6 +10515,75 @@ class ChartDataProcessor {
     }
 }
 exports.ChartDataProcessor = ChartDataProcessor;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/ComodityService.ts":
+/*!************************************************!*\
+  !*** ./Typescript/Services/ComodityService.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const ComoditiesForm_1 = __webpack_require__(/*! ../Components/Comodities/ComoditiesForm */ "./Typescript/Components/Comodities/ComoditiesForm.tsx");
+class ComodityService {
+    constructor(comodityApi) {
+        this.mapDataModelToViewModel = (tradeHistory) => {
+            let model = new ComoditiesForm_1.ComoditiesFormViewModel();
+            model.currencySymbol = tradeHistory.currencySymbol;
+            model.currencySymbolId = tradeHistory.currencySymbolId;
+            model.id = tradeHistory.id;
+            model.price = tradeHistory.tradeValue;
+            model.buyTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+            model.comodityAmount = tradeHistory.tradeSize;
+            model.company = tradeHistory.company;
+            return model;
+        };
+        this.comodityApi = comodityApi;
+    }
+    getComodityTypes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const comodityTypes = yield this.comodityApi.comoditiesComodityTypeAllGet();
+            return comodityTypes.map(c => this.mapComodityTypeToViewModel(c));
+        });
+    }
+    getAllComodityTrades(comodityId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const comodities = yield this.comodityApi.comoditiesAllGet();
+            const allComodityTradeData = comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g));
+            return allComodityTradeData;
+        });
+    }
+    mapComodityTypeToViewModel(comodityType) {
+        let comodityTypeModel = new ComodityTypeViewModel();
+        comodityTypeModel.code = comodityType.code;
+        comodityTypeModel.comodityUnit = comodityType.comodityUnit;
+        comodityTypeModel.comodityUnitId = comodityType.comodityUnitId;
+        comodityTypeModel.id = comodityType.id;
+        comodityTypeModel.name = comodityType.name;
+        return comodityTypeModel;
+    }
+}
+exports.default = ComodityService;
+class ComodityTypeViewModel {
+}
 
 
 /***/ }),
