@@ -73,8 +73,6 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private loadData = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        // const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
-        // this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
         const comodityTypes = await this.comodityService.getComodityTypes();
         this.goldType = _.first(comodityTypes.filter(c => c.code == this.goldCode));
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
@@ -82,23 +80,18 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     }
 
     private loadGoldData = async () => {
-        // let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
-        // const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
         const goldIngots = await this.comodityService.getAllComodityTrades(this.goldType.id);
         this.setState({ goldIngots: goldIngots });
     }
 
     private addNewGold = () => {
         let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-        // model.onSave = this.saveTrade;
-        // model.onDelete = this.deleteTradeConfirm;
         model.buyTimeStamp = moment().format("YYYY-MM-DD");
         model.comodityTypeName = "Gold";
         model.comodityUnit = this.goldType.comodityUnit;
         model.price = 0;
         model.company = "";
         model.comodityAmount = 0;
-        // model.currencies = this.currencies;
         model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
@@ -109,21 +102,6 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         this.setState({ selectedModel: tradeHistory, openedForm: true });
         this.setState({ openedForm: true, dialogTitle: "Gold" });
     }
-
-    // private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
-    //     let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-    //     model.currencySymbol = tradeHistory.currencySymbol;
-    //     model.currencySymbolId = tradeHistory.currencySymbolId;
-    //     model.id = tradeHistory.id;
-    //     model.price = tradeHistory.tradeValue;
-    //     model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-    //     model.comodityAmount = tradeHistory.tradeSize;
-    //     model.onSave = this.saveTrade;
-    //     model.onDelete = this.deleteTradeConfirm;
-    //     model.currencies = this.currencies;
-    //     model.company = tradeHistory.company;
-    //     return model;
-    // }
 
     private saveTrade = async (data: ComoditiesFormViewModel): Promise<void> => {
         const tradeHistory: ComodityTradeHistoryModel = {

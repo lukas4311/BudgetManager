@@ -20,6 +20,11 @@ export default class ComodityService {
         return allComodityTradeData;
     }
 
+    public async getGoldPriceInCurrency(currencyCode: string){
+        const currentPrice = await this.comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: currencyCode });
+        return currentPrice;
+    }
+
     private mapComodityTypeToViewModel(comodityType: ComodityTypeModel) {
         let comodityTypeModel = new ComodityTypeViewModel();
         comodityTypeModel.code = comodityType.code;

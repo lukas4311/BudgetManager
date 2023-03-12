@@ -2,6 +2,7 @@ import _ from "lodash";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ComodityApi } from "../../ApiClient/Main";
+import ComodityService from "../../Services/ComodityService";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { GoldListProps } from "./GoldListProps";
 
@@ -17,9 +18,10 @@ const Gold = (props: GoldListProps) => {
     useEffect(() => {
         async function calculateTotalActualPrice() {
             const apiFactory = new ApiClientFactory(null);
-            const totalWeight = _.sumBy(props.comoditiesViewModels ?? [], (g) => g.comodityAmount);
             let comodityApi = await apiFactory.getClient(ComodityApi);
-            const price = await comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: "CZK" });
+            let comodityService = new ComodityService(comodityApi);
+            const price = await comodityService.getGoldPriceInCurrency("CZK");
+            const totalWeight = _.sumBy(props.comoditiesViewModels ?? [], (g) => g.comodityAmount);
             const actualTotalPrice = totalWeight * price / ounce;
             setActualTotalPrice(actualTotalPrice.toFixed(1));
         }
@@ -47,7 +49,7 @@ const Gold = (props: GoldListProps) => {
                     <div className="w-11/12 z-negative1 bg-gold rotateBox">
                     </div>
                     <div className="px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center">
-                        <p className="font-medium goldText text-7xl font-black">+</p>
+                        <p className="font-medium goldText text-7xl">+</p>
                     </div>
                 </div>
             </div>
