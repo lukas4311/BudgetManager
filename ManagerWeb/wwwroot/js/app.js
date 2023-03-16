@@ -7295,6 +7295,7 @@ const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typ
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const ComodityService_1 = __importDefault(__webpack_require__(/*! ../../Services/ComodityService */ "./Typescript/Services/ComodityService.ts"));
+const CurrencyService_1 = __webpack_require__(/*! ../../Services/CurrencyService */ "./Typescript/Services/CurrencyService.ts");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -7311,15 +7312,15 @@ class Comodities extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             const comodityApi = yield apiFactory.getClient(apis_1.ComodityApi);
+            const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
             this.comodityService = new ComodityService_1.default(comodityApi);
+            this.currencyService = new CurrencyService_1.CurrencyService(currencyApi);
             this.loadData();
         });
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
-            const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
             const comodityTypes = yield this.comodityService.getComodityTypes();
             this.goldType = lodash_1.default.first(comodityTypes.filter(c => c.code == this.goldCode));
-            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            this.currencies = yield this.currencyService.getAllCurrencies();
             yield this.loadGoldData();
         });
         this.loadGoldData = () => __awaiter(this, void 0, void 0, function* () {
@@ -7858,6 +7859,7 @@ const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
+const CurrencyService_1 = __webpack_require__(/*! ../../Services/CurrencyService */ "./Typescript/Services/CurrencyService.ts");
 class CryptoTradesState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -7868,6 +7870,18 @@ const theme = (0, styles_1.createMuiTheme)({
 class CryptoTrades extends react_1.default.Component {
     constructor(props) {
         super(props);
+        this.init = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            this.currencyService = new CurrencyService_1.CurrencyService(currencyApi);
+            this.loadCryptoTradesData();
+        });
+        // private async load(): Promise<void> {
+        //     const apiFactory = new ApiClientFactory(this.props.history);
+        //     this.cryptoApi = await apiFactory.getClient(CryptoApi);
+        //     this.currencyApi = await apiFactory.getClient(CurrencyApi);
+        //     this.loadCryptoTradesData();
+        // }
         this.loadCryptoTradesData = () => __awaiter(this, void 0, void 0, function* () {
             this.cryptoTickers = (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
             this.currencies = (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
@@ -7950,15 +7964,7 @@ class CryptoTrades extends react_1.default.Component {
         this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
     }
     componentDidMount() {
-        this.load();
-    }
-    load() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
-            this.currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
-            this.loadCryptoTradesData();
-        });
+        this.init();
     }
     render() {
         return (react_1.default.createElement(ComponentPanel_1.ComponentPanel, null,
@@ -10585,6 +10591,41 @@ class ComodityService {
 exports.default = ComodityService;
 class ComodityTypeViewModel {
 }
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/CurrencyService.ts":
+/*!************************************************!*\
+  !*** ./Typescript/Services/CurrencyService.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CurrencyService = void 0;
+class CurrencyService {
+    constructor(currencyApi) {
+        this.currencyApi = currencyApi;
+    }
+    getAllCurrencies() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        });
+    }
+}
+exports.CurrencyService = CurrencyService;
 
 
 /***/ }),

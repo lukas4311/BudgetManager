@@ -10,6 +10,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
 import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import { CurrencyService } from "../../Services/CurrencyService";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -29,6 +30,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private currencyApi: CurrencyApi;
     private cryptoTickers: CryptoTickerSelectModel[];
     private currencies: any[];
+    currencyService: any;
 
 
     constructor(props: RouteComponentProps) {
@@ -37,16 +39,23 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     }
 
     public componentDidMount() {
-        this.load();
+        this.init();
     }
 
-    private async load(): Promise<void> {
+    private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.currencyApi = await apiFactory.getClient(CurrencyApi);
-
+        const currencyApi = await apiFactory.getClient(CurrencyApi);
+        this.currencyService = new CurrencyService(currencyApi);
         this.loadCryptoTradesData();
     }
+
+    // private async load(): Promise<void> {
+    //     const apiFactory = new ApiClientFactory(this.props.history);
+    //     this.cryptoApi = await apiFactory.getClient(CryptoApi);
+    //     this.currencyApi = await apiFactory.getClient(CurrencyApi);
+
+    //     this.loadCryptoTradesData();
+    // }
 
     private loadCryptoTradesData = async () => {
         this.cryptoTickers = (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));

@@ -14,6 +14,7 @@ import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
 import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import ComodityService from "../../Services/ComodityService";
+import { CurrencyService } from "../../Services/CurrencyService";
 
 const theme = createMuiTheme({
     palette: {
@@ -44,6 +45,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private currencies: CurrencyTickerSelectModel[];
     private confirmationDeleteId: number;
     private comodityService: ComodityService;
+    private currencyService: CurrencyService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -65,16 +67,16 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const comodityApi = await apiFactory.getClient(ComodityApi);
+        const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.comodityService = new ComodityService(comodityApi);
+        this.currencyService = new CurrencyService(currencyApi);
         this.loadData();
     }
 
     private loadData = async () => {
-        const apiFactory = new ApiClientFactory(this.props.history);
-        const currencyApi = await apiFactory.getClient(CurrencyApi);
         const comodityTypes = await this.comodityService.getComodityTypes();
         this.goldType = _.first(comodityTypes.filter(c => c.code == this.goldCode));
-        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        this.currencies = await this.currencyService.getAllCurrencies();
         await this.loadGoldData();
     }
 
