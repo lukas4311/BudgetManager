@@ -7317,30 +7317,23 @@ class Comodities extends react_1.default.Component {
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
-            // const comodityTypes = await this.comodityApi.comoditiesComodityTypeAllGet();
-            // this.goldType = comodityTypes.filter(c => c.code == this.goldCode)[0];
             const comodityTypes = yield this.comodityService.getComodityTypes();
             this.goldType = lodash_1.default.first(comodityTypes.filter(c => c.code == this.goldCode));
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
             yield this.loadGoldData();
         });
         this.loadGoldData = () => __awaiter(this, void 0, void 0, function* () {
-            // let data: ComodityTradeHistoryModel[] = await this.comodityApi.comoditiesAllGet();
-            // const goldIngots = data.filter(a => a.comodityTypeId == this.goldType.id).map(g => this.mapDataModelToViewModel(g));
             const goldIngots = yield this.comodityService.getAllComodityTrades(this.goldType.id);
             this.setState({ goldIngots: goldIngots });
         });
         this.addNewGold = () => {
             let model = new ComoditiesForm_1.ComoditiesFormViewModel();
-            // model.onSave = this.saveTrade;
-            // model.onDelete = this.deleteTradeConfirm;
             model.buyTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
             model.comodityTypeName = "Gold";
             model.comodityUnit = this.goldType.comodityUnit;
             model.price = 0;
             model.company = "";
             model.comodityAmount = 0;
-            // model.currencies = this.currencies;
             model.currencySymbolId = this.currencies[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
@@ -7349,20 +7342,6 @@ class Comodities extends react_1.default.Component {
             this.setState({ selectedModel: tradeHistory, openedForm: true });
             this.setState({ openedForm: true, dialogTitle: "Gold" });
         };
-        // private mapDataModelToViewModel = (tradeHistory: ComodityTradeHistoryModel): ComoditiesFormViewModel => {
-        //     let model: ComoditiesFormViewModel = new ComoditiesFormViewModel();
-        //     model.currencySymbol = tradeHistory.currencySymbol;
-        //     model.currencySymbolId = tradeHistory.currencySymbolId;
-        //     model.id = tradeHistory.id;
-        //     model.price = tradeHistory.tradeValue;
-        //     model.buyTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-        //     model.comodityAmount = tradeHistory.tradeSize;
-        //     model.onSave = this.saveTrade;
-        //     model.onDelete = this.deleteTradeConfirm;
-        //     model.currencies = this.currencies;
-        //     model.company = tradeHistory.company;
-        //     return model;
-        // }
         this.saveTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             const tradeHistory = {
                 comodityTypeId: this.goldType.id,
@@ -7375,9 +7354,9 @@ class Comodities extends react_1.default.Component {
                 tradeValue: data.price
             };
             if (data.id)
-                yield this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+                yield this.comodityService.updateComodityTrade(tradeHistory);
             else
-                yield this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+                yield this.comodityService.createComodityTrade(tradeHistory);
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadGoldData();
         });
@@ -7387,7 +7366,7 @@ class Comodities extends react_1.default.Component {
         });
         this.deleteTrade = (res) => __awaiter(this, void 0, void 0, function* () {
             if (res == ConfirmationForm_1.ConfirmationResult.Ok)
-                yield this.comodityApi.comoditiesDelete({ body: this.confirmationDeleteId });
+                yield this.comodityService.deleteComodityTrade(this.confirmationDeleteId);
             this.confirmationDeleteId = undefined;
             this.setState({ confirmDialogIsOpen: false, openedForm: false, selectedModel: undefined });
             yield this.loadGoldData();
@@ -7566,6 +7545,7 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const ComodityService_1 = __importDefault(__webpack_require__(/*! ../../Services/ComodityService */ "./Typescript/Services/ComodityService.ts"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold = (props) => {
     var _a, _b, _c;
@@ -7581,9 +7561,10 @@ const Gold = (props) => {
             var _a;
             return __awaiter(this, void 0, void 0, function* () {
                 const apiFactory = new ApiClientFactory_1.default(null);
-                const totalWeight = lodash_1.default.sumBy((_a = props.comoditiesViewModels) !== null && _a !== void 0 ? _a : [], (g) => g.comodityAmount);
                 let comodityApi = yield apiFactory.getClient(Main_1.ComodityApi);
-                const price = yield comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: "CZK" });
+                let comodityService = new ComodityService_1.default(comodityApi);
+                const price = yield comodityService.getGoldPriceInCurrency("CZK");
+                const totalWeight = lodash_1.default.sumBy((_a = props.comoditiesViewModels) !== null && _a !== void 0 ? _a : [], (g) => g.comodityAmount);
                 const actualTotalPrice = totalWeight * price / ounce;
                 setActualTotalPrice(actualTotalPrice.toFixed(1));
             });
@@ -7604,7 +7585,7 @@ const Gold = (props) => {
             react_1.default.createElement("div", { className: "relative p-1 bg-gold-brighter rounded-xl inline-block goldCard shadow-2xl z-0 overflow-hidden cardOverlap", onClick: props.addNewIngot },
                 react_1.default.createElement("div", { className: "w-11/12 z-negative1 bg-gold rotateBox" }),
                 react_1.default.createElement("div", { className: "px-2 py-6 rounded-xl bg-gold z-10 h-full flex items-center justify-center" },
-                    react_1.default.createElement("p", { className: "font-medium goldText text-7xl font-black" }, "+")))),
+                    react_1.default.createElement("p", { className: "font-medium goldText text-7xl" }, "+")))),
         react_1.default.createElement("div", { className: "text-center block" },
             react_1.default.createElement("h4", { className: "text-xl mt-12" }, "Summary info"),
             react_1.default.createElement("p", { className: "mt-2" },
@@ -10569,6 +10550,27 @@ class ComodityService {
             const comodities = yield this.comodityApi.comoditiesAllGet();
             const allComodityTradeData = comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g));
             return allComodityTradeData;
+        });
+    }
+    getGoldPriceInCurrency(currencyCode) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const currentPrice = yield this.comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: currencyCode });
+            return currentPrice;
+        });
+    }
+    createComodityTrade(tradeModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeModel });
+        });
+    }
+    updateComodityTrade(tradeModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeModel });
+        });
+    }
+    deleteComodityTrade(comodityId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.comodityApi.comoditiesDelete({ body: comodityId });
         });
     }
     mapComodityTypeToViewModel(comodityType) {

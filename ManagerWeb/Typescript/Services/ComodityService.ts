@@ -20,9 +20,21 @@ export default class ComodityService {
         return allComodityTradeData;
     }
 
-    public async getGoldPriceInCurrency(currencyCode: string){
+    public async getGoldPriceInCurrency(currencyCode: string) {
         const currentPrice = await this.comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: currencyCode });
         return currentPrice;
+    }
+
+    public async createComodityTrade(tradeModel: ComodityTradeHistoryModel) {
+        await this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeModel });
+    }
+
+    public async updateComodityTrade(tradeModel: ComodityTradeHistoryModel) {
+        await this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeModel });
+    }
+
+    public async deleteComodityTrade(comodityId: number) {
+        await this.comodityApi.comoditiesDelete({ body: comodityId });
     }
 
     private mapComodityTypeToViewModel(comodityType: ComodityTypeModel) {

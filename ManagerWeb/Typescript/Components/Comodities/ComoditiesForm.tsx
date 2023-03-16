@@ -22,9 +22,6 @@ class ComoditiesFormViewModel implements IBaseModel {
     company: string;
     currencySymbolId: number;
     currencySymbol: string;
-    // currencies: CurrencyTickerSelectModel[];
-    // onSave: (data: ComoditiesFormViewModel) => void;
-    // onDelete: (id: number) => Promise<void>;
 }
 
 const ComoditiesForm = (props: ComoditiesFormProps) => {

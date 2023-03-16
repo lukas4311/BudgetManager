@@ -116,9 +116,9 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         };
 
         if (data.id)
-            await this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeHistory });
+            await this.comodityService.updateComodityTrade(tradeHistory);
         else
-            await this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeHistory });
+            await this.comodityService.createComodityTrade(tradeHistory);
 
         this.setState({ openedForm: false, selectedModel: undefined });
         this.loadGoldData();
@@ -131,7 +131,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     private deleteTrade = async (res: ConfirmationResult) => {
         if (res == ConfirmationResult.Ok)
-            await this.comodityApi.comoditiesDelete({ body: this.confirmationDeleteId })
+            await this.comodityService.deleteComodityTrade(this.confirmationDeleteId);
 
         this.confirmationDeleteId = undefined;
         this.setState({ confirmDialogIsOpen: false, openedForm: false, selectedModel: undefined });

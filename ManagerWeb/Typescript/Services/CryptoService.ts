@@ -7,4 +7,5 @@ export default class CryptoService {
         this.cryptoApi = cryptoApi;
     }
 
+    
 }
