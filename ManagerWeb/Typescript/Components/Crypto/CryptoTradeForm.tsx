@@ -11,17 +11,25 @@ class CryptoTradeViewModel implements IBaseModel {
     tradeTimeStamp: string;
     cryptoTickerId: number;
     cryptoTicker: string;
-    cryptoTickers: CryptoTickerSelectModel[];
+    // cryptoTickers: CryptoTickerSelectModel[];
     tradeSize: number;
     tradeValue: number;
     currencySymbolId: number;
     currencySymbol: string;
+    // currencies: CurrencyTickerSelectModel[];
+    // onSave: (data: CryptoTradeViewModel) => void;
+}
+
+class CryptoTradeFromProps {
+    viewModel: CryptoTradeViewModel;
     currencies: CurrencyTickerSelectModel[];
+    cryptoTickers: CryptoTickerSelectModel[];
     onSave: (data: CryptoTradeViewModel) => void;
 }
 
-const CryptoTradeForm = (props: CryptoTradeViewModel) => {
-    const { handleSubmit, control } = useForm<CryptoTradeViewModel>({ defaultValues: { ...props } });
+const CryptoTradeForm = (props: CryptoTradeFromProps) => {
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = useForm<CryptoTradeViewModel>({ defaultValues: { ...viewModel } });
 
     const onSubmit = (data: CryptoTradeViewModel) => {
         props.onSave(data);
@@ -32,7 +40,7 @@ const CryptoTradeForm = (props: CryptoTradeViewModel) => {
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="col-span-2 w-1/3">
                     <Controller render={({ field }) => <TextField label="Datum tradu" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
-                        name="tradeTimeStamp" defaultValue={props.tradeTimeStamp} control={control} />
+                        name="tradeTimeStamp" defaultValue={viewModel.tradeTimeStamp} control={control} />
                 </div>
                 <div className="w-2/3">
                     <Controller render={({ field }) =>

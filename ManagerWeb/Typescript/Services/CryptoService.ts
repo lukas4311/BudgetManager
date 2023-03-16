@@ -1,5 +1,6 @@
 import moment from "moment";
 import { CryptoApiInterface, TradeHistory } from "../ApiClient/Main";
+import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 
 export default class CryptoService {
@@ -15,17 +16,21 @@ export default class CryptoService {
         return trades;
     }
 
-    public async createComodityTrade(tradeModel: CryptoTradeViewModel) {
+    public async getCryptoTickers(): Promise<CryptoTickerSelectModel[]> {
+        return (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }))
+    }
+
+    public async createCryptoTrade(tradeModel: CryptoTradeViewModel) {
         const tradeHistory = this.mapViewModelToDataModel(tradeModel);
         await this.cryptoApi.cryptosPost({ tradeHistory: tradeHistory });
     }
 
-    public async updateComodityTrade(tradeModel: CryptoTradeViewModel) {
+    public async updateCryptoTrade(tradeModel: CryptoTradeViewModel) {
         const tradeHistory = this.mapViewModelToDataModel(tradeModel);
         await this.cryptoApi.cryptosPut({ tradeHistory: tradeHistory });
     }
 
-    public async deleteComodityTrade(tradeId: number) {
+    public async deleteCryptoTrade(tradeId: number) {
         await this.cryptoApi.cryptosDelete({ body: tradeId });
     }
 

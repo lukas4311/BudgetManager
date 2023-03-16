@@ -7787,15 +7787,18 @@ const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 class CryptoTradeViewModel {
 }
 exports.CryptoTradeViewModel = CryptoTradeViewModel;
+class CryptoTradeFromProps {
+}
 const CryptoTradeForm = (props) => {
-    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, viewModel) });
     const onSubmit = (data) => {
         props.onSave(data);
     };
     return (React.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         React.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             React.createElement("div", { className: "col-span-2 w-1/3" },
-                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: props.tradeTimeStamp, control: control })),
+                React.createElement(react_hook_form_1.Controller, { render: ({ field }) => React.createElement(core_2.TextField, Object.assign({ label: "Datum tradu", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "tradeTimeStamp", defaultValue: viewModel.tradeTimeStamp, control: control })),
             React.createElement("div", { className: "w-2/3" },
                 React.createElement(react_hook_form_1.Controller, { render: ({ field }) => {
                         var _a;
@@ -7860,6 +7863,7 @@ const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Componen
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const CurrencyService_1 = __webpack_require__(/*! ../../Services/CurrencyService */ "./Typescript/Services/CurrencyService.ts");
+const CryptoService_1 = __importDefault(__webpack_require__(/*! ../../Services/CryptoService */ "./Typescript/Services/CryptoService.ts"));
 class CryptoTradesState {
 }
 const theme = (0, styles_1.createMuiTheme)({
@@ -7873,59 +7877,28 @@ class CryptoTrades extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
+            const cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
             this.currencyService = new CurrencyService_1.CurrencyService(currencyApi);
+            this.cryptoService = new CryptoService_1.default(cryptoApi);
             this.loadCryptoTradesData();
         });
-        // private async load(): Promise<void> {
-        //     const apiFactory = new ApiClientFactory(this.props.history);
-        //     this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        //     this.currencyApi = await apiFactory.getClient(CurrencyApi);
-        //     this.loadCryptoTradesData();
-        // }
         this.loadCryptoTradesData = () => __awaiter(this, void 0, void 0, function* () {
-            this.cryptoTickers = (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
-            this.currencies = (yield this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
-            let tradesData = yield this.cryptoApi.cryptosAllGet();
-            let trades = tradesData.map(t => this.mapDataModelToViewModel(t));
+            this.cryptoTickers = yield this.cryptoService.getCryptoTickers();
+            this.currencies = yield this.currencyService.getAllCurrencies();
+            let trades = yield this.cryptoService.getTradeData();
             trades.sort((a, b) => (0, moment_1.default)(a.tradeTimeStamp).format("YYYY-MM-DD") > (0, moment_1.default)(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
             this.setState({ trades });
         });
-        this.mapDataModelToViewModel = (tradeHistory) => {
-            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
-            model.cryptoTicker = tradeHistory.cryptoTicker;
-            model.cryptoTickerId = tradeHistory.cryptoTickerId;
-            model.currencySymbol = tradeHistory.currencySymbol;
-            model.currencySymbolId = tradeHistory.currencySymbolId;
-            model.id = tradeHistory.id;
-            model.tradeSize = tradeHistory.tradeSize;
-            model.tradeTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-            model.tradeValue = tradeHistory.tradeValue;
-            model.onSave = this.saveTrade;
-            model.currencies = this.currencies;
-            model.cryptoTickers = this.cryptoTickers;
-            return model;
-        };
-        this.saveTrade = (data) => {
-            const tradeHistory = {
-                cryptoTickerId: data.cryptoTickerId,
-                currencySymbolId: data.currencySymbolId,
-                id: data.id,
-                tradeSize: data.tradeSize,
-                tradeTimeStamp: (0, moment_1.default)(data.tradeTimeStamp).toDate(),
-                tradeValue: data.tradeValue
-            };
+        this.saveTrade = (data) => __awaiter(this, void 0, void 0, function* () {
             if (data.id)
-                this.cryptoApi.cryptosPut({ tradeHistory });
+                yield this.cryptoService.updateCryptoTrade(data);
             else
-                this.cryptoApi.cryptosPost({ tradeHistory });
+                yield this.cryptoService.createCryptoTrade(data);
             this.setState({ openedForm: false, selectedTrade: undefined });
             this.loadCryptoTradesData();
-        };
+        });
         this.addNewItem = () => {
             let model = new CryptoTradeForm_1.CryptoTradeViewModel();
-            model.onSave = this.saveTrade;
-            model.currencies = this.currencies;
-            model.cryptoTickers = this.cryptoTickers;
             model.cryptoTickerId = this.cryptoTickers[0].id;
             model.currencySymbolId = this.currencies[0].id;
             model.tradeTimeStamp = (0, moment_1.default)().format("YYYY-MM-DD");
@@ -7938,7 +7911,7 @@ class CryptoTrades extends react_1.default.Component {
             this.setState({ selectedTrade: tradeHistory, openedForm: true });
         });
         this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
-            yield this.cryptoApi.cryptosDelete({ body: id });
+            yield this.cryptoService.deleteCryptoTrade(id);
             this.loadCryptoTradesData();
         });
         this.handleClose = () => this.setState({ openedForm: false });
@@ -7975,7 +7948,7 @@ class CryptoTrades extends react_1.default.Component {
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Detail transakce"),
                         react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                             react_1.default.createElement("div", { className: "p-2 overflow-y-auto" },
-                                react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, Object.assign({}, this.state.selectedTrade)))))))));
+                                react_1.default.createElement(CryptoTradeForm_1.CryptoTradeForm, { onSave: this.saveTrade, currencies: this.currencies, cryptoTickers: this.cryptoTickers, viewModel: this.state.selectedTrade }))))))));
     }
 }
 exports.default = CryptoTrades;
@@ -10591,6 +10564,95 @@ class ComodityService {
 exports.default = ComodityService;
 class ComodityTypeViewModel {
 }
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/CryptoService.ts":
+/*!**********************************************!*\
+  !*** ./Typescript/Services/CryptoService.ts ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const CryptoTradeForm_1 = __webpack_require__(/*! ../Components/Crypto/CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
+class CryptoService {
+    constructor(cryptoApi) {
+        this.mapViewModelToDataModel = (tradeModel) => {
+            const tradeHistory = {
+                cryptoTickerId: tradeModel.cryptoTickerId,
+                currencySymbolId: tradeModel.currencySymbolId,
+                id: tradeModel.id,
+                tradeSize: tradeModel.tradeSize,
+                tradeTimeStamp: (0, moment_1.default)(tradeModel.tradeTimeStamp).toDate(),
+                tradeValue: tradeModel.tradeValue
+            };
+            return tradeHistory;
+        };
+        this.mapDataModelToViewModel = (tradeHistory) => {
+            let model = new CryptoTradeForm_1.CryptoTradeViewModel();
+            model.cryptoTicker = tradeHistory.cryptoTicker;
+            model.cryptoTickerId = tradeHistory.cryptoTickerId;
+            model.currencySymbol = tradeHistory.currencySymbol;
+            model.currencySymbolId = tradeHistory.currencySymbolId;
+            model.id = tradeHistory.id;
+            model.tradeSize = tradeHistory.tradeSize;
+            model.tradeTimeStamp = (0, moment_1.default)(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
+            model.tradeValue = tradeHistory.tradeValue;
+            // model.onSave = this.saveTrade;
+            // model.currencies = this.currencies;
+            // model.cryptoTickers = this.cryptoTickers;
+            return model;
+        };
+        this.cryptoApi = cryptoApi;
+    }
+    getTradeData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield this.cryptoApi.cryptosAllGet();
+            let trades = data.map(t => this.mapDataModelToViewModel(t));
+            return trades;
+        });
+    }
+    getCryptoTickers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
+        });
+    }
+    createCryptoTrade(tradeModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tradeHistory = this.mapViewModelToDataModel(tradeModel);
+            yield this.cryptoApi.cryptosPost({ tradeHistory: tradeHistory });
+        });
+    }
+    updateCryptoTrade(tradeModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tradeHistory = this.mapViewModelToDataModel(tradeModel);
+            yield this.cryptoApi.cryptosPut({ tradeHistory: tradeHistory });
+        });
+    }
+    deleteCryptoTrade(tradeId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.cryptoApi.cryptosDelete({ body: tradeId });
+        });
+    }
+}
+exports.default = CryptoService;
 
 
 /***/ }),

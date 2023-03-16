@@ -11,6 +11,7 @@ import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
 import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CurrencyService } from "../../Services/CurrencyService";
+import CryptoService from "../../Services/CryptoService";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -30,7 +31,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private currencyApi: CurrencyApi;
     private cryptoTickers: CryptoTickerSelectModel[];
     private currencies: any[];
-    currencyService: any;
+    private currencyService: any;
+    private cryptoService: CryptoService;
 
 
     constructor(props: RouteComponentProps) {
@@ -45,57 +47,25 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
+        const cryptoApi = await apiFactory.getClient(CryptoApi);
         this.currencyService = new CurrencyService(currencyApi);
+        this.cryptoService = new CryptoService(cryptoApi);
         this.loadCryptoTradesData();
     }
 
-    // private async load(): Promise<void> {
-    //     const apiFactory = new ApiClientFactory(this.props.history);
-    //     this.cryptoApi = await apiFactory.getClient(CryptoApi);
-    //     this.currencyApi = await apiFactory.getClient(CurrencyApi);
-
-    //     this.loadCryptoTradesData();
-    // }
-
     private loadCryptoTradesData = async () => {
-        this.cryptoTickers = (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
-        this.currencies = (await this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
-        let tradesData: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
-        let trades: CryptoTradeViewModel[] = tradesData.map(t => this.mapDataModelToViewModel(t));
+        this.cryptoTickers = await this.cryptoService.getCryptoTickers();
+        this.currencies = await this.currencyService.getAllCurrencies();
+        let trades: CryptoTradeViewModel[] = await this.cryptoService.getTradeData();
         trades.sort((a, b) => moment(a.tradeTimeStamp).format("YYYY-MM-DD") > moment(b.tradeTimeStamp).format("YYYY-MM-DD") ? 1 : -1);
         this.setState({ trades });
     }
 
-    private mapDataModelToViewModel = (tradeHistory: TradeHistory): CryptoTradeViewModel => {
-        let model: CryptoTradeViewModel = new CryptoTradeViewModel();
-        model.cryptoTicker = tradeHistory.cryptoTicker;
-        model.cryptoTickerId = tradeHistory.cryptoTickerId;
-        model.currencySymbol = tradeHistory.currencySymbol;
-        model.currencySymbolId = tradeHistory.currencySymbolId;
-        model.id = tradeHistory.id;
-        model.tradeSize = tradeHistory.tradeSize;
-        model.tradeTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
-        model.tradeValue = tradeHistory.tradeValue;
-        model.onSave = this.saveTrade;
-        model.currencies = this.currencies;
-        model.cryptoTickers = this.cryptoTickers;
-        return model;
-    }
-
-    private saveTrade = (data: CryptoTradeViewModel): void => {
-        const tradeHistory: TradeHistory = {
-            cryptoTickerId: data.cryptoTickerId,
-            currencySymbolId: data.currencySymbolId,
-            id: data.id,
-            tradeSize: data.tradeSize,
-            tradeTimeStamp: moment(data.tradeTimeStamp).toDate(),
-            tradeValue: data.tradeValue
-        };
-
+    private saveTrade = async (data: CryptoTradeViewModel): Promise<void> => {
         if (data.id)
-            this.cryptoApi.cryptosPut({ tradeHistory });
+            await this.cryptoService.updateCryptoTrade(data);
         else
-            this.cryptoApi.cryptosPost({ tradeHistory });
+            await this.cryptoService.createCryptoTrade(data);
 
         this.setState({ openedForm: false, selectedTrade: undefined });
         this.loadCryptoTradesData();
@@ -103,9 +73,6 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
 
     private addNewItem = (): void => {
         let model: CryptoTradeViewModel = new CryptoTradeViewModel();
-        model.onSave = this.saveTrade;
-        model.currencies = this.currencies;
-        model.cryptoTickers = this.cryptoTickers;
         model.cryptoTickerId = this.cryptoTickers[0].id;
         model.currencySymbolId = this.currencies[0].id;
         model.tradeTimeStamp = moment().format("YYYY-MM-DD");
@@ -120,7 +87,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     }
 
     private deleteTrade = async (id: number) => {
-        await this.cryptoApi.cryptosDelete({ body: id });
+        await this.cryptoService.deleteCryptoTrade(id);
         this.loadCryptoTradesData();
     }
 
@@ -165,9 +132,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                             <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
                             <DialogContent className="bg-prussianBlue">
                                 <div className="p-2 overflow-y-auto">
-                                    <CryptoTradeForm
-                                        {...this.state.selectedTrade}
-                                    ></CryptoTradeForm>
+                                    <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
+                                        viewModel={this.state.selectedTrade} />
                                 </div>
                             </DialogContent>
                         </Dialog>
