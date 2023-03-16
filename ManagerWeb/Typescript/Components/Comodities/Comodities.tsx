@@ -39,7 +39,6 @@ class ComodityMenuItem {
 }
 
 export default class Comodities extends React.Component<RouteComponentProps, ComoditiesState>{
-    private comodityApi: ComodityApiInterface;
     private goldCode: string = 'AU';
     private goldType: ComodityTypeModel;
     private currencies: CurrencyTickerSelectModel[];
@@ -65,8 +64,8 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
 
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.comodityApi = await apiFactory.getClient(ComodityApi);
-        this.comodityService = new ComodityService(this.comodityApi);
+        const comodityApi = await apiFactory.getClient(ComodityApi);
+        this.comodityService = new ComodityService(comodityApi);
         this.loadData();
     }
 

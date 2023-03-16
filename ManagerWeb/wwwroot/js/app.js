@@ -7310,8 +7310,8 @@ class Comodities extends react_1.default.Component {
         this.goldCode = 'AU';
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.comodityApi = yield apiFactory.getClient(apis_1.ComodityApi);
-            this.comodityService = new ComodityService_1.default(this.comodityApi);
+            const comodityApi = yield apiFactory.getClient(apis_1.ComodityApi);
+            this.comodityService = new ComodityService_1.default(comodityApi);
             this.loadData();
         });
         this.loadData = () => __awaiter(this, void 0, void 0, function* () {
