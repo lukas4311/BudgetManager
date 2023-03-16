@@ -143,9 +143,6 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 
-    private renderTradeBadge = (tradeValue: number) =>
-        <span className={(tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{tradeValue > 0 ? "SELL" : "BUY"}</span>
-
     render() {
         return (
             <ComponentPanel>

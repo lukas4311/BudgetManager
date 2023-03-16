@@ -7947,7 +7947,6 @@ class CryptoTrades extends react_1.default.Component {
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-1/10" },
                     react_1.default.createElement(exports.BuySellBadge, { tradeValue: p.tradeValue }))));
         };
-        this.renderTradeBadge = (tradeValue) => react_1.default.createElement("span", { className: (tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim" }, tradeValue > 0 ? "SELL" : "BUY");
         this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
     }
     componentDidMount() {
