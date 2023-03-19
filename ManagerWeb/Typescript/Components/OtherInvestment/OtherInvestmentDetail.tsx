@@ -85,6 +85,9 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     private async loadData() {
         const otherinvestmentid = this.props.selectedInvestment.id;
         const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: otherinvestmentid });
+        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        viewModels = _.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
+
         this.tags = await this.tagApi.tagsAllUsedGet();
         const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
         let linkedTagCode = "";
@@ -97,8 +100,6 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             totalInvested = _.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
         }
 
-        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
-        viewModels = _.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
         const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
         const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
         this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
@@ -220,8 +221,6 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     }
 
     private renderPaymentTemplate = (p: PaymentModel): JSX.Element => {
-        let iconsData: IconsData = new IconsData();
-
         return (
             <>
                 <p className="mx-6 my-1 w-2/12">{p.amount},-</p>

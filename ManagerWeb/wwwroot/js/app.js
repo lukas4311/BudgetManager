@@ -8251,7 +8251,6 @@ class OtherInvestmentDetail extends react_1.default.Component {
             this.setState({ openedFormTags: false, tagViewModel: undefined });
         };
         this.renderPaymentTemplate = (p) => {
-            let iconsData = new IconsEnum_1.IconsData();
             return (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("p", { className: "mx-6 my-1 w-2/12" },
                     p.amount,
@@ -8322,6 +8321,8 @@ class OtherInvestmentDetail extends react_1.default.Component {
         return __awaiter(this, void 0, void 0, function* () {
             const otherinvestmentid = this.props.selectedInvestment.id;
             const data = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: otherinvestmentid });
+            let viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            viewModels = lodash_1.default.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
             this.tags = yield this.tagApi.tagsAllUsedGet();
             const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
             let linkedTagCode = "";
@@ -8332,8 +8333,6 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
                 totalInvested = lodash_1.default.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
             }
-            let viewModels = data.map(d => this.mapDataModelToViewModel(d));
-            viewModels = lodash_1.default.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
             const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
             const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
             this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
