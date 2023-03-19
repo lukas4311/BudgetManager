@@ -20,6 +20,7 @@ import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
 import OtherInvestmentService from "../../Services/OtherInvestmentService";
+import TagService from "../../Services/TagService";
 
 
 const theme = createMuiTheme({
@@ -62,8 +63,8 @@ class OtherInvestmentDetailState {
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
     private otherInvesmentService: OtherInvestmentService;
+    private tagSevice: TagService;
     private icons: IconsData = new IconsData();
-    private tagApi: TagApi;
     private tags: TagModel[];
 
     constructor(props: OtherInvestmentDetailProps) {
@@ -80,7 +81,8 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         const apiFactory = new ApiClientFactory(this.props.route.history);
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         this.otherInvesmentService = new OtherInvestmentService(otherInvestmentApi);
-        this.tagApi = await apiFactory.getClient(TagApi);
+        const tagApi = await apiFactory.getClient(TagApi);
+        this.tagSevice = new TagService(tagApi);
         await this.loadData();
     }
 
@@ -89,7 +91,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         let viewModels = await this.otherInvesmentService.getBalanceHistory(otherinvestmentid);
         viewModels = _.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
 
-        this.tags = await this.tagApi.tagsAllUsedGet();
+        this.tags = await this.tagSevice.getAllUsedTags();
         const linkedTag = await this.otherInvesmentService.getTagConnectedWithInvetment(otherinvestmentid);
         let linkedTagCode = "";
         let linkedPayments: PaymentModel[] = [];
@@ -176,7 +178,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         this.setState({ openedFormBalance: true, selectedModel: viewModel });
     }
 
-    private editInvesment = (id: number) => {
+    private editInvestment = (id: number) => {
         let selectedModel = _.first(this.state.balances.filter(t => t.id == id))
         this.setState({ openedFormBalance: true, selectedModel });
     }
@@ -255,7 +257,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-6">
                         <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
-                            addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvesment}></BaseList>
+                            addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvestment}></BaseList>
                         <div className="flex flex-col p-4">
                             <p className="text-xl mb-2 text-left">Payments to investment</p>
                             <BaseList<PaymentModel> data={this.state.linkedPayments} template={this.renderPaymentTemplate}></BaseList>
