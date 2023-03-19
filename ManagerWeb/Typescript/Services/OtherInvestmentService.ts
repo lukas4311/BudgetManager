@@ -57,7 +57,6 @@ export default class CryptoService {
         model.date = moment(otherInvestmentBalance.date).format("YYYY-MM-DD");
         model.balance = otherInvestmentBalance.balance;
         model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
-        // model.onSave = this.saveBalance;
         return model;
     }
 }
