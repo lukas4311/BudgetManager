@@ -8141,6 +8141,7 @@ const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
 const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
+const TagService_1 = __importDefault(__webpack_require__(/*! ../../Services/TagService */ "./Typescript/Services/TagService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8165,7 +8166,8 @@ class OtherInvestmentDetail extends react_1.default.Component {
             const apiFactory = new ApiClientFactory_1.default(this.props.route.history);
             const otherInvestmentApi = yield apiFactory.getClient(OtherInvestmentApi_1.OtherInvestmentApi);
             this.otherInvesmentService = new OtherInvestmentService_1.default(otherInvestmentApi);
-            this.tagApi = yield apiFactory.getClient(Main_1.TagApi);
+            const tagApi = yield apiFactory.getClient(Main_1.TagApi);
+            this.tagSevice = new TagService_1.default(tagApi);
             yield this.loadData();
         });
         this.renderTemplate = (p) => {
@@ -8219,7 +8221,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
             };
             this.setState({ openedFormBalance: true, selectedModel: viewModel });
         };
-        this.editInvesment = (id) => {
+        this.editInvestment = (id) => {
             let selectedModel = lodash_1.default.first(this.state.balances.filter(t => t.id == id));
             this.setState({ openedFormBalance: true, selectedModel });
         };
@@ -8290,7 +8292,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                                 react_1.default.createElement("span", { className: "font-medium " + (this.state.progressYY < 0 ? "text-red-700" : "text-green-700") }, lodash_1.default.round(this.state.progressYY, 2)),
                                 "%"))),
                     react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mt-6" },
-                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvesment }),
+                        react_1.default.createElement(BaseList_1.BaseList, { data: this.state.balances, template: this.renderTemplate, header: this.renderHeader(), addItemHandler: this.addBalance, useRowBorderColor: true, itemClickHandler: this.editInvestment }),
                         react_1.default.createElement("div", { className: "flex flex-col p-4" },
                             react_1.default.createElement("p", { className: "text-xl mb-2 text-left" }, "Payments to investment"),
                             react_1.default.createElement(BaseList_1.BaseList, { data: this.state.linkedPayments, template: this.renderPaymentTemplate }),
@@ -8318,7 +8320,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
             const otherinvestmentid = this.props.selectedInvestment.id;
             let viewModels = yield this.otherInvesmentService.getBalanceHistory(otherinvestmentid);
             viewModels = lodash_1.default.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
-            this.tags = yield this.tagApi.tagsAllUsedGet();
+            this.tags = yield this.tagSevice.getAllUsedTags();
             const linkedTag = yield this.otherInvesmentService.getTagConnectedWithInvetment(otherinvestmentid);
             let linkedTagCode = "";
             let linkedPayments = [];
@@ -11056,6 +11058,41 @@ class StockService {
     }
 }
 exports.default = StockService;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/TagService.ts":
+/*!*******************************************!*\
+  !*** ./Typescript/Services/TagService.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+class TagService {
+    constructor(tagApi) {
+        this.tagApi = tagApi;
+    }
+    getAllUsedTags() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tags = yield this.tagApi.tagsAllUsedGet();
+            return tags;
+        });
+    }
+}
+exports.default = TagService;
 
 
 /***/ }),
