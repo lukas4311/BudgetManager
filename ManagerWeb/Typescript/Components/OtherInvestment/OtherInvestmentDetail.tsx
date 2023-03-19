@@ -232,7 +232,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     private deleteOtherInvestment = async (res: ConfirmationResult) => {
         if (res == ConfirmationResult.Ok)
-            await this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id })
+            await this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id });
 
         this.setState({ confirmDialogIsOpen: false });
         this.props.refreshRecords();
