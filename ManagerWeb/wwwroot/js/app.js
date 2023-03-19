@@ -8081,15 +8081,18 @@ exports.OtherInvestmentBalanceForm = void 0;
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+class OtherInvestmentBalanceFormProps {
+}
 const OtherInvestmentBalanceForm = (props) => {
-    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, viewModel) });
     const onSubmit = (data) => {
         props.onSave(data);
     };
     return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             react_1.default.createElement("div", { className: "w-1/2" },
-                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Balance record date", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "date", defaultValue: props.date, control: control })),
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Balance record date", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "date", defaultValue: viewModel.date, control: control })),
             react_1.default.createElement("div", { className: "w-1/2" },
                 react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Balance", type: "text" }, field, { className: "place-self-end w-full" })), name: "balance", control: control }))),
         react_1.default.createElement(core_1.Button, { type: "submit", variant: "contained", color: "primary", className: "block ml-auto" }, "Save")));
@@ -8137,6 +8140,7 @@ const OtherInvestmentTagForm_1 = __webpack_require__(/*! ./OtherInvestmentTagFor
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
+const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8159,7 +8163,8 @@ class OtherInvestmentDetail extends react_1.default.Component {
         this.componentDidMount = () => this.init();
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.route.history);
-            this.otherInvestmentApi = yield apiFactory.getClient(OtherInvestmentApi_1.OtherInvestmentApi);
+            const otherInvestmentApi = yield apiFactory.getClient(OtherInvestmentApi_1.OtherInvestmentApi);
+            this.otherInvesmentService = new OtherInvestmentService_1.default(otherInvestmentApi);
             this.tagApi = yield apiFactory.getClient(Main_1.TagApi);
             yield this.loadData();
         });
@@ -8191,15 +8196,6 @@ class OtherInvestmentDetail extends react_1.default.Component {
             }
             return balanceChartData;
         };
-        this.mapDataModelToViewModel = (otherInvestmentBalance) => {
-            let model = new OtherInvestmentBalaceHistoryViewModel();
-            model.id = otherInvestmentBalance.id;
-            model.date = (0, moment_1.default)(otherInvestmentBalance.date).format("YYYY-MM-DD");
-            model.balance = otherInvestmentBalance.balance;
-            model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
-            model.onSave = this.saveBalance;
-            return model;
-        };
         this.saveBalance = (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
             const otherInvestmentBalance = {
                 id: otherInvestmentData.id,
@@ -8208,9 +8204,9 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 otherInvestmentId: otherInvestmentData.otherInvestmentId
             };
             if (otherInvestmentData.id)
-                yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+                yield this.otherInvesmentService.updateOtherInvestmentBalanceHistory(otherInvestmentBalance);
             else
-                yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+                yield this.otherInvesmentService.createOtherInvestmentBalanceHistory(otherInvestmentBalance.otherInvestmentId, otherInvestmentBalance);
             this.setState({ openedFormBalance: false, selectedModel: undefined });
             this.loadData();
         });
@@ -8240,7 +8236,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         };
         this.createConnectionWithPaymentTag = (tagId) => __awaiter(this, void 0, void 0, function* () {
             if (tagId != undefined && tagId != 0)
-                this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: this.props.selectedInvestment.id });
+                this.otherInvesmentService.createConnectionWithPaymentTag(tagId, this.props.selectedInvestment.id);
             this.setState({ openedFormTags: false, tagViewModel: undefined });
             yield this.loadData();
         });
@@ -8260,7 +8256,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         };
         this.deleteOtherInvestment = (res) => __awaiter(this, void 0, void 0, function* () {
             if (res == ConfirmationForm_1.ConfirmationResult.Ok)
-                yield this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id });
+                yield this.otherInvesmentService.deleteOtherInvestment(this.props.selectedInvestment.id);
             this.setState({ confirmDialogIsOpen: false });
             this.props.refreshRecords();
         });
@@ -8304,7 +8300,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormBalance, onClose: this.handleCloseBalance, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title" }, "Balance form"),
                     react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                        react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, Object.assign({}, this.state.selectedModel)))),
+                        react_1.default.createElement(OtherInvestmentBalanceForm_1.OtherInvestmentBalanceForm, { viewModel: this.state.selectedModel, onSave: this.saveBalance }))),
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormTags, onClose: this.handleCloseTag, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Tag form"),
                     react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -8320,21 +8316,20 @@ class OtherInvestmentDetail extends react_1.default.Component {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const otherinvestmentid = this.props.selectedInvestment.id;
-            const data = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: otherinvestmentid });
-            let viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            let viewModels = yield this.otherInvesmentService.getBalanceHistory(otherinvestmentid);
             viewModels = lodash_1.default.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
             this.tags = yield this.tagApi.tagsAllUsedGet();
-            const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
+            const linkedTag = yield this.otherInvesmentService.getTagConnectedWithInvetment(otherinvestmentid);
             let linkedTagCode = "";
             let linkedPayments = [];
             let totalInvested;
             if (linkedTag != undefined) {
                 linkedTagCode = (_b = (_a = lodash_1.default.first(lodash_1.default.filter(this.tags, t => t.id == linkedTag.tagId))) === null || _a === void 0 ? void 0 : _a.code) !== null && _b !== void 0 ? _b : "";
-                linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
+                linkedPayments = yield this.otherInvesmentService.getPaymentLinkedToTagOfOtherInvestment(otherinvestmentid, linkedTag.tagId);
                 totalInvested = lodash_1.default.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
             }
-            const progressYY = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
-            const progressOverall = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
+            const progressYY = yield this.otherInvesmentService.getYearToYearProfit(otherinvestmentid, 1);
+            const progressOverall = yield this.otherInvesmentService.getOverallProfit(otherinvestmentid);
             this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
         });
     }
@@ -10850,6 +10845,99 @@ class DataLoader {
     }
 }
 exports.default = DataLoader;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/OtherInvestmentService.ts":
+/*!*******************************************************!*\
+  !*** ./Typescript/Services/OtherInvestmentService.ts ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+const OtherInvestmentDetail_1 = __webpack_require__(/*! ../Components/OtherInvestment/OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx");
+class OtherInvestmentService {
+    constructor(otherInvestmentApi) {
+        this.mapDataModelToViewModel = (otherInvestmentBalance) => {
+            let model = new OtherInvestmentDetail_1.OtherInvestmentBalaceHistoryViewModel();
+            model.id = otherInvestmentBalance.id;
+            model.date = (0, moment_1.default)(otherInvestmentBalance.date).format("YYYY-MM-DD");
+            model.balance = otherInvestmentBalance.balance;
+            model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
+            return model;
+        };
+        this.otherInvestmentApi = otherInvestmentApi;
+    }
+    getBalanceHistory(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const balanceHistory = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: id });
+            let viewModels = balanceHistory.map(d => this.mapDataModelToViewModel(d));
+            return viewModels;
+        });
+    }
+    getTagConnectedWithInvetment(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: id });
+            return linkedTag;
+        });
+    }
+    getPaymentLinkedToTagOfOtherInvestment(otherinvestmentid, tagId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: tagId });
+            return linkedPayments;
+        });
+    }
+    getYearToYearProfit(id, years) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let otherInvestmentProfit = yield this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: id, years: years });
+            return otherInvestmentProfit;
+        });
+    }
+    getOverallProfit(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let overallProfit = yield this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: id });
+            return overallProfit;
+        });
+    }
+    updateOtherInvestmentBalanceHistory(otherInvestmentModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+        });
+    }
+    createOtherInvestmentBalanceHistory(otherInvestmentId, otherInvestmentModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+        });
+    }
+    createConnectionWithPaymentTag(otherInvestmentId, tagId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: otherInvestmentId });
+        });
+    }
+    deleteOtherInvestment(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.otherInvestmentDelete({ body: id });
+        });
+    }
+}
+exports.default = OtherInvestmentService;
 
 
 /***/ }),

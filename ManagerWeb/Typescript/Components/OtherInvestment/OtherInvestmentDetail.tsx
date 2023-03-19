@@ -19,6 +19,7 @@ import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
+import OtherInvestmentService from "../../Services/OtherInvestmentService";
 
 
 const theme = createMuiTheme({
@@ -60,7 +61,7 @@ class OtherInvestmentDetailState {
 }
 
 export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
-    private otherInvestmentApi: OtherInvestmentApi;
+    private otherInvesmentService: OtherInvestmentService;
     private icons: IconsData = new IconsData();
     private tagApi: TagApi;
     private tags: TagModel[];
@@ -77,31 +78,31 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.route.history);
-        this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        this.otherInvesmentService = new OtherInvestmentService(otherInvestmentApi);
         this.tagApi = await apiFactory.getClient(TagApi);
         await this.loadData();
     }
 
     private async loadData() {
         const otherinvestmentid = this.props.selectedInvestment.id;
-        const data: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: otherinvestmentid });
-        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
+        let viewModels = await this.otherInvesmentService.getBalanceHistory(otherinvestmentid);
         viewModels = _.orderBy(viewModels, [(obj) => new Date(obj.date)], ['asc']);
 
         this.tags = await this.tagApi.tagsAllUsedGet();
-        const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: otherinvestmentid });
+        const linkedTag = await this.otherInvesmentService.getTagConnectedWithInvetment(otherinvestmentid);
         let linkedTagCode = "";
         let linkedPayments: PaymentModel[] = [];
         let totalInvested: number;
 
         if (linkedTag != undefined) {
             linkedTagCode = _.first(_.filter(this.tags, t => t.id == linkedTag.tagId))?.code ?? "";
-            linkedPayments = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: linkedTag.tagId });
+            linkedPayments = await this.otherInvesmentService.getPaymentLinkedToTagOfOtherInvestment(otherinvestmentid, linkedTag.tagId);
             totalInvested = _.sumBy(linkedPayments, p => p.amount) + this.props.selectedInvestment.openingBalance;
         }
 
-        const progressYY = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: otherinvestmentid, years: 1 });
-        const progressOverall = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: otherinvestmentid });
+        const progressYY = await this.otherInvesmentService.getYearToYearProfit(otherinvestmentid, 1);
+        const progressOverall = await this.otherInvesmentService.getOverallProfit(otherinvestmentid);
         this.setState({ balances: viewModels, progressOverall, progressYY, linkedTagCode, linkedPayments, totalInvested });
     }
 
@@ -147,16 +148,6 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         return balanceChartData;
     }
 
-    private mapDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {
-        let model: OtherInvestmentBalaceHistoryViewModel = new OtherInvestmentBalaceHistoryViewModel();
-        model.id = otherInvestmentBalance.id;
-        model.date = moment(otherInvestmentBalance.date).format("YYYY-MM-DD");
-        model.balance = otherInvestmentBalance.balance;
-        model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
-        model.onSave = this.saveBalance;
-        return model;
-    }
-
     private saveBalance = async (otherInvestmentData: OtherInvestmentBalaceHistoryViewModel) => {
         const otherInvestmentBalance: OtherInvestmentBalaceHistoryModel = {
             id: otherInvestmentData.id,
@@ -166,9 +157,9 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
         };
 
         if (otherInvestmentData.id)
-            await this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+            await this.otherInvesmentService.updateOtherInvestmentBalanceHistory(otherInvestmentBalance);
         else
-            await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentBalance.otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentBalance });
+            await this.otherInvesmentService.createOtherInvestmentBalanceHistory(otherInvestmentBalance.otherInvestmentId, otherInvestmentBalance);
 
         this.setState({ openedFormBalance: false, selectedModel: undefined });
         this.loadData();
@@ -206,7 +197,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     private createConnectionWithPaymentTag = async (tagId: number) => {
         if (tagId != undefined && tagId != 0)
-            this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: this.props.selectedInvestment.id });
+            this.otherInvesmentService.createConnectionWithPaymentTag(tagId, this.props.selectedInvestment.id);
 
         this.setState({ openedFormTags: false, tagViewModel: undefined });
         await this.loadData();
@@ -232,7 +223,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     private deleteOtherInvestment = async (res: ConfirmationResult) => {
         if (res == ConfirmationResult.Ok)
-            await this.otherInvestmentApi.otherInvestmentDelete({ body: this.props.selectedInvestment.id });
+            await this.otherInvesmentService.deleteOtherInvestment(this.props.selectedInvestment.id);
 
         this.setState({ confirmDialogIsOpen: false });
         this.props.refreshRecords();
@@ -279,7 +270,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     maxWidth="md" fullWidth={true}>
                     <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
                     <DialogContent className="bg-prussianBlue">
-                        <OtherInvestmentBalanceForm {...this.state.selectedModel} />
+                        <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} />
                     </DialogContent>
                 </Dialog>
                 <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
