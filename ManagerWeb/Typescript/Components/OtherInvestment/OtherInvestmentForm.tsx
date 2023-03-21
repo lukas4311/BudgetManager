@@ -2,9 +2,17 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@m
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
+import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 
-const OtherInvestmentForm = (props: OtherInvestmentViewModel) => {
-    const { handleSubmit, control } = useForm<OtherInvestmentViewModel>({ defaultValues: { ...props } });
+class OtherInvestmentFormProps {
+    viewModel: OtherInvestmentViewModel;
+    currencies: CurrencyTickerSelectModel[];
+    onSave: (data: OtherInvestmentViewModel) => void;
+}
+
+const OtherInvestmentForm = (props: OtherInvestmentFormProps) => {
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = useForm<OtherInvestmentViewModel>({ defaultValues: { ...viewModel } });
 
     const onSubmit = (data: OtherInvestmentViewModel) => {
         props.onSave(data);
@@ -15,7 +23,7 @@ const OtherInvestmentForm = (props: OtherInvestmentViewModel) => {
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="col-span-2 w-1/3">
                     <Controller render={({ field }) => <TextField label="Invested on" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
-                        name="created" defaultValue={props.created} control={control} />
+                        name="created" defaultValue={viewModel.created} control={control} />
                 </div>
                 <div className="w-2/3">
                     <Controller render={({ field }) => <TextField label="Code" type="text" {...field} className="place-self-end w-full" />}

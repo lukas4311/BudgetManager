@@ -16,6 +16,8 @@ import _ from "lodash";
 import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
 import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import OtherInvestmentService from "../../Services/OtherInvestmentService";
+import { CurrencyService } from "../../Services/CurrencyService";
 
 const theme = createMuiTheme({
     palette: {
@@ -36,9 +38,10 @@ class OtherInvestmentOverviewState {
 }
 
 export default class OtherInvestmentOverview extends React.Component<RouteComponentProps, OtherInvestmentOverviewState>{
-    private otherInvestmentApi: OtherInvestmentApi;
     private currencies: CurrencyTickerSelectModel[];
     private progressCalculator: ProgressCalculatorService;
+    private otherInvesmentService: OtherInvestmentService;
+    currencyService: CurrencyService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -50,18 +53,18 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.progressCalculator = new ProgressCalculatorService();
-        this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        this.otherInvesmentService = new OtherInvestmentService(otherInvestmentApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        this.currencyService = new CurrencyService(currencyApi);
+        this.currencies = (await this.currencyService.getAllCurrencies());
         await this.loadData();
     }
 
     private async loadData() {
-        const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
+        const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvesmentService.getSummary();
         const actualSummary: Array<OtherInvestmentBalaceHistoryModel> = summary.actualBalanceData;
-        const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
-        const viewModels: OtherInvestmentViewModel[] = data.map(d => this.mapDataModelToViewModel(d));
-
+        const viewModels: OtherInvestmentViewModel[] = await this.otherInvesmentService.getAll();
         this.setState({ otherInvestments: viewModels, actualSummary });
     }
 
@@ -79,7 +82,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                 <div className="w-1/3 h-full border border-vermilion flex items-center justify-center rounded-r-full">
                     <div className={bgColor + " my-1 px-1 mx-auto rounded-md flex flex-row content-start items-center"}>
                         <p className="w-1/2 text-white text-right">{actualBalanceSummary.balance} </p>
-                        <p className="w-1/2 font-semibold ml-1 text-white text-left">{p.currencySymbol}</p>
+                        <p className="w-1/2 font-semibold ml-1 text-white text-left">{this.currencies.find(f => f.id == p.currencySymbolId).ticker}</p>
                         <p className="w-1/2 font-extralight text-xs ml-1 text-white text-left">{totalProgress.toFixed(2)}%</p>
                     </div>
                 </div>
@@ -100,12 +103,10 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     private addInvesment = () => {
         let model: OtherInvestmentViewModel = new OtherInvestmentViewModel();
-        model.onSave = this.saveTrade;
         model.created = moment().format("YYYY-MM-DD");
         model.name = "";
         model.code = "";
         model.openingBalance = 0;
-        model.currencies = this.currencies;
         model.currencySymbolId = this.currencies[0].id;
         this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
     }
@@ -119,21 +120,6 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         this.setState({ showDetail: true, selectedModel: selectedModel, formKey: Date.now() });
     }
 
-    private mapDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
-        let model: OtherInvestmentViewModel = new OtherInvestmentViewModel();
-        model.currencySymbol = this.currencies.find(f => f.id == otherInvestment.currencySymbolId).ticker;
-        model.currencySymbolId = otherInvestment.currencySymbolId;
-        model.currencies = this.currencies;
-        model.id = otherInvestment.id;
-        model.created = moment(otherInvestment.created).format("YYYY-MM-DD");
-        model.name = otherInvestment.name;
-        model.code = otherInvestment.code;
-        model.openingBalance = otherInvestment.openingBalance;
-        model.onSave = this.saveTrade;
-
-        return model;
-    }
-
     private saveTrade = async (otherInvestmentData: OtherInvestmentViewModel): Promise<void> => {
         const otherInvestment: OtherInvestmentModel = {
             code: otherInvestmentData.code,
@@ -145,9 +131,9 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
         };
 
         if (otherInvestmentData.id)
-            await this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+            await this.otherInvesmentService.updateOtherInvestment(otherInvestment);
         else
-            await this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
+            await this.otherInvesmentService.createOtherInvestment(otherInvestment);
 
         this.setState({ openedForm: false, selectedModel: undefined });
         this.loadData();
@@ -185,7 +171,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form" maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
                             <DialogContent className="bg-prussianBlue">
-                                <OtherInvestmentForm {...this.state.selectedModel} />
+                                <OtherInvestmentForm viewModel={this.state.selectedModel} onSave={this.saveTrade} currencies={this.currencies} />
                             </DialogContent>
                         </Dialog>
                     </>

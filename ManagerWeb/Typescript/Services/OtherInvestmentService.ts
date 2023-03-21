@@ -1,6 +1,7 @@
 import moment from "moment";
-import { OtherInvestmentApiInterface, OtherInvestmentBalaceHistoryModel, OtherInvestmentTagModel, PaymentModel } from "../ApiClient/Main";
+import { OtherInvestmentApiInterface, OtherInvestmentBalaceHistoryModel, OtherInvestmentModel, OtherInvestmentTagModel, PaymentModel } from "../ApiClient/Main";
 import { OtherInvestmentBalaceHistoryViewModel } from "../Components/OtherInvestment/OtherInvestmentDetail";
+import OtherInvestmentViewModel from "../Model/OtherInvestmentViewModel";
 
 export default class OtherInvestmentService {
     private otherInvestmentApi: OtherInvestmentApiInterface;
@@ -11,7 +12,7 @@ export default class OtherInvestmentService {
 
     public async getBalanceHistory(id: number) {
         const balanceHistory = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: id });
-        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = balanceHistory.map(d => this.mapDataModelToViewModel(d));
+        let viewModels: OtherInvestmentBalaceHistoryViewModel[] = balanceHistory.map(d => this.mapBalanceHistoryDataModelToViewModel(d));
         return viewModels;
     }
 
@@ -35,12 +36,31 @@ export default class OtherInvestmentService {
         return overallProfit;
     }
 
+    public async getSummary() {
+        let summary = await this.otherInvestmentApi.otherInvestmentSummaryGet();
+        return summary;
+    }
+
+    public async getAll() {
+        const otherInvestments = await this.otherInvestmentApi.otherInvestmentAllGet();
+        let viewModels: OtherInvestmentViewModel[] = otherInvestments.map(d => this.mapOtherInvetsmentDataModelToViewModel(d));
+        return viewModels;
+    }
+
     public async updateOtherInvestmentBalanceHistory(otherInvestmentModel: OtherInvestmentBalaceHistoryModel) {
         await this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentModel });
     }
 
+    public async updateOtherInvestment(otherInvestment: OtherInvestmentModel) {
+        await this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+    }
+
     public async createOtherInvestmentBalanceHistory(otherInvestmentId: number, otherInvestmentModel: OtherInvestmentBalaceHistoryModel) {
         await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+    }
+
+    public async createOtherInvestment(otherInvestment: OtherInvestmentModel) {
+        await this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
     }
 
     public async createConnectionWithPaymentTag(otherInvestmentId: number, tagId: number) {
@@ -51,12 +71,23 @@ export default class OtherInvestmentService {
         await this.otherInvestmentApi.otherInvestmentDelete({ body: id });
     }
 
-    private mapDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {
+    private mapBalanceHistoryDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {
         let model: OtherInvestmentBalaceHistoryViewModel = new OtherInvestmentBalaceHistoryViewModel();
         model.id = otherInvestmentBalance.id;
         model.date = moment(otherInvestmentBalance.date).format("YYYY-MM-DD");
         model.balance = otherInvestmentBalance.balance;
         model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
+        return model;
+    }
+
+    private mapOtherInvetsmentDataModelToViewModel = (otherInvestment: OtherInvestmentModel): OtherInvestmentViewModel => {
+        let model: OtherInvestmentViewModel = new OtherInvestmentViewModel();
+        model.currencySymbolId = otherInvestment.currencySymbolId;
+        model.id = otherInvestment.id;
+        model.created = moment(otherInvestment.created).format("YYYY-MM-DD");
+        model.name = otherInvestment.name;
+        model.code = otherInvestment.code;
+        model.openingBalance = otherInvestment.openingBalance;
         return model;
     }
 }

@@ -9,7 +9,7 @@ export default class OtherInvestmentViewModel implements IBaseModel {
     openingBalance: number;
     oneYearProgress: number;
     currencySymbolId: number;
-    currencySymbol: string;
-    currencies: CurrencyTickerSelectModel[];
-    onSave: (data: OtherInvestmentViewModel) => void;
+    // currencySymbol: string;
+    // currencies: CurrencyTickerSelectModel[];
+    // onSave: (data: OtherInvestmentViewModel) => void;
 }
