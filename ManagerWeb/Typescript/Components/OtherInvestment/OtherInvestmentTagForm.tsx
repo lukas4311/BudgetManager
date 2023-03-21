@@ -3,8 +3,14 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TagFormViewModel } from "../../Model/TagFormViewModel";
 
-const OtherInvestmentTagForm = (props: TagFormViewModel) => {
-    const { handleSubmit, control } = useForm<TagFormViewModel>({ defaultValues: { ...props } });
+class OtherInvestmentTagFormProps {
+    viewModel: TagFormViewModel;
+    onSave: (tagId: number) => void;
+}
+
+const OtherInvestmentTagForm = (props: OtherInvestmentTagFormProps) => {
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = useForm<TagFormViewModel>({ defaultValues: { ...viewModel } });
 
     const onSubmit = (data: TagFormViewModel) => {
         props.onSave(data.tagId);
@@ -23,7 +29,7 @@ const OtherInvestmentTagForm = (props: TagFormViewModel) => {
                                 id="type"
                                 value={field.value}
                             >
-                                {props.tags?.map(p => {
+                                {viewModel.tags?.map(p => {
                                     return <MenuItem key={p.id} value={p.id}>
                                         <span>{p.code}</span>
                                     </MenuItem>

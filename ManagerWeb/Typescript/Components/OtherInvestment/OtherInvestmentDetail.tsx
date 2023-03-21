@@ -188,7 +188,6 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
         if (firstTag != undefined) {
             let tagModel: TagFormViewModel = {
-                onSave: this.createConnectionWithPaymentTag,
                 tagId: firstTag.id,
                 tags: this.tags
             };
@@ -279,7 +278,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                     maxWidth="md" fullWidth={true}>
                     <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Tag form</DialogTitle>
                     <DialogContent className="bg-prussianBlue">
-                        <OtherInvestmentTagForm {...this.state.tagViewModel} />
+                        <OtherInvestmentTagForm viewModel={this.state.tagViewModel} onSave={this.createConnectionWithPaymentTag} />
                     </DialogContent>
                 </Dialog>
                 <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteOtherInvestment(ConfirmationResult.Cancel)} onConfirm={this.deleteOtherInvestment} isOpen={this.state.confirmDialogIsOpen} />
