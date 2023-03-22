@@ -8229,7 +8229,6 @@ class OtherInvestmentDetail extends react_1.default.Component {
             let firstTag = lodash_1.default.first(this.tags);
             if (firstTag != undefined) {
                 let tagModel = {
-                    onSave: this.createConnectionWithPaymentTag,
                     tagId: firstTag.id,
                     tags: this.tags
                 };
@@ -8306,7 +8305,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
                 react_1.default.createElement(core_1.Dialog, { open: this.state.openedFormTags, onClose: this.handleCloseTag, "aria-labelledby": "Balance at date", maxWidth: "md", fullWidth: true },
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Tag form"),
                     react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                        react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, Object.assign({}, this.state.tagViewModel)))),
+                        react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, { viewModel: this.state.tagViewModel, onSave: this.createConnectionWithPaymentTag }))),
                 react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteOtherInvestment(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteOtherInvestment, isOpen: this.state.confirmDialogIsOpen })));
         };
         this.state = {
@@ -8358,15 +8357,18 @@ exports.OtherInvestmentForm = void 0;
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+class OtherInvestmentFormProps {
+}
 const OtherInvestmentForm = (props) => {
-    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, viewModel) });
     const onSubmit = (data) => {
         props.onSave(data);
     };
     return (react_1.default.createElement("form", { onSubmit: handleSubmit(onSubmit) },
         react_1.default.createElement("div", { className: "grid grid-cols-2 gap-4 mb-6 place-items-center" },
             react_1.default.createElement("div", { className: "col-span-2 w-1/3" },
-                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Invested on", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "created", defaultValue: props.created, control: control })),
+                react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Invested on", type: "date", value: field.value }, field, { className: "place-self-end w-full", InputLabelProps: { shrink: true } })), name: "created", defaultValue: viewModel.created, control: control })),
             react_1.default.createElement("div", { className: "w-2/3" },
                 react_1.default.createElement(react_hook_form_1.Controller, { render: ({ field }) => react_1.default.createElement(core_1.TextField, Object.assign({ label: "Code", type: "text" }, field, { className: "place-self-end w-full" })), name: "code", control: control })),
             react_1.default.createElement("div", { className: "w-2/3" },
@@ -8427,6 +8429,8 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
+const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
+const CurrencyService_1 = __webpack_require__(/*! ../../Services/CurrencyService */ "./Typescript/Services/CurrencyService.ts");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -8444,9 +8448,11 @@ class OtherInvestmentOverview extends react_1.default.Component {
         this.init = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.progressCalculator = new ProgressCalculatorService_1.ProgressCalculatorService();
-            this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            this.otherInvesmentService = new OtherInvestmentService_1.default(otherInvestmentApi);
             const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
-            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            this.currencyService = new CurrencyService_1.CurrencyService(currencyApi);
+            this.currencies = (yield this.currencyService.getAllCurrencies());
             yield this.loadData();
         });
         this.renderTemplate = (p) => {
@@ -8467,7 +8473,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                         react_1.default.createElement("p", { className: "w-1/2 text-white text-right" },
                             actualBalanceSummary.balance,
                             " "),
-                        react_1.default.createElement("p", { className: "w-1/2 font-semibold ml-1 text-white text-left" }, p.currencySymbol),
+                        react_1.default.createElement("p", { className: "w-1/2 font-semibold ml-1 text-white text-left" }, this.currencies.find(f => f.id == p.currencySymbolId).ticker),
                         react_1.default.createElement("p", { className: "w-1/2 font-extralight text-xs ml-1 text-white text-left" },
                             totalProgress.toFixed(2),
                             "%")))));
@@ -8481,12 +8487,10 @@ class OtherInvestmentOverview extends react_1.default.Component {
         };
         this.addInvesment = () => {
             let model = new OtherInvestmentViewModel_1.default();
-            model.onSave = this.saveTrade;
             model.created = (0, moment_1.default)().format("YYYY-MM-DD");
             model.name = "";
             model.code = "";
             model.openingBalance = 0;
-            model.currencies = this.currencies;
             model.currencySymbolId = this.currencies[0].id;
             this.setState({ openedForm: true, formKey: Date.now(), selectedModel: model });
         };
@@ -8496,19 +8500,6 @@ class OtherInvestmentOverview extends react_1.default.Component {
         };
         this.showDetail = (selectedModel) => {
             this.setState({ showDetail: true, selectedModel: selectedModel, formKey: Date.now() });
-        };
-        this.mapDataModelToViewModel = (otherInvestment) => {
-            let model = new OtherInvestmentViewModel_1.default();
-            model.currencySymbol = this.currencies.find(f => f.id == otherInvestment.currencySymbolId).ticker;
-            model.currencySymbolId = otherInvestment.currencySymbolId;
-            model.currencies = this.currencies;
-            model.id = otherInvestment.id;
-            model.created = (0, moment_1.default)(otherInvestment.created).format("YYYY-MM-DD");
-            model.name = otherInvestment.name;
-            model.code = otherInvestment.code;
-            model.openingBalance = otherInvestment.openingBalance;
-            model.onSave = this.saveTrade;
-            return model;
         };
         this.saveTrade = (otherInvestmentData) => __awaiter(this, void 0, void 0, function* () {
             const otherInvestment = {
@@ -8520,9 +8511,9 @@ class OtherInvestmentOverview extends react_1.default.Component {
                 openingBalance: otherInvestmentData.openingBalance
             };
             if (otherInvestmentData.id)
-                yield this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+                yield this.otherInvesmentService.updateOtherInvestment(otherInvestment);
             else
-                yield this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
+                yield this.otherInvesmentService.createOtherInvestment(otherInvestment);
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadData();
         });
@@ -8535,10 +8526,9 @@ class OtherInvestmentOverview extends react_1.default.Component {
     }
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {
-            const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
+            const summary = yield this.otherInvesmentService.getSummary();
             const actualSummary = summary.actualBalanceData;
-            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
-            const viewModels = data.map(d => this.mapDataModelToViewModel(d));
+            const viewModels = yield this.otherInvesmentService.getAll();
             this.setState({ otherInvestments: viewModels, actualSummary });
         });
     }
@@ -8559,7 +8549,7 @@ class OtherInvestmentOverview extends react_1.default.Component {
                     react_1.default.createElement(core_1.Dialog, { open: this.state.openedForm, onClose: this.handleClose, "aria-labelledby": "Investment form", maxWidth: "md", fullWidth: true },
                         react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Investment form"),
                         react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
-                            react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, Object.assign({}, this.state.selectedModel))))))));
+                            react_1.default.createElement(OtherInvestmentForm_1.OtherInvestmentForm, { viewModel: this.state.selectedModel, onSave: this.saveTrade, currencies: this.currencies })))))));
     }
 }
 exports.default = OtherInvestmentOverview;
@@ -8593,6 +8583,7 @@ const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
 const ProgressCalculatorService_1 = __webpack_require__(/*! ../../Services/ProgressCalculatorService */ "./Typescript/Services/ProgressCalculatorService.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
@@ -8607,9 +8598,8 @@ class OtherInvestmentSummary extends react_1.default.Component {
         super(props);
         this.initData = () => __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
-            const currencyApi = yield apiFactory.getClient(Main_1.CurrencyApi);
-            this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+            const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            this.otherInvestmentService = new OtherInvestmentService_1.default(otherInvestmentApi);
             this.progressCalculator = new ProgressCalculatorService_1.ProgressCalculatorService();
             yield this.loadData();
         });
@@ -8630,20 +8620,20 @@ class OtherInvestmentSummary extends react_1.default.Component {
     loadData() {
         var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
-            const summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
-            const data = yield this.otherInvestmentApi.otherInvestmentAllGet();
+            const summary = yield this.otherInvestmentService.getSummary();
+            const data = yield this.otherInvestmentService.getAll();
             let investedChartData = [];
             let balanceChartData = [];
             let allPayments = [];
             let allBalances = [];
             for (const o of data) {
-                const linkedTag = yield this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: o.id });
+                const linkedTag = yield this.otherInvestmentService.getTagConnectedWithInvetment(o.id);
                 let linkedPayments = [];
                 if (linkedTag != undefined) {
-                    linkedPayments = yield this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: o.id, tagId: linkedTag.tagId });
+                    linkedPayments = yield this.otherInvestmentService.getPaymentLinkedToTagOfOtherInvestment(o.id, linkedTag.tagId);
                     allPayments.push(...linkedPayments);
                 }
-                const otherInvestmentBalance = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: o.id });
+                const otherInvestmentBalance = yield this.otherInvestmentService.getBalanceHistory(o.id);
                 allBalances.push(...otherInvestmentBalance);
             }
             ;
@@ -8754,8 +8744,11 @@ exports.OtherInvestmentTagForm = void 0;
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.js");
+class OtherInvestmentTagFormProps {
+}
 const OtherInvestmentTagForm = (props) => {
-    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, props) });
+    const viewModel = props.viewModel;
+    const { handleSubmit, control } = (0, react_hook_form_1.useForm)({ defaultValues: Object.assign({}, viewModel) });
     const onSubmit = (data) => {
         props.onSave(data.tagId);
     };
@@ -8766,7 +8759,7 @@ const OtherInvestmentTagForm = (props) => {
                         var _a;
                         return react_1.default.createElement(core_1.FormControl, { className: "w-full" },
                             react_1.default.createElement(core_1.InputLabel, { id: "demo-simple-select-label" }, "Connect with tag"),
-                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = props.tags) === null || _a === void 0 ? void 0 : _a.map(p => {
+                            react_1.default.createElement(core_1.Select, Object.assign({}, field, { labelId: "demo-simple-select-label", id: "type", value: field.value }), (_a = viewModel.tags) === null || _a === void 0 ? void 0 : _a.map(p => {
                                 return react_1.default.createElement(core_1.MenuItem, { key: p.id, value: p.id },
                                     react_1.default.createElement("span", null, p.code));
                             })));
@@ -10875,9 +10868,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const OtherInvestmentDetail_1 = __webpack_require__(/*! ../Components/OtherInvestment/OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx");
+const OtherInvestmentViewModel_1 = __importDefault(__webpack_require__(/*! ../Model/OtherInvestmentViewModel */ "./Typescript/Model/OtherInvestmentViewModel.ts"));
 class OtherInvestmentService {
     constructor(otherInvestmentApi) {
-        this.mapDataModelToViewModel = (otherInvestmentBalance) => {
+        this.mapBalanceHistoryDataModelToViewModel = (otherInvestmentBalance) => {
             let model = new OtherInvestmentDetail_1.OtherInvestmentBalaceHistoryViewModel();
             model.id = otherInvestmentBalance.id;
             model.date = (0, moment_1.default)(otherInvestmentBalance.date).format("YYYY-MM-DD");
@@ -10885,12 +10879,22 @@ class OtherInvestmentService {
             model.otherInvestmentId = otherInvestmentBalance.otherInvestmentId;
             return model;
         };
+        this.mapOtherInvetsmentDataModelToViewModel = (otherInvestment) => {
+            let model = new OtherInvestmentViewModel_1.default();
+            model.currencySymbolId = otherInvestment.currencySymbolId;
+            model.id = otherInvestment.id;
+            model.created = (0, moment_1.default)(otherInvestment.created).format("YYYY-MM-DD");
+            model.name = otherInvestment.name;
+            model.code = otherInvestment.code;
+            model.openingBalance = otherInvestment.openingBalance;
+            return model;
+        };
         this.otherInvestmentApi = otherInvestmentApi;
     }
     getBalanceHistory(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const balanceHistory = yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: id });
-            let viewModels = balanceHistory.map(d => this.mapDataModelToViewModel(d));
+            let viewModels = balanceHistory.map(d => this.mapBalanceHistoryDataModelToViewModel(d));
             return viewModels;
         });
     }
@@ -10918,14 +10922,37 @@ class OtherInvestmentService {
             return overallProfit;
         });
     }
+    getSummary() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let summary = yield this.otherInvestmentApi.otherInvestmentSummaryGet();
+            return summary;
+        });
+    }
+    getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const otherInvestments = yield this.otherInvestmentApi.otherInvestmentAllGet();
+            let viewModels = otherInvestments.map(d => this.mapOtherInvetsmentDataModelToViewModel(d));
+            return viewModels;
+        });
+    }
     updateOtherInvestmentBalanceHistory(otherInvestmentModel) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentModel });
         });
     }
+    updateOtherInvestment(otherInvestment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+        });
+    }
     createOtherInvestmentBalanceHistory(otherInvestmentId, otherInvestmentModel) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+        });
+    }
+    createOtherInvestment(otherInvestment) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
         });
     }
     createConnectionWithPaymentTag(otherInvestmentId, tagId) {

@@ -5,6 +5,8 @@ import { RouteComponentProps } from "react-router-dom";
 import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel, PaymentModel } from "../../ApiClient/Main";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
+import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
+import OtherInvestmentService from "../../Services/OtherInvestmentService";
 import { ProgressCalculatorService } from "../../Services/ProgressCalculatorService";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
@@ -13,7 +15,7 @@ import { Investments, Ranking } from "../../Utils/Ranking";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { PieChart, PieChartData } from "../Charts/PieChart";
-import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
+import { OtherInvestmentBalaceHistoryViewModel } from "./OtherInvestmentDetail";
 
 class OtherInvestmentSummaryState {
     balanceSum: number;
@@ -24,9 +26,8 @@ class OtherInvestmentSummaryState {
 }
 
 export default class OtherInvestmentSummary extends React.Component<RouteComponentProps, OtherInvestmentSummaryState>{
-    private otherInvestmentApi: OtherInvestmentApi;
-    private currencies: CurrencyTickerSelectModel[];
     private progressCalculator: ProgressCalculatorService;
+    private otherInvestmentService: OtherInvestmentService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -39,32 +40,31 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     private initData = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
-        const currencyApi = await apiFactory.getClient(CurrencyApi);
-        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
+        this.otherInvestmentService = new OtherInvestmentService(otherInvestmentApi);
         this.progressCalculator = new ProgressCalculatorService();
         await this.loadData();
     }
 
     private async loadData() {
-        const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentApi.otherInvestmentSummaryGet();
-        const data: OtherInvestmentModel[] = await this.otherInvestmentApi.otherInvestmentAllGet();
+        const summary: OtherInvestmentBalanceSummaryModel = await this.otherInvestmentService.getSummary();
+        const data: OtherInvestmentViewModel[] = await this.otherInvestmentService.getAll();
 
         let investedChartData: LineChartData[] = []
         let balanceChartData: LineChartData[] = []
         let allPayments: PaymentModel[] = [];
-        let allBalances: OtherInvestmentBalaceHistoryModel[] = [];
+        let allBalances: OtherInvestmentBalaceHistoryViewModel[] = [];
 
         for (const o of data) {
-            const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: o.id });
+            const linkedTag = await this.otherInvestmentService.getTagConnectedWithInvetment(o.id);
             let linkedPayments: PaymentModel[] = [];
 
             if (linkedTag != undefined) {
-                linkedPayments = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: o.id, tagId: linkedTag.tagId });
+                linkedPayments = await this.otherInvestmentService.getPaymentLinkedToTagOfOtherInvestment(o.id, linkedTag.tagId);
                 allPayments.push(...linkedPayments);
             }
 
-            const otherInvestmentBalance: OtherInvestmentBalaceHistoryModel[] = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: o.id });
+            const otherInvestmentBalance: OtherInvestmentBalaceHistoryViewModel[] = await this.otherInvestmentService.getBalanceHistory(o.id);
             allBalances.push(...otherInvestmentBalance);
         };
 
