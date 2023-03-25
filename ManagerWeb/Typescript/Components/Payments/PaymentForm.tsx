@@ -8,6 +8,7 @@ import { IconsData } from '../../Enums/IconsEnum';
 import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentModel } from '../../ApiClient/Main';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
 import * as H from 'history';
+import PaymentService from '../../Services/PaymentService';
 
 interface IPaymentFormProps {
     paymentId: number,
@@ -18,7 +19,7 @@ interface IPaymentFormProps {
 
 export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
     private requiredMessage: string = "Zadejte hodnotu.";
-    private paymentApi: PaymentApi;
+    private paymentService: any;
 
     constructor(props: IPaymentFormProps) {
         super(props);
@@ -43,28 +44,29 @@ export default class PaymentForm extends React.Component<IPaymentFormProps, IPay
 
     public async componentDidMount() {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.paymentApi = await apiFactory.getClient(PaymentApi);
+        const paymentApi = await apiFactory.getClient(PaymentApi);
+        this.paymentService = new PaymentService(paymentApi);
 
-        const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
-        const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
+        const types: PaymentTypeModel[] = await this.paymentService.getPaymentTypes();
+        const categories: PaymentCategoryModel[] = await this.paymentService.getPaymentCategories();
         this.processPaymentTypesData(types);
         this.processPaymentCategoryData(categories);
 
         if (this.state.id != null) {
-            let paymentResponse = await this.paymentApi.paymentsDetailGet({ id: this.state.id });
+            let paymentResponse = await this.paymentService.getPaymentById(this.state.id);
             this.processPaymentData(paymentResponse);
         }
     }
 
-    private confirmPayment = (e: React.FormEvent<HTMLFormElement>): void => {
+    private confirmPayment = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         this.setState({ disabledConfirm: true });
         let dataModel = this.mapViewModelToDatModel();
 
         if (this.state.id != undefined) {
-            this.paymentApi.paymentsPut({ paymentModel: dataModel })
+            await this.paymentService.updatePayment(dataModel);
         } else {
-            this.paymentApi.paymentsPost({ paymentModel: dataModel });
+            await this.paymentService.createPayment(dataModel);
         }
 
         this.props.handleClose();
