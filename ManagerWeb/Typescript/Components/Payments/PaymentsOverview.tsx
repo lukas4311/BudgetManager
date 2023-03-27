@@ -44,6 +44,7 @@ interface PaymentsOverviewState {
     barChartData: BarData[];
     averageMonthExpense: number;
     averageMonthRevenue: number;
+    averageMonthInvestments: number;
 }
 
 interface DateFilter {
@@ -84,7 +85,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -132,10 +133,12 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
             const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
+            const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
+
             this.setState({
                 payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue
+                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
             });
         } else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -321,35 +324,37 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <ComponentPanel classStyle="w-1/2 h-80">
                                     <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                                 </ComponentPanel>
-                                <ComponentPanel classStyle="w-1/2 h-80">
-                                    <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
-                                        <div>
-                                            <p>Totaly earned: {income}</p>
+                                <div className='w-1/2 h-80 flex flex-row'>
+                                    <ComponentPanel classStyle="w-1/2 h-80">
+                                        <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
+                                            <div>
+                                                <p>Totaly earned: {income}</p>
+                                            </div>
+                                            <div>
+                                                <p>Totaly spent: {expenses}</p>
+                                            </div>
+                                            <div>
+                                                <p>Totaly saved: {saved} ({savedPct?.toFixed(1)}%)</p>
+                                            </div>
+                                            <div>
+                                                <p>Totaly invested: {invested} ({investedPct?.toFixed(1)}%)</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p>Totaly spent: {expenses}</p>
+                                    </ComponentPanel>
+                                    <ComponentPanel classStyle="w-1/2 h-80">
+                                        <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
+                                            <div>
+                                                <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
+                                            </div>
+                                            <div>
+                                                <p>Month average revenue: {this.state.averageMonthRevenue.toFixed(0)}</p>
+                                            </div>
+                                            <div>
+                                                <p>Month average investments: {this.state.averageMonthInvestments.toFixed(0)}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p>Totaly saved: {saved} ({savedPct?.toFixed(1)}%)</p>
-                                        </div>
-                                        <div>
-                                            <p>Totaly invested: {invested} ({investedPct?.toFixed(1)}%)</p>
-                                        </div>
-                                    </div>
-                                </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row">
-                                <ComponentPanel classStyle="w-1/3 h-80">
-                                    <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
-                                        <div>
-                                            <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
-                                        </div>
-                                        <div>
-                                            <p>Month average revenue: {this.state.averageMonthRevenue.toFixed(0)}</p>
-                                        </div>
-                                    </div>
-                                </ComponentPanel>
-
+                                    </ComponentPanel>
+                                </div>
                             </div>
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>

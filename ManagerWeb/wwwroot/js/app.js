@@ -9099,10 +9099,11 @@ class PaymentsOverview extends React.Component {
                 const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
                 const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
                 const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
+                const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
                 this.setState({
                     payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue
+                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
                 });
             }
             else {
@@ -9174,7 +9175,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -9279,41 +9280,45 @@ class PaymentsOverview extends React.Component {
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                                 React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                                React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Totaly earned: ",
-                                            income)),
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Totaly spent: ",
-                                            expenses)),
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Totaly saved: ",
-                                            saved,
-                                            " (", savedPct === null || savedPct === void 0 ? void 0 :
-                                            savedPct.toFixed(1),
-                                            "%)")),
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Totaly invested: ",
-                                            invested,
-                                            " (", investedPct === null || investedPct === void 0 ? void 0 :
-                                            investedPct.toFixed(1),
-                                            "%)"))))),
-                        React.createElement("div", { className: "flex flex-row" },
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3 h-80" },
-                                React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Month average expenses: ",
-                                            this.state.averageMonthExpense.toFixed(0))),
-                                    React.createElement("div", null,
-                                        React.createElement("p", null,
-                                            "Month average revenue: ",
-                                            this.state.averageMonthRevenue.toFixed(0)))))),
+                            React.createElement("div", { className: 'w-1/2 h-80 flex flex-row' },
+                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                    React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Totaly earned: ",
+                                                income)),
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Totaly spent: ",
+                                                expenses)),
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Totaly saved: ",
+                                                saved,
+                                                " (", savedPct === null || savedPct === void 0 ? void 0 :
+                                                savedPct.toFixed(1),
+                                                "%)")),
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Totaly invested: ",
+                                                invested,
+                                                " (", investedPct === null || investedPct === void 0 ? void 0 :
+                                                investedPct.toFixed(1),
+                                                "%)")))),
+                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                    React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Month average expenses: ",
+                                                this.state.averageMonthExpense.toFixed(0))),
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Month average revenue: ",
+                                                this.state.averageMonthRevenue.toFixed(0))),
+                                        React.createElement("div", null,
+                                            React.createElement("p", null,
+                                                "Month average investments: ",
+                                                this.state.averageMonthInvestments.toFixed(0))))))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
                             React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
                             React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -11027,6 +11032,12 @@ class PaymentService {
             if (!revenues || revenues.length == 0)
                 return 0;
             return this.getAverageAmountFromPayments(revenues);
+        };
+        this.getAverageMonthInvestment = (payments) => {
+            const investments = payments.filter(f => f.paymentTypeCode == 'Expense' && f.paymentCategoryCode == "Invetsment");
+            if (!investments || investments.length == 0)
+                return 0;
+            return this.getAverageAmountFromPayments(investments);
         };
         this.getAverageAmountFromPayments = (payments) => {
             if (!payments || payments.length == 0)

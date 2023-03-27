@@ -55,6 +55,15 @@ export default class PaymentService {
         return this.getAverageAmountFromPayments(revenues);
     }
 
+    public getAverageMonthInvestment = (payments: PaymentModel[]) => {
+        const investments = payments.filter(f => f.paymentTypeCode == 'Expense' && f.paymentCategoryCode == "Invetsment");
+
+        if (!investments || investments.length == 0)
+            return 0;
+
+        return this.getAverageAmountFromPayments(investments);
+    }
+
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;
