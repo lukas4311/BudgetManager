@@ -23,30 +23,32 @@ import { BarChart, BarData } from '../Charts/BarChart';
 import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
+import PaymentService from '../../Services/PaymentService';
 
 interface PaymentsOverviewState {
-    payments: PaymentModel[],
-    selectedFilter: DateFilter,
-    filterDateFrom: string,
-    filterDateTo: string,
-    showPaymentFormModal: boolean,
-    bankAccounts: Array<BankAccountModel>
-    selectedBankAccount?: number,
-    showBankAccountError: boolean,
-    paymentId: number,
-    formKey: number,
-    apiError: string,
-    expenseChartData: LineChartProps,
-    balanceChartData: LineChartProps,
-    calendarChartData: CalendarChartProps,
-    radarChartData: RadarChartProps,
-    barChartData: BarData[]
+    payments: PaymentModel[];
+    selectedFilter: DateFilter;
+    filterDateFrom: string;
+    filterDateTo: string;
+    showPaymentFormModal: boolean;
+    bankAccounts: Array<BankAccountModel>;
+    selectedBankAccount?: number;
+    showBankAccountError: boolean;
+    paymentId: number;
+    formKey: number;
+    apiError: string;
+    expenseChartData: LineChartProps;
+    balanceChartData: LineChartProps;
+    calendarChartData: CalendarChartProps;
+    radarChartData: RadarChartProps;
+    barChartData: BarData[];
+    averageMonthExpense: number;
 }
 
 interface DateFilter {
-    caption: string,
-    days: number,
-    key: number
+    caption: string;
+    days: number;
+    key: number;
 }
 
 const theme = createMuiTheme({
@@ -67,6 +69,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
     private paymentApi: PaymentApi;
+    private paymentService: PaymentService;
     private categories: PaymentCategoryModel[];
 
     constructor(props: RouteComponentProps) {
@@ -80,7 +83,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: []
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -90,7 +93,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         this.paymentApi = await apiFactory.getClient(PaymentApi);
-
+        this.paymentService = new PaymentService(this.paymentApi);
         this.setState({ selectedFilter: this.filters[0] });
         let bankAccounts: BankAccountModel[] = [];
         bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
@@ -126,10 +129,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
+            const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
             this.setState({
                 payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                radarChartData: { dataSets: radarData }, barChartData
+                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense
             });
         } else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -331,7 +335,17 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </div>
                                 </ComponentPanel>
-                            </div>                            
+                            </div>
+                            <div className="flex flex-row">
+                                <ComponentPanel classStyle="w-1/3 h-80">
+                                    <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
+                                        <div>
+                                            <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
+                                        </div>
+                                    </div>
+                                </ComponentPanel>
+
+                            </div>
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>
                                 <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Payment detail</DialogTitle>

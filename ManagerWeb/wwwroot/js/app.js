@@ -8879,6 +8879,7 @@ const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core")
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const PaymentService_1 = __importDefault(__webpack_require__(/*! ../../Services/PaymentService */ "./Typescript/Services/PaymentService.ts"));
 class PaymentForm extends React.Component {
     constructor(props) {
         super(props);
@@ -8891,18 +8892,18 @@ class PaymentForm extends React.Component {
                 paymentTypeId: data.paymentTypeId, paymentCategoryId: data.paymentCategoryId, bankAccountId: data.bankAccountId, tags: data.tags
             });
         };
-        this.confirmPayment = (e) => {
+        this.confirmPayment = (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
             this.setState({ disabledConfirm: true });
             let dataModel = this.mapViewModelToDatModel();
             if (this.state.id != undefined) {
-                this.paymentApi.paymentsPut({ paymentModel: dataModel });
+                yield this.paymentService.updatePayment(dataModel);
             }
             else {
-                this.paymentApi.paymentsPost({ paymentModel: dataModel });
+                yield this.paymentService.createPayment(dataModel);
             }
             this.props.handleClose();
-        };
+        });
         this.mapViewModelToDatModel = () => {
             let dataModel = new Main_1.PaymentModel();
             dataModel.amount = parseInt(this.state.amount.toString());
@@ -8946,13 +8947,14 @@ class PaymentForm extends React.Component {
     componentDidMount() {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
-            this.paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
-            const types = yield this.paymentApi.paymentsTypesGet();
-            const categories = yield this.paymentApi.paymentsCategoriesGet();
+            const paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
+            this.paymentService = new PaymentService_1.default(paymentApi);
+            const types = yield this.paymentService.getPaymentTypes();
+            const categories = yield this.paymentService.getPaymentCategories();
             this.processPaymentTypesData(types);
             this.processPaymentCategoryData(categories);
             if (this.state.id != null) {
-                let paymentResponse = yield this.paymentApi.paymentsDetailGet({ id: this.state.id });
+                let paymentResponse = yield this.paymentService.getPaymentById(this.state.id);
                 this.processPaymentData(paymentResponse);
             }
         });
@@ -9066,6 +9068,7 @@ const BarChart_1 = __webpack_require__(/*! ../Charts/BarChart */ "./Typescript/C
 const BarChartSettingManager_1 = __webpack_require__(/*! ../Charts/BarChartSettingManager */ "./Typescript/Components/Charts/BarChartSettingManager.tsx");
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const PaymentService_1 = __importDefault(__webpack_require__(/*! ../../Services/PaymentService */ "./Typescript/Services/PaymentService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9094,10 +9097,11 @@ class PaymentsOverview extends React.Component {
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
+                const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
                 this.setState({
                     payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                    radarChartData: { dataSets: radarData }, barChartData
+                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense
                 });
             }
             else {
@@ -9169,7 +9173,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: []
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -9178,6 +9182,7 @@ class PaymentsOverview extends React.Component {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
             this.paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
+            this.paymentService = new PaymentService_1.default(this.paymentApi);
             this.setState({ selectedFilter: this.filters[0] });
             let bankAccounts = [];
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
@@ -9297,6 +9302,13 @@ class PaymentsOverview extends React.Component {
                                             " (", investedPct === null || investedPct === void 0 ? void 0 :
                                             investedPct.toFixed(1),
                                             "%)"))))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/3 h-80" },
+                                React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Month average expenses: ",
+                                            this.state.averageMonthExpense.toFixed(0)))))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
                             React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
                             React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -10967,6 +10979,90 @@ class OtherInvestmentService {
     }
 }
 exports.default = OtherInvestmentService;
+
+
+/***/ }),
+
+/***/ "./Typescript/Services/PaymentService.ts":
+/*!***********************************************!*\
+  !*** ./Typescript/Services/PaymentService.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+class PaymentService {
+    constructor(paymentApi) {
+        this.getExactDateRangeDaysPaymentData = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () {
+            return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
+        });
+        this.getAverageMonthExpense = (payments) => {
+            const expenses = payments.filter(f => f.paymentTypeCode == 'Expense');
+            if (!expenses || expenses.length == 0)
+                return 0;
+            const orderedPayments = lodash_1.default.orderBy(payments, o => o.date);
+            const firstPayment = lodash_1.default.first(orderedPayments);
+            const lastPayment = lodash_1.default.last(orderedPayments);
+            const monthCount = this.calculateMonthCount(firstPayment.date, lastPayment.date);
+            const sumExpenses = lodash_1.default.sumBy(expenses, s => s.amount);
+            return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+        };
+        this.paymentApi = paymentApi;
+    }
+    getPaymentTypes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const types = yield this.paymentApi.paymentsTypesGet();
+            return types;
+        });
+    }
+    getPaymentCategories() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const categories = yield this.paymentApi.paymentsCategoriesGet();
+            return categories;
+        });
+    }
+    getPaymentById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const paymentResponse = yield this.paymentApi.paymentsDetailGet({ id: id });
+            return paymentResponse;
+        });
+    }
+    createPayment(paymentModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.paymentApi.paymentsPost({ paymentModel: paymentModel });
+            return response;
+        });
+    }
+    updatePayment(paymentModel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const response = yield this.paymentApi.paymentsPut({ paymentModel: paymentModel });
+            return response;
+        });
+    }
+    calculateMonthCount(fromDate, toDate) {
+        const fromYear = fromDate.getFullYear();
+        const fromMonth = fromDate.getMonth();
+        const toYear = toDate.getFullYear();
+        const toMonth = toDate.getMonth();
+        return (toYear - fromYear) * 12 + (toMonth - fromMonth) + 1;
+    }
+}
+exports.default = PaymentService;
 
 
 /***/ }),
