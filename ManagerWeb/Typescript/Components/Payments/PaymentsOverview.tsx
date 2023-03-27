@@ -43,6 +43,7 @@ interface PaymentsOverviewState {
     radarChartData: RadarChartProps;
     barChartData: BarData[];
     averageMonthExpense: number;
+    averageMonthRevenue: number;
 }
 
 interface DateFilter {
@@ -83,7 +84,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -130,10 +131,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
+            const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
             this.setState({
                 payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense
+                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue
             });
         } else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -341,6 +343,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
                                         <div>
                                             <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
+                                        </div>
+                                        <div>
+                                            <p>Month average revenue: {this.state.averageMonthRevenue.toFixed(0)}</p>
                                         </div>
                                     </div>
                                 </ComponentPanel>

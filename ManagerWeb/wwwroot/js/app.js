@@ -9098,10 +9098,11 @@ class PaymentsOverview extends React.Component {
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
                 const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
+                const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
                 this.setState({
                     payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense
+                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue
                 });
             }
             else {
@@ -9173,7 +9174,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -9308,7 +9309,11 @@ class PaymentsOverview extends React.Component {
                                     React.createElement("div", null,
                                         React.createElement("p", null,
                                             "Month average expenses: ",
-                                            this.state.averageMonthExpense.toFixed(0)))))),
+                                            this.state.averageMonthExpense.toFixed(0))),
+                                    React.createElement("div", null,
+                                        React.createElement("p", null,
+                                            "Month average revenue: ",
+                                            this.state.averageMonthRevenue.toFixed(0)))))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
                             React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
                             React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -11015,11 +11020,22 @@ class PaymentService {
             const expenses = payments.filter(f => f.paymentTypeCode == 'Expense');
             if (!expenses || expenses.length == 0)
                 return 0;
+            return this.getAverageAmountFromPayments(expenses);
+        };
+        this.getAverageMonthRevenues = (payments) => {
+            const revenues = payments.filter(f => f.paymentTypeCode == 'Revenue');
+            if (!revenues || revenues.length == 0)
+                return 0;
+            return this.getAverageAmountFromPayments(revenues);
+        };
+        this.getAverageAmountFromPayments = (payments) => {
+            if (!payments || payments.length == 0)
+                return 0;
             const orderedPayments = lodash_1.default.orderBy(payments, o => o.date);
             const firstPayment = lodash_1.default.first(orderedPayments);
             const lastPayment = lodash_1.default.last(orderedPayments);
             const monthCount = this.calculateMonthCount(firstPayment.date, lastPayment.date);
-            const sumExpenses = lodash_1.default.sumBy(expenses, s => s.amount);
+            const sumExpenses = lodash_1.default.sumBy(payments, s => s.amount);
             return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
         };
         this.paymentApi = paymentApi;

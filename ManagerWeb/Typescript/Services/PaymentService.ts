@@ -43,12 +43,27 @@ export default class PaymentService {
         if (!expenses || expenses.length == 0)
             return 0;
 
+        return this.getAverageAmountFromPayments(expenses);
+    }
+
+    public getAverageMonthRevenues = (payments: PaymentModel[]) => {
+        const revenues = payments.filter(f => f.paymentTypeCode == 'Revenue');
+
+        if (!revenues || revenues.length == 0)
+            return 0;
+
+        return this.getAverageAmountFromPayments(revenues);
+    }
+
+    private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
+        if (!payments || payments.length == 0)
+            return 0;
+
         const orderedPayments = _.orderBy(payments, o => o.date);
         const firstPayment = _.first(orderedPayments);
         const lastPayment = _.last(orderedPayments);
-
         const monthCount = this.calculateMonthCount(firstPayment.date, lastPayment.date);
-        const sumExpenses = _.sumBy(expenses, s => s.amount);
+        const sumExpenses = _.sumBy(payments, s => s.amount);
 
         return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
     }
