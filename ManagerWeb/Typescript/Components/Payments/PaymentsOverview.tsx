@@ -70,7 +70,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
-    // private paymentApi: PaymentApi;
     private paymentService: PaymentService;
     private categories: PaymentCategoryModel[];
 

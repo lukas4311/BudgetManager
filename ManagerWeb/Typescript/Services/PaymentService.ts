@@ -3,6 +3,8 @@ import { PaymentApi, PaymentTypeModel, PaymentCategoryModel, PaymentModel } from
 
 export default class PaymentService {
     private paymentApi: PaymentApi;
+    private expenseCode: string = "Expense";
+    private revenueCode: string = "Revenue";
 
     constructor(paymentApi: PaymentApi) {
         this.paymentApi = paymentApi;
@@ -38,7 +40,7 @@ export default class PaymentService {
     }
 
     public getAverageMonthExpense = (payments: PaymentModel[]) => {
-        const expenses = payments.filter(f => f.paymentTypeCode == 'Expense');
+        const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
 
         if (!expenses || expenses.length == 0)
             return 0;
@@ -47,7 +49,7 @@ export default class PaymentService {
     }
 
     public getAverageMonthRevenues = (payments: PaymentModel[]) => {
-        const revenues = payments.filter(f => f.paymentTypeCode == 'Revenue');
+        const revenues = payments.filter(f => f.paymentTypeCode == this.revenueCode);
 
         if (!revenues || revenues.length == 0)
             return 0;
@@ -56,12 +58,21 @@ export default class PaymentService {
     }
 
     public getAverageMonthInvestment = (payments: PaymentModel[]) => {
-        const investments = payments.filter(f => f.paymentTypeCode == 'Expense' && f.paymentCategoryCode == "Invetsment");
+        const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode && f.paymentCategoryCode == "Invetsment");
 
         if (!investments || investments.length == 0)
             return 0;
 
         return this.getAverageAmountFromPayments(investments);
+    }
+
+    public getMeanMonthInvestment = (payments: PaymentModel[]) => {
+        const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode);
+
+        if (!investments || investments.length == 0)
+            return 0;
+
+        return this.getMeanAmountFromPayments(investments);
     }
 
     public clonePayment(paymentId: number) {
@@ -72,13 +83,25 @@ export default class PaymentService {
         if (!payments || payments.length == 0)
             return 0;
 
+        const monthCount = this.getMonthCountFromPayments(payments);
+        const sumExpenses = _.sumBy(payments, s => s.amount);
+        return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+    }
+
+    private getMeanAmountFromPayments = (payments: PaymentModel[]) => {
+        if (!payments || payments.length == 0)
+            return 0;
+
+        const monthCount = this.getMonthCountFromPayments(payments);
+        const meanExpenses = _.meanBy(payments, s => s.amount);
+        return meanExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+    }
+
+    private getMonthCountFromPayments = (payments: PaymentModel[]) => {
         const orderedPayments = _.orderBy(payments, o => o.date);
         const firstPayment = _.first(orderedPayments);
         const lastPayment = _.last(orderedPayments);
-        const monthCount = this.calculateMonthCount(firstPayment.date, lastPayment.date);
-        const sumExpenses = _.sumBy(payments, s => s.amount);
-
-        return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+        return this.calculateMonthCount(firstPayment.date, lastPayment.date);
     }
 
     private calculateMonthCount(fromDate: Date, toDate: Date): number {

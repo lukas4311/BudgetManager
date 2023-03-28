@@ -11023,36 +11023,54 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 class PaymentService {
     constructor(paymentApi) {
+        this.expenseCode = "Expense";
+        this.revenueCode = "Revenue";
         this.getExactDateRangeDaysPaymentData = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () {
             return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
         });
         this.getAverageMonthExpense = (payments) => {
-            const expenses = payments.filter(f => f.paymentTypeCode == 'Expense');
+            const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
             if (!expenses || expenses.length == 0)
                 return 0;
             return this.getAverageAmountFromPayments(expenses);
         };
         this.getAverageMonthRevenues = (payments) => {
-            const revenues = payments.filter(f => f.paymentTypeCode == 'Revenue');
+            const revenues = payments.filter(f => f.paymentTypeCode == this.revenueCode);
             if (!revenues || revenues.length == 0)
                 return 0;
             return this.getAverageAmountFromPayments(revenues);
         };
         this.getAverageMonthInvestment = (payments) => {
-            const investments = payments.filter(f => f.paymentTypeCode == 'Expense' && f.paymentCategoryCode == "Invetsment");
+            const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode && f.paymentCategoryCode == "Invetsment");
             if (!investments || investments.length == 0)
                 return 0;
             return this.getAverageAmountFromPayments(investments);
         };
+        this.getMeanMonthInvestment = (payments) => {
+            const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode);
+            if (!investments || investments.length == 0)
+                return 0;
+            return this.getMeanAmountFromPayments(investments);
+        };
         this.getAverageAmountFromPayments = (payments) => {
             if (!payments || payments.length == 0)
                 return 0;
+            const monthCount = this.getMonthCountFromPayments(payments);
+            const sumExpenses = lodash_1.default.sumBy(payments, s => s.amount);
+            return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+        };
+        this.getMeanAmountFromPayments = (payments) => {
+            if (!payments || payments.length == 0)
+                return 0;
+            const monthCount = this.getMonthCountFromPayments(payments);
+            const meanExpenses = lodash_1.default.meanBy(payments, s => s.amount);
+            return meanExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+        };
+        this.getMonthCountFromPayments = (payments) => {
             const orderedPayments = lodash_1.default.orderBy(payments, o => o.date);
             const firstPayment = lodash_1.default.first(orderedPayments);
             const lastPayment = lodash_1.default.last(orderedPayments);
-            const monthCount = this.calculateMonthCount(firstPayment.date, lastPayment.date);
-            const sumExpenses = lodash_1.default.sumBy(payments, s => s.amount);
-            return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+            return this.calculateMonthCount(firstPayment.date, lastPayment.date);
         };
         this.paymentApi = paymentApi;
     }
