@@ -332,9 +332,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             </div>
                                             <div>
                                                 <p>Totaly spent: {expenses}</p>
+                                                <p className='text-xs'>Totaly spent without investments: {expenses - invested}</p>
                                             </div>
                                             <div>
                                                 <p>Totaly saved: {saved} ({savedPct?.toFixed(1)}%)</p>
+                                                <p className='text-xs'>Totaly saved including investments: {saved + invested}</p>
                                             </div>
                                             <div>
                                                 <p>Totaly invested: {invested} ({investedPct?.toFixed(1)}%)</p>
@@ -345,6 +347,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
                                             <div>
                                                 <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
+                                                <p className='text-xs'>Month average expenses without investments: {(this.state.averageMonthExpense - this.state.averageMonthInvestments).toFixed(0)}</p>
                                             </div>
                                             <div>
                                                 <p>Month average revenue: {this.state.averageMonthRevenue.toFixed(0)}</p>
