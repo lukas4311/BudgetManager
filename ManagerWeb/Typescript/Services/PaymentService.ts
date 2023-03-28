@@ -64,6 +64,10 @@ export default class PaymentService {
         return this.getAverageAmountFromPayments(investments);
     }
 
+    public clonePayment(paymentId: number) {
+        this.paymentApi.paymentsCloneIdPost({ id: paymentId });
+    }
+
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;

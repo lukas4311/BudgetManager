@@ -70,7 +70,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private apiErrorMessage: string = "Při získnání data došlo k chybě.";
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
-    private paymentApi: PaymentApi;
+    // private paymentApi: PaymentApi;
     private paymentService: PaymentService;
     private categories: PaymentCategoryModel[];
 
@@ -94,14 +94,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     public async componentDidMount() {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
-        this.paymentApi = await apiFactory.getClient(PaymentApi);
-        this.paymentService = new PaymentService(this.paymentApi);
+        const paymentApi = await apiFactory.getClient(PaymentApi);
+        this.paymentService = new PaymentService(paymentApi);
         this.setState({ selectedFilter: this.filters[0] });
         let bankAccounts: BankAccountModel[] = [];
         bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-        this.categories = await this.paymentApi.paymentsCategoriesGet();
+        this.categories = await this.paymentService.getPaymentCategories();
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         await this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
     }
@@ -111,9 +111,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.setPayments(payments);
     }
 
-    private async getExactDateRangeDaysPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> {
-        return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
-    }
+    private getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> =>
+        await this.paymentService.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+
 
     private setPayments = async (payments: Array<PaymentModel>) => {
         if (payments != undefined) {
@@ -216,7 +216,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         console.log("clone: " + id);
         e.preventDefault();
         e.stopPropagation();
-        this.paymentApi.paymentsCloneIdPost({ id: id });
+        this.paymentService.clonePayment(id);
     }
 
     private renderTemplate = (p: PaymentModel): JSX.Element => {

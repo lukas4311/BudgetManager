@@ -9083,6 +9083,7 @@ class PaymentsOverview extends React.Component {
         super(props);
         this.defaultBankOption = "Vše";
         this.apiErrorMessage = "Při získnání data došlo k chybě.";
+        this.getExactDateRangeDaysPaymentData = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () { return yield this.paymentService.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId); });
         this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
             if (payments != undefined) {
                 const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
@@ -9144,7 +9145,7 @@ class PaymentsOverview extends React.Component {
             console.log("clone: " + id);
             e.preventDefault();
             e.stopPropagation();
-            this.paymentApi.paymentsCloneIdPost({ id: id });
+            this.paymentService.clonePayment(id);
         };
         this.renderTemplate = (p) => {
             let iconsData = new IconsEnum_1.IconsData();
@@ -9183,13 +9184,13 @@ class PaymentsOverview extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             const apiFactory = new ApiClientFactory_1.default(this.props.history);
             this.bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
-            this.paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
-            this.paymentService = new PaymentService_1.default(this.paymentApi);
+            const paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
+            this.paymentService = new PaymentService_1.default(paymentApi);
             this.setState({ selectedFilter: this.filters[0] });
             let bankAccounts = [];
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-            this.categories = yield this.paymentApi.paymentsCategoriesGet();
+            this.categories = yield this.paymentService.getPaymentCategories();
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             yield this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
         });
@@ -9198,11 +9199,6 @@ class PaymentsOverview extends React.Component {
         return __awaiter(this, void 0, void 0, function* () {
             const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
             this.setPayments(payments);
-        });
-    }
-    getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
         });
     }
     getFilteredPaymentData(bankId) {
@@ -11089,6 +11085,9 @@ class PaymentService {
             const response = yield this.paymentApi.paymentsPut({ paymentModel: paymentModel });
             return response;
         });
+    }
+    clonePayment(paymentId) {
+        this.paymentApi.paymentsCloneIdPost({ id: paymentId });
     }
     calculateMonthCount(fromDate, toDate) {
         const fromYear = fromDate.getFullYear();
