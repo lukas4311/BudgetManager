@@ -66,13 +66,13 @@ export default class PaymentService {
         return this.getAverageAmountFromPayments(investments);
     }
 
-    public getMeanMonthInvestment = (payments: PaymentModel[]) => {
-        const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode);
+    public getMeanExpense = (payments: PaymentModel[]) => {
+        const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
 
-        if (!investments || investments.length == 0)
+        if (!expenses || expenses.length == 0)
             return 0;
 
-        return this.getMeanAmountFromPayments(investments);
+        return this.getMeanValueFromPayments(expenses);
     }
 
     public clonePayment(paymentId: number) {
@@ -88,13 +88,12 @@ export default class PaymentService {
         return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
     }
 
-    private getMeanAmountFromPayments = (payments: PaymentModel[]) => {
+    private getMeanValueFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;
 
         const monthCount = this.getMonthCountFromPayments(payments);
-        const meanExpenses = _.meanBy(payments, s => s.amount);
-        return meanExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+        return _.meanBy(payments, s => s.amount);
     }
 
     private getMonthCountFromPayments = (payments: PaymentModel[]) => {

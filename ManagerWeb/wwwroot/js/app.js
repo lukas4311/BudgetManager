@@ -11046,11 +11046,11 @@ class PaymentService {
                 return 0;
             return this.getAverageAmountFromPayments(investments);
         };
-        this.getMeanMonthInvestment = (payments) => {
-            const investments = payments.filter(f => f.paymentTypeCode == this.expenseCode);
-            if (!investments || investments.length == 0)
+        this.getMeanExpense = (payments) => {
+            const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
+            if (!expenses || expenses.length == 0)
                 return 0;
-            return this.getMeanAmountFromPayments(investments);
+            return this.getMeanValueFromPayments(expenses);
         };
         this.getAverageAmountFromPayments = (payments) => {
             if (!payments || payments.length == 0)
@@ -11059,12 +11059,11 @@ class PaymentService {
             const sumExpenses = lodash_1.default.sumBy(payments, s => s.amount);
             return sumExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
         };
-        this.getMeanAmountFromPayments = (payments) => {
+        this.getMeanValueFromPayments = (payments) => {
             if (!payments || payments.length == 0)
                 return 0;
             const monthCount = this.getMonthCountFromPayments(payments);
-            const meanExpenses = lodash_1.default.meanBy(payments, s => s.amount);
-            return meanExpenses / (!monthCount || monthCount == 0 ? 1 : monthCount);
+            return lodash_1.default.meanBy(payments, s => s.amount);
         };
         this.getMonthCountFromPayments = (payments) => {
             const orderedPayments = lodash_1.default.orderBy(payments, o => o.date);
