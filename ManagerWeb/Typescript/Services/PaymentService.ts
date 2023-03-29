@@ -79,6 +79,12 @@ export default class PaymentService {
         this.paymentApi.paymentsCloneIdPost({ id: paymentId });
     }
 
+    public getTopPaymentsByAmount(payments: PaymentModel[], count: number): PaymentModel[] {
+        const sortedPayments = _.orderBy(payments, ['amount'], ['desc']);
+        const topPayments = _.slice(sortedPayments, 0, count);
+        return topPayments;
+    }
+
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;
