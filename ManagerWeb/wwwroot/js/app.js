@@ -9069,6 +9069,7 @@ const BarChartSettingManager_1 = __webpack_require__(/*! ../Charts/BarChartSetti
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const PaymentService_1 = __importDefault(__webpack_require__(/*! ../../Services/PaymentService */ "./Typescript/Services/PaymentService.ts"));
+const ScoreList_1 = __importDefault(__webpack_require__(/*! ../../Utils/ScoreList */ "./Typescript/Utils/ScoreList.tsx"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -9101,8 +9102,9 @@ class PaymentsOverview extends React.Component {
                 const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
                 const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
+                const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
                 this.setState({
-                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
+                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] }, topPayments,
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
                 });
@@ -9176,7 +9178,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0
+            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -9324,6 +9326,9 @@ class PaymentsOverview extends React.Component {
                                             React.createElement("p", null,
                                                 "Month average investments: ",
                                                 this.state.averageMonthInvestments.toFixed(0))))))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(ScoreList_1.default, { models: this.state.topPayments.map(m => ({ score: m.amount, title: m.name })) }))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
                             React.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Payment detail"),
                             React.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
@@ -11023,8 +11028,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 class PaymentService {
     constructor(paymentApi) {
-        this.expenseCode = "Expense";
         this.revenueCode = "Revenue";
+        this.expenseCode = "Expense";
         this.getExactDateRangeDaysPaymentData = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () {
             return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
         });
@@ -11062,7 +11067,6 @@ class PaymentService {
         this.getMeanValueFromPayments = (payments) => {
             if (!payments || payments.length == 0)
                 return 0;
-            const monthCount = this.getMonthCountFromPayments(payments);
             return lodash_1.default.meanBy(payments, s => s.amount);
         };
         this.getMonthCountFromPayments = (payments) => {
@@ -11105,6 +11109,13 @@ class PaymentService {
     }
     clonePayment(paymentId) {
         this.paymentApi.paymentsCloneIdPost({ id: paymentId });
+    }
+    getTopPaymentsByAmount(payments, count, paymentType) {
+        if (paymentType)
+            payments = payments.filter(p => p.paymentTypeCode == paymentType);
+        const sortedPayments = lodash_1.default.orderBy(payments, ['amount'], ['desc']);
+        const topPayments = lodash_1.default.slice(sortedPayments, 0, count);
+        return topPayments;
     }
     calculateMonthCount(fromDate, toDate) {
         const fromYear = fromDate.getFullYear();
@@ -11634,6 +11645,35 @@ const Ranking = (props) => {
         renderRankingColumn(3)));
 };
 exports.Ranking = Ranking;
+
+
+/***/ }),
+
+/***/ "./Typescript/Utils/ScoreList.tsx":
+/*!****************************************!*\
+  !*** ./Typescript/Utils/ScoreList.tsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+function ScoreList({ models }) {
+    const getHeight = (sequenceNo) => {
+        const height = (models.length - (sequenceNo)) / models.length;
+        return height * 100 + "%";
+    };
+    return (react_1.default.createElement("div", { className: "flex flex-row h-full justify-between" }, models.map((model, index) => (react_1.default.createElement("div", { className: "flex flex-col h-full justify-end" },
+        react_1.default.createElement("div", { key: index, style: { height: getHeight(index) }, className: "flex justify-center items-center duration-500 transition-all bg-white mx-4 w-24 rounded-xl bg-vermilion mb-2 boxShadowHover" },
+            react_1.default.createElement("div", { className: "text-2xl font-bold text-black" }, model.score)),
+        react_1.default.createElement("p", null, model.title))))));
+}
+exports.default = ScoreList;
 
 
 /***/ }),

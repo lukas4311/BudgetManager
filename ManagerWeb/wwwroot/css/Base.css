@@ -610,3 +610,15 @@ h1, h2, h3, h4, h5 {
   -moz-box-shadow: -12px 7px 50px 0px rgba(0, 0, 0, 0.75);
   box-shadow: -12px 7px 50px 0px rgba(0, 0, 0, 0.75);
 }
+
+.boxShadowHover {
+  transition: ease 0.5;
+  -webkit-box-shadow: 0px 7px 20px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 7px 20px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 7px 20px 0px rgba(0, 0, 0, 0.75);
+}
+.boxShadowHover:hover {
+  -webkit-box-shadow: 0px 7px 20px 0px #e03d15;
+  -moz-box-shadow: 0px 7px 20px 0px #e03d15;
+  box-shadow: 0px 7px 20px 0px #e03d15;
+}

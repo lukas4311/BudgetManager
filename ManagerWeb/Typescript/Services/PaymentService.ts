@@ -3,8 +3,8 @@ import { PaymentApi, PaymentTypeModel, PaymentCategoryModel, PaymentModel } from
 
 export default class PaymentService {
     private paymentApi: PaymentApi;
-    private expenseCode: string = "Expense";
     private revenueCode: string = "Revenue";
+    private expenseCode: string = "Expense";
 
     constructor(paymentApi: PaymentApi) {
         this.paymentApi = paymentApi;
@@ -79,7 +79,10 @@ export default class PaymentService {
         this.paymentApi.paymentsCloneIdPost({ id: paymentId });
     }
 
-    public getTopPaymentsByAmount(payments: PaymentModel[], count: number): PaymentModel[] {
+    public getTopPaymentsByAmount(payments: PaymentModel[], count: number, paymentType?: string): PaymentModel[] {
+        if(paymentType)
+            payments = payments.filter(p => p.paymentTypeCode == paymentType);
+
         const sortedPayments = _.orderBy(payments, ['amount'], ['desc']);
         const topPayments = _.slice(sortedPayments, 0, count);
         return topPayments;
@@ -98,7 +101,6 @@ export default class PaymentService {
         if (!payments || payments.length == 0)
             return 0;
 
-        const monthCount = this.getMonthCountFromPayments(payments);
         return _.meanBy(payments, s => s.amount);
     }
 

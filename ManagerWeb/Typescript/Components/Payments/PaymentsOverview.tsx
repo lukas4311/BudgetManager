@@ -24,6 +24,7 @@ import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
+import ScoreList from '../../Utils/ScoreList';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[];
@@ -45,6 +46,7 @@ interface PaymentsOverviewState {
     averageMonthExpense: number;
     averageMonthRevenue: number;
     averageMonthInvestments: number;
+    topPayments: PaymentModel[];
 }
 
 interface DateFilter {
@@ -84,7 +86,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0
+            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -133,9 +135,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
             const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
             const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
+            const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
 
             this.setState({
-                payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] },
+                payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] }, topPayments,
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                 radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
             });
@@ -357,6 +360,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </ComponentPanel>
                                 </div>
+                            </div>
+                            <div className="flex flex-row">
+                                <ComponentPanel classStyle="w-1/2 h-80">
+                                    <ScoreList models={this.state.topPayments.map(m => ({ score: m.amount, title: m.name }))} />
+                                </ComponentPanel>
                             </div>
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>

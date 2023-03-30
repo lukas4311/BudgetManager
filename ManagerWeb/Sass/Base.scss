@@ -184,3 +184,19 @@
     -moz-box-shadow: -12px 7px 50px 0px rgba(0, 0, 0, 0.75);
     box-shadow: -12px 7px 50px 0px rgba(0, 0, 0, 0.75);
 }
+
+$shadowSize: 0px 7px 20px 0px rgba(0, 0, 0, 0.75);
+$shadowSizeHover: 0px 7px 20px 0px #e03d15;
+
+.boxShadowHover {
+    transition: ease 0.5;
+    -webkit-box-shadow: $shadowSize;
+    -moz-box-shadow: $shadowSize;
+    box-shadow: $shadowSize;
+
+    &:hover {
+        -webkit-box-shadow: $shadowSizeHover;
+        -moz-box-shadow: $shadowSizeHover;
+        box-shadow: $shadowSizeHover;
+    }
+}
