@@ -67,9 +67,9 @@ const theme = createMuiTheme({
 const defaultSelectedBankAccount = -1;
 
 export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewState>{
-    private defaultBankOption: string = "Vše";
+    private defaultBankOption: string = "All";
     private filters: DateFilter[];
-    private apiErrorMessage: string = "Při získnání data došlo k chybě.";
+    private apiErrorMessage: string = "An error occurred while retrieving the data.";
     private chartDataProcessor: ChartDataProcessor;
     private bankAccountApi: BankAccountApiInterface;
     private paymentService: PaymentService;
