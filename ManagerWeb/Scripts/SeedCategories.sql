@@ -13,17 +13,17 @@ INSERT INTO #Categories
 VALUES
 	(
 		'Food'
-		,'Jídlo'
+		,'Food'
 		,'food'
 	),
 	(
 		 'Shop'
-		,'Nákupy'
+		,'Shop'
 		,'shop'
 	),
 	(
 		 'Transport'
-		,'Doprava'
+		,'Transport'
 		,'bus'
 	),
 	(
@@ -33,102 +33,102 @@ VALUES
 	),
 	(
 		 'Housing'
-		,'Bydlení'
+		,'Housing'
 		,'realestate'
 	),
 	(
 		 'Bills'
-		,'Finanèní úèty'
+		,'Bills'
 		,'bill'
 	),
 	(
 		 'Travel'
-		,'Cestování'
+		,'Travel'
 		,'travel'
 	),
 	(
 		 'Fun'
-		,'Zábava'
+		,'Fun'
 		,'fun'
 	),
 	(
 		 'Culture'
-		,'Kultura'
+		,'Culture'
 		,'theatre'
 	),
 	(
 		 'Invetsment'
-		,'Investice'
+		,'Invetsment'
 		,'cash'
 	),
 	(
 		 'Phone'
-		,'Mobil'
+		,'Phone'
 		,'mobile'
 	),
 	(
 		 'Network'
-		,'Internet'
+		,'Network'
 		,'net'
 	),
 	(
 		'Tools',
-		'Náøadí',
+		'Tools',
 		'tools'
 	),
 	(
 		'Medication',
-		'Léky',
+		'Medication',
 		'medication'
 	),
 	(
 		'Pets',
-		'Domácí mazlíèci',
+		'Pets',
 		'pets'
 	),
 	(
 		'Kids',
-		'Dìti',
+		'Kids',
 		'kids'
 	),
 	(
 		'Education',
-		'Vzdìlání',
+		'Education',
 		'education'
 	),
 	(
 		'Insurance',
-		'Pojistka',
+		'Insurance',
 		'insurance'
 	),
 	(
 		 'Salary'
-		,'Mzda'
+		,'Salary'
 		,'salary'
 	),
 	(
 		 'Sale'
-		,'Prodej'
+		,'Sale'
 		,'sale'
 	),
 	(
 		'Alimony'
-		,'Alimenty'
+		,'Alimony'
 		,'alimony'
 	),
 	(
 		'Dividents',
-		'Dividendy',
+		'Dividents',
 		'dividents'
 	),
 	(
 		'Games',
-		'Hry',
+		'Games',
 		'games'
 	),
 	(
 		'Presents',
-		'Dárky',
+		'Presents',
 		'presents'
 	)
 

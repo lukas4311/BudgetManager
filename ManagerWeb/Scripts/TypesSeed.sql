@@ -6,13 +6,13 @@ INSERT INTO dbo.PaymentType
 VALUES
 (
 	 'Revenue'
-	,'Příjem'
+	,'Revenue'
 ),
 (
 	 'Expense'
-	,'Výdej'
+	,'Expense'
 ),
 (
 	 'Transfer'
-	,'Převod'
+	,'Transfer'
 )
