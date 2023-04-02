@@ -9,7 +9,6 @@ from Services.YahooService import YahooService
 from SourceFiles.stockList import stockToDownload
 from configManager import token, organizaiton
 from secret import alphaVantageToken, influxDbUrl
-import pytz
 
 log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
