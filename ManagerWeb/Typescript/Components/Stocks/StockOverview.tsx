@@ -161,7 +161,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
 
     private deleteTrade = async (id: number): Promise<void> => {
-        await this.stockApi.stockStockTradeHistoryDelete({ body: id });
+        await this.stockService.deleteStockTradeHistory(id);
         await this.loadStockData();
     }
 
@@ -193,10 +193,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private showCompanyProfile = async (companyTicker: string) => {
-        const companyProfile = await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
+        const companyProfile = await this.stockService.getCompanyProfile(companyTicker);
         const last5YearDate = moment(new Date()).subtract(5, "y").toDate();
         const companyPrice = await this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
-        const companyTrades = await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: companyTicker });
+        const companyTrades = await this.stockService.getStockTradeHistoryByTicker(companyTicker);
         const tradesViewModel = companyTrades.map(c => StockViewModel.mapFromDataModel(c));
         let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
 
