@@ -2,7 +2,7 @@ import * as H from 'history';
 import _ from 'lodash';
 import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
-import { InterestRate, StockPrice, StockTickerModel } from '../ApiClient/Main/models';
+import { InterestRate, StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClient/Main/models';
 import ApiUrls from '../Model/Setting/ApiUrl';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import ApiClientFactory from "../Utils/ApiClientFactory";
@@ -75,6 +75,32 @@ export default class StockService {
         }
 
         return tickersWithPrice;
+    }
+
+    public async updateStockTradeHistory(data: StockViewModel) {
+        const stockHistoryTrade: StockTradeHistoryModel = {
+            id: data.id,
+            currencySymbolId: data.currencySymbolId,
+            stockTickerId: data.stockTickerId,
+            tradeSize: data.tradeSize,
+            tradeTimeStamp: new Date(data.tradeTimeStamp),
+            tradeValue: data.tradeValue
+        };
+
+        await this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+    }
+
+    public async createStockTradeHistory(data: StockViewModel) {
+        const stockHistoryTrade: StockTradeHistoryModel = {
+            id: data.id,
+            currencySymbolId: data.currencySymbolId,
+            stockTickerId: data.stockTickerId,
+            tradeSize: data.tradeSize,
+            tradeTimeStamp: new Date(data.tradeTimeStamp),
+            tradeValue: data.tradeValue
+        };
+
+        await this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
     }
 }
 

@@ -105,20 +105,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
     }
 
-    private saveStockTrade = async (data: StockViewModel) => {
-        const stockHistoryTrade: StockTradeHistoryModel = {
-            id: data.id,
-            currencySymbolId: data.currencySymbolId,
-            stockTickerId: data.stockTickerId,
-            tradeSize: data.tradeSize,
-            tradeTimeStamp: new Date(data.tradeTimeStamp),
-            tradeValue: data.tradeValue
-        };
-
-        if (data.id)
-            await this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+    private saveStockTrade = async (stockViewModel: StockViewModel) => {
+        if (stockViewModel.id)
+            await this.stockService.updateStockTradeHistory(stockViewModel);
         else
-            await this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+            await this.stockService.createStockTradeHistory(stockViewModel);
 
         this.setState({ openedForm: false, selectedModel: undefined });
         this.loadStockData();
