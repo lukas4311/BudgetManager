@@ -102,6 +102,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+        // TODO: return code property
         this.categories = await this.paymentService.getPaymentCategories();
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
         await this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
@@ -252,7 +253,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let income = _.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
         let saved = income - expenses;
         let savedPct = income == 0 ? 0 : (saved / income) * 100;
-        let categoryInvested = this.categories?.filter(a => a.name == "Investice")[0];
+        // TODO: fix problem with name instead of code
+        let categoryInvested = this.categories?.filter(a => a.name == "Invetsment")[0];
         let invested = 0;
         let investedPct = 0;
 

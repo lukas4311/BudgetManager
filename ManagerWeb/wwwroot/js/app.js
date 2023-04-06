@@ -9192,6 +9192,7 @@ class PaymentsOverview extends React.Component {
             let bankAccounts = [];
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
+            // TODO: return code property
             this.categories = yield this.paymentService.getPaymentCategories();
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
             yield this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
@@ -9233,7 +9234,8 @@ class PaymentsOverview extends React.Component {
         let income = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
         let saved = income - expenses;
         let savedPct = income == 0 ? 0 : (saved / income) * 100;
-        let categoryInvested = (_a = this.categories) === null || _a === void 0 ? void 0 : _a.filter(a => a.name == "Investice")[0];
+        // TODO: fix problem with name instead of code
+        let categoryInvested = (_a = this.categories) === null || _a === void 0 ? void 0 : _a.filter(a => a.name == "Invetsment")[0];
         let invested = 0;
         let investedPct = 0;
         if (categoryInvested) {
@@ -9501,19 +9503,11 @@ class StockOverview extends react_1.default.Component {
             }
             this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
         });
-        this.saveStockTrade = (data) => __awaiter(this, void 0, void 0, function* () {
-            const stockHistoryTrade = {
-                id: data.id,
-                currencySymbolId: data.currencySymbolId,
-                stockTickerId: data.stockTickerId,
-                tradeSize: data.tradeSize,
-                tradeTimeStamp: new Date(data.tradeTimeStamp),
-                tradeValue: data.tradeValue
-            };
-            if (data.id)
-                yield this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+        this.saveStockTrade = (stockViewModel) => __awaiter(this, void 0, void 0, function* () {
+            if (stockViewModel.id)
+                yield this.stockService.updateStockTradeHistory(stockViewModel);
             else
-                yield this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+                yield this.stockService.createStockTradeHistory(stockViewModel);
             this.setState({ openedForm: false, selectedModel: undefined });
             this.loadStockData();
         });
@@ -9554,7 +9548,7 @@ class StockOverview extends react_1.default.Component {
         this.showDetail = (selectedModel) => this.setState({ openedForm: true, selectedModel: selectedModel, formKey: Date.now() });
         this.handleClose = () => this.setState({ openedForm: false, formKey: Date.now(), selectedModel: undefined });
         this.deleteTrade = (id) => __awaiter(this, void 0, void 0, function* () {
-            yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
+            yield this.stockService.deleteStockTradeHistory(id);
             yield this.loadStockData();
         });
         this.renderChart = (ticker) => {
@@ -9576,10 +9570,10 @@ class StockOverview extends react_1.default.Component {
             return profit;
         };
         this.showCompanyProfile = (companyTicker) => __awaiter(this, void 0, void 0, function* () {
-            const companyProfile = yield this.stockApi.stockStockTickerCompanyProfileGet({ ticker: companyTicker });
+            const companyProfile = yield this.stockService.getCompanyProfile(companyTicker);
             const last5YearDate = (0, moment_1.default)(new Date()).subtract(5, "y").toDate();
             const companyPrice = yield this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
-            const companyTrades = yield this.stockApi.stockStockTradeHistoryTickerGet({ ticker: companyTicker });
+            const companyTrades = yield this.stockService.getStockTradeHistoryByTicker(companyTicker);
             const tradesViewModel = companyTrades.map(c => StockViewModel_1.StockViewModel.mapFromDataModel(c));
             let complexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
             if (companyProfile != undefined) {
@@ -11191,16 +11185,6 @@ class StockService {
         this.getStockTickers = () => __awaiter(this, void 0, void 0, function* () {
             return yield this.stockApi.stockStockTickerGet();
         });
-        this.getStockTradeHistory = () => __awaiter(this, void 0, void 0, function* () {
-            const tickers = yield this.getStockTickers();
-            const stockTrades = yield this.stockApi.stockStockTradeHistoryGet();
-            return stockTrades.map(s => {
-                var _a, _b;
-                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
-                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
-                return viewModel;
-            });
-        });
         this.getGroupedTradeHistory = () => __awaiter(this, void 0, void 0, function* () {
             const stocks = yield this.getStockTradeHistory();
             const tickers = yield this.getStockTickers();
@@ -11225,6 +11209,23 @@ class StockService {
         const apiFactory = new ApiClientFactory_1.default(history);
         this.stockApi = apiFactory.getClientWithSetting(apis_1.StockApi, setting);
     }
+    getStockTradeHistory() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const tickers = yield this.getStockTickers();
+            const stockTrades = yield this.stockApi.stockStockTradeHistoryGet();
+            return stockTrades.map(s => {
+                var _a, _b;
+                let viewModel = StockViewModel_1.StockViewModel.mapFromDataModel(s);
+                viewModel.stockTicker = (_b = (_a = lodash_1.default.first(tickers.filter(f => f.id == viewModel.stockTickerId))) === null || _a === void 0 ? void 0 : _a.ticker) !== null && _b !== void 0 ? _b : "undefined";
+                return viewModel;
+            });
+        });
+    }
+    getStockTradeHistoryByTicker(ticker) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
+        });
+    }
     getStockPriceHistory(ticker, from) {
         return __awaiter(this, void 0, void 0, function* () {
             const fromDate = from !== null && from !== void 0 ? from : (0, moment_1.default)(new Date()).subtract(30, "d").toDate();
@@ -11240,6 +11241,42 @@ class StockService {
                 tickersWithPrice.push({ ticker: ticker, price: priceHistory });
             }
             return tickersWithPrice;
+        });
+    }
+    updateStockTradeHistory(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stockHistoryTrade = {
+                id: data.id,
+                currencySymbolId: data.currencySymbolId,
+                stockTickerId: data.stockTickerId,
+                tradeSize: data.tradeSize,
+                tradeTimeStamp: new Date(data.tradeTimeStamp),
+                tradeValue: data.tradeValue
+            };
+            yield this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+        });
+    }
+    createStockTradeHistory(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const stockHistoryTrade = {
+                id: data.id,
+                currencySymbolId: data.currencySymbolId,
+                stockTickerId: data.stockTickerId,
+                tradeSize: data.tradeSize,
+                tradeTimeStamp: new Date(data.tradeTimeStamp),
+                tradeValue: data.tradeValue
+            };
+            yield this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+        });
+    }
+    deleteStockTradeHistory(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.stockApi.stockStockTradeHistoryDelete({ body: id });
+        });
+    }
+    getCompanyProfile(ticker) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker });
         });
     }
 }
