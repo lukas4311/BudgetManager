@@ -7094,7 +7094,7 @@ class LineChartSettingManager {
                 legendOffset: -12,
             },
             colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false,
-            pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, enableSlices: "y",
+            pointSize: 7, useMesh: true, enableArea: false, areaOpacity: 0.5, enableSlices: "x",
             sliceTooltip: ({ slice }) => {
                 return (React.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (React.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
                     React.createElement("span", null, point.data.xFormatted),

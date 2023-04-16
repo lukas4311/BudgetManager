@@ -39,7 +39,7 @@ export class LineChartSettingManager {
                 legendOffset: -12,
             },
             colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false,
-            pointSize: 7, useMesh: true, enableArea: true, areaOpacity: 0.5, enableSlices: "y",
+            pointSize: 7, useMesh: true, enableArea: false, areaOpacity: 0.5, enableSlices: "x",
             sliceTooltip: ({ slice }) => {
                 return (
                     <div style={{ background: 'black', padding: '9px 12px' }}>
