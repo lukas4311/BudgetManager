@@ -8,7 +8,7 @@ import { RadarChartData } from "../Model/RadarChartData";
 import { BankBalanceModel, PaymentModel } from "../ApiClient/Main";
 import _ from "lodash";
 
-export class ChartDataProcessor{
+export class ChartDataProcessor {
     dataLoader: DataLoader;
 
     constructor() {
@@ -35,16 +35,27 @@ export class ChartDataProcessor{
     }
 
     public prepareExpenseChartData(payments: Array<PaymentModel>): LineChartData[] {
-        let expenseSum = 0;
-        let expenses: LineChartData[] = [];
-        payments.filter(a => a.paymentTypeCode == 'Expense')
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Expense');
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+
+    public prepareExpenseWithoutInvestmentsChartData(payments: Array<PaymentModel>): LineChartData[] {
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Expense' &&
+            a.paymentCategoryCode != "Invetsment");
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+
+    private mapPaymentsToLinearChartStructure(payments: Array<PaymentModel>): LineChartData[] {
+        let paymentsSum = 0;
+        let mappedPayments: LineChartData[] = [];
+        payments
             .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
-                expenseSum += a.amount;
-                expenses.push({ x: moment(a.date).format("YYYY-MM-DD"), y: expenseSum });
+                paymentsSum += a.amount;
+                mappedPayments.push({ x: moment(a.date).format("YYYY-MM-DD"), y: paymentsSum });
             });
 
-        return expenses;
+        return mappedPayments;
     }
 
     public async prepareBalanceChartData(payments: Array<PaymentModel>, accountsBalance: BankBalanceModel[], selectedBankAccount: number): Promise<LineChartData[]> {

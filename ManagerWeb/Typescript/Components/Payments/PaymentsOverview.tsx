@@ -120,6 +120,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private setPayments = async (payments: Array<PaymentModel>) => {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+            const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
             const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
             let dateTo: string;
@@ -139,7 +140,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
 
             this.setState({
-                payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] }, topPayments,
+                payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments }] }, topPayments,
                 balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                 radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
             });

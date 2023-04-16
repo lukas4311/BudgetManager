@@ -9088,6 +9088,7 @@ class PaymentsOverview extends React.Component {
         this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
             if (payments != undefined) {
                 const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+                const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
                 let dateTo;
@@ -9104,7 +9105,7 @@ class PaymentsOverview extends React.Component {
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
                 const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
                 this.setState({
-                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }] }, topPayments,
+                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments }] }, topPayments,
                     balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
                 });
@@ -10443,15 +10444,24 @@ class ChartDataProcessor {
         return calendarChartData;
     }
     prepareExpenseChartData(payments) {
-        let expenseSum = 0;
-        let expenses = [];
-        payments.filter(a => a.paymentTypeCode == 'Expense')
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Expense');
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+    prepareExpenseWithoutInvestmentsChartData(payments) {
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Expense' &&
+            a.paymentCategoryCode != "Invetsment");
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+    mapPaymentsToLinearChartStructure(payments) {
+        let paymentsSum = 0;
+        let mappedPayments = [];
+        payments
             .sort((a, b) => (0, moment_1.default)(a.date).format("YYYY-MM-DD") > (0, moment_1.default)(b.date).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
-            expenseSum += a.amount;
-            expenses.push({ x: (0, moment_1.default)(a.date).format("YYYY-MM-DD"), y: expenseSum });
+            paymentsSum += a.amount;
+            mappedPayments.push({ x: (0, moment_1.default)(a.date).format("YYYY-MM-DD"), y: paymentsSum });
         });
-        return expenses;
+        return mappedPayments;
     }
     prepareBalanceChartData(payments, accountsBalance, selectedBankAccount) {
         return __awaiter(this, void 0, void 0, function* () {
