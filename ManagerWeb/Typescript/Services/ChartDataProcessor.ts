@@ -45,6 +45,11 @@ export class ChartDataProcessor {
         return this.mapPaymentsToLinearChartStructure(filteredPayments);
     }
 
+    public prepareRevenuesChartData(payments: Array<PaymentModel>): LineChartData[] {
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Revenue');
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+
     private mapPaymentsToLinearChartStructure(payments: Array<PaymentModel>): LineChartData[] {
         let paymentsSum = 0;
         let mappedPayments: LineChartData[] = [];

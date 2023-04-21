@@ -9089,6 +9089,7 @@ class PaymentsOverview extends React.Component {
             if (payments != undefined) {
                 const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
                 const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
+                const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
                 let dateTo;
@@ -9105,8 +9106,9 @@ class PaymentsOverview extends React.Component {
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
                 const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
                 this.setState({
-                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments }] }, topPayments,
-                    balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
+                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments },
+                            { id: "Revenue", data: revenueChartData }] }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
+                    calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
                 });
             }
@@ -10450,6 +10452,10 @@ class ChartDataProcessor {
     prepareExpenseWithoutInvestmentsChartData(payments) {
         let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Expense' &&
             a.paymentCategoryCode != "Invetsment");
+        return this.mapPaymentsToLinearChartStructure(filteredPayments);
+    }
+    prepareRevenuesChartData(payments) {
+        let filteredPayments = payments.filter(a => a.paymentTypeCode == 'Revenue');
         return this.mapPaymentsToLinearChartStructure(filteredPayments);
     }
     mapPaymentsToLinearChartStructure(payments) {
