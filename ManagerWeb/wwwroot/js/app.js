@@ -9106,8 +9106,10 @@ class PaymentsOverview extends React.Component {
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
                 const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
                 this.setState({
-                    payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments },
-                            { id: "Revenue", data: revenueChartData }] }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
+                    payments: fromLastOrderder, expenseChartData: {
+                        dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments },
+                            { id: "Revenue", data: revenueChartData }]
+                    }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                     calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
                 });
@@ -9165,9 +9167,12 @@ class PaymentsOverview extends React.Component {
                 React.createElement("span", { className: "ml-auto my-1 w-2/12 categoryIcon fill-white", onClick: e => this.clonePayment(e, p.id) }, iconsData.copy)));
         };
         this.getExpensesMaxValue = () => {
-            var _a, _b;
+            var _a;
             let maxValue = 0;
-            const sourceData = (_b = (_a = this.state.expenseChartData) === null || _a === void 0 ? void 0 : _a.dataSets[0]) === null || _b === void 0 ? void 0 : _b.data;
+            let sourceData = [];
+            const data = (_a = this.state.expenseChartData) === null || _a === void 0 ? void 0 : _a.dataSets;
+            for (let dataSet of data)
+                sourceData = sourceData.concat(...dataSet.data);
             if (!sourceData || sourceData.length == 0)
                 return maxValue;
             maxValue = lodash_1.default.maxBy(sourceData, o => o.y).y;

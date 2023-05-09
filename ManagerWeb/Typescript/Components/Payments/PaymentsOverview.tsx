@@ -25,6 +25,8 @@ import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
 import ScoreList from '../../Utils/ScoreList';
+import { LineChartDataSets } from '../../Model/LineChartDataSets';
+import { LineChartData } from '../../Model/LineChartData';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[];
@@ -141,8 +143,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
 
             this.setState({
-                payments: fromLastOrderder, expenseChartData: { dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments }, 
-                { id: "Revenue", data: revenueChartData }] }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] }, 
+                payments: fromLastOrderder, expenseChartData: {
+                    dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments },
+                    { id: "Revenue", data: revenueChartData }]
+                }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                 calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                 radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
             });
@@ -242,7 +246,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
     private getExpensesMaxValue = () => {
         let maxValue = 0;
-        const sourceData = this.state.expenseChartData?.dataSets[0]?.data;
+        let sourceData: LineChartData[] = [];
+        const data = this.state.expenseChartData?.dataSets;
+
+        for (let dataSet of data)
+            sourceData = sourceData.concat(...dataSet.data);
 
         if (!sourceData || sourceData.length == 0)
             return maxValue;
