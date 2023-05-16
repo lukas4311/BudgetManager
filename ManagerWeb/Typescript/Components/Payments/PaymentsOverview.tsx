@@ -122,7 +122,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private setPayments = async (payments: Array<PaymentModel>) => {
         if (payments != undefined) {
             const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
-            console.log("🚀 ~ file: PaymentsOverview.tsx:125 ~ PaymentsOverview ~ setPayments= ~ expenses:", expenses)
             const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
             const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
@@ -147,8 +146,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 payments: fromLastOrderder, expenseChartData: {
                     dataSets: [
                         { id: 'Expense', data: expenses },
-                        // { id: "Expense wihtou investment", data: expensesWithoutInvestments },
-                        // { id: "Revenue", data: revenueChartData }
+                        { id: "Expense wihtou investment", data: expensesWithoutInvestments },
+                        { id: "Revenue", data: revenueChartData }
                     ]
                 }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                 calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
