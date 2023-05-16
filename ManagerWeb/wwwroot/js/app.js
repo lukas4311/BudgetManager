@@ -9088,6 +9088,7 @@ class PaymentsOverview extends React.Component {
         this.setPayments = (payments) => __awaiter(this, void 0, void 0, function* () {
             if (payments != undefined) {
                 const expenses = this.chartDataProcessor.prepareExpenseChartData(payments);
+                console.log("🚀 ~ file: PaymentsOverview.tsx:125 ~ PaymentsOverview ~ setPayments= ~ expenses:", expenses);
                 const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
                 const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
@@ -9107,8 +9108,11 @@ class PaymentsOverview extends React.Component {
                 const topPayments = this.paymentService.getTopPaymentsByAmount(payments, 5, "Expense");
                 this.setState({
                     payments: fromLastOrderder, expenseChartData: {
-                        dataSets: [{ id: 'Expense', data: expenses }, { id: "Expense wihtou investment", data: expensesWithoutInvestments },
-                            { id: "Revenue", data: revenueChartData }]
+                        dataSets: [
+                            { id: 'Expense', data: expenses },
+                            // { id: "Expense wihtou investment", data: expensesWithoutInvestments },
+                            // { id: "Revenue", data: revenueChartData }
+                        ]
                     }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                     calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
                     radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
@@ -10466,11 +10470,22 @@ class ChartDataProcessor {
     mapPaymentsToLinearChartStructure(payments) {
         let paymentsSum = 0;
         let mappedPayments = [];
-        payments
-            .sort((a, b) => (0, moment_1.default)(a.date).format("YYYY-MM-DD") > (0, moment_1.default)(b.date).format("YYYY-MM-DD") ? 1 : -1)
+        const groupedData = lodash_1.default.chain(payments)
+            .groupBy((model) => (0, moment_1.default)(model.date).format("YYYY-MM-DD"))
+            .reduce((result, models, dateStr) => {
+            var _a;
+            const totalValue = lodash_1.default.sumBy(models, 'amount');
+            const lastCumulativeSum = ((_a = lodash_1.default.last(result)) === null || _a === void 0 ? void 0 : _a.cumulativeSum) || 0;
+            const cumulativeSum = lastCumulativeSum + totalValue;
+            result.push({ paymentDate: dateStr, totalValue, cumulativeSum });
+            return result;
+        }, [])
+            .value();
+        groupedData
+            .sort((a, b) => (0, moment_1.default)(a.paymentDate).format("YYYY-MM-DD") > (0, moment_1.default)(b.paymentDate).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
-            paymentsSum += a.amount;
-            mappedPayments.push({ x: (0, moment_1.default)(a.date).format("YYYY-MM-DD"), y: paymentsSum });
+            paymentsSum += a.cumulativeSum;
+            mappedPayments.push({ x: (0, moment_1.default)(a.paymentDate).format("YYYY-MM-DD"), y: paymentsSum });
         });
         return mappedPayments;
     }
@@ -10510,6 +10525,10 @@ class ChartDataProcessor {
     }
 }
 exports.ChartDataProcessor = ChartDataProcessor;
+class GroupedData {
+}
+class GroupedCumulativeData {
+}
 
 
 /***/ }),

@@ -53,11 +53,23 @@ export class ChartDataProcessor {
     private mapPaymentsToLinearChartStructure(payments: Array<PaymentModel>): LineChartData[] {
         let paymentsSum = 0;
         let mappedPayments: LineChartData[] = [];
-        payments
-            .sort((a, b) => moment(a.date).format("YYYY-MM-DD") > moment(b.date).format("YYYY-MM-DD") ? 1 : -1)
+
+        const groupedData = _.chain(payments)
+            .groupBy((model) => moment(model.date).format("YYYY-MM-DD"))
+            .reduce((result: GroupedCumulativeData[], models, dateStr) => {
+                const totalValue = _.sumBy(models, 'amount');
+                const lastCumulativeSum = _.last(result)?.cumulativeSum || 0;
+                const cumulativeSum = lastCumulativeSum + totalValue;
+                result.push({ paymentDate: dateStr, totalValue, cumulativeSum });
+                return result;
+            }, [])
+            .value()
+
+        groupedData
+            .sort((a, b) => moment(a.paymentDate).format("YYYY-MM-DD") > moment(b.paymentDate).format("YYYY-MM-DD") ? 1 : -1)
             .forEach(a => {
-                paymentsSum += a.amount;
-                mappedPayments.push({ x: moment(a.date).format("YYYY-MM-DD"), y: paymentsSum });
+                paymentsSum += a.cumulativeSum;
+                mappedPayments.push({ x: moment(a.paymentDate).format("YYYY-MM-DD"), y: paymentsSum });
             });
 
         return mappedPayments;
@@ -101,3 +113,13 @@ export class ChartDataProcessor {
     }
 }
 
+class GroupedData {
+    paymentDate: string;
+    totalValue: number;
+}
+
+class GroupedCumulativeData {
+    paymentDate: string;
+    totalValue: number;
+    cumulativeSum: number;
+}
