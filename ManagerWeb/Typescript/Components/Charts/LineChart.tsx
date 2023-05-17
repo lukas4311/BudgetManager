@@ -12,8 +12,7 @@ function LineChart({ dataSets, chartProps }: LineChartProps) {
     chartProps.data = dataSets;
 
   return (
-    <ResponsiveLine margin={{ top: 50, right: 50, bottom: 50, left: 100 }} {...chartProps}
-    />
+    <ResponsiveLine margin={{ top: 50, right: 50, bottom: 50, left: 100 }} {...chartProps} />
   )
 }
 
