@@ -27,7 +27,7 @@ function RadarChart({ dataSets }: any) {
       dotLabelYOffset={-17}
       colors={{ scheme: 'category10' }}
       fillOpacity={0.75}
-      // blendMode="normal"
+      blendMode="normal"
       animate={false}
       // motionStiffness={85}
       // motionDamping={15}

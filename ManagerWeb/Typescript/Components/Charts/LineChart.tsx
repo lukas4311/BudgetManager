@@ -3,7 +3,6 @@ import React from 'react'
 import { LineChartProps } from '../../Model/LineChartProps';
 
 function LineChart({ dataSets, chartProps }: LineChartProps) {
-  console.log("🚀 ~ file: LineChart.tsx:6 ~ LineChart ~ dataSets:", dataSets)
   let allYData: number[] = [];
   dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
 
