@@ -9092,6 +9092,7 @@ class PaymentsOverview extends React.Component {
                 const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+                console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ radarData:", radarData);
                 let dateTo;
                 if (this.state.selectedFilter != undefined)
                     dateTo = ((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
@@ -9259,7 +9260,7 @@ class PaymentsOverview extends React.Component {
                     React.createElement(React.Fragment, null,
                         this.showErrorMessage(),
                         React.createElement("div", { className: "flex flex-row" },
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-7/12" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
                                 React.createElement(React.Fragment, null,
                                     React.createElement("div", { className: "py-4 flex" },
                                         React.createElement("h2", { className: "text-xl ml-12" }, "Income/expense"),
@@ -9281,18 +9282,8 @@ class PaymentsOverview extends React.Component {
                                         React.createElement(DateRangeComponent_1.default, { datesFilledHandler: this.rangeDatesHandler })),
                                     React.createElement("div", { className: "pb-10 h-64 overflow-y-scroll pr-4" },
                                         React.createElement(BaseList_1.BaseList, { data: this.state.payments, template: this.renderTemplate, itemClickHandler: this.paymentEdit })))),
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-5/12 calendar" },
-                                React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
-                        React.createElement("div", { className: "flex flex-row" },
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                                React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
-                                React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-                        React.createElement("div", { className: "flex flex-row" },
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
-                            React.createElement("div", { className: 'w-1/2 h-80 flex flex-row' },
-                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                            React.createElement("div", { className: "w-1/2 flex flex-row" },
+                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
                                     React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
                                         React.createElement("div", null,
                                             React.createElement("p", null,
@@ -9322,7 +9313,7 @@ class PaymentsOverview extends React.Component {
                                                 " (", investedPct === null || investedPct === void 0 ? void 0 :
                                                 investedPct.toFixed(1),
                                                 "%)")))),
-                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
                                     React.createElement("div", { className: 'flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full' },
                                         React.createElement("div", null,
                                             React.createElement("p", null,
@@ -9339,6 +9330,16 @@ class PaymentsOverview extends React.Component {
                                             React.createElement("p", null,
                                                 "Month average investments: ",
                                                 this.state.averageMonthInvestments.toFixed(0))))))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
+                                React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
+                        React.createElement("div", { className: "flex flex-row" },
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80 " },
+                                React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                                 React.createElement(ScoreList_1.default, { models: this.state.topPayments.map(m => ({ score: m.amount, title: m.name })) }))),

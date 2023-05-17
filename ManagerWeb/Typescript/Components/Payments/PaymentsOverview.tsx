@@ -126,6 +126,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
             const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
+            console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ radarData:", radarData)
             let dateTo: string;
 
             if (this.state.selectedFilter != undefined)
@@ -284,7 +285,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <React.Fragment>
                             {this.showErrorMessage()}
                             <div className="flex flex-row">
-                                <ComponentPanel classStyle="w-7/12">
+                                <ComponentPanel classStyle="w-1/2">
                                     <>
                                         <div className="py-4 flex">
                                             <h2 className="text-xl ml-12">Income/expense</h2>
@@ -326,24 +327,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </>
                                 </ComponentPanel>
-                                <ComponentPanel classStyle="w-5/12 calendar">
-                                    <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
-                                </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row">
-                                <ComponentPanel classStyle="w-1/2 h-80">
-                                    <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25)}></LineChart>
-                                </ComponentPanel>
-                                <ComponentPanel classStyle="w-1/2 calendar text-black h-80">
-                                    <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
-                                </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row">
-                                <ComponentPanel classStyle="w-1/2 h-80">
-                                    <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
-                                </ComponentPanel>
-                                <div className='w-1/2 h-80 flex flex-row'>
-                                    <ComponentPanel classStyle="w-1/2 h-80">
+                                <div className="w-1/2 flex flex-row">
+                                    <ComponentPanel classStyle="w-1/2">
                                         <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
                                             <div>
                                                 <p>Totaly earned: {income}</p>
@@ -361,7 +346,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             </div>
                                         </div>
                                     </ComponentPanel>
-                                    <ComponentPanel classStyle="w-1/2 h-80">
+                                    <ComponentPanel classStyle="w-1/2">
                                         <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
                                             <div>
                                                 <p>Month average expenses: {this.state.averageMonthExpense.toFixed(0)}</p>
@@ -376,6 +361,22 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </ComponentPanel>
                                 </div>
+                            </div>
+                            <div className="flex flex-row">
+                                <ComponentPanel classStyle="w-1/2 h-80">
+                                    <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25)}></LineChart>
+                                </ComponentPanel>
+                                <ComponentPanel classStyle="w-1/2 calendar text-black h-80">
+                                    <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
+                                </ComponentPanel>
+                            </div>
+                            <div className="flex flex-row">
+                                <ComponentPanel classStyle="w-1/2 h-80">
+                                    <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
+                                </ComponentPanel>
+                                <ComponentPanel classStyle="w-1/2 h-80 ">
+                                    <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
+                                </ComponentPanel>
                             </div>
                             <div className="flex flex-row">
                                 <ComponentPanel classStyle="w-1/2 h-80">
