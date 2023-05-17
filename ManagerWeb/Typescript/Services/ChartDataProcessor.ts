@@ -51,28 +51,24 @@ export class ChartDataProcessor {
     }
 
     private mapPaymentsToLinearChartStructure(payments: Array<PaymentModel>): LineChartData[] {
-        let paymentsSum = 0;
-        let mappedPayments: LineChartData[] = [];
-
-        const groupedData = _.chain(payments)
+        const groupedData = _(payments)
             .groupBy((model) => moment(model.date).format("YYYY-MM-DD"))
-            .reduce((result: GroupedCumulativeData[], models, dateStr) => {
-                const totalValue = _.sumBy(models, 'amount');
-                const lastCumulativeSum = _.last(result)?.cumulativeSum || 0;
-                const cumulativeSum = lastCumulativeSum + totalValue;
-                result.push({ paymentDate: dateStr, totalValue, cumulativeSum });
-                return result;
-            }, [])
-            .value()
+            .map((models, dateStr) => ({
+                paymentDate: new Date(dateStr),
+                totalValue: _.sumBy(models, 'amount'),
+            }))
+            .orderBy('paymentDate')
+            .value();
 
-        groupedData
-            .sort((a, b) => moment(a.paymentDate).format("YYYY-MM-DD") > moment(b.paymentDate).format("YYYY-MM-DD") ? 1 : -1)
-            .forEach(a => {
-                paymentsSum += a.cumulativeSum;
-                mappedPayments.push({ x: moment(a.paymentDate).format("YYYY-MM-DD"), y: paymentsSum });
-            });
+        let cumulativeSum = 0;
+        const result: GroupedCumulativeData[] = [];
 
-        return mappedPayments;
+        for (const group of groupedData) {
+            cumulativeSum += group.totalValue;
+            result.push({ paymentDate: group.paymentDate, totalValue: group.totalValue, cumulativeSum });
+        }
+
+        return result.map(d => ({ x: moment(d.paymentDate).format("YYYY-MM-DD"), y: d.cumulativeSum }));
     }
 
     public async prepareBalanceChartData(payments: Array<PaymentModel>, accountsBalance: BankBalanceModel[], selectedBankAccount: number): Promise<LineChartData[]> {
@@ -119,7 +115,7 @@ class GroupedData {
 }
 
 class GroupedCumulativeData {
-    paymentDate: string;
+    paymentDate: Date;
     totalValue: number;
     cumulativeSum: number;
 }

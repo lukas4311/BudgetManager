@@ -7017,6 +7017,7 @@ exports.LineChart = void 0;
 const line_1 = __webpack_require__(/*! @nivo/line */ "./node_modules/@nivo/line/dist/nivo-line.es.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 function LineChart({ dataSets, chartProps }) {
+    console.log("🚀 ~ file: LineChart.tsx:6 ~ LineChart ~ dataSets:", dataSets);
     let allYData = [];
     dataSets.map(a => a.data.map(c => c.y)).forEach(c => allYData = allYData.concat(c));
     if (chartProps == undefined)
@@ -7094,7 +7095,7 @@ class LineChartSettingManager {
                 legendOffset: -12,
             },
             colors: { scheme: 'set1' }, curve: 'linear', enablePoints: false, enablePointLabel: false,
-            pointSize: 7, useMesh: true, enableArea: false, areaOpacity: 0.5, enableSlices: "x",
+            pointSize: 7, useMesh: true, enableArea: false, areaOpacity: 0.5, enableSlices: false, isInteractive: false,
             sliceTooltip: ({ slice }) => {
                 return (React.createElement("div", { style: { background: 'black', padding: '9px 12px' } }, slice.points.map(point => (React.createElement("div", { key: point.id, style: { color: 'white', padding: '3px 0' } },
                     React.createElement("span", null, point.data.xFormatted),
@@ -10467,26 +10468,21 @@ class ChartDataProcessor {
         return this.mapPaymentsToLinearChartStructure(filteredPayments);
     }
     mapPaymentsToLinearChartStructure(payments) {
-        let paymentsSum = 0;
-        let mappedPayments = [];
-        const groupedData = lodash_1.default.chain(payments)
+        const groupedData = (0, lodash_1.default)(payments)
             .groupBy((model) => (0, moment_1.default)(model.date).format("YYYY-MM-DD"))
-            .reduce((result, models, dateStr) => {
-            var _a;
-            const totalValue = lodash_1.default.sumBy(models, 'amount');
-            const lastCumulativeSum = ((_a = lodash_1.default.last(result)) === null || _a === void 0 ? void 0 : _a.cumulativeSum) || 0;
-            const cumulativeSum = lastCumulativeSum + totalValue;
-            result.push({ paymentDate: dateStr, totalValue, cumulativeSum });
-            return result;
-        }, [])
+            .map((models, dateStr) => ({
+            paymentDate: new Date(dateStr),
+            totalValue: lodash_1.default.sumBy(models, 'amount'),
+        }))
+            .orderBy('paymentDate')
             .value();
-        groupedData
-            .sort((a, b) => (0, moment_1.default)(a.paymentDate).format("YYYY-MM-DD") > (0, moment_1.default)(b.paymentDate).format("YYYY-MM-DD") ? 1 : -1)
-            .forEach(a => {
-            paymentsSum += a.cumulativeSum;
-            mappedPayments.push({ x: (0, moment_1.default)(a.paymentDate).format("YYYY-MM-DD"), y: paymentsSum });
-        });
-        return mappedPayments;
+        let cumulativeSum = 0;
+        const result = [];
+        for (const group of groupedData) {
+            cumulativeSum += group.totalValue;
+            result.push({ paymentDate: group.paymentDate, totalValue: group.totalValue, cumulativeSum });
+        }
+        return result.map(d => ({ x: (0, moment_1.default)(d.paymentDate).format("YYYY-MM-DD"), y: d.cumulativeSum }));
     }
     prepareBalanceChartData(payments, accountsBalance, selectedBankAccount) {
         return __awaiter(this, void 0, void 0, function* () {
