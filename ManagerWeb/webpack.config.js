@@ -1,13 +1,15 @@
+const webpack5esmInteropRule = {
+    test: /\.m?js/,
+    resolve: {
+        fullySpecified: false
+    }
+};
+
 module.exports = {
     //mode: "production",
     mode: "development",
     entry: {
         app: './Typescript/App.tsx'
-        // app: './Typescript/Overview.tsx',
-        // menu: './Typescript/Components/Menu.tsx',
-        // crypto: './Typescript/Crypto.tsx',
-        // bankAccounts: './Typescript/BankAccounts.tsx',
-        // auth: './Typescript/Components/Auth/Auth.tsx',
     },
     output: {
         filename: "[name].js",
@@ -34,20 +36,18 @@ module.exports = {
                 enforce: "pre",
                 test: /\.js$/,
                 loader: "source-map-loader"
-            }
+            },
+            webpack5esmInteropRule
         ]
     },
     externals: [
         {
             "react": "React",
             "react-dom": "ReactDOM",
-            // 'material-ui': 'window["material-ui"]'
             '@material-ui/core': 'MaterialUI',
             '@material-ui/core/styles': 'MaterialUI',
-            // _: 'lodash'
             "lodash": "_",
             'moment': 'moment'
         }
-        // , /@material-ui\/core\/.*/
     ]
 };

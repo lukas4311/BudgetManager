@@ -10,18 +10,18 @@ import ApiClientFactory from '../../Utils/ApiClientFactory';
 import * as H from 'history';
 import PaymentService from '../../Services/PaymentService';
 
-interface IPaymentFormProps {
-    paymentId: number,
-    bankAccountId: number,
-    handleClose: () => void,
-    history: H.History<any>
+class PaymentFormProps {
+    paymentId: number;
+    bankAccountId: number;
+    handleClose: () => void;
+    history: H.History<any>;
 }
 
-export default class PaymentForm extends React.Component<IPaymentFormProps, IPaymentModel>{
+export default class PaymentForm extends React.Component<PaymentFormProps, IPaymentModel>{
     private requiredMessage: string = "Zadejte hodnotu.";
     private paymentService: any;
 
-    constructor(props: IPaymentFormProps) {
+    constructor(props: PaymentFormProps) {
         super(props);
         this.state = {
             name: '', amount: 0, date: moment(Date.now()).format("YYYY-MM-DD"), description: '', formErrors: { name: '', amount: '', date: '', description: '' }, paymentTypeId: -1,

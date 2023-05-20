@@ -71,7 +71,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     public componentDidMount = () => this.init();
 
     private async init() {
-        const appContext: AppContext = this.context;
+        const appContext: AppContext = this.context as AppContext;
         const apiFactory = new ApiClientFactory(this.props.history);
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
