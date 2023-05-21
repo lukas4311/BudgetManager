@@ -12717,37 +12717,6 @@ function D(){return D=Object.assign?Object.assign.bind():function(e){for(var i=1
 
 /***/ }),
 
-/***/ "./node_modules/@nivo/radar/dist/nivo-radar.es.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@nivo/radar/dist/nivo-radar.es.js ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Radar: () => (/* binding */ re),
-/* harmony export */   RadarDots: () => (/* binding */ U),
-/* harmony export */   ResponsiveRadar: () => (/* binding */ te),
-/* harmony export */   svgDefaultProps: () => (/* binding */ Z)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _nivo_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @nivo/core */ "./node_modules/@nivo/core/dist/nivo-core.es.js");
-/* harmony import */ var _nivo_legends__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @nivo/legends */ "./node_modules/@nivo/legends/dist/nivo-legends.es.js");
-/* harmony import */ var _react_spring_web__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @react-spring/web */ "./node_modules/@react-spring/web/dist/esm/index.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/lineRadial.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/curve/linearClosed.js");
-/* harmony import */ var d3_shape__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! d3-shape */ "./node_modules/d3-shape/src/arc.js");
-/* harmony import */ var _nivo_colors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @nivo/colors */ "./node_modules/@nivo/colors/dist/nivo-colors.es.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _nivo_tooltip__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @nivo/tooltip */ "./node_modules/@nivo/tooltip/dist/nivo-tooltip.es.js");
-/* harmony import */ var d3_scale__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! d3-scale */ "./node_modules/d3-scale/src/linear.js");
-function z(){return z=Object.assign?Object.assign.bind():function(e){for(var r=1;r<arguments.length;r++){var t=arguments[r];for(var n in t)Object.prototype.hasOwnProperty.call(t,n)&&(e[n]=t[n])}return e},z.apply(this,arguments)}function j(e,r){if(null==e)return{};var t,n,o={},i=Object.keys(e);for(n=0;n<i.length;n++)t=i[n],r.indexOf(t)>=0||(o[t]=e[t]);return o}var T=function(r){var t,n=r.data,o=r.item,i=r.colorByKey,u=r.fillByKey,c=r.radiusScale,s=r.rotation,f=r.angleStep,m=r.curveFactory,g=r.borderWidth,v=r.borderColor,y=r.fillOpacity,h=r.blendMode,p=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),b=(0,_nivo_colors__WEBPACK_IMPORTED_MODULE_4__.useInheritedColor)(v,p),x=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return (0,d3_shape__WEBPACK_IMPORTED_MODULE_7__["default"])().radius((function(e){return c(e)})).angle((function(e,r){return s+r*f})).curve(m)}),[c,s,f,m]),B=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useMotionConfig)(),k=B.animate,O=B.config,I=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useAnimatedPath)(x(n.map((function(e){return e[o]})))),M=(0,_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.useSpring)({fill:i[o],stroke:b({key:o,color:i[o]}),config:O,immediate:!k}),K=null!=(t=u[o])?t:M.fill;return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.animated.path,{d:I,fill:K,fillOpacity:y,stroke:M.stroke,strokeWidth:g,style:{mixBlendMode:h}},o)},E=function(e){var t=e.radius,n=e.angles,o=e.indices,i=e.label,a=e.labelOffset,d=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useMotionConfig)(),s=d.animate,f=d.config,m=o.map((function(e,r){var o,i,l=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.positionFromAngle)(n[r],t+a),d=(o=n[r],(i=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.radiansToDegrees)(o)+90)<=10||i>=350||i>=170&&i<=190?"middle":i>180?"end":"start");return z({id:e,angle:(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.radiansToDegrees)(n[r]),anchor:d},l)})),g=(0,_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.useSprings)(m.length,m.map((function(e){return{transform:"translate("+e.x+", "+e.y+")",config:f,immediate:!s}})));return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,{children:g.map((function(e,t){var n=m[t];return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(i,{key:n.id,id:n.id,anchor:n.anchor,angle:n.angle,x:n.x,y:n.y,animated:e})}))})},H=["shape"],G=(0,react__WEBPACK_IMPORTED_MODULE_0__.memo)((function(e){var r=e.radius,t=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),n=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useMotionConfig)(),o=n.animate,i=n.config,d=(0,_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.useSpring)({radius:r,config:i,immediate:!o});return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.animated.circle,z({fill:"none",r:(0,_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.to)(d.radius,(function(e){return Math.max(e,0)}))},t.grid.line))})),R=function(r){var t=r.radius,n=r.rotation,o=r.angleStep,i=r.dataLength,l=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),u=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return (0,d3_shape__WEBPACK_IMPORTED_MODULE_7__["default"])().angle((function(e){return n+e*o})).radius(t).curve(d3_shape__WEBPACK_IMPORTED_MODULE_8__["default"])}),[n,o,t]),c=Array.from({length:i},(function(e,r){return r})),s=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useAnimatedPath)(u(c));return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.animated.path,z({fill:"none",d:s},l.grid.line))},q=function(e){var r=e.shape,t=j(e,H);return"circular"===r?(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(G,{radius:t.radius}):(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(R,z({},t))},J=function(r){var t=r.indices,n=r.levels,o=r.shape,i=r.radius,l=r.rotation,d=r.angleStep,c=r.label,s=r.labelOffset,f=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),m=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return{radii:Array.from({length:n}).map((function(e,r){return i/n*(r+1)})).reverse(),angles:Array.from({length:t.length}).map((function(e,r){return l+r*d-Math.PI/2}))}}),[t,n,i,l,d]),g=m.radii,v=m.angles;return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,{children:[v.map((function(e,r){var t=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.positionFromAngle)(e,i);return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("line",z({x1:0,y1:0,x2:t.x,y2:t.y},f.grid.line),"axis."+r)})),g.map((function(e,r){return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(q,{shape:o,radius:e,rotation:l,angleStep:d,dataLength:t.length},"level."+r)})),(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(E,{radius:i,angles:v,indices:t,labelOffset:s,label:c})]})},N=function(t){var i=t.datum,l=t.keys,d=t.index,c=t.formatValue,s=t.colorByKey,f=t.radius,m=t.startAngle,g=t.endAngle,v=t.arcGenerator,y=t.tooltip,h=(0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(!1),p=h[0],b=h[1],x=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),B=(0,_nivo_tooltip__WEBPACK_IMPORTED_MODULE_6__.useTooltip)(),L=B.showTooltipFromEvent,S=B.hideTooltip,k=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){var e=l.map((function(e){return{color:s[e],id:e,value:i[e],formattedValue:c(i[e],e)}}));return e.sort((function(e,r){return e.value-r.value})),e.reverse(),e}),[i,l,c,s]),O=(0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function(e){b(!0),L((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(y,{index:d,data:k}),e)}),[L,y,d,k]),C=(0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((function(){b(!1),S()}),[S,b]),I=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){var e=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.positionFromAngle)(m+.5*(g-m)-Math.PI/2,f);return{path:v({startAngle:m,endAngle:g}),tipX:e.x,tipY:e.y}}),[m,g,f,v]),M=I.path,W=I.tipX,K=I.tipY;return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,{children:[p&&(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("line",{x1:0,y1:0,x2:W,y2:K,style:x.crosshair.line}),(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("path",{d:M,fill:"#F00",fillOpacity:0,onMouseEnter:O,onMouseMove:O,onMouseLeave:C})]})},Q=function(e){var r=e.data,t=e.keys,n=e.getIndex,o=e.formatValue,i=e.colorByKey,a=e.radius,l=e.rotation,d=e.angleStep,u=e.tooltip,c=(0,d3_shape__WEBPACK_IMPORTED_MODULE_9__["default"])().outerRadius(a).innerRadius(0),s=l-.5*d;return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,{children:r.map((function(e){var r=n(e),l=s;return s+=d,(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(N,{datum:e,keys:t,index:r,formatValue:o,colorByKey:i,startAngle:l,endAngle:l+d,radius:a,arcGenerator:c,tooltip:u},r)}))})},U=function(r){var t=r.data,n=r.keys,o=r.getIndex,i=r.colorByKey,l=r.radiusScale,d=r.rotation,c=r.angleStep,m=r.symbol,g=r.size,v=void 0===g?6:g,y=r.color,h=void 0===y?{from:"color"}:y,p=r.borderWidth,b=void 0===p?0:p,x=r.borderColor,B=void 0===x?{from:"color"}:x,L=r.enableLabel,S=void 0!==L&&L,k=r.label,O=void 0===k?"value":k,C=r.formatValue,I=r.labelYOffset,M=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)(),W=(0,_nivo_colors__WEBPACK_IMPORTED_MODULE_4__.getInheritedColorGenerator)(h,M),V=(0,_nivo_colors__WEBPACK_IMPORTED_MODULE_4__.getInheritedColorGenerator)(B,M),w=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.usePropertyAccessor)(O),A=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return t.reduce((function(e,r,t){var a=o(r);return n.forEach((function(n){var o=r[n],s={index:a,key:n,value:o,formattedValue:C(o,n),color:i[n]};e.push({key:n+"."+a,label:S?w(s):void 0,style:z({fill:W(s),stroke:V(s)},(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.positionFromAngle)(d+c*t-Math.PI/2,l(r[n]))),data:s})})),e}),[])}),[t,n,o,i,S,w,C,W,V,d,c,l]);return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,{children:A.map((function(e){return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_core__WEBPACK_IMPORTED_MODULE_1__.DotsItem,{x:e.style.x,y:e.style.y,symbol:m,size:v,color:e.style.fill,borderWidth:b,borderColor:e.style.stroke,label:e.label,labelYOffset:I,datum:e.data},e.key)}))})},Z={layers:["grid","layers","slices","dots","legends"],maxValue:"auto",rotation:0,curve:"linearClosed",borderWidth:2,borderColor:{from:"color"},gridLevels:5,gridShape:"circular",gridLabelOffset:16,gridLabel:function(e){var r=e.id,t=e.anchor,n=e.animated,o=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useTheme)();return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_react_spring_web__WEBPACK_IMPORTED_MODULE_3__.animated.g,{transform:n.transform,children:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("text",{style:o.axis.ticks.text,dominantBaseline:"central",textAnchor:t,children:r})})},enableDots:!0,dotSize:6,dotColor:{from:"color"},dotBorderWidth:0,dotBorderColor:{from:"color"},enableDotLabel:!1,dotLabel:"formattedValue",dotLabelYOffset:-12,colors:{scheme:"nivo"},fillOpacity:.25,blendMode:"normal",isInteractive:!0,sliceTooltip:function(r){var t=r.index,n=r.data,o=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return n.map((function(e){return[(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_6__.Chip,{color:e.color},e.id),e.id,e.formattedValue]}))}),[n]);return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_tooltip__WEBPACK_IMPORTED_MODULE_6__.TableTooltip,{title:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("strong",{children:t}),rows:o})},legends:[],role:"img",animate:!0,motionConfig:"gentle",defs:[],fill:[]},$=["data"],_=["isInteractive","animate","motionConfig","theme","renderWrapper"],ee=function(t){var n=t.data,o=t.keys,a=t.indexBy,l=t.layers,d=void 0===l?Z.layers:l,u=t.rotation,c=void 0===u?Z.rotation:u,f=t.maxValue,h=void 0===f?Z.maxValue:f,x=t.valueFormat,L=t.curve,S=void 0===L?Z.curve:L,k=t.margin,O=t.width,C=t.height,I=t.borderWidth,M=void 0===I?Z.borderWidth:I,W=t.borderColor,K=void 0===W?Z.borderColor:W,Y=t.gridLevels,w=void 0===Y?Z.gridLevels:Y,A=t.gridShape,F=void 0===A?Z.gridShape:A,P=t.gridLabel,E=void 0===P?Z.gridLabel:P,H=t.gridLabelOffset,G=void 0===H?Z.gridLabelOffset:H,R=t.enableDots,q=void 0===R?Z.enableDots:R,N=t.dotSymbol,_=t.dotSize,ee=void 0===_?Z.dotSize:_,re=t.dotColor,te=void 0===re?Z.dotColor:re,ne=t.dotBorderWidth,oe=void 0===ne?Z.dotBorderWidth:ne,ie=t.dotBorderColor,ae=void 0===ie?Z.dotBorderColor:ie,le=t.enableDotLabel,de=void 0===le?Z.enableDotLabel:le,ue=t.dotLabel,ce=void 0===ue?Z.dotLabel:ue,se=t.dotLabelYOffset,fe=void 0===se?Z.dotLabelYOffset:se,me=t.colors,ge=void 0===me?Z.colors:me,ve=t.fillOpacity,ye=void 0===ve?Z.fillOpacity:ve,he=t.blendMode,pe=void 0===he?Z.blendMode:he,be=t.isInteractive,xe=void 0===be?Z.isInteractive:be,Be=t.sliceTooltip,Le=void 0===Be?Z.sliceTooltip:Be,Se=t.legends,ke=void 0===Se?Z.legends:Se,Oe=t.role,Ce=t.ariaLabel,Ie=t.ariaLabelledBy,Me=t.ariaDescribedBy,We=t.defs,Ke=void 0===We?Z.defs:We,Ve=t.fill,De=void 0===Ve?Z.fill:Ve,Ye=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useDimensions)(O,C,k),we=Ye.margin,Ae=Ye.innerWidth,Fe=Ye.innerHeight,Pe=Ye.outerWidth,Xe=Ye.outerHeight,ze=function(r){var t=r.data,n=r.keys,o=r.indexBy,i=r.rotationDegrees,a=r.maxValue,l=r.valueFormat,d=r.curve,u=r.width,c=r.height,f=r.colors,h=void 0===f?Z.colors:f,p=r.legends,b=r.defs,x=r.fill,B=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.usePropertyAccessor)(o),L=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return t.map(B)}),[t,B]),S=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useValueFormatter)(l),k=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.degreesToRadians)(i),O=(0,_nivo_colors__WEBPACK_IMPORTED_MODULE_4__.useOrdinalColorScale)(h,"key"),C=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return n.reduce((function(e,r,t){return e[r]=O({key:r,index:t}),e}),{})}),[n,O]),I=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){var e=n.map((function(e){return{key:e,color:C[e],data:t,fill:null}})),r=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.bindDefs)(b,e,x),o=e.reduce((function(e,r){var t=r.key,n=r.fill;return e[t]=n,e}),{});return{boundDefs:r,fillByKey:o}}),[n,t,b,x,C]),M=I.boundDefs,W=I.fillByKey,K=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){var e=t.reduce((function(e,r){return[].concat(e,n.map((function(e){return r[e]})))}),[]),r="auto"!==a?a:Math.max.apply(Math,e),o=Math.min(u,c)/2;return{radius:o,radiusScale:(0,d3_scale__WEBPACK_IMPORTED_MODULE_10__["default"])().range([0,o]).domain([0,r]),centerX:u/2,centerY:c/2,angleStep:2*Math.PI/t.length}}),[n,t,a,u,c]),D=K.radius,Y=K.radiusScale,w=K.centerX,A=K.centerY,F=K.angleStep,P=(0,_nivo_core__WEBPACK_IMPORTED_MODULE_1__.useCurveInterpolation)(d),T=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return{data:t,keys:n,indices:L,colorByKey:C,centerX:w,centerY:A,radiusScale:Y,angleStep:F}}),[t,n,L,C,w,A,Y,F]),E=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return n.map((function(e){return{id:e,label:e,color:C[e]}}))}),[n,C]),H=(0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)((function(){return p.map((function(e){var r=e.data,t=j(e,$),n=null==r?void 0:r.map((function(e){return z({},E.find((function(r){return r.id===e.id}))||{},e)}));return z({},t,{data:n||E})}))}),[p,E]);return{getIndex:B,indices:L,formatValue:S,colorByKey:C,fillByKey:W,boundDefs:M,rotation:k,radius:D,radiusScale:Y,centerX:w,centerY:A,angleStep:F,curveFactory:P,legendData:E,boundLegends:H,customLayerProps:T}}({data:n,keys:o,indexBy:a,rotationDegrees:c,maxValue:h,valueFormat:x,curve:S,width:Ae,height:Fe,colors:ge,legends:ke,defs:Ke,fill:De}),je=ze.getIndex,Te=ze.indices,Ee=ze.formatValue,He=ze.colorByKey,Ge=ze.fillByKey,Re=ze.boundDefs,qe=ze.rotation,Je=ze.radius,Ne=ze.radiusScale,Qe=ze.centerX,Ue=ze.centerY,Ze=ze.angleStep,$e=ze.curveFactory,_e=ze.boundLegends,er=ze.customLayerProps,rr={grid:null,layers:null,slices:null,dots:null,legends:null};return d.includes("grid")&&(rr.grid=(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("g",{transform:"translate("+Qe+", "+Ue+")",children:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(J,{levels:w,shape:F,radius:Je,rotation:qe,angleStep:Ze,indices:Te,label:E,labelOffset:G})},"grid")),d.includes("layers")&&(rr.layers=(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("g",{transform:"translate("+Qe+", "+Ue+")",children:o.map((function(e){return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(T,{data:n,item:e,colorByKey:He,fillByKey:Ge,radiusScale:Ne,rotation:qe,angleStep:Ze,curveFactory:$e,borderWidth:M,borderColor:K,fillOpacity:ye,blendMode:pe},e)}))},"layers")),d.includes("slices")&&xe&&(rr.slices=(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("g",{transform:"translate("+Qe+", "+Ue+")",children:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(Q,{data:n,keys:o,getIndex:je,formatValue:Ee,colorByKey:He,radius:Je,rotation:qe,angleStep:Ze,tooltip:Le})},"slices")),d.includes("dots")&&q&&(rr.dots=(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("g",{transform:"translate("+Qe+", "+Ue+")",children:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(U,{data:n,keys:o,getIndex:je,radiusScale:Ne,rotation:qe,angleStep:Ze,symbol:N,size:ee,colorByKey:He,color:te,borderWidth:oe,borderColor:ae,enableLabel:de,label:ce,formatValue:Ee,labelYOffset:fe})},"dots")),d.includes("legends")&&(rr.legends=(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment,{children:_e.map((function(e,r){return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_legends__WEBPACK_IMPORTED_MODULE_2__.BoxLegendSvg,z({},e,{containerWidth:O,containerHeight:C}),r)}))},"legends")),(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_core__WEBPACK_IMPORTED_MODULE_1__.SvgWrapper,{defs:Re,width:Pe,height:Xe,margin:we,role:Oe,ariaLabel:Ce,ariaLabelledBy:Ie,ariaDescribedBy:Me,children:d.map((function(e,t){var n;return"function"==typeof e?(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment,{children:(0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(e,er)},t):null!=(n=null==rr?void 0:rr[e])?n:null}))})},re=function(e){var r=e.isInteractive,t=void 0===r?Z.isInteractive:r,n=e.animate,o=void 0===n?Z.animate:n,i=e.motionConfig,a=void 0===i?Z.motionConfig:i,l=e.theme,d=e.renderWrapper,u=j(e,_);return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_core__WEBPACK_IMPORTED_MODULE_1__.Container,{animate:o,isInteractive:t,motionConfig:a,renderWrapper:d,theme:l,children:(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(ee,z({isInteractive:t},u))})},te=function(e){return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_nivo_core__WEBPACK_IMPORTED_MODULE_1__.ResponsiveWrapper,{children:function(r){var t=r.width,n=r.height;return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(re,z({width:t,height:n},e))}})};
-
-
-/***/ }),
-
 /***/ "./node_modules/@nivo/scales/dist/nivo-scales.es.js":
 /*!**********************************************************!*\
   !*** ./node_modules/@nivo/scales/dist/nivo-scales.es.js ***!
@@ -21375,59 +21344,6 @@ function controlPoints(x) {
 
 /***/ }),
 
-/***/ "./node_modules/d3-shape/src/curve/radial.js":
-/*!***************************************************!*\
-  !*** ./node_modules/d3-shape/src/curve/radial.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   curveRadialLinear: () => (/* binding */ curveRadialLinear),
-/* harmony export */   "default": () => (/* binding */ curveRadial)
-/* harmony export */ });
-/* harmony import */ var _linear_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./linear.js */ "./node_modules/d3-shape/src/curve/linear.js");
-
-
-var curveRadialLinear = curveRadial(_linear_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-function Radial(curve) {
-  this._curve = curve;
-}
-
-Radial.prototype = {
-  areaStart: function() {
-    this._curve.areaStart();
-  },
-  areaEnd: function() {
-    this._curve.areaEnd();
-  },
-  lineStart: function() {
-    this._curve.lineStart();
-  },
-  lineEnd: function() {
-    this._curve.lineEnd();
-  },
-  point: function(a, r) {
-    this._curve.point(r * Math.sin(a), r * -Math.cos(a));
-  }
-};
-
-function curveRadial(curve) {
-
-  function radial(context) {
-    return new Radial(curve(context));
-  }
-
-  radial._curve = curve;
-
-  return radial;
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/d3-shape/src/curve/step.js":
 /*!*************************************************!*\
   !*** ./node_modules/d3-shape/src/curve/step.js ***!
@@ -21603,43 +21519,6 @@ __webpack_require__.r(__webpack_exports__);
   };
 
   return line;
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/d3-shape/src/lineRadial.js":
-/*!*************************************************!*\
-  !*** ./node_modules/d3-shape/src/lineRadial.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   lineRadial: () => (/* binding */ lineRadial)
-/* harmony export */ });
-/* harmony import */ var _curve_radial_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./curve/radial.js */ "./node_modules/d3-shape/src/curve/radial.js");
-/* harmony import */ var _line_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./line.js */ "./node_modules/d3-shape/src/line.js");
-
-
-
-function lineRadial(l) {
-  var c = l.curve;
-
-  l.angle = l.x, delete l.x;
-  l.radius = l.y, delete l.y;
-
-  l.curve = function(_) {
-    return arguments.length ? c((0,_curve_radial_js__WEBPACK_IMPORTED_MODULE_0__["default"])(_)) : c()._curve;
-  };
-
-  return l;
-}
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__() {
-  return lineRadial((0,_line_js__WEBPACK_IMPORTED_MODULE_1__["default"])().curve(_curve_radial_js__WEBPACK_IMPORTED_MODULE_0__.curveRadialLinear));
 }
 
 
@@ -49218,9 +49097,14 @@ class BarChartSettingManager {
     static getPaymentCategoryBarChartProps() {
         return {
             data: undefined,
-            margin: { top: 60, right: 80, bottom: 60, left: 80 },
+            margin: { top: 20, right: 50, bottom: 120, left: 50 },
             indexBy: "key",
+            colorBy: "indexValue",
             keys: ["value"],
+            padding: 0.45,
+            axisBottom: {
+                tickRotation: 35,
+            },
             isInteractive: false,
             theme: {
                 axis: {
@@ -49495,7 +49379,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PieChartData = exports.PieChart = void 0;
+exports.PieChartProps = exports.PieChartData = exports.PieChart = void 0;
 const pie_1 = __webpack_require__(/*! @nivo/pie */ "./node_modules/@nivo/pie/dist/nivo-pie.es.js");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 class PieChartData {
@@ -49503,42 +49387,16 @@ class PieChartData {
 exports.PieChartData = PieChartData;
 class PieChartProps {
 }
+exports.PieChartProps = PieChartProps;
 function PieChart(props) {
     var _a;
-    return (react_1.default.createElement(pie_1.ResponsivePieCanvas, { data: ((_a = props.data) !== null && _a !== void 0 ? _a : []), margin: { top: 40, right: 200, bottom: 40, left: 80 }, innerRadius: 0.6, padAngle: 0, isInteractive: true, cornerRadius: 0, colors: { scheme: 'paired' }, borderColor: { from: 'color', modifiers: [['darker', 0.6]] }, arcLinkLabelsTextColor: "#ffffff", arcLabelsTextColor: "ffffff", arcLinkLabelsSkipAngle: 10, arcLabelsSkipAngle: 10, sortByValue: true, tooltip: (p) => { return react_1.default.createElement("p", { className: "bg-black p-2 rounded-xl" },
+    return (react_1.default.createElement(pie_1.ResponsivePieCanvas, { data: ((_a = props.data) !== null && _a !== void 0 ? _a : []), margin: { top: 40, right: 200, bottom: 40, left: 80 }, innerRadius: 0.6, padAngle: 0, isInteractive: true, cornerRadius: 0, colors: { scheme: 'paired' }, borderColor: { from: 'color', modifiers: [['darker', 0.6]] }, arcLinkLabelsTextColor: "#ffffff", arcLabelsTextColor: "ffffff", arcLinkLabelsSkipAngle: 10, arcLabelsSkipAngle: 10, sortByValue: true, tooltip: (p) => { var _a; return react_1.default.createElement("p", { className: "bg-black p-2 rounded-xl" },
             p.datum.label,
             " : ",
             p.datum.value,
-            " USD"); } }));
+            " ", (_a = props === null || props === void 0 ? void 0 : props.labelPostfix) !== null && _a !== void 0 ? _a : ""); } }));
 }
 exports.PieChart = PieChart;
-
-
-/***/ }),
-
-/***/ "./Typescript/Components/Charts/RadarChart.tsx":
-/*!*****************************************************!*\
-  !*** ./Typescript/Components/Charts/RadarChart.tsx ***!
-  \*****************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RadarChart = void 0;
-const radar_1 = __webpack_require__(/*! @nivo/radar */ "./node_modules/@nivo/radar/dist/nivo-radar.es.js");
-const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-function RadarChart({ dataSets }) {
-    const margin = 30;
-    return (react_1.default.createElement(radar_1.ResponsiveRadar, { data: dataSets, keys: ['value'], indexBy: "key", maxValue: "auto", margin: { top: margin, right: margin, bottom: margin, left: margin }, curve: "linearClosed", borderWidth: 0, borderColor: { from: 'color' }, gridLevels: 8, gridShape: "circular", gridLabelOffset: 27, enableDots: false, dotSize: 10, dotBorderWidth: 0, enableDotLabel: false, dotColor: { theme: 'background' }, dotBorderColor: { from: 'color' }, dotLabel: "value", dotLabelYOffset: -17, colors: { scheme: 'category10' }, fillOpacity: 0.75, blendMode: "normal", animate: false, 
-        // motionStiffness={85}
-        // motionDamping={15}
-        isInteractive: true, legends: [] }));
-}
-exports.RadarChart = RadarChart;
 
 
 /***/ }),
@@ -49997,7 +49855,7 @@ class CryptoPortfolio extends react_1.default.Component {
             if (this.state.allCryptoSum != undefined && this.state.allCryptoSum.length != 0) {
                 let chartData = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
                 element = (react_1.default.createElement("div", { className: "h-96" },
-                    react_1.default.createElement(PieChart_1.PieChart, { data: chartData })));
+                    react_1.default.createElement(PieChart_1.PieChart, { data: chartData, labelPostfix: "USD" })));
             }
             return element;
         };
@@ -51341,7 +51199,6 @@ const PaymentForm_1 = __importDefault(__webpack_require__(/*! ./PaymentForm */ "
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
-const RadarChart_1 = __webpack_require__(/*! ../Charts/RadarChart */ "./Typescript/Components/Charts/RadarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
@@ -51378,8 +51235,8 @@ class PaymentsOverview extends React.Component {
                 const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
                 const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
-                const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
-                console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ radarData:", radarData);
+                const pieData = this.chartDataProcessor.prepareDataForPieChart(payments);
+                console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ pieData:", pieData);
                 let dateTo;
                 if (this.state.selectedFilter != undefined)
                     dateTo = ((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
@@ -51388,7 +51245,8 @@ class PaymentsOverview extends React.Component {
                 const fromLastOrderder = lodash_1.default.orderBy(payments, a => a.date, "desc");
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
-                const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
+                const barChartData = pieData.map(d => ({ key: d.id, value: d.value }));
+                console.log("🚀 ~ file: PaymentsOverview.tsx:140 ~ PaymentsOverview ~ setPayments= ~ barChartData:", barChartData);
                 const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
                 const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
@@ -51402,7 +51260,7 @@ class PaymentsOverview extends React.Component {
                         ]
                     }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                     calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                    radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
+                    barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments,
                 });
             }
             else {
@@ -51477,7 +51335,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
+            filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -51620,11 +51478,9 @@ class PaymentsOverview extends React.Component {
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                                 React.createElement(LineChart_1.LineChart, { dataSets: this.state.expenseChartData.dataSets, chartProps: LineChartSettingManager_1.LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25) })),
-                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 calendar text-black h-80" },
-                                React.createElement(RadarChart_1.RadarChart, { dataSets: this.state.radarChartData.dataSets }))),
-                        React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
-                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() })),
+                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.barChartData, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentCategoryBarChartProps() }))),
+                        React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80 " },
                                 React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }))),
                         React.createElement("div", { className: "flex flex-row" },
@@ -52795,10 +52651,17 @@ class ChartDataProcessor {
         categoryGroups = lodash_1.default.orderBy(categoryGroups, a => a.value, ['desc']);
         return categoryGroups;
     }
+    prepareDataForPieChart(payments) {
+        let data = lodash_1.default.chain(payments.filter(f => f.paymentTypeCode == 'Expense'))
+            .groupBy(g => g.paymentCategoryCode)
+            .map((value, key) => ({ id: `${key} (${lodash_1.default.sumBy(value, d => d.amount)})`, value: lodash_1.default.sumBy(value, d => d.amount), label: `${key} (${lodash_1.default.sumBy(value, d => d.amount)})` }))
+            .orderBy(f => f.value, ['desc'])
+            .value();
+        console.log("🚀 ~ file: ChartDataProcessor.ts:128 ~ ChartDataProcessor ~ prepareDataForPieChart ~ data:", data);
+        return data;
+    }
 }
 exports.ChartDataProcessor = ChartDataProcessor;
-class GroupedData {
-}
 class GroupedCumulativeData {
 }
 

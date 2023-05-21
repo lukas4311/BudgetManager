@@ -2,7 +2,7 @@
 import React from 'react'
 import { Bar, BarSvgProps, ResponsiveBar } from '@nivo/bar'
 
-export class BarData{
+export class BarData {
     key: string;
     value: number;
 }
@@ -17,6 +17,7 @@ function BarChart({ dataSets, chartProps }: any) {
         <ResponsiveBar
             {...chartProps}
             data={dataSets}
+            // axisBottom={{renderTick: <p>AAA</p>}}
         />
     )
 }

@@ -6,7 +6,8 @@ import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceRe
 import DataLoader from "./DataLoader";
 import { RadarChartData } from "../Model/RadarChartData";
 import { BankBalanceModel, PaymentModel } from "../ApiClient/Main";
-import _ from "lodash";
+import _, { forEach } from "lodash";
+import { PieChartData } from "../Components/Charts/PieChart";
 
 export class ChartDataProcessor {
     dataLoader: DataLoader;
@@ -107,11 +108,17 @@ export class ChartDataProcessor {
         categoryGroups = _.orderBy(categoryGroups, a => a.value, ['desc'])
         return categoryGroups;
     }
-}
 
-class GroupedData {
-    paymentDate: string;
-    totalValue: number;
+    public prepareDataForPieChart(payments: Array<PaymentModel>): PieChartData[] {
+        let data: PieChartData[] = _.chain(payments.filter(f => f.paymentTypeCode == 'Expense'))
+            .groupBy(g => g.paymentCategoryCode)
+            .map((value, key) => ({ id: `${key} (${_.sumBy(value, d => d.amount)})`, value: _.sumBy(value, d => d.amount), label: `${key} (${_.sumBy(value, d => d.amount)})` }))
+            .orderBy(f => f.value, ['desc'])
+            .value();
+
+        console.log("🚀 ~ file: ChartDataProcessor.ts:128 ~ ChartDataProcessor ~ prepareDataForPieChart ~ data:", data)
+        return data;
+    }
 }
 
 class GroupedCumulativeData {

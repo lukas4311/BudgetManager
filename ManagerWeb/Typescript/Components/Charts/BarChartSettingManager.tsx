@@ -4,9 +4,14 @@ export class BarChartSettingManager {
     static getPaymentCategoryBarChartProps(): any {
         return {
             data: undefined,
-            margin: { top: 60, right: 80, bottom: 60, left: 80 },
+            margin: { top: 20, right: 50, bottom: 120, left: 50 },
             indexBy: "key",
+            colorBy: "indexValue",
             keys: ["value"],
+            padding: 0.45,
+            axisBottom: {
+                tickRotation: 35,
+            },
             isInteractive: false,
             theme: {
                 axis: {

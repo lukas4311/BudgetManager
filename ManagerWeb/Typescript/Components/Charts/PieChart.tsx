@@ -9,6 +9,7 @@ class PieChartData {
 
 class PieChartProps {
     data: PieChartData[];
+    labelPostfix?: string;
 }
 
 function PieChart(props: PieChartProps) {
@@ -27,9 +28,9 @@ function PieChart(props: PieChartProps) {
             arcLinkLabelsSkipAngle={10}
             arcLabelsSkipAngle={10}
             sortByValue={true}
-            tooltip={(p) => { return <p className="bg-black p-2 rounded-xl">{p.datum.label} : {p.datum.value} USD</p> }}
+            tooltip={(p) => { return <p className="bg-black p-2 rounded-xl">{p.datum.label} : {p.datum.value} {props?.labelPostfix ?? ""}</p> }}
         />
     )
 }
 
-export { PieChart, PieChartData };
+export { PieChart, PieChartData, PieChartProps };

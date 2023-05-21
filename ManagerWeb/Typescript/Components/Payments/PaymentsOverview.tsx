@@ -27,6 +27,7 @@ import PaymentService from '../../Services/PaymentService';
 import ScoreList from '../../Utils/ScoreList';
 import { LineChartDataSets } from '../../Model/LineChartDataSets';
 import { LineChartData } from '../../Model/LineChartData';
+import { PieChart, PieChartData, PieChartProps } from '../Charts/PieChart';
 
 interface PaymentsOverviewState {
     payments: PaymentModel[];
@@ -43,7 +44,6 @@ interface PaymentsOverviewState {
     expenseChartData: LineChartProps;
     balanceChartData: LineChartProps;
     calendarChartData: CalendarChartProps;
-    radarChartData: RadarChartProps;
     barChartData: BarData[];
     averageMonthExpense: number;
     averageMonthRevenue: number;
@@ -88,7 +88,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , radarChartData: { dataSets: [] }, filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
+            , filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -125,8 +125,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
             const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
-            const radarData = this.chartDataProcessor.prepareDataForRadarChart(payments);
-            console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ radarData:", radarData)
+            const pieData:PieChartData[] = this.chartDataProcessor.prepareDataForPieChart(payments);
+            console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ pieData:", pieData)
             let dateTo: string;
 
             if (this.state.selectedFilter != undefined)
@@ -137,7 +137,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
-            const barChartData = radarData.map(d => ({ key: d.key, value: d.value }));
+            const barChartData = pieData.map(d => ({ key: d.id, value: d.value }));
+            console.log("🚀 ~ file: PaymentsOverview.tsx:140 ~ PaymentsOverview ~ setPayments= ~ barChartData:", barChartData)
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
             const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
             const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
@@ -152,7 +153,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     ]
                 }, topPayments, balanceChartData: { dataSets: [{ id: 'Balance', data: balance }] },
                 calendarChartData: { dataSets: chartData, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-                radarChartData: { dataSets: radarData }, barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments
+                barChartData, averageMonthExpense: averageMonthExpense, averageMonthRevenue: averageMonthRevenue, averageMonthInvestments: averageMonthInvestments,
             });
         } else {
             this.setState({ apiError: this.apiErrorMessage });
@@ -366,14 +367,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <ComponentPanel classStyle="w-1/2 h-80">
                                     <LineChart dataSets={this.state.expenseChartData.dataSets} chartProps={LineChartSettingManager.getPaymentChartSettingWithScale(0, 0, this.getExpensesMaxValue(), 25)}></LineChart>
                                 </ComponentPanel>
-                                <ComponentPanel classStyle="w-1/2 calendar text-black h-80">
-                                    <RadarChart dataSets={this.state.radarChartData.dataSets}></RadarChart>
-                                </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row">
                                 <ComponentPanel classStyle="w-1/2 h-80">
                                     <BarChart dataSets={this.state.barChartData} chartProps={BarChartSettingManager.getPaymentCategoryBarChartProps()}></BarChart>
                                 </ComponentPanel>
+                            </div>
+                            <div className="flex flex-row">
                                 <ComponentPanel classStyle="w-1/2 h-80 ">
                                     <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                                 </ComponentPanel>

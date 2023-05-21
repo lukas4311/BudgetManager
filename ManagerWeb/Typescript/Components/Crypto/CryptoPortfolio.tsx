@@ -62,7 +62,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
             element = (
                 <div className="h-96">
-                    <PieChart data={chartData}></PieChart>
+                    <PieChart data={chartData} labelPostfix="USD"></PieChart>
                 </div>
             )
         }
