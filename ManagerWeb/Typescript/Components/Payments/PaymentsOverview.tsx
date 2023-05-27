@@ -375,8 +375,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <ComponentPanel classStyle="w-1/2 h-80 ">
                                     <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                                 </ComponentPanel>
-                            </div>
-                            <div className="flex flex-row">
                                 <ComponentPanel classStyle="w-1/2 h-80">
                                     <ScoreList models={this.state.topPayments.map(m => ({ score: m.amount, title: m.name }))} />
                                 </ComponentPanel>
