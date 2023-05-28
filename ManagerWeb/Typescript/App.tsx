@@ -18,6 +18,7 @@ import StockOverview from "./Components/Stocks/StockOverview";
 import { SpinnerCircularSplit } from 'spinners-react';
 import DataLoader from "./Services/DataLoader";
 import ApiUrls from "./Model/Setting/ApiUrl";
+import NetWorthOverview from "./Components/NetWorth/NetWorthOverview";
 
 export default function App() {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -42,7 +43,7 @@ export default function App() {
                         <Router>
                             <div className="bg-mainDarkBlue h-full flex flex-col overflow-x-hidden">
                                 <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
-                                    <div>                                        
+                                    <div>
                                         <nav id="navMenu">
                                             <Menu></Menu>
                                         </nav>
@@ -60,7 +61,7 @@ export default function App() {
                                             <PrivateRoute path="/comodity" component={Comodities} />
                                             <PrivateRoute path="/other-investment" component={OtherInvestmentOverview} />
                                             <PrivateRoute path="/stock" component={StockOverview} />
-                                            <PrivateRoute path="/" component={Overview} />
+                                            <PrivateRoute path="/" component={NetWorthOverview} />
                                         </Switch>
                                     </main>
                                 </div>

@@ -19,9 +19,8 @@ export class StockGroupModel {
 export default class StockService implements IStockService {
     private stockApi: StockApi;
 
-    constructor(history: H.History<any>, setting: ApiUrls) {
-        const apiFactory = new ApiClientFactory(history);
-        this.stockApi = apiFactory.getClientWithSetting(StockApi, setting);
+    constructor(stockApi: StockApi) {
+        this.stockApi = stockApi;
     }
 
     public getStockTickers = async (): Promise<StockTickerModel[]> => {

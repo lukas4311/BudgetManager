@@ -76,7 +76,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.stockService = new StockService(this.props.history, appContext.apiUrls);
+        this.stockService = new StockService(this.stockApi);
 
         this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
