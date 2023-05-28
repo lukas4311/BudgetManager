@@ -1,8 +1,9 @@
 import { BankAccountApiInterface } from "../ApiClient/Main/apis";
 import { BankAccount, BankAccountModel } from "../ApiClient/Main/models";
 import BankAccountViewModel from "../Model/BankAccountViewModel";
+import { IBankAccountService } from "./IBankAccountService";
 
-export default class BankAccountService {
+export default class BankAccountService implements IBankAccountService {
     private bankAccountApi: BankAccountApiInterface;
 
     constructor(bankAccountApi: BankAccountApiInterface) {
