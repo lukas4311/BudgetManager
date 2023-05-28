@@ -2,8 +2,9 @@ import moment from "moment";
 import { OtherInvestmentApiInterface, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel, OtherInvestmentTagModel, PaymentModel } from "../ApiClient/Main";
 import { OtherInvestmentBalaceHistoryViewModel } from "../Components/OtherInvestment/OtherInvestmentDetail";
 import OtherInvestmentViewModel from "../Model/OtherInvestmentViewModel";
+import { IOtherInvestmentService } from "./IOtherInvestmentService";
 
-export default class OtherInvestmentService {
+export default class OtherInvestmentService implements IOtherInvestmentService {
     private otherInvestmentApi: OtherInvestmentApiInterface;
 
     constructor(otherInvestmentApi: OtherInvestmentApiInterface) {

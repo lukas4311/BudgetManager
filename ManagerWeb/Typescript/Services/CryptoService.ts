@@ -2,8 +2,9 @@ import moment from "moment";
 import { CryptoApiInterface, TradeHistory } from "../ApiClient/Main";
 import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
+import { ICryptoService } from "./ICryptoService";
 
-export default class CryptoService {
+export default class CryptoService implements ICryptoService {
     private cryptoApi: CryptoApiInterface;
 
     constructor(cryptoApi: CryptoApiInterface) {

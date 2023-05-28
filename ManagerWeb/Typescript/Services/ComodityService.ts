@@ -2,7 +2,16 @@ import moment from "moment";
 import { ComodityApiInterface, ComodityTradeHistoryModel, ComodityTypeModel } from "../ApiClient/Main";
 import { ComoditiesFormViewModel } from "../Components/Comodities/ComoditiesForm";
 
-export default class ComodityService {
+interface IComodityService {
+    getComodityTypes(): Promise<ComodityTypeViewModel[]>;
+    getAllComodityTrades(comodityId: number): Promise<ComoditiesFormViewModel[]>;
+    getGoldPriceInCurrency(currencyCode: string): Promise<number>;
+    createComodityTrade(tradeModel: ComodityTradeHistoryModel): Promise<void>;
+    updateComodityTrade(tradeModel: ComodityTradeHistoryModel): Promise<void>;
+    deleteComodityTrade(comodityId: number): Promise<void>;
+}
+
+export default class ComodityService implements IComodityService {
     comodityApi: ComodityApiInterface;
 
     constructor(comodityApi: ComodityApiInterface) {

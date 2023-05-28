@@ -1,7 +1,8 @@
 import { CurrencyApiInterface } from "../ApiClient/Main";
 import CurrencyTickerSelectModel from "../Components/Crypto/CurrencyTickerSelectModel";
+import { ICurrencyService } from "./ICurrencyService";
 
-export class CurrencyService {
+export class CurrencyService implements ICurrencyService {
     private currencyApi: CurrencyApiInterface;
 
     constructor(currencyApi: CurrencyApiInterface) {

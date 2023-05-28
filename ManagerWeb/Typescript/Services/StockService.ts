@@ -6,6 +6,7 @@ import { InterestRate, StockPrice, StockTickerModel, StockTradeHistoryModel } fr
 import ApiUrls from '../Model/Setting/ApiUrl';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import ApiClientFactory from "../Utils/ApiClientFactory";
+import { IStockService } from './IStockService';
 
 export class StockGroupModel {
     tickerId: number;
@@ -15,7 +16,7 @@ export class StockGroupModel {
     stocksActualPrice: number;
 }
 
-export default class StockService {
+export default class StockService implements IStockService {
     private stockApi: StockApi;
 
     constructor(history: H.History<any>, setting: ApiUrls) {

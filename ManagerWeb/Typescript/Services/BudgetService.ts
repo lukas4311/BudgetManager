@@ -2,8 +2,9 @@ import moment from "moment";
 import { BudgetApiInterface, BudgetModel } from "../ApiClient/Main";
 import { BudgetFormModel } from "../Components/Budget/BudgetForm";
 import { BudgetViewModel } from "../Components/Budget/BudgetViewModel";
+import { IBudgetService } from "./IBudgetService";
 
-export default class BudgetService {
+export default class BudgetService implements IBudgetService {
     private budgetApi: BudgetApiInterface;
 
     constructor(budgetApi: BudgetApiInterface) {

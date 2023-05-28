@@ -1,15 +1,14 @@
 import { CalendarChartData } from "../Model/CalendarChartData";
-import { IPaymentInfo } from "../Model/IPaymentInfo";
 import moment from "moment";
 import { LineChartData } from "../Model/LineChartData";
-import { IBankAccountBalanceResponseModel } from "../Model/IBankAccountBalanceResponseModel";
 import DataLoader from "./DataLoader";
 import { RadarChartData } from "../Model/RadarChartData";
 import { BankBalanceModel, PaymentModel } from "../ApiClient/Main";
-import _, { forEach } from "lodash";
+import _ from "lodash";
 import { PieChartData } from "../Components/Charts/PieChart";
+import { IChartDataProcessor } from "./IChartDataProcessor";
 
-export class ChartDataProcessor {
+export class ChartDataProcessor implements IChartDataProcessor {
     dataLoader: DataLoader;
 
     constructor() {
