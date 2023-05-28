@@ -25,7 +25,7 @@ export default class NetWorthService {
         console.log("🚀 ~ file: NetWorthService.ts:25 ~ NetWorthService ~ getNetWorthHistory ~ bankAccounts:", bankAccounts)
 
         // get payment history from payment service
-        const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(from, null, null);
+        const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(from, undefined, undefined);
         console.log("🚀 ~ file: NetWorthService.ts:29 ~ NetWorthService ~ getNetWorthHistory ~ paymentHistory:", paymentHistory)
     }
 }

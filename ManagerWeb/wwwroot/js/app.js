@@ -48411,7 +48411,6 @@ const react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "react-
 const AppCtx_1 = __webpack_require__(/*! ./Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 const Menu_1 = __importDefault(__webpack_require__(/*! ./Components/Menu */ "./Typescript/Components/Menu.tsx"));
-const Overview_1 = __importDefault(__webpack_require__(/*! ./Overview */ "./Typescript/Overview.tsx"));
 const Crypto_1 = __importDefault(__webpack_require__(/*! ./Crypto */ "./Typescript/Crypto.tsx"));
 const ErrorBoundry_1 = __importDefault(__webpack_require__(/*! ./Utils/ErrorBoundry */ "./Typescript/Utils/ErrorBoundry.tsx"));
 const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
@@ -48425,6 +48424,7 @@ const OtherInvestmentOverview_1 = __importDefault(__webpack_require__(/*! ./Comp
 const StockOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Stocks/StockOverview */ "./Typescript/Components/Stocks/StockOverview.tsx"));
 const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
 const DataLoader_1 = __importDefault(__webpack_require__(/*! ./Services/DataLoader */ "./Typescript/Services/DataLoader.ts"));
+const NetWorthOverview_1 = __importDefault(__webpack_require__(/*! ./Components/NetWorth/NetWorthOverview */ "./Typescript/Components/NetWorth/NetWorthOverview.tsx"));
 function App() {
     const [isLoaded, setIsLoaded] = (0, react_1.useState)(false);
     const [context, setContext] = (0, react_1.useState)({ apiUrls: { authApi: "aaa", mainApi: "bbb" } });
@@ -48460,7 +48460,7 @@ function App() {
                                 react_1.default.createElement(PrivateRoute_1.default, { path: "/comodity", component: Comodities_1.default }),
                                 react_1.default.createElement(PrivateRoute_1.default, { path: "/other-investment", component: OtherInvestmentOverview_1.default }),
                                 react_1.default.createElement(PrivateRoute_1.default, { path: "/stock", component: StockOverview_1.default }),
-                                react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: Overview_1.default })))),
+                                react_1.default.createElement(PrivateRoute_1.default, { path: "/", component: NetWorthOverview_1.default })))),
                     react_1.default.createElement("footer", { className: "text-center  m-4 text-white" },
                         react_1.default.createElement("span", { className: "m-auto" }, (0, moment_1.default)().format('YYYY-MM-DD') + " - Budget&Investment")),
                     react_1.default.createElement("script", { src: "~/js/site.js", "asp-append-version": "true" }),
@@ -50208,6 +50208,94 @@ exports["default"] = Menu;
 
 /***/ }),
 
+/***/ "./Typescript/Components/NetWorth/NetWorthOverview.tsx":
+/*!*************************************************************!*\
+  !*** ./Typescript/Components/NetWorth/NetWorthOverview.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const NetWorthService_1 = __importDefault(__webpack_require__(/*! ../../Services/NetWorthService */ "./Typescript/Services/NetWorthService.ts"));
+const PaymentService_1 = __importDefault(__webpack_require__(/*! ../../Services/PaymentService */ "./Typescript/Services/PaymentService.ts"));
+const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
+const CryptoService_1 = __importDefault(__webpack_require__(/*! ../../Services/CryptoService */ "./Typescript/Services/CryptoService.ts"));
+const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
+const BankAccountService_1 = __importDefault(__webpack_require__(/*! ../../Services/BankAccountService */ "./Typescript/Services/BankAccountService.ts"));
+const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
+const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
+const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
+class NetWorthOverviewState {
+}
+class NetWorthOverview extends react_1.Component {
+    constructor(props) {
+        super(props);
+        this.init = () => __awaiter(this, void 0, void 0, function* () {
+            const apiFactory = new ApiClientFactory_1.default(this.props.history);
+            const bankAccountApi = yield apiFactory.getClient(Main_1.BankAccountApi);
+            const paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
+            const stockApi = yield apiFactory.getClient(Main_1.StockApi);
+            const cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
+            const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
+            this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi), new CryptoService_1.default(cryptoApi), new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi));
+            const data = this.netWorthService.getNetWorthHistory(new Date(2020, 1, 1));
+            this.setState({ loading: false });
+        });
+        this.state = { loading: true };
+    }
+    componentDidMount() {
+        this.init();
+    }
+    render() {
+        return (react_1.default.createElement("div", null,
+            react_1.default.createElement("div", null, "NetWorthOverview"),
+            this.state.loading ? (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
+                react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }))) :
+                react_1.default.createElement("div", null)));
+    }
+}
+exports["default"] = NetWorthOverview;
+
+
+/***/ }),
+
 /***/ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx":
 /*!******************************************************************************!*\
   !*** ./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx ***!
@@ -51742,7 +51830,7 @@ class StockOverview extends react_1.default.Component {
             this.stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
             this.cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
-            this.stockService = new StockService_1.default(this.props.history, appContext.apiUrls);
+            this.stockService = new StockService_1.default(this.stockApi);
             this.tickers = yield this.stockService.getStockTickers();
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
             this.loadStockData();
@@ -52359,58 +52447,6 @@ class StockViewModel {
     }
 }
 exports.StockViewModel = StockViewModel;
-
-
-/***/ }),
-
-/***/ "./Typescript/Overview.tsx":
-/*!*********************************!*\
-  !*** ./Typescript/Overview.tsx ***!
-  \*********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const React = __importStar(__webpack_require__(/*! react */ "react"));
-const PaymentsOverview_1 = __importDefault(__webpack_require__(/*! ./Components/Payments/PaymentsOverview */ "./Typescript/Components/Payments/PaymentsOverview.tsx"));
-class Overview extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        return (React.createElement("div", { className: "" },
-            React.createElement("div", { className: "w-full lg:p-4" },
-                React.createElement(PaymentsOverview_1.default, Object.assign({}, this.props)))));
-    }
-}
-exports["default"] = Overview;
 
 
 /***/ }),
@@ -53040,6 +53076,48 @@ exports["default"] = DataLoader;
 
 /***/ }),
 
+/***/ "./Typescript/Services/NetWorthService.ts":
+/*!************************************************!*\
+  !*** ./Typescript/Services/NetWorthService.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+class NetWorthService {
+    constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
+        this.paymentService = paymentService;
+        this.stockService = stockService;
+        this.cryptoService = cryptoService;
+        this.otherInvestment = otherInvestment;
+        this.bankAccount = bankAccount;
+    }
+    getNetWorthHistory(from) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // get all bank accounts
+            const bankAccounts = yield this.bankAccount.getAllBankAccounts();
+            console.log("🚀 ~ file: NetWorthService.ts:25 ~ NetWorthService ~ getNetWorthHistory ~ bankAccounts:", bankAccounts);
+            // get payment history from payment service
+            const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(from, undefined, undefined);
+            console.log("🚀 ~ file: NetWorthService.ts:29 ~ NetWorthService ~ getNetWorthHistory ~ paymentHistory:", paymentHistory);
+        });
+    }
+}
+exports["default"] = NetWorthService;
+
+
+/***/ }),
+
 /***/ "./Typescript/Services/OtherInvestmentService.ts":
 /*!*******************************************************!*\
   !*** ./Typescript/Services/OtherInvestmentService.ts ***!
@@ -53340,14 +53418,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StockGroupModel = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
-const apis_1 = __webpack_require__(/*! ../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const StockViewModel_1 = __webpack_require__(/*! ../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
-const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 class StockGroupModel {
 }
 exports.StockGroupModel = StockGroupModel;
 class StockService {
-    constructor(history, setting) {
+    constructor(stockApi) {
         this.getStockTickers = () => __awaiter(this, void 0, void 0, function* () {
             return yield this.stockApi.stockStockTickerGet();
         });
@@ -53372,8 +53448,7 @@ class StockService {
                 .value();
             return values.filter(s => s.size > 0.00001);
         });
-        const apiFactory = new ApiClientFactory_1.default(history);
-        this.stockApi = apiFactory.getClientWithSetting(apis_1.StockApi, setting);
+        this.stockApi = stockApi;
     }
     getStockTradeHistory() {
         return __awaiter(this, void 0, void 0, function* () {
