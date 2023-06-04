@@ -50262,6 +50262,16 @@ const BankAccountService_1 = __importDefault(__webpack_require__(/*! ../../Servi
 const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const theme = (0, core_1.createMuiTheme)({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
 class NetWorthOverviewState {
 }
 class NetWorthOverview extends react_1.Component {
@@ -50275,7 +50285,7 @@ class NetWorthOverview extends react_1.Component {
             const cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
             const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
             this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi), new CryptoService_1.default(cryptoApi), new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi));
-            const data = this.netWorthService.getNetWorthHistory(new Date(2020, 1, 1));
+            const data = this.netWorthService.getNetWorthHistory();
             this.setState({ loading: false });
         });
         this.state = { loading: true };
@@ -50284,11 +50294,12 @@ class NetWorthOverview extends react_1.Component {
         this.init();
     }
     render() {
-        return (react_1.default.createElement("div", null,
-            react_1.default.createElement("div", null, "NetWorthOverview"),
-            this.state.loading ? (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
-                react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }))) :
-                react_1.default.createElement("div", null)));
+        return (react_1.default.createElement(core_1.ThemeProvider, { theme: theme },
+            react_1.default.createElement("div", { className: "" },
+                react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Net worth overview' },
+                    react_1.default.createElement(react_1.default.Fragment, null, this.state.loading ? (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
+                        react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }))) :
+                        react_1.default.createElement("div", null))))));
     }
 }
 exports["default"] = NetWorthOverview;
@@ -53080,7 +53091,7 @@ exports["default"] = DataLoader;
 /*!************************************************!*\
   !*** ./Typescript/Services/NetWorthService.ts ***!
   \************************************************/
-/***/ (function(__unused_webpack_module, exports) {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
@@ -53093,7 +53104,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PaymentType = void 0;
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+var PaymentType;
+(function (PaymentType) {
+    PaymentType["Revenue"] = "Revenue";
+    PaymentType["Expense"] = "Expense";
+})(PaymentType = exports.PaymentType || (exports.PaymentType = {}));
 class NetWorthService {
     constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
         this.paymentService = paymentService;
@@ -53102,14 +53123,25 @@ class NetWorthService {
         this.otherInvestment = otherInvestment;
         this.bankAccount = bankAccount;
     }
-    getNetWorthHistory(from) {
+    getNetWorthHistory() {
         return __awaiter(this, void 0, void 0, function* () {
             // get all bank accounts
             const bankAccounts = yield this.bankAccount.getAllBankAccounts();
-            console.log("🚀 ~ file: NetWorthService.ts:25 ~ NetWorthService ~ getNetWorthHistory ~ bankAccounts:", bankAccounts);
+            const bankAccountBaseLine = lodash_1.default.sumBy(bankAccounts, s => s.openingBalance);
+            console.log("🚀 ~ file: NetWorthService.ts:27 ~ NetWorthService ~ getNetWorthHistory ~ bankAccountBaseLine:", bankAccountBaseLine);
+            const limitDate = new Date(1970, 1, 1);
             // get payment history from payment service
-            const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(from, undefined, undefined);
+            const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
             console.log("🚀 ~ file: NetWorthService.ts:29 ~ NetWorthService ~ getNetWorthHistory ~ paymentHistory:", paymentHistory);
+            const income = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
+            const expense = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
+            let currentBalance = bankAccountBaseLine + income - expense;
+            console.log("🚀 ~ file: NetWorthService.ts:43 ~ NetWorthService ~ getNetWorthHistory ~ currentBalance:", currentBalance);
+            const otherInvestments = yield this.otherInvestment.getSummary();
+            const otherInvestmentsbalance = lodash_1.default.sumBy(otherInvestments.actualBalanceData, s => s.balance);
+            console.log("🚀 ~ file: NetWorthService.ts:47 ~ NetWorthService ~ getNetWorthHistory ~ otherInvestmentsbalance:", otherInvestmentsbalance);
+            currentBalance += otherInvestmentsbalance;
+            console.log("🚀 ~ file: NetWorthService.ts:50 ~ NetWorthService ~ getNetWorthHistory ~ currentBalance:", currentBalance);
         });
     }
 }
