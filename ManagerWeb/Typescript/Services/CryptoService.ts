@@ -17,6 +17,10 @@ export default class CryptoService implements ICryptoService {
         return trades;
     }
 
+    public async getRawTradeData(): Promise<TradeHistory[]> {
+        return await this.cryptoApi.cryptosAllGet();
+    }
+
     public async getCryptoTickers(): Promise<CryptoTickerSelectModel[]> {
         return (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }))
     }
@@ -33,6 +37,10 @@ export default class CryptoService implements ICryptoService {
 
     public async deleteCryptoTrade(tradeId: number) {
         await this.cryptoApi.cryptosDelete({ body: tradeId });
+    }
+
+    public async getExchangeRate(from: string, to: string): Promise<number> {
+        return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
     }
 
     private mapViewModelToDataModel = (tradeModel: CryptoTradeViewModel) => {

@@ -61,7 +61,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                     </div>
                                 ) :
                                     <div>
-
+                                        
                                     </div>
                             }
                         </React.Fragment>

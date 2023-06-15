@@ -52866,6 +52866,11 @@ class CryptoService {
             return trades;
         });
     }
+    getRawTradeData() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.cryptoApi.cryptosAllGet();
+        });
+    }
     getCryptoTickers() {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }));
@@ -52886,6 +52891,11 @@ class CryptoService {
     deleteCryptoTrade(tradeId) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.cryptoApi.cryptosDelete({ body: tradeId });
+        });
+    }
+    getExchangeRate(from, to) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
         });
     }
 }
@@ -53118,6 +53128,7 @@ var PaymentType;
     PaymentType["Revenue"] = "Revenue";
     PaymentType["Expense"] = "Expense";
 })(PaymentType = exports.PaymentType || (exports.PaymentType = {}));
+const usdSymbol = "USD";
 class NetWorthService {
     constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
         this.paymentService = paymentService;
@@ -53131,24 +53142,41 @@ class NetWorthService {
             // get all bank accounts
             const bankAccounts = yield this.bankAccount.getAllBankAccounts();
             const bankAccountBaseLine = lodash_1.default.sumBy(bankAccounts, s => s.openingBalance);
-            console.log("🚀 ~ file: NetWorthService.ts:27 ~ NetWorthService ~ getNetWorthHistory ~ bankAccountBaseLine:", bankAccountBaseLine);
             const limitDate = new Date(1970, 1, 1);
             // get payment history from payment service
             const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
-            console.log("🚀 ~ file: NetWorthService.ts:29 ~ NetWorthService ~ getNetWorthHistory ~ paymentHistory:", paymentHistory);
             const income = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
             const expense = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
             let currentBalance = bankAccountBaseLine + income - expense;
-            console.log("🚀 ~ file: NetWorthService.ts:43 ~ NetWorthService ~ getNetWorthHistory ~ currentBalance:", currentBalance);
             const otherInvestments = yield this.otherInvestment.getSummary();
             const otherInvestmentsbalance = lodash_1.default.sumBy(otherInvestments.actualBalanceData, s => s.balance);
-            console.log("🚀 ~ file: NetWorthService.ts:47 ~ NetWorthService ~ getNetWorthHistory ~ otherInvestmentsbalance:", otherInvestmentsbalance);
             currentBalance += otherInvestmentsbalance;
-            console.log("🚀 ~ file: NetWorthService.ts:50 ~ NetWorthService ~ getNetWorthHistory ~ currentBalance:", currentBalance);
+            // const cryptoBalance = this.cryptoService.
+            this.getCryptoUsdSum();
+            return currentBalance;
+        });
+    }
+    getCryptoUsdSum() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let trades = yield this.cryptoService.getRawTradeData();
+            let groupedTrades = lodash_1.default.groupBy(trades, t => t.currencySymbol);
+            console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
+            let cryptoSums = [];
+            let that = this;
+            lodash_1.default.forOwn(groupedTrades, function (value, key) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+                    let exhangeRate = yield that.cryptoService.getExchangeRate(value[0].currencySymbol, usdSymbol);
+                    cryptoSums.push({ usdPrice: sumValue * exhangeRate });
+                });
+            });
+            console.log(cryptoSums);
         });
     }
 }
 exports["default"] = NetWorthService;
+class CryptoSum {
+}
 
 
 /***/ }),
