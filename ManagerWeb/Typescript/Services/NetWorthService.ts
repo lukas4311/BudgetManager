@@ -48,16 +48,18 @@ export default class NetWorthService {
 
         // const cryptoBalance = this.cryptoService.
         this.getCryptoUsdSum();
-        
+
         return currentBalance;
     }
 
     private async getCryptoUsdSum() {
         let trades: TradeHistory[] = await this.cryptoService.getRawTradeData();
-        let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
+        let groupedTrades = _.chain(trades).groupBy(t => t.cryptoTicker)
+            .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
+            .value();
+
         console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
-        
-        // TODO: udelat sumu trade size podle meny
+
         // TODO: pro kazdou menu udelat fetch aktulani ceny
         // TODO: prevod z meny na CZK
 
