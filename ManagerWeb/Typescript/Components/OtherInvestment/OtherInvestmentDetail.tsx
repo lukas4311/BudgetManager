@@ -21,6 +21,7 @@ import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
 import OtherInvestmentService from "../../Services/OtherInvestmentService";
 import TagService from "../../Services/TagService";
+import { SpinnerCircularSplit } from "spinners-react";
 
 
 const theme = createMuiTheme({
@@ -237,51 +238,61 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
     render = () => {
         return (
             <ThemeProvider theme={theme}>
-                <div className="bg-lightGray rounded-xl m-6 p-4">
-                    <div className="w-8 binWithAnimation" onClick={this.showDialog}>{new IconsData().bin}</div>
-                    <div className="flex flex-row justify-center">
-                        <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
-                        <p className="self-end ml-4 mr-2">currently invested</p>
-                        <h2 className="text-vermilion text-2xl font-bold self-center">{this.state.totalInvested}</h2>
-                    </div>
-                    <div className="flex flex-col pt-4">
-                        <div className="h-64 w-full">
-                            <LineChart dataSets={this.getChartData()} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
+                {this.props ? (
+                    <>
+                        <div className="bg-lightGray rounded-xl m-6 p-4">
+                            <div className="w-8 binWithAnimation" onClick={this.showDialog}>{new IconsData().bin}</div>
+                            <div className="flex flex-row justify-center">
+                                <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>
+                                <p className="self-end ml-4 mr-2">currently invested</p>
+                                <h2 className="text-vermilion text-2xl font-bold self-center">{this.state.totalInvested}</h2>
+                            </div>
+                            <div className="flex flex-col pt-4">
+                                <div className="h-64 w-full">
+                                    <LineChart dataSets={this.getChartData()} chartProps={LineChartSettingManager.getOtherInvestmentChartSetting()}></LineChart>
+                                </div>
+                                <div className="flex flex-row justify-around">
+                                    <p className="text-xl">Curent value <span className="text-vermilion text-2xl font-medium">{this.getActualBalance()}</span></p>
+                                    <p>Overall progress <span className={"font-medium " + (this.state.progressOverall < 0 ? "text-red-700 " : "text-green-700")}>{_.round(this.state.progressOverall, 2)}</span>%</p>
+                                    <p>YOY progress <span className={"font-medium " + (this.state.progressYY < 0 ? "text-red-700" : "text-green-700")}>{_.round(this.state.progressYY, 2)}</span>%</p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mt-6">
+                                <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
+                                    addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvestment}></BaseList>
+                                <div className="flex flex-col p-4">
+                                    <p className="text-xl mb-2 text-left">Payments to investment</p>
+                                    <BaseList<PaymentModel> data={this.state.linkedPayments} template={this.renderPaymentTemplate}></BaseList>
+                                    <Button className='bg-vermilion w-full' onClick={this.onCreateConnectionWithPaymentTag}>
+                                        <span className="w-6">{this.icons.link}</span>
+                                        <span className="ml-6 text-xs font-semibold">{this.state.linkedTagCode}</span>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex flex-row justify-around">
-                            <p className="text-xl">Curent value <span className="text-vermilion text-2xl font-medium">{this.getActualBalance()}</span></p>
-                            <p>Overall progress <span className={"font-medium " + (this.state.progressOverall < 0 ? "text-red-700 " : "text-green-700")}>{_.round(this.state.progressOverall, 2)}</span>%</p>
-                            <p>YOY progress <span className={"font-medium " + (this.state.progressYY < 0 ? "text-red-700" : "text-green-700")}>{_.round(this.state.progressYY, 2)}</span>%</p>
+                        <Dialog open={this.state.openedFormBalance} onClose={this.handleCloseBalance} aria-labelledby="Balance at date"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
+                                <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} />
+                            </DialogContent>
+                        </Dialog>
+                        <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Tag form</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
+                                <OtherInvestmentTagForm viewModel={this.state.tagViewModel} onSave={this.createConnectionWithPaymentTag} />
+                            </DialogContent>
+                        </Dialog>
+                        <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteOtherInvestment(ConfirmationResult.Cancel)} onConfirm={this.deleteOtherInvestment} isOpen={this.state.confirmDialogIsOpen} />
+                    </>
+                )
+                    : (
+                        <div className="flex text-center justify-center h-full">
+                            {/* <div id="loading"></div> */}
+                            <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
                         </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mt-6">
-                        <BaseList<OtherInvestmentBalaceHistoryViewModel> data={this.state.balances} template={this.renderTemplate} header={this.renderHeader()}
-                            addItemHandler={this.addBalance} useRowBorderColor={true} itemClickHandler={this.editInvestment}></BaseList>
-                        <div className="flex flex-col p-4">
-                            <p className="text-xl mb-2 text-left">Payments to investment</p>
-                            <BaseList<PaymentModel> data={this.state.linkedPayments} template={this.renderPaymentTemplate}></BaseList>
-                            <Button className='bg-vermilion w-full' onClick={this.onCreateConnectionWithPaymentTag}>
-                                <span className="w-6">{this.icons.link}</span>
-                                <span className="ml-6 text-xs font-semibold">{this.state.linkedTagCode}</span>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-                <Dialog open={this.state.openedFormBalance} onClose={this.handleCloseBalance} aria-labelledby="Balance at date"
-                    maxWidth="md" fullWidth={true}>
-                    <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
-                    <DialogContent className="bg-prussianBlue">
-                        <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} />
-                    </DialogContent>
-                </Dialog>
-                <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
-                    maxWidth="md" fullWidth={true}>
-                    <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Tag form</DialogTitle>
-                    <DialogContent className="bg-prussianBlue">
-                        <OtherInvestmentTagForm viewModel={this.state.tagViewModel} onSave={this.createConnectionWithPaymentTag} />
-                    </DialogContent>
-                </Dialog>
-                <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteOtherInvestment(ConfirmationResult.Cancel)} onConfirm={this.deleteOtherInvestment} isOpen={this.state.confirmDialogIsOpen} />
+                    )}
             </ThemeProvider>
         );
     }

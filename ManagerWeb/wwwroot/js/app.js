@@ -50383,6 +50383,7 @@ const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSet
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
 const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
 const TagService_1 = __importDefault(__webpack_require__(/*! ../../Services/TagService */ "./Typescript/Services/TagService.ts"));
+const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -50507,7 +50508,7 @@ class OtherInvestmentDetail extends react_1.default.Component {
         };
         this.render = () => {
             var _a;
-            return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme },
+            return (react_1.default.createElement(styles_1.ThemeProvider, { theme: theme }, this.props ? (react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement("div", { className: "bg-lightGray rounded-xl m-6 p-4" },
                     react_1.default.createElement("div", { className: "w-8 binWithAnimation", onClick: this.showDialog }, new IconsEnum_1.IconsData().bin),
                     react_1.default.createElement("div", { className: "flex flex-row justify-center" },
@@ -50547,7 +50548,9 @@ class OtherInvestmentDetail extends react_1.default.Component {
                     react_1.default.createElement(core_1.DialogTitle, { id: "form-dialog-title", className: "bg-prussianBlue" }, "Tag form"),
                     react_1.default.createElement(core_1.DialogContent, { className: "bg-prussianBlue" },
                         react_1.default.createElement(OtherInvestmentTagForm_1.OtherInvestmentTagForm, { viewModel: this.state.tagViewModel, onSave: this.createConnectionWithPaymentTag }))),
-                react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteOtherInvestment(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteOtherInvestment, isOpen: this.state.confirmDialogIsOpen })));
+                react_1.default.createElement(ConfirmationForm_1.ConfirmationForm, { key: this.state.confirmDialogKey, onClose: () => this.deleteOtherInvestment(ConfirmationForm_1.ConfirmationResult.Cancel), onConfirm: this.deleteOtherInvestment, isOpen: this.state.confirmDialogIsOpen })))
+                : (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
+                    react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" })))));
         };
         this.state = {
             balances: [], progressOverall: 0, progressYY: 0, openedFormBalance: false, selectedModel: undefined, confirmDialogIsOpen: false,
