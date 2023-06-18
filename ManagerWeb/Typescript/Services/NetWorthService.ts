@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { forEach } from "lodash";
 import { IBankAccountService } from "./IBankAccountService";
 import { ICryptoService } from "./ICryptoService";
 import { IOtherInvestmentService } from "./IOtherInvestmentService";
@@ -12,6 +12,7 @@ export enum PaymentType {
 }
 
 const usdSymbol = "USD";
+const czkSymbol = "CZK";
 
 export default class NetWorthService {
     private paymentService: IPaymentService;
@@ -53,6 +54,7 @@ export default class NetWorthService {
     }
 
     private async getCryptoUsdSum() {
+        let cryptoSum = 0;
         let trades: TradeHistory[] = await this.cryptoService.getRawTradeData();
         let groupedTrades = _.chain(trades).groupBy(t => t.cryptoTicker)
             .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
@@ -60,19 +62,16 @@ export default class NetWorthService {
 
         console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
 
-        // TODO: pro kazdou menu udelat fetch aktulani ceny
-        // TODO: prevod z meny na CZK
+        for (const ticker of groupedTrades) {
+            const exchangeRate = await this.cryptoService.getExchangeRate(ticker.ticker, czkSymbol);
 
-
-        // let cryptoSums: CryptoSum[] = [];
-        // let that = this;
-
-        // _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
-        //     let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-        //     let exhangeRate: number = await that.cryptoService.getExchangeRate(value[0].currencySymbol, usdSymbol);
-
-        //     cryptoSums.push({ usdPrice: sumValue * exhangeRate });
-        // });
+            if (exchangeRate) {
+                const sumedInFinalCurrency = exchangeRate * ticker.sum;
+                cryptoSum += sumedInFinalCurrency;
+            }
+        }
+        
+        console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getCryptoUsdSum ~ cryptoSum:", cryptoSum)
     }
 }
 

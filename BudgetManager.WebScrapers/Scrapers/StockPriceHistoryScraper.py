@@ -84,7 +84,7 @@ def processTickers(rows):
             influx_repository.clear()
             print(symbol + " - error")
 
-        print("Sleeping for 5 seconds")
+        print("Sleeping for 2 seconds")
         time.sleep(2)
         print("Sleeping is done.")
 

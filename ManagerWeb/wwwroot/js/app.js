@@ -48599,8 +48599,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BankAccountFromViewModel = exports.BankAccountForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 class BankAccountFromViewModel {
 }
 exports.BankAccountFromViewModel = BankAccountFromViewModel;
@@ -48646,9 +48646,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const BankAccountForm_1 = __webpack_require__(/*! ./BankAccountForm */ "./Typescript/Components/BankAccount/BankAccountForm.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
@@ -48763,7 +48763,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BaseList = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const IconsEnum_1 = __webpack_require__(/*! ../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const BaseList = (props) => {
@@ -48910,14 +48910,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ActualBudgetCard_1 = __importDefault(__webpack_require__(/*! ./ActualBudgetCard */ "./Typescript/Components/Budget/ActualBudgetCard.tsx"));
 const BudgetForm_1 = __webpack_require__(/*! ./BudgetForm */ "./Typescript/Components/Budget/BudgetForm.tsx");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BudgetService_1 = __importDefault(__webpack_require__(/*! ../../Services/BudgetService */ "./Typescript/Services/BudgetService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
@@ -49027,7 +49027,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BudgetForm2 = exports.BudgetFormModel = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 class BudgetFormModel {
 }
 exports.BudgetFormModel = BudgetFormModel;
@@ -49425,10 +49425,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Gold_1 = __importDefault(__webpack_require__(/*! ./Gold */ "./Typescript/Components/Comodities/Gold.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const ComoditiesForm_1 = __webpack_require__(/*! ./ComoditiesForm */ "./Typescript/Components/Comodities/ComoditiesForm.tsx");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ConfirmationForm_1 = __webpack_require__(/*! ../ConfirmationForm */ "./Typescript/Components/ConfirmationForm.tsx");
@@ -49600,8 +49600,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ComoditiesFormViewModel = exports.ComoditiesForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 class ComoditiesFormProps {
 }
 class ComoditiesFormViewModel {
@@ -49929,8 +49929,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CryptoTradeViewModel = exports.CryptoTradeForm = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
-const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const core_2 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 class CryptoTradeViewModel {
 }
 exports.CryptoTradeViewModel = CryptoTradeViewModel;
@@ -49999,12 +49999,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BuySellBadge = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const CryptoTradeForm_1 = __webpack_require__(/*! ./CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
@@ -50262,7 +50262,7 @@ const BankAccountService_1 = __importDefault(__webpack_require__(/*! ../../Servi
 const OtherInvestmentService_1 = __importDefault(__webpack_require__(/*! ../../Services/OtherInvestmentService */ "./Typescript/Services/OtherInvestmentService.ts"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const theme = (0, core_1.createMuiTheme)({
     palette: {
@@ -50320,7 +50320,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OtherInvestmentBalanceForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 class OtherInvestmentBalanceFormProps {
@@ -50368,11 +50368,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OtherInvestmentBalaceHistoryViewModel = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const OtherInvestmentApi_1 = __webpack_require__(/*! ../../ApiClient/Main/apis/OtherInvestmentApi */ "./Typescript/ApiClient/Main/apis/OtherInvestmentApi.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const OtherInvestmentBalanceForm_1 = __webpack_require__(/*! ./OtherInvestmentBalanceForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentBalanceForm.tsx");
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
@@ -50597,7 +50597,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OtherInvestmentForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 class OtherInvestmentFormProps {
@@ -50657,13 +50657,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const OtherInvestmentViewModel_1 = __importDefault(__webpack_require__(/*! ../../Model/OtherInvestmentViewModel */ "./Typescript/Model/OtherInvestmentViewModel.ts"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const OtherInvestmentForm_1 = __webpack_require__(/*! ./OtherInvestmentForm */ "./Typescript/Components/OtherInvestment/OtherInvestmentForm.tsx");
 const OtherInvestmentDetail_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentDetail */ "./Typescript/Components/OtherInvestment/OtherInvestmentDetail.tsx"));
 const OtherInvestmentSummary_1 = __importDefault(__webpack_require__(/*! ./OtherInvestmentSummary */ "./Typescript/Components/OtherInvestment/OtherInvestmentSummary.tsx"));
@@ -50981,7 +50981,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OtherInvestmentTagForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
 class OtherInvestmentTagFormProps {
@@ -51117,7 +51117,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const PaymentTagManager_1 = __importDefault(__webpack_require__(/*! ../PaymentTagManager */ "./Typescript/Components/PaymentTagManager.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescript/Enums/IconsEnum.tsx");
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
@@ -51303,8 +51303,8 @@ const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript
 const CalendarChart_1 = __webpack_require__(/*! ../Charts/CalendarChart */ "./Typescript/Components/Charts/CalendarChart.tsx");
 const ChartDataProcessor_1 = __webpack_require__(/*! ../../Services/ChartDataProcessor */ "./Typescript/Services/ChartDataProcessor.ts");
 const DateRangeComponent_1 = __importDefault(__webpack_require__(/*! ../../Utils/DateRangeComponent */ "./Typescript/Utils/DateRangeComponent.tsx"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const BaseList_1 = __webpack_require__(/*! ../BaseList */ "./Typescript/Components/BaseList.tsx");
 const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/ApiClientFactory */ "./Typescript/Utils/ApiClientFactory.tsx"));
 const Main_1 = __webpack_require__(/*! ../../ApiClient/Main */ "./Typescript/ApiClient/Main/index.ts");
@@ -51703,10 +51703,10 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 const apis_1 = __webpack_require__(/*! ../../ApiClient/Main/apis */ "./Typescript/ApiClient/Main/apis/index.ts");
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const StockViewModel_1 = __webpack_require__(/*! ../../Model/StockViewModel */ "./Typescript/Model/StockViewModel.tsx");
 const StockTradeForm_1 = __webpack_require__(/*! ./StockTradeForm */ "./Typescript/Components/Stocks/StockTradeForm.tsx");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const AppCtx_1 = __webpack_require__(/*! ../../Context/AppCtx */ "./Typescript/Context/AppCtx.ts");
 const StockService_1 = __importDefault(__webpack_require__(/*! ../../Services/StockService */ "./Typescript/Services/StockService.ts"));
 const CryptoTrades_1 = __webpack_require__(/*! ../Crypto/CryptoTrades */ "./Typescript/Components/Crypto/CryptoTrades.tsx");
@@ -51920,10 +51920,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StockTradeForm = void 0;
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_hook_form_1 = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.cjs.js");
-const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core/styles");
+const styles_1 = __webpack_require__(/*! @material-ui/core/styles */ "@material-ui/core");
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -53129,6 +53129,7 @@ var PaymentType;
     PaymentType["Expense"] = "Expense";
 })(PaymentType = exports.PaymentType || (exports.PaymentType = {}));
 const usdSymbol = "USD";
+const czkSymbol = "CZK";
 class NetWorthService {
     constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
         this.paymentService = paymentService;
@@ -53158,20 +53159,20 @@ class NetWorthService {
     }
     getCryptoUsdSum() {
         return __awaiter(this, void 0, void 0, function* () {
+            let cryptoSum = 0;
             let trades = yield this.cryptoService.getRawTradeData();
             let groupedTrades = lodash_1.default.chain(trades).groupBy(t => t.cryptoTicker)
                 .map((value, key) => ({ ticker: key, sum: lodash_1.default.sumBy(value, s => s.tradeSize) }))
                 .value();
             console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
-            // TODO: pro kazdou menu udelat fetch aktulani ceny
-            // TODO: prevod z meny na CZK
-            // let cryptoSums: CryptoSum[] = [];
-            // let that = this;
-            // _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
-            //     let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            //     let exhangeRate: number = await that.cryptoService.getExchangeRate(value[0].currencySymbol, usdSymbol);
-            //     cryptoSums.push({ usdPrice: sumValue * exhangeRate });
-            // });
+            for (const ticker of groupedTrades) {
+                const exchangeRate = yield this.cryptoService.getExchangeRate(ticker.ticker, czkSymbol);
+                if (exchangeRate) {
+                    const sumedInFinalCurrency = exchangeRate * ticker.sum;
+                    cryptoSum += sumedInFinalCurrency;
+                }
+            }
+            console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getCryptoUsdSum ~ cryptoSum:", cryptoSum);
         });
     }
 }
@@ -53763,7 +53764,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core/styles");
+const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 class DateRangeState {
 }
@@ -54048,7 +54049,7 @@ exports["default"] = UnauthorizedMiddleware;
 
 /***/ }),
 
-/***/ "@material-ui/core/styles":
+/***/ "@material-ui/core":
 /*!*****************************!*\
   !*** external "MaterialUI" ***!
   \*****************************/
