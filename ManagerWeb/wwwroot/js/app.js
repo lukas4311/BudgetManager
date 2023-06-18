@@ -50285,7 +50285,7 @@ class NetWorthOverview extends react_1.Component {
             const cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
             const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
             this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi), new CryptoService_1.default(cryptoApi), new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi));
-            const data = this.netWorthService.getNetWorthHistory();
+            const data = this.netWorthService.getCurrentNetWorth();
             this.setState({ loading: false });
         });
         this.state = { loading: true };
@@ -52829,6 +52829,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const CryptoTradeForm_1 = __webpack_require__(/*! ../Components/Crypto/CryptoTradeForm */ "./Typescript/Components/Crypto/CryptoTradeForm.tsx");
+const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const usdSymbol = "USD";
+const czkSymbol = "CZK";
 class CryptoService {
     constructor(cryptoApi) {
         this.mapViewModelToDataModel = (tradeModel) => {
@@ -52896,6 +52899,25 @@ class CryptoService {
     getExchangeRate(from, to) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
+        });
+    }
+    getCryptoCurrentNetWorth(currency) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let cryptoSum = 0;
+            let trades = yield this.getRawTradeData();
+            let groupedTrades = lodash_1.default.chain(trades).groupBy(t => t.cryptoTicker)
+                .map((value, key) => ({ ticker: key, sum: lodash_1.default.sumBy(value, s => s.tradeSize) }))
+                .value();
+            for (const ticker of groupedTrades) {
+                const dollarExcahngeRate = yield this.getExchangeRate(ticker.ticker, usdSymbol);
+                const finalCurrencyExcahngeRate = yield this.getExchangeRate(usdSymbol, currency);
+                const finalMultiplier = dollarExcahngeRate * finalCurrencyExcahngeRate;
+                if (finalMultiplier != 0) {
+                    const sumedInFinalCurrency = finalMultiplier * ticker.sum;
+                    cryptoSum += sumedInFinalCurrency;
+                }
+            }
+            return cryptoSum;
         });
     }
 }
@@ -53128,7 +53150,6 @@ var PaymentType;
     PaymentType["Revenue"] = "Revenue";
     PaymentType["Expense"] = "Expense";
 })(PaymentType = exports.PaymentType || (exports.PaymentType = {}));
-const usdSymbol = "USD";
 const czkSymbol = "CZK";
 class NetWorthService {
     constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
@@ -53138,13 +53159,11 @@ class NetWorthService {
         this.otherInvestment = otherInvestment;
         this.bankAccount = bankAccount;
     }
-    getNetWorthHistory() {
+    getCurrentNetWorth() {
         return __awaiter(this, void 0, void 0, function* () {
-            // get all bank accounts
             const bankAccounts = yield this.bankAccount.getAllBankAccounts();
             const bankAccountBaseLine = lodash_1.default.sumBy(bankAccounts, s => s.openingBalance);
             const limitDate = new Date(1970, 1, 1);
-            // get payment history from payment service
             const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
             const income = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
             const expense = lodash_1.default.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
@@ -53152,33 +53171,14 @@ class NetWorthService {
             const otherInvestments = yield this.otherInvestment.getSummary();
             const otherInvestmentsbalance = lodash_1.default.sumBy(otherInvestments.actualBalanceData, s => s.balance);
             currentBalance += otherInvestmentsbalance;
-            // const cryptoBalance = this.cryptoService.
-            this.getCryptoUsdSum();
+            const cryptoSum = yield this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
+            currentBalance += cryptoSum;
+            console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance);
             return currentBalance;
-        });
-    }
-    getCryptoUsdSum() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let cryptoSum = 0;
-            let trades = yield this.cryptoService.getRawTradeData();
-            let groupedTrades = lodash_1.default.chain(trades).groupBy(t => t.cryptoTicker)
-                .map((value, key) => ({ ticker: key, sum: lodash_1.default.sumBy(value, s => s.tradeSize) }))
-                .value();
-            console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
-            for (const ticker of groupedTrades) {
-                const exchangeRate = yield this.cryptoService.getExchangeRate(ticker.ticker, czkSymbol);
-                if (exchangeRate) {
-                    const sumedInFinalCurrency = exchangeRate * ticker.sum;
-                    cryptoSum += sumedInFinalCurrency;
-                }
-            }
-            console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getCryptoUsdSum ~ cryptoSum:", cryptoSum);
         });
     }
 }
 exports["default"] = NetWorthService;
-class CryptoSum {
-}
 
 
 /***/ }),

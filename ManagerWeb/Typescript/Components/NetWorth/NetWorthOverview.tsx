@@ -44,7 +44,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const cryptoApi = await apiFactory.getClient(CryptoApi);
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi), new CryptoService(cryptoApi), new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi));
-        const data = this.netWorthService.getNetWorthHistory();
+        const data = this.netWorthService.getCurrentNetWorth();
         this.setState({ loading: false });
     }
 

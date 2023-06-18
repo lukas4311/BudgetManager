@@ -10,4 +10,5 @@ export interface ICryptoService {
     deleteCryptoTrade(tradeId: number): Promise<void>;
     getRawTradeData(): Promise<TradeHistory[]>;
     getExchangeRate(from: string, to: string): Promise<number>;
+    getCryptoCurrentNetWorth(currency: string): Promise<number>;
 }

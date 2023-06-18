@@ -3,6 +3,10 @@ import { CryptoApiInterface, TradeHistory } from "../ApiClient/Main";
 import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { ICryptoService } from "./ICryptoService";
+import _ from "lodash";
+
+const usdSymbol = "USD";
+const czkSymbol = "CZK";
 
 export default class CryptoService implements ICryptoService {
     private cryptoApi: CryptoApiInterface;
@@ -41,6 +45,28 @@ export default class CryptoService implements ICryptoService {
 
     public async getExchangeRate(from: string, to: string): Promise<number> {
         return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
+    }
+
+    public async getCryptoCurrentNetWorth(currency: string): Promise<number> {
+        let cryptoSum = 0;
+        let trades: TradeHistory[] = await this.getRawTradeData();
+        let groupedTrades = _.chain(trades).groupBy(t => t.cryptoTicker)
+            .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
+            .value();
+
+
+        for (const ticker of groupedTrades) {
+            const dollarExcahngeRate = await this.getExchangeRate(ticker.ticker, usdSymbol);
+            const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, currency);
+            const finalMultiplier = dollarExcahngeRate * finalCurrencyExcahngeRate;
+
+            if (finalMultiplier != 0) {
+                const sumedInFinalCurrency = finalMultiplier * ticker.sum;
+                cryptoSum += sumedInFinalCurrency;
+            }
+        }
+
+        return cryptoSum;
     }
 
     private mapViewModelToDataModel = (tradeModel: CryptoTradeViewModel) => {

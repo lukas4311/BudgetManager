@@ -11,7 +11,6 @@ export enum PaymentType {
     Expense = 'Expense'
 }
 
-const usdSymbol = "USD";
 const czkSymbol = "CZK";
 
 export default class NetWorthService {
@@ -29,13 +28,11 @@ export default class NetWorthService {
         this.bankAccount = bankAccount;
     }
 
-    async getNetWorthHistory(): Promise<number> {
-        // get all bank accounts
+    async getCurrentNetWorth(): Promise<number> {
         const bankAccounts = await this.bankAccount.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
 
         const limitDate = new Date(1970, 1, 1);
-        // get payment history from payment service
         const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
         const income = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
         const expense = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
@@ -47,34 +44,10 @@ export default class NetWorthService {
 
         currentBalance += otherInvestmentsbalance;
 
-        // const cryptoBalance = this.cryptoService.
-        this.getCryptoUsdSum();
-
+        const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
+        currentBalance += cryptoSum;
+        
+        console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
     }
-
-    private async getCryptoUsdSum() {
-        let cryptoSum = 0;
-        let trades: TradeHistory[] = await this.cryptoService.getRawTradeData();
-        let groupedTrades = _.chain(trades).groupBy(t => t.cryptoTicker)
-            .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
-            .value();
-
-        console.log("🚀 ~ file: NetWorthService.ts:58 ~ NetWorthService ~ getCryptoUsdSum ~ groupedTrades:", groupedTrades);
-
-        for (const ticker of groupedTrades) {
-            const exchangeRate = await this.cryptoService.getExchangeRate(ticker.ticker, czkSymbol);
-
-            if (exchangeRate) {
-                const sumedInFinalCurrency = exchangeRate * ticker.sum;
-                cryptoSum += sumedInFinalCurrency;
-            }
-        }
-        
-        console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getCryptoUsdSum ~ cryptoSum:", cryptoSum)
-    }
-}
-
-class CryptoSum {
-    usdPrice: number;
 }
