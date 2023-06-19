@@ -46,8 +46,30 @@ export default class NetWorthService {
 
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
         currentBalance += cryptoSum;
-        
+
+        const stockSum = await this.getStockNetWorth(czkSymbol);
+        currentBalance += stockSum;
+
         console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
+    }
+
+    async getStockNetWorth(czkSymbol: string): Promise<number> {
+        let netWorth = 0;
+        let stockGrouped = await this.stockService.getGroupedTradeHistory();
+        const tickers = stockGrouped.map(a => a.tickerName);
+        const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
+
+        for (const stock of stockGrouped) {
+            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+
+            if (tickerPrices != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
+                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+            }
+        }
+
+        return netWorth;
     }
 }
