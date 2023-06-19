@@ -1,11 +1,8 @@
-import * as H from 'history';
 import _ from 'lodash';
 import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
-import { InterestRate, StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClient/Main/models';
-import ApiUrls from '../Model/Setting/ApiUrl';
+import { StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClient/Main/models';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
-import ApiClientFactory from "../Utils/ApiClientFactory";
 import { IStockService } from './IStockService';
 
 export class StockGroupModel {
