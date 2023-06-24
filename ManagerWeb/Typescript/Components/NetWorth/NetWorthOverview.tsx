@@ -4,13 +4,15 @@ import PaymentService from '../../Services/PaymentService';
 import StockService from '../../Services/StockService';
 import CryptoService from '../../Services/CryptoService';
 import { RouteComponentProps } from 'react-router-dom';
-import { BankAccountApi, CryptoApi, OtherInvestmentApi, PaymentApi, StockApi } from '../../ApiClient/Main';
+import { BankAccountApi, ComodityApi, CryptoApi, OtherInvestmentApi, PaymentApi, StockApi } from '../../ApiClient/Main';
 import BankAccountService from '../../Services/BankAccountService';
 import OtherInvestmentService from '../../Services/OtherInvestmentService';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
 import { SpinnerCircularSplit } from 'spinners-react';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core';
 import { MainFrame } from '../MainFrame';
+import { ICryptoService } from '../../Services/ICryptoService';
+import ComodityService from '../../Services/ComodityService';
 
 const theme = createMuiTheme({
     palette: {
@@ -42,8 +44,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const paymentApi = await apiFactory.getClient(PaymentApi);
         const stockApi = await apiFactory.getClient(StockApi);
         const cryptoApi = await apiFactory.getClient(CryptoApi);
+        const comodityApi = await apiFactory.getClient(ComodityApi);
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
-        this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi), new CryptoService(cryptoApi), new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi));
+        const cryptoService: ICryptoService = new CryptoService(cryptoApi);
+        this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi));
         const data = this.netWorthService.getCurrentNetWorth();
         this.setState({ loading: false });
     }
@@ -61,7 +65,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                     </div>
                                 ) :
                                     <div>
-                                        
+
                                     </div>
                             }
                         </React.Fragment>

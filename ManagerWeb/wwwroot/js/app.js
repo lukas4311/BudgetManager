@@ -50264,6 +50264,7 @@ const ApiClientFactory_1 = __importDefault(__webpack_require__(/*! ../../Utils/A
 const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modules/spinners-react/lib/esm/index.js");
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
+const ComodityService_1 = __importDefault(__webpack_require__(/*! ../../Services/ComodityService */ "./Typescript/Services/ComodityService.ts"));
 const theme = (0, core_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -50283,8 +50284,10 @@ class NetWorthOverview extends react_1.Component {
             const paymentApi = yield apiFactory.getClient(Main_1.PaymentApi);
             const stockApi = yield apiFactory.getClient(Main_1.StockApi);
             const cryptoApi = yield apiFactory.getClient(Main_1.CryptoApi);
+            const comodityApi = yield apiFactory.getClient(Main_1.ComodityApi);
             const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
-            this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi), new CryptoService_1.default(cryptoApi), new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi));
+            const cryptoService = new CryptoService_1.default(cryptoApi);
+            this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi, cryptoService), cryptoService, new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi), new ComodityService_1.default(comodityApi));
             const data = this.netWorthService.getCurrentNetWorth();
             this.setState({ loading: false });
         });
@@ -51716,6 +51719,7 @@ const IconsEnum_1 = __webpack_require__(/*! ../../Enums/IconsEnum */ "./Typescri
 const LineChart_1 = __webpack_require__(/*! ../Charts/LineChart */ "./Typescript/Components/Charts/LineChart.tsx");
 const LineChartSettingManager_1 = __webpack_require__(/*! ../Charts/LineChartSettingManager */ "./Typescript/Components/Charts/LineChartSettingManager.tsx");
 const CompanyProfile_1 = __webpack_require__(/*! ./CompanyProfile */ "./Typescript/Components/Stocks/CompanyProfile.tsx");
+const CryptoService_1 = __importDefault(__webpack_require__(/*! ../../Services/CryptoService */ "./Typescript/Services/CryptoService.ts"));
 const theme = (0, styles_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -51844,7 +51848,7 @@ class StockOverview extends react_1.default.Component {
             this.stockApi = yield apiFactory.getClient(apis_1.StockApi);
             const currencyApi = yield apiFactory.getClient(apis_1.CurrencyApi);
             this.cryptoApi = yield apiFactory.getClient(apis_1.CryptoApi);
-            this.stockService = new StockService_1.default(this.stockApi);
+            this.stockService = new StockService_1.default(this.stockApi, new CryptoService_1.default(this.cryptoApi));
             this.tickers = yield this.stockService.getStockTickers();
             this.currencies = (yield currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
             this.loadStockData();
@@ -52738,6 +52742,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ComodityTypeViewModel = void 0;
 const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 const ComoditiesForm_1 = __webpack_require__(/*! ../Components/Comodities/ComoditiesForm */ "./Typescript/Components/Comodities/ComoditiesForm.tsx");
 class ComodityService {
@@ -52802,6 +52807,7 @@ class ComodityService {
 exports["default"] = ComodityService;
 class ComodityTypeViewModel {
 }
+exports.ComodityTypeViewModel = ComodityTypeViewModel;
 
 
 /***/ }),
@@ -53152,12 +53158,13 @@ var PaymentType;
 })(PaymentType = exports.PaymentType || (exports.PaymentType = {}));
 const czkSymbol = "CZK";
 class NetWorthService {
-    constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount) {
+    constructor(paymentService, stockService, cryptoService, otherInvestment, bankAccount, comodityService) {
         this.paymentService = paymentService;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
         this.otherInvestment = otherInvestment;
         this.bankAccount = bankAccount;
+        this.comodityService = comodityService;
     }
     getCurrentNetWorth() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53173,8 +53180,28 @@ class NetWorthService {
             currentBalance += otherInvestmentsbalance;
             const cryptoSum = yield this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
             currentBalance += cryptoSum;
+            const stockSum = yield this.getStockNetWorth(czkSymbol);
+            currentBalance += stockSum;
             console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance);
             return currentBalance;
+        });
+    }
+    getStockNetWorth(czkSymbol) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            let netWorth = 0;
+            let stockGrouped = yield this.stockService.getGroupedTradeHistory();
+            const tickers = stockGrouped.map(a => a.tickerName);
+            const tickersPrice = yield this.stockService.getLastMonthTickersPrice(tickers);
+            for (const stock of stockGrouped) {
+                const tickerPrices = lodash_1.default.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+                if (tickerPrices != undefined) {
+                    const actualPrice = lodash_1.default.first(lodash_1.default.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                    const actualPriceCzk = yield this.cryptoService.getExchangeRate("USD", czkSymbol);
+                    netWorth += stock.size * ((_a = actualPrice === null || actualPrice === void 0 ? void 0 : actualPrice.price) !== null && _a !== void 0 ? _a : 0) * actualPriceCzk;
+                }
+            }
+            return netWorth;
         });
     }
 }
@@ -53488,7 +53515,7 @@ class StockGroupModel {
 }
 exports.StockGroupModel = StockGroupModel;
 class StockService {
-    constructor(stockApi) {
+    constructor(stockApi, cryptoService) {
         this.getStockTickers = () => __awaiter(this, void 0, void 0, function* () {
             return yield this.stockApi.stockStockTickerGet();
         });
@@ -53514,6 +53541,7 @@ class StockService {
             return values.filter(s => s.size > 0.00001);
         });
         this.stockApi = stockApi;
+        this.cryptoService = cryptoService;
     }
     getStockTradeHistory() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53530,6 +53558,24 @@ class StockService {
     getStockTradeHistoryByTicker(ticker) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
+        });
+    }
+    getStockNetWorth(czkSymbol) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            let netWorth = 0;
+            let stockGrouped = yield this.getGroupedTradeHistory();
+            const tickers = stockGrouped.map(a => a.tickerName);
+            const tickersPrice = yield this.getLastMonthTickersPrice(tickers);
+            for (const stock of stockGrouped) {
+                const tickerPrices = lodash_1.default.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+                if (tickerPrices != undefined) {
+                    const actualPrice = lodash_1.default.first(lodash_1.default.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                    const actualPriceCzk = yield this.cryptoService.getExchangeRate("USD", czkSymbol);
+                    netWorth += stock.size * ((_a = actualPrice === null || actualPrice === void 0 ? void 0 : actualPrice.price) !== null && _a !== void 0 ? _a : 0) * actualPriceCzk;
+                }
+            }
+            return netWorth;
         });
     }
     getStockPriceHistory(ticker, from) {

@@ -5,6 +5,7 @@ import { IOtherInvestmentService } from "./IOtherInvestmentService";
 import { IPaymentService } from "./IPaymentService";
 import { IStockService } from "./IStockService";
 import { TradeHistory } from "../ApiClient/Main";
+import { IComodityService } from "./IComodityService";
 
 export enum PaymentType {
     Revenue = 'Revenue',
@@ -19,13 +20,15 @@ export default class NetWorthService {
     private cryptoService: ICryptoService;
     private otherInvestment: IOtherInvestmentService;
     private bankAccount: IBankAccountService;
+    private comodityService: IComodityService;
 
-    constructor(paymentService: IPaymentService, stockService: IStockService, cryptoService: ICryptoService, otherInvestment: IOtherInvestmentService, bankAccount: IBankAccountService) {
+    constructor(paymentService: IPaymentService, stockService: IStockService, cryptoService: ICryptoService, otherInvestment: IOtherInvestmentService, bankAccount: IBankAccountService, comodityService: IComodityService) {
         this.paymentService = paymentService;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
         this.otherInvestment = otherInvestment;
         this.bankAccount = bankAccount;
+        this.comodityService = comodityService;
     }
 
     async getCurrentNetWorth(): Promise<number> {
@@ -47,29 +50,10 @@ export default class NetWorthService {
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
         currentBalance += cryptoSum;
 
-        const stockSum = await this.getStockNetWorth(czkSymbol);
+        const stockSum = await this.stockService.getStockNetWorth(czkSymbol);
         currentBalance += stockSum;
 
         console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
-    }
-
-    async getStockNetWorth(czkSymbol: string): Promise<number> {
-        let netWorth = 0;
-        let stockGrouped = await this.stockService.getGroupedTradeHistory();
-        const tickers = stockGrouped.map(a => a.tickerName);
-        const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
-
-        for (const stock of stockGrouped) {
-            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
-
-            if (tickerPrices != undefined) {
-                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
-                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
-            }
-        }
-
-        return netWorth;
     }
 }

@@ -22,6 +22,7 @@ import { LineChartData } from "../../Model/LineChartData";
 import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
+import CryptoService from "../../Services/CryptoService";
 
 const theme = createMuiTheme({
     palette: {
@@ -76,7 +77,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.stockService = new StockService(this.stockApi);
+        this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi));
 
         this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));

@@ -14,4 +14,5 @@ export interface IStockService {
     createStockTradeHistory(data: StockViewModel): Promise<any>;
     deleteStockTradeHistory(id: number): Promise<any>;
     getCompanyProfile(ticker: string): Promise<any>;
+    getStockNetWorth(czkSymbol: string): Promise<number>;
 }

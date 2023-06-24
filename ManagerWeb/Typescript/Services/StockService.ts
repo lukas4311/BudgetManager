@@ -4,6 +4,7 @@ import { StockApi } from '../ApiClient/Main/apis';
 import { StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClient/Main/models';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import { IStockService } from './IStockService';
+import { ICryptoService } from './ICryptoService';
 
 export class StockGroupModel {
     tickerId: number;
@@ -15,9 +16,11 @@ export class StockGroupModel {
 
 export default class StockService implements IStockService {
     private stockApi: StockApi;
+    cryptoService: ICryptoService;
 
-    constructor(stockApi: StockApi) {
+    constructor(stockApi: StockApi, cryptoService: ICryptoService) {
         this.stockApi = stockApi;
+        this.cryptoService = cryptoService;
     }
 
     public getStockTickers = async (): Promise<StockTickerModel[]> => {
@@ -59,6 +62,25 @@ export default class StockService implements IStockService {
             .value();
 
         return values.filter(s => s.size > 0.00001);
+    }
+
+    public async getStockNetWorth(czkSymbol: string): Promise<number> {
+        let netWorth = 0;
+        let stockGrouped = await this.getGroupedTradeHistory();
+        const tickers = stockGrouped.map(a => a.tickerName);
+        const tickersPrice = await this.getLastMonthTickersPrice(tickers);
+
+        for (const stock of stockGrouped) {
+            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+
+            if (tickerPrices != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
+                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+            }
+        }
+
+        return netWorth;
     }
 
     public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
