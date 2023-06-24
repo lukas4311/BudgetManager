@@ -2,6 +2,11 @@ import moment from "moment";
 import { ComodityApiInterface, ComodityTradeHistoryModel, ComodityTypeModel } from "../ApiClient/Main";
 import { ComoditiesFormViewModel } from "../Components/Comodities/ComoditiesForm";
 import { IComodityService } from "./IComodityService";
+import _ from "lodash";
+
+const ounce = 28.34;
+const goldCode = 'AU';
+const czkSymbol = 'CZK';
 
 export default class ComodityService implements IComodityService {
     comodityApi: ComodityApiInterface;
@@ -10,15 +15,14 @@ export default class ComodityService implements IComodityService {
         this.comodityApi = comodityApi;
     }
 
-    public async getComodityTypes() {
+    public async getComodityTypes(): Promise<ComodityTypeModel[]> {
         const comodityTypes: ComodityTypeModel[] = await this.comodityApi.comoditiesComodityTypeAllGet();
         return comodityTypes.map(c => this.mapComodityTypeToViewModel(c))
     }
 
-    public async getAllComodityTrades(comodityId: number) {
+    public async getAllComodityTrades(comodityId: number): Promise<ComoditiesFormViewModel[]> {
         const comodities = await this.comodityApi.comoditiesAllGet();
-        const allComodityTradeData = comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g))
-        return allComodityTradeData;
+        return comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g))
     }
 
     public async getGoldPriceInCurrency(currencyCode: string) {
@@ -36,6 +40,22 @@ export default class ComodityService implements IComodityService {
 
     public async deleteComodityTrade(comodityId: number) {
         await this.comodityApi.comoditiesDelete({ body: comodityId });
+    }
+
+    public async getComodityNetWorth() {
+        let netWorth = 0;
+        const allComodityTypes = await this.getComodityTypes();
+
+        for (const comodityType of allComodityTypes.filter(c => c.code == goldCode)) {
+            const tradeData = await this.getAllComodityTrades(comodityType.id);
+
+            const price = await this.getGoldPriceInCurrency(czkSymbol);
+            const totalWeight = _.sumBy(tradeData ?? [], (g) => g.comodityAmount);
+            const actualTotalPrice = totalWeight * price / ounce;
+            netWorth += actualTotalPrice;
+        }
+
+        return netWorth;
     }
 
     private mapComodityTypeToViewModel(comodityType: ComodityTypeModel) {
