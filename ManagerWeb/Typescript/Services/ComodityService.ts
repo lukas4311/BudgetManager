@@ -42,7 +42,7 @@ export default class ComodityService implements IComodityService {
         await this.comodityApi.comoditiesDelete({ body: comodityId });
     }
 
-    public async getComodityNetWorth() {
+    public async getComodityNetWorth(): Promise<number> {
         let netWorth = 0;
         const allComodityTypes = await this.getComodityTypes();
 

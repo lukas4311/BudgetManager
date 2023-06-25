@@ -9,4 +9,5 @@ export interface IComodityService {
     createComodityTrade(tradeModel: ComodityTradeHistoryModel): Promise<void>;
     updateComodityTrade(tradeModel: ComodityTradeHistoryModel): Promise<void>;
     deleteComodityTrade(comodityId: number): Promise<void>;
+    getComodityNetWorth(): Promise<number>;
 }
