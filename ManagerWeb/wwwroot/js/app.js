@@ -53199,8 +53199,8 @@ class NetWorthService {
             currentBalance += cryptoSum;
             const stockSum = yield this.stockService.getStockNetWorth(czkSymbol);
             currentBalance += stockSum;
-            const comoditySUm = yield this.comodityService.getComodityNetWorth();
-            currentBalance += stockSum;
+            const comoditySum = yield this.comodityService.getComodityNetWorth();
+            currentBalance += comoditySum;
             console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance);
             return currentBalance;
         });

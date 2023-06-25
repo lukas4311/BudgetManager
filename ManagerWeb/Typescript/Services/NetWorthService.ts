@@ -53,8 +53,8 @@ export default class NetWorthService {
         const stockSum = await this.stockService.getStockNetWorth(czkSymbol);
         currentBalance += stockSum;
 
-        const comoditySUm = await this.comodityService.getComodityNetWorth();
-        currentBalance += stockSum;
+        const comoditySum = await this.comodityService.getComodityNetWorth();
+        currentBalance += comoditySum;
 
         console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
