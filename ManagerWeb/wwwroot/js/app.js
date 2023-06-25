@@ -52936,9 +52936,9 @@ class CryptoService {
             let groupedTrades = lodash_1.default.chain(trades).groupBy(t => t.cryptoTicker)
                 .map((value, key) => ({ ticker: key, sum: lodash_1.default.sumBy(value, s => s.tradeSize) }))
                 .value();
+            const finalCurrencyExcahngeRate = yield this.getExchangeRate(usdSymbol, currency);
             for (const ticker of groupedTrades) {
                 const dollarExcahngeRate = yield this.getExchangeRate(ticker.ticker, usdSymbol);
-                const finalCurrencyExcahngeRate = yield this.getExchangeRate(usdSymbol, currency);
                 const finalMultiplier = dollarExcahngeRate * finalCurrencyExcahngeRate;
                 if (finalMultiplier != 0) {
                     const sumedInFinalCurrency = finalMultiplier * ticker.sum;
