@@ -50265,6 +50265,7 @@ const spinners_react_1 = __webpack_require__(/*! spinners-react */ "./node_modul
 const core_1 = __webpack_require__(/*! @material-ui/core */ "@material-ui/core");
 const MainFrame_1 = __webpack_require__(/*! ../MainFrame */ "./Typescript/Components/MainFrame.tsx");
 const ComodityService_1 = __importDefault(__webpack_require__(/*! ../../Services/ComodityService */ "./Typescript/Services/ComodityService.ts"));
+const ComponentPanel_1 = __webpack_require__(/*! ../../Utils/ComponentPanel */ "./Typescript/Utils/ComponentPanel.tsx");
 const theme = (0, core_1.createMuiTheme)({
     palette: {
         type: 'dark',
@@ -50288,10 +50289,10 @@ class NetWorthOverview extends react_1.Component {
             const otherInvestmentApi = yield apiFactory.getClient(Main_1.OtherInvestmentApi);
             const cryptoService = new CryptoService_1.default(cryptoApi);
             this.netWorthService = new NetWorthService_1.default(new PaymentService_1.default(paymentApi), new StockService_1.default(stockApi, cryptoService), cryptoService, new OtherInvestmentService_1.default(otherInvestmentApi), new BankAccountService_1.default(bankAccountApi), new ComodityService_1.default(comodityApi));
-            const data = this.netWorthService.getCurrentNetWorth();
-            this.setState({ loading: false });
+            const data = yield this.netWorthService.getCurrentNetWorth();
+            this.setState({ loading: false, netWorth: data });
         });
-        this.state = { loading: true };
+        this.state = { loading: true, netWorth: 0 };
     }
     componentDidMount() {
         this.init();
@@ -50302,7 +50303,11 @@ class NetWorthOverview extends react_1.Component {
                 react_1.default.createElement(MainFrame_1.MainFrame, { header: 'Net worth overview' },
                     react_1.default.createElement(react_1.default.Fragment, null, this.state.loading ? (react_1.default.createElement("div", { className: "flex text-center justify-center h-full" },
                         react_1.default.createElement(spinners_react_1.SpinnerCircularSplit, { size: 150, thickness: 110, speed: 70, color: "rgba(27, 39, 55, 1)", secondaryColor: "rgba(224, 61, 21, 1)" }))) :
-                        react_1.default.createElement("div", null))))));
+                        react_1.default.createElement("div", { className: 'flex flex-row' },
+                            react_1.default.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2" },
+                                react_1.default.createElement("h2", null,
+                                    "Your net worth is ",
+                                    this.state.netWorth.toFixed(0)))))))));
     }
 }
 exports["default"] = NetWorthOverview;
@@ -53568,11 +53573,11 @@ class StockService {
             let stockGrouped = yield this.getGroupedTradeHistory();
             const tickers = stockGrouped.map(a => a.tickerName);
             const tickersPrice = yield this.getLastMonthTickersPrice(tickers);
+            const actualPriceCzk = yield this.cryptoService.getExchangeRate("USD", czkSymbol);
             for (const stock of stockGrouped) {
                 const tickerPrices = lodash_1.default.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
                 if (tickerPrices != undefined) {
                     const actualPrice = lodash_1.default.first(lodash_1.default.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                    const actualPriceCzk = yield this.cryptoService.getExchangeRate("USD", czkSymbol);
                     netWorth += stock.size * ((_a = actualPrice === null || actualPrice === void 0 ? void 0 : actualPrice.price) !== null && _a !== void 0 ? _a : 0) * actualPriceCzk;
                 }
             }

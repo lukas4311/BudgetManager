@@ -13,6 +13,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core';
 import { MainFrame } from '../MainFrame';
 import { ICryptoService } from '../../Services/ICryptoService';
 import ComodityService from '../../Services/ComodityService';
+import { ComponentPanel } from '../../Utils/ComponentPanel';
 
 const theme = createMuiTheme({
     palette: {
@@ -25,13 +26,14 @@ const theme = createMuiTheme({
 
 class NetWorthOverviewState {
     loading: boolean;
+    netWorth: number;
 }
 
 export default class NetWorthOverview extends Component<RouteComponentProps, NetWorthOverviewState> {
     netWorthService: NetWorthService;
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { loading: true };
+        this.state = { loading: true, netWorth: 0 };
     }
 
     public componentDidMount() {
@@ -48,8 +50,8 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const cryptoService: ICryptoService = new CryptoService(cryptoApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi));
-        const data = this.netWorthService.getCurrentNetWorth();
-        this.setState({ loading: false });
+        const data = await this.netWorthService.getCurrentNetWorth();
+        this.setState({ loading: false, netWorth: data });
     }
 
     render() {
@@ -64,8 +66,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                         <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
                                     </div>
                                 ) :
-                                    <div>
-
+                                    <div className='flex flex-row'>
+                                        <ComponentPanel classStyle="w-1/2">
+                                            <h2>Your net worth is {this.state.netWorth.toFixed(0)}</h2>
+                                        </ComponentPanel>
                                     </div>
                             }
                         </React.Fragment>

@@ -69,13 +69,13 @@ export default class StockService implements IStockService {
         let stockGrouped = await this.getGroupedTradeHistory();
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickersPrice = await this.getLastMonthTickersPrice(tickers);
+        const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
 
         for (const stock of stockGrouped) {
             const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
 
             if (tickerPrices != undefined) {
                 const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
                 netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
             }
         }
