@@ -23,7 +23,7 @@ import { BarChart, BarData } from '../Charts/BarChart';
 import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
-import PaymentService from '../../Services/PaymentService';
+import PaymentService, { MonthlyGroupedPayments } from '../../Services/PaymentService';
 import ScoreList from '../../Utils/ScoreList';
 import { LineChartDataSets } from '../../Model/LineChartDataSets';
 import { LineChartData } from '../../Model/LineChartData';
@@ -45,6 +45,7 @@ interface PaymentsOverviewState {
     balanceChartData: LineChartProps;
     calendarChartData: CalendarChartProps;
     barChartData: BarData[];
+    monthlyGrouped: any[];
     averageMonthExpense: number;
     averageMonthRevenue: number;
     averageMonthInvestments: number;
@@ -88,7 +89,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() }
-            , filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
+            , filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: [], monthlyGrouped: []
         };
 
         this.chartDataProcessor = new ChartDataProcessor();
@@ -104,14 +105,19 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-        // TODO: return code property
         this.categories = await this.paymentService.getPaymentCategories();
         this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
+        const from = moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate();
+        const to = moment(Date.now()).toDate();
         await this.getPaymentData(moment(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), moment(Date.now()).toDate(), null);
+        const groupedPayments = await this.paymentService.getPaymentsSumGroupedByMonth(from, to, null);
+        this.setBarchChartData(groupedPayments);
     }
 
     private async getPaymentData(dateFrom: Date, dateTo: Date, bankAccountId: number) {
         const payments = await this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+        const groupedPayments = await this.paymentService.getPaymentsSumGroupedByMonth(dateFrom, dateTo, null);
+        this.setBarchChartData(groupedPayments);
         this.setPayments(payments);
     }
 
@@ -125,8 +131,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             const expensesWithoutInvestments = this.chartDataProcessor.prepareExpenseWithoutInvestmentsChartData(payments);
             const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
             const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
-            const pieData:PieChartData[] = this.chartDataProcessor.prepareDataForPieChart(payments);
-            console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ pieData:", pieData)
+            const pieData: PieChartData[] = this.chartDataProcessor.prepareDataForPieChart(payments);
             let dateTo: string;
 
             if (this.state.selectedFilter != undefined)
@@ -138,7 +143,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             const barChartData = pieData.map(d => ({ key: d.id, value: d.value }));
-            console.log("🚀 ~ file: PaymentsOverview.tsx:140 ~ PaymentsOverview ~ setPayments= ~ barChartData:", barChartData)
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
             const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
             const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
@@ -158,6 +162,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         } else {
             this.setState({ apiError: this.apiErrorMessage });
         }
+    }
+
+    private setBarchChartData(monthlyGroupedPayments: MonthlyGroupedPayments[]) {
+        const monthlyGrouped = monthlyGroupedPayments.map(d => ({ key: d.dateGroup, positive: d.amountSum >= 0 ? d.amountSum : 0, negative: d.amountSum < 0 ? d.amountSum : 0 }));
+        this.setState({ monthlyGrouped });
     }
 
     private filterClick = (filterKey: number) => {
@@ -279,6 +288,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             investedPct = income == 0 ? 0 : (invested / income) * 100;
         }
 
+        let minGroupedPayment = 0;
+        let maxGroupedPayment = 0;
+
+        if (this.state.monthlyGrouped.length > 0) {
+            minGroupedPayment = _.minBy(this.state.monthlyGrouped, o => o.negative)?.negative ?? 0;
+            maxGroupedPayment = _.maxBy(this.state.monthlyGrouped, o => o.positive)?.positive ?? 0;
+        }
+
         return (
             <ThemeProvider theme={theme}>
                 <div className="">
@@ -376,8 +393,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <CalendarChart dataSets={this.state.calendarChartData.dataSets} fromYear={new Date().getFullYear() - 1} toYear={new Date().getFullYear()}></CalendarChart>
                                 </ComponentPanel>
                                 <ComponentPanel classStyle="w-1/2 h-80">
+                                    <BarChart dataSets={this.state.monthlyGrouped} chartProps={BarChartSettingManager.getPaymentMonthlyGroupedBarChartProps(minGroupedPayment, maxGroupedPayment)}></BarChart>
+                                </ComponentPanel>
+                            </div>
+                            <div className="flex flex-row">
+                                <ComponentPanel classStyle="w-1/2 h-80">
                                     <ScoreList models={this.state.topPayments.map(m => ({ score: m.amount, title: m.name }))} />
                                 </ComponentPanel>
+
                             </div>
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>

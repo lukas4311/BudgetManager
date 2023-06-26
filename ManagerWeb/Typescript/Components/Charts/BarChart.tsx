@@ -17,7 +17,7 @@ function BarChart({ dataSets, chartProps }: any) {
         <ResponsiveBar
             {...chartProps}
             data={dataSets}
-            // axisBottom={{renderTick: <p>AAA</p>}}
+        // axisBottom={{renderTick: <p>AAA</p>}}
         />
     )
 }

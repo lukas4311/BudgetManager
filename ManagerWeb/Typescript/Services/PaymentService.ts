@@ -1,6 +1,12 @@
-import _, { last } from "lodash";
+import _ from "lodash";
 import { PaymentApi, PaymentTypeModel, PaymentCategoryModel, PaymentModel } from "../ApiClient/Main";
 import { IPaymentService } from "./IPaymentService";
+import moment from "moment";
+
+export class MonthlyGroupedPayments {
+    dateGroup: string;
+    amountSum: number;
+}
 
 export default class PaymentService implements IPaymentService {
     private paymentApi: PaymentApi;
@@ -11,35 +17,53 @@ export default class PaymentService implements IPaymentService {
         this.paymentApi = paymentApi;
     }
 
+    // Get payment types from API
     public async getPaymentTypes() {
         const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
         return types;
     }
 
+    // This code gets the payment categories from the server.
     public async getPaymentCategories() {
         const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
         return categories;
     }
 
+    // This function retrieves a payment by its id.
     public async getPaymentById(id: number) {
         const paymentResponse = await this.paymentApi.paymentsDetailGet({ id: id });
         return paymentResponse;
     }
 
+    // This code creates a payment for the specified payment model.
     public async createPayment(paymentModel: PaymentModel) {
         const response = await this.paymentApi.paymentsPost({ paymentModel: paymentModel });
         return response;
     }
 
+    // This function updates the payment data for the specified payment model.
     public async updatePayment(paymentModel: PaymentModel) {
         const response = await this.paymentApi.paymentsPut({ paymentModel: paymentModel });
         return response;
     }
 
+    // Get the payment data for the exact date range
     public getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> => {
         return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
     }
 
+    // This code gets the sum of payments grouped by month.
+    public getPaymentsSumGroupedByMonth = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<MonthlyGroupedPayments[]> => {
+        const payments = await this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+        const grouped = _.chain(payments.map(m => ({ ...m, date: moment(m.date).format("YYYY-MM"), amount: m.paymentTypeCode == this.expenseCode ? m.amount * -1 : m.amount })))
+            .groupBy(g => moment(g.date).format("YYYY-MM"))
+            .map((value, key) => ({ dateGroup: key, amountSum: _.sumBy(value, 'amount') }))
+            .value();
+
+        return grouped;
+    }
+
+    /* Gets the average expense per month for a given set of payments */
     public getAverageMonthExpense = (payments: PaymentModel[]) => {
         const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
 

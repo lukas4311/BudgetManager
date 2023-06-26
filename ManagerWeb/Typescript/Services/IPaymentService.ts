@@ -14,4 +14,5 @@ export interface IPaymentService {
     getMeanExpense(payments: PaymentModel[]): number;
     clonePayment(paymentId: number): void;
     getTopPaymentsByAmount(payments: PaymentModel[], count: number, paymentType?: string): PaymentModel[];
+    getPaymentsSumGroupedByMonth(dateFrom: Date, dateTo: Date, bankAccountId: number);
 }

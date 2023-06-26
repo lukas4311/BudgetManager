@@ -49117,6 +49117,35 @@ class BarChartSettingManager {
             },
         };
     }
+    static getPaymentMonthlyGroupedBarChartProps(axisMin, axisMax) {
+        let config = {
+            data: undefined,
+            margin: { top: 20, right: 50, bottom: 50, left: 50 },
+            indexBy: "key",
+            keys: ['positive', 'negative'],
+            colors: ['#007E04', '#920000'],
+            padding: 0.55,
+            axisBottom: {
+                tickRotation: 35,
+            },
+            isInteractive: false,
+            enableLabel: false,
+            theme: {
+                axis: {
+                    ticks: {
+                        text: {
+                            fill: "white"
+                        }
+                    }
+                }
+            }
+        };
+        if (axisMin !== undefined)
+            config["minValue"] = axisMin * 1.2;
+        if (axisMax !== undefined)
+            config["maxValue"] = axisMax * 1.2;
+        return config;
+    }
 }
 exports.BarChartSettingManager = BarChartSettingManager;
 
@@ -51346,7 +51375,6 @@ class PaymentsOverview extends React.Component {
                 const revenueChartData = this.chartDataProcessor.prepareRevenuesChartData(payments);
                 const chartData = this.chartDataProcessor.prepareCalendarCharData(payments);
                 const pieData = this.chartDataProcessor.prepareDataForPieChart(payments);
-                console.log("🚀 ~ file: PaymentsOverview.tsx:129 ~ PaymentsOverview ~ setPayments= ~ pieData:", pieData);
                 let dateTo;
                 if (this.state.selectedFilter != undefined)
                     dateTo = ((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').format("YYYY-MM-DD"));
@@ -51356,7 +51384,6 @@ class PaymentsOverview extends React.Component {
                 let bankAccountBalanceResponse = yield this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: (0, moment_1.default)((dateTo)).toDate() });
                 const balance = yield this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
                 const barChartData = pieData.map(d => ({ key: d.id, value: d.value }));
-                console.log("🚀 ~ file: PaymentsOverview.tsx:140 ~ PaymentsOverview ~ setPayments= ~ barChartData:", barChartData);
                 const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);
                 const averageMonthRevenue = this.paymentService.getAverageMonthRevenues(payments);
                 const averageMonthInvestments = this.paymentService.getAverageMonthInvestment(payments);
@@ -51445,7 +51472,7 @@ class PaymentsOverview extends React.Component {
             payments: [], selectedFilter: undefined, showPaymentFormModal: false, bankAccounts: bankAccounts, selectedBankAccount: -1,
             showBankAccountError: false, paymentId: null, formKey: Date.now(), apiError: undefined,
             expenseChartData: { dataSets: [] }, balanceChartData: { dataSets: [] }, calendarChartData: { dataSets: [], fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() },
-            filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: []
+            filterDateTo: '', filterDateFrom: '', barChartData: [], averageMonthExpense: 0, averageMonthRevenue: 0, averageMonthInvestments: 0, topPayments: [], monthlyGrouped: []
         };
         this.chartDataProcessor = new ChartDataProcessor_1.ChartDataProcessor();
     }
@@ -51459,17 +51486,26 @@ class PaymentsOverview extends React.Component {
             let bankAccounts = [];
             bankAccounts = yield this.bankAccountApi.bankAccountsAllGet();
             bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
-            // TODO: return code property
             this.categories = yield this.paymentService.getPaymentCategories();
             this.setState({ bankAccounts: bankAccounts, selectedBankAccount: defaultSelectedBankAccount });
+            const from = (0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate();
+            const to = (0, moment_1.default)(Date.now()).toDate();
             yield this.getPaymentData((0, moment_1.default)(Date.now()).subtract(this.state.selectedFilter.days, 'days').toDate(), (0, moment_1.default)(Date.now()).toDate(), null);
+            const groupedPayments = yield this.paymentService.getPaymentsSumGroupedByMonth(from, to, null);
+            this.setBarchChartData(groupedPayments);
         });
     }
     getPaymentData(dateFrom, dateTo, bankAccountId) {
         return __awaiter(this, void 0, void 0, function* () {
             const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+            const groupedPayments = yield this.paymentService.getPaymentsSumGroupedByMonth(dateFrom, dateTo, null);
+            this.setBarchChartData(groupedPayments);
             this.setPayments(payments);
         });
+    }
+    setBarchChartData(monthlyGroupedPayments) {
+        const monthlyGrouped = monthlyGroupedPayments.map(d => ({ key: d.dateGroup, positive: d.amountSum >= 0 ? d.amountSum : 0, negative: d.amountSum < 0 ? d.amountSum : 0 }));
+        this.setState({ monthlyGrouped });
     }
     getFilteredPaymentData(bankId) {
         if (bankId == -1)
@@ -51496,7 +51532,7 @@ class PaymentsOverview extends React.Component {
         }
     }
     render() {
-        var _a;
+        var _a, _b, _c, _d, _e;
         let expenses = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Expense'), e => e.amount);
         let income = lodash_1.default.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
         let saved = income - expenses;
@@ -51508,6 +51544,12 @@ class PaymentsOverview extends React.Component {
         if (categoryInvested) {
             invested = lodash_1.default.sumBy(this.state.payments.filter(p => p.paymentCategoryId == categoryInvested.id), s => s.amount);
             investedPct = income == 0 ? 0 : (invested / income) * 100;
+        }
+        let minGroupedPayment = 0;
+        let maxGroupedPayment = 0;
+        if (this.state.monthlyGrouped.length > 0) {
+            minGroupedPayment = (_c = (_b = lodash_1.default.minBy(this.state.monthlyGrouped, o => o.negative)) === null || _b === void 0 ? void 0 : _b.negative) !== null && _c !== void 0 ? _c : 0;
+            maxGroupedPayment = (_e = (_d = lodash_1.default.maxBy(this.state.monthlyGrouped, o => o.positive)) === null || _d === void 0 ? void 0 : _d.positive) !== null && _e !== void 0 ? _e : 0;
         }
         return (React.createElement(styles_1.ThemeProvider, { theme: theme },
             React.createElement("div", { className: "" },
@@ -51593,6 +51635,9 @@ class PaymentsOverview extends React.Component {
                         React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80 " },
                                 React.createElement(CalendarChart_1.CalendarChart, { dataSets: this.state.calendarChartData.dataSets, fromYear: new Date().getFullYear() - 1, toYear: new Date().getFullYear() })),
+                            React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
+                                React.createElement(BarChart_1.BarChart, { dataSets: this.state.monthlyGrouped, chartProps: BarChartSettingManager_1.BarChartSettingManager.getPaymentMonthlyGroupedBarChartProps(minGroupedPayment, maxGroupedPayment) }))),
+                        React.createElement("div", { className: "flex flex-row" },
                             React.createElement(ComponentPanel_1.ComponentPanel, { classStyle: "w-1/2 h-80" },
                                 React.createElement(ScoreList_1.default, { models: this.state.topPayments.map(m => ({ score: m.amount, title: m.name })) }))),
                         React.createElement(core_1.Dialog, { open: this.state.showPaymentFormModal, onClose: this.hideModal, "aria-labelledby": "Payment_detail", maxWidth: "md", fullWidth: true },
@@ -53363,14 +53408,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MonthlyGroupedPayments = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
+class MonthlyGroupedPayments {
+}
+exports.MonthlyGroupedPayments = MonthlyGroupedPayments;
 class PaymentService {
     constructor(paymentApi) {
         this.revenueCode = "Revenue";
         this.expenseCode = "Expense";
+        // Get the payment data for the exact date range
         this.getExactDateRangeDaysPaymentData = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () {
             return yield this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
         });
+        // This code gets the sum of payments grouped by month.
+        this.getPaymentsSumGroupedByMonth = (dateFrom, dateTo, bankAccountId) => __awaiter(this, void 0, void 0, function* () {
+            const payments = yield this.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
+            const grouped = lodash_1.default.chain(payments.map(m => (Object.assign(Object.assign({}, m), { date: (0, moment_1.default)(m.date).format("YYYY-MM"), amount: m.paymentTypeCode == this.expenseCode ? m.amount * -1 : m.amount }))))
+                .groupBy(g => (0, moment_1.default)(g.date).format("YYYY-MM"))
+                .map((value, key) => ({ dateGroup: key, amountSum: lodash_1.default.sumBy(value, 'amount') }))
+                .value();
+            return grouped;
+        });
+        /* Gets the average expense per month for a given set of payments */
         this.getAverageMonthExpense = (payments) => {
             const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
             if (!expenses || expenses.length == 0)
@@ -53415,30 +53476,35 @@ class PaymentService {
         };
         this.paymentApi = paymentApi;
     }
+    // Get payment types from API
     getPaymentTypes() {
         return __awaiter(this, void 0, void 0, function* () {
             const types = yield this.paymentApi.paymentsTypesGet();
             return types;
         });
     }
+    // This code gets the payment categories from the server.
     getPaymentCategories() {
         return __awaiter(this, void 0, void 0, function* () {
             const categories = yield this.paymentApi.paymentsCategoriesGet();
             return categories;
         });
     }
+    // This function retrieves a payment by its id.
     getPaymentById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const paymentResponse = yield this.paymentApi.paymentsDetailGet({ id: id });
             return paymentResponse;
         });
     }
+    // This code creates a payment for the specified payment model.
     createPayment(paymentModel) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.paymentApi.paymentsPost({ paymentModel: paymentModel });
             return response;
         });
     }
+    // This function updates the payment data for the specified payment model.
     updatePayment(paymentModel) {
         return __awaiter(this, void 0, void 0, function* () {
             const response = yield this.paymentApi.paymentsPut({ paymentModel: paymentModel });
