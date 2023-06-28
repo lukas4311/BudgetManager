@@ -53261,25 +53261,29 @@ class NetWorthService {
             const bankAccountBaseLine = lodash_1.default.sumBy(bankAccounts, s => s.openingBalance);
             const limitDate = new Date(1970, 1, 1);
             const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
+            const paymentGroupedData = [];
             const paymentHistoryGroupedByMonth = lodash_1.default.chain(paymentHistory)
                 .groupBy(s => (0, moment_1.default)(s.date).format('YYYY-MM'))
                 .map((value, key) => ({ date: (0, moment_1.default)(key + "-1"), amount: lodash_1.default.sumBy(value, s => s.amount) }))
                 .orderBy(f => f.date, ['asc'])
+                .reduce((acc, model) => {
+                acc[model.date.format("YYYY-MM")] = acc.prev + model.amount + bankAccountBaseLine;
+                acc.prev = acc[model.date.format("YYYY-MM")];
+                return acc;
+            }, { prev: 0 })
                 .value();
-            // working example (https://codesandbox.io/s/lodash-forked-ty9wkh?file=/src/index.js)
-            // const paymentHistoryGroupedByMonth = _.chain(data)
-            //     .groupBy((s) => moment(s.date).format("YYYY-MM"))
-            //     .map((value, key) => ({
-            //         date: moment(key + "-1"),
-            //         amount: _.sumBy(value, (s) => s.amount)
-            //     }))
-            //     .orderBy((f) => f.date, ["asc"])
-            //     .reduce((acc, model) => {
-            //         acc[model.date] = acc.prev + model.amount;
-            //         acc.prev = acc[model.date];
-            //         return acc;
-            //     }, { prev: 0 })
-            //     .value();
+            lodash_1.default.chain(paymentHistory)
+                .groupBy(s => (0, moment_1.default)(s.date).format('YYYY-MM'))
+                .map((value, key) => ({ date: (0, moment_1.default)(key + "-1"), amount: lodash_1.default.sumBy(value, s => s.amount) }))
+                .orderBy(f => f.date, ['asc'])
+                .reduce((acc, model) => {
+                const amount = acc.prev + model.amount + bankAccountBaseLine;
+                paymentGroupedData.push({ date: model.date, amount: amount });
+                acc.prev = amount;
+                return acc;
+            }, { prev: 0 });
+            console.log("🚀 ~ file: NetWorthService.ts:73 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentHistoryGroupedByMonth:", paymentHistoryGroupedByMonth);
+            console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentGroupedData:", paymentGroupedData);
             return undefined;
         });
     }
