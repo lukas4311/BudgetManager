@@ -52760,7 +52760,6 @@ class ChartDataProcessor {
             .map((value, key) => ({ id: `${key} (${lodash_1.default.sumBy(value, d => d.amount)})`, value: lodash_1.default.sumBy(value, d => d.amount), label: `${key} (${lodash_1.default.sumBy(value, d => d.amount)})` }))
             .orderBy(f => f.value, ['desc'])
             .value();
-        console.log("🚀 ~ file: ChartDataProcessor.ts:128 ~ ChartDataProcessor ~ prepareDataForPieChart ~ data:", data);
         return data;
     }
 }
@@ -53218,6 +53217,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentType = void 0;
 const lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "lodash"));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "moment"));
 var PaymentType;
 (function (PaymentType) {
     PaymentType["Revenue"] = "Revenue";
@@ -53253,6 +53253,34 @@ class NetWorthService {
             currentBalance += comoditySum;
             console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance);
             return currentBalance;
+        });
+    }
+    getNetWorthGroupedByMonth() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bankAccounts = yield this.bankAccount.getAllBankAccounts();
+            const bankAccountBaseLine = lodash_1.default.sumBy(bankAccounts, s => s.openingBalance);
+            const limitDate = new Date(1970, 1, 1);
+            const paymentHistory = yield this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
+            const paymentHistoryGroupedByMonth = lodash_1.default.chain(paymentHistory)
+                .groupBy(s => (0, moment_1.default)(s.date).format('YYYY-MM'))
+                .map((value, key) => ({ date: (0, moment_1.default)(key + "-1"), amount: lodash_1.default.sumBy(value, s => s.amount) }))
+                .orderBy(f => f.date, ['asc'])
+                .value();
+            // working example (https://codesandbox.io/s/lodash-forked-ty9wkh?file=/src/index.js)
+            // const paymentHistoryGroupedByMonth = _.chain(data)
+            //     .groupBy((s) => moment(s.date).format("YYYY-MM"))
+            //     .map((value, key) => ({
+            //         date: moment(key + "-1"),
+            //         amount: _.sumBy(value, (s) => s.amount)
+            //     }))
+            //     .orderBy((f) => f.date, ["asc"])
+            //     .reduce((acc, model) => {
+            //         acc[model.date] = acc.prev + model.amount;
+            //         acc.prev = acc[model.date];
+            //         return acc;
+            //     }, { prev: 0 })
+            //     .value();
+            return undefined;
         });
     }
 }

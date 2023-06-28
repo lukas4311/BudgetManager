@@ -6,6 +6,7 @@ import { IPaymentService } from "./IPaymentService";
 import { IStockService } from "./IStockService";
 import { TradeHistory } from "../ApiClient/Main";
 import { IComodityService } from "./IComodityService";
+import moment from "moment";
 
 export enum PaymentType {
     Revenue = 'Revenue',
@@ -58,5 +59,38 @@ export default class NetWorthService {
 
         console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
+    }
+
+    async getNetWorthGroupedByMonth() {
+        const bankAccounts = await this.bankAccount.getAllBankAccounts();
+        const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
+
+        const limitDate = new Date(1970, 1, 1);
+        const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
+
+        const paymentHistoryGroupedByMonth = _.chain(paymentHistory)
+            .groupBy(s => moment(s.date).format('YYYY-MM'))
+            .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
+            .orderBy(f => f.date, ['asc'])
+            .value();
+
+        // working example (https://codesandbox.io/s/lodash-forked-ty9wkh?file=/src/index.js)
+        // const paymentHistoryGroupedByMonth = _.chain(data)
+        //     .groupBy((s) => moment(s.date).format("YYYY-MM"))
+        //     .map((value, key) => ({
+        //         date: moment(key + "-1"),
+        //         amount: _.sumBy(value, (s) => s.amount)
+        //     }))
+        //     .orderBy((f) => f.date, ["asc"])
+        //     .reduce((acc, model) => {
+        //         acc[model.date] = acc.prev + model.amount;
+        //         acc.prev = acc[model.date];
+        //         return acc;
+        //     }, { prev: 0 })
+        //     .value();
+
+
+
+        return undefined;
     }
 }

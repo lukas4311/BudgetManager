@@ -115,7 +115,6 @@ export class ChartDataProcessor implements IChartDataProcessor {
             .orderBy(f => f.value, ['desc'])
             .value();
 
-        console.log("🚀 ~ file: ChartDataProcessor.ts:128 ~ ChartDataProcessor ~ prepareDataForPieChart ~ data:", data)
         return data;
     }
 }
