@@ -17,4 +17,5 @@ export interface IOtherInvestmentService {
     createOtherInvestment(otherInvestment: OtherInvestmentModel): Promise<void>;
     createConnectionWithPaymentTag(otherInvestmentId: number, tagId: number): Promise<void>;
     deleteOtherInvestment(id: number): Promise<void>;
+    getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]);
 }

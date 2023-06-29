@@ -64,23 +64,27 @@ export default class NetWorthService {
     async getNetWorthGroupedByMonth() {
         const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
+        console.log("🚀 ~ file: NetWorthService.ts:67 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ bankAccountBaseLine:", bankAccountBaseLine)
 
         const limitDate = new Date(1970, 1, 1);
-        const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
+        let paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
+        paymentHistory = paymentHistory.map(p => ({ ...p, amount: p.paymentTypeCode == PaymentType.Revenue ? p.amount : -p.amount }));
         const paymentGroupedData = [];
-        
+
         _.chain(paymentHistory)
-        .groupBy(s => moment(s.date).format('YYYY-MM'))
-        .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
-        .orderBy(f => f.date, ['asc'])
-        .reduce((acc, model) => {
-            const amount = acc.prev + model.amount + bankAccountBaseLine;
-            paymentGroupedData.push({ date: model.date, amount: amount });
-            acc.prev = amount;
-            return acc;
-        }, { prev: 0 });
-        
-        console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentGroupedData:", paymentGroupedData)
+            .groupBy(s => moment(s.date).format('YYYY-MM'))
+            .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
+            .orderBy(f => f.date, ['asc'])
+            .reduce((acc, model) => {
+                const amount = acc.prev + model.amount + bankAccountBaseLine;
+                paymentGroupedData.push({ date: model.date, amount: amount });
+                acc.prev = amount - bankAccountBaseLine;
+                return acc;
+            }, { prev: 0 }).value();
+
+        console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentGroupedData:", paymentGroupedData);
+        await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), undefined);
+
         return paymentGroupedData;
     }
 }

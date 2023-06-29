@@ -3,6 +3,7 @@ import { OtherInvestmentApiInterface, OtherInvestmentBalaceHistoryModel, OtherIn
 import { OtherInvestmentBalaceHistoryViewModel } from "../Components/OtherInvestment/OtherInvestmentDetail";
 import OtherInvestmentViewModel from "../Model/OtherInvestmentViewModel";
 import { IOtherInvestmentService } from "./IOtherInvestmentService";
+import _ from "lodash";
 
 export default class OtherInvestmentService implements IOtherInvestmentService {
     private otherInvestmentApi: OtherInvestmentApiInterface;
@@ -46,6 +47,47 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
         const otherInvestments = await this.otherInvestmentApi.otherInvestmentAllGet();
         let viewModels: OtherInvestmentViewModel[] = otherInvestments.map(d => this.mapOtherInvetsmentDataModelToViewModel(d));
         return viewModels;
+    }
+
+    public async getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]) {
+        let otherInvestmentData = [];
+        const months = this.getMonthsBetween(fromDate, toDate);
+        console.log("🚀 ~ file: OtherInvestmentService.ts:55 ~ OtherInvestmentService ~ getMonthlyGroupedAccumulatedPayments ~ months:", months)
+
+        for (const otherInvestment of otherInvestments) {
+            const baseLine = otherInvestment.openingBalance;
+            const balanceHistory = await this.getBalanceHistory(otherInvestment.id);
+            const orderedBalanceHistory = _.orderBy(balanceHistory, d => d.date, ['asc']);
+
+            for (const month of months) {
+                const balance = _.last(balanceHistory.filter(b => moment(b.date) < moment(month.date + "-1")));
+                
+            }
+
+            // _.chain(balanceHistory)
+            //     .groupBy(s => moment(s.date).format('YYYY-MM'))
+            //     .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.balance) }))
+            //     .orderBy(f => f.date, ['asc'])
+            //     .reduce((acc, model) => {
+            //         const amount = acc.prev + model.amount + (baseLine ?? 0);
+            //         otherInvestmentData.push({ date: model.date, amount: amount });
+            //         acc.prev = amount;
+            //         return acc;
+            //     }, { prev: 0 });
+        }
+    }
+
+    private getMonthsBetween(fromDate: Date, toDate: Date) {
+        const start = moment(fromDate);
+        const end = moment(toDate);
+        const months = [];
+
+        while (start.isBefore(end)) {
+            months.push({ date: start.format('YYYY-MM') });
+            start.add(1, 'month');
+        }
+
+        return months;
     }
 
     public async updateOtherInvestmentBalanceHistory(otherInvestmentModel: OtherInvestmentBalaceHistoryModel): Promise<void> {
