@@ -19,21 +19,21 @@ export default class NetWorthService {
     private paymentService: IPaymentService;
     private stockService: IStockService;
     private cryptoService: ICryptoService;
-    private otherInvestment: IOtherInvestmentService;
-    private bankAccount: IBankAccountService;
+    private otherInvestmentService: IOtherInvestmentService;
+    private bankAccountService: IBankAccountService;
     private comodityService: IComodityService;
 
     constructor(paymentService: IPaymentService, stockService: IStockService, cryptoService: ICryptoService, otherInvestment: IOtherInvestmentService, bankAccount: IBankAccountService, comodityService: IComodityService) {
         this.paymentService = paymentService;
         this.stockService = stockService;
         this.cryptoService = cryptoService;
-        this.otherInvestment = otherInvestment;
-        this.bankAccount = bankAccount;
+        this.otherInvestmentService = otherInvestment;
+        this.bankAccountService = bankAccount;
         this.comodityService = comodityService;
     }
 
     async getCurrentNetWorth(): Promise<number> {
-        const bankAccounts = await this.bankAccount.getAllBankAccounts();
+        const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
 
         const limitDate = new Date(1970, 1, 1);
@@ -43,7 +43,7 @@ export default class NetWorthService {
 
         let currentBalance = bankAccountBaseLine + income - expense;
 
-        const otherInvestments = await this.otherInvestment.getSummary();
+        const otherInvestments = await this.otherInvestmentService.getSummary();
         const otherInvestmentsbalance = _.sumBy(otherInvestments.actualBalanceData, s => s.balance);
 
         currentBalance += otherInvestmentsbalance;
@@ -62,7 +62,7 @@ export default class NetWorthService {
     }
 
     async getNetWorthGroupedByMonth() {
-        const bankAccounts = await this.bankAccount.getAllBankAccounts();
+        const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
 
         const limitDate = new Date(1970, 1, 1);
