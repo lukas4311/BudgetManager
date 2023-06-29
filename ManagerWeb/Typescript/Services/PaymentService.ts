@@ -113,6 +113,23 @@ export default class PaymentService implements IPaymentService {
         return topPayments;
     }
 
+    public getMonthlyGroupedAccumulatedPayments(payments: PaymentModel[]) {
+        const paymentGroupedData = [];
+
+        _.chain(payments)
+        .groupBy(s => moment(s.date).format('YYYY-MM'))
+        .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
+        .orderBy(f => f.date, ['asc'])
+        .reduce((acc, model) => {
+            const amount = acc.prev + model.amount;
+            paymentGroupedData.push({ date: model.date, amount: amount });
+            acc.prev = amount;
+            return acc;
+        }, { prev: 0 });
+
+        return paymentGroupedData;
+    }
+
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;
