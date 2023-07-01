@@ -1,6 +1,7 @@
 import { OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel, OtherInvestmentModel, OtherInvestmentTagModel, PaymentModel } from "../ApiClient/Main";
 import { OtherInvestmentBalaceHistoryViewModel } from "../Components/OtherInvestment/OtherInvestmentDetail";
 import OtherInvestmentViewModel from "../Model/OtherInvestmentViewModel";
+import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 
 export interface IOtherInvestmentService {
@@ -17,5 +18,5 @@ export interface IOtherInvestmentService {
     createOtherInvestment(otherInvestment: OtherInvestmentModel): Promise<void>;
     createConnectionWithPaymentTag(otherInvestmentId: number, tagId: number): Promise<void>;
     deleteOtherInvestment(id: number): Promise<void>;
-    getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]);
+    getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]): Promise<NetWorthMonthGroupModel[]>;
 }
