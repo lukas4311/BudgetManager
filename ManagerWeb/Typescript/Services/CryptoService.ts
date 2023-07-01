@@ -4,6 +4,7 @@ import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectMode
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { ICryptoService } from "./ICryptoService";
 import _ from "lodash";
+import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 const usdSymbol = "USD";
 const czkSymbol = "CZK";
@@ -67,6 +68,24 @@ export default class CryptoService implements ICryptoService {
         }
 
         return cryptoSum;
+    }
+
+    public getMonthlyGroupedAccumulatedCrypto(payments: TradeHistory[]): NetWorthMonthGroupModel[] {
+        // const paymentGroupedData = [];
+
+        // _.chain(payments)
+        //     .groupBy(s => moment(s.date).format('YYYY-MM'))
+        //     .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
+        //     .orderBy(f => f.date, ['asc'])
+        //     .reduce((acc, model) => {
+        //         const amount = acc.prev + model.amount + (baseLine ?? 0);
+        //         paymentGroupedData.push({ date: model.date, amount: amount });
+        //         acc.prev = amount;
+        //         return acc;
+        //     }, { prev: 0 });
+
+        // return paymentGroupedData;
+        return [];
     }
 
     private mapViewModelToDataModel = (tradeModel: CryptoTradeViewModel) => {

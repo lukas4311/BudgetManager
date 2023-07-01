@@ -2,6 +2,7 @@ import _ from "lodash";
 import { PaymentApi, PaymentTypeModel, PaymentCategoryModel, PaymentModel } from "../ApiClient/Main";
 import { IPaymentService } from "./IPaymentService";
 import moment from "moment";
+import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 export class MonthlyGroupedPayments {
     dateGroup: string;
@@ -113,8 +114,8 @@ export default class PaymentService implements IPaymentService {
         return topPayments;
     }
 
-    public getMonthlyGroupedAccumulatedPayments(payments: PaymentModel[], baseLine?: number): PaymentModel[] {
-        const paymentGroupedData = [];
+    public getMonthlyGroupedAccumulatedPayments(payments: PaymentModel[], baseLine?: number): NetWorthMonthGroupModel[] {
+        const paymentGroupedData: NetWorthMonthGroupModel[] = [];
 
         _.chain(payments)
             .groupBy(s => moment(s.date).format('YYYY-MM'))
