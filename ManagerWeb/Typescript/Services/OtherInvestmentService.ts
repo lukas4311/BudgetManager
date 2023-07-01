@@ -3,7 +3,8 @@ import { OtherInvestmentApiInterface, OtherInvestmentBalaceHistoryModel, OtherIn
 import { OtherInvestmentBalaceHistoryViewModel } from "../Components/OtherInvestment/OtherInvestmentDetail";
 import OtherInvestmentViewModel from "../Model/OtherInvestmentViewModel";
 import { IOtherInvestmentService } from "./IOtherInvestmentService";
-import _ from "lodash";
+import _, { forEach } from "lodash";
+import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 export default class OtherInvestmentService implements IOtherInvestmentService {
     private otherInvestmentApi: OtherInvestmentApiInterface;
@@ -50,9 +51,10 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
     }
 
     public async getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]) {
-        let otherInvestmentData = [];
         const months = this.getMonthsBetween(fromDate, toDate);
         console.log("🚀 ~ file: OtherInvestmentService.ts:55 ~ OtherInvestmentService ~ getMonthlyGroupedAccumulatedPayments ~ months:", months)
+        const monthSummary: Map<string, number> = new Map<string, number>();
+        forEach(months, m => monthSummary.set(m.date, 0));
 
         for (const otherInvestment of otherInvestments) {
             const baseLine = otherInvestment.openingBalance;
@@ -60,21 +62,13 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
             const orderedBalanceHistory = _.orderBy(balanceHistory, d => d.date, ['asc']);
 
             for (const month of months) {
-                const balance = _.last(balanceHistory.filter(b => moment(b.date) < moment(month.date + "-1")));
-                
+                const balance = _.last(orderedBalanceHistory.filter(b => moment(b.date) < moment(month.date + "-1")))?.balance ?? 0;
+                monthSummary.set(month.date, monthSummary.get(month.date) + balance + baseLine);
             }
-
-            // _.chain(balanceHistory)
-            //     .groupBy(s => moment(s.date).format('YYYY-MM'))
-            //     .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.balance) }))
-            //     .orderBy(f => f.date, ['asc'])
-            //     .reduce((acc, model) => {
-            //         const amount = acc.prev + model.amount + (baseLine ?? 0);
-            //         otherInvestmentData.push({ date: model.date, amount: amount });
-            //         acc.prev = amount;
-            //         return acc;
-            //     }, { prev: 0 });
         }
+
+        const finalGroupedModel: NetWorthMonthGroupModel[] = Array.from(monthSummary.entries()).map(([key, value]) => ({ date: moment(key + "-1"), amount: value }));
+        console.log("🚀 ~ file: OtherInvestmentService.ts:57 ~ OtherInvestmentService ~ getMonthlyGroupedAccumulatedPayments ~ monthSummary:", finalGroupedModel)
     }
 
     private getMonthsBetween(fromDate: Date, toDate: Date) {

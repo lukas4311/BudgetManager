@@ -6,7 +6,7 @@ import { IPaymentService } from "./IPaymentService";
 import { IStockService } from "./IStockService";
 import { TradeHistory } from "../ApiClient/Main";
 import { IComodityService } from "./IComodityService";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 export enum PaymentType {
     Revenue = 'Revenue',
@@ -57,19 +57,17 @@ export default class NetWorthService {
         const comoditySum = await this.comodityService.getComodityNetWorth();
         currentBalance += comoditySum;
 
-        console.log("🚀 ~ file: NetWorthService.ts:52 ~ NetWorthService ~ getCurrentNetWorth ~ currentBalance:", currentBalance)
         return currentBalance;
     }
 
     async getNetWorthGroupedByMonth() {
         const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
-        console.log("🚀 ~ file: NetWorthService.ts:67 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ bankAccountBaseLine:", bankAccountBaseLine)
 
         const limitDate = new Date(1970, 1, 1);
         let paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
         paymentHistory = paymentHistory.map(p => ({ ...p, amount: p.paymentTypeCode == PaymentType.Revenue ? p.amount : -p.amount }));
-        const paymentGroupedData = [];
+        const paymentGroupedData: NetWorthMonthGroupModel[] = [];
 
         _.chain(paymentHistory)
             .groupBy(s => moment(s.date).format('YYYY-MM'))
@@ -83,8 +81,15 @@ export default class NetWorthService {
             }, { prev: 0 }).value();
 
         console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentGroupedData:", paymentGroupedData);
-        await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), undefined);
+
+        const otherInvestments = await this.otherInvestmentService.getAll();
+        await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), otherInvestments);
 
         return paymentGroupedData;
     }
+}
+
+export class NetWorthMonthGroupModel {
+    date: Moment;
+    amount: number;
 }
