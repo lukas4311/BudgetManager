@@ -87,6 +87,8 @@ export default class NetWorthService {
         console.log("🚀 ~ file: NetWorthService.ts:87 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ otherInvetmentsMonthlyGrouped:", otherInvetmentsMonthlyGrouped);
 
         // TODO: add monthly group data for crypto
+        const tradeData = await this.cryptoService.getRawTradeData();
+        const cryptoNetWorth = this.cryptoService.getMonthlyGroupedAccumulatedCrypto(tradeData);
 
         // TODO: add monthly group data for stocks
 

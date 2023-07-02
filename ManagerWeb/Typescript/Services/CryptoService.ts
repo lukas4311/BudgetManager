@@ -70,21 +70,28 @@ export default class CryptoService implements ICryptoService {
         return cryptoSum;
     }
 
-    public getMonthlyGroupedAccumulatedCrypto(payments: TradeHistory[]): NetWorthMonthGroupModel[] {
+    public async getMonthlyGroupedAccumulatedCrypto(trades: TradeHistory[]): Promise<NetWorthMonthGroupModel[]> {
+        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeSize * (t.tradeSize > 0 ? -1 : 1) }));
+        console.log("🚀 ~ file: CryptoService.ts:75 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ tradesWithPlusMinusSign:", tradesWithPlusMinusSign)
         // const paymentGroupedData = [];
 
-        // _.chain(payments)
-        //     .groupBy(s => moment(s.date).format('YYYY-MM'))
-        //     .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.amount) }))
-        //     .orderBy(f => f.date, ['asc'])
-        //     .reduce((acc, model) => {
-        //         const amount = acc.prev + model.amount + (baseLine ?? 0);
-        //         paymentGroupedData.push({ date: model.date, amount: amount });
-        //         acc.prev = amount;
-        //         return acc;
-        //     }, { prev: 0 });
+        const cryptos = _.chain(tradesWithPlusMinusSign).groupBy(a => a.cryptoTicker).map((value, key) => ({ ticker: key, trades: value })).value();
 
-        // return paymentGroupedData;
+        // now group cryptos by month using moment(s.date).format('YYYY-MM')
+
+        for (const crypto of cryptos) {
+            const cryptoGroupedData = _.chain(crypto.trades)
+                .groupBy(s => moment(s.tradeTimeStamp).format('YYYY-MM'))
+                .map((value, key) => ({ date: moment(key + "-1"), amount: _.sumBy(value, s => s.tradeSize) }))
+                .orderBy(f => f.date, ['asc'])
+                .reduce((acc, model) => {
+                    // const amount = acc.prev + model.amount;
+                    // paymentGroupedData.push({ date: model.date, amount: amount });
+                    // acc.prev = amount;
+                    return acc;
+                }, { prev: 0 });
+        }
+
         return [];
     }
 

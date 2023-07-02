@@ -1,6 +1,7 @@
 import { TradeHistory } from "../ApiClient/Main/models";
 import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
+import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 export interface ICryptoService {
     getTradeData(): Promise<CryptoTradeViewModel[]>;
@@ -11,4 +12,5 @@ export interface ICryptoService {
     getRawTradeData(): Promise<TradeHistory[]>;
     getExchangeRate(from: string, to: string): Promise<number>;
     getCryptoCurrentNetWorth(currency: string): Promise<number>;
+    getMonthlyGroupedAccumulatedCrypto(trades: TradeHistory[]): Promise<NetWorthMonthGroupModel[]>;
 }
