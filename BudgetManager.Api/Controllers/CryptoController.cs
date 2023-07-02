@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
@@ -66,6 +67,13 @@ namespace BudgetManager.Api.Controllers
 
             return Ok(exhangeRate);
         }
+        
+        [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}/{atDate}")]
+        public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency, DateTime atDate)
+        {
+            double exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency, atDate).ConfigureAwait(false);
+            return Ok(exhangeRate);
+        } 
 
         [HttpGet("tradeDetail/{tradeId}")]
         public ActionResult<TradeHistory> Get(int id)
