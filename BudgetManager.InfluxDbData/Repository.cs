@@ -152,6 +152,14 @@ namespace BudgetManager.InfluxDbData
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
             return this.ParseData(data);
         }
+        
+        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, DateTime from, DateTime to, Dictionary<string, object> filters)
+        {
+            var query = this.PrepareQueryBuilder(dataSourceIdentification, filters);
+            query.Range(new DateTimeRange { From = from, To = to});
+            List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
+            return this.ParseData(data);
+        }
 
         private FluxQueryBuilder PrepareQueryBuilder(DataSourceIdentification dataSourceIdentification, Dictionary<string, object> filters)
         {
@@ -217,7 +225,10 @@ namespace BudgetManager.InfluxDbData
 
         private void SetPropertyOfModel(TModel model, KeyValuePair<string, object> pair)
         {
-            PropertyInfo property = typeof(TModel).GetProperties().SingleOrDefault(predicate: prop => Attribute.IsDefined(prop, typeof(Column)) && prop.GetCustomAttribute<Column>().Name == pair.Key);
+            PropertyInfo property = typeof(TModel)
+                .GetProperties()
+                .SingleOrDefault(predicate: prop => Attribute.IsDefined(prop, typeof(Column)) 
+                                                    && prop.GetCustomAttribute<Column>().Name == pair.Key);
 
             property?.SetValue(model, pair.Value);
         }

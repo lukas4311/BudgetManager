@@ -81,7 +81,7 @@ namespace BudgetManager.ManagerWeb
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name:"a", pattern: "{controller}/{action}/{id?}", defaults: new { controller = "setting", action = "apiRoutes" });
+                endpoints.MapControllerRoute(name:"a", pattern: "{controller}/{action}/{id?}", defaults: new { controller = "Home", action = "Index" });
                 endpoints.MapFallbackToController("Index", "Home");
             });
         }
