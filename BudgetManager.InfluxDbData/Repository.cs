@@ -153,10 +153,10 @@ namespace BudgetManager.InfluxDbData
             return this.ParseData(data);
         }
         
-        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, DateTime from, DateTime to, Dictionary<string, object> filters)
+        public async Task<IEnumerable<TModel>> GetAllData(DataSourceIdentification dataSourceIdentification, DateTimeRange dateTimeRange, Dictionary<string, object> filters)
         {
             var query = this.PrepareQueryBuilder(dataSourceIdentification, filters);
-            query.Range(new DateTimeRange { From = from, To = to});
+            query.Range(new DateTimeRange { From = dateTimeRange.From, To = dateTimeRange.To});
             List<FluxTable> data = await this.context.Client.GetQueryApi().QueryAsync(query.CreateQuery(), dataSourceIdentification.Organization);
             return this.ParseData(data);
         }

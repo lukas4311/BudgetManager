@@ -70,5 +70,13 @@ namespace BudgetManager.Services
             IEnumerable<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
+        
+        public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
+        {
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForex);
+            IEnumerable<CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification, 
+                new DateTimeRange{From = atDate, To = atDate.AddDays(1)}, new() { { "ticker", $"{fromSymbol}{toSymbol}" }}).ConfigureAwait(false);
+            return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
+        }
     }
 }

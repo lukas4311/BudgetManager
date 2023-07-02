@@ -1,4 +1,5 @@
-﻿using BudgetManager.Data.DataModels;
+﻿using System;
+using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace BudgetManager.Services.Contracts
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
 
         bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId);
+
+        Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate);
     }
 }
