@@ -70,8 +70,9 @@ export default class CryptoService implements ICryptoService {
         return cryptoSum;
     }
 
-    public async getMonthlyGroupedAccumulatedCrypto(trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
+    public async getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
         const cryptoGroupData = [];
+        const months = this.getMonthsBetween(fromDate, toDate);
         const cryptoGroupDataWithCurrencyAmount = [];
         const cryptoExchangeRate = new Map<string, number>();
         const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeSize }));
@@ -149,5 +150,18 @@ export default class CryptoService implements ICryptoService {
         // model.currencies = this.currencies;
         // model.cryptoTickers = this.cryptoTickers;
         return model;
+    }
+
+    private getMonthsBetween(fromDate: Date, toDate: Date) {
+        const start = moment(fromDate);
+        const end = moment(toDate);
+        const months = [];
+
+        while (start.isBefore(end)) {
+            months.push({ date: start.format('YYYY-MM') });
+            start.add(1, 'month');
+        }
+
+        return months;
     }
 }
