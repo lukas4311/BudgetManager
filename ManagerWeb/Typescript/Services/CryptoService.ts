@@ -94,7 +94,7 @@ export default class CryptoService implements ICryptoService {
 
         const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, currency);
 
-        console.log("Start", moment(Date.now()).format("HH:mm:ss"));
+        // console.log("Start", moment(Date.now()).format("HH:mm:ss"));
         for (const monthGroups of cryptoGroupData) {
             let exchangeRate = cryptoExchangeRate.get(monthGroups.ticker);
 
@@ -106,7 +106,7 @@ export default class CryptoService implements ICryptoService {
             const finalMultiplier = exchangeRate * finalCurrencyExcahngeRate;
             cryptoGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
         }
-        console.log("End", moment(Date.now()).format("HH:mm:ss"));
+        // console.log("End", moment(Date.now()).format("HH:mm:ss"));
         console.log("🚀 ~ file: CryptoService.ts:78 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupDataWithCurrencyAmount:", cryptoGroupDataWithCurrencyAmount)
 
         // TODO: je tu problem s tim ze kdyz chybi nejaky mesic tak se to nepripocita a je tam spatne ten celkovy soucet bude se muset pro kazdy mesic doplnit pokud v nem nejsou zadne trady
