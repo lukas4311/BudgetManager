@@ -107,8 +107,16 @@ export default class CryptoService implements ICryptoService {
             cryptoGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
         }
         console.log("End", moment(Date.now()).format("HH:mm:ss"));
-
         console.log("🚀 ~ file: CryptoService.ts:78 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupDataWithCurrencyAmount:", cryptoGroupDataWithCurrencyAmount)
+
+        const data = _.chain(cryptoGroupDataWithCurrencyAmount)
+            .groupBy(s => moment(s.date).format('YYYY-MM'))
+            .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.amount) }))
+            .orderBy(f => f.date, ['asc'])
+            .value();
+
+        console.log("🚀 ~ file: CryptoService.ts:114 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ data:", data)
+
         return [];
     }
 

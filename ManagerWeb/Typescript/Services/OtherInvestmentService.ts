@@ -52,7 +52,6 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
 
     public async getMonthlyGroupedAccumulatedPayments(fromDate: Date, toDate: Date, otherInvestments: OtherInvestmentViewModel[]): Promise<NetWorthMonthGroupModel[]> {
         const months = this.getMonthsBetween(fromDate, toDate);
-        console.log("🚀 ~ file: OtherInvestmentService.ts:55 ~ OtherInvestmentService ~ getMonthlyGroupedAccumulatedPayments ~ months:", months)
         const monthSummary: Map<string, number> = new Map<string, number>();
         forEach(months, m => monthSummary.set(m.date, 0));
 
@@ -68,7 +67,6 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
         }
 
         const finalGroupedModel: NetWorthMonthGroupModel[] = Array.from(monthSummary.entries()).map(([key, value]) => ({ date: moment(key + "-1"), amount: value }));
-        console.log("🚀 ~ file: OtherInvestmentService.ts:57 ~ OtherInvestmentService ~ getMonthlyGroupedAccumulatedPayments ~ monthSummary:", finalGroupedModel)
         return finalGroupedModel;
     }
 
