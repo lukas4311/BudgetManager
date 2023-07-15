@@ -3,7 +3,7 @@ import { CryptoApiInterface, TradeHistory } from "../ApiClient/Main";
 import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { ICryptoService } from "./ICryptoService";
-import _ from "lodash";
+import _, { forEach } from "lodash";
 import { NetWorthMonthGroupModel } from "./NetWorthService";
 
 const usdSymbol = "USD";
@@ -71,54 +71,39 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
-        const cryptoGroupData = [];
         const months = this.getMonthsBetween(fromDate, toDate);
-        const cryptoGroupDataWithCurrencyAmount = [];
         const cryptoExchangeRate = new Map<string, number>();
-        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeSize }));
+        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize }));
+        const cryptoGroupData: NetWorthMonthGroupModel[] = [];
+        let prevMonthSum = 0;
 
-        const cryptos = _.chain(tradesWithPlusMinusSign).groupBy(a => a.cryptoTicker).map((value, key) => ({ ticker: key, trades: value })).value();
-
-        for (const crypto of cryptos.filter(f => f.trades.length > 0)) {
-            _.chain(crypto.trades)
-                .groupBy(s => moment(s.tradeTimeStamp).format('YYYY-MM'))
-                .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.tradeSize), cryptoTickerId: _.first(value)?.cryptoTickerId, cryptoTicker: _.first(value)?.cryptoTicker }))
-                .orderBy(f => f.date, ['asc'])
-                .reduce((acc, model) => {
-                    const tradeSize = acc.prev + model.tradeSize;
-                    cryptoGroupData.push({ date: model.date, size: tradeSize, tickerId: model.cryptoTickerId, ticker: model.cryptoTicker });
-                    acc.prev = tradeSize;
-                    return acc;
-                }, { prev: 0 })
+        for (const month of months) {
+            const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month);
+            const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.cryptoTicker)
+                .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
                 .value();
-        }
 
-        const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, currency);
+            let aggregatedSum = prevMonthSum;
 
-        // console.log("Start", moment(Date.now()).format("HH:mm:ss"));
-        for (const monthGroups of cryptoGroupData) {
-            let exchangeRate = cryptoExchangeRate.get(monthGroups.ticker);
+            for (const monthTickerGroup of monthGroupedTrades) {
+                let exchangeRate = cryptoExchangeRate.get(monthTickerGroup.ticker);
 
-            if (!exchangeRate) {
-                exchangeRate = await this.getExchangeRate(monthGroups.ticker, usdSymbol);
-                cryptoExchangeRate.set(monthGroups.ticker, exchangeRate);
+                if (!exchangeRate) {
+                    exchangeRate = await this.getExchangeRate(monthTickerGroup.ticker, usdSymbol);
+                    cryptoExchangeRate.set(monthTickerGroup.ticker, exchangeRate);
+                }
+
+                const finalMultiplier = exchangeRate * cryptoExchangeRate.get(monthTickerGroup.ticker);
+
+                if (finalMultiplier != 0)
+                    aggregatedSum += finalMultiplier * monthTickerGroup.sum;
             }
 
-            const finalMultiplier = exchangeRate * finalCurrencyExcahngeRate;
-            cryptoGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
+            prevMonthSum = aggregatedSum;
+            cryptoGroupData.push({ date: month, amount: prevMonthSum });
         }
-        // console.log("End", moment(Date.now()).format("HH:mm:ss"));
-        console.log("🚀 ~ file: CryptoService.ts:78 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupDataWithCurrencyAmount:", cryptoGroupDataWithCurrencyAmount)
-
-        // TODO: je tu problem s tim ze kdyz chybi nejaky mesic tak se to nepripocita a je tam spatne ten celkovy soucet bude se muset pro kazdy mesic doplnit pokud v nem nejsou zadne trady
-
-        const data = _.chain(cryptoGroupDataWithCurrencyAmount)
-            .groupBy(s => moment(s.date).format('YYYY-MM'))
-            .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.amount) }))
-            .orderBy(f => f.date, ['asc'])
-            .value();
-
-        console.log("🚀 ~ file: CryptoService.ts:114 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ data:", data)
+        
+        console.log("🚀 ~ file: CryptoService.ts:104 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupData:", cryptoGroupData)
 
         return [];
     }
