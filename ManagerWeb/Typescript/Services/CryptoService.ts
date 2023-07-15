@@ -109,6 +109,8 @@ export default class CryptoService implements ICryptoService {
         console.log("End", moment(Date.now()).format("HH:mm:ss"));
         console.log("🚀 ~ file: CryptoService.ts:78 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupDataWithCurrencyAmount:", cryptoGroupDataWithCurrencyAmount)
 
+        // TODO: je tu problem s tim ze kdyz chybi nejaky mesic tak se to nepripocita a je tam spatne ten celkovy soucet bude se muset pro kazdy mesic doplnit pokud v nem nejsou zadne trady
+
         const data = _.chain(cryptoGroupDataWithCurrencyAmount)
             .groupBy(s => moment(s.date).format('YYYY-MM'))
             .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.amount) }))
