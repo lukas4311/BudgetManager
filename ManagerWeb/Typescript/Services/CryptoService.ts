@@ -77,12 +77,14 @@ export default class CryptoService implements ICryptoService {
         const cryptoGroupData: NetWorthMonthGroupModel[] = [];
         let prevMonthSum = 0;
 
+        console.log("🚀 ~ file: CryptoService.ts:81 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ months:", months)
         for (const month of months) {
-            const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month);
+            const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
             const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.cryptoTicker)
-                .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
-                .value();
-
+            .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
+            .value();
+            
+            console.log("🚀 ~ file: CryptoService.ts:84 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ monthGroupedTrades:", monthGroupedTrades)
             let aggregatedSum = prevMonthSum;
 
             for (const monthTickerGroup of monthGroupedTrades) {
@@ -94,6 +96,8 @@ export default class CryptoService implements ICryptoService {
                 }
 
                 const finalMultiplier = exchangeRate * cryptoExchangeRate.get(monthTickerGroup.ticker);
+                // TODO: fix problem that there is crypto exhcange rate multiplied by same value insted of selected currency
+                console.log("🚀 ~ file: CryptoService.ts:99 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ finalMultiplier:", finalMultiplier)
 
                 if (finalMultiplier != 0)
                     aggregatedSum += finalMultiplier * monthTickerGroup.sum;
