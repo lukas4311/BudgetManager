@@ -74,18 +74,18 @@ export default class CryptoService implements ICryptoService {
         const months = this.getMonthsBetween(fromDate, toDate);
         const cryptoExchangeRate = new Map<string, number>();
         const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize }));
+        console.log("🚀 ~ file: CryptoService.ts:77 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ tradesWithPlusMinusSign:", tradesWithPlusMinusSign)
         const cryptoGroupData: NetWorthMonthGroupModel[] = [];
         let prevMonthSum = 0;
 
-        console.log("🚀 ~ file: CryptoService.ts:81 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ months:", months)
         for (const month of months) {
             const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
             const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.cryptoTicker)
             .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
             .value();
             
-            console.log("🚀 ~ file: CryptoService.ts:84 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ monthGroupedTrades:", monthGroupedTrades)
             let aggregatedSum = prevMonthSum;
+            const exchangeRateCurrency = await this.getExchangeRate(usdSymbol, currency);
 
             for (const monthTickerGroup of monthGroupedTrades) {
                 let exchangeRate = cryptoExchangeRate.get(monthTickerGroup.ticker);
@@ -95,8 +95,7 @@ export default class CryptoService implements ICryptoService {
                     cryptoExchangeRate.set(monthTickerGroup.ticker, exchangeRate);
                 }
 
-                const finalMultiplier = exchangeRate * cryptoExchangeRate.get(monthTickerGroup.ticker);
-                // TODO: fix problem that there is crypto exhcange rate multiplied by same value insted of selected currency
+                const finalMultiplier = exchangeRate * exchangeRateCurrency;
                 console.log("🚀 ~ file: CryptoService.ts:99 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ finalMultiplier:", finalMultiplier)
 
                 if (finalMultiplier != 0)

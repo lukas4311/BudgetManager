@@ -88,7 +88,7 @@ export default class NetWorthService {
 
         // TODO: add monthly group data for crypto
         const tradeData = await this.cryptoService.getRawTradeData();
-        const cryptoNetWorth = this.cryptoService.getMonthlyGroupedAccumulatedCrypto(new Date(2023, 0, 1), new Date(2023, 6, 1), tradeData, czkSymbol);
+        const cryptoNetWorth = this.cryptoService.getMonthlyGroupedAccumulatedCrypto(new Date(2021, 0, 1), new Date(2022, 0, 1), tradeData, czkSymbol);
 
         // TODO: add monthly group data for stocks
 
