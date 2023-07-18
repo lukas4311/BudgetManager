@@ -85,12 +85,14 @@ export default class CryptoService implements ICryptoService {
             .value();
             
             let aggregatedSum = prevMonthSum;
+            // FIXME: there i need to get echange rate for this month date not for current date
             const exchangeRateCurrency = await this.getExchangeRate(usdSymbol, currency);
 
             for (const monthTickerGroup of monthGroupedTrades) {
                 let exchangeRate = cryptoExchangeRate.get(monthTickerGroup.ticker);
 
                 if (!exchangeRate) {
+                    // FIXME: there i need to get echange rate for this month date not for current date, cache is not working for this use case
                     exchangeRate = await this.getExchangeRate(monthTickerGroup.ticker, usdSymbol);
                     cryptoExchangeRate.set(monthTickerGroup.ticker, exchangeRate);
                 }
