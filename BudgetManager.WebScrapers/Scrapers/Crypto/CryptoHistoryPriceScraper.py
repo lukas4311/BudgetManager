@@ -3,6 +3,7 @@ import datetime
 import time
 import requests
 import json
+from enum import Enum
 
 
 class ResultData:
@@ -21,24 +22,31 @@ class Result:
         self.quoteVolume = quoteVolume
 
 
+class CryptoTickers(Enum):
+    BTC = "BTCUSD"
+    ETH = "ETHUSD"
+
+
 class CryptoWatchService:
     oneDayLimit = 86400
     cryptoWatchBaseUrl = "https://api.cryptowat.ch"
 
-    def downloadCryptoPriceHistory(self):
+    def downloadCryptoPriceHistory(self, ticker: CryptoTickers):
         date_time = datetime.datetime(2000, 7, 26, 21, 20)
         fromTime = int(time.mktime(date_time.timetuple()))
-        url = f"{self.cryptoWatchBaseUrl}/markets/coinbase-pro/BTCUSD/ohlc?periods={self.oneDayLimit}&after={fromTime}"
+        url = f"{self.cryptoWatchBaseUrl}/markets/coinbase-pro/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
         print(url)
 
-        response = requests.get(url)
-        jsonData = response.text
-        parsed_data = json.loads(jsonData)
+        # response = requests.get(url)
+        # jsonData = response.text
+        # parsed_data = json.loads(jsonData)
+        #
+        # result_objects = [Result(*item) for item in parsed_data['result']['86400']]
+        # result_data_instance = ResultData(result_objects)
+        #
+        # for result in result_data_instance.data:
+        #     print(f"Timestamp: {result.timestamp}, Close Value: {result.close_val}")
 
-        result_objects = [Result(*item) for item in parsed_data['result']['86400']]
-        result_data_instance = ResultData(result_objects)
 
-        for result in result_data_instance.data:
-            print(f"Timestamp: {result.timestamp}, Close Value: {result.close_val}")
-
-
+cryptoService = CryptoWatchService();
+cryptoService.downloadCryptoPriceHistory(CryptoTickers.BTC)
