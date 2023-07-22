@@ -1,10 +1,21 @@
 # importing datetime module
-import datetime
+from datetime import datetime, timedelta
 import time
 import requests
 import json
-from enum import Enum
+import logging
 
+from Models.FilterTuple import FilterTuple
+from Services.InfluxRepository import InfluxRepository
+from enum import Enum
+from configManager import token, organizaiton
+from secret import influxDbUrl
+
+log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
+                    level=logging.DEBUG)
+influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizaiton, logging)
+bucketName = "Crypto"
 
 class ResultData:
     def __init__(self, data):
@@ -37,6 +48,14 @@ class CryptoWatchService:
         url = f"{self.cryptoWatchBaseUrl}/markets/coinbase-pro/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
         print(url)
 
+        lastRecordTime = self.get_last_record_time(ticker)
+
+        #now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=1)
+
+        # if last_downloaded_time < now_datetime_with_offset:
+        #     stockPriceData = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
+        #     stockPriceData = [d for d in stockPriceData if d.date > last_downloaded_time]
+
         # response = requests.get(url)
         # jsonData = response.text
         # parsed_data = json.loads(jsonData)
@@ -46,6 +65,15 @@ class CryptoWatchService:
         #
         # for result in result_data_instance.data:
         #     print(f"Timestamp: {result.timestamp}, Close Value: {result.close_val}")
+
+    def get_last_record_time(self, ticker: CryptoTickers):
+        lastValue = influx_repository.filter_last_value(bucketName, FilterTuple("ticker", ticker), datetime.min)
+        last_downloaded_time = datetime(2000, 1, 1)
+
+        if len(lastValue) != 0:
+            last_downloaded_time = lastValue[0].records[0]["_time"]
+
+        return last_downloaded_time
 
 
 cryptoService = CryptoWatchService();

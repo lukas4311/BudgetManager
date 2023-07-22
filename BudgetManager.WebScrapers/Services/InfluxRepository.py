@@ -129,3 +129,18 @@ class InfluxRepository:
 
         tables = query_api.query(query_data[0], params=query_data[1])
         return tables
+
+    def filter_last_value(self, measurement: str, customFilter: FilterTuple, start: datetime):
+        query_api = self.__client.query_api()
+
+        queryBuilder = InfluxQueryBuilder()
+        queryBuilder.set_bucket(self.__bucket)
+        queryBuilder.set_start(start)
+        queryBuilder.set_end(datetime(9999, 12, 31))
+        queryBuilder.set_measurement(measurement)
+        queryBuilder.set_filter(customFilter)
+        queryBuilder.set_highestMax("_time")
+        query_data = queryBuilder.build()
+
+        tables = query_api.query(query_data[0], params=query_data[1])
+        return tables
