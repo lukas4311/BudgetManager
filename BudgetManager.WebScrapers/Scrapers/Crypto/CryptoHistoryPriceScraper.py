@@ -11,11 +11,11 @@ from enum import Enum
 from configManager import token, organizaiton
 from secret import influxDbUrl
 
-log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+log_name = 'Logs/cryptoPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizaiton, logging)
-bucketName = "Crypto"
+influx_repository = InfluxRepository(influxDbUrl, "Crypto", token, organizaiton, logging)
+measurement = "cryptoData"
 
 class ResultData:
     def __init__(self, data):
@@ -43,13 +43,13 @@ class CryptoWatchService:
     cryptoWatchBaseUrl = "https://api.cryptowat.ch"
 
     def downloadCryptoPriceHistory(self, ticker: CryptoTickers):
-        date_time = datetime.datetime(2000, 7, 26, 21, 20)
+        date_time = datetime(2000, 7, 26, 21, 20)
         fromTime = int(time.mktime(date_time.timetuple()))
         url = f"{self.cryptoWatchBaseUrl}/markets/coinbase-pro/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
         print(url)
 
         lastRecordTime = self.get_last_record_time(ticker)
-
+        print(lastRecordTime)
         #now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=1)
 
         # if last_downloaded_time < now_datetime_with_offset:
@@ -67,7 +67,7 @@ class CryptoWatchService:
         #     print(f"Timestamp: {result.timestamp}, Close Value: {result.close_val}")
 
     def get_last_record_time(self, ticker: CryptoTickers):
-        lastValue = influx_repository.filter_last_value(bucketName, FilterTuple("ticker", ticker), datetime.min)
+        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker.value), datetime.min)
         last_downloaded_time = datetime(2000, 1, 1)
 
         if len(lastValue) != 0:
