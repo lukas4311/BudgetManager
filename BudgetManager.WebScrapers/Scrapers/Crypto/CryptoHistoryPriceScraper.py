@@ -64,7 +64,7 @@ class CryptoWatchService:
             stockPriceData = [d for d in result_data_instance.data if d.timestamp > fromTime]
             print(stockPriceData)
             for a in stockPriceData:
-                print(f"Timestamp: {a.timestamp}, date: {datetime.fromtimestamp(a.timestamp)} Close Value: {round(a.close_val)}")
+                print(f"Timestamp: {a.timestamp}, date: {datetime.fromtimestamp(a.timestamp)} Close Value: {a.close_val}")
 
     def get_last_record_time(self, ticker: CryptoTickers):
         lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker.value), datetime.min)
