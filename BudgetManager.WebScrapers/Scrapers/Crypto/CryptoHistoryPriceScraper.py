@@ -70,14 +70,15 @@ class CryptoWatchService:
             parsed_data = json.loads(jsonData)
             result_objects = [Result(*item) for item in parsed_data['result']['86400']]
             result_data_instance = ResultData(result_objects)
-            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp), d.close_val, ticker.value) for d in result_data_instance.data if d.timestamp > fromTime]
-
+            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp), round(d.close_val, 2), ticker.value) for d in result_data_instance.data if d.timestamp > fromTime]
+            print(stockPriceData)
             return stockPriceData
 
         return []
 
     def __get_last_record_time(self, ticker: CryptoTickers):
         lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker.value), datetime.min)
+        print(lastValue)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         if len(lastValue) != 0:
@@ -97,8 +98,8 @@ class CryptoWatchService:
             point = point.time(priceModel.date, WritePrecision.NS)
             pointsToSave.append(point)
 
-        influx_repository.add_range(pointsToSave)
-        influx_repository.save()
+        # influx_repository.add_range(pointsToSave)
+        # influx_repository.save()
         logging.info('Data saved for ticker: ' + priceData[0].ticker)
         print("Data saved")
 
