@@ -7,7 +7,8 @@
     "webpackW": "npx webpack watch",
     "webpack": "npx webpack",
     "gulp": "gulp watchsass",
-    "all": "npm-run-all --parallel webpackW gulp"
+    "tailwind": "npx tailwindcss -i Tailwind/tailwindBase.css -o wwwroot/css/tailwind.css --watch",
+    "all": "npm-run-all --parallel webpackW gulp tailwind"
   },
   "keywords": [],
   "author": "",
