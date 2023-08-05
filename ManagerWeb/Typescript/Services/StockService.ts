@@ -85,41 +85,41 @@ export default class StockService implements IStockService {
         return netWorth;
     }
 
-    public async getMonthlyGroupedAccumulated(trades: StockViewModel[], currency: string): Promise<number> {
-        const stockGroupedData = [];
-        const stockGroupDataWithCurrencyAmount = [];
-        const stockExchangeRate = new Map<string, number>();
-        const cryptos = _.chain(trades).groupBy(a => a.stockTicker).map((value, key) => ({ ticker: key, trades: value })).value();
+    public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<number> {
+        // const stockGroupedData = [];
+        // const stockGroupDataWithCurrencyAmount = [];
+        // const stockExchangeRate = new Map<string, number>();
+        // const cryptos = _.chain(trades).groupBy(a => a.stockTicker).map((value, key) => ({ ticker: key, trades: value })).value();
 
-        for (const crypto of cryptos.filter(f => f.trades.length > 0)) {
-            _.chain(crypto.trades)
-                .groupBy(s => moment(s.tradeTimeStamp).format('YYYY-MM'))
-                .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.tradeSize), stockTickerId: _.first(value)?.stockTickerId, stockTicker: _.first(value)?.stockTicker }))
-                .orderBy(f => f.date, ['asc'])
-                .reduce((acc, model) => {
-                    const tradeSize = acc.prev + model.tradeSize;
-                    stockGroupedData.push({ date: model.date, size: tradeSize, tickerId: model.stockTickerId, ticker: model.stockTicker });
-                    acc.prev = tradeSize;
-                    return acc;
-                }, { prev: 0 })
-                .value();
-        }
+        // for (const crypto of cryptos.filter(f => f.trades.length > 0)) {
+        //     _.chain(crypto.trades)
+        //         .groupBy(s => moment(s.tradeTimeStamp).format('YYYY-MM'))
+        //         .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.tradeSize), stockTickerId: _.first(value)?.stockTickerId, stockTicker: _.first(value)?.stockTicker }))
+        //         .orderBy(f => f.date, ['asc'])
+        //         .reduce((acc, model) => {
+        //             const tradeSize = acc.prev + model.tradeSize;
+        //             stockGroupedData.push({ date: model.date, size: tradeSize, tickerId: model.stockTickerId, ticker: model.stockTicker });
+        //             acc.prev = tradeSize;
+        //             return acc;
+        //         }, { prev: 0 })
+        //         .value();
+        // }
 
-        const finalCurrencyExcahngeRate = await this.cryptoService.getExchangeRate(usdSymbol, currency);
+        // const finalCurrencyExcahngeRate = await this.cryptoService.getExchangeRate(usdSymbol, currency);
 
-        console.log("Start", moment(Date.now()).format("HH:mm:ss"));
-        for (const monthGroups of stockGroupedData) {
-            let exchangeRate = stockExchangeRate.get(monthGroups.ticker);
+        // console.log("Start", moment(Date.now()).format("HH:mm:ss"));
+        // for (const monthGroups of stockGroupedData) {
+        //     let exchangeRate = stockExchangeRate.get(monthGroups.ticker);
 
-            if (!exchangeRate) {
-                exchangeRate = await this.cryptoService.getExchangeRate(monthGroups.ticker, usdSymbol);
-                stockExchangeRate.set(monthGroups.ticker, exchangeRate);
-            }
+        //     if (!exchangeRate) {
+        //         exchangeRate = await this.cryptoService.getExchangeRate(monthGroups.ticker, usdSymbol);
+        //         stockExchangeRate.set(monthGroups.ticker, exchangeRate);
+        //     }
 
-            const finalMultiplier = exchangeRate * finalCurrencyExcahngeRate;
-            stockGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
-        }
-        console.log("End", moment(Date.now()).format("HH:mm:ss"));
+        //     const finalMultiplier = exchangeRate * finalCurrencyExcahngeRate;
+        //     stockGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
+        // }
+        // console.log("End", moment(Date.now()).format("HH:mm:ss"));
 
         return 0;
     }
