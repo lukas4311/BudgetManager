@@ -111,3 +111,8 @@ btcData = cryptoService.get_crypto_price_history(CryptoTickers.BTC)
 
 if len(btcData) > 0:
     cryptoService.save_data_to_influx(btcData)
+
+ethData = cryptoService.get_crypto_price_history(CryptoTickers.ETH)
+
+if len(ethData) > 0:
+    cryptoService.save_data_to_influx(ethData)
