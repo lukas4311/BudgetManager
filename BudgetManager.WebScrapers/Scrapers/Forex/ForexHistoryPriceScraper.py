@@ -44,7 +44,7 @@ class ApiDataSource:
 
                 datetime = pd.to_datetime(datetime_str)
 
-                model = PriceModel(datetime=datetime, close_price=close_price, symbol=symbol)
+                model = PriceModel(datetime=datetime, close_price=round(float(close_price), 6), symbol=symbol)
                 parsed_data.append(model)
 
         return parsed_data
@@ -68,6 +68,10 @@ class ForexScrapeService:
         data = json.loads(data)
         return self.data_source.parse_data(data)
 
+    def invert_currency_pair(self, pair: str):
+        base, quote = pair.split('/')
+        return f"{quote}/{base}"
+
 
 # Usage example:
 symbols = ["USD/CZK", "USD/EUR", "USD/GBP", "USD/CHF"]
@@ -83,4 +87,27 @@ for model in data:
     else:
         symbol_models[model.symbol] = [model]
 
-print(symbol_models)
+
+inverted_symbol_models = {}
+
+for symbol, models in symbol_models.items():
+    inverted_symbol = service.invert_currency_pair(symbol)
+    inverted_models = []
+    for model in models:
+        inverted_close_price = round(1.0 / model.close_price, 6)
+        inverted_model = PriceModel(datetime=model.datetime, close_price=inverted_close_price, symbol=inverted_symbol)
+        inverted_models.append(inverted_model)
+    inverted_symbol_models[inverted_symbol] = inverted_models
+
+
+# console log for test
+for key in symbol_models:
+    print(f'{key}: {symbol_models[key][-1].datetime} {symbol_models[key][-1].close_price} [{symbol_models[key][-1].symbol}]')
+    for price_record in symbol_models[key]:
+        print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+
+print(inverted_symbol_models)
+for key in inverted_symbol_models:
+    print(f'{key}: {inverted_symbol_models[key][-1].datetime} {inverted_symbol_models[key][-1].close_price} [{inverted_symbol_models[key][-1].symbol}]')
+    for price_record in inverted_symbol_models[key]:
+        print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
