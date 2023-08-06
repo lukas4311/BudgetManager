@@ -51,35 +51,32 @@ class ApiDataSource:
         return parsed_data
 
 
-class CrossRateCalculator:
-    def calculate_cross_rate(self, base_pair: str, quote_pair: str, base_quote_prices: dict) -> float:
-        print(base_quote_prices)
-        # Implement the cross-rate calculation logic here.
-        base_currency = base_pair.split('/')[1]
-        quote_currency = quote_pair.split('/')[1]
-
-        if base_currency == quote_currency:
-            return 1.0
-
-        print(base_pair)
-        print(quote_pair)
-        # Find the close prices for the base/quote pairs
-        base_prices = [model.close_price for model in base_quote_prices.get(base_pair, [])]
-        quote_prices = [model.close_price for model in base_quote_prices.get(quote_pair, [])]
-        print(base_prices)
-        print(quote_prices)
-        if not base_prices or not quote_prices:
-            return None
-
-        # Calculate the cross rate using the last available prices
-        cross_rate = base_prices[-1] / quote_prices[-1]
-        return cross_rate
+# class CrossRateCalculator:
+#     def calculate_cross_rate(self, base_pair: str, quote_pair: str, base_quote_prices: dict) -> float:
+#         print(base_quote_prices)
+#         # Implement the cross-rate calculation logic here.
+#         base_currency = base_pair.split('/')[1]
+#         quote_currency = quote_pair.split('/')[1]
+#
+#         if base_currency == quote_currency:
+#             return 1.0
+#
+#         print(base_pair)
+#         print(quote_pair)
+#         # Find the close prices for the base/quote pairs
+#         base_prices = [model.close_price for model in base_quote_prices.get(base_pair, [])]
+#         quote_prices = [model.close_price for model in base_quote_prices.get(quote_pair, [])]
+#         print(base_prices)
+#         print(quote_prices)
+#         if not base_prices or not quote_prices:
+#             return None
+#
+#         # Calculate the cross rate using the last available prices
+#         cross_rate = base_prices[-1] / quote_prices[-1]
+#         return cross_rate
 
 
 class ForexRateAnalyzer:
-    def __init__(self, cross_rate_calculator):
-        self.cross_rate_calculator = cross_rate_calculator
-
     def find_all_cross_rates(self, price_data: dict) -> dict:
         cross_data = {}
 
@@ -97,7 +94,7 @@ class ForexRateAnalyzer:
                     # Check if the dates match
                     if v1.datetime == v2.datetime:
                         # Calculate the cross rate by dividing the exchange rates
-                        cross_rate = v1.close_price / v2.close_price
+                        cross_rate = round(v1.close_price / v2.close_price, 6)
                         # Create a new PriceModel object with the cross rate and the cross key
                         cross_model = PriceModel(v1.datetime, cross_rate, cross_key)
                         # Split the cross key by the slash and take the first and last elements as the base and quote currencies
@@ -112,11 +109,12 @@ class ForexRateAnalyzer:
                         else:
                             cross_data[key] = [cross_model]
 
+        return cross_data
         # Print the cross data dictionary
-        for key, value in cross_data.items():
-            print(key)
-            for v in value:
-                print(v.datetime, v.close_price, v.symbol)
+        # for key, value in cross_data.items():
+        #     print(key)
+        #     for v in value:
+        #         print(v.datetime, v.close_price, v.symbol)
 
 
 class ForexScrapeService:
@@ -157,17 +155,17 @@ class ForexService:
             else:
                 symbol_models[model.symbol] = [model]
 
-        cross_rate_calculator = CrossRateCalculator()
-        forex_rate_analyzer = ForexRateAnalyzer(cross_rate_calculator)
+        forex_rate_analyzer = ForexRateAnalyzer()
 
         all_cross_rates = forex_rate_analyzer.find_all_cross_rates(symbol_models)
         print(all_cross_rates)
+        symbol_models.update(all_cross_rates)
 
         # console log for test
-        # for key in symbol_models:
-        #     print(f'{key}: {symbol_models[key][-1].datetime} {symbol_models[key][-1].close_price} [{symbol_models[key][-1].symbol}]')
-        #     for price_record in symbol_models[key]:
-        #         print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+        for key in symbol_models:
+            print(f'{key}: [{symbol_models[key][-1].symbol}]')
+            for price_record in symbol_models[key]:
+                print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
 
         # print(inverted_symbol_models)
         # for key in inverted_symbol_models:
