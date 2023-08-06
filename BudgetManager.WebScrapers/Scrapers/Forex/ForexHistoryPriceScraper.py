@@ -57,39 +57,26 @@ class ForexRateAnalyzer:
 
         for key1, value1 in price_data.items():
             for key2, value2 in price_data.items():
-                # Skip if the keys are the same or the reverse order has been calculated
                 if key1 == key2 or key2 + "/" + key1 in price_data:
                     continue
-                # Create a new key for the cross pair
+
                 cross_key = key1 + "/" + key2
-                # Zip the corresponding values by date
                 cross_value = list(zip(value1, value2))
-                # Loop over the zipped values
+
                 for v1, v2 in cross_value:
-                    # Check if the dates match
                     if v1.datetime == v2.datetime:
-                        # Calculate the cross rate by dividing the exchange rates
                         cross_rate = round(v1.close_price / v2.close_price, 6)
-                        # Create a new PriceModel object with the cross rate and the cross key
                         cross_model = PriceModel(v1.datetime, cross_rate, cross_key)
-                        # Split the cross key by the slash and take the first and last elements as the base and quote currencies
                         base_currency = cross_key.split("/")[1]
                         quote_currency = cross_key.split("/")[-1]
-                        # Join them with a slash and assign it to the symbol attribute of the cross model
                         key = quote_currency + "/" + base_currency
                         cross_model.symbol = key
-                        # Check if the cross key is already in the cross data dictionary
                         if key in cross_data:
                             cross_data[key].append(cross_model)
                         else:
                             cross_data[key] = [cross_model]
 
         return cross_data
-        # Print the cross data dictionary
-        # for key, value in cross_data.items():
-        #     print(key)
-        #     for v in value:
-        #         print(v.datetime, v.close_price, v.symbol)
 
 
 class ForexScrapeService:
