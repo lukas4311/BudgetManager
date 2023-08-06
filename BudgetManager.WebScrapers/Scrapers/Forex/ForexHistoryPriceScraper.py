@@ -55,13 +55,12 @@ class ForexRateAnalyzer:
     def find_all_cross_rates(self, price_data: dict) -> dict:
         cross_data = {}
 
-        for key1, value1 in price_data.items():
-            for key2, value2 in price_data.items():
-                if key1 == key2 or key2 + "/" + key1 in price_data:
+        for first_symbol, first_symbol_exchange_rates in price_data.items():
+            for second_symbol, second_symbol_exchange_rates in price_data.items():
+                if first_symbol == second_symbol or second_symbol + "/" + first_symbol in price_data:
                     continue
-
-                cross_key = key1 + "/" + key2
-                cross_value = list(zip(value1, value2))
+                cross_key = first_symbol + "/" + second_symbol
+                cross_value = list(zip(first_symbol_exchange_rates, second_symbol_exchange_rates))
 
                 for v1, v2 in cross_value:
                     if v1.datetime == v2.datetime:
@@ -120,7 +119,6 @@ class ForexService:
         forex_rate_analyzer = ForexRateAnalyzer()
 
         all_cross_rates = forex_rate_analyzer.find_all_cross_rates(symbol_models)
-        print(all_cross_rates)
         symbol_models.update(all_cross_rates)
 
         # console log for test
