@@ -51,31 +51,6 @@ class ApiDataSource:
         return parsed_data
 
 
-# class CrossRateCalculator:
-#     def calculate_cross_rate(self, base_pair: str, quote_pair: str, base_quote_prices: dict) -> float:
-#         print(base_quote_prices)
-#         # Implement the cross-rate calculation logic here.
-#         base_currency = base_pair.split('/')[1]
-#         quote_currency = quote_pair.split('/')[1]
-#
-#         if base_currency == quote_currency:
-#             return 1.0
-#
-#         print(base_pair)
-#         print(quote_pair)
-#         # Find the close prices for the base/quote pairs
-#         base_prices = [model.close_price for model in base_quote_prices.get(base_pair, [])]
-#         quote_prices = [model.close_price for model in base_quote_prices.get(quote_pair, [])]
-#         print(base_prices)
-#         print(quote_prices)
-#         if not base_prices or not quote_prices:
-#             return None
-#
-#         # Calculate the cross rate using the last available prices
-#         cross_rate = base_prices[-1] / quote_prices[-1]
-#         return cross_rate
-
-
 class ForexRateAnalyzer:
     def find_all_cross_rates(self, price_data: dict) -> dict:
         cross_data = {}
@@ -101,7 +76,7 @@ class ForexRateAnalyzer:
                         base_currency = cross_key.split("/")[1]
                         quote_currency = cross_key.split("/")[-1]
                         # Join them with a slash and assign it to the symbol attribute of the cross model
-                        key = base_currency + "/" + quote_currency
+                        key = quote_currency + "/" + base_currency
                         cross_model.symbol = key
                         # Check if the cross key is already in the cross data dictionary
                         if key in cross_data:
@@ -166,12 +141,6 @@ class ForexService:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
             for price_record in symbol_models[key]:
                 print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
-
-        # print(inverted_symbol_models)
-        # for key in inverted_symbol_models:
-        #     print(f'{key}: {inverted_symbol_models[key][-1].datetime} {inverted_symbol_models[key][-1].close_price} [{inverted_symbol_models[key][-1].symbol}]')
-        #     for price_record in inverted_symbol_models[key]:
-        #         print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
 
 
 forex_service = ForexService()
