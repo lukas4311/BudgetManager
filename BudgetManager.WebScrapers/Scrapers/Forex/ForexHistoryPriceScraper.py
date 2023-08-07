@@ -140,7 +140,7 @@ class ForexService:
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
         pointsToSave = []
-        logging.info('Saving price for stock: ' + priceData[0].symbol)
+        logging.info('Saving forex pair: ' + priceData[0].symbol)
 
         for priceModel in priceData:
             print(priceModel.close_price)
@@ -155,7 +155,7 @@ class ForexService:
             print(point.to_line_protocol())
 
         # influx_repository.save()
-        logging.info('Data saved for ticker: ' + priceData[0].ticker)
+        logging.info('Data saved for pair: ' + priceData[0].ticker)
         print("Data saved")
 
 
