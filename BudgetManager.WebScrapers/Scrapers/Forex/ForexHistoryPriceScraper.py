@@ -1,9 +1,20 @@
 import requests
-from itertools import combinations
 import pandas as pd
+import json
+import logging
+from datetime import datetime
 from dataclasses import dataclass
 from secret import tokenTwelveData
-import json
+from Services.InfluxRepository import InfluxRepository
+from configManager import token, organizaiton
+from secret import influxDbUrl
+from influxdb_client import Point, WritePrecision
+
+log_name = 'Logs/forexPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
+                    level=logging.DEBUG)
+influx_repository = InfluxRepository(influxDbUrl, "Forex", token, organizaiton, logging)
+measurement = "ExchangeRates"
 
 
 @dataclass
@@ -33,7 +44,7 @@ class ApiDataSource:
             raise ValueError("Failed to fetch data from the API.")
         return response.json()
 
-    def parse_data(self, data):
+    def parse_data(self, data) -> PriceModel:
         parsed_data = []
         for symbol, symbol_data in data.items():
             if 'values' not in symbol_data:
@@ -85,13 +96,13 @@ class ForexScrapeService:
     def set_data_source(self, data_source):
         self.data_source = data_source
 
-    def get_data(self, symbols):
+    def get_data(self, symbols) -> list[PriceModel]:
         if not self.data_source:
             raise ValueError("Data source is not set. Please call set_data_source() first.")
 
         api_url = TwelveDataUrlBuilder.build_time_series_url(symbols)
         self.data_source.api_url = api_url
-        #data = self.data_source.fetch_data()
+        # data = self.data_source.fetch_data()
         data = '{"USD/CZK":{"meta":{"symbol":"USD/CZK","interval":"1day","currency_base":"US Dollar","currency_quote":"Czech Koruna","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"22.11000","high":"22.21170","low":"21.94720","close":"22.03530"},{"datetime":"2023-08-03","open":"21.91590","high":"22.21390","low":"21.87700","close":"22.13430"},{"datetime":"2023-08-02","open":"21.80990","high":"21.97790","low":"21.71790","close":"21.91560"},{"datetime":"2023-08-01","open":"21.72250","high":"21.86480","low":"21.69340","close":"21.81840"}],"status":"ok"},"USD/EUR":{"meta":{"symbol":"USD/EUR","interval":"1day","currency_base":"US Dollar","currency_quote":"Euro","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.91334","high":"0.91448","low":"0.90568","close":"0.90820"},{"datetime":"2023-08-03","open":"0.91424","high":"0.91629","low":"0.91229","close":"0.91331"},{"datetime":"2023-08-02","open":"0.91043","high":"0.91578","low":"0.90746","close":"0.91420"},{"datetime":"2023-08-01","open":"0.90930","high":"0.91302","low":"0.90870","close":"0.91035"}],"status":"ok"},"USD/GBP":{"meta":{"symbol":"USD/GBP","interval":"1day","currency_base":"US Dollar","currency_quote":"British Pound","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.78690","high":"0.78798","low":"0.78175","close":"0.78425"},{"datetime":"2023-08-03","open":"0.78680","high":"0.79212","low":"0.78569","close":"0.78685"},{"datetime":"2023-08-02","open":"0.78267","high":"0.78854","low":"0.78095","close":"0.78673"},{"datetime":"2023-08-01","open":"0.77911","high":"0.78479","low":"0.77870","close":"0.78269"}],"status":"ok"},"USD/CHF":{"meta":{"symbol":"USD/CHF","interval":"1day","currency_base":"US Dollar","currency_quote":"Swiss Franc","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.87425","high":"0.87840","low":"0.86990","close":"0.87290"},{"datetime":"2023-08-03","open":"0.87780","high":"0.87990","low":"0.87330","close":"0.87430"},{"datetime":"2023-08-02","open":"0.87525","high":"0.88060","low":"0.87160","close":"0.87755"},{"datetime":"2023-08-01","open":"0.87195","high":"0.87785","low":"0.87080","close":"0.87510"}],"status":"ok"}}'
         data = json.loads(data)
         return self.data_source.parse_data(data)
@@ -126,6 +137,26 @@ class ForexService:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
             for price_record in symbol_models[key]:
                 print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+
+    def save_data_to_influx(self, priceData: list[PriceModel]):
+        pointsToSave = []
+        logging.info('Saving price for stock: ' + priceData[0].symbol)
+
+        for priceModel in priceData:
+            print(priceModel.close_price)
+            point = Point(measurement) \
+                .tag("pair", priceModel.symbol) \
+                .field('price', priceModel.close_price)
+            point = point.time(priceModel.datetime, WritePrecision.NS)
+            pointsToSave.append(point)
+
+        # influx_repository.add_range(pointsToSave)
+        for point in pointsToSave:
+            print(point.to_line_protocol())
+
+        # influx_repository.save()
+        logging.info('Data saved for ticker: ' + priceData[0].ticker)
+        print("Data saved")
 
 
 forex_service = ForexService()
