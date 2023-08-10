@@ -2,8 +2,11 @@ import requests
 import pandas as pd
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
+
+from Models.FilterTuple import FilterTuple
+from SourceFiles.forexSource import forexResponse
 from secret import tokenTwelveData
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton
@@ -31,7 +34,7 @@ class TwelveDataUrlBuilder:
         symbol_param = ','.join(symbols)
         interval = "1day"
         api_key = tokenTwelveData
-        return f"{base_url}?symbol={symbol_param}&interval={interval}&apikey={api_key}"
+        return f"{base_url}?symbol={symbol_param}&interval={interval}&apikey={api_key}&start_date=2000-01-01"
 
 
 class ApiDataSource:
@@ -40,8 +43,10 @@ class ApiDataSource:
 
     def fetch_data(self):
         response = requests.get(self.api_url)
+
         if response.status_code != 200:
             raise ValueError("Failed to fetch data from the API.")
+
         return response.json()
 
     def parse_data(self, data) -> PriceModel:
@@ -102,10 +107,12 @@ class ForexScrapeService:
 
         api_url = TwelveDataUrlBuilder.build_time_series_url(symbols)
         self.data_source.api_url = api_url
-        # data = self.data_source.fetch_data()
+        #data = self.data_source.fetch_data()
+        # print(data)
         data = '{"USD/CZK":{"meta":{"symbol":"USD/CZK","interval":"1day","currency_base":"US Dollar","currency_quote":"Czech Koruna","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"22.11000","high":"22.21170","low":"21.94720","close":"22.03530"},{"datetime":"2023-08-03","open":"21.91590","high":"22.21390","low":"21.87700","close":"22.13430"},{"datetime":"2023-08-02","open":"21.80990","high":"21.97790","low":"21.71790","close":"21.91560"},{"datetime":"2023-08-01","open":"21.72250","high":"21.86480","low":"21.69340","close":"21.81840"}],"status":"ok"},"USD/EUR":{"meta":{"symbol":"USD/EUR","interval":"1day","currency_base":"US Dollar","currency_quote":"Euro","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.91334","high":"0.91448","low":"0.90568","close":"0.90820"},{"datetime":"2023-08-03","open":"0.91424","high":"0.91629","low":"0.91229","close":"0.91331"},{"datetime":"2023-08-02","open":"0.91043","high":"0.91578","low":"0.90746","close":"0.91420"},{"datetime":"2023-08-01","open":"0.90930","high":"0.91302","low":"0.90870","close":"0.91035"}],"status":"ok"},"USD/GBP":{"meta":{"symbol":"USD/GBP","interval":"1day","currency_base":"US Dollar","currency_quote":"British Pound","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.78690","high":"0.78798","low":"0.78175","close":"0.78425"},{"datetime":"2023-08-03","open":"0.78680","high":"0.79212","low":"0.78569","close":"0.78685"},{"datetime":"2023-08-02","open":"0.78267","high":"0.78854","low":"0.78095","close":"0.78673"},{"datetime":"2023-08-01","open":"0.77911","high":"0.78479","low":"0.77870","close":"0.78269"}],"status":"ok"},"USD/CHF":{"meta":{"symbol":"USD/CHF","interval":"1day","currency_base":"US Dollar","currency_quote":"Swiss Franc","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.87425","high":"0.87840","low":"0.86990","close":"0.87290"},{"datetime":"2023-08-03","open":"0.87780","high":"0.87990","low":"0.87330","close":"0.87430"},{"datetime":"2023-08-02","open":"0.87525","high":"0.88060","low":"0.87160","close":"0.87755"},{"datetime":"2023-08-01","open":"0.87195","high":"0.87785","low":"0.87080","close":"0.87510"}],"status":"ok"}}'
-        data = json.loads(data)
-        return self.data_source.parse_data(data)
+        json_data = json.loads(forexResponse)
+        # print(json_data)
+        return self.data_source.parse_data(json_data)
 
     def invert_currency_pair(self, pair: str):
         base, quote = pair.split('/')
@@ -114,7 +121,7 @@ class ForexScrapeService:
 
 class ForexService:
     def run(self):
-        symbols = ["USD/CZK", "USD/EUR", "USD/GBP", "USD/CHF"]
+        symbols = ["USD/CZK", "USD/EUR", "USD/GBP", "USD/CHF", "USD/JPY"]
         service = ForexScrapeService()
         api_data_source = ApiDataSource(None)
         service.set_data_source(api_data_source)
@@ -135,8 +142,13 @@ class ForexService:
         # console log for test
         for key in symbol_models:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
-            for price_record in symbol_models[key]:
+            exchangeRates = symbol_models[key]
+            exchangeRatesWithoutToday = [d for d in exchangeRates if d.datetime < (datetime.now() - timedelta(days=1))]
+
+            for price_record in exchangeRatesWithoutToday:
                 print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+
+            self.save_data_to_influx(exchangeRates)
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
         pointsToSave = []
@@ -155,9 +167,21 @@ class ForexService:
             print(point.to_line_protocol())
 
         # influx_repository.save()
-        logging.info('Data saved for pair: ' + priceData[0].ticker)
+        logging.info('Data saved for pair: ' + priceData[0].symbol)
         print("Data saved")
+
+    def get_last_record_time(self, ticker: str):
+        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
+        print(lastValue)
+        last_downloaded_time = None
+
+        if len(lastValue) != 0:
+            last_downloaded_time = lastValue[0].records[0]["_time"]
+
+        return last_downloaded_time
 
 
 forex_service = ForexService()
 forex_service.run()
+# data = forex_service.get_last_record_time('USD/CZK')
+# print(data)
