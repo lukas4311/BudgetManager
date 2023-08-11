@@ -16,7 +16,7 @@ from influxdb_client import Point, WritePrecision
 log_name = 'Logs/forexPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "Forex", token, organizaiton, logging)
+influx_repository = InfluxRepository(influxDbUrl, "ForexV2", token, organizaiton, logging)
 measurement = "ExchangeRates"
 
 
@@ -58,9 +58,7 @@ class ApiDataSource:
             for entry in symbol_data['values']:
                 datetime_str = entry['datetime']
                 close_price = entry['close']
-
-                datetime = pd.to_datetime(datetime_str)
-
+                datetime = pd.to_datetime(datetime_str, utc=True)
                 model = PriceModel(datetime=datetime, close_price=round(float(close_price), 6), symbol=symbol)
                 parsed_data.append(model)
 
@@ -107,11 +105,16 @@ class ForexScrapeService:
 
         api_url = TwelveDataUrlBuilder.build_time_series_url(symbols)
         self.data_source.api_url = api_url
-        #data = self.data_source.fetch_data()
-        # print(data)
-        data = '{"USD/CZK":{"meta":{"symbol":"USD/CZK","interval":"1day","currency_base":"US Dollar","currency_quote":"Czech Koruna","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"22.11000","high":"22.21170","low":"21.94720","close":"22.03530"},{"datetime":"2023-08-03","open":"21.91590","high":"22.21390","low":"21.87700","close":"22.13430"},{"datetime":"2023-08-02","open":"21.80990","high":"21.97790","low":"21.71790","close":"21.91560"},{"datetime":"2023-08-01","open":"21.72250","high":"21.86480","low":"21.69340","close":"21.81840"}],"status":"ok"},"USD/EUR":{"meta":{"symbol":"USD/EUR","interval":"1day","currency_base":"US Dollar","currency_quote":"Euro","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.91334","high":"0.91448","low":"0.90568","close":"0.90820"},{"datetime":"2023-08-03","open":"0.91424","high":"0.91629","low":"0.91229","close":"0.91331"},{"datetime":"2023-08-02","open":"0.91043","high":"0.91578","low":"0.90746","close":"0.91420"},{"datetime":"2023-08-01","open":"0.90930","high":"0.91302","low":"0.90870","close":"0.91035"}],"status":"ok"},"USD/GBP":{"meta":{"symbol":"USD/GBP","interval":"1day","currency_base":"US Dollar","currency_quote":"British Pound","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.78690","high":"0.78798","low":"0.78175","close":"0.78425"},{"datetime":"2023-08-03","open":"0.78680","high":"0.79212","low":"0.78569","close":"0.78685"},{"datetime":"2023-08-02","open":"0.78267","high":"0.78854","low":"0.78095","close":"0.78673"},{"datetime":"2023-08-01","open":"0.77911","high":"0.78479","low":"0.77870","close":"0.78269"}],"status":"ok"},"USD/CHF":{"meta":{"symbol":"USD/CHF","interval":"1day","currency_base":"US Dollar","currency_quote":"Swiss Franc","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.87425","high":"0.87840","low":"0.86990","close":"0.87290"},{"datetime":"2023-08-03","open":"0.87780","high":"0.87990","low":"0.87330","close":"0.87430"},{"datetime":"2023-08-02","open":"0.87525","high":"0.88060","low":"0.87160","close":"0.87755"},{"datetime":"2023-08-01","open":"0.87195","high":"0.87785","low":"0.87080","close":"0.87510"}],"status":"ok"}}'
-        json_data = json.loads(forexResponse)
-        # print(json_data)
+        # json_data = self.data_source.fetch_data()
+
+        # with open('forexData.json', "w") as json_file:
+        #     json.dump(json_data, json_file)
+
+        with open('forexData.json', "r") as json_file:
+            json_data = json.load(json_file)
+
+        # data = '{"USD/CZK":{"meta":{"symbol":"USD/CZK","interval":"1day","currency_base":"US Dollar","currency_quote":"Czech Koruna","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"22.11000","high":"22.21170","low":"21.94720","close":"22.03530"},{"datetime":"2023-08-03","open":"21.91590","high":"22.21390","low":"21.87700","close":"22.13430"},{"datetime":"2023-08-02","open":"21.80990","high":"21.97790","low":"21.71790","close":"21.91560"},{"datetime":"2023-08-01","open":"21.72250","high":"21.86480","low":"21.69340","close":"21.81840"}],"status":"ok"},"USD/EUR":{"meta":{"symbol":"USD/EUR","interval":"1day","currency_base":"US Dollar","currency_quote":"Euro","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.91334","high":"0.91448","low":"0.90568","close":"0.90820"},{"datetime":"2023-08-03","open":"0.91424","high":"0.91629","low":"0.91229","close":"0.91331"},{"datetime":"2023-08-02","open":"0.91043","high":"0.91578","low":"0.90746","close":"0.91420"},{"datetime":"2023-08-01","open":"0.90930","high":"0.91302","low":"0.90870","close":"0.91035"}],"status":"ok"},"USD/GBP":{"meta":{"symbol":"USD/GBP","interval":"1day","currency_base":"US Dollar","currency_quote":"British Pound","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.78690","high":"0.78798","low":"0.78175","close":"0.78425"},{"datetime":"2023-08-03","open":"0.78680","high":"0.79212","low":"0.78569","close":"0.78685"},{"datetime":"2023-08-02","open":"0.78267","high":"0.78854","low":"0.78095","close":"0.78673"},{"datetime":"2023-08-01","open":"0.77911","high":"0.78479","low":"0.77870","close":"0.78269"}],"status":"ok"},"USD/CHF":{"meta":{"symbol":"USD/CHF","interval":"1day","currency_base":"US Dollar","currency_quote":"Swiss Franc","type":"Physical Currency"},"values":[{"datetime":"2023-08-04","open":"0.87425","high":"0.87840","low":"0.86990","close":"0.87290"},{"datetime":"2023-08-03","open":"0.87780","high":"0.87990","low":"0.87330","close":"0.87430"},{"datetime":"2023-08-02","open":"0.87525","high":"0.88060","low":"0.87160","close":"0.87755"},{"datetime":"2023-08-01","open":"0.87195","high":"0.87785","low":"0.87080","close":"0.87510"}],"status":"ok"}}'
+        # json_data = json.loads(forexResponse)
         return self.data_source.parse_data(json_data)
 
     def invert_currency_pair(self, pair: str):
@@ -142,20 +145,23 @@ class ForexService:
         # console log for test
         for key in symbol_models:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
-            exchangeRates = symbol_models[key]
-            exchangeRatesWithoutToday = [d for d in exchangeRates if d.datetime < (datetime.now() - timedelta(days=1))]
 
-            for price_record in exchangeRatesWithoutToday:
-                print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+            if key == 'USD/CZK':
+                exchangeRates = symbol_models[key]
+                last_record = self.get_last_record_time(key)
+                exchangeRatesWithoutToday = [d for d in exchangeRates if
+                                             datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
 
-            self.save_data_to_influx(exchangeRates)
+                for price_record in exchangeRatesWithoutToday:
+                    print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+
+                self.save_data_to_influx(exchangeRates)
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
         pointsToSave = []
         logging.info('Saving forex pair: ' + priceData[0].symbol)
 
         for priceModel in priceData:
-            print(priceModel.close_price)
             point = Point(measurement) \
                 .tag("pair", priceModel.symbol) \
                 .field('price', priceModel.close_price)
@@ -172,8 +178,7 @@ class ForexService:
 
     def get_last_record_time(self, ticker: str):
         lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
-        print(lastValue)
-        last_downloaded_time = None
+        last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         if len(lastValue) != 0:
             last_downloaded_time = lastValue[0].records[0]["_time"]
