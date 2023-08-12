@@ -1,17 +1,17 @@
-import requests
-import pandas as pd
 import json
 import logging
-from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
+from datetime import datetime, timezone
+
+import pandas as pd
+import requests
+from influxdb_client import Point, WritePrecision
 
 from Models.FilterTuple import FilterTuple
-from SourceFiles.forexSource import forexResponse
-from secret import tokenTwelveData
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton
 from secret import influxDbUrl
-from influxdb_client import Point, WritePrecision
+from secret import tokenTwelveData
 
 log_name = 'Logs/forexPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
@@ -91,6 +91,19 @@ class ForexRateAnalyzer:
 
         return cross_data
 
+    def get_reversed_data(self, price_data: dict):
+        reverse_data = {}
+
+        for symbol, entries in price_data.items():
+            reversed_symbol = self.__reverse_symbol(symbol)
+            reversed_entries = [PriceModel(entry.datetime, 1 / entry.close_price, reversed_symbol) for entry in entries]
+            reverse_data[reversed_symbol] = reversed_entries
+
+        return reverse_data
+
+    def __reverse_symbol(self, symbol):
+        return f"{symbol.split('/')[1]}/{symbol.split('/')[0]}"
+
 
 class ForexScrapeService:
     def __init__(self):
@@ -117,9 +130,6 @@ class ForexScrapeService:
         # json_data = json.loads(forexResponse)
         return self.data_source.parse_data(json_data)
 
-    def invert_currency_pair(self, pair: str):
-        base, quote = pair.split('/')
-        return f"{quote}/{base}"
 
 
 class ForexService:
@@ -138,20 +148,22 @@ class ForexService:
                 symbol_models[model.symbol] = [model]
 
         forex_rate_analyzer = ForexRateAnalyzer()
-
+        inverse_rates = forex_rate_analyzer.get_reversed_data(symbol_models)
         all_cross_rates = forex_rate_analyzer.find_all_cross_rates(symbol_models)
+
+        symbol_models.update(inverse_rates)
         symbol_models.update(all_cross_rates)
 
         # console log for test
         for key in symbol_models:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
 
-            if key == 'CHF/JPY':
+            if key == 'JPY/USD':
                 exchangeRates = symbol_models[key]
                 last_record = self.get_last_record_time(key)
                 print(f"last record: {last_record}")
                 filteredExchangeRates = [d for d in exchangeRates if
-                                             datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
+                                         datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
 
                 if len(filteredExchangeRates) > 0:
                     self.save_data_to_influx(filteredExchangeRates)
