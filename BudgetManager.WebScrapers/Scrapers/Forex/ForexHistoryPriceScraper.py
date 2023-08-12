@@ -149,13 +149,17 @@ class ForexService:
             if key == 'USD/CZK':
                 exchangeRates = symbol_models[key]
                 last_record = self.get_last_record_time(key)
-                exchangeRatesWithoutToday = [d for d in exchangeRates if
+                print(f"last record: {last_record}")
+                filteredExchangeRates = [d for d in exchangeRates if
                                              datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
 
-                for price_record in exchangeRatesWithoutToday:
-                    print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
+                # for price_record in filteredExchangeRates:
+                #     print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
 
-                self.save_data_to_influx(exchangeRates)
+                if len(filteredExchangeRates) > 0:
+                    self.save_data_to_influx(filteredExchangeRates)
+                else:
+                    print(f"No new data for pair: {key}")
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
         pointsToSave = []
@@ -177,7 +181,7 @@ class ForexService:
         print("Data saved")
 
     def get_last_record_time(self, ticker: str):
-        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
+        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("pair", ticker), datetime.min)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         if len(lastValue) != 0:
