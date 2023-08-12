@@ -146,15 +146,12 @@ class ForexService:
         for key in symbol_models:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
 
-            if key == 'USD/CZK':
+            if key == 'CHF/JPY':
                 exchangeRates = symbol_models[key]
                 last_record = self.get_last_record_time(key)
                 print(f"last record: {last_record}")
                 filteredExchangeRates = [d for d in exchangeRates if
                                              datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
-
-                # for price_record in filteredExchangeRates:
-                #     print(f'{price_record.symbol} {price_record.datetime} {price_record.close_price}')
 
                 if len(filteredExchangeRates) > 0:
                     self.save_data_to_influx(filteredExchangeRates)
@@ -172,11 +169,11 @@ class ForexService:
             point = point.time(priceModel.datetime, WritePrecision.NS)
             pointsToSave.append(point)
 
-        # influx_repository.add_range(pointsToSave)
+        influx_repository.add_range(pointsToSave)
         for point in pointsToSave:
             print(point.to_line_protocol())
 
-        # influx_repository.save()
+        influx_repository.save()
         logging.info('Data saved for pair: ' + priceData[0].symbol)
         print("Data saved")
 
