@@ -1,14 +1,14 @@
-using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using BudgetManager.FinancialApi.Models;
 using BudgetManager.InfluxDbData;
+using BudgetManager.Services.Extensions;
+using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -22,10 +22,10 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Replace the built-in service provider with Autofac
-builder.Services.AddAutofac(containerBuilder =>
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     InfluxSetting influxSetting = configuration.GetSection("Influxdb").Get<InfluxSetting>();
+    containerBuilder.RegisterServices();
     containerBuilder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
     containerBuilder.RegisterType<CryptoData>();
     containerBuilder.RegisterType<ForexData>();
@@ -43,24 +43,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/forex/from/to", async ([FromServices] IForexService forexService) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var data = await forexService.GetExchangeRate("USD", "CZK");
+    return Results.Ok(data);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetForexPairPrice")
 .WithOpenApi();
 
 app.Run();

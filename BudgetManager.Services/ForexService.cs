@@ -9,12 +9,15 @@ namespace BudgetManager.Services
     public class ForexService : IForexService
     {
         private const string bucketForex = "Forex";
+        private const string bucketForexV2 = "ForexV2";
         private const string organizationId = "f209a688c8dcfff3";
         private readonly IRepository<ForexData> forexRepository;
+        private readonly IRepository<ForexDataV2> forexRepositoryV2;
 
-        public ForexService(IRepository<ForexData> forexRepository)
+        public ForexService(IRepository<ForexData> forexRepository, IRepository<ForexDataV2> forexRepositoryV2)
         {
             this.forexRepository = forexRepository;
+            this.forexRepositoryV2 = forexRepositoryV2;
         }
 
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
@@ -23,6 +26,13 @@ namespace BudgetManager.Services
             IEnumerable<ForexData> data = await this.forexRepository.GetLastWrittenRecordsTime(dataSourceIdentification);
             return data.SingleOrDefault(a => string.Equals(a.BaseCurrency, fromSymbol, System.StringComparison.OrdinalIgnoreCase)
                 && string.Equals(a.Currency, toSymbol, System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
+        }
+
+        public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol)
+        {
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForexV2);
+            IEnumerable<ForexDataV2> data = await this.forexRepositoryV2.GetLastWrittenRecordsTime(dataSourceIdentification);
+            return data.SingleOrDefault(a => string.Equals(a.Pair, $"{fromSymbol}/{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
     }
 }

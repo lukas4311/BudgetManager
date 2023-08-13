@@ -18,4 +18,17 @@ namespace BudgetManager.InfluxDbData
         [Column(IsTimestamp = true)]
         public DateTime Time { get; set; }
     }
+
+    [Measurement("ExchangeRates")]
+    public class ForexDataV2 : IInfluxModel
+    {
+        [Column("price")]
+        public double Price { get; set; }
+
+        [Column("pair", IsTag = true)]
+        public string Pair { get; set; }
+
+        [Column(IsTimestamp = true)]
+        public DateTime Time { get; set; }
+    }
 }

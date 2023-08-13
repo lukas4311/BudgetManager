@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
+    <ProjectReference Include="..\BudgetManager.Services\BudgetManager.Services.csproj" />
   </ItemGroup>
 
 </Project>
