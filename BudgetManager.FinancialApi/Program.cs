@@ -1,4 +1,11 @@
+using Autofac.Core;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using BudgetManager.FinancialApi.Models;
+using BudgetManager.InfluxDbData;
+
 var builder = WebApplication.CreateBuilder(args);
+IConfiguration configuration = builder.Configuration;
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -13,6 +20,16 @@ builder.Services.AddCors(options =>
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
         });
+});
+
+// Replace the built-in service provider with Autofac
+builder.Services.AddAutofac(containerBuilder =>
+{
+    InfluxSetting influxSetting = configuration.GetSection("Influxdb").Get<InfluxSetting>();
+    containerBuilder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
+    containerBuilder.RegisterType<CryptoData>();
+    containerBuilder.RegisterType<ForexData>();
+    containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 });
 
 var app = builder.Build();
