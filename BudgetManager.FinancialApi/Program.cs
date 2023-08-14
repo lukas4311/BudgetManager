@@ -3,12 +3,10 @@ using Autofac;
 using BudgetManager.FinancialApi.Models;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Services.Extensions;
-using BudgetManager.Services.Contracts;
-using Microsoft.AspNetCore.Mvc;
-using BudgetManager.FinancialApi.Enums;
 using System.Text.Json.Serialization;
 using JsnOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
+using BudgetManager.FinancialApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -49,18 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.MapGet("/forex/exchangerate/{from}/{to}", async ([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to) =>
-{
-    if (from == to)
-        return Results.Ok(1);
-
-    var data = await forexService.GetExchangeRate(from.ToString(), to.ToString());
-    return Results.Ok(data);
-})
-.WithName("GetForexPairPrice")
-.WithOpenApi();
-
+app.RegisterForexEndpoints();
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
