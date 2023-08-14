@@ -1,5 +1,4 @@
 ﻿using BudgetManager.FinancialApi.Enums;
-using BudgetManager.InfluxDbData;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
