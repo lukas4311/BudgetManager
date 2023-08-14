@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -6,5 +7,6 @@ namespace BudgetManager.Services.Contracts
     {
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol);
         Task<double> GetExchangeRate(string fromSymbol, string toSymbol);
+        Task<double> GetExchangeRate(string fromSymbol, string toSymbol, DateTime atDate);
     }
 }
