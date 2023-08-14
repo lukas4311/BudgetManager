@@ -5,6 +5,10 @@ using BudgetManager.InfluxDbData;
 using BudgetManager.Services.Extensions;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using BudgetManager.FinancialApi.Enums;
+using System.Text.Json.Serialization;
+using JsnOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -21,6 +25,9 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod();
         });
 });
+
+builder.Services.Configure<JsnOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -43,9 +50,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/forex/from/to", async ([FromServices] IForexService forexService) =>
+app.MapGet("/forex/exchangerate/{from}/{to}", async ([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to) =>
 {
-    var data = await forexService.GetExchangeRate("USD", "CZK");
+    if (from == to)
+        return Results.Ok(1);
+
+    var data = await forexService.GetExchangeRate(from.ToString(), to.ToString());
     return Results.Ok(data);
 })
 .WithName("GetForexPairPrice")
