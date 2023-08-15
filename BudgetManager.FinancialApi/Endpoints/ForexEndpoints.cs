@@ -11,11 +11,11 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static void RegisterForexEndpoints(this WebApplication app)
         {
             app.MapGet("/forex/exchangerate/{from}/{to}", GetForexPairPrice)
-            .WithName("GetForexPairPrice")
+            .WithName(nameof(GetForexPairPrice))
             .WithOpenApi();
 
             app.MapGet("/forex/exchangerate/{from}/{to}/{date}", GetForexPairPriceAtDate)
-            .WithName("GetForexPairPriceAtDate")
+            .WithName(nameof(GetForexPairPriceAtDate))
             .WithOpenApi();
         }
 
