@@ -41,8 +41,8 @@ namespace BudgetManager.Services
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketForexV2);
             string pair = $"{fromSymbol}/{toSymbol}";
             IEnumerable<ForexDataV2> data = await this.forexRepositoryV2.GetAllData(dataSourceIdentification,
-                new DateTimeRange { From = atDate, To = atDate.AddDays(1) }, new() { { "pair", pair } }).ConfigureAwait(false);
-            return data.FirstOrDefault()?.Price ?? 0;
+                new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "pair", pair } }).ConfigureAwait(false);
+            return data.LastOrDefault()?.Price ?? 0;
         }
     }
 }

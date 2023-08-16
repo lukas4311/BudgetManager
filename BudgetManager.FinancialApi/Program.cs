@@ -7,6 +7,9 @@ using System.Text.Json.Serialization;
 using JsnOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
 using BudgetManager.FinancialApi.Endpoints;
+using BudgetManager.Data;
+using Microsoft.EntityFrameworkCore;
+using BudgetManager.Repository.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -29,6 +32,12 @@ builder.Services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converte
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
+    DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+    optionsBuilder.UseSqlServer(configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
+    containerBuilder.Register(_ => new DataContext(optionsBuilder.Options));
+    containerBuilder.RegisterRepositories();
+    containerBuilder.RegisterModelMapping();
+
     InfluxSetting influxSetting = configuration.GetSection("Influxdb").Get<InfluxSetting>();
     containerBuilder.RegisterServices();
     containerBuilder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();

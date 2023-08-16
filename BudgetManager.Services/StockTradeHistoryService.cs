@@ -24,29 +24,31 @@ namespace BudgetManager.Services
             this.stockDataInfluxRepo = stockDataInfluxRepo;
         }
 
-        public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => this.repository
+        public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
-                .Select(d => this.mapper.Map<StockTradeHistoryGetModel>(d));
+                .Select(d => mapper.Map<StockTradeHistoryGetModel>(d));
 
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {
-            return this.repository
+            return repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
                 .Include(t => t.StockTicker)
                 .Where(t => t.StockTicker.Ticker == stockTicker)
-                .Select(d => this.mapper.Map<StockTradeHistoryGetModel>(d));
+                .Select(d => mapper.Map<StockTradeHistoryGetModel>(d));
         }
 
         public bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId)
-            => this.repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
+            => repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker) 
-            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from)
-            => await this.stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), from, new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), from, new() { { "ticker", ticker } });
 
+        public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
+            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
     }
 }
