@@ -3,6 +3,7 @@ using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BudgetManager.InfluxDbData;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -19,5 +20,11 @@ namespace BudgetManager.Services.Contracts
         bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId);
 
         Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate);
+
+        Task<IEnumerable<CryptoDataV2>> GetCryptoPriceHistory(string ticker);
+
+        Task<CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate);
+
+        Task<IEnumerable<CryptoDataV2>> GetCryptoPriceHistory(string ticker, DateTime from);
     }
 }

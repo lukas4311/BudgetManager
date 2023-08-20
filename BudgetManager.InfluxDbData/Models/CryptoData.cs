@@ -27,4 +27,18 @@ namespace BudgetManager.InfluxDbData
         [Column(IsTimestamp = true)]
         public DateTime Time { get; set; }
     }
+
+
+    [Measurement("Price")]
+    public class CryptoDataV2 : IInfluxModel
+    {
+        [Column("price")]
+        public double Price { get; set; }
+
+        [Column("ticker", IsTag = true)]
+        public string Ticker { get; set; }
+
+        [Column(IsTimestamp = true)]
+        public DateTime Time { get; set; }
+    }
 }
