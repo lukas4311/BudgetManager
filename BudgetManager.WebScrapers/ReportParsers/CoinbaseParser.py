@@ -41,14 +41,12 @@ class CoinbaseParser:
 
 
 class CryptoSqlService:
-
-
-    def ticker_cxists(self, ticker: str):
+    def ticker_exists(self, ticker: str):
         print(f'Loading if {ticker} exists')
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
         stock_ticker_sql = """SELECT [Id] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
-        ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
+        ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[ticker])
 
     def create_new_ticker(self, ticker: str):
         print(f'Create new ticker {ticker}')

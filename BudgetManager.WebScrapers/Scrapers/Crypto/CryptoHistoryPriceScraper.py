@@ -1,11 +1,10 @@
 # importing datetime module
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 import time
 import requests
 import json
 import logging
-
-from attr import dataclass
 
 from Models.FilterTuple import FilterTuple
 from Services.InfluxRepository import InfluxRepository
