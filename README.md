@@ -24,7 +24,7 @@ App to help keep an eye on the family budget and at the same time monitor how al
 }
 ```
 
-### BudgetManager.ManagerWeb appsetting.json
+### BudgetManager.Api appsetting.json
 
 ```json
 {
@@ -52,4 +52,52 @@ App to help keep an eye on the family budget and at the same time monitor how al
     "ElasaticIndexKey": "[ELK_KEY]"
   }
 }
+```
+
+### BudgetManager.AuthApi appsetting.json
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "DbSetting": {
+    "ConnectionString": "Server=[SERVER];Database=[DATABASE];Trusted_Connection=True;"
+  },
+  "JwtSettingOption": {
+    "Secret": "[JWT_SECRET]",
+    "Expiration": "360"
+  },
+  "AppSettings": {
+    "Secret": "[APPLICATION_SECRET]"
+  },
+}
+
+```
+
+### BudgetManager.FinancialApi appsetting.json
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Influxdb": {
+    "Token": "[INFLUX_DB_TOKEN]",
+    "Url": "[INFLUX_DB_URL]"
+  },
+  "DbSetting": {
+    "ConnectionString": "Server=[SERVER];Database=[DATABASE];Trusted_Connection=True;"
+  }
+}
+
+
 ```
