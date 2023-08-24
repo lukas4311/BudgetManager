@@ -1,0 +1,55 @@
+# BudgetManager
+
+App to help keep an eye on the family budget and at the same time monitor how all investments are developing.
+
+### BudgetManager.ManagerWeb appsetting.json
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "DbSetting": {
+    "ConnectionString": "Server=[SERVER];Database=[DATABASE];Trusted_Connection=True;"
+  },
+  "ApiUrls": {
+    "MainApi": "[API_URL]",
+    "AuthApi": "[AUTH_API_URL]"
+  }
+}
+```
+
+### BudgetManager.ManagerWeb appsetting.json
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "DbSetting": {
+    "ConnectionString": "Server=[SERVER];Database=[DATABASE];Trusted_Connection=True;"
+  },
+  "AuthApi": {
+    "ValidateUrl": "[VALIDATION_ENDPOINT_URL]",
+    "DataUrl": "[USER_DATA_ENDPOINT_URL]"
+  },
+  "Influxdb": {
+    "Token": "[INFLUX_DB_TOKEN]",
+    "Url": "[INFLUX_DB_URL]"
+  },
+  "Elk": {
+    "ElasticUrl": "[ELK_URL]",
+    "ElasaticIndexKey": "[ELK_KEY]"
+  }
+}
+```
