@@ -8,15 +8,14 @@ from secret import influxDbUrl
 from configManager import token, organizaiton
 
 class ComodityTicker(Enum):
-    GOLD = 'GC=F'
-    SILVER = 'SI=F'
-    OIL = 'CL=F'
+    Gold = 'GC=F'
+    Silver = 'SI=F'
+    Oil = 'CL=F'
 
 
 log_name = 'ComodityHistoryPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 influx_repository = InfluxRepository(influxDbUrl, "ComodityV2", token, organizaiton, logging)
 
-tickersToScrape = ComodityTicker.GOLD.value
 stockPriceScraper = StockPriceScraper(influx_repository)
-stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.GOLD.value)
+stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)

@@ -24,11 +24,11 @@ class StockPriceScraper:
     def __init__(self, influx_repo: InfluxRepository):
         self.influx_repo = influx_repo
 
-    def scrape_stocks_prices(self, measurement: str, ticker: str):
+    def scrape_stocks_prices(self, measurement: str, ticker: str, tag: str):
         try:
             stockPriceData: list[StockPriceData] = []
             date_to = datetime.now()
-            lastValue = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
+            lastValue = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", tag), datetime.min)
 
             if len(lastValue) != 0:
                 last_downloaded_time = lastValue[0].records[0]["_time"]
@@ -40,7 +40,7 @@ class StockPriceScraper:
             else:
                 stockPriceData = self.__scrape_stock_data(ticker, None, date_to)
 
-            self.__save_price_data_to_influx(measurement, ticker, stockPriceData)
+            self.__save_price_data_to_influx(measurement, tag, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
@@ -63,9 +63,9 @@ class StockPriceScraper:
             point = point.time(priceModel.date, WritePrecision.NS)
             pointsToSave.append(point)
 
-        print(pointsToSave)
-        # self.influx_repo.add_range(pointsToSave)
-        # self.influx_repo.save()
+        # print(pointsToSave)
+        self.influx_repo.add_range(pointsToSave)
+        self.influx_repo.save()
 
     def __convert_to_unix_timestamp(self, date: datetime):
         return int(time.mktime(date.timetuple()))
@@ -82,7 +82,7 @@ def processTickers(rows):
         logging.info(message)
 
         try:
-            stockPriceScraper.scrape_stocks_prices('Price', symbol)
+            stockPriceScraper.scrape_stocks_prices('Price', symbol, symbol)
         except Exception:
             influx_repository.clear()
             print(symbol + " - error")
@@ -93,7 +93,7 @@ def processTickers(rows):
 
 
 # for ticker in tickersToScrape:
-#     stockPriceScraper.scrape_stocks_prices('Price', ticker)
+#     stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
 
 # with open("..\\SourceFiles\\sp500.csv", 'r') as file:
 #     csv_file = csv.DictReader(file)
