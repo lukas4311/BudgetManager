@@ -1,7 +1,6 @@
 ﻿using BudgetManager.Core.Extensions;
 using BudgetManager.FinanceDataMining.Models;
 using BudgetManager.FinanceDataMining.CryproApi;
-using BudgetManager.FinanceDataMining.Models;
 using BudgetManager.InfluxDbData;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.TestingConsole
 {
+    [Obsolete("New parsers in Python")]
     internal class CryptoDataDownloader
     {
         private readonly IRepository<CryptoData> influxRepo;
