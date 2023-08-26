@@ -17,7 +17,7 @@ from typing import List
 log_name = 'Logs/cryptoPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "CryptoNew", token, organizaiton, logging)
+influx_repository = InfluxRepository(influxDbUrl, "CryptoV2", token, organizaiton, logging)
 measurement = "Price"
 
 
@@ -49,11 +49,21 @@ class CryptoTickers(Enum):
     ETH = "ETHUSD"
 
 
+class CryptoTickerTranslator:
+    def translate(self, crypto_ticker: CryptoTickers):
+        match crypto_ticker:
+            case CryptoTickers.BTC:
+                return "BTC/USD"
+            case CryptoTickers.ETH:
+                return "ETH/USD"
+
+
 class CryptoWatchService:
     oneDayLimit = 86400
     cryptoWatchBaseUrl = "https://api.cryptowat.ch"
 
     def get_crypto_price_history(self, ticker: CryptoTickers):
+        cryptoTickerTranslator = CryptoTickerTranslator()
         lastRecordTime = self.__get_last_record_time(ticker)
         print(lastRecordTime)
         now_datetime_with_offset = datetime.now().astimezone(lastRecordTime.tzinfo)
@@ -68,7 +78,7 @@ class CryptoWatchService:
             parsed_data = json.loads(jsonData)
             result_objects = [Result(*item) for item in parsed_data['result']['86400']]
             result_data_instance = ResultData(result_objects)
-            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), ticker.value) for d in result_data_instance.data if d.timestamp > fromTime]
+            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), cryptoTickerTranslator.translate(ticker)) for d in result_data_instance.data if d.timestamp > fromTime]
 
             return stockPriceData
 
