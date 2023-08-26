@@ -3,6 +3,8 @@ import logging
 from influxdb_client import Point, WritePrecision
 import csv
 import time
+
+from Models.FilterTuple import FilterTuple
 from Models.Fmp import StockPriceData
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
@@ -17,13 +19,16 @@ influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizai
 
 
 class StockPriceScraper:
+    influx_repo:InfluxRepository = None
 
-    def scrape_stocks_prices(self, bucketName: str, ticker: str):
+    def __init__(self, influx_repo: InfluxRepository):
+        self.influx_repo = influx_repo
+
+    def scrape_stocks_prices(self, measurement: str, ticker: str):
         try:
-            # alphaVantageService = AlphaVantageService(alphaVantageToken)
             stockPriceData: list[StockPriceData] = []
             date_to = datetime.now()
-            lastValue = influx_repository.filter_last_value(bucketName, ticker, datetime.min)
+            lastValue = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
 
             if len(lastValue) != 0:
                 last_downloaded_time = lastValue[0].records[0]["_time"]
@@ -35,14 +40,15 @@ class StockPriceScraper:
             else:
                 stockPriceData = self.__scrape_stock_data(ticker, None, date_to)
 
-            self.__save_price_data_to_influx(bucketName, ticker, stockPriceData)
+            self.__save_price_data_to_influx(measurement, ticker, stockPriceData)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
 
     def __scrape_stock_data(self, ticker: str, date_from: datetime, date_to: datetime):
         yahooService = YahooService()
-        unix_from = '511056000' if date_from is None else str(self.__convert_to_unix_timestamp(date_from + timedelta(days=1)))
+        unix_from = '511056000' if date_from is None else str(
+            self.__convert_to_unix_timestamp(date_from + timedelta(days=1)))
         unix_to = str(self.__convert_to_unix_timestamp(date_to))
         return yahooService.get_stock_price_history(ticker, unix_from, unix_to)
 
@@ -57,19 +63,16 @@ class StockPriceScraper:
             point = point.time(priceModel.date, WritePrecision.NS)
             pointsToSave.append(point)
 
-        influx_repository.add_range(pointsToSave)
-        influx_repository.save()
+        print(pointsToSave)
+        # self.influx_repo.add_range(pointsToSave)
+        # self.influx_repo.save()
 
     def __convert_to_unix_timestamp(self, date: datetime):
         return int(time.mktime(date.timetuple()))
 
 
-tickersToScrape = stockToDownload;
-stockPriceScraper = StockPriceScraper()
-
-for ticker in tickersToScrape:
-    stockPriceScraper.scrape_stocks_prices('Price', ticker)
-
+tickersToScrape = stockToDownload
+stockPriceScraper = StockPriceScraper(influx_repository)
 
 def processTickers(rows):
     for row in rows:
@@ -89,6 +92,9 @@ def processTickers(rows):
         print("Sleeping is done.")
 
 
-with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-    csv_file = csv.DictReader(file)
-    processTickers(csv_file)
+# for ticker in tickersToScrape:
+#     stockPriceScraper.scrape_stocks_prices('Price', ticker)
+
+# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+#     csv_file = csv.DictReader(file)
+#     processTickers(csv_file)
