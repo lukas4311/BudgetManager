@@ -19,3 +19,5 @@ influx_repository = InfluxRepository(influxDbUrl, "ComodityV2", token, organizai
 
 stockPriceScraper = StockPriceScraper(influx_repository)
 stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
+stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Sivler.value, ComodityTicker.Silver.name)
+stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Oil.value, ComodityTicker.Oil.name)

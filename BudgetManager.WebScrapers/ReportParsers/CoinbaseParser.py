@@ -6,6 +6,8 @@ from typing import List
 import pandas as pd
 import pyodbc
 
+import secret
+
 
 @dataclass
 class CoinbaseReportData:
