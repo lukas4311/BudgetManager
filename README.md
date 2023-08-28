@@ -72,10 +72,7 @@ App to help keep an eye on the family budget and at the same time monitor how al
   "JwtSettingOption": {
     "Secret": "[JWT_SECRET]",
     "Expiration": "360"
-  },
-  "AppSettings": {
-    "Secret": "[APPLICATION_SECRET]"
-  },
+  }
 }
 
 ```
