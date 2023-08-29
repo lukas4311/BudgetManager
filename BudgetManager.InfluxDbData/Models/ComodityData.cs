@@ -16,7 +16,7 @@ namespace BudgetManager.InfluxDbData
         public DateTime Time { get; set; }
     }
 
-    [Measurement("comodityDataV2")]
+    [Measurement("Price")]
     public class ComodityDataV2 : IInfluxModel
     {
         [Column("price")]

@@ -17,6 +17,7 @@ namespace BudgetManager.Services
         private const string bucketComodity = "Comodity";
         private const string bucketComodityV2 = "ComodityV2";
         private const string organizationId = "f209a688c8dcfff3";
+        private const string organizationIdV2 = "c45e0d70af9b1dda";
         private const string Gold = "AU";
         private const string GoldTicker = "Gold";
         private readonly IComodityTradeHistoryRepository comodityTradeHistoryRepository;
@@ -82,9 +83,7 @@ namespace BudgetManager.Services
 
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
-            //DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketComodity);
-            //IEnumerable<ComodityDataV2> data = await this.comodityRepositoryV2.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
-            ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(organizationId, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
+            ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(organizationIdV2, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
             return data2?.Price ?? 0;
         }

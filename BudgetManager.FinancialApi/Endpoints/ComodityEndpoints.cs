@@ -14,13 +14,9 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithName(nameof(GetCurrentGoldPriceForOunce))
             .WithOpenApi();
 
-            app.MapGet("gold/actualPrice/{currencyCode}", GetCurrentGoldPriceForOunce)
-            .WithName(nameof(GetCurrentGoldPriceForOunce))
-            .WithOpenApi();
-
-            app.MapGet("stock/{ticker}/price/{date}", GetCurrentGoldPriceForOunceForSpecificCurrency)
-            .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
-            .WithOpenApi();
+            app.MapGet("gold/actualPrice/{currencyCode}", GetCurrentGoldPriceForOunceForSpecificCurrency)
+                .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
+                .WithOpenApi();
         }
 
         public static async Task<IResult> GetCurrentGoldPriceForOunce([FromServices] IComodityService comodityService)
@@ -35,7 +31,7 @@ namespace BudgetManager.FinancialApi.Endpoints
 
             if (string.Compare(currencyCode, GoldPriceCurrency, true) != 0)
             {
-                currencyExchangeRate = await forexService.GetCurrentExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
+                currencyExchangeRate = await forexService.GetExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
 
                 if (currencyExchangeRate == 0)
                     throw new ArgumentException("Currency code is not valid");

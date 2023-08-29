@@ -59,6 +59,7 @@ app.UseHttpsRedirection();
 app.RegisterForexEndpoints();
 app.RegisterStockEndpoints();
 app.RegisterCryptoEndpoints();
+app.RegisterComodityEndpoints();
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
