@@ -9,7 +9,7 @@ import logging
 from Models.FilterTuple import FilterTuple
 from Services.InfluxRepository import InfluxRepository
 from enum import Enum
-from configManager import token, organizaiton
+from secret import token, organizationId
 from secret import influxDbUrl
 from influxdb_client import Point, WritePrecision
 from typing import List
@@ -17,7 +17,7 @@ from typing import List
 log_name = 'Logs/cryptoPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "CryptoV2", token, organizaiton, logging)
+influx_repository = InfluxRepository(influxDbUrl, "CryptoV2", token, organizationId, logging)
 measurement = "Price"
 
 
