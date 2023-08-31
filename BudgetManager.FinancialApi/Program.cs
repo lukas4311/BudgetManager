@@ -40,7 +40,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
     InfluxSetting influxSetting = configuration.GetSection("Influxdb").Get<InfluxSetting>();
     containerBuilder.RegisterServices();
-    containerBuilder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
+    containerBuilder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token, influxSetting.OrganizationId)).As<IInfluxContext>();
     containerBuilder.RegisterType<CryptoData>();
     containerBuilder.RegisterType<ForexData>();
     containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

@@ -16,12 +16,13 @@ namespace BudgetManager.Services
     public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
-        private const string organizationId = "f209a688c8dcfff3";
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
+        private readonly IInfluxContext influxContext;
 
-        public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo) : base(repository, mapper)
+        public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext) : base(repository, mapper)
         {
             this.stockDataInfluxRepo = stockDataInfluxRepo;
+            this.influxContext = influxContext;
         }
 
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => repository
@@ -43,12 +44,12 @@ namespace BudgetManager.Services
             => repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker) 
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new() { { "ticker", ticker } });
 
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from)
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), from, new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), from, new() { { "ticker", ticker } });
 
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
-            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(organizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
     }
 }

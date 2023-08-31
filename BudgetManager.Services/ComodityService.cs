@@ -14,27 +14,25 @@ namespace BudgetManager.Services
 {
     public class ComodityService : BaseService<ComodityTradeHistoryModel, ComodityTradeHistory, IComodityTradeHistoryRepository>, IComodityService
     {
-        private const string bucketComodity = "Comodity";
         private const string bucketComodityV2 = "ComodityV2";
-        private const string organizationId = "f209a688c8dcfff3";
-        private const string organizationIdV2 = "c45e0d70af9b1dda";
-        private const string Gold = "AU";
         private const string GoldTicker = "Gold";
         private readonly IComodityTradeHistoryRepository comodityTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IComodityTypeRepository comodityTypeRepository;
         private readonly IComodityUnitRepository comodityUnitRepository;
+        private readonly IInfluxContext influxContext;
         private readonly InfluxDbData.IRepository<ComodityData> comodityRepository;
         private readonly InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2;
 
         public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository,
-            IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository,
+            IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository, IInfluxContext influxContext,
             InfluxDbData.IRepository<ComodityData> comodityRepository, IMapper autoMapper, InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2) : base(comodityTradeHistoryRepository, autoMapper)
         {
             this.comodityTradeHistoryRepository = comodityTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.comodityTypeRepository = comodityTypeRepository;
             this.comodityUnitRepository = comodityUnitRepository;
+            this.influxContext = influxContext;
             this.comodityRepository = comodityRepository;
             this.comodityRepositoryV2 = comodityRepositoryV2;
         }
@@ -83,7 +81,7 @@ namespace BudgetManager.Services
 
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
-            ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(organizationIdV2, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
+            ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
             return data2?.Price ?? 0;
         }

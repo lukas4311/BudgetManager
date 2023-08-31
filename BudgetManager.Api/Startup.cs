@@ -81,7 +81,7 @@ namespace BudgetManager.Api
             builder.RegisterServices();
 
             InfluxSetting influxSetting = this.Configuration.GetSection("Influxdb").Get<InfluxSetting>();
-            builder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token)).As<IInfluxContext>();
+            builder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token, influxSetting.OrganizationId)).As<IInfluxContext>();
             builder.RegisterType<CryptoData>();
             builder.RegisterType<ForexData>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

@@ -25,9 +25,6 @@ namespace BudgetManager.ManagerWeb
             services.AddCors();
             IConfigurationSection connectinoStringSection = Configuration.GetSection(nameof(DbSetting));
 
-            Influxdb influxdbConfig = new Influxdb();
-            Configuration.Bind(nameof(Influxdb), influxdbConfig);
-
             // configure basic authentication 
             services
                 .AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme)
@@ -46,7 +43,6 @@ namespace BudgetManager.ManagerWeb
             services.ConfigureIoCRepositories();
             services.ConfigureInfluxRepositories();
             services.RegisterServices();
-            services.AddTransient<IInfluxContext>(_ => new InfluxContext(influxdbConfig.Url, influxdbConfig.Token));
 
             services.AddSwaggerGen();
             services.AddControllersWithViews();
