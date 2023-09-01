@@ -53,9 +53,9 @@ class CryptoTickerTranslator:
     def translate(self, crypto_ticker: CryptoTickers):
         match crypto_ticker:
             case CryptoTickers.BTC:
-                return "BTC/USD"
+                return "BTC"
             case CryptoTickers.ETH:
-                return "ETH/USD"
+                return "ETH"
 
 
 class CryptoWatchService:
