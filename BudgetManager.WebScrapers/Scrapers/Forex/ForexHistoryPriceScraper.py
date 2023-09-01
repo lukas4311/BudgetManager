@@ -171,11 +171,12 @@ class ForexService:
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
         pointsToSave = []
-        logging.info('Saving forex pair: ' + priceData[0].symbol)
+        transferred_symbol = priceData[0].symbol.replace('/', '-')
+        logging.info('Saving forex pair: ' + transferred_symbol)
 
         for priceModel in priceData:
             point = Point(measurement) \
-                .tag("pair", priceModel.symbol) \
+                .tag("pair", priceModel.symbol.replace('/', '-')) \
                 .field('price', priceModel.close_price)
             point = point.time(priceModel.datetime, WritePrecision.NS)
             pointsToSave.append(point)
@@ -189,7 +190,8 @@ class ForexService:
         print("Data saved")
 
     def get_last_record_time(self, ticker: str):
-        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("pair", ticker), datetime.min)
+        transferred_symbol = ticker.replace('/', '-')
+        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("pair", transferred_symbol), datetime.min)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
         if len(lastValue) != 0:

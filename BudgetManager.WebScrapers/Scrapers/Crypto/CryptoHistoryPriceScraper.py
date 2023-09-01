@@ -64,8 +64,8 @@ class CryptoWatchService:
 
     def get_crypto_price_history(self, ticker: CryptoTickers):
         cryptoTickerTranslator = CryptoTickerTranslator()
-        lastRecordTime = self.__get_last_record_time(ticker)
-        print(lastRecordTime)
+        translated_ticker = cryptoTickerTranslator.translate(ticker)
+        lastRecordTime = self.__get_last_record_time(translated_ticker)
         now_datetime_with_offset = datetime.now().astimezone(lastRecordTime.tzinfo)
 
         if lastRecordTime < now_datetime_with_offset:
@@ -74,18 +74,18 @@ class CryptoWatchService:
             print(url)
             response = requests.get(url)
             jsonData = response.text
-            print(jsonData)
             parsed_data = json.loads(jsonData)
             result_objects = [Result(*item) for item in parsed_data['result']['86400']]
             result_data_instance = ResultData(result_objects)
-            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), cryptoTickerTranslator.translate(ticker)) for d in result_data_instance.data if d.timestamp > fromTime]
+            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), translated_ticker) for d in result_data_instance.data if d.timestamp > fromTime]
 
             return stockPriceData
 
         return []
 
-    def __get_last_record_time(self, ticker: CryptoTickers):
-        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker.value), datetime.min)
+    def __get_last_record_time(self, ticker: str):
+        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
+        print(ticker)
         print(lastValue)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
@@ -99,7 +99,6 @@ class CryptoWatchService:
         logging.info('Saving price for stock: ' + priceData[0].ticker)
 
         for priceModel in priceData:
-            print(priceModel.price)
             point = Point(measurement) \
                 .tag("ticker", priceModel.ticker) \
                 .field('price', priceModel.price)
