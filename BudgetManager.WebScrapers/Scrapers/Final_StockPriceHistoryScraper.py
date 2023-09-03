@@ -9,13 +9,13 @@ from Models.Fmp import StockPriceData
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
 from SourceFiles.stockList import stockToDownload
-from configManager import token, organizaiton
+from secret import token, organizationId
 from secret import influxDbUrl
 
 log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizaiton, logging)
+influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizationId, logging)
 
 
 class StockPriceScraper:
@@ -92,8 +92,8 @@ def processTickers(rows):
         print("Sleeping is done.")
 
 
-# for ticker in tickersToScrape:
-#     stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
+for ticker in tickersToScrape:
+    stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
 
 # with open("..\\SourceFiles\\sp500.csv", 'r') as file:
 #     csv_file = csv.DictReader(file)
