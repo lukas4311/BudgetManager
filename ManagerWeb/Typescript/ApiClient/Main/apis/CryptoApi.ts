@@ -60,11 +60,11 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+    // cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
-    /**
-     */
-    cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number>;
+    // /**
+    //  */
+    // cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
@@ -156,41 +156,41 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         return encodeURIComponent(String(param));
     }
 
-    /**
-     */
-    async cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
-        if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
-            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
-        }
+    // /**
+    //  */
+    // async cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+    //     if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
+    //         throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
+    //     }
 
-        if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
-            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
-        }
+    //     if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
+    //         throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling cryptosActualExchangeRateFromCurrencyToCurrencyGet.');
+    //     }
 
-        const queryParameters: any = {};
+    //     const queryParameters: any = {};
 
-        const headerParameters: runtime.HTTPHeaders = {};
+    //     const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
-        }
+    //     if (this.configuration && this.configuration.apiKey) {
+    //         headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+    //     }
 
-        const response = await this.request({
-            path: `/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
+    //     const response = await this.request({
+    //         path: `/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)),
+    //         method: 'GET',
+    //         headers: headerParameters,
+    //         query: queryParameters,
+    //     }, initOverrides);
 
-        return new runtime.TextApiResponse(response) as any;
-    }
+    //     return new runtime.TextApiResponse(response) as any;
+    // }
 
-    /**
-     */
-    async cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number> {
-        const response = await this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
+    // /**
+    //  */
+    // async cryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number> {
+    //     const response = await this.cryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
+    //     return await response.value();
+    // }
 
     /**
      */

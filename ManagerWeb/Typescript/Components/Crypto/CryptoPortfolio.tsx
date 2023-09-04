@@ -1,10 +1,13 @@
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
+import { Configuration, CryptoApi, CryptoApiInterface, CurrencySymbol, TradeHistory } from "../../ApiClient/Main";
 import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
+import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
+import moment from "moment";
+import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
 
 const usdSymbol = "USD";
 
@@ -23,6 +26,8 @@ class CryptoPortfolioState {
 
 export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
     cryptoApi: CryptoApiInterface;
+    cryptoFinApi: CryptoEndpointsApi;
+    forexFinApi: ForexEndpointsApi;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -36,6 +41,8 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
     private load = async (): Promise<void> => {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
+        this.cryptoFinApi = await apiFactory.getClient(CryptoEndpointsApi);
+        this.forexFinApi = await apiFactory.getClient(ForexEndpointsApi);
 
         let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
@@ -43,11 +50,12 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         let that = this;
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
+            let date = moment(Date.now()).subtract(1, 'd').toDate();
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-            let exhangeRateTrade: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: key, toCurrency: usdSymbol });
+            let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: key, date: date }))?.price ?? 0;
 
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let exhangeRate: number = await that.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: value[0].currencySymbol, toCurrency: usdSymbol });
+            let exhangeRate: number = await that.forexFinApi.getForexPairPriceAtDate({date: date, from: ForexSymbol[value[0].currencySymbol], to: ForexSymbol.Usd});
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
