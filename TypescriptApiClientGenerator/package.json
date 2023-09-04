@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "version": "openapi-generator-cli version",
     "generate": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator-cli generate -i https://localhost:44303/swagger/v1/swagger.json -g typescript-fetch -o .\\Client -c .\\config.yaml -t .\\templates\\ --enable-post-process-file --skip-validate-spec",
-    "generateSso": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator-cli generate -i https://localhost:44395/swagger/v1/swagger.json -g typescript-fetch -o .\\Client -c .\\config.yaml -t .\\templates\\ --enable-post-process-file --skip-validate-spec"
+    "generateSso": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator-cli generate -i https://localhost:44395/swagger/v1/swagger.json -g typescript-fetch -o .\\Client -c .\\config.yaml -t .\\templates\\ --enable-post-process-file --skip-validate-spec",
+    "generateFin": "SET JAVA_OPTS=-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true && openapi-generator-cli generate -i https://localhost:7252/swagger/v1/swagger.json -g typescript-fetch -o .\\Client -c .\\config.yaml -t .\\templates\\ --enable-post-process-file --skip-validate-spec"
   },
   "keywords": [],
   "author": "",

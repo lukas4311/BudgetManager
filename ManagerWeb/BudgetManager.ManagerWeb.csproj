@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="ColorPalette\" />
+    <Folder Include="Typescript\ApiClient\Fin\" />
   </ItemGroup>
 
   <ItemGroup>
