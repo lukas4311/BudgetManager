@@ -33,6 +33,15 @@ export default class ApiClientFactory {
         return client;
     }
 
+    public async getFinClient<TClient extends BaseAPI>(type: new (config: Configuration) => TClient): Promise<TClient> {
+        let setting: ApiUrls = await this.getApiUrls();
+        let apiUrl = setting.finApi;
+        let apiConfiguration = this.getApiConfiguration(apiUrl);
+        let client: TClient = new type(apiConfiguration);
+
+        return client;
+    }
+
     public getClientWithSetting<TClient extends BaseAPI>(type: new (config: Configuration) => TClient, setting: ApiUrls): TClient {
         let apiUrl = setting.mainApi;
         let apiConfiguration = this.getApiConfiguration(apiUrl);

@@ -1,12 +1,13 @@
 ﻿using BudgetManager.FinancialApi.Enums;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.FinancialApi.Endpoints
 {
     public static class ForexEndpoints
     {
-        private const int SameCurrencyExchangeRate = 1;
+        private const double SameCurrencyExchangeRate = 1.0;
 
         public static void RegisterForexEndpoints(this WebApplication app)
         {
@@ -19,22 +20,22 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithOpenApi();
         }
 
-        public static async Task<IResult> GetForexPairPrice([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to)
+        public static async Task<Ok<double>> GetForexPairPrice([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to)
         {
             if (from == to)
-                return Results.Ok(SameCurrencyExchangeRate);
+                return TypedResults.Ok(SameCurrencyExchangeRate);
 
             var data = await forexService.GetExchangeRate(from.ToString(), to.ToString());
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
 
-        public static async Task<IResult> GetForexPairPriceAtDate([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to, [FromRoute] DateTime date)
+        public static async Task<Ok<double>> GetForexPairPriceAtDate([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to, [FromRoute] DateTime date)
         {
             if (from == to)
-                return Results.Ok(SameCurrencyExchangeRate);
+                return TypedResults.Ok(SameCurrencyExchangeRate);
 
             var data = await forexService.GetExchangeRate(from.ToString(), to.ToString(), date);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
     }
 }

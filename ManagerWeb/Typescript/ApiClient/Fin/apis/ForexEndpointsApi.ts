@@ -46,11 +46,11 @@ export interface ForexEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof ForexEndpointsApiInterface
      */
-    getForexPairPriceRaw(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getForexPairPriceRaw(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    getForexPairPrice(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<void>;
+    getForexPairPrice(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
@@ -61,11 +61,11 @@ export interface ForexEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof ForexEndpointsApiInterface
      */
-    getForexPairPriceAtDateRaw(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getForexPairPriceAtDateRaw(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    getForexPairPriceAtDate(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<void>;
+    getForexPairPriceAtDate(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<number>;
 
 }
 
@@ -82,7 +82,7 @@ export class ForexEndpointsApi extends runtime.BaseAPI implements ForexEndpoints
 
     /**
      */
-    async getForexPairPriceRaw(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getForexPairPriceRaw(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         if (requestParameters.from === null || requestParameters.from === undefined) {
             throw new runtime.RequiredError('from','Required parameter requestParameters.from was null or undefined when calling getForexPairPrice.');
         }
@@ -102,18 +102,19 @@ export class ForexEndpointsApi extends runtime.BaseAPI implements ForexEndpoints
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async getForexPairPrice(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getForexPairPriceRaw(requestParameters, initOverrides);
+    async getForexPairPrice(requestParameters: GetForexPairPriceRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.getForexPairPriceRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getForexPairPriceAtDateRaw(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getForexPairPriceAtDateRaw(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         if (requestParameters.from === null || requestParameters.from === undefined) {
             throw new runtime.RequiredError('from','Required parameter requestParameters.from was null or undefined when calling getForexPairPriceAtDate.');
         }
@@ -137,13 +138,14 @@ export class ForexEndpointsApi extends runtime.BaseAPI implements ForexEndpoints
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async getForexPairPriceAtDate(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getForexPairPriceAtDateRaw(requestParameters, initOverrides);
+    async getForexPairPriceAtDate(requestParameters: GetForexPairPriceAtDateRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.getForexPairPriceAtDateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

@@ -15,6 +15,7 @@ import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import ComodityService from "../../Services/ComodityService";
 import { CurrencyService } from "../../Services/CurrencyService";
+import { ComodityEndpointsApi } from "../../ApiClient/Fin";
 
 const theme = createMuiTheme({
     palette: {
@@ -68,7 +69,8 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         const apiFactory = new ApiClientFactory(this.props.history);
         const comodityApi = await apiFactory.getClient(ComodityApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        this.comodityService = new ComodityService(comodityApi);
+        const comodityFinApi = await apiFactory.getFinClient(ComodityEndpointsApi);
+        this.comodityService = new ComodityService(comodityApi, comodityFinApi);
         this.currencyService = new CurrencyService(currencyApi);
         this.loadData();
     }

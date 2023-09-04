@@ -14,6 +14,11 @@
 
 
 import * as runtime from '../../runtime';
+import {
+    CryptoDataV2,
+    CryptoDataV2FromJSON,
+    CryptoDataV2ToJSON,
+} from '../models';
 
 export interface GetCryptoPriceDataRequest {
     ticker?: string;
@@ -43,11 +48,11 @@ export interface CryptoEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoEndpointsApiInterface
      */
-    getCryptoPriceDataRaw(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getCryptoPriceDataRaw(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoDataV2>>>;
 
     /**
      */
-    getCryptoPriceData(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<void>;
+    getCryptoPriceData(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<Array<CryptoDataV2>>;
 
     /**
      * 
@@ -57,11 +62,11 @@ export interface CryptoEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoEndpointsApiInterface
      */
-    getCryptoPriceDataAtDateRaw(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getCryptoPriceDataAtDateRaw(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<CryptoDataV2>>;
 
     /**
      */
-    getCryptoPriceDataAtDate(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<void>;
+    getCryptoPriceDataAtDate(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<CryptoDataV2>;
 
     /**
      * 
@@ -71,11 +76,11 @@ export interface CryptoEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoEndpointsApiInterface
      */
-    getCryptoPriceDataFromDateRaw(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getCryptoPriceDataFromDateRaw(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoDataV2>>>;
 
     /**
      */
-    getCryptoPriceDataFromDate(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<void>;
+    getCryptoPriceDataFromDate(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<Array<CryptoDataV2>>;
 
 }
 
@@ -92,7 +97,7 @@ export class CryptoEndpointsApi extends runtime.BaseAPI implements CryptoEndpoin
 
     /**
      */
-    async getCryptoPriceDataRaw(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getCryptoPriceDataRaw(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoDataV2>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -104,18 +109,19 @@ export class CryptoEndpointsApi extends runtime.BaseAPI implements CryptoEndpoin
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CryptoDataV2FromJSON));
     }
 
     /**
      */
-    async getCryptoPriceData(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getCryptoPriceDataRaw(requestParameters, initOverrides);
+    async getCryptoPriceData(requestParameters: GetCryptoPriceDataRequest, initOverrides?: RequestInit): Promise<Array<CryptoDataV2>> {
+        const response = await this.getCryptoPriceDataRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getCryptoPriceDataAtDateRaw(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getCryptoPriceDataAtDateRaw(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<CryptoDataV2>> {
         if (requestParameters.date === null || requestParameters.date === undefined) {
             throw new runtime.RequiredError('date','Required parameter requestParameters.date was null or undefined when calling getCryptoPriceDataAtDate.');
         }
@@ -131,18 +137,19 @@ export class CryptoEndpointsApi extends runtime.BaseAPI implements CryptoEndpoin
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => CryptoDataV2FromJSON(jsonValue));
     }
 
     /**
      */
-    async getCryptoPriceDataAtDate(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getCryptoPriceDataAtDateRaw(requestParameters, initOverrides);
+    async getCryptoPriceDataAtDate(requestParameters: GetCryptoPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<CryptoDataV2> {
+        const response = await this.getCryptoPriceDataAtDateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getCryptoPriceDataFromDateRaw(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getCryptoPriceDataFromDateRaw(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoDataV2>>> {
         if (requestParameters.from === null || requestParameters.from === undefined) {
             throw new runtime.RequiredError('from','Required parameter requestParameters.from was null or undefined when calling getCryptoPriceDataFromDate.');
         }
@@ -158,13 +165,14 @@ export class CryptoEndpointsApi extends runtime.BaseAPI implements CryptoEndpoin
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CryptoDataV2FromJSON));
     }
 
     /**
      */
-    async getCryptoPriceDataFromDate(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getCryptoPriceDataFromDateRaw(requestParameters, initOverrides);
+    async getCryptoPriceDataFromDate(requestParameters: GetCryptoPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<Array<CryptoDataV2>> {
+        const response = await this.getCryptoPriceDataFromDateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

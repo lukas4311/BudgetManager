@@ -4,6 +4,8 @@ apis/ForexEndpointsApi.ts
 apis/StockEndpointsApi.ts
 apis/index.ts
 index.ts
+models/CryptoDataV2.ts
 models/CurrencySymbol.ts
+models/StockPrice.ts
 models/index.ts
 runtime.ts

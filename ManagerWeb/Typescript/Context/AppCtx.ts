@@ -5,4 +5,4 @@ export class AppContext {
     apiUrls: ApiUrls;
 }
 
-export const AppCtx = React.createContext<AppContext>({ apiUrls: { authApi: "aaa", mainApi: "bbb" } });
+export const AppCtx = React.createContext<AppContext>({ apiUrls: { authApi: "aaa", mainApi: "bbb", finApi: "fff" } });

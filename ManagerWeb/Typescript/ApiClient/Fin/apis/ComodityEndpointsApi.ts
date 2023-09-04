@@ -32,11 +32,11 @@ export interface ComodityEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof ComodityEndpointsApiInterface
      */
-    getCurrentGoldPriceForOunceRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getCurrentGoldPriceForOunceRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    getCurrentGoldPriceForOunce(initOverrides?: RequestInit): Promise<void>;
+    getCurrentGoldPriceForOunce(initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
@@ -45,11 +45,11 @@ export interface ComodityEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof ComodityEndpointsApiInterface
      */
-    getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    getCurrentGoldPriceForOunceForSpecificCurrency(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<void>;
+    getCurrentGoldPriceForOunceForSpecificCurrency(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<number>;
 
 }
 
@@ -66,7 +66,7 @@ export class ComodityEndpointsApi extends runtime.BaseAPI implements ComodityEnd
 
     /**
      */
-    async getCurrentGoldPriceForOunceRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getCurrentGoldPriceForOunceRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -78,18 +78,19 @@ export class ComodityEndpointsApi extends runtime.BaseAPI implements ComodityEnd
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async getCurrentGoldPriceForOunce(initOverrides?: RequestInit): Promise<void> {
-        await this.getCurrentGoldPriceForOunceRaw(initOverrides);
+    async getCurrentGoldPriceForOunce(initOverrides?: RequestInit): Promise<number> {
+        const response = await this.getCurrentGoldPriceForOunceRaw(initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -101,13 +102,14 @@ export class ComodityEndpointsApi extends runtime.BaseAPI implements ComodityEnd
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.TextApiResponse(response) as any;
     }
 
     /**
      */
-    async getCurrentGoldPriceForOunceForSpecificCurrency(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters, initOverrides);
+    async getCurrentGoldPriceForOunceForSpecificCurrency(requestParameters: GetCurrentGoldPriceForOunceForSpecificCurrencyRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.getCurrentGoldPriceForOunceForSpecificCurrencyRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

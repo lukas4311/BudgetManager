@@ -1,5 +1,6 @@
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.FinancialApi.Endpoints
@@ -21,33 +22,34 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithOpenApi();
         }
 
-        public static async Task<IResult> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)
+        public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound>> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)
         {
+            var empty = Array.Empty<StockPrice>().AsEnumerable();
             if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
-                return Results.NoContent();
+                return TypedResults.NotFound();
 
             IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
 
-        public static async Task<IResult> GetStockPriceDataFromDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, 
+        public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound>> GetStockPriceDataFromDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, 
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
             if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
-                return Results.NoContent();
+                return TypedResults.NotFound();
 
             IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker, from);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
 
-        public static async Task<IResult> GetStockPriceDataAtDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
+        public static async Task<Results<Ok<StockPrice>, NotFound>> GetStockPriceDataAtDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
             [FromRoute] string ticker, [FromRoute] DateTime date)
         {
             if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
-                return Results.NoContent();
+                return TypedResults.NotFound();
 
             StockPrice data = await stockTradeHistoryService.GetStockPriceAtDate(ticker, date);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
     }
 }

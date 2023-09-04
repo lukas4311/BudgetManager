@@ -1,5 +1,6 @@
 using BudgetManager.Services;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.FinancialApi.Endpoints
@@ -19,13 +20,13 @@ namespace BudgetManager.FinancialApi.Endpoints
                 .WithOpenApi();
         }
 
-        public static async Task<IResult> GetCurrentGoldPriceForOunce([FromServices] IComodityService comodityService)
+        public static async Task<Ok<double>> GetCurrentGoldPriceForOunce([FromServices] IComodityService comodityService)
         {
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
-            return Results.Ok(exhangeRate);
+            return TypedResults.Ok(exhangeRate);
         }
 
-        public static async Task<IResult> GetCurrentGoldPriceForOunceForSpecificCurrency([FromServices] IComodityService comodityService, [FromServices] IForexService forexService, string currencyCode)
+        public static async Task<Ok<double>> GetCurrentGoldPriceForOunceForSpecificCurrency([FromServices] IComodityService comodityService, [FromServices] IForexService forexService, string currencyCode)
         {
             double currencyExchangeRate = 1.0;
 
@@ -38,7 +39,7 @@ namespace BudgetManager.FinancialApi.Endpoints
             }
 
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
-            return Results.Ok(exhangeRate * currencyExchangeRate);
+            return TypedResults.Ok(exhangeRate * currencyExchangeRate);
         }
     }
 }

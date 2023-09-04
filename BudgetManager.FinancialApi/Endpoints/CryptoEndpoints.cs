@@ -1,6 +1,6 @@
 using BudgetManager.InfluxDbData;
-using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.FinancialApi.Endpoints
@@ -22,24 +22,24 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithOpenApi();
         }
 
-        public static async Task<IResult> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
+        public static async Task<Ok<IEnumerable<CryptoDataV2>>> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
         {
             IEnumerable<CryptoDataV2> data = await cryptoService.GetCryptoPriceHistory(ticker);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
 
-        public static async Task<IResult> GetCryptoPriceDataFromDate([FromServices] ICryptoService cryptoService, 
+        public static async Task<Ok<IEnumerable<CryptoDataV2>>> GetCryptoPriceDataFromDate([FromServices] ICryptoService cryptoService, 
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
             IEnumerable<CryptoDataV2> data = await cryptoService.GetCryptoPriceHistory(ticker, from);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
 
-        public static async Task<IResult> GetCryptoPriceDataAtDate([FromServices] ICryptoService cryptoService,
+        public static async Task<Ok<CryptoDataV2>> GetCryptoPriceDataAtDate([FromServices] ICryptoService cryptoService,
             [FromRoute] string ticker, [FromRoute] DateTime date)
         {
             CryptoDataV2 data = await cryptoService.GetCryptoPriceAtDate(ticker, date);
-            return Results.Ok(data);
+            return TypedResults.Ok(data);
         }
     }
 }

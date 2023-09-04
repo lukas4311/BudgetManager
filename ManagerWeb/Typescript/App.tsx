@@ -22,7 +22,7 @@ import NetWorthOverview from "./Components/NetWorth/NetWorthOverview";
 
 export default function App() {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    const [context, setContext] = useState<AppContext>({ apiUrls: { authApi: "aaa", mainApi: "bbb" } });
+    const [context, setContext] = useState<AppContext>({ apiUrls: { authApi: "aaa", mainApi: "bbb", finApi: "fff" } });
 
     useEffect(() => {
         async function getSetting() {

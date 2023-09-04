@@ -14,6 +14,11 @@
 
 
 import * as runtime from '../../runtime';
+import {
+    StockPrice,
+    StockPriceFromJSON,
+    StockPriceToJSON,
+} from '../models';
 
 export interface GetStockPriceDataRequest {
     ticker?: string;
@@ -43,11 +48,11 @@ export interface StockEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof StockEndpointsApiInterface
      */
-    getStockPriceDataRaw(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getStockPriceDataRaw(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>>;
 
     /**
      */
-    getStockPriceData(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<void>;
+    getStockPriceData(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>>;
 
     /**
      * 
@@ -57,11 +62,11 @@ export interface StockEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof StockEndpointsApiInterface
      */
-    getStockPriceDataAtDateRaw(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getStockPriceDataAtDateRaw(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<StockPrice>>;
 
     /**
      */
-    getStockPriceDataAtDate(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<void>;
+    getStockPriceDataAtDate(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<StockPrice>;
 
     /**
      * 
@@ -71,11 +76,11 @@ export interface StockEndpointsApiInterface {
      * @throws {RequiredError}
      * @memberof StockEndpointsApiInterface
      */
-    getStockPriceDataFromDateRaw(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    getStockPriceDataFromDateRaw(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>>;
 
     /**
      */
-    getStockPriceDataFromDate(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<void>;
+    getStockPriceDataFromDate(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>>;
 
 }
 
@@ -92,7 +97,7 @@ export class StockEndpointsApi extends runtime.BaseAPI implements StockEndpoints
 
     /**
      */
-    async getStockPriceDataRaw(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getStockPriceDataRaw(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -104,18 +109,19 @@ export class StockEndpointsApi extends runtime.BaseAPI implements StockEndpoints
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockPriceFromJSON));
     }
 
     /**
      */
-    async getStockPriceData(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getStockPriceDataRaw(requestParameters, initOverrides);
+    async getStockPriceData(requestParameters: GetStockPriceDataRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>> {
+        const response = await this.getStockPriceDataRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getStockPriceDataAtDateRaw(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getStockPriceDataAtDateRaw(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<StockPrice>> {
         if (requestParameters.date === null || requestParameters.date === undefined) {
             throw new runtime.RequiredError('date','Required parameter requestParameters.date was null or undefined when calling getStockPriceDataAtDate.');
         }
@@ -131,18 +137,19 @@ export class StockEndpointsApi extends runtime.BaseAPI implements StockEndpoints
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => StockPriceFromJSON(jsonValue));
     }
 
     /**
      */
-    async getStockPriceDataAtDate(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getStockPriceDataAtDateRaw(requestParameters, initOverrides);
+    async getStockPriceDataAtDate(requestParameters: GetStockPriceDataAtDateRequest, initOverrides?: RequestInit): Promise<StockPrice> {
+        const response = await this.getStockPriceDataAtDateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
      */
-    async getStockPriceDataFromDateRaw(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async getStockPriceDataFromDateRaw(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockPrice>>> {
         if (requestParameters.from === null || requestParameters.from === undefined) {
             throw new runtime.RequiredError('from','Required parameter requestParameters.from was null or undefined when calling getStockPriceDataFromDate.');
         }
@@ -158,13 +165,14 @@ export class StockEndpointsApi extends runtime.BaseAPI implements StockEndpoints
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockPriceFromJSON));
     }
 
     /**
      */
-    async getStockPriceDataFromDate(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.getStockPriceDataFromDateRaw(requestParameters, initOverrides);
+    async getStockPriceDataFromDate(requestParameters: GetStockPriceDataFromDateRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>> {
+        const response = await this.getStockPriceDataFromDateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

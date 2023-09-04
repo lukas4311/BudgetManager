@@ -5,6 +5,7 @@ import { ComodityApi } from "../../ApiClient/Main";
 import ComodityService from "../../Services/ComodityService";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { GoldListProps } from "./GoldListProps";
+import { ComodityEndpointsApi } from "../../ApiClient/Fin";
 
 const Gold = (props: GoldListProps) => {
     const ounce = 28.34;
@@ -19,7 +20,8 @@ const Gold = (props: GoldListProps) => {
         async function calculateTotalActualPrice() {
             const apiFactory = new ApiClientFactory(null);
             let comodityApi = await apiFactory.getClient(ComodityApi);
-            let comodityService = new ComodityService(comodityApi);
+            const comodityFinApi = await apiFactory.getFinClient(ComodityEndpointsApi);
+            let comodityService = new ComodityService(comodityApi, comodityFinApi);
             const price = await comodityService.getGoldPriceInCurrency("CZK");
             const totalWeight = _.sumBy(props.comoditiesViewModels ?? [], (g) => g.comodityAmount);
             const actualTotalPrice = totalWeight * price / ounce;

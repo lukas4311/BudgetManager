@@ -3,6 +3,7 @@ import { ComodityApiInterface, ComodityTradeHistoryModel, ComodityTypeModel } fr
 import { ComoditiesFormViewModel } from "../Components/Comodities/ComoditiesForm";
 import { IComodityService } from "./IComodityService";
 import _ from "lodash";
+import { ComodityEndpointsApiInterface } from "../ApiClient/Fin";
 
 const ounce = 28.34;
 const goldCode = 'AU';
@@ -10,9 +11,11 @@ const czkSymbol = 'CZK';
 
 export default class ComodityService implements IComodityService {
     comodityApi: ComodityApiInterface;
+    comodityFinApi: ComodityEndpointsApiInterface;
 
-    constructor(comodityApi: ComodityApiInterface) {
+    constructor(comodityApi: ComodityApiInterface, comodityFinApi: ComodityEndpointsApiInterface) {
         this.comodityApi = comodityApi;
+        this.comodityFinApi = comodityFinApi;
     }
 
     public async getComodityTypes(): Promise<ComodityTypeModel[]> {
@@ -26,7 +29,7 @@ export default class ComodityService implements IComodityService {
     }
 
     public async getGoldPriceInCurrency(currencyCode: string) {
-        const currentPrice = await this.comodityApi.comoditiesGoldActualPriceCurrencyCodeGet({ currencyCode: currencyCode });
+        const currentPrice = await this.comodityFinApi.getCurrentGoldPriceForOunceForSpecificCurrency({ currencyCode: currencyCode });
         return currentPrice;
     }
 
