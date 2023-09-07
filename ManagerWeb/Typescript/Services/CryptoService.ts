@@ -5,15 +5,19 @@ import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { ICryptoService } from "./ICryptoService";
 import _, { forEach } from "lodash";
 import { NetWorthMonthGroupModel } from "./NetWorthService";
+import { ForexEndpointsApi } from "../ApiClient/Fin";
+import {CurrencySymbol as ForexSymbol}  from "../ApiClient/Fin"
 
 const usdSymbol = "USD";
 const czkSymbol = "CZK";
 
 export default class CryptoService implements ICryptoService {
     private cryptoApi: CryptoApiInterface;
+    private forexApi: ForexEndpointsApi;
 
-    constructor(cryptoApi: CryptoApiInterface) {
+    constructor(cryptoApi: CryptoApiInterface, forexApi: ForexEndpointsApi) {
         this.cryptoApi = cryptoApi;
+        this.forexApi = forexApi;
     }
 
     public async getTradeData(): Promise<CryptoTradeViewModel[]> {
@@ -45,7 +49,9 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async getExchangeRate(from: string, to: string): Promise<number> {
-        return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        return await this.forexApi.getForexPairPriceAtDate({date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd});
+        // return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
     }
 
     public async getCryptoCurrentNetWorth(currency: string): Promise<number> {

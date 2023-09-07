@@ -23,6 +23,8 @@ import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
+import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
+import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
 
 const theme = createMuiTheme({
     palette: {
@@ -63,6 +65,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private stockService: StockService = undefined;
     private icons: IconsData = new IconsData();
     private cryptoApi: CryptoApi;
+    private cryptoFinApi: CryptoEndpointsApi;
+    private forexFinApi: ForexEndpointsApi;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -77,7 +81,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi));
+        this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
+        this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
+        this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi, this.forexFinApi));
 
         this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
@@ -85,6 +91,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private loadStockData = async () => {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
         stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
@@ -98,7 +105,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
             if (tickerPrices != undefined) {
                 const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                const actualPriceCzk = await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: "USD", toCurrency: "CZK" });
+                const actualPriceCzk = await this.forexFinApi.getForexPairPriceAtDate({date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd});
                 stock.stocksActualPrice = stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
             }
         }

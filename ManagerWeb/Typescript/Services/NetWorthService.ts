@@ -4,7 +4,6 @@ import { ICryptoService } from "./ICryptoService";
 import { IOtherInvestmentService } from "./IOtherInvestmentService";
 import { IPaymentService } from "./IPaymentService";
 import { IStockService } from "./IStockService";
-import { TradeHistory } from "../ApiClient/Main";
 import { IComodityService } from "./IComodityService";
 import moment, { Moment } from "moment";
 
