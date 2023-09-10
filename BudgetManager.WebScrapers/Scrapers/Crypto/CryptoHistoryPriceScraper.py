@@ -19,6 +19,8 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
                     level=logging.DEBUG)
 influx_repository = InfluxRepository(influxDbUrl, "CryptoV2", token, organizationId, logging)
 measurement = "Price"
+coinbaseExchange = "coinbase-pro"
+geminiExchange = "gemini"
 
 
 @dataclass
@@ -50,6 +52,7 @@ class CryptoTickers(Enum):
     LINK = "LINKUSD"
     MATIC = "MATICUSD"
     SNX = "SNXUSD"
+    USDC = "USDCUSD"
 
 
 class CryptoTickerTranslator:
@@ -65,6 +68,8 @@ class CryptoTickerTranslator:
                 return "LINK"
             case CryptoTickers.SNX:
                 return "SNX"
+            case CryptoTickers.USDC:
+                return "USDC"
 
 
 class CryptoWatchService:
@@ -79,7 +84,8 @@ class CryptoWatchService:
 
         if lastRecordTime < now_datetime_with_offset:
             fromTime = int(time.mktime(lastRecordTime.timetuple()))
-            url = f"{self.cryptoWatchBaseUrl}/markets/coinbase-pro/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
+            exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
+            url = f"{self.cryptoWatchBaseUrl}/markets/{exchange}/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
             print(url)
             response = requests.get(url)
             jsonData = response.text
@@ -127,19 +133,26 @@ class CryptoWatchService:
 cryptoService = CryptoWatchService()
 btcData = cryptoService.get_crypto_price_history(CryptoTickers.BTC)
 print(btcData)
-# if len(btcData) > 0:
-#     cryptoService.save_data_to_influx(btcData)
+if len(btcData) > 0:
+    cryptoService.save_data_to_influx(btcData)
 
 ethData = cryptoService.get_crypto_price_history(CryptoTickers.ETH)
 print(ethData)
-# if len(ethData) > 0:
-#     cryptoService.save_data_to_influx(ethData)
+if len(ethData) > 0:
+    cryptoService.save_data_to_influx(ethData)
 
 link = cryptoService.get_crypto_price_history(CryptoTickers.LINK)
-print(link)
+if len(link) > 0:
+    cryptoService.save_data_to_influx(link)
 
 matic = cryptoService.get_crypto_price_history(CryptoTickers.MATIC)
-print(matic)
+if len(matic) > 0:
+    cryptoService.save_data_to_influx(matic)
 
 snx = cryptoService.get_crypto_price_history(CryptoTickers.SNX)
-print(snx)
+if len(snx) > 0:
+    cryptoService.save_data_to_influx(snx)
+
+usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDC)
+if len(snx) > 0:
+    cryptoService.save_data_to_influx(usdc)
