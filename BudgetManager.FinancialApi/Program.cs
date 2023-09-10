@@ -56,6 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 app.RegisterForexEndpoints();
 app.RegisterStockEndpoints();
 app.RegisterCryptoEndpoints();

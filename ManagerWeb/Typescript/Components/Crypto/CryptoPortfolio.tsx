@@ -41,8 +41,8 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
     private load = async (): Promise<void> => {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
-        this.cryptoFinApi = await apiFactory.getClient(CryptoEndpointsApi);
-        this.forexFinApi = await apiFactory.getClient(ForexEndpointsApi);
+        this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
+        this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
 
         let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
@@ -51,16 +51,24 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
             let date = moment(Date.now()).subtract(1, 'd').toDate();
+            let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-            let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: key, date: date }))?.price ?? 0;
 
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let exhangeRate: number = await that.forexFinApi.getForexPairPriceAtDate({date: date, from: ForexSymbol[value[0].currencySymbol], to: ForexSymbol.Usd});
+            let testForexSym = that.convertStringToForexEnum("EUR");
+            let exhangeRate: number = await that.forexFinApi.getForexPairPriceAtDate({date: date, from: testForexSym, to: ForexSymbol.Usd});
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
             that.setState({ allCryptoSum: cryptoSums });
         });
+    }
+
+    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
+        if (Object.values(ForexSymbol).includes(value as ForexSymbol)) {
+            return value as ForexSymbol;
+        }
+        return undefined;
     }
 
     private renderChart = () => {
