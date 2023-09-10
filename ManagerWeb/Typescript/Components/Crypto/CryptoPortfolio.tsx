@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import moment from "moment";
-import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
+import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 
 const usdSymbol = "USD";
 
@@ -22,10 +22,6 @@ class CryptoSum {
 
 class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
-}
-
-interface ExchangeRateStrategy{
-    getExhangeRate();
 }
 
 export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
@@ -57,13 +53,13 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             let date = moment(Date.now()).subtract(1, 'd').toDate();
             let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-            
-            // TODO: add different exchange rate for different currency
-            let uniqueSourceCurrency = _.uniqBy(value, d => d.currencySymbol).map(t => t.currencySymbol);
-            console.log("🚀 ~ file: CryptoPortfolio.tsx:58 ~ CryptoPortfolio ~ uniqueSourceCurrency:", uniqueSourceCurrency)
+
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let testForexSym = that.convertStringToForexEnum("EUR");
-            let exhangeRate: number = await that.forexFinApi.getForexPairPriceAtDate({date: date, from: testForexSym, to: ForexSymbol.Usd});
+            let forexSymbol = that.convertStringToForexEnum(value[0].currencySymbol);
+            let exhangeRate: number = 1
+
+            if (forexSymbol)
+                exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
 
             cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
             cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
@@ -75,6 +71,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         if (Object.values(ForexSymbol).includes(value as ForexSymbol)) {
             return value as ForexSymbol;
         }
+
         return undefined;
     }
 
