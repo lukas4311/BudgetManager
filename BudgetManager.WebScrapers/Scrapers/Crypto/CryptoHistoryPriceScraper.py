@@ -47,6 +47,9 @@ class Result:
 class CryptoTickers(Enum):
     BTC = "BTCUSD"
     ETH = "ETHUSD"
+    LINK = "LINKUSD"
+    MATIC = "MATICUSD"
+    SNX = "SNXUSD"
 
 
 class CryptoTickerTranslator:
@@ -56,6 +59,12 @@ class CryptoTickerTranslator:
                 return "BTC"
             case CryptoTickers.ETH:
                 return "ETH"
+            case CryptoTickers.MATIC:
+                return "MATIC"
+            case CryptoTickers.LINK:
+                return "LINK"
+            case CryptoTickers.SNX:
+                return "SNX"
 
 
 class CryptoWatchService:
@@ -75,6 +84,7 @@ class CryptoWatchService:
             response = requests.get(url)
             jsonData = response.text
             parsed_data = json.loads(jsonData)
+            print(parsed_data)
             result_objects = [Result(*item) for item in parsed_data['result']['86400']]
             result_data_instance = ResultData(result_objects)
             stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), translated_ticker) for d in result_data_instance.data if d.timestamp > fromTime]
@@ -116,11 +126,20 @@ class CryptoWatchService:
 
 cryptoService = CryptoWatchService()
 btcData = cryptoService.get_crypto_price_history(CryptoTickers.BTC)
-
-if len(btcData) > 0:
-    cryptoService.save_data_to_influx(btcData)
+print(btcData)
+# if len(btcData) > 0:
+#     cryptoService.save_data_to_influx(btcData)
 
 ethData = cryptoService.get_crypto_price_history(CryptoTickers.ETH)
+print(ethData)
+# if len(ethData) > 0:
+#     cryptoService.save_data_to_influx(ethData)
 
-if len(ethData) > 0:
-    cryptoService.save_data_to_influx(ethData)
+link = cryptoService.get_crypto_price_history(CryptoTickers.LINK)
+print(link)
+
+matic = cryptoService.get_crypto_price_history(CryptoTickers.MATIC)
+print(matic)
+
+snx = cryptoService.get_crypto_price_history(CryptoTickers.SNX)
+print(snx)

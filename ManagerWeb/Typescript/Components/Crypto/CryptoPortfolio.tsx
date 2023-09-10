@@ -24,6 +24,10 @@ class CryptoPortfolioState {
     allCryptoSum: CryptoSum[];
 }
 
+interface ExchangeRateStrategy{
+    getExhangeRate();
+}
+
 export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
     cryptoApi: CryptoApiInterface;
     cryptoFinApi: CryptoEndpointsApi;
@@ -53,7 +57,10 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             let date = moment(Date.now()).subtract(1, 'd').toDate();
             let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
             let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-
+            
+            // TODO: add different exchange rate for different currency
+            let uniqueSourceCurrency = _.uniqBy(value, d => d.currencySymbol).map(t => t.currencySymbol);
+            console.log("🚀 ~ file: CryptoPortfolio.tsx:58 ~ CryptoPortfolio ~ uniqueSourceCurrency:", uniqueSourceCurrency)
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
             let testForexSym = that.convertStringToForexEnum("EUR");
             let exhangeRate: number = await that.forexFinApi.getForexPairPriceAtDate({date: date, from: testForexSym, to: ForexSymbol.Usd});
