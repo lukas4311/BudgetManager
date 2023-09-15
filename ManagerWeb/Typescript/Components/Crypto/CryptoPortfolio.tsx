@@ -10,14 +10,15 @@ import moment from "moment";
 import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 
 const usdSymbol = "USD";
+const stableCoins = ["USDC", "USDT", "BUSD"]
 
 class CryptoSum {
     ticker: string;
     tradeSizeSum: number;
     tradeValueSum: number;
     valueTicker: string;
-    usdPrice: number;
-    usdPriceTrade: number;
+    finalCurrencyPrice: number;
+    finalCurrencyPriceTrade: number;
 }
 
 class CryptoPortfolioState {
@@ -50,20 +51,30 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         let that = this;
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
-            let date = moment(Date.now()).subtract(1, 'd').toDate();
-            let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
-            let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+            if (key == 'eth') {
+                console.log("🚀 ~ file: CryptoPortfolio.tsx:53 ~ CryptoPortfolio ~ value:", value)
+                let date = moment(Date.now()).subtract(1, 'd').toDate();
+                let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
+                console.log("🚀 ~ file: CryptoPortfolio.tsx:55 ~ CryptoPortfolio ~ exhangeRateTrade:", key, exhangeRateTrade)
+                let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+                console.log("🚀 ~ file: CryptoPortfolio.tsx:57 ~ CryptoPortfolio ~ sumTradeSize:", key, sumTradeSize)
 
-            let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let forexSymbol = that.convertStringToForexEnum(value[0].currencySymbol);
-            let exhangeRate: number = 1
+                let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+                let currencySymbol = _.last(value).currencySymbol;
+                let forexSymbol = that.convertStringToForexEnum(currencySymbol);
+                let exhangeRate: number = 1
+                console.log("🚀 ~ file: CryptoPortfolio.tsx:63 ~ CryptoPortfolio ~ forexSymbol:", forexSymbol)
 
-            if (forexSymbol)
-                exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+                if (forexSymbol)
+                    exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Czk });
+                else if (_.some(stableCoins, c => c == currencySymbol))
+                    exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: ForexSymbol.Czk });
 
-            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
-            cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
-            that.setState({ allCryptoSum: cryptoSums });
+                console.log("🚀 ~ file: CryptoPortfolio.tsx:65 ~ CryptoPortfolio ~ exhangeRate:", key, exhangeRate)
+                cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue * exhangeRate, valueTicker: value[0].currencySymbol, finalCurrencyPrice: sumValue * exhangeRate, finalCurrencyPriceTrade: sumTradeSize * exhangeRateTrade * exhangeRate });
+                cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
+                that.setState({ allCryptoSum: cryptoSums });
+            }
         });
     }
 
@@ -79,10 +90,10 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         let element: JSX.Element;
 
         if (this.state.allCryptoSum != undefined && this.state.allCryptoSum.length != 0) {
-            let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
+            let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.finalCurrencyPriceTrade) }));
             element = (
                 <div className="h-96">
-                    <PieChart data={chartData} labelPostfix="USD"></PieChart>
+                    <PieChart data={chartData} labelPostfix="CZK"></PieChart>
                 </div>
             )
         }
@@ -105,8 +116,8 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                             {this.state.allCryptoSum.map(p =>
                                 <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                     <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
-                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
-                                    <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.finalCurrencyPriceTrade.toFixed(2)} CZK)</p>
+                                    <p className="mx-6 my-1 w-1/3">{(p.tradeValueSum * -1.0).toFixed(2)} CZK</p>
                                 </div>
                             )}
                         </div>
