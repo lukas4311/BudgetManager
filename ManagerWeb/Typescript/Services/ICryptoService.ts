@@ -13,4 +13,5 @@ export interface ICryptoService {
     getExchangeRate(from: string, to: string): Promise<number>;
     getCryptoCurrentNetWorth(currency: string): Promise<number>;
     getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]>;
+    getCryptoCurrentPrice(ticker: string): Promise<number>;
 }

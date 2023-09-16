@@ -8,6 +8,7 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import moment from "moment";
 import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
+import CryptoService from "../../Services/CryptoService";
 
 const usdSymbol = "USD";
 
@@ -25,9 +26,10 @@ class CryptoPortfolioState {
 }
 
 export default class CryptoPortfolio extends React.Component<RouteComponentProps, CryptoPortfolioState> {
-    cryptoApi: CryptoApiInterface;
-    cryptoFinApi: CryptoEndpointsApi;
-    forexFinApi: ForexEndpointsApi;
+    private cryptoApi: CryptoApiInterface;
+    private cryptoFinApi: CryptoEndpointsApi;
+    private forexFinApi: ForexEndpointsApi;
+    private cryptoService: CryptoService;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -43,16 +45,18 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
         this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
+        this.cryptoService = new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi);
 
         let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
         let that = this;
 
-        _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
+        _.forOwn(groupedTrades, async function (value: TradeHistory[], ticker) {
+            let totalyStacked = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+
             let date = moment(Date.now()).subtract(1, 'd').toDate();
-            let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
-            let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+            let exhangeRateTrade: number = await this.cryptoService.getCryptoCurrentPrice(ticker);
 
             let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
             let forexSymbol = that.convertStringToForexEnum(value[0].currencySymbol);
@@ -61,10 +65,26 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             if (forexSymbol)
                 exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
 
-            cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol, usdPrice: sumValue * exhangeRate, usdPriceTrade: sumTradeSize * exhangeRateTrade });
+            cryptoSums.push({
+                tradeSizeSum: totalyStacked, ticker: ticker, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol,
+                usdPrice: sumValue * exhangeRate, usdPriceTrade: totalyStacked * exhangeRateTrade
+            });
+
             cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
             that.setState({ allCryptoSum: cryptoSums });
         });
+    }
+
+    private calculateCryptoTradesSameCurrencySum = async (value: TradeHistory[]): Promise<number> => {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
+        let forexSymbol = this.convertStringToForexEnum(value[0].currencySymbol);
+        let exhangeRate: number = 1
+
+        if (forexSymbol)
+            exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+
+        return 0;
     }
 
     private convertStringToForexEnum(value: string): ForexSymbol | undefined {

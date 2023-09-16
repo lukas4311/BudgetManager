@@ -5,8 +5,8 @@ import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { ICryptoService } from "./ICryptoService";
 import _, { forEach } from "lodash";
 import { NetWorthMonthGroupModel } from "./NetWorthService";
-import { ForexEndpointsApi } from "../ApiClient/Fin";
-import {CurrencySymbol as ForexSymbol}  from "../ApiClient/Fin"
+import { CryptoEndpointsApi, ForexEndpointsApi } from "../ApiClient/Fin";
+import { CurrencySymbol as ForexSymbol } from "../ApiClient/Fin"
 
 const usdSymbol = "USD";
 const czkSymbol = "CZK";
@@ -14,10 +14,12 @@ const czkSymbol = "CZK";
 export default class CryptoService implements ICryptoService {
     private cryptoApi: CryptoApiInterface;
     private forexApi: ForexEndpointsApi;
+    private cryptoFinApi: CryptoEndpointsApi;
 
-    constructor(cryptoApi: CryptoApiInterface, forexApi: ForexEndpointsApi) {
+    constructor(cryptoApi: CryptoApiInterface, forexApi: ForexEndpointsApi, cryptoFinApi: CryptoEndpointsApi) {
         this.cryptoApi = cryptoApi;
         this.forexApi = forexApi;
+        this.cryptoFinApi = cryptoFinApi;
     }
 
     public async getTradeData(): Promise<CryptoTradeViewModel[]> {
@@ -50,7 +52,7 @@ export default class CryptoService implements ICryptoService {
 
     public async getExchangeRate(from: string, to: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
-        return await this.forexApi.getForexPairPriceAtDate({date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd});
+        return await this.forexApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd });
         // return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
     }
 
@@ -87,9 +89,9 @@ export default class CryptoService implements ICryptoService {
         for (const month of months) {
             const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
             const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.cryptoTicker)
-            .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
-            .value();
-            
+                .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
+                .value();
+
             let aggregatedSum = prevMonthSum;
             // FIXME: there i need to get echange rate for this month date not for current date
             const exchangeRateCurrency = await this.getExchangeRate(usdSymbol, currency);
@@ -113,10 +115,15 @@ export default class CryptoService implements ICryptoService {
             prevMonthSum = aggregatedSum;
             cryptoGroupData.push({ date: month, amount: prevMonthSum });
         }
-        
+
         console.log("🚀 ~ file: CryptoService.ts:104 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupData:", cryptoGroupData)
 
         return [];
+    }
+
+    public async getCryptoCurrentPrice(ticker: string): Promise<number> {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        return (await this.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(ticker), date: date }))?.price ?? 0;
     }
 
     private mapViewModelToDataModel = (tradeModel: CryptoTradeViewModel) => {
@@ -142,9 +149,6 @@ export default class CryptoService implements ICryptoService {
         model.tradeSize = tradeHistory.tradeSize;
         model.tradeTimeStamp = moment(tradeHistory.tradeTimeStamp).format("YYYY-MM-DD");
         model.tradeValue = tradeHistory.tradeValue;
-        // model.onSave = this.saveTrade;
-        // model.currencies = this.currencies;
-        // model.cryptoTickers = this.cryptoTickers;
         return model;
     }
 
