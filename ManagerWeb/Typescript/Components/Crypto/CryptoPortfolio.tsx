@@ -103,19 +103,19 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                         <div className="pb-10 overflow-y-scroll">
                             <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1">
                                 <p className="mx-6 my-1 w-1/3">Ticker</p>
-                                <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
-                                <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>
+                                <p className="mx-6 my-1 w-1/3">Stacked amount</p>
+                                <p className="mx-6 my-1 w-1/3">Current value</p>
                             </div>
                             {this.state.allCryptoSum.map(p =>
                                 <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                     <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
-                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.finalCurrencyPriceTrade.toFixed(2)} CZK)</p>
-                                    <p className="mx-6 my-1 w-1/3">{(p.tradeValueSum * -1.0).toFixed(2)} CZK</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.finalCurrencyPriceTrade.toFixed(2)} CZK</p>
                                 </div>
                             )}
                         </div>
                         : <div>
-                            <p>Probíhá načátíní</p>
+                            <p>Loading ...</p>
                         </div>
                     }
                     {this.renderChart()}
