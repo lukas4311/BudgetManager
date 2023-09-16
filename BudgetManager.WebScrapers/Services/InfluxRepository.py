@@ -38,6 +38,18 @@ class InfluxRepository:
 
     def save(self):
         try:
+            write_api = self.__client.write_api(write_options=SYNCHRONOUS)
+            self.__logger and self.__logger.debug('START: Influx save ' + get_datetime_to_log())
+            write_api.write(self.__bucket, record=self.__entities)
+            self.__entities.clear()
+            self.__logger and self.__logger.debug('END: Influx save ' + get_datetime_to_log())
+        except Exception as e:
+            logging.error(e)
+            self.__logger and self.__logger.debug('Error while Influx save ' + get_datetime_to_log())
+            self.clear_entities()
+
+    def save_async(self):
+        try:
             write_api = self.__client.write_api(write_options=ASYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx save ' + get_datetime_to_log())
             write_api.write(self.__bucket, record=self.__entities)
@@ -51,6 +63,19 @@ class InfluxRepository:
     def save_batch(self, saveAfter: int = 10):
         try:
             write_api = self.__client.write_api(write_options=ASYNCHRONOUS)
+            self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
+            if len(self.__entities) > saveAfter:
+                write_api.write(bucket=self.__bucket, record=self.__entities)
+                self.__entities.clear()
+                self.__logger and self.__logger.debug('END: Influx batch save' + get_datetime_to_log())
+        except Exception as e:
+            logging.error(e)
+            self.__logger and self.__logger.debug('Error while Influx save ' + get_datetime_to_log())
+            self.clear_entities()
+
+    def save_batch_async(self, saveAfter: int = 10):
+        try:
+            write_api = self.__client.write_api(write_options=SYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
             if len(self.__entities) > saveAfter:
                 write_api.write(bucket=self.__bucket, record=self.__entities)

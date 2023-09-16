@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 import logging
 from influxdb_client import Point, WritePrecision
-import csv
 import time
 
 from Models.FilterTuple import FilterTuple
@@ -63,7 +62,7 @@ class StockPriceScraper:
             point = point.time(priceModel.date, WritePrecision.NS)
             pointsToSave.append(point)
 
-        # print(pointsToSave)
+        print(len(pointsToSave))
         self.influx_repo.add_range(pointsToSave)
         self.influx_repo.save()
 
@@ -93,7 +92,7 @@ def processTickers(rows):
 
 
 for ticker in tickersToScrape:
-    stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
+     stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
 
 # with open("..\\SourceFiles\\sp500.csv", 'r') as file:
 #     csv_file = csv.DictReader(file)

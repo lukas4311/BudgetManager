@@ -11,14 +11,15 @@ import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 import CryptoService from "../../Services/CryptoService";
 
 const usdSymbol = "USD";
+const stableCoins = ["USDC", "USDT", "BUSD"]
 
 class CryptoSum {
     ticker: string;
     tradeSizeSum: number;
     tradeValueSum: number;
     valueTicker: string;
-    usdPrice: number;
-    usdPriceTrade: number;
+    finalCurrencyPrice: number;
+    finalCurrencyPriceTrade: number;
 }
 
 class CryptoPortfolioState {
@@ -58,16 +59,12 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
             let date = moment(Date.now()).subtract(1, 'd').toDate();
             let exhangeRateTrade: number = await this.cryptoService.getCryptoCurrentPrice(ticker);
 
-            let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-            let forexSymbol = that.convertStringToForexEnum(value[0].currencySymbol);
-            let exhangeRate: number = 1
-
-            if (forexSymbol)
-                exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+            const usdSum = await this.calculateCryptoTradesUsdSum(value);
+            const finalExhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: ForexSymbol.Czk });
 
             cryptoSums.push({
-                tradeSizeSum: totalyStacked, ticker: ticker, tradeValueSum: sumValue, valueTicker: value[0].currencySymbol,
-                usdPrice: sumValue * exhangeRate, usdPriceTrade: totalyStacked * exhangeRateTrade
+                tradeSizeSum: totalyStacked, ticker: ticker, tradeValueSum: usdSum, valueTicker: value[0].currencySymbol,
+                finalCurrencyPrice: usdSum * finalExhangeRate, finalCurrencyPriceTrade: totalyStacked * exhangeRateTrade
             });
 
             cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
@@ -75,16 +72,29 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         });
     }
 
-    private calculateCryptoTradesSameCurrencySum = async (value: TradeHistory[]): Promise<number> => {
+    private calculateCryptoTradesUsdSum = async (tradeHistory: TradeHistory[]): Promise<number> => {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
-        let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
-        let forexSymbol = this.convertStringToForexEnum(value[0].currencySymbol);
-        let exhangeRate: number = 1
+        let sum = 0;
 
-        if (forexSymbol)
-            exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+        for (const trade of tradeHistory) {
+            let exhangeRate: number = 1
+            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
 
-        return 0;
+            if (forexSymbol)
+                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+            else if (_.some(stableCoins, c => c == trade.currencySymbol))
+                exhangeRate = 1;
+            else {
+                const cryptoPrice = await this.cryptoFinApi.getCryptoPriceDataAtDate({ date: trade.tradeTimeStamp, ticker: _.upperCase(trade.currencySymbol) });
+
+                if (cryptoPrice)
+                    exhangeRate = cryptoPrice.price;
+            }
+
+            sum += trade.tradeSize * exhangeRate;
+        }
+
+        return sum;
     }
 
     private convertStringToForexEnum(value: string): ForexSymbol | undefined {
@@ -99,10 +109,10 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         let element: JSX.Element;
 
         if (this.state.allCryptoSum != undefined && this.state.allCryptoSum.length != 0) {
-            let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.usdPriceTrade) }));
+            let chartData: PieChartData[] = this.state.allCryptoSum.map(a => ({ id: a.ticker, label: a.ticker, value: Math.floor(a.finalCurrencyPriceTrade) }));
             element = (
                 <div className="h-96">
-                    <PieChart data={chartData} labelPostfix="USD"></PieChart>
+                    <PieChart data={chartData} labelPostfix="CZK"></PieChart>
                 </div>
             )
         }
@@ -119,19 +129,19 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                         <div className="pb-10 overflow-y-scroll">
                             <div className="font-bold bg-battleshipGrey rounded-r-full flex mr-6 mt-1">
                                 <p className="mx-6 my-1 w-1/3">Ticker</p>
-                                <p className="mx-6 my-1 w-1/3">Sum velikosti</p>
-                                <p className="mx-6 my-1 w-1/3">Sum hodnoty</p>
+                                <p className="mx-6 my-1 w-1/3">Stacked amount</p>
+                                <p className="mx-6 my-1 w-1/3">Current value</p>
                             </div>
                             {this.state.allCryptoSum.map(p =>
                                 <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                     <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
-                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}({p.usdPriceTrade.toFixed(2)} USD)</p>
-                                    <p className="mx-6 my-1 w-1/3">{p.tradeValueSum.toFixed(2)} USD</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.finalCurrencyPriceTrade.toFixed(2)} CZK</p>
                                 </div>
                             )}
                         </div>
                         : <div>
-                            <p>Probíhá načátíní</p>
+                            <p>Loading ...</p>
                         </div>
                     }
                     {this.renderChart()}
