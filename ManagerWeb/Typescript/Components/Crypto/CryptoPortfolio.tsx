@@ -52,25 +52,20 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
         _.forOwn(groupedTrades, async function (value: TradeHistory[], key) {
             if (key == 'eth') {
-                console.log("🚀 ~ file: CryptoPortfolio.tsx:53 ~ CryptoPortfolio ~ value:", value)
                 let date = moment(Date.now()).subtract(1, 'd').toDate();
                 let exhangeRateTrade: number = (await that.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(key), date: date }))?.price ?? 0;
-                console.log("🚀 ~ file: CryptoPortfolio.tsx:55 ~ CryptoPortfolio ~ exhangeRateTrade:", key, exhangeRateTrade)
                 let sumTradeSize = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-                console.log("🚀 ~ file: CryptoPortfolio.tsx:57 ~ CryptoPortfolio ~ sumTradeSize:", key, sumTradeSize)
 
                 let sumValue = value.reduce((partial_sum, v) => partial_sum + v.tradeValue, 0);
                 let currencySymbol = _.last(value).currencySymbol;
                 let forexSymbol = that.convertStringToForexEnum(currencySymbol);
                 let exhangeRate: number = 1
-                console.log("🚀 ~ file: CryptoPortfolio.tsx:63 ~ CryptoPortfolio ~ forexSymbol:", forexSymbol)
 
                 if (forexSymbol)
                     exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Czk });
                 else if (_.some(stableCoins, c => c == currencySymbol))
                     exhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: ForexSymbol.Czk });
 
-                console.log("🚀 ~ file: CryptoPortfolio.tsx:65 ~ CryptoPortfolio ~ exhangeRate:", key, exhangeRate)
                 cryptoSums.push({ tradeSizeSum: sumTradeSize, ticker: key, tradeValueSum: sumValue * exhangeRate, valueTicker: value[0].currencySymbol, finalCurrencyPrice: sumValue * exhangeRate, finalCurrencyPriceTrade: sumTradeSize * exhangeRateTrade * exhangeRate });
                 cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
                 that.setState({ allCryptoSum: cryptoSums });
