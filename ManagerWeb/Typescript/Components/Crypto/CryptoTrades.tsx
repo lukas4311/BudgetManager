@@ -12,7 +12,7 @@ import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CurrencyService } from "../../Services/CurrencyService";
 import CryptoService from "../../Services/CryptoService";
-import { ForexEndpointsApi } from "../../ApiClient/Fin";
+import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -50,8 +50,9 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         const currencyApi = await apiFactory.getClient(CurrencyApi);
         const cryptoApi = await apiFactory.getClient(CryptoApi);
         const forexApi = await apiFactory.getFinClient(ForexEndpointsApi);
+        const cryptoFin = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.currencyService = new CurrencyService(currencyApi);
-        this.cryptoService = new CryptoService(cryptoApi, forexApi);
+        this.cryptoService = new CryptoService(cryptoApi, forexApi, cryptoFin);
         this.loadCryptoTradesData();
     }
 
