@@ -53,7 +53,9 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         let cryptoSums: CryptoSum[] = [];
         let that = this;
 
-        _.forOwn(groupedTrades, async function (value: TradeHistory[], ticker) {
+        for (let ticker in groupedTrades) {
+            let value = groupedTrades[ticker];
+
             let totalyStacked = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
 
             let date = moment(Date.now()).subtract(1, 'd').toDate();
@@ -64,12 +66,13 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
             cryptoSums.push({
                 tradeSizeSum: totalyStacked, ticker: ticker, tradeValueSum: usdSum, valueTicker: value[0].currencySymbol,
-                finalCurrencyPrice: usdSum * finalExhangeRate, finalCurrencyPriceTrade: totalyStacked * exhangeRateTrade
+                finalCurrencyPrice: usdSum * finalExhangeRate, finalCurrencyPriceTrade: totalyStacked * exhangeRateTrade * finalExhangeRate
             });
 
-            cryptoSums = _.orderBy(cryptoSums, a => a.tradeValueSum, 'asc');
-            that.setState({ allCryptoSum: cryptoSums });
-        });
+        }
+
+        cryptoSums = _.orderBy(cryptoSums, a => a.finalCurrencyPriceTrade, 'desc');
+        that.setState({ allCryptoSum: cryptoSums });
     }
 
     private calculateCryptoTradesUsdSum = async (tradeHistory: TradeHistory[]): Promise<number> => {
@@ -91,7 +94,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                     exhangeRate = cryptoPrice.price;
             }
 
-            sum += trade.tradeSize * exhangeRate;
+            sum += Math.abs(trade.tradeValue) * exhangeRate;
         }
 
         return sum;
@@ -131,12 +134,14 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
                                 <p className="mx-6 my-1 w-1/3">Ticker</p>
                                 <p className="mx-6 my-1 w-1/3">Stacked amount</p>
                                 <p className="mx-6 my-1 w-1/3">Current value</p>
+                                <p className="mx-6 my-1 w-1/3">Bought for</p>
                             </div>
                             {this.state.allCryptoSum.map(p =>
                                 <div key={p.ticker} className="paymentRecord bg-battleshipGrey rounded-r-full flex mr-6 mt-1 hover:bg-vermilion cursor-pointer">
                                     <p className="mx-6 my-1 w-1/3">{p.ticker.toUpperCase()}</p>
                                     <p className="mx-6 my-1 w-1/3">{p.tradeSizeSum.toFixed(3)}</p>
                                     <p className="mx-6 my-1 w-1/3">{p.finalCurrencyPriceTrade.toFixed(2)} CZK</p>
+                                    <p className="mx-6 my-1 w-1/3">{p.finalCurrencyPrice.toFixed(2)} CZK</p>
                                 </div>
                             )}
                         </div>
