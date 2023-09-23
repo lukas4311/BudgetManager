@@ -61,12 +61,10 @@ class Trading212ReportParser:
                 logging.error(e)
 
     def store_orders(self, tradingData: TradingReportData):
-        print('Connected0')
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
         stock_ticker_sql = """SELECT [Id] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
 
-        print('Connected1')
         ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
 
         if len(ticker_data.index) == 0:
