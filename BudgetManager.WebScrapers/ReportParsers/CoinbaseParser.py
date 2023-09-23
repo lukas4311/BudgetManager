@@ -37,9 +37,12 @@ class CoinbaseParser:
     def load_coinbase_report_csv(self):
         with open("..\\BrokerReports\\Coinbase.csv", 'r') as file:
             rows = csv.DictReader(file)
+            records = []
             for row in rows:
                 coinbase_record = self.map_csv_row_to_model(row)
-                print(coinbase_record)
+                records.append(coinbase_record)
+
+        return records
 
 
 class CryptoSqlService:
@@ -57,3 +60,6 @@ class CryptoSqlService:
         print("Storing all trade data to DB")
         for trade in crypto_trade_data:
             print(trade)
+
+parser = CoinbaseParser()
+parsed_records = parser.load_coinbase_report_csv()
