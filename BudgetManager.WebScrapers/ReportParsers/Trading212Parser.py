@@ -4,8 +4,7 @@ from dataclasses import dataclass
 import pandas as pd
 import logging
 import pyodbc
-
-# import secret
+import secret
 
 log_name = 'Logs/trading212.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
@@ -53,41 +52,50 @@ class Trading212ReportParser:
 
         for tradeData in data:
             try:
-                print(tradeData)
-                # self.store_orders(tradeData)
+                # print(tradeData)
+                self.store_orders(tradeData)
             except Exception as e:
-                logging.info('Error while saving for ticker: ' + tradeData.ticker + 'and for time' + tradeData.time.strftime('%Y-%m-%d'))
+                logging.info(
+                    'Error while saving for ticker: ' + tradeData.ticker + 'and for time' + tradeData.time.strftime(
+                        '%Y-%m-%d'))
                 logging.error(e)
 
-    # def store_orders(self, tradingData: TradingReportData):
-    #     conn = pyodbc.connect(
-    #         f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-    #     stock_ticker_sql = """SELECT [Id] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
-    #     ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
-    #
-    #     if len(ticker_data.index) == 0:
-    #         cursor = conn.cursor()
-    #         params = (tradingData.ticker, tradingData.name)
-    #         cursor.execute('''
-    #                             INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
-    #                             VALUES(?,?)
-    #                         ''', params)
-    #         conn.commit()
-    #
-    #     ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
-    #     stock_ticker_id = int(ticker_data['Id'].values[0])
-    #
-    #     currency_sql = """SELECT Id from CurrencySymbol where SYMBOL = 'CZK'"""
-    #     currency_data = pd.read_sql(currency_sql, conn)
-    #     currency_id: int = int(currency_data['Id'].values[0])
-    #
-    #     cursor = conn.cursor()
-    #     params = (tradingData.time.strftime('%Y-%m-%d'), stock_ticker_id, float(tradingData.number_of_shares), float(tradingData.total), currency_id)
-    #     cursor.execute('''
-    #                         INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
-    #                         VALUES (?,?,?,?,?,1)
-    #                     ''', params)
-    #     conn.commit()
+    def store_orders(self, tradingData: TradingReportData):
+        print('Connected0')
+        conn = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        stock_ticker_sql = """SELECT [Id] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
+
+        print('Connected1')
+        ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
+
+        if len(ticker_data.index) == 0:
+            cursor = conn.cursor()
+            params = (tradingData.ticker, tradingData.name)
+            cursor.execute('''
+                                INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
+                                VALUES(?,?)
+                            ''', params)
+            conn.commit()
+        else:
+            print(f'Ticker not found for: {tradingData.ticker}')
+
+        ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
+        stock_ticker_id = int(ticker_data['Id'].values[0])
+
+        currency_sql = """SELECT Id from CurrencySymbol where SYMBOL = 'CZK'"""
+        currency_data = pd.read_sql(currency_sql, conn)
+        currency_id: int = int(currency_data['Id'].values[0])
+
+        cursor = conn.cursor()
+        params = (tradingData.time.strftime('%Y-%m-%d'), stock_ticker_id, float(tradingData.number_of_shares),
+                  float(tradingData.total), currency_id)
+        cursor.execute('''
+                            INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
+                            VALUES (?,?,?,?,?,1)
+                        ''', params)
+        conn.commit()
+
 
 parser = Trading212ReportParser()
 parser.save_report_data_to_db()
