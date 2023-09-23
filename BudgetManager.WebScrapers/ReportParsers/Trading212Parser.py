@@ -5,6 +5,9 @@ import pandas as pd
 import logging
 import pyodbc
 import secret
+# from sqlalchemy import create_engine
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning)
 
 log_name = 'Logs/trading212.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
@@ -75,8 +78,6 @@ class Trading212ReportParser:
                                 VALUES(?,?)
                             ''', params)
             conn.commit()
-        else:
-            print(f'Ticker not found for: {tradingData.ticker}')
 
         ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[tradingData.ticker])
         stock_ticker_id = int(ticker_data['Id'].values[0])

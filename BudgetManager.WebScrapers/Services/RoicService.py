@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-
 import requests
 from bs4 import BeautifulSoup
 

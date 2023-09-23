@@ -3,6 +3,7 @@ import csv
 import io
 import pandas as pd
 from Models.Fmp.StockPriceData import StockPriceData
+import yfinance as yf
 
 
 class YahooService:
@@ -33,6 +34,12 @@ class YahooService:
                 stockPriceData.append(priceModel)
 
         return stockPriceData
+
+    def get_company_name(self, ticker:str):
+        data = yf.Ticker("AAPL")
+        info = data.info
+        return info["shortName"]
+
 
 # yahooService = YahooService()
 # yahooService.get_stock_price_history("MMM")
