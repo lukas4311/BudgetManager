@@ -30,7 +30,7 @@ with open("..\\BrokerReports\\IB_report.csv", 'r') as file:
         ticker = row[None][1]
         date = row[None][2]
         date = date.split(',')[0]
-        size = row[None][3]
+        size = float(row[None][3])
         totalWithoutFee = float(row[None][6])
         total = float(row[None][8])
         buy = totalWithoutFee < 0
@@ -45,7 +45,7 @@ with open("..\\BrokerReports\\IB_report.csv", 'r') as file:
 
         pandas_date = pd.to_datetime(date)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
-        pandas_date = pandas_date.tz_convert("utc")
+        pandas_date = pandas_date.tz_convert('utc')
 
         print('\nTrade data')
         model = IBReportData(pandas_date, ticker, size, totalWithAction, currency, name)
