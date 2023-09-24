@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, Session
 import pyodbc
 
 import secret
-from Orm.CurrencySymbol import currencySymbol
+from Orm.CurrencySymbol import Base, CurrencySymbol
 
 print(pyodbc.drivers())
 
@@ -12,16 +12,21 @@ print(pyodbc.drivers())
 engine = create_engine(f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
 # Create all tables in the engine (if they don't exist yet).
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 
 # Create a configured "Session" class.
 session = Session(engine)
+stmt = select(CurrencySymbol).where(CurrencySymbol.symbol.in_(["USD"]))
+
+for user in session.scalars(stmt):
+    print(user.id)
 
 # Print the Id and Symbol of each USD symbol.
-with engine.connect() as conn:
-   stmt = select(currencySymbol)
-   for row in conn.execute(stmt):
-        print(row)
+# with engine.connect() as conn:
+#    stmt = select(currencySymbol.symbol)
+#    for row in conn.execute(stmt):
+#         print(row)
+
 # for row  in session.execute(select(currencySymbol.c.id, currencySymbol.c.symbol)).scalars().all():
 #    print(row)
 
