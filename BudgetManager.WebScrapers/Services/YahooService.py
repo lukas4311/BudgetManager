@@ -36,10 +36,10 @@ class YahooService:
         return stockPriceData
 
     def get_company_name(self, ticker:str):
-        data = yf.Ticker("AAPL")
-        info = data.info
-        return info["shortName"]
-
-
-# yahooService = YahooService()
-# yahooService.get_stock_price_history("MMM")
+        name = None
+        try:
+            data = yf.Ticker(ticker)
+            info = data.info
+            return info["shortName"]
+        except:
+            return None
