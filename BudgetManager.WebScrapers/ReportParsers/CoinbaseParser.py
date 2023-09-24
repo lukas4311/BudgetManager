@@ -2,10 +2,8 @@ import csv
 from datetime import datetime
 from dataclasses import dataclass
 from typing import List
-
 import pandas as pd
 import pyodbc
-
 import secret
 
 
@@ -29,6 +27,9 @@ class CoinbaseParser:
         total_unit = row['price/fee/total unit']
         size_unit = row['size unit']
 
+        if buy_or_sell == "BUY":
+            total = total * -1
+
         pandas_date = pd.to_datetime(time)
         pandas_date = pandas_date.tz_convert("utc")
 
@@ -46,20 +47,64 @@ class CoinbaseParser:
 
 
 class CryptoSqlService:
-    def ticker_exists(self, ticker: str):
-        print(f'Loading if {ticker} exists')
+    def get_ticker_id(self, ticker: str):
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-        stock_ticker_sql = """SELECT [Id] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
+        stock_ticker_sql = """SELECT [Id] FROM [dbo].[CryptoTicker] WHERE [Ticker] = ?"""
         ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[ticker])
+        conn.close()
+        return ticker_data["Id"].values[0] if ticker_data["Id"].values.size > 0 else None
 
     def create_new_ticker(self, ticker: str):
-        print(f'Create new ticker {ticker}')
+        conn = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        params = (ticker, ticker)
+        cursor.execute('''INSERT INTO [dbo].[CryptoTicker]([Ticker], [Name]) VALUES(?,?)''', params)
+        conn.commit()
+        conn.close()
+
+    def get_currency_id(self, currency: str):
+        conn = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        currency_sql = """SELECT Id from CurrencySymbol where SYMBOL = ?"""
+        currency_data = pd.read_sql_query(currency_sql, conn, params=[currency])
+        conn.close()
+
+        return currency_data["Id"].values[0] if currency_data["Id"].values.size > 0 else None
+
+    def insert_crypto_trade(self, tradingData: CoinbaseReportData):
+        print("Insert record")
+        ticker_id = self.get_ticker_id(tradingData.ticker)
+        currency_id = self.get_currency_id(tradingData.total_unit)
+
+        conn = pyodbc.connect(
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+
+        cursor = conn.cursor()
+        params = (tradingData.time.strftime('%Y-%m-%d'), ticker_id, float(tradingData.size), float(tradingData.total),
+                  currency_id)
+        # cursor.execute('''
+        #                 INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
+        #                 VALUES (?,?,?,?,?,1)
+        #             ''', params)
+        # conn.commit()
+        print(tradingData)
+        print(params)
+        conn.close()
 
     def store_trade_data(self, crypto_trade_data: List[CoinbaseReportData]):
-        print("Storing all trade data to DB")
         for trade in crypto_trade_data:
-            print(trade)
+            ticker_id = self.get_ticker_id(trade.ticker)
+
+            if not ticker_id:
+                self.create_new_ticker(trade.ticker)
+
+            self.insert_crypto_trade(trade)
+
 
 parser = CoinbaseParser()
+cryptoSqlService = CryptoSqlService()
+
 parsed_records = parser.load_coinbase_report_csv()
+cryptoSqlService.store_trade_data(parsed_records)
