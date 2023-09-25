@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Integer, Float, DateTime, Sequence
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import String, Integer, DateTime, Numeric
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
+import datetime
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 class CryptoTradeHistory(Base):
     __tablename__ = 'CryptoTradeHistory'
-    Id = Column(Integer, Sequence('id_seq'), primary_key=True)
-    TradeTimeStamp = Column(DateTime, nullable=False)
-    CryptoTickerId = Column(Integer, nullable=False)
-    TradeValue = Column(Float, nullable=False)
-    CurrencySymbolId = Column(Integer, nullable=False)
-    TradeSize = Column(Float, nullable=False)
-    UserIdentityId = Column(Integer, nullable=False)
+    id:Mapped[int] = mapped_column(primary_key=True)
+    tradeTimeStamp: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    cryptoTickerId:Mapped[int] = mapped_column(Integer, nullable=False)
+    tradeValue: Mapped[float] = mapped_column(Numeric, nullable=False)
+    currencySymbolId = mapped_column(Integer, nullable=False)
+    tradeSize: Mapped[float] = mapped_column(Numeric, nullable=False)
+    userIdentityId:Mapped[int] = mapped_column(Integer, nullable=False)

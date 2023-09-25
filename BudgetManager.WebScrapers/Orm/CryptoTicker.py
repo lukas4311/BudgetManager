@@ -1,10 +1,13 @@
-from sqlalchemy import Column, Integer, String, Sequence
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import String
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
+
 
 class CryptoTicker(Base):
     __tablename__ = 'CryptoTicker'
-    Id = Column(Integer, Sequence('id_seq'), primary_key=True)
-    Ticker = Column(String(20), nullable=False)
-    Name = Column(String(100), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
