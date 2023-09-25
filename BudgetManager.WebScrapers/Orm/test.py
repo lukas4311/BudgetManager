@@ -6,8 +6,6 @@ import secret
 from Orm.CryptoTradeHistory import CryptoTradeHistory
 from Orm.CurrencySymbol import Base, CurrencySymbol
 
-print(pyodbc.drivers())
-
 # Create an engine that connects to a local MSSQL database using a trusted connection.
 engine = create_engine(f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
