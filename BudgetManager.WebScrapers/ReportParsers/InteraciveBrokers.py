@@ -75,15 +75,14 @@ class InteractiveBrokersParse:
 
         for tradeData in data:
             try:
-                # print(tradeData)
-                self.store_orders(tradeData)
+                self.store_trades(tradeData)
             except Exception as e:
                 logging.info(
                     'Error while saving for ticker: ' + tradeData.ticker + 'and for time' + tradeData.time.strftime(
                         '%Y-%m-%d'))
                 logging.error(e)
 
-    def store_orders(self, tradingData: IBReportData):
+    def store_trades(self, tradingData: IBReportData):
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
@@ -114,16 +113,7 @@ class InteractiveBrokersParse:
             conn.execute(insertTradeCommand)
             conn.commit()
 
-        # Close the session.
         session.close()
-
-        # params = (tradingData.time.strftime('%Y-%m-%d'), stock_ticker_id, float(tradingData.number_of_shares),
-        #           float(tradingData.total), currency_id)
-        # cursor.execute('''
-        #                     INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
-        #                     VALUES (?,?,?,?,?,1)
-        #                 ''', params)
-        # conn.commit()
 
 
 parser = InteractiveBrokersParse()
