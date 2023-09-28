@@ -10,16 +10,19 @@ import { CurrencySymbol as ForexSymbol } from "../ApiClient/Fin"
 
 const usdSymbol = "USD";
 const czkSymbol = "CZK";
+const stableCoins = ["USDC", "USDT", "BUSD"]
 
 export default class CryptoService implements ICryptoService {
     private cryptoApi: CryptoApiInterface;
     private forexApi: ForexEndpointsApi;
     private cryptoFinApi: CryptoEndpointsApi;
+    private forexFinApi: ForexEndpointsApi;
 
-    constructor(cryptoApi: CryptoApiInterface, forexApi: ForexEndpointsApi, cryptoFinApi: CryptoEndpointsApi) {
+    constructor(cryptoApi: CryptoApiInterface, forexApi: ForexEndpointsApi, cryptoFinApi: CryptoEndpointsApi, forexFinApi: ForexEndpointsApi) {
         this.cryptoApi = cryptoApi;
         this.forexApi = forexApi;
         this.cryptoFinApi = cryptoFinApi;
+        this.forexFinApi = forexFinApi;
     }
 
     public async getTradeData(): Promise<CryptoTradeViewModel[]> {
@@ -121,9 +124,57 @@ export default class CryptoService implements ICryptoService {
         return [];
     }
 
+
+
     public async getCryptoCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         return (await this.cryptoFinApi.getCryptoPriceDataAtDate({ ticker: _.upperCase(ticker), date: date }))?.price ?? 0;
+    }
+
+    public async calculateCryptoTotalUsdValue(tradeHistory: TradeHistory[], ticker: string, finalCurrency: ForexSymbol): Promise<CryptoCalculationModel> {
+        let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
+
+        const usdSum = await this.calculateCryptoTradesUsdSum(tradeHistory);
+        const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: finalCurrency });
+        let finalCurrencyPrice = usdSum * finalExhangeRate;
+        let finalCurrencyPriceTrade = totalyStacked * exhangeRateTrade * finalExhangeRate;
+
+        return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked };
+    }
+
+    public calculateCryptoTradesUsdSum = async (tradeHistory: TradeHistory[]): Promise<number> => {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        let sum = 0;
+
+        for (const trade of tradeHistory) {
+            let exhangeRate: number = 1
+            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+
+            if (forexSymbol)
+                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+            else if (_.some(stableCoins, c => c == trade.currencySymbol))
+                exhangeRate = 1;
+            else {
+                const cryptoPrice = await this.cryptoFinApi.getCryptoPriceDataAtDate({ date: trade.tradeTimeStamp, ticker: _.upperCase(trade.currencySymbol) });
+
+                if (cryptoPrice)
+                    exhangeRate = cryptoPrice.price;
+            }
+
+            sum += Math.abs(trade.tradeValue) * exhangeRate;
+        }
+
+        return sum;
+    }
+
+    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
+        if (Object.values(ForexSymbol).includes(value as ForexSymbol))
+            return value as ForexSymbol;
+
+        return undefined;
     }
 
     private mapViewModelToDataModel = (tradeModel: CryptoTradeViewModel) => {
@@ -164,4 +215,11 @@ export default class CryptoService implements ICryptoService {
 
         return months;
     }
+}
+
+export class CryptoCalculationModel {
+    totalyStacked: number;
+    usdSum: number;
+    finalCurrencyPrice: number;
+    finalCurrencyPriceTrade: number;
 }

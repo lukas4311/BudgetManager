@@ -1,17 +1,14 @@
 import React from "react";
-import { Configuration, CryptoApi, CryptoApiInterface, CurrencySymbol, TradeHistory } from "../../ApiClient/Main";
+import { CryptoApi, CryptoApiInterface, TradeHistory } from "../../ApiClient/Main";
 import _ from "lodash";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
-import moment from "moment";
 import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 import CryptoService from "../../Services/CryptoService";
 
-const usdSymbol = "USD";
-const stableCoins = ["USDC", "USDT", "BUSD"]
 
 class CryptoSum {
     ticker: string;
@@ -46,66 +43,24 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
         this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
-        this.cryptoService = new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi);
+        this.cryptoService = new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi);
 
         let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
-        let that = this;
 
         for (let ticker in groupedTrades) {
             let value = groupedTrades[ticker];
-
-            let totalyStacked = value.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-
-            let date = moment(Date.now()).subtract(1, 'd').toDate();
-            let exhangeRateTrade: number = await this.cryptoService.getCryptoCurrentPrice(ticker);
-
-            const usdSum = await this.calculateCryptoTradesUsdSum(value);
-            const finalExhangeRate = await that.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: ForexSymbol.Czk });
+            const cryptoCalculationModel = await this.cryptoService.calculateCryptoTotalUsdValue(value, ticker, ForexSymbol.Czk);
 
             cryptoSums.push({
-                tradeSizeSum: totalyStacked, ticker: ticker, tradeValueSum: usdSum, valueTicker: value[0].currencySymbol,
-                finalCurrencyPrice: usdSum * finalExhangeRate, finalCurrencyPriceTrade: totalyStacked * exhangeRateTrade * finalExhangeRate
+                tradeSizeSum: cryptoCalculationModel.totalyStacked, ticker: ticker, tradeValueSum: cryptoCalculationModel.usdSum, valueTicker: value[0].currencySymbol,
+                finalCurrencyPrice: cryptoCalculationModel.finalCurrencyPrice, finalCurrencyPriceTrade: cryptoCalculationModel.finalCurrencyPriceTrade
             });
-
         }
 
         cryptoSums = _.orderBy(cryptoSums, a => a.finalCurrencyPriceTrade, 'desc');
-        that.setState({ allCryptoSum: cryptoSums });
-    }
-
-    private calculateCryptoTradesUsdSum = async (tradeHistory: TradeHistory[]): Promise<number> => {
-        let date = moment(Date.now()).subtract(1, 'd').toDate();
-        let sum = 0;
-
-        for (const trade of tradeHistory) {
-            let exhangeRate: number = 1
-            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
-
-            if (forexSymbol)
-                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
-            else if (_.some(stableCoins, c => c == trade.currencySymbol))
-                exhangeRate = 1;
-            else {
-                const cryptoPrice = await this.cryptoFinApi.getCryptoPriceDataAtDate({ date: trade.tradeTimeStamp, ticker: _.upperCase(trade.currencySymbol) });
-
-                if (cryptoPrice)
-                    exhangeRate = cryptoPrice.price;
-            }
-
-            sum += Math.abs(trade.tradeValue) * exhangeRate;
-        }
-
-        return sum;
-    }
-
-    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
-        if (Object.values(ForexSymbol).includes(value as ForexSymbol)) {
-            return value as ForexSymbol;
-        }
-
-        return undefined;
+        this.setState({ allCryptoSum: cryptoSums });
     }
 
     private renderChart = () => {

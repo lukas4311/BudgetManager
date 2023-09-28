@@ -2,6 +2,8 @@ import { TradeHistory } from "../ApiClient/Main/models";
 import CryptoTickerSelectModel from "../Components/Crypto/CryptoTickerSelectModel";
 import { CryptoTradeViewModel } from "../Components/Crypto/CryptoTradeForm";
 import { NetWorthMonthGroupModel } from "./NetWorthService";
+import { CurrencySymbol as ForexSymbol } from "../ApiClient/Fin";
+import { CryptoCalculationModel } from "./CryptoService";
 
 export interface ICryptoService {
     getTradeData(): Promise<CryptoTradeViewModel[]>;
@@ -14,4 +16,5 @@ export interface ICryptoService {
     getCryptoCurrentNetWorth(currency: string): Promise<number>;
     getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]>;
     getCryptoCurrentPrice(ticker: string): Promise<number>;
+    calculateCryptoTotalUsdValue(tradeHistory: TradeHistory[], ticker: string, finalCurrency: ForexSymbol): Promise<CryptoCalculationModel>;
 }
