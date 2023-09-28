@@ -83,7 +83,6 @@ export default class CryptoService implements ICryptoService {
 
     public async getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
         const months = this.getMonthsBetween(fromDate, toDate);
-        const cryptoExchangeRate = new Map<string, number>();
         const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize }));
         console.log("🚀 ~ file: CryptoService.ts:77 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ tradesWithPlusMinusSign:", tradesWithPlusMinusSign)
         const cryptoGroupData: NetWorthMonthGroupModel[] = [];
@@ -92,39 +91,27 @@ export default class CryptoService implements ICryptoService {
         for (const month of months) {
             const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
             const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.cryptoTicker)
-                .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
+                .map((value, key) => ({ ticker: key, trades: value }))
                 .value();
 
-            let aggregatedSum = prevMonthSum;
-            // FIXME: there i need to get echange rate for this month date not for current date
-            const exchangeRateCurrency = await this.getExchangeRate(usdSymbol, currency);
-
             for (const monthTickerGroup of monthGroupedTrades) {
-                let exchangeRate = cryptoExchangeRate.get(monthTickerGroup.ticker);
+                let monthTradeFirst = _.first(monthTickerGroup.trades);
 
-                if (!exchangeRate) {
-                    // FIXME: there i need to get echange rate for this month date not for current date, cache is not working for this use case
-                    exchangeRate = await this.getExchangeRate(monthTickerGroup.ticker, usdSymbol);
-                    cryptoExchangeRate.set(monthTickerGroup.ticker, exchangeRate);
+                if(monthTradeFirst){
+                    const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
+                    let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
+                    dateForForexExchangeGet = dateForForexExchangeGet.add(1, 'month');
+                    console.log("🚀 ~ file: CryptoService.ts:106 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ dateForForexExchangeGet:", dateForForexExchangeGet)
+                    let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
+                    prevMonthSum += finalCalculation.finalCurrencyPrice;
                 }
-
-                const finalMultiplier = exchangeRate * exchangeRateCurrency;
-                console.log("🚀 ~ file: CryptoService.ts:99 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ finalMultiplier:", finalMultiplier)
-
-                if (finalMultiplier != 0)
-                    aggregatedSum += finalMultiplier * monthTickerGroup.sum;
             }
 
-            prevMonthSum = aggregatedSum;
             cryptoGroupData.push({ date: month, amount: prevMonthSum });
         }
 
-        console.log("🚀 ~ file: CryptoService.ts:104 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupData:", cryptoGroupData)
-
         return [];
     }
-
-
 
     public async getCryptoCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
@@ -132,13 +119,15 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async calculateCryptoTotalUsdValue(tradeHistory: TradeHistory[], ticker: string, finalCurrency: ForexSymbol): Promise<CryptoCalculationModel> {
-        let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-
         let date = moment(Date.now()).subtract(1, 'd').toDate();
-        let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
+        return this.calculateCryptoTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
+    }
 
+    public async calculateCryptoTotalUsdValueForDate(tradeHistory: TradeHistory[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<CryptoCalculationModel> {
+        let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+        let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
         const usdSum = await this.calculateCryptoTradesUsdSum(tradeHistory);
-        const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Usd, to: finalCurrency });
+        const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
         let finalCurrencyPrice = usdSum * finalExhangeRate;
         let finalCurrencyPriceTrade = totalyStacked * exhangeRateTrade * finalExhangeRate;
 
