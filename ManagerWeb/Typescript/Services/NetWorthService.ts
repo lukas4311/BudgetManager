@@ -79,8 +79,6 @@ export default class NetWorthService {
                 return acc;
             }, { prev: 0 }).value();
 
-        console.log("🚀 ~ file: NetWorthService.ts:71 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ paymentGroupedData:", paymentGroupedData);
-
         const otherInvestments = await this.otherInvestmentService.getAll();
         const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), otherInvestments);
         console.log("🚀 ~ file: NetWorthService.ts:87 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ otherInvetmentsMonthlyGrouped:", otherInvetmentsMonthlyGrouped);
