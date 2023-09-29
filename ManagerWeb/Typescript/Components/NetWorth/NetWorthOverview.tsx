@@ -52,7 +52,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const forexApi = await apiFactory.getFinClient(ForexEndpointsApi);
         const cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
-        const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi);
+        const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi, forexApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
         // const data = await this.netWorthService.getCurrentNetWorth();
         await this.netWorthService.getNetWorthGroupedByMonth();

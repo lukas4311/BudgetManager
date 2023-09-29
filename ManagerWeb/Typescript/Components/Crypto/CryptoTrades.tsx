@@ -52,7 +52,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         const forexApi = await apiFactory.getFinClient(ForexEndpointsApi);
         const cryptoFin = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.currencyService = new CurrencyService(currencyApi);
-        this.cryptoService = new CryptoService(cryptoApi, forexApi, cryptoFin);
+        this.cryptoService = new CryptoService(cryptoApi, forexApi, cryptoFin, forexApi);
         this.loadCryptoTradesData();
     }
 
