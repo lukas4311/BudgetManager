@@ -108,8 +108,7 @@ export default class CryptoService implements ICryptoService {
             cryptoGroupData.push({ date: month, amount: prevMonthSum });
         }
         
-        console.log("🚀 ~ file: CryptoService.ts:109 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupData:", cryptoGroupData)
-        return [];
+        return cryptoGroupData;
     }
 
     public async getCryptoCurrentPrice(ticker: string): Promise<number> {

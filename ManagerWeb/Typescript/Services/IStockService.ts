@@ -1,5 +1,6 @@
 import { StockPrice, StockTickerModel } from '../ApiClient/Main/models';
 import { StockViewModel } from '../Model/StockViewModel';
+import { NetWorthMonthGroupModel } from './NetWorthService';
 import { StockGroupModel, TickersWithPriceHistory } from './StockService';
 
 
@@ -15,5 +16,5 @@ export interface IStockService {
     deleteStockTradeHistory(id: number): Promise<any>;
     getCompanyProfile(ticker: string): Promise<any>;
     getStockNetWorth(czkSymbol: string): Promise<number>;
-    getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<number>;
+    getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]>;
 }

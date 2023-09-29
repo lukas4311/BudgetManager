@@ -5,6 +5,8 @@ import { StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClie
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import { IStockService } from './IStockService';
 import { ICryptoService } from './ICryptoService';
+import { NetWorthMonthGroupModel } from './NetWorthService';
+import { CurrencySymbol as ForexSymbol } from "../ApiClient/Fin"
 
 const usdSymbol = "USD";
 
@@ -85,43 +87,51 @@ export default class StockService implements IStockService {
         return netWorth;
     }
 
-    public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<number> {
-        // const stockGroupedData = [];
-        // const stockGroupDataWithCurrencyAmount = [];
-        // const stockExchangeRate = new Map<string, number>();
-        // const cryptos = _.chain(trades).groupBy(a => a.stockTicker).map((value, key) => ({ ticker: key, trades: value })).value();
+    public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
+        const months = this.getMonthsBetween(fromDate, toDate);
+        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize } as StockViewModel));
+        const stockGroupData: NetWorthMonthGroupModel[] = [];
+        let prevMonthSum = 0;
 
-        // for (const crypto of cryptos.filter(f => f.trades.length > 0)) {
-        //     _.chain(crypto.trades)
-        //         .groupBy(s => moment(s.tradeTimeStamp).format('YYYY-MM'))
-        //         .map((value, key) => ({ date: key, tradeSize: _.sumBy(value, s => s.tradeSize), stockTickerId: _.first(value)?.stockTickerId, stockTicker: _.first(value)?.stockTicker }))
-        //         .orderBy(f => f.date, ['asc'])
-        //         .reduce((acc, model) => {
-        //             const tradeSize = acc.prev + model.tradeSize;
-        //             stockGroupedData.push({ date: model.date, size: tradeSize, tickerId: model.stockTickerId, ticker: model.stockTicker });
-        //             acc.prev = tradeSize;
-        //             return acc;
-        //         }, { prev: 0 })
-        //         .value();
-        // }
+        for (const month of months) {
+            const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
+            const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.stockTicker)
+                .map((value, key) => ({ ticker: key, trades: value }))
+                .value();
 
-        // const finalCurrencyExcahngeRate = await this.cryptoService.getExchangeRate(usdSymbol, currency);
+            for (const monthTickerGroup of monthGroupedTrades) {
+                let monthTradeFirst = _.first(monthTickerGroup.trades);
 
-        // console.log("Start", moment(Date.now()).format("HH:mm:ss"));
-        // for (const monthGroups of stockGroupedData) {
-        //     let exchangeRate = stockExchangeRate.get(monthGroups.ticker);
+                if (monthTradeFirst) {
+                    const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
+                    let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
+                    dateForForexExchangeGet.add(1, 'month');
+                    let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
+                    prevMonthSum += finalCalculation.finalCurrencyPriceTrade;
+                }
+            }
 
-        //     if (!exchangeRate) {
-        //         exchangeRate = await this.cryptoService.getExchangeRate(monthGroups.ticker, usdSymbol);
-        //         stockExchangeRate.set(monthGroups.ticker, exchangeRate);
-        //     }
+            stockGroupData.push({ date: month, amount: prevMonthSum });
+        }
 
-        //     const finalMultiplier = exchangeRate * finalCurrencyExcahngeRate;
-        //     stockGroupDataWithCurrencyAmount.push({ date: monthGroups.date, amount: monthGroups.size * finalMultiplier, ticker: monthGroups.ticker });
-        // }
-        // console.log("End", moment(Date.now()).format("HH:mm:ss"));
+        return stockGroupData;
+    }
 
-        return 0;
+    public async calculateCryptoTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        return this.calculateCryptoTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
+    }
+
+    public async calculateCryptoTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
+        // let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+        // let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
+        // const usdSum = await this.calculateCryptoTradesUsdSum(tradeHistory);
+        // const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
+        // let finalCurrencyPrice = usdSum * finalExhangeRate;
+        // let finalCurrencyPriceTrade = totalyStacked * exhangeRateTrade * finalExhangeRate;
+
+        // return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked };
+        return undefined;
     }
 
     public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
@@ -174,9 +184,29 @@ export default class StockService implements IStockService {
     public async getCompanyProfile(ticker: string) {
         return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
     }
+
+    private getMonthsBetween(fromDate: Date, toDate: Date) {
+        const start = moment(fromDate);
+        const end = moment(toDate);
+        const months = [];
+
+        while (start.isBefore(end)) {
+            months.push({ date: start.format('YYYY-MM') });
+            start.add(1, 'month');
+        }
+
+        return months;
+    }
 }
 
 export interface TickersWithPriceHistory {
     ticker: string;
     price: StockPrice[];
+}
+
+export class StockCalculationModel {
+    totalyStacked: number;
+    usdSum: number;
+    finalCurrencyPrice: number;
+    finalCurrencyPriceTrade: number;
 }
