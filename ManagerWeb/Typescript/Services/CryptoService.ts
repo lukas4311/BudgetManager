@@ -84,7 +84,6 @@ export default class CryptoService implements ICryptoService {
     public async getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
         const months = this.getMonthsBetween(fromDate, toDate);
         const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize }));
-        console.log("🚀 ~ file: CryptoService.ts:77 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ tradesWithPlusMinusSign:", tradesWithPlusMinusSign)
         const cryptoGroupData: NetWorthMonthGroupModel[] = [];
         let prevMonthSum = 0;
 
@@ -97,11 +96,10 @@ export default class CryptoService implements ICryptoService {
             for (const monthTickerGroup of monthGroupedTrades) {
                 let monthTradeFirst = _.first(monthTickerGroup.trades);
 
-                if(monthTradeFirst){
+                if (monthTradeFirst) {
                     const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
                     let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
-                    dateForForexExchangeGet = dateForForexExchangeGet.add(1, 'month');
-                    console.log("🚀 ~ file: CryptoService.ts:106 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ dateForForexExchangeGet:", dateForForexExchangeGet)
+                    dateForForexExchangeGet.add(1, 'month');
                     let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
                     prevMonthSum += finalCalculation.finalCurrencyPrice;
                 }
@@ -109,7 +107,8 @@ export default class CryptoService implements ICryptoService {
 
             cryptoGroupData.push({ date: month, amount: prevMonthSum });
         }
-
+        
+        console.log("🚀 ~ file: CryptoService.ts:109 ~ CryptoService ~ getMonthlyGroupedAccumulatedCrypto ~ cryptoGroupData:", cryptoGroupData)
         return [];
     }
 
