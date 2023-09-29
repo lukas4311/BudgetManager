@@ -101,7 +101,7 @@ export default class CryptoService implements ICryptoService {
                     let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
                     dateForForexExchangeGet.add(1, 'month');
                     let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
-                    prevMonthSum += finalCalculation.finalCurrencyPrice;
+                    prevMonthSum += finalCalculation.finalCurrencyPriceTrade;
                 }
             }
 
