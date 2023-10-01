@@ -6,7 +6,7 @@ import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import { IStockService } from './IStockService';
 import { ICryptoService } from './ICryptoService';
 import { NetWorthMonthGroupModel } from './NetWorthService';
-import { CurrencySymbol as ForexSymbol } from "../ApiClient/Fin"
+import { ForexEndpointsApi, CurrencySymbol as ForexSymbol, StockEndpointsApi } from "../ApiClient/Fin"
 
 const usdSymbol = "USD";
 
@@ -20,11 +20,15 @@ export class StockGroupModel {
 
 export default class StockService implements IStockService {
     private stockApi: StockApi;
-    cryptoService: ICryptoService;
+    private cryptoService: ICryptoService;
+    private forexFinApi: ForexEndpointsApi;
+    private stockFinApi: StockEndpointsApi;
 
-    constructor(stockApi: StockApi, cryptoService: ICryptoService) {
+    constructor(stockApi: StockApi, cryptoService: ICryptoService, forexFinApi: ForexEndpointsApi, stockFinApi: StockEndpointsApi) {
         this.stockApi = stockApi;
         this.cryptoService = cryptoService;
+        this.forexFinApi = forexFinApi;
+        this.stockFinApi = stockFinApi;
     }
 
     public getStockTickers = async (): Promise<StockTickerModel[]> => {
@@ -68,12 +72,12 @@ export default class StockService implements IStockService {
         return values.filter(s => s.size > 0.00001);
     }
 
-    public async getStockNetWorth(czkSymbol: string): Promise<number> {
+    public async getStockNetWorth(finalCurrency: string): Promise<number> {
         let netWorth = 0;
         let stockGrouped = await this.getGroupedTradeHistory();
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickersPrice = await this.getLastMonthTickersPrice(tickers);
-        const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", czkSymbol);
+        const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", finalCurrency);
 
         for (const stock of stockGrouped) {
             const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
@@ -117,21 +121,53 @@ export default class StockService implements IStockService {
         return stockGroupData;
     }
 
-    public async calculateCryptoTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
+    public async calculateStockTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         return this.calculateCryptoTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
     }
 
     public async calculateCryptoTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
-        // let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-        // let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
-        // const usdSum = await this.calculateCryptoTradesUsdSum(tradeHistory);
-        // const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
-        // let finalCurrencyPrice = usdSum * finalExhangeRate;
-        // let finalCurrencyPriceTrade = totalyStacked * exhangeRateTrade * finalExhangeRate;
+        let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+        let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
+        const usdSum = await this.calculateStockTradesUsdSum(tradeHistory);
+        const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
+        let finalCurrencyPrice = usdSum * finalExhangeRate;
+        let finalCurrencyPriceTrade = totalyStackedAmountOfStocks * exhangeRateTrade * finalExhangeRate;
 
-        // return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked };
+        return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked: totalyStackedAmountOfStocks };
+    }
+
+    public calculateStockTradesUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        let sum = 0;
+
+        for (const trade of tradeHistory) {
+            let exhangeRate: number = 1
+            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+
+            if (forexSymbol)
+                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
+            else {
+                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
+                exhangeRate = 1;
+            }
+
+            sum += Math.abs(trade.tradeValue) * exhangeRate;
+        }
+
+        return sum;
+    }
+
+    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
+        if (Object.values(ForexSymbol).includes(value as ForexSymbol))
+            return value as ForexSymbol;
+
         return undefined;
+    }
+
+    public async getCryptoCurrentPrice(ticker: string): Promise<number> {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: _.upperCase(ticker), date: date }))?.price ?? 0;
     }
 
     public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
