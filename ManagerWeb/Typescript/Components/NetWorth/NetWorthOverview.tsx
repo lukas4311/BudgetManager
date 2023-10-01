@@ -14,7 +14,7 @@ import { MainFrame } from '../MainFrame';
 import { ICryptoService } from '../../Services/ICryptoService';
 import ComodityService from '../../Services/ComodityService';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
-import { ComodityEndpointsApi, CryptoEndpointsApi, ForexEndpointsApi } from '../../ApiClient/Fin';
+import { ComodityEndpointsApi, CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from '../../ApiClient/Fin';
 
 const theme = createMuiTheme({
     palette: {
@@ -52,8 +52,9 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const otherInvestmentApi = await apiFactory.getClient(OtherInvestmentApi);
         const forexApi = await apiFactory.getFinClient(ForexEndpointsApi);
         const cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
+        const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
         const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi, forexApi);
-        this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
+        this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
         // const data = await this.netWorthService.getCurrentNetWorth();
         await this.netWorthService.getNetWorthGroupedByMonth();
         this.setState({ loading: false, netWorth: 0 });

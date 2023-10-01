@@ -23,7 +23,7 @@ import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
-import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
+import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
 import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
 
 const theme = createMuiTheme({
@@ -83,7 +83,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
         this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
-        this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi));
+        const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
+        this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi), this.forexFinApi, stockFinApi);
 
         this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
