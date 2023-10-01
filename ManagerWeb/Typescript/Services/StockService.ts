@@ -128,7 +128,15 @@ export default class StockService implements IStockService {
 
     public async calculateCryptoTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
         let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
-        let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
+        let exhangeRateTrade: number = 0;
+
+        try {
+            exhangeRateTrade = await this.getStockCurrentPrice(ticker);
+        } catch (error) {
+            console.log(`Error while downloading of fin data for ticker: ${ticker}`);
+            return { finalCurrencyPrice: 0, finalCurrencyPriceTrade: 0, usdSum: 0, totalyStacked: 0 };
+        }
+
         const usdSum = await this.calculateStockTradesUsdSum(tradeHistory);
         const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
         let finalCurrencyPrice = usdSum * finalExhangeRate;
@@ -165,7 +173,7 @@ export default class StockService implements IStockService {
         return undefined;
     }
 
-    public async getCryptoCurrentPrice(ticker: string): Promise<number> {
+    public async getStockCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: _.upperCase(ticker), date: date }))?.price ?? 0;
     }

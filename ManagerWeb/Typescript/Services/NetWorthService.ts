@@ -88,7 +88,9 @@ export default class NetWorthService {
         const cryptoNetWorth = this.cryptoService.getMonthlyGroupedAccumulatedCrypto(new Date(2021, 0, 1), new Date(2022, 0, 1), tradeData, czkSymbol);
 
         // TODO: add monthly group data for stocks
-        // const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(new Date(2021, 0, 1), new Date(2022, 0, 1), czkSymbol);
+        const stockTradeData = await this.stockService.getStockTradeHistory();
+        const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(new Date(2022, 0, 1), new Date(2023, 0, 1), stockTradeData, czkSymbol);
+        console.log("🚀 ~ file: NetWorthService.ts:93 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", acumulatedData)
 
         // TODO: add monthly group data for comodities
 
