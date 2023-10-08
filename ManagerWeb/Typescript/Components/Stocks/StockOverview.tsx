@@ -92,7 +92,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private loadStockData = async () => {
-        let date = moment(Date.now()).subtract(1, 'd').toDate();
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
         stockGrouped = _.orderBy(stockGrouped, a => a.stockSpentPrice, 'desc');
