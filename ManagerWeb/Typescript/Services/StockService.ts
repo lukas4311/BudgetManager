@@ -14,8 +14,8 @@ export class StockGroupModel {
     tickerId: number;
     tickerName: string;
     size: number;
-    stockValues: number;
-    stocksActualPrice: number;
+    stockSpentPrice: number;
+    stockCurrentPrice: number;
 }
 
 export default class StockService implements IStockService {
@@ -51,25 +51,27 @@ export default class StockService implements IStockService {
 
     public getGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
         const stocks = await this.getStockTradeHistory();
-        const tickers = await this.getStockTickers();
-        let values: StockGroupModel[] = _.chain(stocks)
+        let groupedTradesByTicker = _.chain(stocks)
             .groupBy(g => g.stockTickerId)
-            .map((group) => {
-                let groupModel: StockGroupModel = new StockGroupModel();
-                groupModel.tickerId = group[0].stockTickerId;
-                groupModel.tickerName = _.first(tickers.filter(t => t.id == group[0].stockTickerId)).ticker;
-                groupModel.size = _.sumBy(group, s => {
-                    if (s.action == TradeAction.Buy)
-                        return s.tradeSize;
-                    else
-                        return s.tradeSize * -1;
-                });
-                groupModel.stockValues = _.sumBy(group, s => s.tradeValue);
-                return groupModel;
-            })
             .value();
+        let groupedModels = []
 
-        return values.filter(s => s.size > 0.00001);
+        for (const tickerKey in groupedTradesByTicker) {
+            const trades = groupedTradesByTicker[tickerKey];
+            const first = _.first(trades);
+
+            const calculatedTradesSpent = await this.calculateStockTradesUsdSum(trades);
+            const sizeSum = _.sumBy(trades, s => {
+                if (s.action == TradeAction.Buy)
+                    return s.tradeSize;
+                else
+                    return s.tradeSize * -1;
+            });
+            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined };
+            groupedModels.push(stockGroupModel);
+        }
+
+        return groupedModels.filter(s => s.size > 0.00001);
     }
 
     public async getStockNetWorth(finalCurrency: string): Promise<number> {
@@ -168,7 +170,7 @@ export default class StockService implements IStockService {
 
     public async getStockCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
-        const tickerUpper =  ticker.toUpperCase();
+        const tickerUpper = ticker.toUpperCase();
         return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: tickerUpper, date: date }))?.price ?? 0;
     }
 

@@ -24,7 +24,7 @@ import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
-import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
+import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 
 const theme = createMuiTheme({
     palette: {
@@ -95,23 +95,22 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
-        stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockSpentPrice, 'desc');
         const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
         const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
         const tickers = stockGrouped.map(a => a.tickerName);
-        const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
+        const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
 
         for (const stock of stockGrouped) {
-            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+            const tickerPrice = _.first(tickerPrices.filter(f => f.ticker == stock.tickerName));
 
-            if (tickerPrices != undefined) {
-                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                const actualPriceCzk = await this.forexFinApi.getForexPairPriceAtDate({date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd});
-                stock.stocksActualPrice = stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+            if (tickerPrice != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrice.price, [(obj) => new Date(obj.time)], ['desc']));
+                stock.stockCurrentPrice = stock.size * (actualPrice?.price ?? 0);
             }
         }
 
-        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickerPrices });
     }
 
     private saveStockTrade = async (stockViewModel: StockViewModel) => {
@@ -193,12 +192,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private calculareProfit = (actualPrice: number, buyPrice: number) => {
-        let profit = -100;
+        if (buyPrice <= 0 || actualPrice <= 0)
+            return 0;
 
-        if (actualPrice != 0)
-            profit = ((actualPrice / (buyPrice * -1)) - 1) * 100;
+        let profitOrLoss = ((actualPrice - buyPrice) / buyPrice) * 100;
 
-        return profit;
+        return profitOrLoss;
     }
 
     private showCompanyProfile = async (companyTicker: string) => {
@@ -245,9 +244,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                                         <p className="text-xl font-bold text-left">{g.tickerName}</p>
                                                         <div>
                                                             <p className="text-lg text-left">{g.size.toFixed(3)}</p>
-                                                            <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
-                                                            {g.stocksActualPrice != 0 ? (
-                                                                <p className="text-lg text-left">{(this.calculareProfit(g.stocksActualPrice, g.stockValues)).toFixed(2)} %</p>
+                                                            <p className="text-lg text-left">{Math.abs(g.stockSpentPrice).toFixed(2)} $</p>
+                                                            {g.stockCurrentPrice != 0 ? (
+                                                                <p className="text-lg text-left">{(this.calculareProfit(g.stockCurrentPrice, g.stockSpentPrice)).toFixed(2)} %</p>
                                                             ) : <></>}
                                                         </div>
                                                     </div>
