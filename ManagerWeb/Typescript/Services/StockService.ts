@@ -77,14 +77,14 @@ export default class StockService implements IStockService {
         let stockGrouped = await this.getGroupedTradeHistory();
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickersPrice = await this.getLastMonthTickersPrice(tickers);
-        const actualPriceCzk = await this.cryptoService.getExchangeRate("USD", finalCurrency);
+        const actualPriceToFinal = await this.cryptoService.getExchangeRate("USD", finalCurrency);
 
         for (const stock of stockGrouped) {
             const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
 
             if (tickerPrices != undefined) {
                 const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinal;
             }
         }
 
@@ -150,7 +150,7 @@ export default class StockService implements IStockService {
         let sum = 0;
 
         for (const trade of tradeHistory) {
-            let exhangeRate: number = 1
+            let exhangeRate: number = 1;
             let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
 
             if (forexSymbol)
@@ -164,13 +164,6 @@ export default class StockService implements IStockService {
         }
 
         return sum;
-    }
-
-    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
-        if (Object.values(ForexSymbol).includes(value as ForexSymbol))
-            return value as ForexSymbol;
-
-        return undefined;
     }
 
     public async getStockCurrentPrice(ticker: string): Promise<number> {
@@ -241,6 +234,13 @@ export default class StockService implements IStockService {
         }
 
         return months;
+    }
+
+    private convertStringToForexEnum(value: string): ForexSymbol | undefined {
+        if (Object.values(ForexSymbol).includes(value as ForexSymbol))
+            return value as ForexSymbol;
+
+        return undefined;
     }
 }
 
