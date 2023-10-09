@@ -6,7 +6,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
-import _, { forIn } from "lodash";
+import _ from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
@@ -16,7 +16,6 @@ import StockService, { StockGroupModel, TickersWithPriceHistory } from "../../Se
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
-import { IconsData } from "../../Enums/IconsEnum";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChart } from "../Charts/LineChart";
@@ -64,7 +63,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
     private stockService: StockService = undefined;
-    private icons: IconsData = new IconsData();
     private cryptoApi: CryptoApi;
     private cryptoFinApi: CryptoEndpointsApi;
     private forexFinApi: ForexEndpointsApi;
