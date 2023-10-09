@@ -25,6 +25,7 @@ import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
 import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import { PieChart, PieChartData } from "../Charts/PieChart";
 
 const theme = createMuiTheme({
     palette: {
@@ -189,6 +190,21 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         );
     }
 
+    private renderChartPortfolio = () => {
+        let element: JSX.Element;
+
+        if (this.state.stockGrouped != undefined && this.state.stockGrouped.length != 0) {
+            let chartData: PieChartData[] = this.state.stockGrouped.map(a => ({ id: a.tickerName, label: a.tickerName, value: Math.floor(a.stockCurrentPrice) }));
+            element = (
+                <div className="h-96">
+                    <PieChart data={chartData} labelPostfix="USD"></PieChart>
+                </div>
+            )
+        }
+
+        return element;
+    }
+
     private calculareProfit = (actualPrice: number, buyPrice: number) => {
         if (buyPrice <= 0 || actualPrice <= 0)
             return 0;
@@ -223,7 +239,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     </div>
                     <div>
                         <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg text-left">{Math.abs(ticker.stockSpentPrice).toFixed(2)} $</p>
+                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentPrice).toFixed(2)} $</p>
                         {ticker.stockCurrentPrice != 0 ? (
                             <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
                         ) : <></>}
@@ -280,6 +296,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
                                         </div>
                                     )}
+                                    <div>
+                                        {this.renderChartPortfolio()}
+                                    </div>
                                 </>
                             </ComponentPanel>
                         </div>
