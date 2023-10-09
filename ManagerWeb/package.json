@@ -15,8 +15,12 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/runtime": "^7.22.5",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.14.12",
+    "@mui/material": "^5.14.12",
     "@nivo/bar": "0.83.0",
     "@nivo/calendar": "0.83.0",
     "@nivo/core": "0.83.0",

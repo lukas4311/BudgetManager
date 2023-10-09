@@ -24,7 +24,8 @@ import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
-import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
+import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 
 const theme = createMuiTheme({
     palette: {
@@ -218,8 +219,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         return (
             <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
                 <div className="grid grid-cols-2">
-                    {/* <p className={"text-xl font-bold text-left" + (profitOrLoss >= 0 ? " text-green-700" : " text-red-700")}>{ticker.tickerName}</p> */}
-                    <p className={"text-xl font-bold text-left"}>{ticker.tickerName}</p>
+                    <div className="flex flex-row">
+                        {(profitOrLoss >= 0 ? <ArrowDropUpOutlinedIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownOutlinedIcon className="fill-red-700 h-10 w-10" />)}
+                        <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
+                    </div>
                     <div>
                         <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
                         <p className="text-lg text-left">{Math.abs(ticker.stockSpentPrice).toFixed(2)} $</p>
