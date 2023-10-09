@@ -212,6 +212,27 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         }
     }
 
+    private renderTickerFinInfo = (ticker: StockGroupModel) => {
+        const profitOrLoss = this.calculareProfit(ticker.stockCurrentPrice, ticker.stockSpentPrice);
+
+        return (
+            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
+                <div className="grid grid-cols-2">
+                    {/* <p className={"text-xl font-bold text-left" + (profitOrLoss >= 0 ? " text-green-700" : " text-red-700")}>{ticker.tickerName}</p> */}
+                    <p className={"text-xl font-bold text-left"}>{ticker.tickerName}</p>
+                    <div>
+                        <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
+                        <p className="text-lg text-left">{Math.abs(ticker.stockSpentPrice).toFixed(2)} $</p>
+                        {ticker.stockCurrentPrice != 0 ? (
+                            <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
+                        ) : <></>}
+                    </div>
+                </div>
+                {this.renderChart(ticker.tickerName)}
+            </div>
+        );
+    }
+
     private handleCloseCompanyProfile = () =>
         this.setState({ selectedCompany: undefined });
 
@@ -237,20 +258,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             </Button>
                                         </div>
                                         <div className="flex flex-wrap justify-around ">
-                                            {this.state.stockGrouped.map(g =>
-                                                <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(g.tickerName)}>
-                                                    <div className="grid grid-cols-2">
-                                                        <p className="text-xl font-bold text-left">{g.tickerName}</p>
-                                                        <div>
-                                                            <p className="text-lg text-left">{g.size.toFixed(3)}</p>
-                                                            <p className="text-lg text-left">{Math.abs(g.stockSpentPrice).toFixed(2)} $</p>
-                                                            {g.stockCurrentPrice != 0 ? (
-                                                                <p className="text-lg text-left">{(this.calculareProfit(g.stockCurrentPrice, g.stockSpentPrice)).toFixed(2)} %</p>
-                                                            ) : <></>}
-                                                        </div>
-                                                    </div>
-                                                    {this.renderChart(g.tickerName)}
-                                                </div>)}
+                                            {this.state.stockGrouped.map(g => this.renderTickerFinInfo(g))}
                                         </div>
                                     </div>
                                     <div className="m-5 flex flex-col">
@@ -287,8 +295,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             </DialogContent>
                         </Dialog>
                     </>
-                </MainFrame >
-            </ThemeProvider >
+                </MainFrame>
+            </ThemeProvider>
         );
     }
 }
