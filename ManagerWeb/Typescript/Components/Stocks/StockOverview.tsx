@@ -6,7 +6,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
-import _, { forIn } from "lodash";
+import _ from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
@@ -16,7 +16,6 @@ import StockService, { StockGroupModel, TickersWithPriceHistory } from "../../Se
 import { BuySellBadge } from "../Crypto/CryptoTrades";
 import { Loading } from "../../Utils/Loading";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
-import { IconsData } from "../../Enums/IconsEnum";
 import { LineChartDataSets } from "../../Model/LineChartDataSets";
 import { LineChartData } from "../../Model/LineChartData";
 import { LineChart } from "../Charts/LineChart";
@@ -24,7 +23,9 @@ import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
-import {CurrencySymbol as ForexSymbol}  from "../../ApiClient/Fin";
+import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import { PieChart, PieChartData } from "../Charts/PieChart";
 
 const theme = createMuiTheme({
     palette: {
@@ -63,7 +64,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
     private stockService: StockService = undefined;
-    private icons: IconsData = new IconsData();
     private cryptoApi: CryptoApi;
     private cryptoFinApi: CryptoEndpointsApi;
     private forexFinApi: ForexEndpointsApi;
@@ -92,26 +92,24 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private loadStockData = async () => {
-        let date = moment(Date.now()).subtract(1, 'd').toDate();
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
-        stockGrouped = _.orderBy(stockGrouped, a => a.stockValues, 'asc');
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockSpentPrice, 'desc');
         const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
         const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
         const tickers = stockGrouped.map(a => a.tickerName);
-        const tickersPrice = await this.stockService.getLastMonthTickersPrice(tickers);
+        const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
 
         for (const stock of stockGrouped) {
-            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+            const tickerPrice = _.first(tickerPrices.filter(f => f.ticker == stock.tickerName));
 
-            if (tickerPrices != undefined) {
-                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                const actualPriceCzk = await this.forexFinApi.getForexPairPriceAtDate({date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd});
-                stock.stocksActualPrice = stock.size * (actualPrice?.price ?? 0) * actualPriceCzk;
+            if (tickerPrice != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrice.price, [(obj) => new Date(obj.time)], ['desc']));
+                stock.stockCurrentPrice = stock.size * (actualPrice?.price ?? 0);
             }
         }
 
-        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickersPrice });
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickerPrices });
     }
 
     private saveStockTrade = async (stockViewModel: StockViewModel) => {
@@ -192,13 +190,28 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         );
     }
 
+    private renderChartPortfolio = () => {
+        let element: JSX.Element;
+
+        if (this.state.stockGrouped != undefined && this.state.stockGrouped.length != 0) {
+            let chartData: PieChartData[] = this.state.stockGrouped.map(a => ({ id: a.tickerName, label: a.tickerName, value: Math.floor(a.stockCurrentPrice) }));
+            element = (
+                <div className="h-96">
+                    <PieChart data={chartData} labelPostfix="USD"></PieChart>
+                </div>
+            )
+        }
+
+        return element;
+    }
+
     private calculareProfit = (actualPrice: number, buyPrice: number) => {
-        let profit = -100;
+        if (buyPrice <= 0 || actualPrice <= 0)
+            return 0;
 
-        if (actualPrice != 0)
-            profit = ((actualPrice / (buyPrice * -1)) - 1) * 100;
+        let profitOrLoss = ((actualPrice - buyPrice) / buyPrice) * 100;
 
-        return profit;
+        return profitOrLoss;
     }
 
     private showCompanyProfile = async (companyTicker: string) => {
@@ -212,6 +225,29 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         if (companyProfile != undefined) {
             this.setState({ selectedCompany: complexModel });
         }
+    }
+
+    private renderTickerFinInfo = (ticker: StockGroupModel) => {
+        const profitOrLoss = this.calculareProfit(ticker.stockCurrentPrice, ticker.stockSpentPrice);
+
+        return (
+            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
+                <div className="grid grid-cols-2">
+                    <div className="flex flex-row">
+                        {(profitOrLoss >= 0 ? <ArrowDropUpOutlinedIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownOutlinedIcon className="fill-red-700 h-10 w-10" />)}
+                        <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
+                    </div>
+                    <div>
+                        <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
+                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentPrice).toFixed(2)} $</p>
+                        {ticker.stockCurrentPrice != 0 ? (
+                            <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
+                        ) : <></>}
+                    </div>
+                </div>
+                {this.renderChart(ticker.tickerName)}
+            </div>
+        );
     }
 
     private handleCloseCompanyProfile = () =>
@@ -239,20 +275,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             </Button>
                                         </div>
                                         <div className="flex flex-wrap justify-around ">
-                                            {this.state.stockGrouped.map(g =>
-                                                <div key={g.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(g.tickerName)}>
-                                                    <div className="grid grid-cols-2">
-                                                        <p className="text-xl font-bold text-left">{g.tickerName}</p>
-                                                        <div>
-                                                            <p className="text-lg text-left">{g.size.toFixed(3)}</p>
-                                                            <p className="text-lg text-left">{Math.abs(g.stockValues).toFixed(2)} Kč</p>
-                                                            {g.stocksActualPrice != 0 ? (
-                                                                <p className="text-lg text-left">{(this.calculareProfit(g.stocksActualPrice, g.stockValues)).toFixed(2)} %</p>
-                                                            ) : <></>}
-                                                        </div>
-                                                    </div>
-                                                    {this.renderChart(g.tickerName)}
-                                                </div>)}
+                                            {this.state.stockGrouped.map(g => this.renderTickerFinInfo(g))}
                                         </div>
                                     </div>
                                     <div className="m-5 flex flex-col">
@@ -273,6 +296,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
                                         </div>
                                     )}
+                                    <div>
+                                        {this.renderChartPortfolio()}
+                                    </div>
                                 </>
                             </ComponentPanel>
                         </div>
@@ -289,8 +315,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             </DialogContent>
                         </Dialog>
                     </>
-                </MainFrame >
-            </ThemeProvider >
+                </MainFrame>
+            </ThemeProvider>
         );
     }
 }

@@ -36,45 +36,46 @@ class ResultData:
 
 
 class Result:
-    def __init__(self, timestamp, open_val, high_val, low_val, close_val, volume, quoteVolume):
+    def __init__(self, timestamp, open_val, high_val, low_val, close_val, vwap, volume, count):
         self.timestamp = timestamp
         self.open_val = open_val
         self.high_val = high_val
         self.low_val = low_val
         self.close_val = close_val
+        self.vwap = vwap
         self.volume = volume
-        self.quoteVolume = quoteVolume
+        self.count = count
 
 
 class CryptoTickers(Enum):
-    BTC = "BTCUSD"
-    ETH = "ETHUSD"
-    LINK = "LINKUSD"
-    MATIC = "MATICUSD"
-    SNX = "SNXUSD"
-    USDC = "USDCUSD"
+    XXBTZUSD = "XXBTZUSD"
+    XETHZUSD = "XETHZUSD"
+    MATICUSD = "MATICUSD"
+    LINKUSD = "LINKUSD"
+    SNXUSD = "SNXUSD"
+    USDCUSD = "USDCUSD"
 
 
 class CryptoTickerTranslator:
     def translate(self, crypto_ticker: CryptoTickers):
         match crypto_ticker:
-            case CryptoTickers.BTC:
+            case CryptoTickers.XXBTZUSD:
                 return "BTC"
-            case CryptoTickers.ETH:
+            case CryptoTickers.XETHZUSD:
                 return "ETH"
-            case CryptoTickers.MATIC:
+            case CryptoTickers.MATICUSD:
                 return "MATIC"
-            case CryptoTickers.LINK:
+            case CryptoTickers.LINKUSD:
                 return "LINK"
-            case CryptoTickers.SNX:
+            case CryptoTickers.SNXUSD:
                 return "SNX"
-            case CryptoTickers.USDC:
+            case CryptoTickers.USDCUSD:
                 return "USDC"
 
 
 class CryptoWatchService:
-    oneDayLimit = 86400
-    cryptoWatchBaseUrl = "https://api.cryptowat.ch"
+    oneDayLimit = 1440
+    cryptoWatchBaseUrl = "https://api.kraken.com/0/public"
 
     def get_crypto_price_history(self, ticker: CryptoTickers):
         cryptoTickerTranslator = CryptoTickerTranslator()
@@ -84,16 +85,16 @@ class CryptoWatchService:
 
         if lastRecordTime < now_datetime_with_offset:
             fromTime = int(time.mktime(lastRecordTime.timetuple()))
-            exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
-            url = f"{self.cryptoWatchBaseUrl}/markets/{exchange}/{ticker.value}/ohlc?periods={self.oneDayLimit}&after={fromTime}"
+            # exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
+            url = f"{self.cryptoWatchBaseUrl}/OHLC?pair={ticker.value}&interval={self.oneDayLimit}&since={fromTime}"
             print(url)
             response = requests.get(url)
             jsonData = response.text
             parsed_data = json.loads(jsonData)
             print(parsed_data)
-            result_objects = [Result(*item) for item in parsed_data['result']['86400']]
+            result_objects = [Result(*item) for item in parsed_data['result'][ticker.value]]
             result_data_instance = ResultData(result_objects)
-            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(d.close_val, 2)), translated_ticker) for d in result_data_instance.data if d.timestamp > fromTime]
+            stockPriceData = [CryptoPriceData(datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1), float(round(float(d.close_val), 2)), translated_ticker) for d in result_data_instance.data if d.timestamp > fromTime]
 
             return stockPriceData
 
@@ -122,6 +123,7 @@ class CryptoWatchService:
             pointsToSave.append(point)
 
         influx_repository.add_range(pointsToSave)
+
         for point in pointsToSave:
             print(point.to_line_protocol())
 
@@ -131,28 +133,28 @@ class CryptoWatchService:
 
 
 cryptoService = CryptoWatchService()
-btcData = cryptoService.get_crypto_price_history(CryptoTickers.BTC)
+btcData = cryptoService.get_crypto_price_history(CryptoTickers.XXBTZUSD)
 print(btcData)
 if len(btcData) > 0:
     cryptoService.save_data_to_influx(btcData)
 
-ethData = cryptoService.get_crypto_price_history(CryptoTickers.ETH)
+ethData = cryptoService.get_crypto_price_history(CryptoTickers.XETHZUSD)
 print(ethData)
 if len(ethData) > 0:
     cryptoService.save_data_to_influx(ethData)
 
-link = cryptoService.get_crypto_price_history(CryptoTickers.LINK)
+link = cryptoService.get_crypto_price_history(CryptoTickers.LINKUSD)
 if len(link) > 0:
     cryptoService.save_data_to_influx(link)
 
-matic = cryptoService.get_crypto_price_history(CryptoTickers.MATIC)
+matic = cryptoService.get_crypto_price_history(CryptoTickers.MATICUSD)
 if len(matic) > 0:
     cryptoService.save_data_to_influx(matic)
 
-snx = cryptoService.get_crypto_price_history(CryptoTickers.SNX)
+snx = cryptoService.get_crypto_price_history(CryptoTickers.SNXUSD)
 if len(snx) > 0:
     cryptoService.save_data_to_influx(snx)
 
-usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDC)
+usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDCUSD)
 if len(snx) > 0:
     cryptoService.save_data_to_influx(usdc)
