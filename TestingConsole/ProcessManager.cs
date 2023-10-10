@@ -16,6 +16,7 @@ using System;
 
 namespace BudgetManager.TestingConsole
 {
+    [Obsolete("All scraping and parsing moved to Python scripts.")]
     public class ProcessManager
     {
         private const string organizationId = "f209a688c8dcfff3";
@@ -43,21 +44,21 @@ namespace BudgetManager.TestingConsole
         {
             InfluxConfig config = GetSecretToken();
 
-            InfluxDbData.Repository<CryptoData> repo = new(new InfluxContext(config.Url, config.Token));
-            IEnumerable<CryptoData> lastRecords = await repo.GetLastWrittenRecordsTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
-            CryptoData lastTickerRecord = lastRecords.SingleOrDefault(r => r.Ticker == cryptoTicker.ToString());
+            //InfluxDbData.Repository<CryptoData> repo = new(new InfluxContext(config.Url, config.Token));
+            //IEnumerable<CryptoData> lastRecords = await repo.GetLastWrittenRecordsTime(new DataSourceIdentification(organizationId, bucketCrypto)).ConfigureAwait(false);
+            //CryptoData lastTickerRecord = lastRecords.SingleOrDefault(r => r.Ticker == cryptoTicker.ToString());
 
-            CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
-            await dataDownloader.CryptoDownload(cryptoTicker, lastTickerRecord?.Time).ConfigureAwait(false);
+            //CryptoDataDownloader dataDownloader = new CryptoDataDownloader(repo, new DataSourceIdentification(organizationId, bucketCrypto));
+            //await dataDownloader.CryptoDownload(cryptoTicker, lastTickerRecord?.Time).ConfigureAwait(false);
         }
 
         internal async Task DownloadForexHistory(ForexTicker forexTicker)
         {
             InfluxConfig config = GetSecretToken();
 
-            InfluxDbData.Repository<ForexData> repo = new(new InfluxContext(config.Url, config.Token));
-            ForexDataDownloader forexDataDownloader = new ForexDataDownloader(repo, new DataSourceIdentification(organizationId, bucketForex), this.configManager.GetTwelveDataApiKey());
-            await forexDataDownloader.ForexDownload(forexTicker.Value).ConfigureAwait(false);
+            //InfluxDbData.Repository<ForexData> repo = new(new InfluxContext(config.Url, config.Token));
+            //ForexDataDownloader forexDataDownloader = new ForexDataDownloader(repo, new DataSourceIdentification(organizationId, bucketForex), this.configManager.GetTwelveDataApiKey());
+            //await forexDataDownloader.ForexDownload(forexTicker.Value).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -89,11 +90,11 @@ namespace BudgetManager.TestingConsole
                 Time = g.Timestamp.ParseToUtcDateTime()
             });
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketFearAndGreed);
-            InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
-            FearAndGreedData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
+            //InfluxDbData.Repository<FearAndGreedData> repo = new InfluxDbData.Repository<FearAndGreedData>(new InfluxContext(config.Url, config.Token));
+            //FearAndGreedData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification)).SingleOrDefault();
 
-            foreach (FearAndGreedData model in data.Where(f => f.Time > (lastRecord?.Time ?? DateTime.MinValue)))
-                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
+            //foreach (FearAndGreedData model in data.Where(f => f.Time > (lastRecord?.Time ?? DateTime.MinValue)))
+            //    await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -104,19 +105,19 @@ namespace BudgetManager.TestingConsole
             InfluxConfig config = configManager.GetSecretToken();
             GoldApi goldApi = new GoldApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, buckerComodity);
-            InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
-            ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification))
-                .SingleOrDefault(t => string.Compare(t.Ticker, gold, true) == 0);
+            //InfluxDbData.Repository<ComodityData> repo = new InfluxDbData.Repository<ComodityData>(new InfluxContext(config.Url, config.Token));
+            //ComodityData lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification))
+            //    .SingleOrDefault(t => string.Compare(t.Ticker, gold, true) == 0);
 
-            IEnumerable<ComodityData> data = (await goldApi.GetData(lastRecord?.Time ?? DateTime.MinValue).ConfigureAwait(false)).Select(g => new ComodityData
-            {
-                Price = g.Price,
-                Ticker = gold,
-                Time = g.Time.ToUniversalTime()
-            });
+            //IEnumerable<ComodityData> data = (await goldApi.GetData(lastRecord?.Time ?? DateTime.MinValue).ConfigureAwait(false)).Select(g => new ComodityData
+            //{
+            //    Price = g.Price,
+            //    Ticker = gold,
+            //    Time = g.Time.ToUniversalTime()
+            //});
 
-            foreach (ComodityData model in data)
-                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
+            //foreach (ComodityData model in data)
+            //    await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         internal async Task DownloadHashRate()
@@ -125,17 +126,17 @@ namespace BudgetManager.TestingConsole
             HashRateApi hashRateApi = new HashRateApi(new HttpClient(), configManager.GetQuandlSetting().ApiKey);
 
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(organizationId, bucketHashRate);
-            InfluxDbData.Repository<HashRate> repo = new InfluxDbData.Repository<HashRate>(new InfluxContext(configSecrets.Url, configSecrets.Token));
-            HashRate lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false)).SingleOrDefault();
+            //InfluxDbData.Repository<HashRate> repo = new InfluxDbData.Repository<HashRate>(new InfluxContext(configSecrets.Url, configSecrets.Token));
+            //HashRate lastRecord = (await repo.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false)).SingleOrDefault();
 
-            IEnumerable<HashRate> data = (await hashRateApi.GetData(lastRecord?.Time ?? DateTime.MinValue)).Select(g => new HashRate
-            {
-                Value = g.Value,
-                Time = g.Time.ToUniversalTime()
-            });
+            //IEnumerable<HashRate> data = (await hashRateApi.GetData(lastRecord?.Time ?? DateTime.MinValue)).Select(g => new HashRate
+            //{
+            //    Value = g.Value,
+            //    Time = g.Time.ToUniversalTime()
+            //});
 
-            foreach (HashRate model in data)
-                await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
+            //foreach (HashRate model in data)
+            //    await repo.Write(model, dataSourceIdentification).ConfigureAwait(false);
         }
 
         internal void SaveCoinbaseDataToDb()
