@@ -1,4 +1,6 @@
-﻿namespace BudgetManager.Data.DataModels
+﻿using System;
+
+namespace BudgetManager.Data.DataModels
 {
     public class StockSplit : IDataModel
     {
@@ -7,6 +9,8 @@
         public int StockTickerId { get; set; }
 
         public StockTicker StockTicker { get; set; }
+
+        public DateTime SplitTimeStamp { get; set; }
 
         public string SplitTextInfo { get; set; }
 
