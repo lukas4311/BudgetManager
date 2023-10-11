@@ -1,9 +1,9 @@
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 import secret
 from Orm.StockSplit import StockSplit
-from Orm.StockTicker import Base
+from Orm.StockTicker import Base, StockTicker
 from Services.YahooService import YahooService, StockSplitData
 from SourceFiles.stockList import stockToDownload
 from datetime import datetime, timedelta
@@ -34,7 +34,7 @@ class StockSplitScraper:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
 
-    def get_last_ticker_stored_split(self):
+    def get_last_ticker_stored_split(self, ticker: str):
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
@@ -42,10 +42,18 @@ class StockSplitScraper:
         session = Session(engine)
 
         stmt = select(StockSplit).where(StockSplit.stockTickerId == 1)
-        ticker = session.scalars(stmt).first()
+        tickerModel = session.scalars(stmt).first()
 
-        if ticker == None:
+        if tickerModel == None:
             print('Not found ticker')
+            insert_command = insert(StockTicker).values(ticker=ticker, name=ticker)
+            with engine.connect() as conn:
+                conn.execute(insert_command)
+                conn.commit()
+
+            tickerModel = session.scalars(stmt).first()
+
+
 
 
 tickersToScrape = stockToDownload
