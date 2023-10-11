@@ -41,19 +41,23 @@ class StockSplitScraper:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(StockSplit).where(StockSplit.stockTickerId == 1)
-        tickerModel = session.scalars(stmt).first()
+        stmt = select(StockTicker).where(StockTicker.ticker == ticker)
+        ticker_model = session.scalars(stmt).first()
 
-        if tickerModel == None:
+        if ticker_model is None:
             print('Not found ticker')
             insert_command = insert(StockTicker).values(ticker=ticker, name=ticker)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
 
-            tickerModel = session.scalars(stmt).first()
+            ticker_model = session.scalars(stmt).first()
 
+        stmt = (select(StockSplit).where(StockSplit.stockTickerId == ticker_model)
+                .order_by(StockSplit.splitTimeStamp.desc()))
+        ticker_split_model = session.scalars(stmt).first()
 
+        return ticker_split_model
 
 
 tickersToScrape = stockToDownload
