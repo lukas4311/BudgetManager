@@ -176,7 +176,7 @@ export default class StockService implements IStockService {
 
     public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
         const fromDate = from ?? moment(new Date()).subtract(30, "d").toDate();
-        const priceHistory = await this.stockApi.stockStockTickerPriceFromGet({ from: fromDate, ticker: ticker });
+        const priceHistory = await this.stockFinApi.getStockPriceDataFromDate({ from: fromDate, ticker: ticker });
         return priceHistory;
     }
 
