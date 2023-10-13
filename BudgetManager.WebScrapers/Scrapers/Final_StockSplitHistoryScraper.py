@@ -1,3 +1,4 @@
+import pandas as pd
 from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
@@ -6,30 +7,37 @@ from Orm.StockSplit import StockSplit
 from Orm.StockTicker import Base, StockTicker
 from Services.YahooService import YahooService, StockSplitData
 from SourceFiles.stockList import stockToDownload
-from datetime import datetime, timedelta
+from datetime import timedelta
+import time
 import logging
 
 
 class StockSplitScraper:
-    def scrape_stocks_splits(self, measurement: str, ticker: str, tag: str):
+    def scrape_stocks_splits(self, ticker: str, split_data: list[StockSplitData]):
         try:
-            stock_split_data: list[StockSplitData] = []
-            date_to = datetime.now()
-            # lastValue = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", tag), datetime.min)
-            # TODO: replace influx to mssql table select
-            lastValue = None
+            split_data_to_save: list[StockSplitData] = []
+            last_split, ticker_id = self.get_last_ticker_stored_split(ticker)
 
-            # if len(lastValue) != 0:
-            #     last_downloaded_time = lastValue[0].records[0]["_time"]
-            #     now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=1)
-            #
-            #     if last_downloaded_time < now_datetime_with_offset:
-            #         stock_split_data = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
-            #         stock_split_data = [d for d in stock_split_data if d.date > last_downloaded_time]
-            # else:
-            #     stock_split_data = self.__scrape_stock_data(ticker, None, date_to)
-            #
-            # self.__save_price_data_to_influx(measurement, tag, stock_split_data)
+            if last_split is None:
+                print('Insert all splits')
+                split_data_to_save = split_data
+            else:
+                print('Add only newer')
+                pandas_last_split = pd.to_datetime(last_split.splitTimeStamp)
+                pandas_last_split = pandas_last_split.tz_localize("Europe/Prague")
+                pandas_last_split = pandas_last_split.tz_convert("utc")
+                pandas_last_split = pandas_last_split + timedelta(days=1)
+                split_data_to_save = [d for d in split_data if d.date > pandas_last_split]
+
+            if len(split_data_to_save) != 0:
+                engine = create_engine(
+                    f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+
+                Base.metadata.create_all(engine)
+                session = Session(engine)
+
+                for split in split_data_to_save:
+                    self.save_split_to_db(split, ticker_id, session, engine)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
@@ -53,16 +61,28 @@ class StockSplitScraper:
 
             ticker_model = session.scalars(stmt).first()
 
-        stmt = (select(StockSplit).where(StockSplit.stockTickerId == ticker_model)
+        stmt = (select(StockSplit).where(StockSplit.stockTickerId == ticker_model.id)
                 .order_by(StockSplit.splitTimeStamp.desc()))
         ticker_split_model = session.scalars(stmt).first()
 
-        return ticker_split_model
+        return ticker_split_model, ticker_model.id
+
+    def save_split_to_db(self, split: StockSplitData, ticker_id, session, engine):
+        insert_command = insert(StockSplit).values(stockTickerId=ticker_id, splitTimeStamp=split.date,
+                                                   splitTextInfo=split.split, splitCoefficient=split.split_coefficient)
+        with engine.connect() as conn:
+            conn.execute(insert_command)
+            conn.commit()
 
 
 tickersToScrape = stockToDownload
 yahooService = YahooService()
 
+stockSplitScraper = StockSplitScraper()
+
 for ticker in tickersToScrape:
     split_data = yahooService.get_stock_split_history(ticker, '511056000', '1696896000')
-    print(split_data)
+
+    if len(split_data) != 0:
+        stockSplitScraper.scrape_stocks_splits(ticker, split_data)
+        time.sleep(3)

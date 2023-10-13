@@ -12,7 +12,7 @@ from dataclasses import dataclass
 class StockSplitData:
     date: datetime
     split: str
-    split_coefficient: str
+    split_coefficient: float
 
 
 class YahooService:
@@ -32,7 +32,6 @@ class YahooService:
                 pandas_date = pd.to_datetime(date)
                 pandas_date = pandas_date.tz_localize("Europe/Prague")
                 pandas_date = pandas_date.tz_convert("utc")
-                close_price = 0
                 try:
                     close_price = float(close)
                 except ValueError:
@@ -43,31 +42,31 @@ class YahooService:
 
         return stockPriceData
 
-    def get_stock_split_history(self, ticker: str, unix_from: str, unix_to: str):
-        print('Downloading stock history for: ' + ticker)
+    def get_stock_split_history(self, ticker: str, unix_from: str, unix_to: str) -> list[StockSplitData]:
+        print('Downloading stock split history for: ' + ticker)
         stock_split_data = []
-        urlDefinition = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={unix_from}&period2={unix_to}&interval=1d&events=split&includeAdjustedClose=true'
-        print(urlDefinition)
-        with urllib.request.urlopen(urlDefinition) as url:
-            data = url.read().decode()
-            print(data)
-            rows = csv.DictReader(io.StringIO(data))
-            print(rows)
-            for row in rows:
 
-                split = row["Stock Splits"]
-                date = row["Date"]
-                pandas_date = pd.to_datetime(date)
-                pandas_date = pandas_date.tz_localize("Europe/Prague")
-                pandas_date = pandas_date.tz_convert("utc")
-                print(split)
+        try:
+            urlDefinition = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={unix_from}&period2={unix_to}&interval=1d&events=split&includeAdjustedClose=true'
+            with urllib.request.urlopen(urlDefinition) as url:
+                data = url.read().decode()
+                rows = csv.DictReader(io.StringIO(data))
+                for row in rows:
 
-                priceModel = StockSplitData(pandas_date, split, self.calculate_split_coefficient(split))
-                stock_split_data.append(priceModel)
+                    split = row["Stock Splits"]
+                    date = row["Date"]
+                    pandas_date = pd.to_datetime(date)
+                    pandas_date = pandas_date.tz_localize("Europe/Prague")
+                    pandas_date = pandas_date.tz_convert("utc")
+
+                    priceModel = StockSplitData(pandas_date, split, self.calculate_split_coefficient(split))
+                    stock_split_data.append(priceModel)
+        except:
+            return stock_split_data
 
         return stock_split_data
 
-    def get_company_name(self, ticker:str):
+    def get_company_name(self, ticker: str):
         try:
             data = yf.Ticker(ticker)
             info = data.info
