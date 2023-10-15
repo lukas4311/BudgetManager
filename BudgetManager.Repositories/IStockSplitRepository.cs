@@ -2,6 +2,6 @@
 
 namespace BudgetManager.Repository
 {
-    internal interface IStockSplitRepository : IRepository<StockSplit>
+    public interface IStockSplitRepository : IRepository<StockSplit>
     { }
 }
