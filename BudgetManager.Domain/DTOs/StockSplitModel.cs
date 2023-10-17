@@ -14,4 +14,7 @@ namespace BudgetManager.Domain.DTOs
 
         public double SplitCoefficient { get; set; }
     }
+
+    public record StockSplitAccumulated(int? Id, int StockTickerId, DateTime SpliDateTime,
+        double SplitAccumulatedCoeficient);
 }
