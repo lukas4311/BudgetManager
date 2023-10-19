@@ -19,18 +19,25 @@ namespace BudgetManager.Services
         public IEnumerable<StockSplitAccumulated> GetSplitAccumulated()
         {
             var accumulatedData = this.repository.FindAll()
-                .Include(s => s.StockTicker)
-                .OrderBy(e => e.StockTickerId)
-                .ThenBy(e => e.SplitTimeStamp)
-                .GroupBy(e => e.StockTickerId)
-                .SelectMany(group => group
-                    .OrderBy(e => e.SplitTimeStamp)
-                    .Select((e, index) => new StockSplitAccumulated(e.Id, e.StockTickerId, e.SplitTimeStamp, group
-                        .Where(subE => subE.SplitTimeStamp <= e.SplitTimeStamp)
-                        .Sum(subE => subE.SplitCoefficient))
-                    ));
+                .GroupBy(s => s.StockTickerId)
+                .Select(g => g.OrderBy(s => s.SplitTimeStamp).Select(e => new StockSplitAccumulated
+                {
+                    Id = e.Id,
+                    StockTickerId = e.StockTickerId,
+                    SpliDateTime = e.SplitTimeStamp,
+                    SplitAccumulatedCoeficient = e.SplitCoefficient
+                }).ToList())
+                .ToList();
 
-            return accumulatedData;
+            foreach (var group in accumulatedData)
+            {
+                for (int i = 1; i < group.Count; i++)
+                {
+                    group[i].SplitAccumulatedCoeficient *= group[i - 1].SplitAccumulatedCoeficient;
+                }
+            }
+
+            return accumulatedData.SelectMany(d => d);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BudgetManager.Domain.DTOs;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,15 @@ namespace BudgetManager.Api.Controllers
         private readonly IStockTickerService stockTickerService;
         private readonly IStockTradeHistoryService stockTradeHistoryService;
         private readonly ICompanyProfileService companyProfileService;
+        private readonly IStockSplitService stockSplitService;
 
-        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService, ICompanyProfileService companyProfileService) : base(httpContextAccessor)
+        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService, 
+            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
             this.companyProfileService = companyProfileService;
+            this.stockSplitService = stockSplitService;
         }
 
         [HttpGet]
@@ -95,6 +99,13 @@ namespace BudgetManager.Api.Controllers
                 return StatusCode(StatusCodes.Status204NoContent);
 
             return companyProfile;
+        }
+
+        [HttpGet("split")]
+        public IActionResult GetSplitTest()
+        {
+            this.stockSplitService.GetSplitAccumulated();
+            return Ok();
         }
     }
 }
