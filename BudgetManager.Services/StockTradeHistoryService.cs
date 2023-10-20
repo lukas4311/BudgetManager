@@ -18,17 +18,30 @@ namespace BudgetManager.Services
         private const string bucket = "StockPrice";
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
         private readonly IInfluxContext influxContext;
+        private readonly IStockSplitService stockSplitService;
 
-        public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext) : base(repository, mapper)
+        public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper, 
+            InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
+            IStockSplitService stockSplitService) : base(repository, mapper)
         {
             this.stockDataInfluxRepo = stockDataInfluxRepo;
             this.influxContext = influxContext;
+            this.stockSplitService = stockSplitService;
         }
 
-        public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId) => repository
+        public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
+        {
+            var trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d));
+
+            var splits = this.stockSplitService.GetSplitAccumulated();
+
+
+
+            return trades;
+        }
 
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {

@@ -18,6 +18,18 @@ namespace BudgetManager.Services
 
         public IEnumerable<StockSplitAccumulated> GetSplitAccumulated()
         {
+            List<List<StockSplitAccumulated>> accumulatedData = this.AccumulateSplits();
+            return accumulatedData.SelectMany(d => d);
+        }
+
+        public IEnumerable<(int tickerId, List<StockSplitAccumulated> splits)> GetGGrupedAccumulatedSplits()
+        {
+            List<List<StockSplitAccumulated>> accumulatedData = this.AccumulateSplits();
+            return accumulatedData.Select(g => (g[0].StockTickerId, g));
+        }
+
+        private List<List<StockSplitAccumulated>> AccumulateSplits()
+        {
             List<List<StockSplitAccumulated>> accumulatedData = this.repository.FindAll()
                 .GroupBy(s => s.StockTickerId)
                 .Select(g => g.OrderBy(s => s.SplitTimeStamp).Select(e => new StockSplitAccumulated
@@ -37,7 +49,7 @@ namespace BudgetManager.Services
                 }
             }
 
-            return accumulatedData.SelectMany(d => d);
+            return accumulatedData;
         }
     }
 }
