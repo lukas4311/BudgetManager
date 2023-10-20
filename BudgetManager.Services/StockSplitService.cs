@@ -18,7 +18,7 @@ namespace BudgetManager.Services
 
         public IEnumerable<StockSplitAccumulated> GetSplitAccumulated()
         {
-            var accumulatedData = this.repository.FindAll()
+            List<List<StockSplitAccumulated>> accumulatedData = this.repository.FindAll()
                 .GroupBy(s => s.StockTickerId)
                 .Select(g => g.OrderBy(s => s.SplitTimeStamp).Select(e => new StockSplitAccumulated
                 {
@@ -29,7 +29,7 @@ namespace BudgetManager.Services
                 }).ToList())
                 .ToList();
 
-            foreach (var group in accumulatedData)
+            foreach (List<StockSplitAccumulated> group in accumulatedData)
             {
                 for (int i = 1; i < group.Count; i++)
                 {
