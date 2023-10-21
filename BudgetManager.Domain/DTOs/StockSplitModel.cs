@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BudgetManager.Domain.DTOs
 {
@@ -17,8 +18,6 @@ namespace BudgetManager.Domain.DTOs
 
     public class StockSplitAccumulated
     {
-        //int? Id, int StockTickerId, DateTime SpliDateTime,
-        //double SplitAccumulatedCoeficient) 
         public int? Id { get; set; }
 
         public int StockTickerId { get; set; }
@@ -27,4 +26,6 @@ namespace BudgetManager.Domain.DTOs
 
         public double SplitAccumulatedCoeficient { get; set; }
     }
+
+    public record GroupedStockAccumulatedSpits(int TickerId, IEnumerable<StockSplitAccumulated> Splits);
 }
