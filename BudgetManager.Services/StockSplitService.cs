@@ -29,7 +29,7 @@ namespace BudgetManager.Services
         }
 
         public IEnumerable<StockSplitAccumulated> GetTickerSplits(int tickerId)
-            => this.GetSplitsMappedToModel().Where(s => s.TickerId == tickerId).SingleOrDefault()?.Splits;
+            => this.GetSplitsMappedToModel().SingleOrDefault(s => s.TickerId == tickerId)?.Splits;
 
         private IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData)
         {
