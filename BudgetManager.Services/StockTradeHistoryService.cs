@@ -39,13 +39,8 @@ namespace BudgetManager.Services
 
             var splits = this.stockSplitService.GetAll();
 
-            foreach (var trade in trades)
-            {
-                var trade1 = trade;
-                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
-                    c.SplitTimeStamp >= trade1.TradeTimeStamp));
-                trade.TradeSize = splitCoefficient * trade.TradeSize;
-            }
+            if (splits.Any())
+                ApplySplitsToTrades(trades, splits);
 
             return trades;
         }
@@ -58,21 +53,27 @@ namespace BudgetManager.Services
                 .Include(t => t.StockTicker)
                 .Where(t => t.StockTicker.Ticker == stockTicker)
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
-                .ToArray();
+                .ToList();
 
             if (trades.Any())
             {
-                var splits = this.stockSplitService.GetTickerSplits(trades[0].StockTickerId);
+                var splits = this.stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
 
-                for (int i = 0; i < trades.Count(); i++)
-                {
-                    var trade = trades[i];
-                    var splitCoefficient = splits.LastOrDefault(c => c.SpliDateTime >= trade.TradeTimeStamp)?.SplitAccumulatedCoeficient ?? 1.0;
-                    trade.TradeSize = splitCoefficient * trade.TradeSize;
-                }
+                if (splits.Any())
+                    ApplySplitsToTrades(trades, splits);
             }
 
             return trades;
+        }
+
+        private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
+        {
+            foreach (var trade in trades)
+            {
+                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
+                    c.SplitTimeStamp >= trade.TradeTimeStamp));
+                trade.TradeSize = splitCoefficient * trade.TradeSize;
+            }
         }
 
         public bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId)

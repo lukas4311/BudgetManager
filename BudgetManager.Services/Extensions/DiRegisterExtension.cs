@@ -61,6 +61,8 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
                     cfg.CreateMap<CompanyProfile, CompanyProfileModel>();
                     cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
+                    cfg.CreateMap<StockSplit, StockSplitModel>();
+                    cfg.CreateMap<StockSplitModel, StockSplit>();
                 }
             );
 
