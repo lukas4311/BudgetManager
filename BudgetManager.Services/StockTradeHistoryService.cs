@@ -37,14 +37,13 @@ namespace BudgetManager.Services
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
-            var splits = this.stockSplitService.GetGrupedAccumulatedSplits();
+            var splits = this.stockSplitService.GetAll();
 
-            for (int i = 0; i < trades.Count(); i++)
+            foreach (var trade in trades)
             {
-                var trade = trades[i];
-                var splitCoefficient = splits
-                    .Where(s => s.tickerId == trade.StockTickerId).SelectMany(c => c.splits)
-                    .LastOrDefault(c => c.SpliDateTime <= trade.TradeTimeStamp)?.SplitAccumulatedCoeficient ?? 1.0;
+                var trade1 = trade;
+                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
+                    c.SplitTimeStamp >= trade1.TradeTimeStamp));
                 trade.TradeSize = splitCoefficient * trade.TradeSize;
             }
 

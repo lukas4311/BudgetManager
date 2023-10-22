@@ -40,13 +40,13 @@ namespace BudgetManager.Services
             return accumulatedData;
         }
 
-        public double GetAccumulatedCoefficient(IEnumerable<List<StockSplitModel>> accumulatedData)
+        public double GetAccumulatedCoefficient(IEnumerable<StockSplitModel> accumulatedData)
         {
             double accumulatedCoefficient = 0;
+            var stockSplitModels = accumulatedData as StockSplitModel[] ?? accumulatedData.ToArray();
 
-            foreach (var group in accumulatedData)
-                for (int i = 1; i < group.Count; i++)
-                    accumulatedCoefficient *= group[i - 1].SplitCoefficient;
+            for (int i = 1; i < stockSplitModels.Length; i++)
+                    accumulatedCoefficient *= stockSplitModels.ElementAt(i).SplitCoefficient;
 
             return accumulatedCoefficient;
         }
