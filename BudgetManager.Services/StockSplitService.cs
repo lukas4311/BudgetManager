@@ -31,7 +31,7 @@ namespace BudgetManager.Services
         public IEnumerable<StockSplitAccumulated> GetTickerSplits(int tickerId)
             => this.GetSplitsMappedToModel().SingleOrDefault(s => s.TickerId == tickerId)?.Splits;
 
-        private IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData)
+        public IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData)
         {
             foreach (var group in accumulatedData)
                 for (int i = 1; i < group.Count(); i++)

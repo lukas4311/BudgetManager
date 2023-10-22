@@ -9,5 +9,6 @@ namespace BudgetManager.Services.Contracts
         IEnumerable<(int tickerId, List<StockSplitAccumulated> splits)> GetGrupedAccumulatedSplits();
         IEnumerable<StockSplitAccumulated> GetSplitAccumulated();
         IEnumerable<StockSplitAccumulated> GetTickerSplits(int tickerId);
+        IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData);
     }
 }
