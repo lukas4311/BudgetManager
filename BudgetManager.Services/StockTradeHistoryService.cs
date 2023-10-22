@@ -68,7 +68,7 @@ namespace BudgetManager.Services
                 for (int i = 0; i < trades.Count(); i++)
                 {
                     var trade = trades[i];
-                    var splitCoefficient = splits.Where(c => c.SpliDateTime >= trade.TradeTimeStamp).LastOrDefault()?.SplitAccumulatedCoeficient ?? 1.0;
+                    var splitCoefficient = splits.LastOrDefault(c => c.SpliDateTime >= trade.TradeTimeStamp)?.SplitAccumulatedCoeficient ?? 1.0;
                     trade.TradeSize = splitCoefficient * trade.TradeSize;
                 }
             }
