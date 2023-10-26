@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Autofac;
 using AutoMapper;
+using AutoMapper.Internal;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 
@@ -20,7 +21,10 @@ namespace BudgetManager.Services.Extensions
         {
             //Automapper
             var config = new MapperConfiguration(
-                cfg => {
+
+                cfg =>
+                {
+                    cfg.Internal().MethodMappingEnabled = false;
                     cfg.CreateMap<BankAccount, BankAccountModel>()
                         .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
                         .ForMember(dest => dest.OpeningBalance, opt => opt.MapFrom(src => src.OpeningBalance))
@@ -53,12 +57,15 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockTradeHistoryModel, StockTradeHistory>();
                     cfg.CreateMap<StockTradeHistory, StockTradeHistoryModel>();
                     cfg.CreateMap<StockTradeHistory, StockTradeHistoryGetModel>()
-                    .ForMember(dest => dest.CurrencySymbol, opt => {
-                        opt.PreCondition(src => src.CurrencySymbol is not null );
+                    //.ForMember(m => m.TradeSizeAfterAplit, act => act.Ignore())
+                    .ForMember(dest => dest.CurrencySymbol, opt =>
+                    {
+                        opt.PreCondition(src => src.CurrencySymbol is not null);
                         opt.MapFrom(x => x.CurrencySymbol.Symbol);
                     });
                     //.ForMember(a => a.CurrencySymbol, o => o.MapFrom(x => x.CurrencySymbol.Symbol));
                     cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
+                        
                     cfg.CreateMap<CompanyProfile, CompanyProfileModel>();
                     cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
                     cfg.CreateMap<StockSplit, StockSplitModel>();
