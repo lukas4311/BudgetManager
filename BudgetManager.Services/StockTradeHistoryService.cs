@@ -66,16 +66,6 @@ namespace BudgetManager.Services
             return trades;
         }
 
-        private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
-        {
-            foreach (var trade in trades)
-            {
-                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
-                    c.SplitTimeStamp >= trade.TradeTimeStamp));
-                trade.TradeSize = splitCoefficient * trade.TradeSize;
-            }
-        }
-
         public bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId)
             => repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
 
@@ -88,5 +78,14 @@ namespace BudgetManager.Services
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
             => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
+        private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
+        {
+            foreach (var trade in trades)
+            {
+                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
+                    c.SplitTimeStamp >= trade.TradeTimeStamp));
+                trade.TradeSize = splitCoefficient * trade.TradeSize;
+            }
+        }
     }
 }
