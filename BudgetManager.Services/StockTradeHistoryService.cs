@@ -83,8 +83,8 @@ namespace BudgetManager.Services
             foreach (var trade in trades)
             {
                 var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
-                    c.SplitTimeStamp >= trade.TradeTimeStamp));
-                trade.TradeSize = splitCoefficient * trade.TradeSize;
+                    c.SplitTimeStamp >= trade.TradeTimeStamp && c.StockTickerId == trade.StockTickerId));
+                trade.TradeSizeAfterAplit = splitCoefficient * trade.TradeSize;
             }
         }
     }
