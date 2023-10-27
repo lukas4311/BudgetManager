@@ -202,16 +202,7 @@ export default class StockService implements IStockService {
         let sum = 0;
 
         for (const trade of tradeHistory.filter(s => s.tradeValue < 0)) {
-            let exhangeRate: number = 1;
-            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
-
-            if (forexSymbol)
-                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
-            else {
-                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
-                exhangeRate = 1;
-            }
-
+            let exhangeRate: number = await this.calculateForexExchangeRate(trade);
             sum += Math.abs(trade.tradeValue) * exhangeRate;
         }
 
@@ -222,20 +213,24 @@ export default class StockService implements IStockService {
         let sum = 0;
 
         for (const trade of tradeHistory.filter(s => s.tradeValue > 0)) {
-            let exhangeRate: number = 1;
-            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
-
-            if (forexSymbol)
-                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
-            else {
-                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
-                exhangeRate = 1;
-            }
-
+            let exhangeRate: number = await this.calculateForexExchangeRate(trade);
             sum += Math.abs(trade.tradeValue) * exhangeRate;
         }
 
         return sum;
+    }
+
+    private async calculateForexExchangeRate(trade: StockViewModel) {
+        let exhangeRate: number = 1;
+        let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+
+        if (forexSymbol)
+            exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
+        else {
+            console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
+            exhangeRate = 1;
+        }
+        return exhangeRate;
     }
 
     private getMonthsBetween(fromDate: Date, toDate: Date) {
