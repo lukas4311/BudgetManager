@@ -60,13 +60,15 @@ export default class StockService implements IStockService {
             const trades = groupedTradesByTicker[tickerKey];
             const first = _.first(trades);
 
-            const calculatedTradesSpent = await this.calculateStockTradesUsdSum(trades);
+            const calculatedTradesSpent = await this.calculateStockTradesSpentUsdSum(trades);
+
             const sizeSum = _.sumBy(trades, s => {
                 if (s.action == TradeAction.Buy)
                     return s.tradeSizeAfterSplit;
                 else
                     return s.tradeSizeAfterSplit * -1;
             });
+
             let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined };
             groupedModels.push(stockGroupModel);
         }
@@ -112,7 +114,7 @@ export default class StockService implements IStockService {
                     const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
                     let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
                     dateForForexExchangeGet.add(1, 'month');
-                    let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
+                    let finalCalculation = await this.calculateStockTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
                     prevMonthSum += finalCalculation.finalCurrencyPriceTrade;
                 }
             }
@@ -123,12 +125,12 @@ export default class StockService implements IStockService {
         return stockGroupData;
     }
 
-    public async calculateStockTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
-        let date = moment(Date.now()).subtract(1, 'd').toDate();
-        return this.calculateCryptoTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
-    }
+    // public async calculateStockTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
+    //     let date = moment(Date.now()).subtract(1, 'd').toDate();
+    //     return this.calculateStockTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
+    // }
 
-    public async calculateCryptoTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
+    public async calculateStockTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
         let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSizeAfterSplit, 0);
         let exhangeRateTrade: number = 0;
 
@@ -139,7 +141,7 @@ export default class StockService implements IStockService {
             return { finalCurrencyPrice: 0, finalCurrencyPriceTrade: 0, usdSum: 0, totalyStacked: 0 };
         }
 
-        const usdSum = await this.calculateStockTradesUsdSum(tradeHistory);
+        const usdSum = await this.calculateStockTradesSpentUsdSum(tradeHistory);
         const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
         let finalCurrencyPrice = usdSum * finalExhangeRate;
         let finalCurrencyPriceTrade = totalyStackedAmountOfStocks * exhangeRateTrade * finalExhangeRate;
@@ -147,11 +149,11 @@ export default class StockService implements IStockService {
         return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked: totalyStackedAmountOfStocks };
     }
 
-    public calculateStockTradesUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
+    public calculateStockTradesSpentUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         let sum = 0;
 
-        for (const trade of tradeHistory) {
+        for (const trade of tradeHistory.filter(s => s.tradeValue < 0)) {
             let exhangeRate: number = 1;
             let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
 
@@ -174,12 +176,6 @@ export default class StockService implements IStockService {
         return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: tickerUpper, date: date }))?.price ?? 0;
     }
 
-    public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
-        const fromDate = from ?? moment(new Date()).subtract(30, "d").toDate();
-        const priceHistory = await this.stockFinApi.getStockPriceDataFromDate({ from: fromDate, ticker: ticker });
-        return priceHistory;
-    }
-
     public async getLastMonthTickersPrice(tickers: string[]): Promise<TickersWithPriceHistory[]> {
         let tickersWithPrice: TickersWithPriceHistory[] = [];
 
@@ -189,6 +185,12 @@ export default class StockService implements IStockService {
         }
 
         return tickersWithPrice;
+    }
+
+    public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
+        const fromDate = from ?? moment(new Date()).subtract(30, "d").toDate();
+        const priceHistory = await this.stockFinApi.getStockPriceDataFromDate({ from: fromDate, ticker: ticker });
+        return priceHistory;
     }
 
     public async updateStockTradeHistory(data: StockViewModel) {

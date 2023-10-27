@@ -26,6 +26,7 @@ import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../
 import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import { PieChart, PieChartData } from "../Charts/PieChart";
+import { IStockService } from "../../Services/IStockService";
 
 const theme = createMuiTheme({
     palette: {
@@ -63,7 +64,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private tickers: StockTickerModel[] = [];
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
-    private stockService: StockService = undefined;
+    private stockService: IStockService = undefined;
     private cryptoApi: CryptoApi;
     private cryptoFinApi: CryptoEndpointsApi;
     private forexFinApi: ForexEndpointsApi;
