@@ -1,13 +1,15 @@
 ﻿import React from "react";
-import ReactDOM from "react-dom";
 import { RouteComponentProps } from "react-router-dom";
 import { AuthResponseModel } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@mui/material";
 
 class AuthState {
     login: string;
     password: string;
+    errorMessage: string;
 }
 
 export default class Auth extends React.Component<RouteComponentProps, AuthState>{
@@ -15,7 +17,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { login: '', password: '' };
+        this.state = { login: '', password: '', errorMessage: "" };
     }
 
     componentDidMount() {
@@ -36,6 +38,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
             this.props.history.push("/");
         } catch (error) {
             console.log(error);
+            this.setState({ errorMessage: "Login failed (bad login or pass)" });
         }
     }
 
@@ -47,6 +50,10 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
     private onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         let pass = e.target.value;
         this.setState({ password: pass });
+    }
+
+    private handleClose = () => {
+        this.setState({ errorMessage: "" });
     }
 
     render = () => {
@@ -86,6 +93,9 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
                         </form>
                     </div>
                 </div>
+                <Snackbar open={this.state.errorMessage != ""} autoHideDuration={6000} onClose={this.handleClose}>
+                    <Alert onClose={this.handleClose} severity="error">{this.state.errorMessage}</Alert>
+                </Snackbar>
             </div>
         );
     }
