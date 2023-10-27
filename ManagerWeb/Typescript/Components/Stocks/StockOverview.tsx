@@ -38,6 +38,7 @@ const theme = createMuiTheme({
 });
 
 class StockSummary {
+    totalWealth: number;
     totalyBought: number;
     totalySold: number;
 }
@@ -95,22 +96,23 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
-        const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
-        const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
+        const stockSummaryBuy = _.sumBy(stockGrouped, s => s.stockSpentPrice);
+        const stockSummarySell = _.sumBy(stockGrouped, s => s.stockSellPrice);
+        const stockSummaryWealth = _.sumBy(stockGrouped, s => s.stockCurrentWealth);
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
 
-        for (const stock of stockGrouped) {
+        for (const stock of stockGrouped.filter(s => s.size > 0.00001)) {
             const tickerPrice = _.first(tickerPrices.filter(f => f.ticker == stock.tickerName));
 
             if (tickerPrice != undefined) {
                 const actualPrice = _.first(_.orderBy(tickerPrice.price, [(obj) => new Date(obj.time)], ['desc']));
-                stock.stockCurrentPrice = stock.size * (actualPrice?.price ?? 0);
+                stock.stockCurrentWealth = stock.size * (actualPrice?.price ?? 0);
             }
         }
 
-        stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentPrice, 'desc');
-        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickerPrices });
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentWealth, 'desc');
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices });
     }
 
     private saveStockTrade = async (stockViewModel: StockViewModel) => {
@@ -195,7 +197,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         let element: JSX.Element;
 
         if (this.state.stockGrouped != undefined && this.state.stockGrouped.length != 0) {
-            let chartData: PieChartData[] = this.state.stockGrouped.map(a => ({ id: a.tickerName, label: a.tickerName, value: Math.floor(a.stockCurrentPrice) }));
+            let chartData: PieChartData[] = this.state.stockGrouped.map(a => ({ id: a.tickerName, label: a.tickerName, value: Math.floor(a.stockCurrentWealth) }));
             element = (
                 <div className="h-96">
                     <PieChart data={chartData} labelPostfix="USD"></PieChart>
@@ -223,13 +225,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const tradesViewModel = companyTrades.map(c => StockViewModel.mapFromDataModel(c));
         let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
 
-        if (companyProfile != undefined) {
+        if (companyProfile != undefined) 
             this.setState({ selectedCompany: complexModel });
-        }
     }
 
     private renderTickerFinInfo = (ticker: StockGroupModel) => {
-        const profitOrLoss = this.calculareProfit(ticker.stockCurrentPrice, ticker.stockSpentPrice);
+        const profitOrLoss = this.calculareProfit(ticker.stockCurrentWealth, ticker.stockSpentPrice);
 
         return (
             <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
@@ -240,8 +241,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     </div>
                     <div>
                         <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentPrice).toFixed(2)} $</p>
-                        {ticker.stockCurrentPrice != 0 ? (
+                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
+                        {ticker.stockCurrentWealth != 0 ? (
                             <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
                         ) : <></>}
                     </div>
@@ -293,8 +294,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
                                     {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
                                         <div className='flex flex-col text-2xl text-white font-semibold text-left px-4 justify-evenly'>
-                                            <p className="">Totaly bought: {this.state.stockSummary.totalyBought}</p>
-                                            <p className="mt-2">Totaly sold: {this.state.stockSummary.totalySold}</p>
+                                            <p className="">Total value: {this.state.stockSummary.totalWealth.toFixed(0)}$</p>
+                                            <p className="mt-2">Total bought: {this.state.stockSummary.totalyBought.toFixed(0)}$</p>
+                                            <p className="mt-2">Total sold: {this.state.stockSummary.totalySold.toFixed(0)}$</p>
                                         </div>
                                     )}
                                     <div>

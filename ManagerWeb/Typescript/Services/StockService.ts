@@ -15,7 +15,7 @@ export class StockGroupModel {
     tickerName: string;
     size: number;
     stockSpentPrice: number;
-    stockCurrentPrice: number;
+    stockCurrentWealth: number;
     stockSellPrice: number;
 }
 
@@ -83,13 +83,13 @@ export default class StockService implements IStockService {
             const calculatedTradesSpent = await this.calculateStockTradesSpentUsdSum(trades);
             const calculatedTradesSell = await this.calculateStockTradesSellUsdSum(trades);
             const sizeSum = _.sumBy(trades, s => s.action == TradeAction.Buy ? s.tradeSizeAfterSplit : s.tradeSizeAfterSplit * -1);
+            const tickerCurrentPrice = await this.getStockCurrentPrice(first.stockTicker);
 
-            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined, stockSellPrice: calculatedTradesSell };
+            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentWealth: tickerCurrentPrice * sizeSum, stockSellPrice: calculatedTradesSell };
             groupedModels.push(stockGroupModel);
         }
 
-        console.log("🚀 ~ file: StockService.ts:92 ~ StockService ~ getGroupedTradeHistory= ~ groupedModels:", groupedModels)
-        return groupedModels.filter(s => s.size > 0.00001);
+        return groupedModels;
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
@@ -144,7 +144,12 @@ export default class StockService implements IStockService {
     public async getStockCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         const tickerUpper = ticker.toUpperCase();
-        return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: tickerUpper, date: date }))?.price ?? 0;
+
+        try {
+            return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: tickerUpper, date: date }))?.price ?? 0
+        } catch (error) {
+            return 0;
+        }
     }
 
     public async getLastMonthTickersPrice(tickers: string[]): Promise<TickersWithPriceHistory[]> {
