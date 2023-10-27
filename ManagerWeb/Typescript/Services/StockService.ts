@@ -63,9 +63,9 @@ export default class StockService implements IStockService {
             const calculatedTradesSpent = await this.calculateStockTradesUsdSum(trades);
             const sizeSum = _.sumBy(trades, s => {
                 if (s.action == TradeAction.Buy)
-                    return s.tradeSize;
+                    return s.tradeSizeAfterSplit;
                 else
-                    return s.tradeSize * -1;
+                    return s.tradeSizeAfterSplit * -1;
             });
             let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined };
             groupedModels.push(stockGroupModel);
@@ -95,7 +95,7 @@ export default class StockService implements IStockService {
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
         const months = this.getMonthsBetween(fromDate, toDate);
-        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize } as StockViewModel));
+        const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSizeAfterSplit * -1 : t.tradeSizeAfterSplit } as StockViewModel));
         const stockGroupData: NetWorthMonthGroupModel[] = [];
         let prevMonthSum = 0;
 
@@ -129,7 +129,7 @@ export default class StockService implements IStockService {
     }
 
     public async calculateCryptoTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
-        let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+        let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSizeAfterSplit, 0);
         let exhangeRateTrade: number = 0;
 
         try {

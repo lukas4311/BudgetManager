@@ -94,7 +94,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getGroupedTradeHistory();
-        stockGrouped = _.orderBy(stockGrouped, a => a.stockSpentPrice, 'desc');
         const stockSummaryBuy = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Buy), a => a.tradeValue));
         const stockSummarySell = Math.abs(_.sumBy(stocks.filter(s => s.action == TradeAction.Sell), a => a.tradeValue));
         const tickers = stockGrouped.map(a => a.tickerName);
@@ -109,6 +108,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             }
         }
 
+        stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentPrice, 'desc');
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell }, stockPrice: tickerPrices });
     }
 

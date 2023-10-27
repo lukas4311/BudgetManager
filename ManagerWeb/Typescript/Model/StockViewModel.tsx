@@ -16,6 +16,7 @@ export class StockViewModel implements IBaseModel {
     public tradeValue: number;
     public currencySymbolId: number;
     public currencySymbol: string;
+    public tradeSizeAfterSplit: number;
     get action(): TradeAction {
         return this.tradeValue >= 0 ? TradeAction.Sell : TradeAction.Buy;
     }
@@ -30,6 +31,7 @@ export class StockViewModel implements IBaseModel {
         viewModel.tradeTimeStamp = moment(s.tradeTimeStamp).format("YYYY-MM-DD");
         viewModel.tradeValue = s.tradeValue;
         viewModel.stockTicker = undefined;
+        viewModel.tradeSizeAfterSplit = s.tradeSizeAfterSplit;
 
         return viewModel;
     }
