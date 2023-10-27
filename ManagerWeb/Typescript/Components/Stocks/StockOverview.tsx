@@ -102,15 +102,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
 
-        for (const stock of stockGrouped.filter(s => s.size > 0.00001)) {
-            const tickerPrice = _.first(tickerPrices.filter(f => f.ticker == stock.tickerName));
-
-            if (tickerPrice != undefined) {
-                const actualPrice = _.first(_.orderBy(tickerPrice.price, [(obj) => new Date(obj.time)], ['desc']));
-                stock.stockCurrentWealth = stock.size * (actualPrice?.price ?? 0);
-            }
-        }
-
         stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentWealth, 'desc');
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices });
     }
