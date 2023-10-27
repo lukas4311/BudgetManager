@@ -67,6 +67,12 @@ export class StockTradeHistoryGetModel {
      * @memberof StockTradeHistoryGetModel
      */
     currencySymbol?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof StockTradeHistoryGetModel
+     */
+    tradeSizeAfterSplit?: number;
 }
 
 export function StockTradeHistoryGetModelFromJSON(json: any): StockTradeHistoryGetModel {
@@ -87,6 +93,7 @@ export function StockTradeHistoryGetModelFromJSONTyped(json: any, ignoreDiscrimi
         'currencySymbolId': !exists(json, 'currencySymbolId') ? undefined : json['currencySymbolId'],
         'userIdentityId': !exists(json, 'userIdentityId') ? undefined : json['userIdentityId'],
         'currencySymbol': !exists(json, 'currencySymbol') ? undefined : json['currencySymbol'],
+        'tradeSizeAfterSplit': !exists(json, 'tradeSizeAfterSplit') ? undefined : json['tradeSizeAfterSplit'],
     };
 }
 
@@ -107,5 +114,6 @@ export function StockTradeHistoryGetModelToJSON(value?: StockTradeHistoryGetMode
         'currencySymbolId': value.currencySymbolId,
         'userIdentityId': value.userIdentityId,
         'currencySymbol': value.currencySymbol,
+        'tradeSizeAfterSplit': value.tradeSizeAfterSplit,
     };
 }

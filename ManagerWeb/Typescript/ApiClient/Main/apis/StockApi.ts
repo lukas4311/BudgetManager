@@ -70,6 +70,18 @@ export interface StockStockTradeHistoryTickerGetRequest {
 export interface StockApiInterface {
     /**
      * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    stockSplitGet(initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
      * @param {string} ticker 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -195,6 +207,33 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
             return encodeURIComponent(String(param.toISOString()));
 
         return encodeURIComponent(String(param));
+    }
+
+    /**
+     */
+    async stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/split`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async stockSplitGet(initOverrides?: RequestInit): Promise<void> {
+        await this.stockSplitGetRaw(initOverrides);
     }
 
     /**
