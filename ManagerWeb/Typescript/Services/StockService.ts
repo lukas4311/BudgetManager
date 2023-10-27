@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
-import { StockPrice, StockTickerModel, StockTradeHistoryModel } from '../ApiClient/Main/models';
+import { StockPrice, StockTickerModel, StockTradeHistoryModel, TradeHistory } from '../ApiClient/Main/models';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import { IStockService } from './IStockService';
 import { ICryptoService } from './ICryptoService';
@@ -16,6 +16,7 @@ export class StockGroupModel {
     size: number;
     stockSpentPrice: number;
     stockCurrentPrice: number;
+    stockSellPrice: number;
 }
 
 export default class StockService implements IStockService {
@@ -49,6 +50,25 @@ export default class StockService implements IStockService {
         return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
     }
 
+    public async getStockNetWorth(finalCurrency: string): Promise<number> {
+        let netWorth = 0;
+        let stockGrouped = await this.getGroupedTradeHistory();
+        const tickers = stockGrouped.map(a => a.tickerName);
+        const tickersPrice = await this.getLastMonthTickersPrice(tickers);
+        const actualPriceToFinalCurrency = await this.cryptoService.getExchangeRate("USD", finalCurrency);
+
+        for (const stock of stockGrouped) {
+            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+
+            if (tickerPrices != undefined) {
+                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinalCurrency;
+            }
+        }
+
+        return netWorth;
+    }
+
     public getGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
         const stocks = await this.getStockTradeHistory();
         let groupedTradesByTicker = _.chain(stocks)
@@ -61,38 +81,15 @@ export default class StockService implements IStockService {
             const first = _.first(trades);
 
             const calculatedTradesSpent = await this.calculateStockTradesSpentUsdSum(trades);
+            const calculatedTradesSell = await this.calculateStockTradesSellUsdSum(trades);
+            const sizeSum = _.sumBy(trades, s => s.action == TradeAction.Buy ? s.tradeSizeAfterSplit : s.tradeSizeAfterSplit * -1);
 
-            const sizeSum = _.sumBy(trades, s => {
-                if (s.action == TradeAction.Buy)
-                    return s.tradeSizeAfterSplit;
-                else
-                    return s.tradeSizeAfterSplit * -1;
-            });
-
-            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined };
+            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, stockSpentPrice: calculatedTradesSpent, stockCurrentPrice: undefined, stockSellPrice: calculatedTradesSell };
             groupedModels.push(stockGroupModel);
         }
 
+        console.log("🚀 ~ file: StockService.ts:92 ~ StockService ~ getGroupedTradeHistory= ~ groupedModels:", groupedModels)
         return groupedModels.filter(s => s.size > 0.00001);
-    }
-
-    public async getStockNetWorth(finalCurrency: string): Promise<number> {
-        let netWorth = 0;
-        let stockGrouped = await this.getGroupedTradeHistory();
-        const tickers = stockGrouped.map(a => a.tickerName);
-        const tickersPrice = await this.getLastMonthTickersPrice(tickers);
-        const actualPriceToFinal = await this.cryptoService.getExchangeRate("USD", finalCurrency);
-
-        for (const stock of stockGrouped) {
-            const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
-
-            if (tickerPrices != undefined) {
-                const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-                netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinal;
-            }
-        }
-
-        return netWorth;
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
@@ -125,11 +122,6 @@ export default class StockService implements IStockService {
         return stockGroupData;
     }
 
-    // public async calculateStockTotalUsdValue(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol): Promise<StockCalculationModel> {
-    //     let date = moment(Date.now()).subtract(1, 'd').toDate();
-    //     return this.calculateStockTotalUsdValueForDate(tradeHistory, ticker, finalCurrency, date)
-    // }
-
     public async calculateStockTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
         let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSizeAfterSplit, 0);
         let exhangeRateTrade: number = 0;
@@ -147,27 +139,6 @@ export default class StockService implements IStockService {
         let finalCurrencyPriceTrade = totalyStackedAmountOfStocks * exhangeRateTrade * finalExhangeRate;
 
         return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked: totalyStackedAmountOfStocks };
-    }
-
-    public calculateStockTradesSpentUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
-        let date = moment(Date.now()).subtract(1, 'd').toDate();
-        let sum = 0;
-
-        for (const trade of tradeHistory.filter(s => s.tradeValue < 0)) {
-            let exhangeRate: number = 1;
-            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
-
-            if (forexSymbol)
-                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: forexSymbol, to: ForexSymbol.Usd });
-            else {
-                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
-                exhangeRate = 1;
-            }
-
-            sum += Math.abs(trade.tradeValue) * exhangeRate;
-        }
-
-        return sum;
     }
 
     public async getStockCurrentPrice(ticker: string): Promise<number> {
@@ -225,6 +196,46 @@ export default class StockService implements IStockService {
 
     public async getCompanyProfile(ticker: string) {
         return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
+    }
+
+    private calculateStockTradesSpentUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
+        let sum = 0;
+
+        for (const trade of tradeHistory.filter(s => s.tradeValue < 0)) {
+            let exhangeRate: number = 1;
+            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+
+            if (forexSymbol)
+                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
+            else {
+                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
+                exhangeRate = 1;
+            }
+
+            sum += Math.abs(trade.tradeValue) * exhangeRate;
+        }
+
+        return sum;
+    }
+
+    private calculateStockTradesSellUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
+        let sum = 0;
+
+        for (const trade of tradeHistory.filter(s => s.tradeValue > 0)) {
+            let exhangeRate: number = 1;
+            let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+
+            if (forexSymbol)
+                exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
+            else {
+                console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
+                exhangeRate = 1;
+            }
+
+            sum += Math.abs(trade.tradeValue) * exhangeRate;
+        }
+
+        return sum;
     }
 
     private getMonthsBetween(fromDate: Date, toDate: Date) {
