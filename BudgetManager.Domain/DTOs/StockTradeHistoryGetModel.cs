@@ -4,6 +4,6 @@
     {
         public string CurrencySymbol { get; set; }
 
-        public double TradeSizeAfterAplit { get; set; }
+        public double TradeSizeAfterSplit { get; set; }
     }
 }
