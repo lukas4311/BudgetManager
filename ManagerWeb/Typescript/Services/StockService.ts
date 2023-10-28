@@ -92,14 +92,14 @@ export default class StockService implements IStockService {
 
         for (const tickerKey in groupedTradesByTicker) {
             const trades = groupedTradesByTicker[tickerKey];
-            const first = _.first(trades);
+            const firstStockRecord = _.first(trades);
 
             const calculatedTradesSpent = _.sumBy(trades.filter(t => t.action == TradeAction.Buy), t => t.tradeValue) * -1;
             const calculatedTradesSell = _.sumBy(trades.filter(t => t.action == TradeAction.Sell), t => t.tradeValue);
             const sizeSum = _.sumBy(trades, s => s.action == TradeAction.Buy ? s.tradeSizeAfterSplit : s.tradeSizeAfterSplit * -1);
-            const tickerCurrentPrice = await this.getStockCurrentPrice(first.stockTicker);
+            const tickerCurrentPrice = await this.getStockCurrentPrice(firstStockRecord.stockTicker);
 
-            let stockGroupModel: StockGroupModel = { tickerName: first.stockTicker, tickerId: first.stockTickerId, size: sizeSum, 
+            let stockGroupModel: StockGroupModel = { tickerName: firstStockRecord.stockTicker, tickerId: firstStockRecord.stockTickerId, size: sizeSum, 
                 stockSpentPrice: calculatedTradesSpent, stockCurrentWealth: tickerCurrentPrice * sizeSum, stockSellPrice: calculatedTradesSell };
             groupedModels.push(stockGroupModel);
         }
