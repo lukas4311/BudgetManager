@@ -59,7 +59,7 @@ export default class StockService implements IStockService {
     }
 
     public getAccumulatedNetWorh = async () => {
-        const data = await this.getStockTradesHistoryInSelectedCurrency();
+        let data = await this.getStockTradesHistoryInSelectedCurrency();
         // const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
         const orderData = _.sortBy(data, d => new Date(d.tradeTimeStamp), ['asc']);
 
@@ -67,15 +67,15 @@ export default class StockService implements IStockService {
         let stockAccumulatedSize = new Map<string, number>();
 
         for (let trade of orderData) {
-            
+
             if (stockAccumulatedSize.has(trade.stockTicker)) {
-                let currentTickerSize = stockAccumulatedSize[trade.stockTicker];
-                stockAccumulatedSize[trade.stockTicker] = currentTickerSize + (trade.tradeSize * (trade.tradeValue <= 0 ? 1 : -1));
+                let currentTickerSize = stockAccumulatedSize.get(trade.stockTicker);
+                stockAccumulatedSize.set(trade.stockTicker, currentTickerSize + (trade.tradeSizeAfterSplit * (trade.tradeValue <= 0 ? 1 : -1)));
             } else {
-                stockAccumulatedSize[trade.stockTicker] = trade.tradeSize * (trade.tradeValue <= 0 ? 1 : -1);
+                stockAccumulatedSize.set(trade.stockTicker, trade.tradeSizeAfterSplit * (trade.tradeValue <= 0 ? 1 : -1));
             }
 
-            accumulatedSizeInDays[trade.tradeTimeStamp] = _.clone(stockAccumulatedSize);
+            accumulatedSizeInDays.set(trade.tradeTimeStamp, _.clone(stockAccumulatedSize));
         }
     }
 
