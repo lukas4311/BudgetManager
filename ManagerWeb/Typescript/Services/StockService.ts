@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { forEach } from 'lodash';
 import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
 import { StockPrice, StockTickerModel, StockTradeHistoryModel, TradeHistory } from '../ApiClient/Main/models';
@@ -44,6 +44,18 @@ export default class StockService implements IStockService {
             viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
             return viewModel;
         });
+    }
+
+    public getStockTradesHistoryInSelectedCurrency = async () : Promise<StockViewModel[]> => {
+        let trades = await this.getStockTradeHistory();
+
+        for (let trade of trades) {
+            const exchangeRate = await this.calculateForexExchangeRate(trade);
+            const newTradeValue = trade.tradeValue * exchangeRate;
+            trade.tradeValue = newTradeValue;
+        }
+
+        return trades;
     }
 
     public async getStockTradeHistoryByTicker(ticker: string) {

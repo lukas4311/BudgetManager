@@ -7,6 +7,7 @@ import { StockGroupModel, TickersWithPriceHistory } from './StockService';
 export interface IStockService {
     getStockTickers(): Promise<StockTickerModel[]>;
     getStockTradeHistory(): Promise<StockViewModel[]>;
+    getStockTradesHistoryInSelectedCurrency(): Promise<StockViewModel[]>;
     getStockTradeHistoryByTicker(ticker: string): Promise<any>;
     getGroupedTradeHistory(): Promise<StockGroupModel[]>;
     getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]>;

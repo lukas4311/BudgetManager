@@ -106,6 +106,17 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices });
     }
 
+    private prepareStockDataToLineChart = async () => {
+        let stockTradesInUsd = await this.stockService.getStockTradesHistoryInSelectedCurrency();
+        let lineChartData: LineChartDataSets[] = [{ id: 'Price', data: [] }];
+
+        if (stockTradesInUsd.length > 2) {
+            // const sortedArray = _.orderBy(stockTradesInUsd, [(obj) => new Date(obj.tradeTimeStamp)], ['asc']);
+            // let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.tradeTimeStamp).format('YYYY-MM-DD'), y: b. }));
+            // lineChartData = [{ id: 'Price', data: priceData }];
+        }
+    }
+
     private saveStockTrade = async (stockViewModel: StockViewModel) => {
         if (stockViewModel.id)
             await this.stockService.updateStockTradeHistory(stockViewModel);
@@ -167,19 +178,19 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private renderChart = (ticker: string) => {
-        let priceChart: LineChartDataSets[] = [{ id: 'Price', data: [] }];
+        let lineChartData: LineChartDataSets[] = [{ id: 'Price', data: [] }];
         let tradeHistory = _.first(this.state.stockPrice.filter(f => f.ticker == ticker));
 
         if (tradeHistory != undefined && tradeHistory.price.length > 5) {
             let prices = tradeHistory.price;
-            const sortedArray = _.orderBy(prices, [(obj) => new Date(obj.time)], ['asc'])
-            let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.time).format('YYYY-MM-DD'), y: b.price }))
-            priceChart = [{ id: 'Price', data: priceData }];
+            const sortedArray = _.orderBy(prices, [(obj) => new Date(obj.time)], ['asc']);
+            let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.time).format('YYYY-MM-DD'), y: b.price }));
+            lineChartData = [{ id: 'Price', data: priceData }];
         }
 
         return (
             <div className="h-12">
-                <LineChart dataSets={priceChart} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
+                <LineChart dataSets={lineChartData} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
             </div>
         );
     }
@@ -216,7 +227,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const tradesViewModel = companyTrades.map(c => StockViewModel.mapFromDataModel(c));
         let complexModel: StockComplexModel = { ticker: companyTicker, companyInfo: companyProfile, company5YPrice: companyPrice, trades: tradesViewModel };
 
-        if (companyProfile != undefined) 
+        if (companyProfile != undefined)
             this.setState({ selectedCompany: complexModel });
     }
 
