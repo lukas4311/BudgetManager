@@ -16,6 +16,6 @@ export interface IStockService {
     createStockTradeHistory(data: StockViewModel): Promise<any>;
     deleteStockTradeHistory(id: number): Promise<any>;
     getCompanyProfile(ticker: string): Promise<any>;
-    getStockNetWorth(czkSymbol: string): Promise<number>;
+    getStockNetWorthSum(czkSymbol: string): Promise<number>;
     getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]>;
 }

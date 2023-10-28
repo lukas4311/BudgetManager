@@ -50,7 +50,7 @@ export default class NetWorthService {
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
         currentBalance += cryptoSum;
 
-        const stockSum = await this.stockService.getStockNetWorth(czkSymbol);
+        const stockSum = await this.stockService.getStockNetWorthSum(czkSymbol);
         currentBalance += stockSum;
 
         const comoditySum = await this.comodityService.getComodityNetWorth();

@@ -46,7 +46,7 @@ export default class StockService implements IStockService {
         });
     }
 
-    public getStockTradesHistoryInSelectedCurrency = async () : Promise<StockViewModel[]> => {
+    public getStockTradesHistoryInSelectedCurrency = async (): Promise<StockViewModel[]> => {
         let trades = await this.getStockTradeHistory();
 
         for (let trade of trades) {
@@ -58,11 +58,26 @@ export default class StockService implements IStockService {
         return trades;
     }
 
+    public getAccumulatedNetWorh = async (fromDate: Date, toDate: Date) => {
+        const data = await this.getStockTradesHistoryInSelectedCurrency();
+        const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
+
+        // TODO: Finish algorithm
+        _.chain(filteredData)
+            .orderBy(s => new Date(s.tradeTimeStamp),  ['asc'])
+            .reduce((acc, model) => {
+                // const amount = acc.prev + model.amount + (baseLine ?? 0);
+                // paymentGroupedData.push({ date: model.date, amount: amount });
+                // acc.prev = amount;
+                return acc;
+            }, { prev: 0 });
+    }
+
     public async getStockTradeHistoryByTicker(ticker: string) {
         return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
     }
 
-    public async getStockNetWorth(finalCurrency: string): Promise<number> {
+    public async getStockNetWorthSum(finalCurrency: string): Promise<number> {
         let netWorth = 0;
         let stockGrouped = await this.getGroupedTradeHistory();
         const tickers = stockGrouped.map(a => a.tickerName);
