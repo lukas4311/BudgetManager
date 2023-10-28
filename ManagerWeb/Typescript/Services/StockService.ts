@@ -35,7 +35,7 @@ export default class StockService implements IStockService {
     public getStockTickers = async (): Promise<StockTickerModel[]> => {
         return await this.stockApi.stockStockTickerGet();
     }
-    
+
     public async getStockTradeHistory(): Promise<StockViewModel[]> {
         const tickers = await this.getStockTickers();
         const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
@@ -45,7 +45,7 @@ export default class StockService implements IStockService {
             return viewModel;
         });
     }
-    
+
     public async getStockTradeHistoryByTicker(ticker: string) {
         return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
     }
@@ -71,7 +71,6 @@ export default class StockService implements IStockService {
         let stockAccumulatedSize = new Map<string, number>();
 
         for (let trade of orderData) {
-
             if (stockAccumulatedSize.has(trade.stockTicker)) {
                 let currentTickerSize = stockAccumulatedSize.get(trade.stockTicker);
                 stockAccumulatedSize.set(trade.stockTicker, currentTickerSize + (trade.tradeSizeAfterSplit * (trade.tradeValue <= 0 ? 1 : -1)));
@@ -99,8 +98,10 @@ export default class StockService implements IStockService {
             const sizeSum = _.sumBy(trades, s => s.action == TradeAction.Buy ? s.tradeSizeAfterSplit : s.tradeSizeAfterSplit * -1);
             const tickerCurrentPrice = await this.getStockCurrentPrice(firstStockRecord.stockTicker);
 
-            let stockGroupModel: StockGroupModel = { tickerName: firstStockRecord.stockTicker, tickerId: firstStockRecord.stockTickerId, size: sizeSum, 
-                stockSpentPrice: calculatedTradesSpent, stockCurrentWealth: tickerCurrentPrice * sizeSum, stockSellPrice: calculatedTradesSell };
+            let stockGroupModel: StockGroupModel = {
+                tickerName: firstStockRecord.stockTicker, tickerId: firstStockRecord.stockTickerId, size: sizeSum,
+                stockSpentPrice: calculatedTradesSpent, stockCurrentWealth: tickerCurrentPrice * sizeSum, stockSellPrice: calculatedTradesSell
+            };
             groupedModels.push(stockGroupModel);
         }
 
@@ -114,7 +115,14 @@ export default class StockService implements IStockService {
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
-        // const months = this.getMonthsBetween(fromDate, toDate);
+        let data = await this.getStockTradesHistoryInSelectedCurrency();
+        const months = this.getMonthsBetween(fromDate, toDate);
+
+        for (const month of months) {
+            const monthTrades = data.filter(t => moment(t.tradeTimeStamp).format("YYYY-MM") == month);
+            // TODO: use method which is calculating accumulated size for all stocks
+        }
+        
         // const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSizeAfterSplit * -1 : t.tradeSizeAfterSplit } as StockViewModel));
         // const stockGroupData: NetWorthMonthGroupModel[] = [];
         // let prevMonthSum = 0;
