@@ -62,7 +62,7 @@ export default class StockService implements IStockService {
         return trades;
     }
 
-    public getStocksAccumulatedSize = async () => {
+    public getStocksAccumulatedSize = async (): Promise<Map<string, Map<string, number>>> => {
         let data = await this.getStockTradesHistoryInSelectedCurrency();
         // const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
         const orderData = _.sortBy(data, d => new Date(d.tradeTimeStamp), ['asc']);
@@ -80,6 +80,27 @@ export default class StockService implements IStockService {
 
             accumulatedSizeInDays.set(trade.tradeTimeStamp, _.clone(stockAccumulatedSize));
         }
+
+        return accumulatedSizeInDays;
+    }
+
+    public getStocksAccumulatedValue = async (): Promise<Map<string, Map<string, number>>> => {
+        let stockAccumulatedSizes = await this.getStocksAccumulatedSize();
+
+        let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
+        let stockAccumulatedValue = new Map<string, number>();
+
+        for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
+            const date = moment(dateKey).toDate();
+            for (const [ticker, accumulatedSize] of tickersSizeAccumulated) {
+                const tickerPrice = await this.getStockPrice(ticker, date);
+                const tickerValue = tickerPrice * accumulatedSize;
+                stockAccumulatedValue.set(ticker, tickerValue);
+            }
+            accumulatedValueInDays.set(dateKey, _.clone(stockAccumulatedValue));
+        }
+
+        return accumulatedValueInDays;
     }
 
     public getStocksTickerGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
@@ -122,7 +143,7 @@ export default class StockService implements IStockService {
             const monthTrades = data.filter(t => moment(t.tradeTimeStamp).format("YYYY-MM") == month);
             // TODO: use method which is calculating accumulated size for all stocks
         }
-        
+
         // const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSizeAfterSplit * -1 : t.tradeSizeAfterSplit } as StockViewModel));
         // const stockGroupData: NetWorthMonthGroupModel[] = [];
         // let prevMonthSum = 0;
@@ -173,6 +194,16 @@ export default class StockService implements IStockService {
 
     public async getStockCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
+        const tickerUpper = ticker.toUpperCase();
+
+        try {
+            return (await this.stockFinApi.getStockPriceDataAtDate({ ticker: tickerUpper, date: date }))?.price ?? 0
+        } catch (error) {
+            return 0;
+        }
+    }
+
+    public async getStockPrice(ticker: string, date: Date): Promise<number> {
         const tickerUpper = ticker.toUpperCase();
 
         try {
