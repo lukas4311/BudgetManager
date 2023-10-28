@@ -84,7 +84,7 @@ export default class StockService implements IStockService {
     }
 
     public getStocksTickerGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
-        const stocks = await this.getStockTradeHistory();
+        const stocks = await this.getStockTradesHistoryInSelectedCurrency();
         let groupedTradesByTicker = _.chain(stocks)
             .groupBy(g => g.stockTickerId)
             .value();
@@ -94,8 +94,8 @@ export default class StockService implements IStockService {
             const trades = groupedTradesByTicker[tickerKey];
             const first = _.first(trades);
 
-            const calculatedTradesSpent = await this.calculateStockTradesSpentUsdSum(trades);
-            const calculatedTradesSell = await this.calculateStockTradesSellUsdSum(trades);
+            const calculatedTradesSpent = _.sumBy(trades.filter(t => t.action == TradeAction.Buy), t => t.tradeValue);
+            const calculatedTradesSell = _.sumBy(trades.filter(t => t.action == TradeAction.Sell), t => t.tradeValue);
             const sizeSum = _.sumBy(trades, s => s.action == TradeAction.Buy ? s.tradeSizeAfterSplit : s.tradeSizeAfterSplit * -1);
             const tickerCurrentPrice = await this.getStockCurrentPrice(first.stockTicker);
 
