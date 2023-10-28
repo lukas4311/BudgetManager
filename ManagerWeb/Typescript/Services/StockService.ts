@@ -58,11 +58,11 @@ export default class StockService implements IStockService {
         return trades;
     }
 
-    public getAccumulatedNetWorh = async (fromDate: Date, toDate: Date) => {
+    public getAccumulatedNetWorh = async () => {
         const data = await this.getStockTradesHistoryInSelectedCurrency();
-        const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
-        const orderData = _.sortBy(filteredData, d => new Date(d.tradeTimeStamp), ['asc']);
-        
+        // const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
+        const orderData = _.sortBy(data, d => new Date(d.tradeTimeStamp), ['asc']);
+
         let accumulatedSizeInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedSize = new Map<string, number>();
 
