@@ -18,5 +18,5 @@ export interface IStockService {
     getCompanyProfile(ticker: string): Promise<any>;
     getStocksNetWorthSum(czkSymbol: string): Promise<number>;
     getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]>;
-    getStocksAccumulatedValue();
+    getStocksAccumulatedSize();
 }

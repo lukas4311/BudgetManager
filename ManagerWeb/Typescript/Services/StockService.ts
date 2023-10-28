@@ -35,7 +35,7 @@ export default class StockService implements IStockService {
     public getStockTickers = async (): Promise<StockTickerModel[]> => {
         return await this.stockApi.stockStockTickerGet();
     }
-
+    
     public async getStockTradeHistory(): Promise<StockViewModel[]> {
         const tickers = await this.getStockTickers();
         const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
@@ -44,6 +44,10 @@ export default class StockService implements IStockService {
             viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
             return viewModel;
         });
+    }
+    
+    public async getStockTradeHistoryByTicker(ticker: string) {
+        return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
     }
 
     public getStockTradesHistoryInSelectedCurrency = async (): Promise<StockViewModel[]> => {
@@ -58,7 +62,7 @@ export default class StockService implements IStockService {
         return trades;
     }
 
-    public getStocksAccumulatedValue = async () => {
+    public getStocksAccumulatedSize = async () => {
         let data = await this.getStockTradesHistoryInSelectedCurrency();
         // const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
         const orderData = _.sortBy(data, d => new Date(d.tradeTimeStamp), ['asc']);
@@ -77,30 +81,6 @@ export default class StockService implements IStockService {
 
             accumulatedSizeInDays.set(trade.tradeTimeStamp, _.clone(stockAccumulatedSize));
         }
-    }
-
-    public async getStockTradeHistoryByTicker(ticker: string) {
-        return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
-    }
-
-    public async getStocksNetWorthSum(finalCurrency: string): Promise<number> {
-        // let netWorth = 0;
-        // let stockGrouped = await this.getStocksTickerGroupedTradeHistory();
-        // const tickers = stockGrouped.map(a => a.tickerName);
-        // const tickersPrice = await this.getLastMonthTickersPrice(tickers);
-        // const actualPriceToFinalCurrency = await this.cryptoService.getExchangeRate("USD", finalCurrency);
-
-        // for (const stock of stockGrouped) {
-        //     const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
-
-        //     if (tickerPrices != undefined) {
-        //         const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-        //         netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinalCurrency;
-        //     }
-        // }
-
-        // return netWorth;
-        throw new Error("Not implemented");
     }
 
     public getStocksTickerGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
@@ -125,6 +105,26 @@ export default class StockService implements IStockService {
         }
 
         return groupedModels;
+    }
+
+    public async getStocksNetWorthSum(finalCurrency: string): Promise<number> {
+        // let netWorth = 0;
+        // let stockGrouped = await this.getStocksTickerGroupedTradeHistory();
+        // const tickers = stockGrouped.map(a => a.tickerName);
+        // const tickersPrice = await this.getLastMonthTickersPrice(tickers);
+        // const actualPriceToFinalCurrency = await this.cryptoService.getExchangeRate("USD", finalCurrency);
+
+        // for (const stock of stockGrouped) {
+        //     const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
+
+        //     if (tickerPrices != undefined) {
+        //         const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
+        //         netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinalCurrency;
+        //     }
+        // }
+
+        // return netWorth;
+        throw new Error("Not implemented");
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
