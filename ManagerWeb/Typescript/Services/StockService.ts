@@ -61,16 +61,22 @@ export default class StockService implements IStockService {
     public getAccumulatedNetWorh = async (fromDate: Date, toDate: Date) => {
         const data = await this.getStockTradesHistoryInSelectedCurrency();
         const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
+        const orderData = _.sortBy(filteredData, d => new Date(d.tradeTimeStamp), ['asc']);
+        
+        let accumulatedSizeInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
+        let stockAccumulatedSize = new Map<string, number>();
 
-        // TODO: Finish algorithm
-        _.chain(filteredData)
-            .orderBy(s => new Date(s.tradeTimeStamp),  ['asc'])
-            .reduce((acc, model) => {
-                // const amount = acc.prev + model.amount + (baseLine ?? 0);
-                // paymentGroupedData.push({ date: model.date, amount: amount });
-                // acc.prev = amount;
-                return acc;
-            }, { prev: 0 });
+        for (let trade of orderData) {
+            
+            if (stockAccumulatedSize.has(trade.stockTicker)) {
+                let currentTickerSize = stockAccumulatedSize[trade.stockTicker];
+                stockAccumulatedSize[trade.stockTicker] = currentTickerSize + (trade.tradeSize * (trade.tradeValue <= 0 ? 1 : -1));
+            } else {
+                stockAccumulatedSize[trade.stockTicker] = trade.tradeSize * (trade.tradeValue <= 0 ? 1 : -1);
+            }
+
+            accumulatedSizeInDays[trade.tradeTimeStamp] = _.clone(stockAccumulatedSize);
+        }
     }
 
     public async getStockTradeHistoryByTicker(ticker: string) {
