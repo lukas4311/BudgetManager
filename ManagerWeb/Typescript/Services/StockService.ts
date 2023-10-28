@@ -108,23 +108,9 @@ export default class StockService implements IStockService {
     }
 
     public async getStocksNetWorthSum(finalCurrency: string): Promise<number> {
-        // let netWorth = 0;
-        // let stockGrouped = await this.getStocksTickerGroupedTradeHistory();
-        // const tickers = stockGrouped.map(a => a.tickerName);
-        // const tickersPrice = await this.getLastMonthTickersPrice(tickers);
-        // const actualPriceToFinalCurrency = await this.cryptoService.getExchangeRate("USD", finalCurrency);
-
-        // for (const stock of stockGrouped) {
-        //     const tickerPrices = _.first(tickersPrice.filter(f => f.ticker == stock.tickerName));
-
-        //     if (tickerPrices != undefined) {
-        //         const actualPrice = _.first(_.orderBy(tickerPrices.price, [(obj) => new Date(obj.time)], ['desc']));
-        //         netWorth += stock.size * (actualPrice?.price ?? 0) * actualPriceToFinalCurrency;
-        //     }
-        // }
-
-        // return netWorth;
-        throw new Error("Not implemented");
+        let groupedTickers = await this.getStocksTickerGroupedTradeHistory();
+        let netWorth = _.sumBy(groupedTickers, t => t.stockCurrentWealth);
+        return netWorth;
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
