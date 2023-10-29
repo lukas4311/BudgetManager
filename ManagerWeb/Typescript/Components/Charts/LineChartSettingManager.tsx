@@ -123,6 +123,31 @@ export class LineChartSettingManager {
         }
     }
 
+    static getStockChartSettingForStockValueHistory(): LineSvgProps {
+        return {
+            data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: false, enableGridX: false, enableGridY: true,
+            margin: { bottom: 40, left: 40, right: 10, top: 10 },
+            axisLeft: { legend: 'linear scale', legendOffset: 5 },
+            axisBottom: { format: '%Y-%m', tickValues: 'every month', legend: 'time scale', legendOffset: -5, },
+            axisRight: null,
+            axisTop: null,
+            yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false },
+            xScale: { type: "time", format: "%Y-%m-%d", precision: "day" }, xFormat: "time:%Y-%m-%d",
+            theme: {
+                axis: {
+                    ticks: {
+                        line: { stroke: "white" },
+                        text: { fill: "white" }
+                    }
+                },
+                grid: {
+                    line: { stroke: "white" }
+                }
+            }
+        }
+    }
+
     static getOtherInvestmentSummarySetting(min: number, max: number): LineSvgProps {
         let yScaleSetting: ScaleSpec = { type: 'linear' };
         const calculatedMin = min - (min * (10 / 100));

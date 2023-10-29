@@ -27,6 +27,7 @@ import ArrowDropUpOutlinedIcon from '@mui/icons-material/ArrowDropUpOutlined';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
+import { LineChartProps } from "../../Model/LineChartProps";
 
 const theme = createMuiTheme({
     palette: {
@@ -52,6 +53,7 @@ interface StockOverviewState {
     stockSummary: StockSummary;
     stockPrice: TickersWithPriceHistory[];
     selectedCompany: StockComplexModel;
+    lineChartData: LineChartProps;
 }
 
 export class StockComplexModel {
@@ -72,7 +74,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] } };
     }
 
     public componentDidMount = () => this.init();
@@ -96,27 +98,34 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getStocksTickerGroupedTradeHistory();
-        let getAccumulatedNetWorh = await this.stockService.getStocksAccumulatedValue();
-        console.log(getAccumulatedNetWorh);
+
+        // console.log(getAccumulatedNetWorh);
         const stockSummaryBuy = _.sumBy(stockGrouped, s => s.stockSpentPrice);
         const stockSummarySell = _.sumBy(stockGrouped, s => s.stockSellPrice);
         const stockSummaryWealth = _.sumBy(stockGrouped, s => s.stockCurrentWealth);
         const tickers = stockGrouped.map(a => a.tickerName);
         const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
+        const lineChartData = await this.prepareStockDataToLineChart();
 
         stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentWealth, 'desc');
-        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices });
+        this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices, lineChartData: { dataSets: lineChartData } });
     }
 
     private prepareStockDataToLineChart = async () => {
-        let stockTradesInUsd = await this.stockService.getStockTradesHistoryInSelectedCurrency();
+        let getAccumulatedValue = await this.stockService.getStocksAccumulatedValue();
+        let priceData: LineChartData[] = [];
         let lineChartData: LineChartDataSets[] = [{ id: 'Price', data: [] }];
 
-        if (stockTradesInUsd.length > 2) {
-            // const sortedArray = _.orderBy(stockTradesInUsd, [(obj) => new Date(obj.tradeTimeStamp)], ['asc']);
-            // let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.tradeTimeStamp).format('YYYY-MM-DD'), y: b. }));
-            // lineChartData = [{ id: 'Price', data: priceData }];
+        if (getAccumulatedValue.size > 2) {
+            for (const [dateKey, tickerValues] of getAccumulatedValue) {
+                let totalDayValue = 0;
+                tickerValues.forEach(d => totalDayValue += d);
+                priceData.push({ x: dateKey, y: totalDayValue });
+            }
         }
+
+        lineChartData = [{ id: 'Price', data: priceData }];
+        return lineChartData;
     }
 
     private saveStockTrade = async (stockViewModel: StockViewModel) => {
@@ -293,21 +302,36 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     </div>
                                 </div>
                             </ComponentPanel>
-                            <ComponentPanel classStyle="w-5/12">
-                                <>
-                                    <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
-                                    {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
-                                        <div className='flex flex-col text-2xl text-white font-semibold text-left px-4 justify-evenly'>
-                                            <p className="">Total value: {this.state.stockSummary.totalWealth.toFixed(0)}$</p>
-                                            <p className="mt-2">Total bought: {this.state.stockSummary.totalyBought.toFixed(0)}$</p>
-                                            <p className="mt-2">Total sold: {this.state.stockSummary.totalySold.toFixed(0)}$</p>
+                            <div className="flex flex-col w-5/12">
+                                <ComponentPanel>
+                                    <>
+                                        <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
+                                        {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
+                                            <div className='flex flex-col text-2xl text-white font-semibold text-left px-4 justify-evenly'>
+                                                <p className="">Total value: {this.state.stockSummary.totalWealth.toFixed(0)}$</p>
+                                                <p className="mt-2">Total bought: {this.state.stockSummary.totalyBought.toFixed(0)}$</p>
+                                                <p className="mt-2">Total sold: {this.state.stockSummary.totalySold.toFixed(0)}$</p>
+                                            </div>
+                                        )}
+                                    </>
+                                </ComponentPanel>
+                                <ComponentPanel>
+                                    <>
+                                        <h2 className="text-xl font-semibold mb-6">Stock portfolio</h2>
+                                        <div>
+                                            {this.renderChartPortfolio()}
                                         </div>
-                                    )}
-                                    <div>
-                                        {this.renderChartPortfolio()}
-                                    </div>
-                                </>
-                            </ComponentPanel>
+                                    </>
+                                </ComponentPanel>
+                                <ComponentPanel>
+                                    <>
+                                        <h2 className="text-xl font-semibold mb-6">Stock value history</h2>
+                                        <div className="h-64">
+                                            <LineChart dataSets={this.state.lineChartData.dataSets} chartProps={LineChartSettingManager.getStockChartSettingForStockValueHistory()}></LineChart>
+                                        </div>
+                                    </>
+                                </ComponentPanel>
+                            </div>
                         </div>
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Stock form"
                             maxWidth="md" fullWidth={true}>
