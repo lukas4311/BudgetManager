@@ -6,7 +6,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
-import _ from "lodash";
+import _, { max } from "lodash";
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
@@ -269,6 +269,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ selectedCompany: undefined });
 
     render() {
+        const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
+        const minStockValue = Math.min(...yValues) ;
+        console.log("🚀 ~ file: StockOverview.tsx:274 ~ StockOverview ~ render ~ minStockValue:", minStockValue)
+        const maxStockValue = Math.max(...yValues);
+        console.log("🚀 ~ file: StockOverview.tsx:276 ~ StockOverview ~ render ~ maxStockValue:", maxStockValue)
+
         return (
             <ThemeProvider theme={theme}>
                 <MainFrame header='Stocks'>
@@ -327,7 +333,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     <>
                                         <h2 className="text-xl font-semibold mb-6">Stock value history</h2>
                                         <div className="h-64">
-                                            <LineChart dataSets={this.state.lineChartData.dataSets} chartProps={LineChartSettingManager.getStockChartSettingForStockValueHistory()}></LineChart>
+                                            <LineChart dataSets={this.state.lineChartData.dataSets} chartProps={LineChartSettingManager.getStockChartSettingForStockValueHistory(minStockValue, maxStockValue)}></LineChart>
                                         </div>
                                     </>
                                 </ComponentPanel>
