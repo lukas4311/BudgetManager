@@ -343,7 +343,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                     <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
                                                 </div>
                                             </div>
-                                            <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:w-6/10 3xl:w-full">
+                                            <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:ml-4 lg:w-6/10 3xl:w-full">
                                                 <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                                             </div>
                                         </div>
