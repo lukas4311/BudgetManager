@@ -20,8 +20,8 @@ function ScoreList<T extends IRankingModel>({ models }: Props<T>) {
       {models.map((model, index) => (
         <div className="flex flex-col h-full justify-end">
           <div key={index} style={{ height: getHeight(index) }}
-            className="flex justify-center items-center duration-500 transition-all bg-white mx-4 w-24 rounded-xl bg-vermilion mb-2 boxShadowHover">
-            <div className="text-2xl font-bold text-black">{model.score}</div>
+            className="flex justify-center items-center duration-500 transition-all bg-white mx-4 lg:w-24 rounded-xl bg-vermilion mb-2 boxShadowHover">
+            <div className="text-lg lg:text-2xl font-bold text-black">{model.score}</div>
           </div>
           <p>{model.title}</p>
         </div>
