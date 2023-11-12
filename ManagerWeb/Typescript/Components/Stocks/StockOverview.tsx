@@ -252,11 +252,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                         {(profitOrLoss >= 0 ? <ArrowDropUpOutlinedIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownOutlinedIcon className="fill-red-700 h-10 w-10" />)}
                         <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
                     </div>
-                    <div>
-                        <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
+                    <div className="text-right">
+                        <p className="text-lg">{ticker.size.toFixed(3)}</p>
+                        <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
                         {ticker.stockCurrentWealth != 0 ? (
-                            <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
+                            <p className="text-lg">{profitOrLoss.toFixed(2)} %</p>
                         ) : <></>}
                     </div>
                 </div>
