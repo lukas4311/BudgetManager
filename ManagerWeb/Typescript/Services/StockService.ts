@@ -173,25 +173,6 @@ export default class StockService implements IStockService {
         throw new Error("Not implemented");
     }
 
-    // public async calculateStockTotalUsdValueForDate(tradeHistory: StockViewModel[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<StockCalculationModel> {
-    //     let totalyStackedAmountOfStocks = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSizeAfterSplit, 0);
-    //     let exhangeRateTrade: number = 0;
-
-    //     try {
-    //         exhangeRateTrade = await this.getStockCurrentPrice(ticker);
-    //     } catch (error) {
-    //         console.log(`Error while downloading of fin data for ticker: ${ticker}`);
-    //         return { finalCurrencyPrice: 0, finalCurrencyPriceTrade: 0, usdSum: 0, totalyStacked: 0 };
-    //     }
-
-    //     const usdSum = await this.calculateStockTradesSpentUsdSum(tradeHistory);
-    //     const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
-    //     let finalCurrencyPrice = usdSum * finalExhangeRate;
-    //     let finalCurrencyPriceTrade = totalyStackedAmountOfStocks * exhangeRateTrade * finalExhangeRate;
-
-    //     return { finalCurrencyPrice, finalCurrencyPriceTrade, usdSum, totalyStacked: totalyStackedAmountOfStocks };
-    // }
-
     public async getStockCurrentPrice(ticker: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
         const tickerUpper = ticker.toUpperCase();
@@ -262,28 +243,6 @@ export default class StockService implements IStockService {
 
     public async getCompanyProfile(ticker: string) {
         return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
-    }
-
-    private calculateStockTradesSpentUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
-        let sum = 0;
-
-        for (const trade of tradeHistory.filter(s => s.tradeValue < 0)) {
-            let exhangeRate: number = await this.calculateForexExchangeRateToUsd(trade);
-            sum += Math.abs(trade.tradeValue) * exhangeRate;
-        }
-
-        return sum;
-    }
-
-    private calculateStockTradesSellUsdSum = async (tradeHistory: StockViewModel[]): Promise<number> => {
-        let sum = 0;
-
-        for (const trade of tradeHistory.filter(s => s.tradeValue > 0)) {
-            let exhangeRate: number = await this.calculateForexExchangeRateToUsd(trade);
-            sum += Math.abs(trade.tradeValue) * exhangeRate;
-        }
-
-        return sum;
     }
 
     private async calculateForexExchangeRateToUsd(trade: StockViewModel) {
