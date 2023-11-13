@@ -144,7 +144,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
                                 <FormControl className="w-full">
-                                    <InputLabel id="demo-simple-select-label">Kategorie</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="type"
@@ -165,19 +165,19 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Název" type="text" name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
+                                <TextField label="Name" type="text" name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
                             </div>
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Výše" type="text" name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
+                                <TextField label="Amount" type="text" name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
                             </div>
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Datum" type="date" name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
+                                <TextField label="Payment date" type="date" name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
                                     InputLabelProps={{ shrink: true }}
                                 />
                             </div>
@@ -187,7 +187,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                     <div className="flex my-4">
                         <div className="w-full">
                             <div className="relative inline-block w-4/5 float-left ml-6">
-                                <TextField label="Popis" type="text" name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
+                                <TextField label="Description" type="text" name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
                             </div>
                         </div>
                     </div>

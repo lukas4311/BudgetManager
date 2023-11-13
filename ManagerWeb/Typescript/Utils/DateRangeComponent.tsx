@@ -35,7 +35,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
             <div className="exactDates w-full flex flex-row text-white">
                 <TextField
                     id="dateFrom"
-                    label="Datum od"
+                    label="Date from"
                     type="date"
                     defaultValue={this.state.filterDateFrom}
                     InputLabelProps={{
@@ -46,7 +46,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
                 />
                 <TextField
                     id="dateTo"
-                    label="Datum do"
+                    label="Date to"
                     type="date"
                     defaultValue={this.state.filterDateTo}
                     InputLabelProps={{
