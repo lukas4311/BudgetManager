@@ -200,7 +200,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         }
 
         return (
-            <div className="h-12">
+            <div className="h-8">
                 <LineChart dataSets={lineChartData} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
             </div>
         );
@@ -247,16 +247,16 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
         return (
             <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 mb-2">
                     <div className="flex flex-row">
                         {(profitOrLoss >= 0 ? <ArrowDropUpOutlinedIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownOutlinedIcon className="fill-red-700 h-10 w-10" />)}
                         <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
                     </div>
-                    <div>
-                        <p className="text-lg text-left">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg text-left">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
+                    <div className="text-right">
+                        <p className="text-lg">{ticker.size.toFixed(3)}</p>
+                        <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
                         {ticker.stockCurrentWealth != 0 ? (
-                            <p className="text-lg text-left">{profitOrLoss.toFixed(2)} %</p>
+                            <p className="text-lg">{profitOrLoss.toFixed(2)} %</p>
                         ) : <></>}
                     </div>
                 </div>

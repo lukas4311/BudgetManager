@@ -502,6 +502,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 
+@media (min-width: 2560px) {
+  .container {
+    max-width: 2560px;
+  }
+}
+
 .static {
   position: static !important;
 }
@@ -575,6 +581,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .my-4 {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
+}
+
+.my-3 {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
 .mx-2 {
@@ -742,10 +753,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 13rem !important;
 }
 
-.h-12 {
-  height: 3rem !important;
-}
-
 .h-10 {
   height: 2.5rem !important;
 }
@@ -804,10 +811,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-1\/5 {
   width: 20% !important;
-}
-
-.w-24 {
-  width: 6rem !important;
 }
 
 .w-1\/2 {
@@ -1298,6 +1301,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1 !important;
 }
 
+.text-lg {
+  font-size: 1.125rem !important;
+  line-height: 1.75rem !important;
+}
+
 .text-2xl {
   font-size: 1.5rem !important;
   line-height: 2rem !important;
@@ -1316,11 +1324,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-7xl {
   font-size: 4.5rem !important;
   line-height: 1 !important;
-}
-
-.text-lg {
-  font-size: 1.125rem !important;
-  line-height: 1.75rem !important;
 }
 
 .font-black {
@@ -1467,11 +1470,76 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 1024px) {
+  .lg\:mb-0 {
+    margin-bottom: 0px !important;
+  }
+
+  .lg\:ml-4 {
+    margin-left: 1rem !important;
+  }
+
   .lg\:w-11\/12 {
     width: 91.666667% !important;
   }
 
+  .lg\:w-24 {
+    width: 6rem !important;
+  }
+
+  .lg\:w-4\/10 {
+    width: 40% !important;
+  }
+
+  .lg\:w-1\/3 {
+    width: 33.333333% !important;
+  }
+
+  .lg\:w-2\/5 {
+    width: 40% !important;
+  }
+
+  .lg\:w-6\/10 {
+    width: 60% !important;
+  }
+
+  .lg\:w-1\/2 {
+    width: 50% !important;
+  }
+
+  .lg\:flex-row {
+    flex-direction: row !important;
+  }
+
+  .lg\:flex-wrap {
+    flex-wrap: wrap !important;
+  }
+
   .lg\:p-4 {
     padding: 1rem !important;
+  }
+
+  .lg\:text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:w-full {
+    width: 100% !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .\33xl\:w-1\/2 {
+    width: 50% !important;
+  }
+
+  .\33xl\:w-full {
+    width: 100% !important;
+  }
+
+  .\33xl\:flex-col {
+    flex-direction: column !important;
   }
 }
