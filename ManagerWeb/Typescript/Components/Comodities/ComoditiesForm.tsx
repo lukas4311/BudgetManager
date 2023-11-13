@@ -43,7 +43,7 @@ const ComoditiesForm = (props: ComoditiesFormProps) => {
                     </div>
                     <div className="w-2/3 flex justify-start">
                         <Controller render={({ field }) =>
-                            <TextField label="Datum nákupu" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                            <TextField label="Buy date" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                             name="buyTimeStamp" defaultValue={viewModel.buyTimeStamp} control={control} />
                     </div>
                     <div className="w-2/3 flex flex-row items-center">
@@ -58,7 +58,7 @@ const ComoditiesForm = (props: ComoditiesFormProps) => {
                     <div className="w-2/3">
                         <Controller render={({ field }) =>
                             <FormControl className="w-full">
-                                <InputLabel id="demo-simple-select-label">Zdrojová měna tradu</InputLabel>
+                                <InputLabel id="demo-simple-select-label">Source trade currency</InputLabel>
                                 <Select
                                     {...field}
                                     labelId="demo-simple-select-label"
