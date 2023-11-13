@@ -274,7 +274,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title">Balance form</DialogTitle>
                             <DialogContent className="bg-prussianBlue">
-                                <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} />
+                                {this.state.selectedModel ? <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} /> : <></>}
                             </DialogContent>
                         </Dialog>
                         <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
