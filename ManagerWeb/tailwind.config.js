@@ -27,7 +27,7 @@ module.exports = {
                 '1/1': '100%'
             },
             screens: {
-                '3xl': '2560px',
+                '3xl': '1800px',
             }
         },
     },

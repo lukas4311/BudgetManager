@@ -302,53 +302,55 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
                             {this.showErrorMessage()}
-                            <div className="flex flex-col lg:flex-row lg:flex-wrap w-full">
-                                <ComponentPanel classStyle="xl:w-full 3xl:w-1/2">
-                                    <>
-                                        <div className="py-4 flex">
-                                            <h2 className="text-xl ml-12">Income/expense</h2>
-                                            <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                                    <path d="M0 0h24v24H0z" fill="none" />
-                                                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                                </svg>
-                                            </span>
-                                        </div>
-                                        <div className='flex flex-col lg:flex-row 3xl:flex-col'>
-                                            <div className='w-full lg:w-4/10 3xl:w-full'>
-                                                <div className="flex flex-col lg:flex-row items-center mb-3 ml-6">
-                                                    <Select
-                                                        labelId="demo-simple-select-label"
-                                                        id="demo-simple-select"
-                                                        value={this.state.selectedBankAccount}
-                                                        onChange={this.bankAccountChange}
-                                                        className="py-1 w-full lg:w-1/3">
-                                                        {this.state.bankAccounts.map((b, i) => {
-                                                            return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
-                                                        })}
-                                                    </Select>
-                                                    <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Please select bank account</span>
-                                                </div>
-                                                <div className="flex flex-col lg:flex-row text-black mb-3 ml-6 cursor-pointer">
-                                                    <div className="text-left m-auto w-full lg:w-2/5 mb-4 lg:mb-0">
-                                                        {this.filters.map((f) =>
-                                                            <span key={f.key}
-                                                                className={"px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
-                                                                    + (f.key == this.state.selectedFilter?.key ? "bg-vermilion" : "")}
-                                                                onClick={() => this.filterClick(f.key)}>
-                                                                {f.caption}
-                                                            </span>
-                                                        )}
+                            <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
+                                <div className="xl:w-full 3xl:w-1/2">
+                                    <ComponentPanel classStyle="">
+                                        <>
+                                            <div className="py-4 flex">
+                                                <h2 className="text-xl ml-12">Income/expense</h2>
+                                                <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                                        <path d="M0 0h24v24H0z" fill="none" />
+                                                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <div className='flex flex-col lg:flex-row 3xl:flex-col'>
+                                                <div className='w-full lg:w-4/10 3xl:w-full'>
+                                                    <div className="flex flex-col lg:flex-row items-center mb-3 ml-6">
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={this.state.selectedBankAccount}
+                                                            onChange={this.bankAccountChange}
+                                                            className="py-1 w-full lg:w-1/3">
+                                                            {this.state.bankAccounts.map((b, i) => {
+                                                                return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
+                                                            })}
+                                                        </Select>
+                                                        <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Please select bank account</span>
                                                     </div>
-                                                    <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
+                                                    <div className="flex flex-col lg:flex-row text-black mb-3 ml-6 cursor-pointer">
+                                                        <div className="text-left m-auto w-full lg:w-2/5 mb-4 lg:mb-0">
+                                                            {this.filters.map((f) =>
+                                                                <span key={f.key}
+                                                                    className={"px-4 bg-white inline-flex items-center transition inline-block duration-700 hover:bg-vermilion text-sm h-8 "
+                                                                        + (f.key == this.state.selectedFilter?.key ? "bg-vermilion" : "")}
+                                                                    onClick={() => this.filterClick(f.key)}>
+                                                                    {f.caption}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <DateRangeComponent datesFilledHandler={this.rangeDatesHandler}></DateRangeComponent>
+                                                    </div>
+                                                </div>
+                                                <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:ml-4 lg:w-6/10 3xl:w-full">
+                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
                                                 </div>
                                             </div>
-                                            <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:ml-4 lg:w-6/10 3xl:w-full">
-                                                <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
-                                            </div>
-                                        </div>
-                                    </>
-                                </ComponentPanel>
+                                        </>
+                                    </ComponentPanel>
+                                </div>
                                 <div className="xl:w-full 3xl:w-1/2 flex lg:flex-row flex-col">
                                     <ComponentPanel classStyle="xl:w-full lg:w-1/2">
                                         <div className='flex flex-col text-2xl text-white text-left px-4 justify-evenly h-full'>
