@@ -122,8 +122,8 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         let maxVal: number = Number.MAX_VALUE;
 
         this.state.chartData.forEach(e => {
-            minVal = Math.min(_.minBy(e.data, m => m.y).y, minVal);
-            maxVal = Math.min(_.maxBy(e.data, m => m.y).y, maxVal);
+            minVal = Math.min(_.minBy(e.data, m => m.y)?.y ?? minVal, minVal);
+            maxVal = Math.min(_.maxBy(e.data, m => m.y)?.y ?? maxVal, maxVal);
         })
 
         return { min: minVal, max: maxVal };
