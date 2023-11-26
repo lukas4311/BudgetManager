@@ -20,5 +20,7 @@ namespace BudgetManager.Services.Contracts
         IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker);
 
         Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate);
+
+        void GetStocksPriceAtDate(string[] tickers, DateTime date);
     }
 }

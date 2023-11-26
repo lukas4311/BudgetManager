@@ -77,6 +77,8 @@ namespace BudgetManager.Services
 
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
             => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+        
+        public void GetStocksPriceAtDate(string[] tickers, DateTime date) => throw new NotImplementedException();
 
         private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
         {
