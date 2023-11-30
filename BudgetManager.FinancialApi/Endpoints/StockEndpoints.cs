@@ -21,7 +21,7 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithName(nameof(GetStockPriceDataAtDate))
             .WithOpenApi();
 
-            app.MapGet("stock/{tickers}/price/{date}", GetStocksPriceDataAtDate)
+            app.MapGet("stocks/price/{date}", GetStocksPriceDataAtDate)
                 .WithName(nameof(GetStocksPriceDataAtDate))
                 .WithOpenApi();
         }
@@ -57,10 +57,9 @@ namespace BudgetManager.FinancialApi.Endpoints
         }
 
         public static async Task<Ok<IEnumerable<StockPrice>>> GetStocksPriceDataAtDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
-            [FromRoute] string[] tickers, [FromRoute] DateTime date)
+            [FromQuery] string[] tickers, [FromRoute] DateTime date)
         {
-            IEnumerable<StockPrice> stockPrices = new List<StockPrice>();
-            stockTradeHistoryService.GetStocksPriceAtDate(tickers, date);
+            IEnumerable<StockPrice> stockPrices = await stockTradeHistoryService.GetStocksPriceAtDate(tickers, date);
             return TypedResults.Ok(stockPrices);
         }
     }
