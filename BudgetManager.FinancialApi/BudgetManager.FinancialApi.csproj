@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />
     <ProjectReference Include="..\BudgetManager.Services\BudgetManager.Services.csproj" />
