@@ -20,6 +20,10 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("stock/{ticker}/price/{date}", GetStockPriceDataAtDate)
             .WithName(nameof(GetStockPriceDataAtDate))
             .WithOpenApi();
+
+            app.MapGet("stock/{tickers}/price/{date}", GetStocksPriceDataAtDate)
+                .WithName(nameof(GetStocksPriceDataAtDate))
+                .WithOpenApi();
         }
 
         public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound>> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)
@@ -32,7 +36,7 @@ namespace BudgetManager.FinancialApi.Endpoints
             return TypedResults.Ok(data);
         }
 
-        public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound>> GetStockPriceDataFromDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, 
+        public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound>> GetStockPriceDataFromDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
             if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
@@ -50,6 +54,15 @@ namespace BudgetManager.FinancialApi.Endpoints
 
             StockPrice data = await stockTradeHistoryService.GetStockPriceAtDate(ticker, date);
             return TypedResults.Ok(data);
+        }
+
+        public static async Task<Ok<IEnumerable<StockPrice>>> GetStocksPriceDataAtDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
+            [FromRoute] string[] tickers, [FromRoute] DateTime date)
+        {
+            IEnumerable<StockPrice> stockPrices = new List<StockPrice>();
+            stockTradeHistoryService.GetStocksPriceAtDate(tickers, date);
+            //StockPrice data = await stockTradeHistoryService.GetStockPriceAtDate(ticker, date);
+            return TypedResults.Ok(stockPrices);
         }
     }
 }

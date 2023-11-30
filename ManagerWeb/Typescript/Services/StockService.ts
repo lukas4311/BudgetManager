@@ -90,7 +90,7 @@ export default class StockService implements IStockService {
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
 
-        // TODO: VERY SLOW - make it faster
+        // TODO: VERY SLOW - make it faster, try to do API method to get price for more then one ticker for date
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
             for (const [ticker, accumulatedSize] of tickersSizeAccumulated) {
