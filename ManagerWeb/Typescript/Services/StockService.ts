@@ -89,15 +89,19 @@ export default class StockService implements IStockService {
 
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
-
+        
         // TODO: VERY SLOW - make it faster, try to do API method to get price for more then one ticker for date
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
-            for (const [ticker, accumulatedSize] of tickersSizeAccumulated) {
-                const tickerPrice = await this.getStockPrice(ticker, date);
-                const tickerValue = tickerPrice * accumulatedSize;
-                stockAccumulatedValue.set(ticker, tickerValue);
+            const tickers = Array.from(tickersSizeAccumulated.keys());
+            const tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+
+            for(const stockPriceInfo of tickersPrice){
+                const accumulatedSize = tickersSizeAccumulated.get(stockPriceInfo.ticker);
+                const tickerValue = (stockPriceInfo?.price ?? 1) * accumulatedSize;
+                stockAccumulatedValue.set(stockPriceInfo.ticker, tickerValue);
             }
+
             accumulatedValueInDays.set(dateKey, _.clone(stockAccumulatedValue));
         }
 
