@@ -21,6 +21,6 @@ namespace BudgetManager.Services.Contracts
 
         Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate);
 
-        void GetStocksPriceAtDate(string[] tickers, DateTime date);
+        Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date);
     }
 }

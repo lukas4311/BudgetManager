@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BudgetManager.Services
 {
@@ -77,8 +78,20 @@ namespace BudgetManager.Services
 
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
             => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
-        
-        public void GetStocksPriceAtDate(string[] tickers, DateTime date) => throw new NotImplementedException();
+
+        public async Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date)
+        {
+            List<Task<IEnumerable<StockPrice>>> finPriceTasks = new();
+
+            for (int i = 0; i < tickers.Length; i++)
+            { 
+                var taskTicker = stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
+                finPriceTasks.Add(taskTicker);
+            }
+
+            var prices = await Task.WhenAll(finPriceTasks.ToArray());
+            return prices.Where(m => m.Any()).Select(m => m.FirstOrDefault());
+        }
 
         private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
         {

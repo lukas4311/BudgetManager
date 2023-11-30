@@ -61,7 +61,6 @@ namespace BudgetManager.FinancialApi.Endpoints
         {
             IEnumerable<StockPrice> stockPrices = new List<StockPrice>();
             stockTradeHistoryService.GetStocksPriceAtDate(tickers, date);
-            //StockPrice data = await stockTradeHistoryService.GetStockPriceAtDate(ticker, date);
             return TypedResults.Ok(stockPrices);
         }
     }
