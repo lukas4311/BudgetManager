@@ -41,7 +41,7 @@ namespace BudgetManager.Api.Controllers
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(this.stockTradeHistoryService.GetAll(this.GetUserId()));
 
         [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}")]
-        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get(ECurrencySymbol forexSymbol) => Ok(this.stockTradeHistoryService.GetAll(this.GetUserId(), forexSymbol));
+        public async Task<ActionResult<IEnumerable<StockTradeHistoryGetModel>>> Get(ECurrencySymbol forexSymbol) => Ok(await this.stockTradeHistoryService.GetAll(this.GetUserId(), forexSymbol));
 
         [HttpGet("stockTradeHistory/{ticker}")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker) => Ok(this.stockTradeHistoryService.GetTradeHistory(this.GetUserId(), ticker));

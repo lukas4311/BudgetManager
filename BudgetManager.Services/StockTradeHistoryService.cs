@@ -21,15 +21,17 @@ namespace BudgetManager.Services
         private readonly IInfluxContext influxContext;
         private readonly IStockSplitService stockSplitService;
         private readonly IForexService forexService;
+        private readonly ICurrencySymbolRepository currencySymbolRepository;
 
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper,
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
-            IStockSplitService stockSplitService, IForexService forexService) : base(repository, mapper)
+            IStockSplitService stockSplitService, IForexService forexService, ICurrencySymbolRepository currencySymbolRepository) : base(repository, mapper)
         {
             this.stockDataInfluxRepo = stockDataInfluxRepo;
             this.influxContext = influxContext;
             this.stockSplitService = stockSplitService;
             this.forexService = forexService;
+            this.currencySymbolRepository = currencySymbolRepository;
         }
 
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
@@ -63,22 +65,34 @@ namespace BudgetManager.Services
 
             // TODO: transfer all trades to selected currency
             List<Task> exchageRateTasks = new List<Task>();
+            IEnumerable<CurrencySymbol> currencySymbols = this.currencySymbolRepository.FindAll().ToList();
 
             for (int i = 0; i < trades.Count; i++)
             {
-                //var task = await Task.Run(async () =>
-                //{
-                //    StockTradeHistoryGetModel trade = trades[i];
-                //    double data = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
-                //    trade.TradeValue *= data;
-                //});
-                //exchageRateTasks.Add(task);
                 StockTradeHistoryGetModel trade = trades[i];
-                double data = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
-                trade.TradeValue *= data;
+                var task = Task.Run(async () =>
+                {
+                    CurrencySymbol currencySymbolEntity = currencySymbols.Where(a => a.Symbol == currencySymbol.ToString()).SingleOrDefault();
+
+                    if (currencySymbolEntity is null)
+                        throw new Exception(currencySymbol.ToString() + " not found");
+
+                    double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                    trade.TradeValue *= exhangeRate;
+                    trade.CurrencySymbol = currencySymbol.ToString();
+                    trade.CurrencySymbolId = currencySymbolEntity.Id;
+                });
+                exchageRateTasks.Add(task);
+
+                //StockTradeHistoryGetModel trade = trades[i];
+                //CurrencySymbol currencySymbolEntity = this.currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
+                //double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                //trade.TradeValue *= exhangeRate;
+                //trade.CurrencySymbol = currencySymbol.ToString();
+                //trade.CurrencySymbolId = currencySymbolEntity.Id;
             }
 
-            //await Task.WhenAll(exchageRateTasks);
+            await Task.WhenAll(exchageRateTasks);
 
             return trades;
         }
