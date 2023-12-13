@@ -1,10 +1,9 @@
 ﻿using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Enums;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +39,9 @@ namespace BudgetManager.Api.Controllers
 
         [HttpGet("stockTradeHistory")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(this.stockTradeHistoryService.GetAll(this.GetUserId()));
+
+        [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}")]
+        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get(ECurrencySymbol forexSymbol) => Ok(this.stockTradeHistoryService.GetAll(this.GetUserId(), forexSymbol));
 
         [HttpGet("stockTradeHistory/{ticker}")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker) => Ok(this.stockTradeHistoryService.GetTradeHistory(this.GetUserId(), ticker));

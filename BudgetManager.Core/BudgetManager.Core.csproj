@@ -5,8 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Security\" />
-    <Folder Include="Services\" />
+    <Compile Remove="Security\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Security\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Security\**" />
+    <None Remove="Services\**" />
   </ItemGroup>
 
 </Project>

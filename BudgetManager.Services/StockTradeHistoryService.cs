@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Enums;
 using BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BudgetManager.Services
 {
@@ -20,25 +20,27 @@ namespace BudgetManager.Services
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
         private readonly IInfluxContext influxContext;
         private readonly IStockSplitService stockSplitService;
+        private readonly IForexService forexService;
 
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper,
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
-            IStockSplitService stockSplitService) : base(repository, mapper)
+            IStockSplitService stockSplitService, IForexService forexService) : base(repository, mapper)
         {
             this.stockDataInfluxRepo = stockDataInfluxRepo;
             this.influxContext = influxContext;
             this.stockSplitService = stockSplitService;
+            this.forexService = forexService;
         }
 
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
         {
-            var trades = repository
+            List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
-            var splits = this.stockSplitService.GetAll();
+            var splits = stockSplitService.GetAll();
 
             if (splits.Any())
                 ApplySplitsToTrades(trades, splits);
@@ -46,9 +48,44 @@ namespace BudgetManager.Services
             return trades;
         }
 
+        public async Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol)
+        {
+            List<StockTradeHistoryGetModel> trades = repository
+                .FindByCondition(i => i.UserIdentityId == userId)
+                .Include(t => t.CurrencySymbol)
+                .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
+                .ToList();
+
+            IEnumerable<StockSplitModel> splits = this.stockSplitService.GetAll();
+
+            if (splits.Any())
+                ApplySplitsToTrades(trades, splits);
+
+            // TODO: transfer all trades to selected currency
+            List<Task> exchageRateTasks = new List<Task>();
+
+            for (int i = 0; i < trades.Count; i++)
+            {
+                //var task = await Task.Run(async () =>
+                //{
+                //    StockTradeHistoryGetModel trade = trades[i];
+                //    double data = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                //    trade.TradeValue *= data;
+                //});
+                //exchageRateTasks.Add(task);
+                StockTradeHistoryGetModel trade = trades[i];
+                double data = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                trade.TradeValue *= data;
+            }
+
+            //await Task.WhenAll(exchageRateTasks);
+
+            return trades;
+        }
+
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {
-            var trades = repository
+            List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
                 .Include(t => t.StockTicker)
@@ -58,7 +95,7 @@ namespace BudgetManager.Services
 
             if (trades.Any())
             {
-                var splits = this.stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
+                var splits = stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
 
                 if (splits.Any())
                     ApplySplitsToTrades(trades, splits);
@@ -84,7 +121,7 @@ namespace BudgetManager.Services
             List<Task<IEnumerable<StockPrice>>> finPriceTasks = new();
 
             for (int i = 0; i < tickers.Length; i++)
-            { 
+            {
                 var taskTicker = stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
                 finPriceTasks.Add(taskTicker);
             }

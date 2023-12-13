@@ -16,6 +16,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
 
 namespace BudgetManager.Api
 {
@@ -33,7 +36,9 @@ namespace BudgetManager.Api
         {
 
             services.AddControllers();
-            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));    
+            services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));
+            services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(

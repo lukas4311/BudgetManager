@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Enums;
 using BudgetManager.InfluxDbData.Models;
 using System;
 using System.Collections.Generic;
@@ -22,5 +23,7 @@ namespace BudgetManager.Services.Contracts
         Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate);
 
         Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date);
+
+        Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol);
     }
 }
