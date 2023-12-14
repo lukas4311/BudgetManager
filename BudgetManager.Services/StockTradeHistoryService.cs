@@ -63,36 +63,17 @@ namespace BudgetManager.Services
             if (splits.Any())
                 ApplySplitsToTrades(trades, splits);
 
-            // TODO: transfer all trades to selected currency
-            List<Task> exchageRateTasks = new List<Task>();
             IEnumerable<CurrencySymbol> currencySymbols = this.currencySymbolRepository.FindAll().ToList();
 
             for (int i = 0; i < trades.Count; i++)
             {
                 StockTradeHistoryGetModel trade = trades[i];
-                var task = Task.Run(async () =>
-                {
-                    CurrencySymbol currencySymbolEntity = currencySymbols.Where(a => a.Symbol == currencySymbol.ToString()).SingleOrDefault();
-
-                    if (currencySymbolEntity is null)
-                        throw new Exception(currencySymbol.ToString() + " not found");
-
-                    double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
-                    trade.TradeValue *= exhangeRate;
-                    trade.CurrencySymbol = currencySymbol.ToString();
-                    trade.CurrencySymbolId = currencySymbolEntity.Id;
-                });
-                exchageRateTasks.Add(task);
-
-                //StockTradeHistoryGetModel trade = trades[i];
-                //CurrencySymbol currencySymbolEntity = this.currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
-                //double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
-                //trade.TradeValue *= exhangeRate;
-                //trade.CurrencySymbol = currencySymbol.ToString();
-                //trade.CurrencySymbolId = currencySymbolEntity.Id;
+                CurrencySymbol currencySymbolEntity = this.currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
+                double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                trade.TradeValue *= exhangeRate;
+                trade.CurrencySymbol = currencySymbol.ToString();
+                trade.CurrencySymbolId = currencySymbolEntity.Id;
             }
-
-            await Task.WhenAll(exchageRateTasks);
 
             return trades;
         }
