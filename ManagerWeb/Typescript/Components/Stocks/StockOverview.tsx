@@ -271,9 +271,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     render() {
         const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
         const minStockValue = Math.min(...yValues) ;
-        console.log("🚀 ~ file: StockOverview.tsx:274 ~ StockOverview ~ render ~ minStockValue:", minStockValue)
         const maxStockValue = Math.max(...yValues);
-        console.log("🚀 ~ file: StockOverview.tsx:276 ~ StockOverview ~ render ~ maxStockValue:", maxStockValue)
 
         return (
             <ThemeProvider theme={theme}>

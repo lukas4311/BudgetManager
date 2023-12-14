@@ -1,7 +1,7 @@
 import _, { forEach } from 'lodash';
 import moment from 'moment';
 import { StockApi } from '../ApiClient/Main/apis';
-import { StockPrice, StockTickerModel, StockTradeHistoryModel, TradeHistory } from '../ApiClient/Main/models';
+import { ECurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel, TradeHistory } from '../ApiClient/Main/models';
 import { StockViewModel, TradeAction } from '../Model/StockViewModel';
 import { IStockService } from './IStockService';
 import { ICryptoService } from './ICryptoService';
@@ -46,6 +46,16 @@ export default class StockService implements IStockService {
         });
     }
 
+    public async getStockTradeHistoryInSelectedCurrency(currencySymbol: ECurrencySymbol): Promise<StockViewModel[]> {
+        const tickers = await this.getStockTickers();
+        const stockTrades = await this.stockApi.stockStockTradeHistoryExhangedToForexSymbolGet({ forexSymbol: currencySymbol });
+        return stockTrades.map(s => {
+            let viewModel = StockViewModel.mapFromDataModel(s);
+            viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
+            return viewModel;
+        });
+    }
+
     public async getStockTradeHistoryByTicker(ticker: string) {
         return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
     }
@@ -59,6 +69,11 @@ export default class StockService implements IStockService {
             trade.tradeValue = newTradeValue;
         }
 
+        return trades;
+    }
+
+    public getStockTradesHistoryInSelectedCurrencyNew = async (): Promise<StockViewModel[]> => {
+        let trades = await this.getStockTradeHistoryInSelectedCurrency(ECurrencySymbol.Usd);
         return trades;
     }
 
@@ -89,14 +104,14 @@ export default class StockService implements IStockService {
 
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
-        
+
         // TODO: VERY SLOW - make it faster, try to do API method to get price for more then one ticker for date
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
             const tickers = Array.from(tickersSizeAccumulated.keys());
             const tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
 
-            for(const stockPriceInfo of tickersPrice){
+            for (const stockPriceInfo of tickersPrice) {
                 const accumulatedSize = tickersSizeAccumulated.get(stockPriceInfo.ticker);
                 const tickerValue = (stockPriceInfo?.price ?? 1) * accumulatedSize;
                 stockAccumulatedValue.set(stockPriceInfo.ticker, tickerValue);
@@ -109,7 +124,7 @@ export default class StockService implements IStockService {
     }
 
     public getStocksTickerGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
-        const stocks = await this.getStockTradesHistoryInSelectedCurrency();
+        const stocks = await this.getStockTradesHistoryInSelectedCurrencyNew();
         let groupedTradesByTicker = _.chain(stocks)
             .groupBy(g => g.stockTickerId)
             .value();
