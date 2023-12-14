@@ -15,6 +15,7 @@ export * from './CompanyProfileModel';
 export * from './CryptoTicker';
 export * from './CryptoTradeHistory';
 export * from './CurrencySymbol';
+export * from './ECurrencySymbol';
 export * from './InterestRate';
 export * from './OtherInvestment';
 export * from './OtherInvestmentBalaceHistory';
