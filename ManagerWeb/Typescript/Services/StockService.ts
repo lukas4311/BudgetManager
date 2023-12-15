@@ -61,25 +61,12 @@ export default class StockService implements IStockService {
     }
 
     public getStockTradesHistoryInSelectedCurrency = async (): Promise<StockViewModel[]> => {
-        let trades = await this.getStockTradeHistory();
-
-        for (let trade of trades) {
-            const exchangeRate = await this.calculateForexExchangeRateToUsd(trade);
-            const newTradeValue = trade.tradeValue * exchangeRate;
-            trade.tradeValue = newTradeValue;
-        }
-
-        return trades;
-    }
-
-    public getStockTradesHistoryInSelectedCurrencyNew = async (): Promise<StockViewModel[]> => {
         let trades = await this.getStockTradeHistoryInSelectedCurrency(ECurrencySymbol.Usd);
         return trades;
     }
 
     public getStocksAccumulatedSize = async (): Promise<Map<string, Map<string, number>>> => {
         let data = await this.getStockTradesHistoryInSelectedCurrency();
-        // const filteredData = data.filter(d => moment(d.tradeTimeStamp).toDate() > fromDate && moment(d.tradeTimeStamp).toDate() < toDate);
         const orderData = _.sortBy(data, d => new Date(d.tradeTimeStamp), ['asc']);
 
         let accumulatedSizeInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
@@ -105,7 +92,6 @@ export default class StockService implements IStockService {
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
 
-        // TODO: VERY SLOW - make it faster, try to do API method to get price for more then one ticker for date
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
             const tickers = Array.from(tickersSizeAccumulated.keys());
@@ -124,7 +110,7 @@ export default class StockService implements IStockService {
     }
 
     public getStocksTickerGroupedTradeHistory = async (): Promise<StockGroupModel[]> => {
-        const stocks = await this.getStockTradesHistoryInSelectedCurrencyNew();
+        const stocks = await this.getStockTradesHistoryInSelectedCurrency();
         let groupedTradesByTicker = _.chain(stocks)
             .groupBy(g => g.stockTickerId)
             .value();
@@ -156,41 +142,30 @@ export default class StockService implements IStockService {
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
-        let data = await this.getStockTradesHistoryInSelectedCurrency();
+        const stockGroupData: NetWorthMonthGroupModel[] = [];
         const months = this.getMonthsBetween(fromDate, toDate);
+        const accumulatedTrades = await this.getStocksAccumulatedValue();
+        let accumulatedValueInDay: GroupedStockValues[] = []
+        accumulatedTrades.forEach((value, key) => {
+            let date = moment(key).toDate();
+            const stockValues = Array.from(value.values());
+            let groupedStockValues: GroupedStockValues = { date: date, accumulatedValue: _.sum(stockValues) };
+            accumulatedValueInDay.push(groupedStockValues);
+        });
+        accumulatedValueInDay = _.orderBy(accumulatedValueInDay, t => t.date, "asc");
+        const lastDate = _.last(accumulatedValueInDay);
 
         for (const month of months) {
-            const monthTrades = data.filter(t => moment(t.tradeTimeStamp).format("YYYY-MM") == month);
-            // TODO: use method which is calculating accumulated size for all stocks
+            if (month > lastDate?.date) {
+                stockGroupData.push({ date: month, amount: lastDate.accumulatedValue });
+            }
+            else {
+                const stockValues = _.sumBy(accumulatedValueInDay.filter(t => moment(t.date).format('YYYY-MM') === month.date), s => s.accumulatedValue);
+                stockGroupData.push({ date: month, amount: stockValues });
+            }
         }
 
-        // const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSizeAfterSplit * -1 : t.tradeSizeAfterSplit } as StockViewModel));
-        // const stockGroupData: NetWorthMonthGroupModel[] = [];
-        // let prevMonthSum = 0;
-
-        // for (const month of months) {
-        //     const monthTrades = tradesWithPlusMinusSign.filter(t => moment(t.tradeTimeStamp).format('YYYY-MM') === month.date);
-        //     const monthGroupedTrades = _.chain(monthTrades).groupBy(t => t.stockTicker)
-        //         .map((value, key) => ({ ticker: key, trades: value }))
-        //         .value();
-
-        //     for (const monthTickerGroup of monthGroupedTrades) {
-        //         let monthTradeFirst = _.first(monthTickerGroup.trades);
-
-        //         if (monthTradeFirst) {
-        //             const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
-        //             let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
-        //             dateForForexExchangeGet.add(1, 'month');
-        //             let finalCalculation = await this.calculateStockTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
-        //             prevMonthSum += finalCalculation.finalCurrencyPriceTrade;
-        //         }
-        //     }
-
-        //     stockGroupData.push({ date: month, amount: prevMonthSum });
-        // }
-
-        // return stockGroupData;
-        throw new Error("Not implemented");
+        return stockGroupData;
     }
 
     public async getStockCurrentPrice(ticker: string): Promise<number> {
@@ -309,4 +284,9 @@ export class StockCalculationModel {
     usdSum: number;
     finalCurrencyPrice: number;
     finalCurrencyPriceTrade: number;
+}
+
+class GroupedStockValues {
+    date: Date;
+    accumulatedValue: number;
 }
