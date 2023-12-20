@@ -7,7 +7,7 @@ import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _, { max } from "lodash";
-import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { createMuiTheme, ThemeProvider, useTheme } from "@material-ui/core/styles";
@@ -28,6 +28,7 @@ import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const theme = createMuiTheme({
     palette: {
@@ -37,6 +38,11 @@ const theme = createMuiTheme({
         }
     }
 });
+
+enum DisplayChioce {
+    Portfolio = "Portfolio",
+    Trades = "Trades"
+}
 
 class StockSummary {
     totalWealth: number;
@@ -54,6 +60,7 @@ interface StockOverviewState {
     stockPrice: TickersWithPriceHistory[];
     selectedCompany: StockComplexModel;
     lineChartData: LineChartProps;
+    selectedDisplayChoice: string;
 }
 
 export class StockComplexModel {
@@ -74,7 +81,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] } };
+        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] }, selectedDisplayChoice: DisplayChioce.Portfolio };
     }
 
     public componentDidMount = () => this.init();
@@ -268,9 +275,14 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private handleCloseCompanyProfile = () =>
         this.setState({ selectedCompany: undefined });
 
+    private handleDisplayChoice = (_: any, displayChoice: DisplayChioce) => {
+        if (displayChoice)
+            this.setState({ selectedDisplayChoice: displayChoice });
+    }
+
     render() {
         const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
-        const minStockValue = Math.min(...yValues) ;
+        const minStockValue = Math.min(...yValues);
         const maxStockValue = Math.max(...yValues);
 
         return (
@@ -280,30 +292,41 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                         <div className="flex flex-row pt-5">
                             <ComponentPanel classStyle="w-7/12">
                                 <div className="flex flex-col h-full">
-                                    <div className="flex flex-col">
-                                        <h2 className="text-xl font-semibold">Current portfolio</h2>
-                                        <div className="text-right mb-6">
-                                            <Button className='bg-vermilion text-mainDarkBlue text-xs'>
-                                                <span className="w-4">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-current cursor-pointer">
-                                                        <path d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                                    </svg>
-                                                </span>
-                                                <span>New ticker request</span>
-                                            </Button>
+                                    <ToggleButtonGroup value={this.state.selectedDisplayChoice} onChange={this.handleDisplayChoice} aria-label="text formatting" size="small" exclusive>
+                                        <ToggleButton value={DisplayChioce.Portfolio} aria-label="Portfolio">
+                                            <span className={this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? "text-vermilion" : "text-white"}>Portfolio</span>
+                                        </ToggleButton>
+                                        <ToggleButton value={DisplayChioce.Trades} aria-label="Trades">
+                                            <span className={this.state.selectedDisplayChoice == DisplayChioce.Trades ? "text-vermilion" : "text-white"}>Trades</span>
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                    {this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? (
+                                        <div className="flex flex-col">
+                                            <h2 className="text-xl font-semibold">Current portfolio</h2>
+                                            <div className="text-right mb-6">
+                                                <Button className='bg-vermilion text-mainDarkBlue text-xs'>
+                                                    <span className="w-4">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-current cursor-pointer">
+                                                            <path d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                        </svg>
+                                                    </span>
+                                                    <span>New ticker request</span>
+                                                </Button>
+                                            </div>
+                                            <div className="flex flex-wrap justify-around ">
+                                                {this.state.stockGrouped.map(g => this.renderTickerFinInfo(g))}
+                                            </div>
                                         </div>
-                                        <div className="flex flex-wrap justify-around ">
-                                            {this.state.stockGrouped.map(g => this.renderTickerFinInfo(g))}
+                                    ) : (
+                                        <div className="flex flex-col">
+                                            <h2 className="text-xl font-semibold mb-6">All trades</h2>
+                                            <div className="overflow-y-scroll">
+                                                <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()} dataAreaClass="h-70vh overflow-y-auto"
+                                                    addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade} ></BaseList>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="m-5 flex flex-col">
-                                        <h2 className="text-xl font-semibold mb-6">All trades</h2>
-                                        <div className="overflow-y-scroll">
-                                            <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()} dataAreaClass="h-70vh overflow-y-auto"
-                                                addItemHandler={this.addStockTrade} itemClickHandler={this.editStock} useRowBorderColor={true} deleteItemHandler={this.deleteTrade} ></BaseList>
-                                        </div>
-                                    </div>
+                                    )}
                                 </div>
                             </ComponentPanel>
                             <div className="flex flex-col w-5/12">
