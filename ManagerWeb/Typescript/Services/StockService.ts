@@ -156,13 +156,8 @@ export default class StockService implements IStockService {
         const lastDate = _.last(accumulatedValueInDay);
 
         for (const month of months) {
-            if (month > lastDate?.date) {
-                stockGroupData.push({ date: month, amount: lastDate.accumulatedValue });
-            }
-            else {
-                const stockValues = _.sumBy(accumulatedValueInDay.filter(t => moment(t.date).format('YYYY-MM') === month.date), s => s.accumulatedValue);
-                stockGroupData.push({ date: month, amount: stockValues });
-            }
+            const monthValueSum = _.last(accumulatedValueInDay.filter(t => moment(t.date).format('YYYY-MM') <= month.date))?.accumulatedValue ?? lastDate.accumulatedValue;
+            stockGroupData.push({ date: month, amount: monthValueSum });
         }
 
         return stockGroupData;

@@ -81,7 +81,6 @@ export default class NetWorthService {
 
         const otherInvestments = await this.otherInvestmentService.getAll();
         const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), otherInvestments);
-        console.log("🚀 ~ file: NetWorthService.ts:87 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ otherInvetmentsMonthlyGrouped:", otherInvetmentsMonthlyGrouped);
 
         // TODO: add monthly group data for crypto
         const tradeData = await this.cryptoService.getRawTradeData();
@@ -90,10 +89,8 @@ export default class NetWorthService {
         // TODO: add monthly group data for stocks
         const stockTradeData = await this.stockService.getStockTradeHistory();
         const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(new Date(2022, 0, 1), new Date(2023, 0, 1), stockTradeData, czkSymbol);
-        console.log("🚀 ~ file: NetWorthService.ts:93 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", acumulatedData)
 
         // TODO: add monthly group data for comodities
-
         return paymentGroupedData;
     }
 }
