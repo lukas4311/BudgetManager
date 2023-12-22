@@ -55,9 +55,9 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
         const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi, forexApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
-        // const data = await this.netWorthService.getCurrentNetWorth();
+        const data = await this.netWorthService.getCurrentNetWorth();
         await this.netWorthService.getNetWorthGroupedByMonth();
-        this.setState({ loading: false, netWorth: 0 });
+        this.setState({ loading: false, netWorth: data });
     }
 
     render() {
@@ -73,8 +73,11 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                     </div>
                                 ) :
                                     <div className='flex flex-row'>
-                                        <ComponentPanel classStyle="w-1/2">
-                                            <h2>Your net worth is {this.state.netWorth.toFixed(0)}</h2>
+                                        <ComponentPanel classStyle="w-full text-center">
+                                            <React.Fragment>
+                                                <h2 className='text-2xl'>Your net worth is</h2>
+                                                <h2 className='text-3xl'>{this.state.netWorth.toFixed(0)}</h2>
+                                            </React.Fragment>
                                         </ComponentPanel>
                                     </div>
                             }
