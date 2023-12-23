@@ -55,8 +55,9 @@ export default class CryptoService implements ICryptoService {
 
     public async getExchangeRate(from: string, to: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
-        return await this.forexApi.getForexPairPriceAtDate({ date: date, from: ForexSymbol.Czk, to: ForexSymbol.Usd });
-        // return await this.cryptoApi.cryptosActualExchangeRateFromCurrencyToCurrencyGet({ fromCurrency: from, toCurrency: to });
+        const fromEnum = this.convertStringToForexEnum(from);
+        const toEnum = this.convertStringToForexEnum(to);
+        return await this.forexApi.getForexPairPriceAtDate({ date: date, from: fromEnum, to: toEnum });
     }
 
     public async getCryptoCurrentNetWorth(currency: string): Promise<number> {
@@ -66,11 +67,11 @@ export default class CryptoService implements ICryptoService {
             .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
             .value();
 
-        const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, currency);
+        const finalCurrencyExcahngeRate = await this.getExchangeRate(currency, usdSymbol);
 
         for (const ticker of groupedTrades) {
-            const dollarExcahngeRate = await this.getExchangeRate(ticker.ticker, usdSymbol);
-            const finalMultiplier = dollarExcahngeRate * finalCurrencyExcahngeRate;
+            const dollarExcahngeRate = await this.getCryptoCurrentPrice(ticker.ticker);
+            const finalMultiplier = dollarExcahngeRate * ticker.sum * finalCurrencyExcahngeRate;
 
             if (finalMultiplier != 0) {
                 const sumedInFinalCurrency = finalMultiplier * ticker.sum;
