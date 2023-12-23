@@ -137,8 +137,10 @@ export default class StockService implements IStockService {
 
     public async getStocksNetWorthSum(finalCurrency: string): Promise<number> {
         let groupedTickers = await this.getStocksTickerGroupedTradeHistory();
+        const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, finalCurrency);
+
         let netWorth = _.sumBy(groupedTickers, t => t.stockCurrentWealth);
-        return netWorth;
+        return netWorth * (finalCurrencyExcahngeRate && finalCurrencyExcahngeRate != 0 ? finalCurrencyExcahngeRate : 1);
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
@@ -235,17 +237,24 @@ export default class StockService implements IStockService {
         return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
     }
 
-    private async calculateForexExchangeRateToUsd(trade: StockViewModel) {
-        let exhangeRate: number = 1;
-        let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
+    // private async calculateForexExchangeRateToUsd(trade: StockViewModel) {
+    //     let exhangeRate: number = 1;
+    //     let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
 
-        if (forexSymbol)
-            exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
-        else {
-            console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
-            exhangeRate = 1;
-        }
-        return exhangeRate;
+    //     if (forexSymbol)
+    //         exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
+    //     else {
+    //         console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
+    //         exhangeRate = 1;
+    //     }
+    //     return exhangeRate;
+    // }
+
+    public async getExchangeRate(from: string, to: string): Promise<number> {
+        let date = moment(Date.now()).subtract(1, 'd').toDate();
+        const fromEnum = this.convertStringToForexEnum(from);
+        const toEnum = this.convertStringToForexEnum(to);
+        return await this.forexFinApi.getForexPairPriceAtDate({ date: date, from: fromEnum, to: toEnum });
     }
 
     private getMonthsBetween(fromDate: Date, toDate: Date) {

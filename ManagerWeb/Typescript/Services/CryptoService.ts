@@ -67,11 +67,11 @@ export default class CryptoService implements ICryptoService {
             .map((value, key) => ({ ticker: key, sum: _.sumBy(value, s => s.tradeSize) }))
             .value();
 
-        const finalCurrencyExcahngeRate = await this.getExchangeRate(currency, usdSymbol);
+        const finalCurrencyExcahngeRate = await this.getExchangeRate(usdSymbol, currency);
 
         for (const ticker of groupedTrades) {
             const dollarExcahngeRate = await this.getCryptoCurrentPrice(ticker.ticker);
-            const finalMultiplier = dollarExcahngeRate * ticker.sum * finalCurrencyExcahngeRate;
+            const finalMultiplier = dollarExcahngeRate * finalCurrencyExcahngeRate;
 
             if (finalMultiplier != 0) {
                 const sumedInFinalCurrency = finalMultiplier * ticker.sum;
