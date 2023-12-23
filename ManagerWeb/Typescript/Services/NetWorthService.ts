@@ -47,11 +47,9 @@ export default class NetWorthService {
 
         currentBalance += otherInvestmentsbalance;
 
-        // FIXME: bad calculation of crypto
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
         currentBalance += cryptoSum;
 
-        // FIXME: bad calculation of stock sum
         const stockSum = await this.stockService.getStocksNetWorthSum(czkSymbol);
         currentBalance += stockSum;
 
