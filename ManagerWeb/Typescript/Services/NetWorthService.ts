@@ -31,32 +31,38 @@ export default class NetWorthService {
         this.comodityService = comodityService;
     }
 
-    async getCurrentNetWorth(): Promise<number> {
+    async getCurrentNetWorth(): Promise<TotalNetWorthDetail> {
         const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
+        let totalNetWorthDetail = new TotalNetWorthDetail();
 
         const limitDate = new Date(1970, 1, 1);
         const paymentHistory = await this.paymentService.getExactDateRangeDaysPaymentData(limitDate, undefined, undefined);
         const income = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
         const expense = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
 
-        let currentBalance = bankAccountBaseLine + income - expense;
+        // let currentBalance = bankAccountBaseLine + income - expense;
+        totalNetWorthDetail.money = bankAccountBaseLine + income - expense;
 
         const otherInvestments = await this.otherInvestmentService.getSummary();
         const otherInvestmentsbalance = _.sumBy(otherInvestments.actualBalanceData, s => s.balance);
 
-        currentBalance += otherInvestmentsbalance;
+        // currentBalance += otherInvestmentsbalance;
+        totalNetWorthDetail.other = otherInvestmentsbalance;
 
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
-        currentBalance += cryptoSum;
+        // currentBalance += cryptoSum;
+        totalNetWorthDetail.crypto = cryptoSum;
 
         const stockSum = await this.stockService.getStocksNetWorthSum(czkSymbol);
-        currentBalance += stockSum;
+        // currentBalance += stockSum;
+        totalNetWorthDetail.stock = stockSum;
 
         const comoditySum = await this.comodityService.getComodityNetWorth();
-        currentBalance += comoditySum;
+        totalNetWorthDetail.comodity = comoditySum;
+        // currentBalance += comoditySum;
 
-        return currentBalance;
+        return totalNetWorthDetail;
     }
 
     async getNetWorthGroupedByMonth() {
@@ -95,4 +101,13 @@ export default class NetWorthService {
 export class NetWorthMonthGroupModel {
     date: Moment;
     amount: number;
+}
+
+export class TotalNetWorthDetail {
+    public money: number = 0;
+    public stock: number = 0;
+    public other: number = 0;
+    public crypto: number = 0;
+    public comodity: number = 0;
+    public total = () => this.money + this.stock + this.other + this.crypto + this.comodity;
 }

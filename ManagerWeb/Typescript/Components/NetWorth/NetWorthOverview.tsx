@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import NetWorthService from '../../Services/NetWorthService';
+import NetWorthService, { TotalNetWorthDetail } from '../../Services/NetWorthService';
 import PaymentService from '../../Services/PaymentService';
 import StockService from '../../Services/StockService';
 import CryptoService from '../../Services/CryptoService';
@@ -28,13 +28,14 @@ const theme = createMuiTheme({
 class NetWorthOverviewState {
     loading: boolean;
     netWorth: number;
+    netWorthDetail: TotalNetWorthDetail;
 }
 
 export default class NetWorthOverview extends Component<RouteComponentProps, NetWorthOverviewState> {
     netWorthService: NetWorthService;
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { loading: true, netWorth: 0 };
+        this.state = { loading: true, netWorth: 0, netWorthDetail: new TotalNetWorthDetail() };
     }
 
     public componentDidMount() {
@@ -55,9 +56,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
         const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi, forexApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
-        const data = await this.netWorthService.getCurrentNetWorth();
+        const netWorthDetail = await this.netWorthService.getCurrentNetWorth();
         await this.netWorthService.getNetWorthGroupedByMonth();
-        this.setState({ loading: false, netWorth: data });
+
+        this.setState({ loading: false, netWorth: netWorthDetail.total(), netWorthDetail: netWorthDetail });
     }
 
     render() {
@@ -73,11 +75,21 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                     </div>
                                 ) :
                                     <div className='flex flex-row'>
-                                        <ComponentPanel classStyle="w-full text-center">
+                                        <ComponentPanel classStyle="w-1/2 text-center">
                                             <React.Fragment>
                                                 <h2 className='text-2xl'>Your net worth is</h2>
-                                                <h2 className='text-3xl'>{this.state.netWorth.toFixed(0)}</h2>
+                                                <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
                                             </React.Fragment>
+                                        </ComponentPanel>
+                                        <ComponentPanel classStyle="w-1/2 text-center">
+                                            <div className='px-12'>
+                                                <h2 className='text-2xl'>Net worth detail</h2>
+                                                <p className='text-xl text-left'>Money net worth: {this.state.netWorthDetail?.money.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Stock net worth: {this.state.netWorthDetail?.stock.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Crypto net worth: {this.state.netWorthDetail?.crypto.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Comodity net worth: {this.state.netWorthDetail?.comodity.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Other net worth: {this.state.netWorthDetail?.other.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                            </div>
                                         </ComponentPanel>
                                     </div>
                             }
