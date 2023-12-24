@@ -53,7 +53,6 @@ export default class NetWorthService {
         const stockSum = await this.stockService.getStocksNetWorthSum(czkSymbol);
         currentBalance += stockSum;
 
-        // FIXME: bad calculation of comodity
         const comoditySum = await this.comodityService.getComodityNetWorth();
         currentBalance += comoditySum;
 
