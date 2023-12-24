@@ -17,14 +17,14 @@ function PieChart(props: PieChartProps) {
         <ResponsivePieCanvas
             data={(props.data ?? [])}
             margin={{ top: 40, right: 200, bottom: 40, left: 80 }}
-            innerRadius={0.6}
+            innerRadius={0.5}
             padAngle={0}
             isInteractive={true}
             cornerRadius={0}
             colors={{ scheme: 'paired' }}
             borderColor={{ from: 'color', modifiers: [['darker', 0.6]] }}
             arcLinkLabelsTextColor="#ffffff"
-            arcLabelsTextColor="ffffff"
+            arcLabelsTextColor="000000"
             arcLinkLabelsSkipAngle={10}
             arcLabelsSkipAngle={10}
             sortByValue={true}

@@ -15,6 +15,7 @@ import { ICryptoService } from '../../Services/ICryptoService';
 import ComodityService from '../../Services/ComodityService';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { ComodityEndpointsApi, CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from '../../ApiClient/Fin';
+import { PieChart, PieChartData } from '../Charts/PieChart';
 
 const theme = createMuiTheme({
     palette: {
@@ -29,13 +30,14 @@ class NetWorthOverviewState {
     loading: boolean;
     netWorth: number;
     netWorthDetail: TotalNetWorthDetail;
+    pieDiversityData: PieChartData[];
 }
 
 export default class NetWorthOverview extends Component<RouteComponentProps, NetWorthOverviewState> {
     netWorthService: NetWorthService;
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { loading: true, netWorth: 0, netWorthDetail: new TotalNetWorthDetail() };
+        this.state = { loading: true, netWorth: 0, netWorthDetail: new TotalNetWorthDetail(), pieDiversityData: [] };
     }
 
     public componentDidMount() {
@@ -59,7 +61,23 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const netWorthDetail = await this.netWorthService.getCurrentNetWorth();
         await this.netWorthService.getNetWorthGroupedByMonth();
 
+        await this.preparePieChartData(netWorthDetail);
+
+
         this.setState({ loading: false, netWorth: netWorthDetail.total(), netWorthDetail: netWorthDetail });
+    }
+
+    private preparePieChartData(netWorthDetail: TotalNetWorthDetail) {
+        let pieData: PieChartData[] = [];
+
+
+        pieData.push({ id: "money", label: "money", value: Math.round(netWorthDetail?.money ?? 0) });
+        pieData.push({ id: "stock", label: "stock", value: Math.round(netWorthDetail?.stock ?? 0) });
+        pieData.push({ id: "crypto", label: "crypto", value: Math.round(netWorthDetail?.crypto ?? 0) });
+        pieData.push({ id: "comodity", label: "comodity", value: Math.round(netWorthDetail?.comodity ?? 0) });
+        pieData.push({ id: "other", label: "other", value: Math.round(netWorthDetail?.other ?? 0) });
+
+        this.setState({ pieDiversityData: pieData });
     }
 
     render() {
@@ -82,14 +100,22 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                             </React.Fragment>
                                         </ComponentPanel>
                                         <ComponentPanel classStyle="w-1/2 text-center">
-                                            <div className='px-12'>
-                                                <h2 className='text-2xl'>Net worth detail</h2>
-                                                <p className='text-xl text-left'>Money net worth: {this.state.netWorthDetail?.money.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                <p className='text-xl text-left'>Stock net worth: {this.state.netWorthDetail?.stock.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                <p className='text-xl text-left'>Crypto net worth: {this.state.netWorthDetail?.crypto.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                <p className='text-xl text-left'>Comodity net worth: {this.state.netWorthDetail?.comodity.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                <p className='text-xl text-left'>Other net worth: {this.state.netWorthDetail?.other.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                            </div>
+                                            <React.Fragment>
+                                                <div className='px-12'>
+                                                    <h2 className='text-2xl'>Net worth detail</h2>
+                                                    <p className='text-xl text-left'>Money net worth: {this.state.netWorthDetail?.money.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                    <p className='text-xl text-left'>Stock net worth: {this.state.netWorthDetail?.stock.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                    <p className='text-xl text-left'>Crypto net worth: {this.state.netWorthDetail?.crypto.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                    <p className='text-xl text-left'>Comodity net worth: {this.state.netWorthDetail?.comodity.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                    <p className='text-xl text-left'>Other net worth: {this.state.netWorthDetail?.other.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                </div>
+                                                <div className='mt-12'>
+                                                    <h4 className="text-2xl text-white">Net worth diversification</h4>
+                                                    <div className="h-96">
+                                                        <PieChart data={this.state.pieDiversityData}></PieChart>
+                                                    </div>
+                                                </div>
+                                            </React.Fragment>
                                         </ComponentPanel>
                                     </div>
                             }
