@@ -104,12 +104,6 @@ export class LineChartSettingManager {
             colors: { scheme: 'set1' }, enableSlices: 'x', enableCrosshair: true, enableGridX: true, enableGridY: true,
             margin: { bottom: 40, left: 60, right: 10, top: 10 },
             axisLeft: { legend: 'linear scale', legendOffset: 5 },
-            // axisBottom: { format: '%Y-%m-%d', tickValues: 'every month', legend: 'time scale', legendOffset: -5, },
-            // axisRight: null,
-            // axisTop: null,
-            // yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false },
-            // xScale: { type: "time", format: "%Y-%m-%d", precision: "month" }, 
-            // xFormat: "time:%Y-%m-%d",
             xScale: {
                 type: 'time',
                 format: '%Y-%m-%d',
