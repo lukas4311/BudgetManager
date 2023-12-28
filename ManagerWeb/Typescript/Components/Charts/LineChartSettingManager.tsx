@@ -101,7 +101,7 @@ export class LineChartSettingManager {
     static getNetWorthChartSettingForCompanyInfo(): LineSvgProps {
         return {
             data: undefined, enableArea: false, isInteractive: true, useMesh: true, enablePoints: false,
-            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: true, enableGridX: true, enableGridY: true,
+            colors: { scheme: 'set1' }, enableSlices: 'x', enableCrosshair: true, enableGridX: true, enableGridY: true,
             margin: { bottom: 40, left: 60, right: 10, top: 10 },
             axisLeft: { legend: 'linear scale', legendOffset: 5 },
             // axisBottom: { format: '%Y-%m-%d', tickValues: 'every month', legend: 'time scale', legendOffset: -5, },
@@ -132,6 +132,18 @@ export class LineChartSettingManager {
                 grid: {
                     line: { stroke: "white" }
                 }
+            },
+            sliceTooltip: ({ slice }) => {
+                return (
+                    <div style={{ background: 'black', padding: '9px 12px' }}>
+                        {slice.points.map(point => (
+                            <div key={point.id} style={{ color: 'white', padding: '3px 0' }}>
+                                <span>{point.data.xFormatted}</span>
+                                <span style={{ margin: '0px 8px' }}>{point.data.yFormatted}</span>
+                            </div>
+                        ))}
+                    </div>
+                );
             }
         }
     }
