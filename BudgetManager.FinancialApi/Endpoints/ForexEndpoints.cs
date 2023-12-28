@@ -26,6 +26,7 @@ namespace BudgetManager.FinancialApi.Endpoints
                 return TypedResults.Ok(SameCurrencyExchangeRate);
 
             var data = await forexService.GetExchangeRate(from.ToString(), to.ToString());
+
             return TypedResults.Ok(data);
         }
 
@@ -35,6 +36,7 @@ namespace BudgetManager.FinancialApi.Endpoints
                 return TypedResults.Ok(SameCurrencyExchangeRate);
 
             var data = await forexService.GetExchangeRate(from.ToString(), to.ToString(), date);
+
             return TypedResults.Ok(data);
         }
     }
