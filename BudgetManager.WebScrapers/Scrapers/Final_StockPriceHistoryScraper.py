@@ -91,9 +91,5 @@ def processTickers(rows):
         print("Sleeping is done.")
 
 
-# for ticker in tickersToScrape:
-#      stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
-
-# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-#     csv_file = csv.DictReader(file)
-#     processTickers(csv_file)
+for ticker in tickersToScrape:
+     stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)

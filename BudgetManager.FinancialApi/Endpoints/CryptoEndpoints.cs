@@ -22,23 +22,35 @@ namespace BudgetManager.FinancialApi.Endpoints
             .WithOpenApi();
         }
 
-        public static async Task<Ok<IEnumerable<CryptoDataV2>>> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
+        public static async Task<Results<Ok<IEnumerable<CryptoDataV2>>, NoContent>> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
         {
             IEnumerable<CryptoDataV2> data = await cryptoService.GetCryptoPriceHistory(ticker);
+
+            if (data is null)
+                return TypedResults.NoContent();
+
             return TypedResults.Ok(data);
         }
 
-        public static async Task<Ok<IEnumerable<CryptoDataV2>>> GetCryptoPriceDataFromDate([FromServices] ICryptoService cryptoService, 
+        public static async Task<Results<Ok<IEnumerable<CryptoDataV2>>, NoContent>> GetCryptoPriceDataFromDate([FromServices] ICryptoService cryptoService,
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
             IEnumerable<CryptoDataV2> data = await cryptoService.GetCryptoPriceHistory(ticker, from);
+
+            if (data is null)
+                return TypedResults.NoContent();
+
             return TypedResults.Ok(data);
         }
 
-        public static async Task<Ok<CryptoDataV2>> GetCryptoPriceDataAtDate([FromServices] ICryptoService cryptoService,
+        public static async Task<Results<Ok<CryptoDataV2>, NoContent>> GetCryptoPriceDataAtDate([FromServices] ICryptoService cryptoService,
             [FromRoute] string ticker, [FromRoute] DateTime date)
         {
             CryptoDataV2 data = await cryptoService.GetCryptoPriceAtDate(ticker, date);
+
+            if (data is null)
+                return TypedResults.NoContent();
+
             return TypedResults.Ok(data);
         }
     }
