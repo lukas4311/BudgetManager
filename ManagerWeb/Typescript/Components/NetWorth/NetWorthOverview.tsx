@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import NetWorthService, { TotalNetWorthDetail } from '../../Services/NetWorthService';
+import NetWorthService, { NetWorthMonthGroupModel, TotalNetWorthDetail } from '../../Services/NetWorthService';
 import PaymentService from '../../Services/PaymentService';
 import StockService from '../../Services/StockService';
 import CryptoService from '../../Services/CryptoService';
@@ -16,6 +16,11 @@ import ComodityService from '../../Services/ComodityService';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { ComodityEndpointsApi, CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from '../../ApiClient/Fin';
 import { PieChart, PieChartData } from '../Charts/PieChart';
+import { LineChart } from '../Charts/LineChart';
+import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
+import { LineChartData } from '../../Model/LineChartData';
+import moment from 'moment';
+import { LineChartDataSets } from '../../Model/LineChartDataSets';
 
 const theme = createMuiTheme({
     palette: {
@@ -31,13 +36,14 @@ class NetWorthOverviewState {
     netWorth: number;
     netWorthDetail: TotalNetWorthDetail;
     pieDiversityData: PieChartData[];
+    netWorthLineChartData: LineChartDataSets[];
 }
 
 export default class NetWorthOverview extends Component<RouteComponentProps, NetWorthOverviewState> {
     netWorthService: NetWorthService;
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { loading: true, netWorth: 0, netWorthDetail: new TotalNetWorthDetail(), pieDiversityData: [] };
+        this.state = { loading: true, netWorth: 0, netWorthDetail: new TotalNetWorthDetail(), pieDiversityData: [], netWorthLineChartData: [] };
     }
 
     public componentDidMount() {
@@ -59,10 +65,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         const cryptoService: ICryptoService = new CryptoService(cryptoApi, forexApi, cryptoFinApi, forexApi);
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
         const netWorthDetail = await this.netWorthService.getCurrentNetWorth();
-        await this.netWorthService.getNetWorthGroupedByMonth();
+        const monthData = await this.netWorthService.getNetWorthGroupedByMonth();
 
         await this.preparePieChartData(netWorthDetail);
-
+        await this.prepareLineChartData(monthData);
 
         this.setState({ loading: false, netWorth: netWorthDetail.total(), netWorthDetail: netWorthDetail });
     }
@@ -78,6 +84,13 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         pieData.push({ id: "other", label: "other", value: Math.round(netWorthDetail?.other ?? 0) });
 
         this.setState({ pieDiversityData: pieData });
+    }
+
+    prepareLineChartData(monthData: NetWorthMonthGroupModel[]) {
+        let netWorthChartData: LineChartData[] = []
+        netWorthChartData = monthData.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.amount }));
+        let chartData = [{ id: 'Net worth', data: netWorthChartData }];
+        this.setState({ netWorthLineChartData: chartData });
     }
 
     render() {
@@ -97,6 +110,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                             <React.Fragment>
                                                 <h2 className='text-2xl'>Your net worth is</h2>
                                                 <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
+
+                                                <div className="h-96 mt-16">
+                                                    <LineChart dataSets={this.state.netWorthLineChartData} chartProps={LineChartSettingManager.getNetWorthChartSettingForCompanyInfo()}></LineChart>
+                                                </div>
                                             </React.Fragment>
                                         </ComponentPanel>
                                         <ComponentPanel classStyle="w-1/2 text-center">

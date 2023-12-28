@@ -693,6 +693,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 3rem !important;
 }
 
+.mt-16 {
+  margin-top: 4rem !important;
+}
+
+.mt-12 {
+  margin-top: 3rem !important;
+}
+
 .block {
   display: block !important;
 }
@@ -733,12 +741,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 1rem !important;
 }
 
-.h-64 {
-  height: 16rem !important;
-}
-
 .h-80 {
   height: 20rem !important;
+}
+
+.h-64 {
+  height: 16rem !important;
 }
 
 .h-auto {
@@ -755,6 +763,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-10 {
   height: 2.5rem !important;
+}
+
+.h-full {
+  height: 100% !important;
+}
+
+.h-96 {
+  height: 24rem !important;
 }
 
 .min-h-full {
@@ -875,6 +891,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .w-1\/4 {
   width: 25% !important;
+}
+
+.w-1\/2 {
+  width: 50% !important;
 }
 
 .shrink {
@@ -1234,6 +1254,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-bottom: 1rem !important;
 }
 
+.px-12 {
+  padding-left: 3rem !important;
+  padding-right: 3rem !important;
+}
+
 .pt-4 {
   padding-top: 1rem !important;
 }
@@ -1326,6 +1351,21 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1 !important;
 }
 
+.text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+.text-3xl {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+}
+
+.text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
 .font-black {
   font-weight: 900 !important;
 }
@@ -1391,6 +1431,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .text-rufous {
   color: #b00000ff !important;
+}
+
+.text-white {
+  --tw-text-opacity: 1 !important;
+  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
 }
 
 .opacity-100 {

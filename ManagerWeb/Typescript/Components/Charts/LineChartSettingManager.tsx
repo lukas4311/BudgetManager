@@ -98,6 +98,44 @@ export class LineChartSettingManager {
         }
     }
 
+    static getNetWorthChartSettingForCompanyInfo(): LineSvgProps {
+        return {
+            data: undefined, enableArea: false, isInteractive: true, useMesh: true, enablePoints: false,
+            colors: { scheme: 'set1' }, enableSlices: "y", enableCrosshair: true, enableGridX: true, enableGridY: true,
+            margin: { bottom: 40, left: 60, right: 10, top: 10 },
+            axisLeft: { legend: 'linear scale', legendOffset: 5 },
+            // axisBottom: { format: '%Y-%m-%d', tickValues: 'every month', legend: 'time scale', legendOffset: -5, },
+            // axisRight: null,
+            // axisTop: null,
+            // yScale: { type: 'linear', min: 'auto', max: 'auto', reverse: false },
+            // xScale: { type: "time", format: "%Y-%m-%d", precision: "month" }, 
+            // xFormat: "time:%Y-%m-%d",
+            xScale: {
+                type: 'time',
+                format: '%Y-%m-%d',
+                precision: 'month',
+            },
+            xFormat: "time:%Y-%m",
+            axisBottom: {
+                format: '%Y-%m',
+                tickValues: 'every 3 months',
+                legend: 'time scale',
+                legendOffset: -12,
+            },
+            theme: {
+                axis: {
+                    ticks: {
+                        line: { stroke: "white" },
+                        text: { fill: "white" }
+                    }
+                },
+                grid: {
+                    line: { stroke: "white" }
+                }
+            }
+        }
+    }
+
     static getStockChartSettingForCompanyInfo(): LineSvgProps {
         return {
             data: undefined, enableArea: false, isInteractive: false, useMesh: true, enablePoints: false,
@@ -125,7 +163,6 @@ export class LineChartSettingManager {
 
     static getStockChartSettingForStockValueHistory(min: number, max: number): LineSvgProps {
         let yScaleSetting: ScaleSpec = { type: 'linear' };
-        // const calculatedMin = min - (min * (10 / 100));
         yScaleSetting["min"] = 0;
         yScaleSetting["max"] = max + (max * (10 / 100));
 
