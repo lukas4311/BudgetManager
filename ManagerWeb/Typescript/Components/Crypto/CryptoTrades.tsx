@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import moment from "moment";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { CryptoApi, CryptoApiInterface, CurrencyApi } from "../../ApiClient/Main/apis";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -34,7 +34,6 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private currencies: any[];
     private currencyService: any;
     private cryptoService: CryptoService;
-
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -122,26 +121,33 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 
+    private uploadBrokerReport = (event: React.MouseEvent<HTMLElement>) => {
+        // TODO: prepare api endpoint to upload broker csv report to DB to process by python script
+    }
+
     render() {
         return (
             <ComponentPanel>
-                <div className="pr-5 h-full">
-                    <ThemeProvider theme={theme}>
-                        <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
-                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
-                        </BaseList>
-                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
-                            maxWidth="md" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
-                            <DialogContent className="bg-prussianBlue">
-                                <div className="p-2 overflow-y-auto">
-                                    <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
-                                        viewModel={this.state.selectedTrade} />
-                                </div>
-                            </DialogContent>
-                        </Dialog>
-                    </ThemeProvider>
-                </div>
+                <React.Fragment>
+                    <Button variant="contained" color="primary" className="block mr-auto bg-vermilion text-white mb-3 w-56" onClick={this.uploadBrokerReport}>Nahrát report</Button>
+                    <div className="pr-5 h-full">
+                        <ThemeProvider theme={theme}>
+                            <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
+                                header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
+                            </BaseList>
+                            <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
+                                maxWidth="md" fullWidth={true}>
+                                <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
+                                <DialogContent className="bg-prussianBlue">
+                                    <div className="p-2 overflow-y-auto">
+                                        <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
+                                            viewModel={this.state.selectedTrade} />
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </ThemeProvider>
+                    </div>
+                </React.Fragment>
             </ComponentPanel>
         );
     }
