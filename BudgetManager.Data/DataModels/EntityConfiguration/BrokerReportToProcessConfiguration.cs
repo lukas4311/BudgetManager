@@ -5,8 +5,6 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
 {
     internal class BrokerReportToProcessConfiguration : IEntityTypeConfiguration<BrokerReportToProcess>
     {
-        private const int MaxLengthCode = 20;
-
         public void Configure(EntityTypeBuilder<BrokerReportToProcess> builder)
         {
             builder.HasOne(e => e.BrokerReportToProcessState)
