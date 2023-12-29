@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
@@ -7,6 +8,7 @@ using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -83,5 +85,20 @@ namespace BudgetManager.Api.Controllers
 
         [HttpGet("tickers")]
         public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(this.cryptoTickerRepository.FindAll());
+
+        [HttpPost("brokerReport")]
+        public async Task<IActionResult> Post(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await file.CopyToAsync(ms);
+                var fileBytes = ms.ToArray();
+                string fileContentBase64 = Convert.ToBase64String(fileBytes);
+
+                // TODO: create EF entity and store report to process
+            }
+
+            return Ok();
+        }
     }
 }
