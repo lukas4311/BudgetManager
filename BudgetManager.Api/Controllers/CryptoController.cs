@@ -89,10 +89,10 @@ namespace BudgetManager.Api.Controllers
         [HttpPost("brokerReport")]
         public async Task<IActionResult> Post(IFormFile file)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 await file.CopyToAsync(ms);
-                var fileBytes = ms.ToArray();
+                byte[] fileBytes = ms.ToArray();
                 string fileContentBase64 = Convert.ToBase64String(fileBytes);
 
                 // TODO: create EF entity and store report to process
