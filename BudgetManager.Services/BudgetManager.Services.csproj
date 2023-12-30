@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BudgetManager.Core\BudgetManager.Core.csproj" />
     <ProjectReference Include="..\BudgetManager.Data\BudgetManager.Data.csproj" />
     <ProjectReference Include="..\BudgetManager.InfluxDbData\BudgetManager.InfluxDbData.csproj" />
     <ProjectReference Include="..\BudgetManager.Repositories\BudgetManager.Repository.csproj" />

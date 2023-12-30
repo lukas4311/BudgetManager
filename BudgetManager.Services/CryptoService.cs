@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.InfluxDbData;
@@ -17,20 +18,34 @@ namespace BudgetManager.Services
     {
         private const string bucketCrypto = "Crypto";
         private const string bucketCryptoV2 = "CryptoV2";
+        private const string BrokerStockTypeCode = "Stock";
+        private const string BrokerProcessStateCode = "InProcess";
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
         private readonly IInfluxContext influxContext;
         private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;
         private readonly InfluxDbData.IRepository<CryptoDataV2> cryptoRepositoryV2;
+        private readonly IMapper autoMapper;
+        private readonly IBrokerReportTypeRepository brokerReportTypeRepository;
+        private readonly IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository;
+        private readonly IBrokerReportToProcessRepository brokerReportToProcessRepository;
+        private readonly IDateTime dateTimeProvider;
 
         public CryptoService(ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, IInfluxContext influxContext,
-            InfluxDbData.IRepository<CryptoData> cryptoRepository, InfluxDbData.IRepository<CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper) : base(cryptoTradeHistoryRepository, autoMapper)
+            InfluxDbData.IRepository<CryptoData> cryptoRepository, InfluxDbData.IRepository<CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
+            IBrokerReportTypeRepository brokerReportTypeRepository, IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository,
+            IBrokerReportToProcessRepository brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
         {
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
             this.influxContext = influxContext;
             this.cryptoRepository = cryptoRepository;
             this.cryptoRepositoryV2 = cryptoRepositoryV2;
+            this.autoMapper = autoMapper;
+            this.brokerReportTypeRepository = brokerReportTypeRepository;
+            this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
+            this.brokerReportToProcessRepository = brokerReportToProcessRepository;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public IEnumerable<TradeHistory> GetByUser(string userLogin)
@@ -74,12 +89,12 @@ namespace BudgetManager.Services
             IEnumerable<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
-        
+
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
-            IEnumerable<CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification, 
-                new DateTimeRange{From = atDate, To = atDate.AddDays(1)}, new() { { "ticker", $"{fromSymbol}{toSymbol}" }}).ConfigureAwait(false);
+            IEnumerable<CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification,
+                new DateTimeRange { From = atDate, To = atDate.AddDays(1) }, new() { { "ticker", $"{fromSymbol}{toSymbol}" } }).ConfigureAwait(false);
             return data.FirstOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
@@ -96,6 +111,20 @@ namespace BudgetManager.Services
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
+            var stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerStockTypeCode).Single().Id;
+            var stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
+
+            var brokerReport = new BrokerReportToProcess
+            {
+                BrokerReportToProcessStateId = stockStateId,
+                BrokerReportTypeId = stockTypeId,
+                FileContentBase64 = fileContentBase64,
+                ImportedTime = this.dateTimeProvider.Now.DateTimeInstance,
+                UserIdentityId = userId
+            };
+
+            this.brokerReportToProcessRepository.Create(brokerReport);
+            this.brokerReportToProcessRepository.Save();
         }
     }
 }

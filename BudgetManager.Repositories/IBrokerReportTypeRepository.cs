@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Repository
 {
-    internal interface IBrokerReportTypeRepository : IRepository<BrokerReportType>
+    public interface IBrokerReportTypeRepository : IRepository<BrokerReportType>
     {
     }
 }

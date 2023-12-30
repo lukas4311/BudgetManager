@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Repository
 {
-    internal interface IBrokerReportToProcessStateRepository : IRepository<BrokerReportToProcessState>
+    public interface IBrokerReportToProcessStateRepository : IRepository<BrokerReportToProcessState>
     {
     }
 }
