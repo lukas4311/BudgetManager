@@ -3,6 +3,7 @@ using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
+using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Repository.Extensions;
@@ -82,6 +83,7 @@ namespace BudgetManager.Api
             optionsBuilder.UseSqlServer(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             builder.Register(_ => new DataContext(optionsBuilder.Options));
             builder.RegisterType<UserDataProviderService>().As<IUserDataProviderService>();
+            builder.RegisterType<DateTimeWrap>().As<IDateTime>();
             builder.RegisterRepositories();
             builder.RegisterServices();
 
