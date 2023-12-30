@@ -10,6 +10,14 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
             builder.HasOne(e => e.BrokerReportToProcessState)
                 .WithMany(e => e.BrokerReportsToProcess)
                 .HasForeignKey(e => e.BrokerReportToProcessStateId);
+
+            builder.HasOne(e => e.UserIdentity)
+                .WithMany(e => e.BrokerReportsToProcess)
+                .HasForeignKey(e => e.UserIdentityId);
+
+            builder.HasOne(e => e.BrokerReportType)
+               .WithMany(e => e.BrokerReportsToProcess)
+               .HasForeignKey(e => e.BrokerReportTypeId);
         }
     }
 }
