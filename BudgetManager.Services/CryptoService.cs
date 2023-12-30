@@ -91,5 +91,11 @@ namespace BudgetManager.Services
 
         public async Task<CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate)
             => (await cryptoRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+
+        public void StoreReportToProcess(byte[] brokerFileData, int userId)
+        {
+            string fileContentBase64 = Convert.ToBase64String(brokerFileData);
+
+        }
     }
 }
