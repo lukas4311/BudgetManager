@@ -2,7 +2,7 @@
 
 namespace BudgetManager.Data.DataModels
 {
-    public class BrokerReportType
+    public class BrokerReportType : IDataModel
     {
         public int Id { get; set; }
 
