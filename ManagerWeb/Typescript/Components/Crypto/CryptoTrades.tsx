@@ -13,6 +13,7 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CurrencyService } from "../../Services/CurrencyService";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
+import PublishIcon from '@material-ui/icons/Publish';
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -29,7 +30,6 @@ const theme = createMuiTheme({
 
 export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
     private cryptoApi: CryptoApiInterface;
-    private currencyApi: CurrencyApi;
     private cryptoTickers: CryptoTickerSelectModel[];
     private currencies: any[];
     private currencyService: any;
@@ -47,11 +47,11 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
-        const cryptoApi = await apiFactory.getClient(CryptoApi);
+        this.cryptoApi = await apiFactory.getClient(CryptoApi);
         const forexApi = await apiFactory.getFinClient(ForexEndpointsApi);
         const cryptoFin = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.currencyService = new CurrencyService(currencyApi);
-        this.cryptoService = new CryptoService(cryptoApi, forexApi, cryptoFin, forexApi);
+        this.cryptoService = new CryptoService(this.cryptoApi, forexApi, cryptoFin, forexApi);
         this.loadCryptoTradesData();
     }
 
@@ -121,15 +121,31 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 
-    private uploadBrokerReport = (event: React.MouseEvent<HTMLElement>) => {
-        // TODO: prepare api endpoint to upload broker csv report to DB to process by python script
+    private uploadBrokerReport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files)
+            return;
+
+        const files: Blob = (e.target as HTMLInputElement).files?.[0];
+        await this.cryptoApi.cryptosBrokerReportPost({ file: files });
     }
 
     render() {
         return (
             <ComponentPanel>
                 <React.Fragment>
-                    <Button variant="contained" color="primary" className="block mr-auto bg-vermilion text-white mb-3 w-56" onClick={this.uploadBrokerReport}>Nahrát report</Button>
+                    <Button
+                        component="label"
+                        variant="outlined"
+                        color="primary"
+                        className="block mr-auto bg-vermilion text-white mb-3 w-1/3"
+
+                    >
+                        <div className="flex flex-row justify-center">
+                            <PublishIcon />
+                            <span className="ml-4">Upload crypto report</span>
+                        </div>
+                        <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
+                    </Button>
                     <div className="pr-5 h-full">
                         <ThemeProvider theme={theme}>
                             <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}

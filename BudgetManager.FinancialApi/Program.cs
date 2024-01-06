@@ -10,6 +10,7 @@ using BudgetManager.FinancialApi.Endpoints;
 using BudgetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using BudgetManager.Repository.Extensions;
+using BudgetManager.Core.SystemWrappers;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -36,6 +37,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     optionsBuilder.UseSqlServer(configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
     containerBuilder.Register(_ => new DataContext(optionsBuilder.Options));
     containerBuilder.RegisterRepositories();
+    containerBuilder.RegisterType<DateTimeWrap>().As<IDateTime>();
     containerBuilder.RegisterModelMapping();
 
     InfluxSetting influxSetting = configuration.GetSection("Influxdb").Get<InfluxSetting>();
