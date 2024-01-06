@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Controller, useForm } from "react-hook-form";
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField } from '@mui/material';
 
 class BudgetFormModel {
     id: number;

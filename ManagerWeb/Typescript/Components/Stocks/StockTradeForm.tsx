@@ -1,18 +1,9 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CurrencySymbol, StockTickerModel } from "../../ApiClient/Main/models";
 import { StockViewModel } from "../../Model/StockViewModel";
-import { createMuiTheme } from "@material-ui/core/styles";
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
+import { createMuiTheme } from "@mui/material/styles";
 
 class StockTradeFormProps {
     stockTradeViewModel: StockViewModel;

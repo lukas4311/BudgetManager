@@ -1,5 +1,5 @@
 import React from "react";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import { BaseList } from "../BaseList";
 import moment from "moment";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
@@ -7,7 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { CurrencyApi, OtherInvestmentApi, OtherInvestmentBalaceHistoryModel, OtherInvestmentBalanceSummaryModel } from "../../ApiClient/Main";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { OtherInvestmentForm } from "./OtherInvestmentForm";
 import OtherInvestmentDetail from "./OtherInvestmentDetail";
 import { OtherInvestmentModel } from "../../ApiClient/Main/models/OtherInvestmentModel";
@@ -18,15 +18,6 @@ import { MainFrame } from "../MainFrame";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import OtherInvestmentService from "../../Services/OtherInvestmentService";
 import { CurrencyService } from "../../Services/CurrencyService";
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
 
 class OtherInvestmentOverviewState {
     otherInvestments: OtherInvestmentViewModel[];
@@ -148,35 +139,33 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
 
     public render() {
         return (
-            <ThemeProvider theme={theme}>
-                <MainFrame header='Other investments'>
-                    <>
-                        <div className="flex flex-row mb-6">
-                            <ComponentPanel classStyle="w-3/5 ml-4">
-                                <>
-                                    <h2 className="text-2xl"></h2>
-                                    <div className="flex flex-row">
-                                        <div className="m-5 overflow-y-scroll w-full">
-                                            <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
-                                                addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
-                                        </div>
+            <MainFrame header='Other investments'>
+                <>
+                    <div className="flex flex-row mb-6">
+                        <ComponentPanel classStyle="w-3/5 ml-4">
+                            <>
+                                <h2 className="text-2xl"></h2>
+                                <div className="flex flex-row">
+                                    <div className="m-5 overflow-y-scroll w-full">
+                                        <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
+                                            addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                                     </div>
-                                </>
-                            </ComponentPanel>
-                            <ComponentPanel classStyle="w-2/5">
-                                <div className="w-full">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
-                            </ComponentPanel>
-                        </div>
-                        <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
-                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form" maxWidth="md" fullWidth={true}>
-                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
-                            <DialogContent className="bg-prussianBlue">
-                                <OtherInvestmentForm viewModel={this.state.selectedModel} onSave={this.saveTrade} currencies={this.currencies} />
-                            </DialogContent>
-                        </Dialog>
-                    </>
-                </MainFrame>
-            </ThemeProvider>
+                                </div>
+                            </>
+                        </ComponentPanel>
+                        <ComponentPanel classStyle="w-2/5">
+                            <div className="w-full">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
+                        </ComponentPanel>
+                    </div>
+                    <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
+                    <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Investment form" maxWidth="md" fullWidth={true}>
+                        <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Investment form</DialogTitle>
+                        <DialogContent className="bg-prussianBlue">
+                            <OtherInvestmentForm viewModel={this.state.selectedModel} onSave={this.saveTrade} currencies={this.currencies} />
+                        </DialogContent>
+                    </Dialog>
+                </>
+            </MainFrame>
         );
     }
 }

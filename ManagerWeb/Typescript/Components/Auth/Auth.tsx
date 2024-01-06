@@ -3,7 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { AuthResponseModel } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
-import { Snackbar } from "@material-ui/core";
+import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 
 class AuthState {

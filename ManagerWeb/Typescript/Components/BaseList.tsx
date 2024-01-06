@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import * as React from 'react'
 import { IconsData } from '../Enums/IconsEnum';
 

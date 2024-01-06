@@ -19,6 +19,22 @@ import { SpinnerCircularSplit } from 'spinners-react';
 import DataLoader from "./Services/DataLoader";
 import ApiUrls from "./Model/Setting/ApiUrl";
 import NetWorthOverview from "./Components/NetWorth/NetWorthOverview";
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+    palette: {
+        type: 'dark',
+        primary: {
+            main: "#e03d15ff",
+        }
+    }
+});
+
+const useStyles = makeStyles((theme) => {
+    root: {
+
+    }
+});
 
 export default function App() {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -41,37 +57,39 @@ export default function App() {
                 {isLoaded
                     ? (
                         <Router>
-                            <div className="bg-mainDarkBlue h-full flex flex-col overflow-x-hidden">
-                                <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
-                                    <div>
-                                        <nav id="navMenu">
-                                            <Menu></Menu>
-                                        </nav>
+                            <ThemeProvider theme={theme}>
+                                <div className="bg-mainDarkBlue h-full flex flex-col overflow-x-hidden">
+                                    <header className="bg-mainDarkBlue flex flex-row text-white pt-4 pb-2 px-12">
+                                        <div>
+                                            <nav id="navMenu">
+                                                <Menu></Menu>
+                                            </nav>
+                                        </div>
+                                        <nav id="navMenu"></nav>
+                                    </header>
+                                    <div className="baseContainer mx-auto lg:w-11/12 w-full flex-grow">
+                                        <main role="main" className="pb-3 text-white">
+                                            <Switch>
+                                                <Route path="/login" component={Auth} />
+                                                <PrivateRoute path="/payments" component={PaymentsOverview} />
+                                                <PrivateRoute path="/crypto-overview" component={Crypto} />
+                                                <PrivateRoute path="/budget" component={BudgetComponent} />
+                                                <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />
+                                                <PrivateRoute path="/comodity" component={Comodities} />
+                                                <PrivateRoute path="/other-investment" component={OtherInvestmentOverview} />
+                                                <PrivateRoute path="/stock" component={StockOverview} />
+                                                <PrivateRoute path="/" component={NetWorthOverview} />
+                                            </Switch>
+                                        </main>
                                     </div>
-                                    <nav id="navMenu"></nav>
-                                </header>
-                                <div className="baseContainer mx-auto lg:w-11/12 w-full flex-grow">
-                                    <main role="main" className="pb-3 text-white">
-                                        <Switch>
-                                            <Route path="/login" component={Auth} />
-                                            <PrivateRoute path="/payments" component={PaymentsOverview} />
-                                            <PrivateRoute path="/crypto-overview" component={Crypto} />
-                                            <PrivateRoute path="/budget" component={BudgetComponent} />
-                                            <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />
-                                            <PrivateRoute path="/comodity" component={Comodities} />
-                                            <PrivateRoute path="/other-investment" component={OtherInvestmentOverview} />
-                                            <PrivateRoute path="/stock" component={StockOverview} />
-                                            <PrivateRoute path="/" component={NetWorthOverview} />
-                                        </Switch>
-                                    </main>
-                                </div>
 
-                                <footer className="text-center  m-4 text-white">
-                                    <span className="m-auto">{moment().format('YYYY-MM-DD') + " - Budget&Investment"}</span>
-                                </footer>
-                                <script src="~/js/site.js" asp-append-version="true"></script>
-                                <script src="~/js/menu.js"></script>
-                            </div>
+                                    <footer className="text-center  m-4 text-white">
+                                        <span className="m-auto">{moment().format('YYYY-MM-DD') + " - Budget&Investment"}</span>
+                                    </footer>
+                                    <script src="~/js/site.js" asp-append-version="true"></script>
+                                    <script src="~/js/menu.js"></script>
+                                </div>
+                            </ThemeProvider>
                         </Router>
                     )
                     : (

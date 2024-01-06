@@ -3,10 +3,10 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { ComodityApi, ComodityApiInterface, CurrencyApi } from "../../ApiClient/Main/apis";
 import { ComodityTradeHistoryModel, ComodityTypeModel } from "../../ApiClient/Main/models";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import Gold from "./Gold";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { ComoditiesForm, ComoditiesFormViewModel } from "./ComoditiesForm";
 import moment from "moment";
 import CurrencyTickerSelectModel from "../Crypto/CurrencyTickerSelectModel";
@@ -16,12 +16,6 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import ComodityService from "../../Services/ComodityService";
 import { CurrencyService } from "../../Services/CurrencyService";
 import { ComodityEndpointsApi } from "../../ApiClient/Fin";
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-    }
-});
 
 class ComoditiesState {
     goldIngots: ComoditiesFormViewModel[];
@@ -168,41 +162,39 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
     public render() {
         return (
             <div className="">
-                <ThemeProvider theme={theme}>
-                    <MainFrame header='Comodities overview'>
-                        <ComponentPanel classStyle="w-2/3 mx-auto">
-                            <>
-                                <div className="flex">
-                                    <div className="w-7/12 overflow-y-auto flex p-4">
-                                        <div className="w-4/5 mx-auto px-10">
-                                            {this.showSelectedComponent()}
-                                        </div>
-                                    </div>
-                                    <div className="w-5/12 overflow-y-auto flex flex-col items-stretch content-between">
-                                        {this.state.comodityMenu.map(c =>
-                                        (
-                                            <div className={"p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>
-                                                <span className="">{c.title}</span>
-                                            </div>
-                                        )
-                                        )}
+                <MainFrame header='Comodities overview'>
+                    <ComponentPanel classStyle="w-2/3 mx-auto">
+                        <>
+                            <div className="flex">
+                                <div className="w-7/12 overflow-y-auto flex p-4">
+                                    <div className="w-4/5 mx-auto px-10">
+                                        {this.showSelectedComponent()}
                                     </div>
                                 </div>
-                                <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
-                                    maxWidth="md" fullWidth={true}>
-                                    <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Golden ingots</DialogTitle>
-                                    <DialogContent className="bg-prussianBlue">
-                                        {this.state.selectedModel != undefined ?
-                                            <ComoditiesForm viewModel={this.state.selectedModel} onSave={this.saveTrade} onDelete={this.deleteTradeConfirm} currencies={this.currencies} /> :
-                                            <></>
-                                        }
-                                    </DialogContent>
-                                </Dialog>
-                                <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteTrade(ConfirmationResult.Cancel)} onConfirm={this.deleteTrade} isOpen={this.state.confirmDialogIsOpen} />
-                            </>
-                        </ComponentPanel>
-                    </MainFrame>
-                </ThemeProvider>
+                                <div className="w-5/12 overflow-y-auto flex flex-col items-stretch content-between">
+                                    {this.state.comodityMenu.map(c =>
+                                    (
+                                        <div className={"p-3 ml-auto flex flex-col flex-grow justify-center w-1/3 bg-gray-700 text-2xl text-center hover:bg-gray-600 duration-500 cursor-default " + (c.selected ? "bg-vermilion" : "")} onClick={_ => this.comodityMenuClick(c.id)}>
+                                            <span className="">{c.title}</span>
+                                        </div>
+                                    )
+                                    )}
+                                </div>
+                            </div>
+                            <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
+                                maxWidth="md" fullWidth={true}>
+                                <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Golden ingots</DialogTitle>
+                                <DialogContent className="bg-prussianBlue">
+                                    {this.state.selectedModel != undefined ?
+                                        <ComoditiesForm viewModel={this.state.selectedModel} onSave={this.saveTrade} onDelete={this.deleteTradeConfirm} currencies={this.currencies} /> :
+                                        <></>
+                                    }
+                                </DialogContent>
+                            </Dialog>
+                            <ConfirmationForm key={this.state.confirmDialogKey} onClose={() => this.deleteTrade(ConfirmationResult.Cancel)} onConfirm={this.deleteTrade} isOpen={this.state.confirmDialogIsOpen} />
+                        </>
+                    </ComponentPanel>
+                </MainFrame>
             </div>
         );
     }

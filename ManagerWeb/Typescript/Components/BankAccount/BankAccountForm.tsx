@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Controller, useForm } from "react-hook-form";
-import { Button, Input } from "@material-ui/core";
-import { TextField } from "@material-ui/core";
+import { Button, Input } from "@mui/material";
+import { TextField } from "@mui/material";
 import { IBaseModel } from '../BaseList';
 
 class BankAccountFromViewModel implements IBaseModel {

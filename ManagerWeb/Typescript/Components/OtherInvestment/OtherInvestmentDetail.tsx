@@ -1,13 +1,13 @@
 import moment from "moment";
 import React from "react";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import { RouteComponentProps } from "react-router-dom";
 import { OtherInvestmentApi } from "../../ApiClient/Main/apis/OtherInvestmentApi";
 import { OtherInvestmentBalaceHistoryModel } from "../../ApiClient/Main/models/OtherInvestmentBalaceHistoryModel";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { BaseList, IBaseModel } from "../BaseList";
-import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { OtherInvestmentBalanceForm } from "./OtherInvestmentBalanceForm";
 import _ from "lodash";
 import { IconsData } from "../../Enums/IconsEnum";
@@ -22,16 +22,6 @@ import { ConfirmationForm, ConfirmationResult } from "../ConfirmationForm";
 import OtherInvestmentService from "../../Services/OtherInvestmentService";
 import TagService from "../../Services/TagService";
 import { SpinnerCircularSplit } from "spinners-react";
-
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
 
 class OtherInvestmentDetailProps {
     selectedInvestment: OtherInvestmentViewModel;
@@ -237,7 +227,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
 
     render = () => {
         return (
-            <ThemeProvider theme={theme}>
+            <React.Fragment>
                 {this.props ? (
                     <>
                         <div className="bg-lightGray rounded-xl m-6 p-4">
@@ -293,7 +283,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                             <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
                         </div>
                     )}
-            </ThemeProvider>
+            </React.Fragment>
         );
     }
 }

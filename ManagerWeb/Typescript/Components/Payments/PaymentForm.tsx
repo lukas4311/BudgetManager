@@ -3,7 +3,7 @@ import DataLoader from '../../Services/DataLoader'
 import { IPaymentModel } from '../../Model/IPaymentModel';
 import moment from 'moment';
 import PaymentTagManager from '../PaymentTagManager';
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { IconsData } from '../../Enums/IconsEnum';
 import { PaymentApi, PaymentCategoryModel, PaymentTypeModel, PaymentModel } from '../../ApiClient/Main';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
@@ -115,7 +115,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
         this.setState({ paymentTypeId: id });
     }
 
-    private changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    private changeCategory = (e: any) =>
         this.setState({ paymentCategoryId: parseInt(e.target.value) });
 
     private tagsChange = (tags: string[]) =>

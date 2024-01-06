@@ -1,9 +1,9 @@
-import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import moment from "moment";
 import React, { MouseEventHandler } from "react";
 import { CryptoApi, CryptoApiInterface, CurrencyApi } from "../../ApiClient/Main/apis";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BaseList, IBaseModel } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
@@ -13,7 +13,7 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CurrencyService } from "../../Services/CurrencyService";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
-import PublishIcon from '@material-ui/icons/Publish';
+import PublishIcon from '@mui/icons-material/Publish';
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -21,12 +21,6 @@ class CryptoTradesState {
     selectedTrade: CryptoTradeViewModel;
     cryptoFormKey: number;
 }
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-    }
-});
 
 export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
     private cryptoApi: CryptoApiInterface;
@@ -147,21 +141,19 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                         <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
                     </Button>
                     <div className="pr-5 h-full">
-                        <ThemeProvider theme={theme}>
-                            <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
-                                header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
-                            </BaseList>
-                            <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
-                                maxWidth="md" fullWidth={true}>
-                                <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
-                                <DialogContent className="bg-prussianBlue">
-                                    <div className="p-2 overflow-y-auto">
-                                        <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
-                                            viewModel={this.state.selectedTrade} />
-                                    </div>
-                                </DialogContent>
-                            </Dialog>
-                        </ThemeProvider>
+                        <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
+                        </BaseList>
+                        <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
+                            maxWidth="md" fullWidth={true}>
+                            <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
+                            <DialogContent className="bg-prussianBlue">
+                                <div className="p-2 overflow-y-auto">
+                                    <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
+                                        viewModel={this.state.selectedTrade} />
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </React.Fragment>
             </ComponentPanel>

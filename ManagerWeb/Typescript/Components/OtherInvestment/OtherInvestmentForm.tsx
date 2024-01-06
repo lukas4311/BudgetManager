@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import OtherInvestmentViewModel from "../../Model/OtherInvestmentViewModel";

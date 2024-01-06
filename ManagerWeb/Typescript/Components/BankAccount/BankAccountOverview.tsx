@@ -1,9 +1,9 @@
 import React from "react";
 import { BankAccountApi } from "../../ApiClient/Main";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import { BaseList } from "../BaseList";
 import BankAccountViewModel from "../../Model/BankAccountViewModel";
-import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { BankAccountForm } from "./BankAccountForm";
 import { BankAccount } from "../../Model/BankAccount";
 import { RouteComponentProps } from "react-router-dom";
@@ -19,12 +19,6 @@ class BankAccountOverviewState {
     showForm: boolean;
     formKey: number;
 }
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-    }
-});
 
 export default class BankAccountOverview extends React.Component<RouteComponentProps, BankAccountOverviewState> {
     private bankAccountService: BankAccountService;
@@ -96,33 +90,31 @@ export default class BankAccountOverview extends React.Component<RouteComponentP
 
     render() {
         return (
-            <ThemeProvider theme={theme}>
-                <MainFrame header='Bank accounts overview'>
-                    <ComponentPanel classStyle="w-2/3 mx-auto">
-                        <div className="flex">
-                            <div className="w-full overflow-y-auto">
-                                <div className="h-full">
-                                    <div className="">
-                                        <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
-                                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
-                                            deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
-                                        </BaseList>
-                                    </div>
-                                    <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
-                                        maxWidth="sm" fullWidth={true}>
-                                        <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Bank account detail</DialogTitle>
-                                        <DialogContent className="bg-prussianBlue">
-                                            <div className="p-2 overflow-y-auto">
-                                                <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
-                                            </div>
-                                        </DialogContent>
-                                    </Dialog>
+            <MainFrame header='Bank accounts overview'>
+                <ComponentPanel classStyle="w-2/3 mx-auto">
+                    <div className="flex">
+                        <div className="w-full overflow-y-auto">
+                            <div className="h-full">
+                                <div className="">
+                                    <BaseList<BankAccountViewModel> title="Bank account" data={this.state.bankAccounts} template={this.renderTemplate}
+                                        header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.bankEdit}
+                                        deleteItemHandler={this.deleteBank} dataAreaClass="h-70vh overflow-y-auto">
+                                    </BaseList>
                                 </div>
+                                <Dialog open={this.state.showForm} onClose={this.hideForm} aria-labelledby="Bank account detail"
+                                    maxWidth="sm" fullWidth={true}>
+                                    <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Bank account detail</DialogTitle>
+                                    <DialogContent className="bg-prussianBlue">
+                                        <div className="p-2 overflow-y-auto">
+                                            <BankAccountForm key={this.state.formKey} {...this.state.selectedBankAccount} onSave={this.saveFormData}></BankAccountForm>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </div>
-                    </ComponentPanel>
-                </MainFrame>
-            </ThemeProvider>
+                    </div>
+                </ComponentPanel>
+            </MainFrame>
         );
     }
 }

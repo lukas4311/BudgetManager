@@ -11,8 +11,8 @@ import { RadarChart } from '../Charts/RadarChart';
 import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
 import BudgetComponent from '../Budget/BudgetComponent';
-import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
 import { BaseList } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentCategoryModel, PaymentModel } from '../../ApiClient/Main';
@@ -57,15 +57,6 @@ interface DateFilter {
     days: number;
     key: number;
 }
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
 
 const defaultSelectedBankAccount = -1;
 
@@ -197,7 +188,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.getFilteredPaymentData(this.state.selectedBankAccount);
     }
 
-    private bankAccountChange = (e: React.ChangeEvent<{ name?: string; value: unknown; }>) => {
+    private bankAccountChange = (e: any) => {
         let selectedbankId: number = parseInt(e.target.value.toString());
         this.setState({ selectedBankAccount: (isNaN(selectedbankId) ? 0 : selectedbankId) });
         this.getFilteredPaymentData(selectedbankId);
@@ -297,7 +288,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         }
 
         return (
-            <ThemeProvider theme={theme}>
+            <React.Fragment>
                 <div className="">
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
@@ -419,7 +410,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         </React.Fragment>
                     </MainFrame>
                 </div >
-            </ThemeProvider>
+            </React.Fragment>
         )
     }
 }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Controller, useForm } from "react-hook-form";
-import { Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
-import { TextField } from "@material-ui/core";
+import { Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { TextField } from "@mui/material";
 import { IBaseModel } from '../BaseList';
 import CurrencyTickerSelectModel from '../Crypto/CurrencyTickerSelectModel';
 

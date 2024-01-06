@@ -9,7 +9,7 @@ import BankAccountService from '../../Services/BankAccountService';
 import OtherInvestmentService from '../../Services/OtherInvestmentService';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
 import { SpinnerCircularSplit } from 'spinners-react';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core';
+import { ThemeProvider, createMuiTheme } from '@mui/material';
 import { MainFrame } from '../MainFrame';
 import { ICryptoService } from '../../Services/ICryptoService';
 import ComodityService from '../../Services/ComodityService';
@@ -21,15 +21,6 @@ import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 import { LineChartData } from '../../Model/LineChartData';
 import moment from 'moment';
 import { LineChartDataSets } from '../../Model/LineChartDataSets';
-
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
 
 class NetWorthOverviewState {
     loading: boolean;
@@ -95,51 +86,49 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
 
     render() {
         return (
-            <ThemeProvider theme={theme}>
-                <div className="">
-                    <MainFrame header='Net worth overview'>
-                        <React.Fragment>
-                            {
-                                this.state.loading ? (
-                                    <div className="flex text-center justify-center h-full">
-                                        <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
-                                    </div>
-                                ) :
-                                    <div className='flex flex-row'>
-                                        <ComponentPanel classStyle="w-1/2 text-center">
-                                            <React.Fragment>
-                                                <h2 className='text-2xl'>Your net worth is</h2>
-                                                <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
+            <div className="">
+                <MainFrame header='Net worth overview'>
+                    <React.Fragment>
+                        {
+                            this.state.loading ? (
+                                <div className="flex text-center justify-center h-full">
+                                    <SpinnerCircularSplit size={150} thickness={110} speed={70} color="rgba(27, 39, 55, 1)" secondaryColor="rgba(224, 61, 21, 1)" />
+                                </div>
+                            ) :
+                                <div className='flex flex-row'>
+                                    <ComponentPanel classStyle="w-1/2 text-center">
+                                        <React.Fragment>
+                                            <h2 className='text-2xl'>Your net worth is</h2>
+                                            <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
 
-                                                <div className="h-96 mt-16">
-                                                    <LineChart dataSets={this.state.netWorthLineChartData} chartProps={LineChartSettingManager.getNetWorthChartSettingForCompanyInfo()}></LineChart>
+                                            <div className="h-96 mt-16">
+                                                <LineChart dataSets={this.state.netWorthLineChartData} chartProps={LineChartSettingManager.getNetWorthChartSettingForCompanyInfo()}></LineChart>
+                                            </div>
+                                        </React.Fragment>
+                                    </ComponentPanel>
+                                    <ComponentPanel classStyle="w-1/2 text-center">
+                                        <React.Fragment>
+                                            <div className='px-12'>
+                                                <h2 className='text-2xl'>Net worth detail</h2>
+                                                <p className='text-xl text-left'>Money net worth: {this.state.netWorthDetail?.money.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Stock net worth: {this.state.netWorthDetail?.stock.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Crypto net worth: {this.state.netWorthDetail?.crypto.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Comodity net worth: {this.state.netWorthDetail?.comodity.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                                <p className='text-xl text-left'>Other net worth: {this.state.netWorthDetail?.other.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
+                                            </div>
+                                            <div className='mt-12'>
+                                                <h4 className="text-2xl text-white">Net worth diversification</h4>
+                                                <div className="h-96">
+                                                    <PieChart data={this.state.pieDiversityData}></PieChart>
                                                 </div>
-                                            </React.Fragment>
-                                        </ComponentPanel>
-                                        <ComponentPanel classStyle="w-1/2 text-center">
-                                            <React.Fragment>
-                                                <div className='px-12'>
-                                                    <h2 className='text-2xl'>Net worth detail</h2>
-                                                    <p className='text-xl text-left'>Money net worth: {this.state.netWorthDetail?.money.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                    <p className='text-xl text-left'>Stock net worth: {this.state.netWorthDetail?.stock.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                    <p className='text-xl text-left'>Crypto net worth: {this.state.netWorthDetail?.crypto.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                    <p className='text-xl text-left'>Comodity net worth: {this.state.netWorthDetail?.comodity.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                    <p className='text-xl text-left'>Other net worth: {this.state.netWorthDetail?.other.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) ?? 0}</p>
-                                                </div>
-                                                <div className='mt-12'>
-                                                    <h4 className="text-2xl text-white">Net worth diversification</h4>
-                                                    <div className="h-96">
-                                                        <PieChart data={this.state.pieDiversityData}></PieChart>
-                                                    </div>
-                                                </div>
-                                            </React.Fragment>
-                                        </ComponentPanel>
-                                    </div>
-                            }
-                        </React.Fragment>
-                    </MainFrame>
-                </div >
-            </ ThemeProvider >
+                                            </div>
+                                        </React.Fragment>
+                                    </ComponentPanel>
+                                </div>
+                        }
+                    </React.Fragment>
+                </MainFrame>
+            </div >
         )
     }
 }
