@@ -1,6 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
-export * from './ComodityEndpointsApi';
-export * from './CryptoEndpointsApi';
-export * from './ForexEndpointsApi';
-export * from './StockEndpointsApi';
+export * from './BankAccountApi';
+export * from './BudgetApi';
+export * from './ComodityApi';
+export * from './CryptoApi';
+export * from './CurrencyApi';
+export * from './OtherInvestmentApi';
+export * from './PaymentApi';
+export * from './StockApi';
+export * from './TagApi';

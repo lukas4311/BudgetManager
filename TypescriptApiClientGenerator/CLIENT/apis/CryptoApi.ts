@@ -28,6 +28,10 @@ export interface CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
     toCurrency: string | null;
 }
 
+export interface CryptosBrokerReportPostRequest {
+    file?: Blob | null;
+}
+
 export interface CryptosDeleteRequest {
     body?: number;
 }
@@ -83,6 +87,19 @@ export interface CryptoApiInterface {
     /**
      */
     cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>>;
+
+    /**
+     * 
+     * @param {Blob} [file] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosBrokerReportPostRaw(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    cryptosBrokerReportPost(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -239,6 +256,54 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
     async cryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>> {
         const response = await this.cryptosAllGetRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async cryptosBrokerReportPostRaw(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        const response = await this.request({
+            path: `/cryptos/brokerReport`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async cryptosBrokerReportPost(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.cryptosBrokerReportPostRaw(requestParameters, initOverrides);
     }
 
     /**
