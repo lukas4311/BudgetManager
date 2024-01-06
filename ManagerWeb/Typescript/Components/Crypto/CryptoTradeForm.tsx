@@ -39,7 +39,7 @@ const CryptoTradeForm = (props: CryptoTradeFromProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="col-span-2 w-1/3">
-                    <Controller render={({ field }) => <TextField label="Datum tradu" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                    <Controller render={({ field }) => <TextField label="Datum tradu" size='small' type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                         name="tradeTimeStamp" defaultValue={viewModel.tradeTimeStamp} control={control} />
                 </div>
                 <div className="w-2/3">
@@ -50,6 +50,7 @@ const CryptoTradeForm = (props: CryptoTradeFromProps) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
+                                size='small'
                                 value={field.value}
                             >
                                 {props.cryptoTickers?.map(p => {
@@ -62,11 +63,11 @@ const CryptoTradeForm = (props: CryptoTradeFromProps) => {
                     } name="cryptoTickerId" control={control}></Controller>
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Velikost tradu" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Trade size" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="tradeSize" control={control} />
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Hodnota tradu" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Trade value" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="tradeValue" control={control} />
                 </div>
                 <div className="w-2/3">
@@ -77,6 +78,7 @@ const CryptoTradeForm = (props: CryptoTradeFromProps) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
+                                size='small'
                                 value={field.value}
                             >
                                 {props.currencies?.map(p => {

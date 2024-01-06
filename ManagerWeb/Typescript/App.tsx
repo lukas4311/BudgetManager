@@ -19,22 +19,41 @@ import { SpinnerCircularSplit } from 'spinners-react';
 import DataLoader from "./Services/DataLoader";
 import ApiUrls from "./Model/Setting/ApiUrl";
 import NetWorthOverview from "./Components/NetWorth/NetWorthOverview";
-import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const theme = createMuiTheme({
+const theme = createTheme({
     palette: {
-        type: 'dark',
-        primary: {
-            main: "#e03d15ff",
-        }
-    }
-});
+      mode: 'dark',
+    },
+    components: {
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .MuiInputBase-input': {
+              color: 'white',
+            },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'white',
+              },
+              '&:hover fieldset': {
+                borderColor: 'white',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'white',
+              },
+            },
+          },
+        },
+      },
+    },
+  });
 
-const useStyles = makeStyles((theme) => {
-    root: {
+// const useStyles = makeStyles((theme) => {
+//     root: {
 
-    }
-});
+//     }
+// });
 
 export default function App() {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);

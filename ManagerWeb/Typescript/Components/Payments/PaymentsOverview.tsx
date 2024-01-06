@@ -312,16 +312,17 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                         <Select
                                                             labelId="demo-simple-select-label"
                                                             id="demo-simple-select"
+                                                            size="small"
                                                             value={this.state.selectedBankAccount}
                                                             onChange={this.bankAccountChange}
-                                                            className="py-1 w-full lg:w-1/3">
+                                                            className="w-full lg:w-1/3">
                                                             {this.state.bankAccounts.map((b, i) => {
                                                                 return <MenuItem key={i} value={b.id}>{b.code}</MenuItem>
                                                             })}
                                                         </Select>
                                                         <span className={"text-sm text-left transition-all ease-in-out duration-700 text-rufous h-auto overflow-hidden ml-3" + (this.state.showBankAccountError ? ' opacity-100 scale-y-100' : ' scale-y-0 opacity-0')}>Please select bank account</span>
                                                     </div>
-                                                    <div className="flex flex-col lg:flex-row text-black mb-3 ml-6 cursor-pointer">
+                                                    <div className="flex flex-col lg:flex-row text-black mb-3 ml-6 mt-6 cursor-pointer">
                                                         <div className="text-left m-auto w-full lg:w-2/5 mb-4 lg:mb-0">
                                                             {this.filters.map((f) =>
                                                                 <span key={f.key}

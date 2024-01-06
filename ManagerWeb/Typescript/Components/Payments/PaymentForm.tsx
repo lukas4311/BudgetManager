@@ -148,6 +148,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                                     <Select
                                         labelId="demo-simple-select-label"
                                         id="type"
+                                        size='small'
                                         value={this.state.paymentCategoryId}
                                         onChange={this.changeCategory}
                                     >
@@ -165,19 +166,19 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Name" type="text" name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
+                                <TextField label="Name" type="text" size='small' name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
                             </div>
                         </div>
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Amount" type="text" name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
+                                <TextField label="Amount" type="text" size='small' name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
                             </div>
                         </div>
                     </div>
                     <div className="flex mt-4">
                         <div className="w-1/2">
                             <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Payment date" type="date" name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
+                                <TextField label="Payment date" type="date" size='small' name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
                                     InputLabelProps={{ shrink: true }}
                                 />
                             </div>
@@ -187,7 +188,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                     <div className="flex my-4">
                         <div className="w-full">
                             <div className="relative inline-block w-4/5 float-left ml-6">
-                                <TextField label="Description" type="text" name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
+                                <TextField label="Description" type="text" size='small' name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
                             </div>
                         </div>
                     </div>

@@ -27,6 +27,7 @@ const OtherInvestmentTagForm = (props: OtherInvestmentTagFormProps) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
+                                size='small'
                                 value={field.value}
                             >
                                 {viewModel.tags?.map(p => {

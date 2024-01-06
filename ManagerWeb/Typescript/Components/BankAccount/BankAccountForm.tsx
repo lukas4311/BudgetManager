@@ -24,14 +24,14 @@ const BankAccountForm = (props: BankAccountFromViewModel) => {
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div>
                     <Controller
-                        render={({ field }) => <TextField label="Account name" {...field} className="materialUIInput w-full" />}
+                        render={({ field }) => <TextField label="Account name" {...field} size='small' className="materialUIInput w-full" />}
                         name="code"
                         control={control}
                     />
                 </div>
                 <div>
                     <Controller
-                        render={({ field }) => <TextField label="Initial balance" {...field} className="materialUIInput w-full" />}
+                        render={({ field }) => <TextField label="Initial balance" {...field} size='small' className="materialUIInput w-full" />}
                         name="openingBalance"
                         control={control}
                     />

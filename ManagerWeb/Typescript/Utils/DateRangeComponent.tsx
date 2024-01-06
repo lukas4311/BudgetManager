@@ -37,6 +37,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
                     id="dateFrom"
                     label="Date from"
                     type="date"
+                    size='small'
                     defaultValue={this.state.filterDateFrom}
                     InputLabelProps={{
                         shrink: true,
@@ -48,6 +49,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
                     id="dateTo"
                     label="Date to"
                     type="date"
+                    size='small'
                     defaultValue={this.state.filterDateTo}
                     InputLabelProps={{
                         shrink: true,

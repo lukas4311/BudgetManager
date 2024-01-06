@@ -24,21 +24,21 @@ const BudgetForm = (props: BudgetFormModel) => {
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Název" type="text" {...field} className="w-full" />}
+                        render={({ field }) => <TextField label="Název" size='small' type="text" {...field} className="w-full" />}
                         name="name"
                         control={control}
                     />
                 </div>
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Velikost" type="text" {...field} className="w-full" />}
+                        render={({ field }) => <TextField label="Velikost" size='small' type="text" {...field} className="w-full" />}
                         name="amount"
                         control={control}
                     />
                 </div>
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Od" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
+                        render={({ field }) => <TextField label="Od" size='small' type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
                         name="from"
                         defaultValue={props.from}
                         control={control}
@@ -46,7 +46,7 @@ const BudgetForm = (props: BudgetFormModel) => {
                 </div>
                 <div className="w-3/5">
                     <Controller
-                        render={({ field }) => <TextField label="Do" type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
+                        render={({ field }) => <TextField label="Do" size='small' type="date" value={field.value} {...field} className="w-full" InputLabelProps={{ shrink: true }} />}
                         name="to"
                         defaultValue={props.to}
                         control={control}

@@ -38,21 +38,21 @@ const ComoditiesForm = (props: ComoditiesFormProps) => {
                 <h1 className='text-center text-3xl mb-5'>{viewModel.comodityTypeName}</h1>
                 <div className="grid grid-cols-2 gap-4 mb-6 place-items-center gap-y-8">
                     <div className="col-span-2 w-2/3 flex flex-row items-center">
-                        <Controller render={({ field }) => <TextField label="Company" type="text" {...field} className="place-self-end w-full" />}
+                        <Controller render={({ field }) => <TextField label="Company" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="company" control={control} />
                     </div>
                     <div className="w-2/3 flex justify-start">
                         <Controller render={({ field }) =>
-                            <TextField label="Buy date" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                            <TextField label="Buy date" size='small' type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                             name="buyTimeStamp" defaultValue={viewModel.buyTimeStamp} control={control} />
                     </div>
                     <div className="w-2/3 flex flex-row items-center">
-                        <Controller render={({ field }) => <TextField label="Amount" type="text" {...field} className="place-self-end w-full" />}
+                        <Controller render={({ field }) => <TextField label="Amount" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="comodityAmount" control={control} />
                         <p className='ml-3'>{viewModel.comodityUnit}</p>
                     </div>
                     <div className="w-2/3">
-                        <Controller render={({ field }) => <TextField label="Price" type="text" {...field} className="place-self-end w-full" />}
+                        <Controller render={({ field }) => <TextField label="Price" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="price" control={control} />
                     </div>
                     <div className="w-2/3">
@@ -63,6 +63,7 @@ const ComoditiesForm = (props: ComoditiesFormProps) => {
                                     {...field}
                                     labelId="demo-simple-select-label"
                                     id="type"
+                                    size='small'
                                     value={field.value}
                                 >
                                     {props.currencies?.map(p => {

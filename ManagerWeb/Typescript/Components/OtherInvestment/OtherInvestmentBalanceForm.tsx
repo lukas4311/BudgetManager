@@ -20,11 +20,11 @@ const OtherInvestmentBalanceForm = (props: OtherInvestmentBalanceFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="w-1/2">
-                    <Controller render={({ field }) => <TextField label="Balance record date" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                    <Controller render={({ field }) => <TextField label="Balance record date" size='small' type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                         name="date" defaultValue={viewModel.date} control={control} />
                 </div>
                 <div className="w-1/2">
-                    <Controller render={({ field }) => <TextField label="Balance" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Balance" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="balance" control={control} />
                 </div>
             </div>

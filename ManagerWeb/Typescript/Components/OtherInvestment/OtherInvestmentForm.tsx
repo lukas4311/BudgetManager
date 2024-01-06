@@ -22,19 +22,19 @@ const OtherInvestmentForm = (props: OtherInvestmentFormProps) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 <div className="col-span-2 w-1/3">
-                    <Controller render={({ field }) => <TextField label="Invested on" type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
+                    <Controller render={({ field }) => <TextField label="Invested on" size='small' type="date" value={field.value} {...field} className="place-self-end w-full" InputLabelProps={{ shrink: true }} />}
                         name="created" defaultValue={viewModel.created} control={control} />
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Code" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Code" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="code" control={control} />
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Investment name" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Investment name" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="name" control={control} />
                 </div>
                 <div className="w-2/3">
-                    <Controller render={({ field }) => <TextField label="Opening balance" type="text" {...field} className="place-self-end w-full" />}
+                    <Controller render={({ field }) => <TextField label="Opening balance" size='small' type="text" {...field} className="place-self-end w-full" />}
                         name="openingBalance" control={control} />
                 </div>
                 <div className="w-2/3">
@@ -45,6 +45,7 @@ const OtherInvestmentForm = (props: OtherInvestmentFormProps) => {
                                 {...field}
                                 labelId="demo-simple-select-label"
                                 id="type"
+                                size='small'
                                 value={field.value}
                             >
                                 {props.currencies?.map(p => {
