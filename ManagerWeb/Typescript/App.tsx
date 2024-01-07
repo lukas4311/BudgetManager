@@ -73,7 +73,7 @@ export default function App() {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [context, setContext] = useState<AppContext>({ apiUrls: { authApi: "aaa", mainApi: "bbb", finApi: "fff" }, setSnackbarMessage: undefined });
   const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState<SnackbarMessageModel>(undefined);
+  const [message, setMessage] = React.useState<SnackbarMessageModel>({ message: 'Dummy', severity: SnackbarSeverity.info });
 
   useEffect(() => {
     async function getSetting() {
@@ -129,8 +129,8 @@ export default function App() {
                       </Switch>
                     </main>
                     <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                      <Alert onClose={handleClose} severity={message.severity} sx={{ width: '100%' }}>
-                        {message.message}
+                      <Alert onClose={handleClose} severity={message?.severity} sx={{ width: '100%' }}>
+                        {message?.message}
                       </Alert>
                     </Snackbar>
                   </div>
