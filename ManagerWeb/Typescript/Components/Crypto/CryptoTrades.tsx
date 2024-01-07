@@ -14,6 +14,8 @@ import { CurrencyService } from "../../Services/CurrencyService";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import PublishIcon from '@mui/icons-material/Publish';
+import { AppContext, AppCtx } from "../../Context/AppCtx";
+import { SnackbarSeverity } from "../../App";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -119,8 +121,14 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         if (!e.target.files)
             return;
 
-        const files: Blob = (e.target as HTMLInputElement).files?.[0];
-        await this.cryptoApi.cryptosBrokerReportPost({ file: files });
+        const appContext: AppContext = this.context as AppContext;
+        try {
+            const files: Blob = (e.target as HTMLInputElement).files?.[0];
+            await this.cryptoApi.cryptosBrokerReportPost({ file: files });
+            appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success })
+        } catch (error) {
+            appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })
+        }
     }
 
     render() {
@@ -160,6 +168,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         );
     }
 }
+
+CryptoTrades.contextType = AppCtx;
 
 export const BuySellBadge = (props: { tradeValue: number }) =>
     (<span className={(props.tradeValue > 0 ? "bg-red-700" : "bg-green-700") + " px-2 py-1 text-xs font-meduim"}>{props.tradeValue > 0 ? "SELL" : "BUY"}</span>);
