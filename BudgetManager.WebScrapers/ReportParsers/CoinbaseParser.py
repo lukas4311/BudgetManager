@@ -4,7 +4,16 @@ from dataclasses import dataclass
 from typing import List
 import pandas as pd
 import pyodbc
+
+from sqlalchemy import create_engine, select, insert
+from sqlalchemy.orm import Session
+
+from Orm.BrokerReportToProcessState import BrokerReportToProcessState
+from Orm.BrokerReportType import BrokerReportType
+from Orm.BrokerReportToProcess import Base, BrokerReportToProcess
+
 import secret
+import base64 as b64
 
 
 @dataclass
@@ -44,6 +53,35 @@ class CoinbaseParser:
                 records.append(coinbase_record)
 
         return records
+
+    def load_csv_from_db(self):
+        engine = create_engine(
+            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        broker_type_cmd = select(BrokerReportType).where(BrokerReportType.code == "Stock")
+        broker_type = session.scalars(broker_type_cmd).first()
+        broker_type_id = broker_type.id
+
+        broker_state_command = select(BrokerReportToProcessState).where(BrokerReportToProcessState.code == "InProcess")
+        broker_state = session.scalars(broker_state_command).first()
+        broker_state_id = broker_state.id
+
+        broker_report_data_command = select(BrokerReportToProcess).where(
+            BrokerReportToProcess.brokerReportTypeId == broker_type_id
+            and BrokerReportToProcess.brokerReportToProcessStateId == broker_state_id)
+
+        broker_report_data = session.scalars(broker_report_data_command).all()
+
+        session.close()
+
+        for a in broker_report_data:
+            # print(a.fileContentBase64)
+            csv = b64.b64decode(a.fileContentBase64).decode('utf-8').split(',')
+            for v in csv:
+                print(v)
 
 
 class CryptoSqlService:
@@ -102,9 +140,9 @@ class CryptoSqlService:
 
             self.insert_crypto_trade(trade)
 
-
 parser = CoinbaseParser()
-cryptoSqlService = CryptoSqlService()
-
-parsed_records = parser.load_coinbase_report_csv()
-cryptoSqlService.store_trade_data(parsed_records)
+parser.load_csv_from_db()
+# cryptoSqlService = CryptoSqlService()
+#
+# parsed_records = parser.load_coinbase_report_csv()
+# cryptoSqlService.store_trade_data(parsed_records)

@@ -7,8 +7,8 @@ class Base(DeclarativeBase):
     pass
 
 
-class BrokerReportToProcessState(Base):
-    __tablename__ = 'BrokerReportToProcessState'
+class BrokerReportToProcess(Base):
+    __tablename__ = 'BrokerReportToProcess'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     importedTime: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
