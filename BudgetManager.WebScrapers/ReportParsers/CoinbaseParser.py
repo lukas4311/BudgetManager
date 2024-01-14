@@ -62,7 +62,7 @@ class CoinbaseParser:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        broker_type_cmd = select(BrokerReportType).where(BrokerReportType.code == "Stock")
+        broker_type_cmd = select(BrokerReportType).where(BrokerReportType.code == "Crypto")
         broker_type = session.scalars(broker_type_cmd).first()
         broker_type_id = broker_type.id
 
@@ -85,6 +85,8 @@ class CoinbaseParser:
             for row in rows:
                 coinbase_record = self.map_csv_row_to_model(row)
                 records.append(coinbase_record)
+
+        print(records)
 
 
 class CryptoSqlService:
