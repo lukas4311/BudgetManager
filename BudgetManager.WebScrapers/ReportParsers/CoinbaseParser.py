@@ -77,16 +77,23 @@ class CoinbaseParser:
         broker_report_data = session.scalars(broker_report_data_command).all()
 
         session.close()
+        all_reports_data = []
 
-        for a in broker_report_data:
-            parsed_csv = b64.b64decode(a.fileContentBase64).decode('utf-8')
-            rows = csv.DictReader(io.StringIO(parsed_csv))
-            records = []
-            for row in rows:
-                coinbase_record = self.map_csv_row_to_model(row)
-                records.append(coinbase_record)
+        for report_data in broker_report_data:
+            try:
+                parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
+                rows = csv.DictReader(io.StringIO(parsed_csv))
+                records = []
+                for row in rows:
+                    coinbase_record = self.map_csv_row_to_model(row)
+                    records.append(coinbase_record)
 
-        print(records)
+                print(records)
+                all_reports_data.append({"data": records, "user_id": report_data.userIdentityId, "report_id": report_data.id})
+            except Exception as e:
+                print("Error while parsing CSV", e)
+
+        return all_reports_data
 
 
 class CryptoSqlService:
@@ -146,7 +153,8 @@ class CryptoSqlService:
             self.insert_crypto_trade(trade)
 
 parser = CoinbaseParser()
-parser.load_csv_from_db()
+report_data = parser.load_csv_from_db()
+print(report_data)
 # cryptoSqlService = CryptoSqlService()
 #
 # parsed_records = parser.load_coinbase_report_csv()
