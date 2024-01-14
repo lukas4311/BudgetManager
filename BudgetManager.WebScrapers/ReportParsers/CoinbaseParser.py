@@ -92,6 +92,7 @@ class CoinbaseParser:
                 all_reports_data.append({"data": records, "user_id": report_data.userIdentityId, "report_id": report_data.id})
             except Exception as e:
                 print("Error while parsing CSV", e)
+                # TODO: update db and change state of process
 
         return all_reports_data
 
