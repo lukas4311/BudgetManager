@@ -18,7 +18,7 @@ namespace BudgetManager.Services
     {
         private const string bucketCrypto = "Crypto";
         private const string bucketCryptoV2 = "CryptoV2";
-        private const string BrokerStockTypeCode = "Stock";
+        private const string BrokerCryptoTypeCode = "Crypto";
         private const string BrokerProcessStateCode = "InProcess";
         private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
         private readonly IUserIdentityRepository userIdentityRepository;
@@ -111,7 +111,7 @@ namespace BudgetManager.Services
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
-            var stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerStockTypeCode).Single().Id;
+            var stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerCryptoTypeCode).Single().Id;
             var stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
 
             var brokerReport = new BrokerReportToProcess
