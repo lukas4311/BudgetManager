@@ -1,4 +1,5 @@
 import csv
+import io
 from datetime import datetime
 from dataclasses import dataclass
 from typing import List
@@ -78,10 +79,12 @@ class CoinbaseParser:
         session.close()
 
         for a in broker_report_data:
-            # print(a.fileContentBase64)
-            csv = b64.b64decode(a.fileContentBase64).decode('utf-8').split(',')
-            for v in csv:
-                print(v)
+            parsed_csv = b64.b64decode(a.fileContentBase64).decode('utf-8')
+            rows = csv.DictReader(io.StringIO(parsed_csv))
+            records = []
+            for row in rows:
+                coinbase_record = self.map_csv_row_to_model(row)
+                records.append(coinbase_record)
 
 
 class CryptoSqlService:
