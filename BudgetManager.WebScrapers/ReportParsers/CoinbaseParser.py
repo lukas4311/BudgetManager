@@ -185,22 +185,30 @@ def process_report_data(cryptoSqlService: CryptoSqlService, parser: CoinbasePars
     all_reports_data = []
 
     for report_data in broker_report_data:
-        try:
-            parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
-            rows = csv.DictReader(io.StringIO(parsed_csv))
-            records = []
-            for row in rows:
-                coinbase_record = parser.map_csv_row_to_model(row)
-                records.append(coinbase_record)
-
-            print(records)
-            all_reports_data.append(
-                {"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
-        except Exception as e:
-            print("Error while parsing CSV", e)
-            # TODO: update db and change state of process
+        parse_report_data_to_model(all_reports_data, parser, report_data)
 
     print(all_reports_data)
+    for parsed_report in all_reports_data:
+        try:
+            cryptoSqlService.store_trade_data(parsed_report.records)
+        except Exception as e:
+            print("Error while storing trading data")
+            # TODO: change process status
+
+def parse_report_data_to_model(all_reports_data, parser, report_data):
+    try:
+        parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
+        rows = csv.DictReader(io.StringIO(parsed_csv))
+        records = []
+        for row in rows:
+            coinbase_record = parser.map_csv_row_to_model(row)
+            records.append(coinbase_record)
+
+        all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
+    except Exception as e:
+        print("Error while parsing CSV", e)
+        # TODO: update db and change state of process
+
 
 parser = CoinbaseParser()
 cryptoSqlService = CryptoSqlService()
