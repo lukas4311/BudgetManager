@@ -89,7 +89,7 @@ class CoinbaseParser:
                     records.append(coinbase_record)
 
                 print(records)
-                all_reports_data.append({"data": records, "user_id": report_data.userIdentityId, "report_id": report_data.id})
+                all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
             except Exception as e:
                 print("Error while parsing CSV", e)
                 # TODO: update db and change state of process
@@ -155,6 +155,7 @@ class CryptoSqlService:
 
 parser = CoinbaseParser()
 report_data = parser.load_csv_from_db()
+
 print(report_data)
 # cryptoSqlService = CryptoSqlService()
 #
