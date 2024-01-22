@@ -175,9 +175,10 @@ def process_report_data(cryptoSqlService: CryptoSqlService, parser: CoinbasePars
     print(all_reports_data)
     for parsed_report in all_reports_data:
         try:
-            cryptoSqlService.store_trade_data(parsed_report.records)
+            cryptoSqlService.store_trade_data(parsed_report["data"])
         except Exception as e:
-            cryptoSqlService.changeProcessStateToParseError(parsed_report.id, "SavinggError")
+            print(parsed_report)
+            cryptoSqlService.changeProcessStateToParseError(parsed_report["report_id"], "SavinggError")
 
 
 def parse_report_data_to_model(all_reports_data, parser, report_data):
