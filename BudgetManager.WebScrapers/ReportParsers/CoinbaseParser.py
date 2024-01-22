@@ -141,7 +141,7 @@ class CryptoSqlService:
 
             self.insert_crypto_trade(trade)
 
-    def changeProcessStateToParseError(self, broker_report_id: int):
+    def changeProcessStateToParseError(self, broker_report_id: int, errorStateCode: str):
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
@@ -149,7 +149,7 @@ class CryptoSqlService:
         session = Session(engine)
 
         broker_state_command = select(BrokerReportToProcessState).where(
-            BrokerReportToProcessState.code == "ParsingError")
+            BrokerReportToProcessState.code == errorStateCode)
         broker_state = session.scalars(broker_state_command).first()
         broker_state_id = broker_state.id
 
@@ -170,7 +170,7 @@ def process_report_data(cryptoSqlService: CryptoSqlService, parser: CoinbasePars
         try:
             parse_report_data_to_model(all_reports_data, parser, report_data)
         except Exception as e:
-            cryptoSqlService.changeProcessStateToParseError(report_data.id)
+            cryptoSqlService.changeProcessStateToParseError(report_data.id, "ParsingError")
 
     print(all_reports_data)
     for parsed_report in all_reports_data:
