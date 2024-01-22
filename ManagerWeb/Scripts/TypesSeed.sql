@@ -22,3 +22,4 @@ values (N'Stock', N'Stock trades'), (N'Crypto', N'Crypto trades')
 
 insert into [BudgetManager].[dbo].[BrokerReportToProcessState] (Code, Name)
 values (N'InProcess', N'Report is in process'), (N'Finished', N'Report import process is finished'), (N'ParsingError', N'Error while parsing of report')
+, (N'SavinggError', N'Error while saving data')
