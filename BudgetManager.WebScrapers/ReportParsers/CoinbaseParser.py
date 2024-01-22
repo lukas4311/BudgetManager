@@ -148,10 +148,17 @@ class CryptoSqlService:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        insert_command = update(BrokerReportToProcess).where(
-            BrokerReportToProcess.brokerReportToProcessStateId == broker_report_id).values(brokerReportToProcessStateId=3)
+        broker_state_command = select(BrokerReportToProcessState).where(
+            BrokerReportToProcessState.code == "ParsingError")
+        broker_state = session.scalars(broker_state_command).first()
+        broker_state_id = broker_state.id
+
+        update_command = update(BrokerReportToProcess).where(
+            BrokerReportToProcess.brokerReportToProcessStateId == broker_report_id).values(
+            brokerReportToProcessStateId=broker_state_id)
+
         with engine.connect() as conn:
-            conn.execute(insert_command)
+            conn.execute(update_command)
             conn.commit()
 
 
