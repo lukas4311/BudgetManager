@@ -6,9 +6,10 @@ from typing import List
 import pandas as pd
 import pyodbc
 
-from sqlalchemy import create_engine, select, insert, update
+from sqlalchemy import create_engine, select, insert, update, and_
 from sqlalchemy.orm import Session
 
+from Orm.CryptoTradeHistory import CryptoTradeHistory
 from Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Orm.BrokerReportType import BrokerReportType
 from Orm.BrokerReportToProcess import Base, BrokerReportToProcess
@@ -36,7 +37,7 @@ class CoinbaseParser:
     def map_csv_row_to_model(self, row):
         time = row['created at']
         buy_or_sell = row['side']
-        size = row['size']
+        size = float(row['size'])
         total = abs(float(row['total']))
         total_unit = row['price/fee/total unit']
         size_unit = row['size unit']
@@ -114,23 +115,42 @@ class CryptoSqlService:
 
     def insert_crypto_trade(self, tradingData: CoinbaseReportData):
         print("Insert record")
-        ticker_id = self.get_ticker_id(tradingData.ticker)
+
+        ticker_id = int(self.get_ticker_id(tradingData.ticker))
+        print(ticker_id)
         currency_id = self.get_currency_id(tradingData.total_unit)
 
-        conn = pyodbc.connect(
-            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        engine = create_engine(
+            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
-        cursor = conn.cursor()
-        params = (tradingData.time.strftime('%Y-%m-%d'), ticker_id, float(tradingData.size), float(tradingData.total),
-                  currency_id)
-        # cursor.execute('''
-        #                 INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
-        #                 VALUES (?,?,?,?,?,1)
-        #             ''', params)
-        # conn.commit()
-        print(tradingData)
-        print(params)
-        conn.close()
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+        crypto_trade = select(CryptoTradeHistory).where(and_(CryptoTradeHistory.tradeValue == tradingData.total
+                                                             , CryptoTradeHistory.tradeSize == tradingData.size
+                                                             , CryptoTradeHistory.cryptoTickerId == ticker_id
+                                                             , CryptoTradeHistory.tradeTimeStamp == tradingData.time))
+        crypto_data = session.scalars(crypto_trade)
+        print(crypto_data)
+        crypto_trade = crypto_data.first()
+        print(crypto_trade)
+
+        if crypto_trade is None:
+            conn = pyodbc.connect(
+                f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+
+            cursor = conn.cursor()
+            params = (tradingData.time.strftime('%Y-%m-%d'), ticker_id, float(tradingData.size), float(tradingData.total),
+                      currency_id)
+            # cursor.execute('''
+            #                 INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
+            #                 VALUES (?,?,?,?,?,1)
+            #             ''', params)
+            # conn.commit()
+            print(tradingData)
+            print(params)
+            conn.close()
+        else:
+            print('Trade is already saved.')
 
     def store_trade_data(self, crypto_trade_data: List[CoinbaseReportData]):
         for trade in crypto_trade_data:
