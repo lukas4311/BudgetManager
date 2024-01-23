@@ -127,7 +127,8 @@ class CryptoSqlService:
         crypto_trade = select(CryptoTradeHistory).where(and_(CryptoTradeHistory.tradeValue == tradingData.total
                                                              , CryptoTradeHistory.tradeSize == tradingData.size
                                                              , CryptoTradeHistory.cryptoTickerId == ticker_id
-                                                             , CryptoTradeHistory.tradeTimeStamp == tradingData.time))
+                                                             , CryptoTradeHistory.tradeTimeStamp == tradingData.time)
+                                                        )
         crypto_data = session.scalars(crypto_trade)
         crypto_trade = crypto_data.first()
 
@@ -136,8 +137,9 @@ class CryptoSqlService:
                 f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
 
             cursor = conn.cursor()
-            params = (tradingData.time.strftime('%Y-%m-%d'), ticker_id, float(tradingData.size), float(tradingData.total),
-                      currency_id)
+            params = (
+                tradingData.time, ticker_id, float(tradingData.size), float(tradingData.total),
+                currency_id)
             # cursor.execute('''
             #                 INSERT INTO [dbo].[CryptoTradeHistory]([TradeTimeStamp],[CryptoTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
             #                 VALUES (?,?,?,?,?,1)
