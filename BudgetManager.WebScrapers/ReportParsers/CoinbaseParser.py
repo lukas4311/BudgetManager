@@ -117,8 +117,7 @@ class CryptoSqlService:
         print("Insert record")
 
         ticker_id = int(self.get_ticker_id(tradingData.ticker))
-        print(ticker_id)
-        currency_id = self.get_currency_id(tradingData.total_unit)
+        currency_id = int(self.get_currency_id(tradingData.total_unit))
 
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
@@ -130,9 +129,7 @@ class CryptoSqlService:
                                                              , CryptoTradeHistory.cryptoTickerId == ticker_id
                                                              , CryptoTradeHistory.tradeTimeStamp == tradingData.time))
         crypto_data = session.scalars(crypto_trade)
-        print(crypto_data)
         crypto_trade = crypto_data.first()
-        print(crypto_trade)
 
         if crypto_trade is None:
             conn = pyodbc.connect(
@@ -141,13 +138,11 @@ class CryptoSqlService:
             cursor = conn.cursor()
             params = (tradingData.time.strftime('%Y-%m-%d'), ticker_id, float(tradingData.size), float(tradingData.total),
                       currency_id)
-            # cursor.execute('''
-            #                 INSERT INTO [dbo].[StockTradeHistory]([TradeTimeStamp],[StockTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
-            #                 VALUES (?,?,?,?,?,1)
-            #             ''', params)
-            # conn.commit()
-            print(tradingData)
-            print(params)
+            cursor.execute('''
+                            INSERT INTO [dbo].[CryptoTradeHistory]([TradeTimeStamp],[CryptoTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
+                            VALUES (?,?,?,?,?,1)
+                        ''', params)
+            conn.commit()
             conn.close()
         else:
             print('Trade is already saved.')
