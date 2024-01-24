@@ -140,10 +140,10 @@ class CryptoSqlService:
             params = (
                 tradingData.time, ticker_id, float(tradingData.size), float(tradingData.total),
                 currency_id)
-            # cursor.execute('''
-            #                 INSERT INTO [dbo].[CryptoTradeHistory]([TradeTimeStamp],[CryptoTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
-            #                 VALUES (?,?,?,?,?,1)
-            #             ''', params)
+            cursor.execute('''
+                            INSERT INTO [dbo].[CryptoTradeHistory]([TradeTimeStamp],[CryptoTickerId],[TradeSize],[TradeValue],[CurrencySymbolId],[UserIdentityId])
+                            VALUES (?,?,?,?,?,1)
+                        ''', params)
             conn.commit()
             conn.close()
         else:
