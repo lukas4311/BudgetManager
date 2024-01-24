@@ -193,7 +193,7 @@ def process_report_data(cryptoSqlService: CryptoSqlService, parser: CoinbasePars
     for parsed_report in all_reports_data:
         try:
             cryptoSqlService.store_trade_data(parsed_report["data"])
-            # TODO: change status to processed
+            cryptoSqlService.changeProcessStateToParseError(parsed_report["report_id"], "Finished")
         except Exception as e:
             print(parsed_report)
             cryptoSqlService.changeProcessStateToParseError(parsed_report["report_id"], "SavinggError")
