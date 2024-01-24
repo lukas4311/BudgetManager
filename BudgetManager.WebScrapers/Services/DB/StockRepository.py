@@ -28,3 +28,5 @@ class StockRepository:
             conn.execute(insert_command)
             conn.commit()
 
+    def get_currency_id(self, currency_code: str):
+        print(currency_code)
