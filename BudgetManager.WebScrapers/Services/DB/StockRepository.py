@@ -9,10 +9,11 @@ from Orm.CurrencySymbol import CurrencySymbol
 from Orm.StockTicker import Base, StockTicker
 
 
+connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
+
 class StockRepository:
     def get_ticker_id(self, ticker: str):
-        engine = create_engine(
-            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+        engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
@@ -22,8 +23,7 @@ class StockRepository:
         return ticker_model.id if ticker_model is not None else None
 
     def create_new_ticker(self, ticker: str):
-        engine = create_engine(
-            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+        engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
 
@@ -33,8 +33,7 @@ class StockRepository:
             conn.commit()
 
     def get_currency_id(self, currency_code: str):
-        engine = create_engine(
-            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+        engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
@@ -44,8 +43,7 @@ class StockRepository:
         return currency_model.id if currency_model is not None else None
 
     def get_all_crypto_broker_reports_to_process(self):
-        engine = create_engine(
-            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+        engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
