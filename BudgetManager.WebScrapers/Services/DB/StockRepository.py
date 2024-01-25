@@ -84,16 +84,16 @@ class StockRepository:
 
         Base.metadata.create_all(engine)
         session = Session(engine)
-        crypto_trade = (select(StockTradeHistory)
-                        .where(and_(StockTradeHistory.tradeValue == tradingData.total,
-                                    StockTradeHistory.tradeSize == tradingData.number_of_shares
-                                    , StockTradeHistory.stockTickerId == ticker_id
-                                    , StockTradeHistory.tradeTimeStamp == tradingData.time)
-                               ))
-        crypto_data = session.scalars(crypto_trade)
-        crypto_trade = crypto_data.first()
+        stock_trade = (select(StockTradeHistory)
+                       .where(and_(StockTradeHistory.tradeValue == tradingData.total,
+                                   StockTradeHistory.tradeSize == tradingData.number_of_shares
+                                   , StockTradeHistory.stockTickerId == ticker_id
+                                   , StockTradeHistory.tradeTimeStamp == tradingData.time)
+                              ))
+        stock_data = session.scalars(stock_trade)
+        stock_trade = stock_data.first()
 
-        if crypto_trade is None:
+        if stock_trade is None:
             insert_command = insert(StockTradeHistory).values(tradeTimeStamp=tradingData.time, stockTickerId=ticker_id,
                                                               tradeSize=tradingData.number_of_shares,
                                                               tradeValue=tradingData.total,
