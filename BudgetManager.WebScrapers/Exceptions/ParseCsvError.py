@@ -1,0 +1,2 @@
+class ParseCsvError(Exception):
+    pass

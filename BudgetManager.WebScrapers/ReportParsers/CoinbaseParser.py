@@ -6,6 +6,7 @@ from datetime import datetime
 
 import pandas as pd
 
+from Exceptions.ParseCsvError import ParseCsvError
 from Services.CryptoSqlService import CryptoSqlService
 
 
@@ -19,8 +20,7 @@ class CoinbaseReportData:
     operationType: str
 
 
-class ParseCsvError(Exception):
-    pass
+
 
 
 class CoinbaseParser:

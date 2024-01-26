@@ -3,12 +3,10 @@ import csv
 import io
 import logging
 import warnings
-from dataclasses import dataclass
 from datetime import datetime
-
 import pandas as pd
-
-from ReportParsers.CoinbaseParser import ParseCsvError
+from Exceptions.ParseCsvError import ParseCsvError
+from Models.TradingReportData import TradingReportData
 from Services.DB.StockRepository import StockRepository
 
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -18,13 +16,6 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
                     level=logging.DEBUG)
 
 
-@dataclass
-class TradingReportData:
-    time: datetime
-    ticker: str
-    name: str
-    number_of_shares: float
-    total: float
 
 
 class Trading212ReportParser:
@@ -97,7 +88,7 @@ def process_report_data(stock_repo: StockRepository, parser: Trading212ReportPar
     print(all_reports_data)
     for parsed_report in all_reports_data:
         try:
-            stock_repo.store_trade_data(parsed_report["data"])
+            stock_repo.insert_stock_trade(parsed_report["data"], "CZK")
             stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
         except Exception as e:
             print(parsed_report)
@@ -120,3 +111,8 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
 
 parser = Trading212ReportParser()
 parser.save_report_data_to_db()
+
+
+parser = Trading212ReportParser()
+stockRepo = StockRepository()
+process_report_data(stockRepo, parser)

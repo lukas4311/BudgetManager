@@ -1,14 +1,14 @@
-from sqlalchemy import create_engine, select, insert, and_
+from sqlalchemy import create_engine, select, insert, and_, update
 from sqlalchemy.orm import Session
 
 import secret
+from Models.TradingReportData import TradingReportData
 from Orm.BrokerReportToProcess import BrokerReportToProcess
 from Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Orm.BrokerReportType import BrokerReportType
 from Orm.CurrencySymbol import CurrencySymbol
 from Orm.StockTicker import Base, StockTicker
 from Orm.StockTradeHistory import StockTradeHistory
-from ReportParsers.Trading212Parser import TradingReportData
 
 connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
 
@@ -105,3 +105,23 @@ class StockRepository:
             print('Trade is already saved.')
 
         session.close()
+
+    def changeProcessState(self, broker_report_id: int, state_code: str):
+        engine = create_engine(
+            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        broker_state_command = select(BrokerReportToProcessState).where(
+            BrokerReportToProcessState.code == state_code)
+        broker_state = session.scalars(broker_state_command).first()
+        broker_state_id = broker_state.id
+
+        update_command = update(BrokerReportToProcess).where(
+            BrokerReportToProcess.brokerReportToProcessStateId == broker_report_id).values(
+            brokerReportToProcessStateId=broker_state_id)
+
+        with engine.connect() as conn:
+            conn.execute(update_command)
+            conn.commit()
