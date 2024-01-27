@@ -29,6 +29,8 @@ import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
 import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import PublishIcon from '@mui/icons-material/Publish';
+import { SnackbarSeverity } from "../../App";
 
 
 enum DisplayChioce {
@@ -272,6 +274,20 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             this.setState({ selectedDisplayChoice: displayChoice });
     }
 
+    private uploadBrokerReport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files)
+            return;
+
+        const appContext: AppContext = this.context as AppContext;
+        try {
+            const files: Blob = (e.target as HTMLInputElement).files?.[0];
+            await this.stockApi.stockBrokerReportPost({ file: files });
+            appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success })
+        } catch (error) {
+            appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })
+        }
+    }
+
     render() {
         const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
         const minStockValue = Math.min(...yValues);
@@ -311,6 +327,19 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     </div>
                                 ) : (
                                     <div className="flex flex-col">
+                                        <Button
+                                            component="label"
+                                            variant="outlined"
+                                            color="primary"
+                                            className="block mr-auto bg-vermilion text-white mb-3 w-1/3"
+
+                                        >
+                                            <div className="flex flex-row justify-center">
+                                                <PublishIcon />
+                                                <span className="ml-4">Upload crypto report</span>
+                                            </div>
+                                            <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
+                                        </Button>
                                         <h2 className="text-xl font-semibold mb-6">All trades</h2>
                                         <div className="overflow-y-scroll">
                                             <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()} dataAreaClass="h-70vh overflow-y-auto"
