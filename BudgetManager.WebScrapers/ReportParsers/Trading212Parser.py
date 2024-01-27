@@ -29,7 +29,7 @@ class Trading212ReportParser:
                 ticker = row["Ticker"]
                 name = row["Name"]
                 number_of_shares = row["No. of shares"]
-                total = float(row["Total (CZK)"])
+                total = float(row["Total"])
 
                 if action == "Market buy":
                     total = total * -1
@@ -51,7 +51,7 @@ class Trading212ReportParser:
         ticker = row["Ticker"]
         name = row["Name"]
         number_of_shares = float(row["No. of shares"])
-        total = float(row["Total (CZK)"])
+        total = float(row["Total"])
 
         if action == "Market buy":
             total = total * -1
@@ -100,8 +100,8 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
         rows = csv.DictReader(io.StringIO(parsed_csv))
         records = []
         for row in rows:
-            coinbase_record = parser.map_csv_row_to_model(row)
-            records.append(coinbase_record)
+            stock_record = parser.map_csv_row_to_model(row)
+            records.append(stock_record)
 
         all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
     except Exception as e:
