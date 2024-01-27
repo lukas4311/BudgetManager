@@ -299,14 +299,32 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     <div className="flex flex-row pt-5">
                         <ComponentPanel classStyle="w-7/12">
                             <div className="flex flex-col h-full">
-                                <ToggleButtonGroup value={this.state.selectedDisplayChoice} onChange={this.handleDisplayChoice} aria-label="text formatting" size="small" exclusive>
-                                    <ToggleButton value={DisplayChioce.Portfolio} aria-label="Portfolio">
-                                        <span className={this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? "text-vermilion" : "text-white"}>Portfolio</span>
-                                    </ToggleButton>
-                                    <ToggleButton value={DisplayChioce.Trades} aria-label="Trades">
-                                        <span className={this.state.selectedDisplayChoice == DisplayChioce.Trades ? "text-vermilion" : "text-white"}>Trades</span>
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
+                                <div className="flex flex-row">
+                                    <div className="w-1/2 text-left">
+                                        <ToggleButtonGroup className="ml-auto" value={this.state.selectedDisplayChoice} onChange={this.handleDisplayChoice} aria-label="text formatting" size="small" exclusive>
+                                            <ToggleButton value={DisplayChioce.Portfolio} aria-label="Portfolio">
+                                                <span className={this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? "text-vermilion" : "text-white"}>Portfolio</span>
+                                            </ToggleButton>
+                                            <ToggleButton value={DisplayChioce.Trades} aria-label="Trades">
+                                                <span className={this.state.selectedDisplayChoice == DisplayChioce.Trades ? "text-vermilion" : "text-white"}>Trades</span>
+                                            </ToggleButton>
+                                        </ToggleButtonGroup>
+                                    </div>
+                                    <div className="w-1/2">
+                                        <Button
+                                            component="label"
+                                            variant="outlined"
+                                            color="primary"
+                                            className="block ml-auto bg-vermilion text-white mb-3 w-2/3"
+                                        >
+                                            <div className="flex flex-row justify-center">
+                                                <PublishIcon />
+                                                <span className="ml-4">Upload crypto report</span>
+                                            </div>
+                                            <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
+                                        </Button>
+                                    </div>
+                                </div>
                                 {this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? (
                                     <div className="flex flex-col">
                                         <h2 className="text-xl font-semibold">Current portfolio</h2>
@@ -327,19 +345,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     </div>
                                 ) : (
                                     <div className="flex flex-col">
-                                        <Button
-                                            component="label"
-                                            variant="outlined"
-                                            color="primary"
-                                            className="block mr-auto bg-vermilion text-white mb-3 w-1/3"
-
-                                        >
-                                            <div className="flex flex-row justify-center">
-                                                <PublishIcon />
-                                                <span className="ml-4">Upload crypto report</span>
-                                            </div>
-                                            <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
-                                        </Button>
                                         <h2 className="text-xl font-semibold mb-6">All trades</h2>
                                         <div className="overflow-y-scroll">
                                             <BaseList<StockViewModel> data={this.state.stocks} template={this.renderTemplate} header={this.renderHeader()} dataAreaClass="h-70vh overflow-y-auto"
