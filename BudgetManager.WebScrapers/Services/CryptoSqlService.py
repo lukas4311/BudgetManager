@@ -129,3 +129,5 @@ class CryptoSqlService:
         with engine.connect() as conn:
             conn.execute(update_command)
             conn.commit()
+
+        session.close()
