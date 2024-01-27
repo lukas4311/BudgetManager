@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -107,6 +108,17 @@ namespace BudgetManager.Api.Controllers
         public IActionResult GetSplitTest()
         {
             this.stockSplitService.GetSplitAccumulated();
+            return Ok();
+        }
+
+        [HttpPost("brokerReport")]
+        public async Task<IActionResult> Post(IFormFile file)
+        {
+            using MemoryStream ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            byte[] fileBytes = ms.ToArray();
+            this.stockTradeHistoryService.StoreReportToProcess(fileBytes, this.GetUserId());
+
             return Ok();
         }
     }

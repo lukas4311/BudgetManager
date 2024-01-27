@@ -25,5 +25,7 @@ namespace BudgetManager.Services.Contracts
         Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date);
 
         Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol);
+
+        void StoreReportToProcess(byte[] brokerFileData, int userId);
     }
 }
