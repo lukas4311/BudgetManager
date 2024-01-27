@@ -123,7 +123,7 @@ class CryptoSqlService:
         broker_state_id = broker_state.id
 
         update_command = update(BrokerReportToProcess).where(
-            BrokerReportToProcess.brokerReportToProcessStateId == broker_report_id).values(
+            BrokerReportToProcess.id == broker_report_id).values(
             brokerReportToProcessStateId=broker_state_id)
 
         with engine.connect() as conn:
