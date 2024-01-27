@@ -68,7 +68,7 @@ class Trading212ReportParser:
         for tradeData in data:
             try:
                 print(tradeData)
-                # self.store_orders(tradeData)
+                self.store_orders(tradeData)
             except Exception as e:
                 logging.info(
                     'Error while saving for ticker: ' + tradeData.ticker + 'and for time' + tradeData.time.strftime(
