@@ -107,11 +107,6 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
     except Exception as e:
         raise ParseCsvError("Error while parsing CSV")
 
-
-parser = Trading212ReportParser()
-parser.save_report_data_to_db()
-
-
 parser = Trading212ReportParser()
 stockRepo = StockRepository()
 process_report_data(stockRepo, parser)
