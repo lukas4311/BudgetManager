@@ -77,7 +77,7 @@ class StockRepository:
 
         currency_id = int(self.get_currency_id(currency_code))
 
-        if ticker_id is None:
+        if currency_id is None:
             print('Throw exception')
 
         engine = create_engine(connectionString)
@@ -128,9 +128,11 @@ class StockRepository:
         broker_state_id = broker_state.id
 
         update_command = update(BrokerReportToProcess).where(
-            BrokerReportToProcess.brokerReportToProcessStateId == broker_report_id).values(
+            BrokerReportToProcess.id == broker_report_id).values(
             brokerReportToProcessStateId=broker_state_id)
 
         with engine.connect() as conn:
             conn.execute(update_command)
             conn.commit()
+
+        session.close()
