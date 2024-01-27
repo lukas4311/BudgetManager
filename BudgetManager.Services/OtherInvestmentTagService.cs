@@ -30,7 +30,7 @@ namespace BudgetManager.Services
 
         public int ReplaceTagForOtherInvestment(int otherInvestmentId, int tagId)
         {
-            var otherInvestmentTag = this.repository.FindByCondition(o => o.OtherInvestmentId == otherInvestmentId).SingleOrDefault();
+            OtherInvestmentTag otherInvestmentTag = this.repository.FindByCondition(o => o.OtherInvestmentId == otherInvestmentId).SingleOrDefault();
 
             if (otherInvestmentTag != null)
                 this.repository.Delete(otherInvestmentTag);

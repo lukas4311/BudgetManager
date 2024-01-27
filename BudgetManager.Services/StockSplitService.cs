@@ -33,7 +33,7 @@ namespace BudgetManager.Services
 
         public IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData)
         {
-            foreach (var group in accumulatedData)
+            foreach (List<StockSplitAccumulated> group in accumulatedData)
                 for (int i = 1; i < group.Count(); i++)
                     group[i].SplitAccumulatedCoeficient *= group[i - 1].SplitAccumulatedCoeficient;
 
@@ -43,7 +43,7 @@ namespace BudgetManager.Services
         public double GetAccumulatedCoefficient(IEnumerable<StockSplitModel> accumulatedData)
         {
             double accumulatedCoefficient = 1;
-            var stockSplitModels = accumulatedData as StockSplitModel[] ?? accumulatedData.ToArray();
+            StockSplitModel[] stockSplitModels = accumulatedData as StockSplitModel[] ?? accumulatedData.ToArray();
 
             for (int i = 0; i < stockSplitModels.Length; i++)
                     accumulatedCoefficient *= stockSplitModels.ElementAt(i).SplitCoefficient;

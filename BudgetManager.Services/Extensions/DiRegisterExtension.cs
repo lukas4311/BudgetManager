@@ -20,7 +20,7 @@ namespace BudgetManager.Services.Extensions
         public static void RegisterModelMapping(this ContainerBuilder containerBuilder)
         {
             //Automapper
-            var config = new MapperConfiguration(
+            MapperConfiguration config = new MapperConfiguration(
 
                 cfg =>
                 {

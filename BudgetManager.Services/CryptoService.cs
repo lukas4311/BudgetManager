@@ -111,10 +111,10 @@ namespace BudgetManager.Services
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
-            var stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerCryptoTypeCode).Single().Id;
-            var stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
+            int stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerCryptoTypeCode).Single().Id;
+            int stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
 
-            var brokerReport = new BrokerReportToProcess
+            BrokerReportToProcess brokerReport = new BrokerReportToProcess
             {
                 BrokerReportToProcessStateId = stockStateId,
                 BrokerReportTypeId = stockTypeId,

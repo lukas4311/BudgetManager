@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Enums;
@@ -17,21 +18,37 @@ namespace BudgetManager.Services
     public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
+        private const string BrokerStockTypeCode = "Stock";
+        private const string BrokerProcessStateCode = "InProcess";
+        private readonly IStockTradeHistoryRepository repository;
+        private readonly IMapper mapper;
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
         private readonly IInfluxContext influxContext;
         private readonly IStockSplitService stockSplitService;
         private readonly IForexService forexService;
         private readonly ICurrencySymbolRepository currencySymbolRepository;
+        private readonly IBrokerReportTypeRepository brokerReportTypeRepository;
+        private readonly IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository;
+        private readonly IBrokerReportToProcessRepository brokerReportToProcessRepository;
+        private readonly IDateTime dateTimeProvider;
 
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper,
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
-            IStockSplitService stockSplitService, IForexService forexService, ICurrencySymbolRepository currencySymbolRepository) : base(repository, mapper)
+            IStockSplitService stockSplitService, IForexService forexService, ICurrencySymbolRepository currencySymbolRepository,
+            IBrokerReportTypeRepository brokerReportTypeRepository, IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository,
+            IBrokerReportToProcessRepository brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
         {
+            this.repository = repository;
+            this.mapper = mapper;
             this.stockDataInfluxRepo = stockDataInfluxRepo;
             this.influxContext = influxContext;
             this.stockSplitService = stockSplitService;
             this.forexService = forexService;
             this.currencySymbolRepository = currencySymbolRepository;
+            this.brokerReportTypeRepository = brokerReportTypeRepository;
+            this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
+            this.brokerReportToProcessRepository = brokerReportToProcessRepository;
+            this.dateTimeProvider = dateTimeProvider;
         }
 
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
@@ -42,7 +59,7 @@ namespace BudgetManager.Services
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
-            var splits = stockSplitService.GetAll();
+            IEnumerable<StockSplitModel> splits = stockSplitService.GetAll();
 
             if (splits.Any())
                 ApplySplitsToTrades(trades, splits);
@@ -90,7 +107,7 @@ namespace BudgetManager.Services
 
             if (trades.Any())
             {
-                var splits = stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
+                IEnumerable<StockSplitModel> splits = stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
 
                 if (splits.Any())
                     ApplySplitsToTrades(trades, splits);
@@ -117,22 +134,42 @@ namespace BudgetManager.Services
 
             for (int i = 0; i < tickers.Length; i++)
             {
-                var taskTicker = stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
+                Task<IEnumerable<StockPrice>> taskTicker = stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
                 finPriceTasks.Add(taskTicker);
             }
 
-            var prices = await Task.WhenAll(finPriceTasks.ToArray());
+            IEnumerable<StockPrice>[] prices = await Task.WhenAll(finPriceTasks.ToArray());
             return prices.Where(m => m.Any()).Select(m => m.FirstOrDefault());
         }
 
         private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
         {
-            foreach (var trade in trades)
+            foreach (StockTradeHistoryGetModel trade in trades)
             {
-                var splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
+                double splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
                     c.SplitTimeStamp >= trade.TradeTimeStamp && c.StockTickerId == trade.StockTickerId));
                 trade.TradeSizeAfterSplit = splitCoefficient * trade.TradeSize;
             }
+        }
+
+        public void StoreReportToProcess(byte[] brokerFileData, int userId)
+        {
+            string fileContentBase64 = Convert.ToBase64String(brokerFileData);
+
+            int stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerStockTypeCode).Single().Id;
+            int stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
+
+            BrokerReportToProcess brokerReport = new BrokerReportToProcess
+            {
+                BrokerReportToProcessStateId = stockStateId,
+                BrokerReportTypeId = stockTypeId,
+                FileContentBase64 = fileContentBase64,
+                ImportedTime = this.dateTimeProvider.Now.DateTimeInstance,
+                UserIdentityId = userId
+            };
+
+            this.brokerReportToProcessRepository.Create(brokerReport);
+            this.brokerReportToProcessRepository.Save();
         }
     }
 }
