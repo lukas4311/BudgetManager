@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, select, insert, and_, update
 from sqlalchemy.orm import Session
-
+from typing import List
 import secret
 from Models.TradingReportData import TradingReportData
 from Orm.BrokerReportToProcess import BrokerReportToProcess
@@ -105,6 +105,15 @@ class StockRepository:
             print('Trade is already saved.')
 
         session.close()
+
+    def store_trade_data(self, stock_trade_data: List[TradingReportData], currency_code: str):
+        for trade in stock_trade_data:
+            ticker_id = self.get_ticker_id(trade.ticker)
+
+            if not ticker_id:
+                self.create_new_ticker(trade.ticker)
+
+            self.insert_stock_trade(trade, currency_code)
 
     def changeProcessState(self, broker_report_id: int, state_code: str):
         engine = create_engine(

@@ -50,7 +50,7 @@ class Trading212ReportParser:
         time = row["Time"]
         ticker = row["Ticker"]
         name = row["Name"]
-        number_of_shares = row["No. of shares"]
+        number_of_shares = float(row["No. of shares"])
         total = float(row["Total (CZK)"])
 
         if action == "Market buy":
@@ -88,12 +88,11 @@ def process_report_data(stock_repo: StockRepository, parser: Trading212ReportPar
     print(all_reports_data)
     for parsed_report in all_reports_data:
         try:
-            stock_repo.insert_stock_trade(parsed_report["data"], "CZK")
+            stock_repo.store_trade_data(parsed_report["data"], "CZK")
             stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
         except Exception as e:
             print(parsed_report)
             stock_repo.changeProcessState(parsed_report["report_id"], "SavinggError")
-
 
 def parse_report_data_to_model(all_reports_data, parser, report_data):
     try:
