@@ -112,7 +112,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpPost("brokerReport")]
-        public async Task<IActionResult> Post(IFormFile file)
+        public async Task<IActionResult> UploadReport(IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);

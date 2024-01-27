@@ -35,6 +35,10 @@ import {
     StockTradeHistoryModelToJSON,
 } from '../models';
 
+export interface StockBrokerReportPostRequest {
+    file?: Blob | null;
+}
+
 export interface StockStockTickerCompanyProfileGetRequest {
     ticker: string | null;
 }
@@ -75,6 +79,19 @@ export interface StockStockTradeHistoryTickerGetRequest {
  * @interface StockApiInterface
  */
 export interface StockApiInterface {
+    /**
+     * 
+     * @param {Blob} [file] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockBrokerReportPostRaw(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    stockBrokerReportPost(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void>;
+
     /**
      * 
      * @param {*} [options] Override http request option.
@@ -227,6 +244,54 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
             return encodeURIComponent(String(param.toISOString()));
 
         return encodeURIComponent(String(param));
+    }
+
+    /**
+     */
+    async stockBrokerReportPostRaw(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.file !== undefined) {
+            formParams.append('file', requestParameters.file as any);
+        }
+
+        const response = await this.request({
+            path: `/stock/brokerReport`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async stockBrokerReportPost(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.stockBrokerReportPostRaw(requestParameters, initOverrides);
     }
 
     /**
