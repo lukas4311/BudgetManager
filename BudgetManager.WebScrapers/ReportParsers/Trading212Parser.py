@@ -16,11 +16,9 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
                     level=logging.DEBUG)
 
 
-
-
 class Trading212ReportParser:
     def read_report_csv_file(self):
-        parsedData: list(TradingReportData) = []
+        parsed_data: list[TradingReportData] = []
         with open("..\\BrokerReports\\Trading212_1.csv", 'r') as file:
             rows = csv.DictReader(file)
             for row in rows:
@@ -40,10 +38,10 @@ class Trading212ReportParser:
 
                 try:
                     model = TradingReportData(pandas_date, ticker, name, number_of_shares, total)
-                    parsedData.append(model)
+                    parsed_data.append(model)
                 except Exception as e:
                     print(ticker + " - error - " + e)
-        return parsedData
+        return parsed_data
 
     def map_csv_row_to_model(self, row):
         action = row["Action"]
@@ -75,6 +73,7 @@ class Trading212ReportParser:
                         '%Y-%m-%d'))
                 logging.error(e)
 
+
 def process_report_data(stock_repo: StockRepository, parser: Trading212ReportParser):
     broker_report_data = stock_repo.get_all_crypto_broker_reports_to_process()
     all_reports_data = []
@@ -94,6 +93,7 @@ def process_report_data(stock_repo: StockRepository, parser: Trading212ReportPar
             print(parsed_report)
             stock_repo.changeProcessState(parsed_report["report_id"], "SavinggError")
 
+
 def parse_report_data_to_model(all_reports_data, parser, report_data):
     try:
         parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
@@ -106,6 +106,7 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
         all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
     except Exception as e:
         raise ParseCsvError("Error while parsing CSV")
+
 
 parser = Trading212ReportParser()
 stockRepo = StockRepository()
