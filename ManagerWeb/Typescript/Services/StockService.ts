@@ -86,7 +86,7 @@ export default class StockService implements IStockService {
         return accumulatedSizeInDays;
     }
 
-    public getStocksAccumulatedValue = async (): Promise<Map<string, Map<string, number>>> => {
+    public getStocksAccumulatedValue = async (currency: ForexSymbol = ForexSymbol.Usd): Promise<Map<string, Map<string, number>>> => {
         let stockAccumulatedSizes = await this.getStocksAccumulatedSize();
 
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
@@ -96,10 +96,11 @@ export default class StockService implements IStockService {
             const date = moment(dateKey).toDate();
             const tickers = Array.from(tickersSizeAccumulated.keys());
             const tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+            const finalExchangeRate = (currency == undefined || currency == ForexSymbol.Usd ? 1 : await this.getExchangeRate(usdSymbol, currency)) ?? 1;
 
             for (const stockPriceInfo of tickersPrice) {
                 const accumulatedSize = tickersSizeAccumulated.get(stockPriceInfo.ticker);
-                const tickerValue = (stockPriceInfo?.price ?? 1) * accumulatedSize;
+                const tickerValue = (stockPriceInfo?.price ?? 1) * accumulatedSize * finalExchangeRate;
                 stockAccumulatedValue.set(stockPriceInfo.ticker, tickerValue);
             }
 
@@ -144,9 +145,10 @@ export default class StockService implements IStockService {
     }
 
     public async getMonthlyGroupedAccumulated(fromDate: Date, toDate: Date, trades: StockViewModel[], currency: string): Promise<NetWorthMonthGroupModel[]> {
+        const finalCurrency = this.convertStringToForexEnum(currency);
         const stockGroupData: NetWorthMonthGroupModel[] = [];
         const months = this.getMonthsBetween(fromDate, toDate);
-        const accumulatedTrades = await this.getStocksAccumulatedValue();
+        const accumulatedTrades = await this.getStocksAccumulatedValue(finalCurrency);
         let accumulatedValueInDay: GroupedStockValues[] = []
         accumulatedTrades.forEach((value, key) => {
             let date = moment(key).toDate();
@@ -236,19 +238,6 @@ export default class StockService implements IStockService {
     public async getCompanyProfile(ticker: string) {
         return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
     }
-
-    // private async calculateForexExchangeRateToUsd(trade: StockViewModel) {
-    //     let exhangeRate: number = 1;
-    //     let forexSymbol = this.convertStringToForexEnum(trade.currencySymbol);
-
-    //     if (forexSymbol)
-    //         exhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: moment(trade.tradeTimeStamp).toDate(), from: forexSymbol, to: ForexSymbol.Usd });
-    //     else {
-    //         console.log(`Currency (${trade.currencySymbol}) is not compatible!`);
-    //         exhangeRate = 1;
-    //     }
-    //     return exhangeRate;
-    // }
 
     public async getExchangeRate(from: string, to: string): Promise<number> {
         let date = moment(Date.now()).subtract(1, 'd').toDate();
