@@ -67,7 +67,6 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
     private preparePieChartData(netWorthDetail: TotalNetWorthDetail) {
         let pieData: PieChartData[] = [];
 
-
         pieData.push({ id: "money", label: "money", value: Math.round(netWorthDetail?.money ?? 0) });
         pieData.push({ id: "stock", label: "stock", value: Math.round(netWorthDetail?.stock ?? 0) });
         pieData.push({ id: "crypto", label: "crypto", value: Math.round(netWorthDetail?.crypto ?? 0) });

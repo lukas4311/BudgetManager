@@ -83,6 +83,7 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async getMonthlyGroupedAccumulatedCrypto(fromDate: Date, toDate: Date, trades: TradeHistory[], currency: string): Promise<NetWorthMonthGroupModel[]> {
+        const finalCurrency = this.convertStringToForexEnum(currency);
         const months = this.getMonthsBetween(fromDate, toDate);
         const tradesWithPlusMinusSign = trades.map(t => ({ ...t, tradeSize: t.tradeValue > 0 ? t.tradeSize * -1 : t.tradeSize }));
         const cryptoGroupData: NetWorthMonthGroupModel[] = [];
@@ -101,7 +102,7 @@ export default class CryptoService implements ICryptoService {
                     const dateForForexExchangeGetString = moment(monthTradeFirst.tradeTimeStamp).format('YYYY-MM');
                     let dateForForexExchangeGet = moment(`${dateForForexExchangeGetString}-01`);
                     dateForForexExchangeGet.add(1, 'month');
-                    let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, ForexSymbol.Czk, dateForForexExchangeGet.toDate())
+                    let finalCalculation = await this.calculateCryptoTotalUsdValueForDate(monthTickerGroup.trades, monthTickerGroup.ticker, finalCurrency, dateForForexExchangeGet.toDate())
                     prevMonthSum += finalCalculation.finalCurrencyPriceTrade;
                 }
             }

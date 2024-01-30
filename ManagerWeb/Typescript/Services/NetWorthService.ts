@@ -41,31 +41,28 @@ export default class NetWorthService {
         const income = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Revenue), s => s.amount);
         const expense = _.sumBy(paymentHistory.filter(p => p.paymentTypeCode == PaymentType.Expense), s => s.amount);
 
-        // let currentBalance = bankAccountBaseLine + income - expense;
         totalNetWorthDetail.money = bankAccountBaseLine + income - expense;
 
         const otherInvestments = await this.otherInvestmentService.getSummary();
         const otherInvestmentsbalance = _.sumBy(otherInvestments.actualBalanceData, s => s.balance);
 
-        // currentBalance += otherInvestmentsbalance;
         totalNetWorthDetail.other = otherInvestmentsbalance;
 
         const cryptoSum = await this.cryptoService.getCryptoCurrentNetWorth(czkSymbol);
-        // currentBalance += cryptoSum;
         totalNetWorthDetail.crypto = cryptoSum;
 
         const stockSum = await this.stockService.getStocksNetWorthSum(czkSymbol);
-        // currentBalance += stockSum;
         totalNetWorthDetail.stock = stockSum;
 
         const comoditySum = await this.comodityService.getComodityNetWorth();
         totalNetWorthDetail.comodity = comoditySum;
-        // currentBalance += comoditySum;
 
         return totalNetWorthDetail;
     }
 
     async getNetWorthGroupedByMonth() {
+        const fromDate = new Date(2020, 0, 1);
+        const toDate = moment().toDate();
         const bankAccounts = await this.bankAccountService.getAllBankAccounts();
         const bankAccountBaseLine = _.sumBy(bankAccounts, s => s.openingBalance);
 
@@ -86,13 +83,17 @@ export default class NetWorthService {
             }, { prev: 0 }).value();
 
         const otherInvestments = await this.otherInvestmentService.getAll();
-        const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(new Date(2023, 0, 1), new Date(2023, 6, 1), otherInvestments);
+        const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(fromDate, toDate, otherInvestments);
 
         const tradeData = await this.cryptoService.getRawTradeData();
-        const cryptoNetWorth = this.cryptoService.getMonthlyGroupedAccumulatedCrypto(new Date(2022, 0, 1), new Date(2023, 0, 1), tradeData, czkSymbol);
+        const cryptoNetWorth = await this.cryptoService.getMonthlyGroupedAccumulatedCrypto(fromDate, toDate, tradeData, czkSymbol);
+        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ cryptoNetWorth:", cryptoNetWorth)
 
         const stockTradeData = await this.stockService.getStockTradeHistory();
-        const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(new Date(2022, 0, 1), new Date(2023, 0, 1), stockTradeData, czkSymbol);
+        const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(fromDate, toDate, stockTradeData, czkSymbol);
+        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", acumulatedData)
+
+        // TODO: need to sum same date
 
         return paymentGroupedData;
     }
