@@ -12,12 +12,14 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static void RegisterComodityEndpoints(this WebApplication app)
         {
             app.MapGet("/gold/actualPrice", GetCurrentGoldPriceForOunce)
-            .WithName(nameof(GetCurrentGoldPriceForOunce))
-            .WithOpenApi();
+                .WithName(nameof(GetCurrentGoldPriceForOunce))
+                .WithOpenApi()
+                .Produces(StatusCodes.Status200OK);
 
             app.MapGet("gold/actualPrice/{currencyCode}", GetCurrentGoldPriceForOunceForSpecificCurrency)
                 .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
-                .WithOpenApi();
+                .WithOpenApi()
+                .Produces(StatusCodes.Status204NoContent);
         }
 
         public static async Task<Ok<double>> GetCurrentGoldPriceForOunce([FromServices] IComodityService comodityService)

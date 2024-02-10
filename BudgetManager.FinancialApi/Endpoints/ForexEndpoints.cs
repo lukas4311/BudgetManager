@@ -13,11 +13,13 @@ namespace BudgetManager.FinancialApi.Endpoints
         {
             app.MapGet("/forex/exchangerate/{from}/{to}", GetForexPairPrice)
             .WithName(nameof(GetForexPairPrice))
-            .WithOpenApi();
+            .WithOpenApi()
+            .Produces(StatusCodes.Status200OK);
 
             app.MapGet("/forex/exchangerate/{from}/{to}/{date}", GetForexPairPriceAtDate)
             .WithName(nameof(GetForexPairPriceAtDate))
-            .WithOpenApi();
+            .WithOpenApi()
+            .Produces(StatusCodes.Status200OK);
         }
 
         public static async Task<Ok<double>> GetForexPairPrice([FromServices] IForexService forexService, [FromRoute] CurrencySymbol from, [FromRoute] CurrencySymbol to)

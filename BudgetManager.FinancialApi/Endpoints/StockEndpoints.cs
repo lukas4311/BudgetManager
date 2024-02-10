@@ -11,20 +11,31 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static void RegisterStockEndpoints(this WebApplication app)
         {
             app.MapGet("/stock/{ticker}/price/all", GetStockPriceData)
-            .WithName(nameof(GetStockPriceData))
-            .WithOpenApi();
+                .WithName(nameof(GetStockPriceData))
+                .WithOpenApi()
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound);
 
             app.MapGet("stock/{ticker}/priceFrom/{from}", GetStockPriceDataFromDate)
-            .WithName(nameof(GetStockPriceDataFromDate))
-            .WithOpenApi();
+                .WithName(nameof(GetStockPriceDataFromDate))
+                .WithOpenApi()
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound);
 
             app.MapGet("stock/{ticker}/price/{date}", GetStockPriceDataAtDate)
-            .WithName(nameof(GetStockPriceDataAtDate))
-            .WithOpenApi();
+                .WithName(nameof(GetStockPriceDataAtDate))
+                .WithOpenApi()
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound);
 
             app.MapGet("stocks/price/{date}", GetStocksPriceDataAtDate)
                 .WithName(nameof(GetStocksPriceDataAtDate))
-                .WithOpenApi();
+                .WithOpenApi()
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status204NoContent);
         }
 
         public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound, NoContent>> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)

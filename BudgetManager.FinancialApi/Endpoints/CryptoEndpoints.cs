@@ -11,15 +11,21 @@ namespace BudgetManager.FinancialApi.Endpoints
         {
             app.MapGet("/crypto/{ticker}/price/all", GetCryptoPriceData)
             .WithName(nameof(GetCryptoPriceData))
-            .WithOpenApi();
+            .WithOpenApi()
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent);
 
             app.MapGet("/crypto/{ticker}/priceFrom/{from}", GetCryptoPriceDataFromDate)
             .WithName(nameof(GetCryptoPriceDataFromDate))
-            .WithOpenApi();
+            .WithOpenApi()
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent);
 
             app.MapGet("/crypto/{ticker}/price/{date}", GetCryptoPriceDataAtDate)
             .WithName(nameof(GetCryptoPriceDataAtDate))
-            .WithOpenApi();
+            .WithOpenApi()
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent);
         }
 
         public static async Task<Results<Ok<IEnumerable<CryptoDataV2>>, NoContent>> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
