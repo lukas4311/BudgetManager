@@ -19,6 +19,7 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("gold/actualPrice/{currencyCode}", GetCurrentGoldPriceForOunceForSpecificCurrency)
                 .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
                 .WithOpenApi()
+                .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status204NoContent);
         }
 
