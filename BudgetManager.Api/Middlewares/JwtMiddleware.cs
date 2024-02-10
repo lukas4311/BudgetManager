@@ -19,13 +19,13 @@ namespace BudgetManager.Api.Middlewares
     {
         private readonly RequestDelegate next;
         private readonly AuthApiSetting appSettings;
-        private readonly HttpClient httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<AuthApiSetting> appSettings)
+        public JwtMiddleware(RequestDelegate next, IOptions<AuthApiSetting> appSettings, IHttpClientFactory httpClientFactory)
         {
             this.next = next;
             this.appSettings = appSettings.Value;
-            this.httpClient = new HttpClient();
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task Invoke(HttpContext context)
@@ -58,7 +58,7 @@ namespace BudgetManager.Api.Middlewares
 
         private async Task<bool> ValidateToken(string token)
         {
-            HttpClient client = new HttpClient();
+            HttpClient client = _httpClientFactory.CreateClient();
             string bodyData = JsonSerializer.Serialize(new { Token = token });
             StringContent data = new StringContent(bodyData, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PostAsync(this.appSettings.ValidateUrl, data);
@@ -77,7 +77,7 @@ namespace BudgetManager.Api.Middlewares
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpClient client = _httpClientFactory.CreateClient();
                 string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
                 UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
                 this.SignIn(context, user.userName, user.userId);

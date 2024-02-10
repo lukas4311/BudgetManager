@@ -40,6 +40,7 @@ namespace BudgetManager.Api
             services.Configure<AuthApiSetting>(Configuration.GetSection("AuthApi"));
             services.Configure<JsonOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddHttpClient();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
