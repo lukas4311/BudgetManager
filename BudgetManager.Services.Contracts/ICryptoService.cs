@@ -26,6 +26,7 @@ namespace BudgetManager.Services.Contracts
         Task<CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate);
 
         Task<IEnumerable<CryptoDataV2>> GetCryptoPriceHistory(string ticker, DateTime from);
+
         void StoreReportToProcess(byte[] brokerFileData, int userId);
     }
 }
