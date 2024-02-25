@@ -24,8 +24,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="configManager.py" />
+    <Compile Include="Exceptions\ParseCsvError.py" />
     <Compile Include="Models\InflationAradModel.py" />
     <Compile Include="Models\MoneySupplyModel.py" />
+    <Compile Include="Orm\BrokerReportToProcess.py" />
+    <Compile Include="Orm\BrokerReportToProcessState.py" />
+    <Compile Include="Orm\BrokerReportType.py" />
+    <Compile Include="Orm\CryptoTicker.py" />
+    <Compile Include="Orm\CryptoTradeHistory.py" />
+    <Compile Include="Orm\CurrencySymbol.py" />
+    <Compile Include="Orm\StockSplit.py" />
+    <Compile Include="Orm\StockTicker.py" />
+    <Compile Include="Orm\StockTradeHistory.py" />
+    <Compile Include="Orm\test.py" />
+    <Compile Include="ReportParsers\CoinbaseParser.py" />
+    <Compile Include="ReportParsers\InteraciveBrokers.py" />
+    <Compile Include="ReportParsers\Trading212Parser.py" />
     <Compile Include="Scrapers\FearAndGreedStocks.py" />
     <Compile Include="Scrapers\InflationCZ.py" />
     <Compile Include="Scrapers\InterstRatesUS.py" />
@@ -43,15 +57,41 @@
     <Compile Include="Services\MoneySupplyUsService.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BrokerReports\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Exceptions\__pycache__\" />
     <Folder Include="Models\" />
     <Folder Include="Models\__pycache__\" />
+    <Folder Include="Orm\" />
+    <Folder Include="Orm\__pycache__\" />
+    <Folder Include="ReportParsers\" />
+    <Folder Include="ReportParsers\Logs\" />
+    <Folder Include="ReportParsers\__pycache__\" />
     <Folder Include="Scrapers\" />
     <Folder Include="Services\" />
     <Folder Include="Services\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BrokerReports\Coinbase.csv" />
+    <Content Include="BrokerReports\Degiro.csv" />
+    <Content Include="BrokerReports\IB_report.csv" />
+    <Content Include="BrokerReports\Trading212_1.csv" />
+    <Content Include="Exceptions\__pycache__\ParseCsvError.cpython-310.pyc" />
     <Content Include="Models\__pycache__\InflationAradModel.cpython-39.pyc" />
     <Content Include="Models\__pycache__\MoneySupplyModel.cpython-39.pyc" />
+    <Content Include="Orm\__pycache__\BrokerReportToProcess.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\BrokerReportToProcessState.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\BrokerReportType.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\CryptoTradeHistory.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\CurrencySymbol.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\StockSplit.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\StockTicker.cpython-310.pyc" />
+    <Content Include="Orm\__pycache__\StockTradeHistory.cpython-310.pyc" />
+    <Content Include="ReportParsers\Logs\IB.2023-09-25.log" />
+    <Content Include="ReportParsers\Logs\trading212.2024-01-26.log" />
+    <Content Include="ReportParsers\Logs\trading212.2024-01-27.log" />
+    <Content Include="ReportParsers\__pycache__\CoinbaseParser.cpython-310.pyc" />
+    <Content Include="ReportParsers\__pycache__\Trading212Parser.cpython-310.pyc" />
     <Content Include="Services\__pycache__\DatetimeService.cpython-39.pyc" />
     <Content Include="Services\__pycache__\InfluxRepository.cpython-39.pyc" />
   </ItemGroup>
