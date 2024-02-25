@@ -55,7 +55,7 @@ namespace BudgetManager.Api
                     cfg.Publish<TickerRequest>(x =>
                     {
                         x.ExchangeType = ExchangeType.Direct;
-                        x.BindQueue("new_stock_ticker_exchange",   "new_stock_ticker");
+                        x.BindQueue("new_stock_ticker_exchange", "new_stock_ticker");
                     });
                 }
             }); 
