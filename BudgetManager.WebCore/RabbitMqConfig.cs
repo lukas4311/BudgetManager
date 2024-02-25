@@ -1,4 +1,6 @@
-﻿namespace BudgetManager.WebCore
+﻿using MassTransit;
+
+namespace BudgetManager.WebCore
 {
     public class RabbitMqConfig
     {
@@ -7,5 +9,7 @@
         public string User { get; set; }
 
         public string Pass { get; set; }
+
+        public Action<IRabbitMqBusFactoryConfigurator> EndpointsConfiguration { get; set; }
     }
 }

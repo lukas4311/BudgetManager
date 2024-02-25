@@ -16,7 +16,11 @@ namespace BudgetManager.WebCore.Extensions
                         c.Username(rabbitMqConfig.User);
                         c.Password(rabbitMqConfig.Pass);
                     });
-                    cfg.ConfigureEndpoints(ctx);
+
+                    if (rabbitMqConfig.EndpointsConfiguration is null)
+                        rabbitMqConfig.EndpointsConfiguration?.Invoke(cfg);
+                    else
+                        cfg.ConfigureEndpoints(ctx);
                 });
             });
             return services;
