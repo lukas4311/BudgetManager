@@ -5,6 +5,7 @@ using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data;
+using BudgetManager.Domain.MessagingContracts;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
@@ -12,6 +13,7 @@ using BudgetManager.Services.Extensions;
 using BudgetManager.WebCore;
 //using MassTransit;
 using BudgetManager.WebCore.Extensions;
+using MassTransit.RabbitMqTransport.Topology;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
 using System.Text.Json.Serialization;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
@@ -46,6 +49,14 @@ namespace BudgetManager.Api
             services.AddHttpClient();
 
             RabbitMqConfig rabbitSetting = this.Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
+            rabbitSetting.EndpointsConfiguration = c =>
+            {
+                c.Publish<TickerRequest>(x =>
+                {
+                    x.ExchangeType = ExchangeType.Direct;
+                    x.BindQueue("bind_stock_ticker_request", "stock_ticker_request");
+                });
+            };
             services.AddMassTransitWithRabbitMq(rabbitSetting);
 
             services.AddCors(options =>
