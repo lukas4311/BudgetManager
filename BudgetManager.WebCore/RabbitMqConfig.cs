@@ -4,7 +4,7 @@ namespace BudgetManager.WebCore
 {
     public class RabbitMqConfig
     {
-        public Uri RabbitMqUri { get; set; }
+        public string RabbitMqUri { get; set; }
 
         public string User { get; set; }
 

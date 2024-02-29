@@ -5,12 +5,12 @@ using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data;
-using BudgetManager.Domain.MessagingContracts;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
 using BudgetManager.WebCore;
+//using MassTransit;
 using BudgetManager.WebCore.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,8 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using RabbitMQ.Client;
-using System;
 using System.Text.Json.Serialization;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
@@ -47,18 +45,8 @@ namespace BudgetManager.Api
             services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddHttpClient();
 
-            services.AddMassTransitWithRabbitMq(new RabbitMqConfig
-            {
-                RabbitMqUri = new Uri("https://localhost"),
-                EndpointsConfiguration = cfg =>
-                {
-                    cfg.Publish<TickerRequest>(x =>
-                    {
-                        x.ExchangeType = ExchangeType.Direct;
-                        x.BindQueue("new_stock_ticker_exchange", "new_stock_ticker");
-                    });
-                }
-            }); 
+            RabbitMqConfig rabbitSetting = this.Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
+            services.AddMassTransitWithRabbitMq(rabbitSetting);
 
             services.AddCors(options =>
             {
@@ -69,7 +57,7 @@ namespace BudgetManager.Api
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
-            });        
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });

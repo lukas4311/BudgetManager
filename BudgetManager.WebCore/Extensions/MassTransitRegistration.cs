@@ -11,13 +11,14 @@ namespace BudgetManager.WebCore.Extensions
             {
                 x.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host(rabbitMqConfig.RabbitMqUri, "/", c =>
+                    cfg.Host(rabbitMqConfig.RabbitMqUri, c =>
                     {
                         if (!string.IsNullOrEmpty(rabbitMqConfig.User))
                         {
                             c.Username(rabbitMqConfig.User);
                             c.Password(rabbitMqConfig.Pass);
                         }
+
                     });
 
                     if (rabbitMqConfig.EndpointsConfiguration is null)
