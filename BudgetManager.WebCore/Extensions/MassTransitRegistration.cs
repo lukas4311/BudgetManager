@@ -18,10 +18,9 @@ namespace BudgetManager.WebCore.Extensions
                             c.Username(rabbitMqConfig.User);
                             c.Password(rabbitMqConfig.Pass);
                         }
-
                     });
 
-                    if (rabbitMqConfig.EndpointsConfiguration is null)
+                    if (rabbitMqConfig.EndpointsConfiguration is not null)
                         rabbitMqConfig.EndpointsConfiguration?.Invoke(cfg);
                     else
                         cfg.ConfigureEndpoints(ctx);

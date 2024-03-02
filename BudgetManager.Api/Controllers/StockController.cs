@@ -1,7 +1,11 @@
 ﻿using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Enums;
+using BudgetManager.Domain.MessagingContracts;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
+using Elasticsearch.Net;
+using MassTransit;
+using MassTransit.Transports;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static MassTransit.Monitoring.Performance.BuiltInCounters;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -20,14 +25,16 @@ namespace BudgetManager.Api.Controllers
         private readonly IStockTradeHistoryService stockTradeHistoryService;
         private readonly ICompanyProfileService companyProfileService;
         private readonly IStockSplitService stockSplitService;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService, 
-            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService) : base(httpContextAccessor)
+        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService,
+            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService, IPublishEndpoint publishEndpoint) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
             this.companyProfileService = companyProfileService;
             this.stockSplitService = stockSplitService;
+            this.publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -97,7 +104,7 @@ namespace BudgetManager.Api.Controllers
         public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
         {
             CompanyProfileModel companyProfile = this.companyProfileService.Get(c => ticker == c.Symbol).SingleOrDefault();
-            
+
             if (companyProfile is null)
                 return StatusCode(StatusCodes.Status204NoContent);
 
@@ -118,6 +125,19 @@ namespace BudgetManager.Api.Controllers
             await file.CopyToAsync(ms);
             byte[] fileBytes = ms.ToArray();
             this.stockTradeHistoryService.StoreReportToProcess(fileBytes, this.GetUserId());
+
+            return Ok();
+        }
+
+        [HttpPost("tickerRequest")]
+        public async Task<IActionResult> TickerRequest(TickerRequest tickerRequest)
+        {
+            string routingKey = "new_ticker";
+
+            await publishEndpoint.Publish(new TickerRequest
+            {
+                Ticker = tickerRequest.Ticker
+            }, context => context.SetRoutingKey(routingKey));
 
             return Ok();
         }

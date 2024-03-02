@@ -54,7 +54,6 @@ namespace BudgetManager.Api
                 c.Publish<TickerRequest>(x =>
                 {
                     x.ExchangeType = ExchangeType.Direct;
-                    x.BindQueue("bind_stock_ticker_request", "stock_ticker_request");
                 });
             };
             services.AddMassTransitWithRabbitMq(rabbitSetting);
