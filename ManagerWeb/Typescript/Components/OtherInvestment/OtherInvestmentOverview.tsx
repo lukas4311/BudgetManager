@@ -154,7 +154,7 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
                             </>
                         </ComponentPanel>
                         <ComponentPanel classStyle="w-2/5">
-                            <div className="w-full">{this.state.showDetail ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
+                            <div className="w-full">{this.state.showDetail && this.state.selectedModel ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                         </ComponentPanel>
                     </div>
                     <OtherInvestmentSummary {...this.props}></OtherInvestmentSummary>
