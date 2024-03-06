@@ -75,14 +75,32 @@ class StockSplitScraper:
             conn.commit()
 
 
-tickersToScrape = stockToDownload
-yahooService = YahooService()
+class StockSplitManager:
+    def __init__(self):
+        self.__yahoo_service = YahooService()
+        self.__split_scraper = StockSplitScraper()
 
-stockSplitScraper = StockSplitScraper()
+    def store_split_data(self, ticker: str):
+        split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', '1696896000')
 
-for ticker in tickersToScrape:
-    split_data = yahooService.get_stock_split_history(ticker, '511056000', '1696896000')
+        if len(split_data) != 0:
+            self.__split_scraper.scrape_stocks_splits(ticker, split_data)
+            time.sleep(3)
 
-    if len(split_data) != 0:
-        stockSplitScraper.scrape_stocks_splits(ticker, split_data)
-        time.sleep(3)
+    def store_split_data_to_all_predefined_ticker(self):
+        tickers_to_scrape = stockToDownload
+        for ticker in tickers_to_scrape:
+            self.store_split_data(ticker)
+
+
+# tickersToScrape = stockToDownload
+# yahooService = YahooService()
+#
+# stockSplitScraper = StockSplitScraper()
+#
+# for ticker in tickersToScrape:
+#     split_data = yahooService.get_stock_split_history(ticker, '511056000', '1696896000')
+#
+#     if len(split_data) != 0:
+#         stockSplitScraper.scrape_stocks_splits(ticker, split_data)
+#         time.sleep(3)

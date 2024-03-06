@@ -28,13 +28,13 @@ namespace BudgetManager.Api.Controllers
         private readonly IPublishEndpoint publishEndpoint;
 
         public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService,
-            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService, IPublishEndpoint publishEndpoint) : base(httpContextAccessor)
+            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
             this.companyProfileService = companyProfileService;
             this.stockSplitService = stockSplitService;
-            this.publishEndpoint = publishEndpoint;
+            //this.publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -132,12 +132,12 @@ namespace BudgetManager.Api.Controllers
         [HttpPost("tickerRequest")]
         public async Task<IActionResult> TickerRequest(TickerRequest tickerRequest)
         {
-            string routingKey = "new_ticker";
+            //string routingKey = "new_ticker";
 
-            await publishEndpoint.Publish(new TickerRequest
-            {
-                Ticker = tickerRequest.Ticker
-            }, context => context.SetRoutingKey(routingKey));
+            //await publishEndpoint.Publish(new TickerRequest
+            //{
+            //    Ticker = tickerRequest.Ticker
+            //}, context => context.SetRoutingKey(routingKey));
 
             return Ok();
         }
