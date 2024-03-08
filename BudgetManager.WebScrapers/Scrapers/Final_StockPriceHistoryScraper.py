@@ -18,7 +18,7 @@ influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizat
 
 
 class StockPriceScraper:
-    influx_repo:InfluxRepository = None
+    influx_repo: InfluxRepository = None
 
     def __init__(self, influx_repo: InfluxRepository):
         self.influx_repo = influx_repo
@@ -70,26 +70,44 @@ class StockPriceScraper:
         return int(time.mktime(date.timetuple()))
 
 
-tickersToScrape = stockToDownload
-stockPriceScraper = StockPriceScraper(influx_repository)
+class StockPriceManager:
+    def __init__(self):
+        self.__stockPriceScraper = StockPriceScraper(influx_repository)
 
-def processTickers(rows):
-    for row in rows:
-        symbol = row["Symbol"]
-        message = 'Loading data for ' + symbol
+    def processTicker(self, ticker: str, delay=0):
+        message = 'Loading data for ' + ticker
         print(message)
         logging.info(message)
 
         try:
-            stockPriceScraper.scrape_stocks_prices('Price', symbol, symbol)
+            self.__stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
         except Exception:
             influx_repository.clear()
-            print(symbol + " - error")
+            print(ticker + " - error")
 
-        print("Sleeping for 2 seconds")
-        time.sleep(2)
+        print(f'Sleeping for {delay} seconds')
+        time.sleep(delay)
         print("Sleeping is done.")
 
+    def processTickers(self, delay=0):
+        for ticker in stockToDownload:
+            message = 'Loading data for ' + ticker
+            print(message)
+            logging.info(message)
 
-for ticker in tickersToScrape:
-     stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
+            try:
+                self.__stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
+            except Exception:
+                influx_repository.clear()
+                print(ticker + " - error")
+
+            print(f'Sleeping for {delay} seconds')
+            time.sleep(delay)
+            print("Sleeping is done.")
+
+#
+# tickersToScrape = stockToDownload
+# stockPriceScraper = StockPriceScraper(influx_repository)
+#
+# for ticker in tickersToScrape:
+#      stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
