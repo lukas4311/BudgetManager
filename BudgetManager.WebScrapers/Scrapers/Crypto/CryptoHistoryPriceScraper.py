@@ -132,29 +132,32 @@ class CryptoWatchService:
         print("Data saved")
 
 
-cryptoService = CryptoWatchService()
-btcData = cryptoService.get_crypto_price_history(CryptoTickers.XXBTZUSD)
-print(btcData)
-if len(btcData) > 0:
-    cryptoService.save_data_to_influx(btcData)
+class CryptoPriceManager:
+    def scrape_crypto_price(self):
+        cryptoService = CryptoWatchService()
 
-ethData = cryptoService.get_crypto_price_history(CryptoTickers.XETHZUSD)
-print(ethData)
-if len(ethData) > 0:
-    cryptoService.save_data_to_influx(ethData)
+        btcData = cryptoService.get_crypto_price_history(CryptoTickers.XXBTZUSD)
+        print(btcData)
+        if len(btcData) > 0:
+            cryptoService.save_data_to_influx(btcData)
 
-link = cryptoService.get_crypto_price_history(CryptoTickers.LINKUSD)
-if len(link) > 0:
-    cryptoService.save_data_to_influx(link)
+        ethData = cryptoService.get_crypto_price_history(CryptoTickers.XETHZUSD)
+        print(ethData)
+        if len(ethData) > 0:
+            cryptoService.save_data_to_influx(ethData)
 
-matic = cryptoService.get_crypto_price_history(CryptoTickers.MATICUSD)
-if len(matic) > 0:
-    cryptoService.save_data_to_influx(matic)
+        link = cryptoService.get_crypto_price_history(CryptoTickers.LINKUSD)
+        if len(link) > 0:
+            cryptoService.save_data_to_influx(link)
 
-snx = cryptoService.get_crypto_price_history(CryptoTickers.SNXUSD)
-if len(snx) > 0:
-    cryptoService.save_data_to_influx(snx)
+        matic = cryptoService.get_crypto_price_history(CryptoTickers.MATICUSD)
+        if len(matic) > 0:
+            cryptoService.save_data_to_influx(matic)
 
-usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDCUSD)
-if len(snx) > 0:
-    cryptoService.save_data_to_influx(usdc)
+        snx = cryptoService.get_crypto_price_history(CryptoTickers.SNXUSD)
+        if len(snx) > 0:
+            cryptoService.save_data_to_influx(snx)
+
+        usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDCUSD)
+        if len(snx) > 0:
+            cryptoService.save_data_to_influx(usdc)

@@ -7,17 +7,21 @@ from Services.InfluxRepository import InfluxRepository
 from secret import influxDbUrl
 from secret import token, organizationId
 
+log_name = 'ComodityHistoryPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
+                    level=logging.DEBUG)
+influx_repository = InfluxRepository(influxDbUrl, "ComodityV2", token, organizationId, logging)
+
+
 class ComodityTicker(Enum):
     Gold = 'GC=F'
     Silver = 'SI=F'
     Oil = 'CL=F'
 
 
-log_name = 'ComodityHistoryPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
-logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "ComodityV2", token, organizationId, logging)
-
-stockPriceScraper = StockPriceScraper(influx_repository)
-stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
-stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Silver.value, ComodityTicker.Silver.name)
-stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Oil.value, ComodityTicker.Oil.name)
+class ComodityPriceManager:
+    def scrape_comodity_price(self):
+        stockPriceScraper = StockPriceScraper(influx_repository)
+        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
+        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Silver.value, ComodityTicker.Silver.name)
+        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Oil.value, ComodityTicker.Oil.name)

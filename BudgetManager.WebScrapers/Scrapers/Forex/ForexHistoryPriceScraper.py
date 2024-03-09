@@ -198,7 +198,3 @@ class ForexService:
             last_downloaded_time = lastValue[0].records[0]["_time"]
 
         return last_downloaded_time
-
-
-forex_service = ForexService()
-forex_service.run()
