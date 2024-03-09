@@ -124,7 +124,7 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async calculateCryptoTotalUsdValueForDate(tradeHistory: TradeHistory[], ticker: string, finalCurrency: ForexSymbol, finalCurrencyDate: Date): Promise<CryptoCalculationModel> {
-        let totalyStacked = tradeHistory.reduce((partial_sum, v) => partial_sum + v.tradeSize, 0);
+        let totalyStacked = tradeHistory.reduce((partial_sum, v) => (v.tradeValue <= 0 ? partial_sum + v.tradeSize : partial_sum - v.tradeSize), 0);
         let exhangeRateTrade: number = await this.getCryptoCurrentPrice(ticker);
         const usdSum = await this.calculateCryptoTradesUsdSum(tradeHistory);
         const finalExhangeRate = await this.forexFinApi.getForexPairPriceAtDate({ date: finalCurrencyDate, from: ForexSymbol.Usd, to: finalCurrency });
