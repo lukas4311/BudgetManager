@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 import logging
 
-from Scrapers.Final_StockPriceHistoryScraper import StockPriceScraper
+from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Services.InfluxRepository import InfluxRepository
 from secret import influxDbUrl
 from secret import token, organizationId

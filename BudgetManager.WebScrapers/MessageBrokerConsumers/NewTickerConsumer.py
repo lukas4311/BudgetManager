@@ -3,8 +3,8 @@ import logging
 
 import pika
 
-from Scrapers.Final_StockPriceHistoryScraper import StockPriceScraper
-from Scrapers.Final_StockSplitHistoryScraper import StockSplitManager
+from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
+from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from secret import influxDbUrl, organizationId, token
