@@ -74,7 +74,7 @@ class StockPriceManager:
     def __init__(self):
         self.__stockPriceScraper = StockPriceScraper(influx_repository)
 
-    def processTicker(self, ticker: str, delay=0):
+    def scrape_ticker_price(self, ticker: str, delay=0):
         message = 'Loading data for ' + ticker
         print(message)
         logging.info(message)
@@ -89,7 +89,7 @@ class StockPriceManager:
         time.sleep(delay)
         print("Sleeping is done.")
 
-    def processTickers(self, delay=0):
+    def scrape_tickers_price(self, delay=0):
         for ticker in stockToDownload:
             message = 'Loading data for ' + ticker
             print(message)
