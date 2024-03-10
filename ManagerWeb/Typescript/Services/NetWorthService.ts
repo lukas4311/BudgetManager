@@ -120,24 +120,23 @@ class NetWorthCollection {
     }
 
     public addTrackRecordSpotWithRecalculation(trackRecord: NetWorthMonthGroupModel) {
-        // FIXME: solve problem with same date, need to update existing record insted of adding new one
         let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackRecord.date) ?? [];
         let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date > trackRecord.date) ?? [];
-        const lastAccumulatedNetWorthBeforeSpotToAdd = _.first(_.orderBy(tractRecordsBefore, r => r.date, 'desc'))?.amount ?? 0;
-
-        let currentMonthNethWorthModel: NetWorthMonthGroupModel = undefined;
         let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date == trackRecord.date));
+        let currentMonthNethWorthModel: NetWorthMonthGroupModel = undefined;
 
         if (existingMonthRecord)
             currentMonthNethWorthModel = {
                 date: moment(trackRecord.date.format('YYYY-MM') + '-1'),
                 amount: currentMonthNethWorthModel.amount + trackRecord.amount
             };
-        else
+        else {
+            const lastAccumulatedNetWorthBeforeSpotToAdd = _.first(_.orderBy(tractRecordsBefore, r => r.date, 'desc'))?.amount ?? 0;
             currentMonthNethWorthModel = {
                 date: moment(trackRecord.date.format('YYYY-MM') + '-1'),
                 amount: lastAccumulatedNetWorthBeforeSpotToAdd + trackRecord.amount
             };
+        }
 
         for (let trackSpotFuture of tractRecordsAfter)
             trackSpotFuture.amount += trackRecord.amount;
