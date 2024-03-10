@@ -107,7 +107,7 @@ export default class CryptoService implements ICryptoService {
                 }
             }
 
-            cryptoGroupData.push({ date: month, amount: prevMonthSum });
+            cryptoGroupData.push({ date: moment(month.date + "-1"), amount: prevMonthSum });
         }
         
         return cryptoGroupData;
