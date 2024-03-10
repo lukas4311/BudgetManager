@@ -123,7 +123,8 @@ class NetWorthCollection {
         console.log("🚀 ~ NetWorthCollection ~ addTrackRecordSpotWithRecalculation ~ tractRecordsBefore:", trackSpot)
         let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackSpot.date) ?? [];
         let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date >= trackSpot.date) ?? [];
-        trackSpot.amount += _.sumBy(tractRecordsBefore, r => r.amount);
+        const lastAccumulatedNetWorthBeforeSpotToAdd = _.first(_.orderBy(tractRecordsBefore, r => r.date, 'desc'))?.amount ?? 0;
+        trackSpot.amount += lastAccumulatedNetWorthBeforeSpotToAdd;
         trackSpot.date = moment(trackSpot.date.format('YYYY-MM')+'-1');
 
         for (let trackSpotFuture of tractRecordsAfter) {
