@@ -119,19 +119,45 @@ class NetWorthCollection {
         this.netWorthTrackRecord.push(trackSpot);
     }
 
-    public addTrackRecordSpotWithRecalculation(trackSpot: NetWorthMonthGroupModel) {
-        console.log("🚀 ~ NetWorthCollection ~ addTrackRecordSpotWithRecalculation ~ tractRecordsBefore:", trackSpot)
-        let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackSpot.date) ?? [];
-        let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date >= trackSpot.date) ?? [];
+    public addTrackRecordSpotWithRecalculation(trackRecord: NetWorthMonthGroupModel) {
+        // FIXME: solve problem with same date, need to update existing record insted of adding new one
+        let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackRecord.date) ?? [];
+        let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date > trackRecord.date) ?? [];
         const lastAccumulatedNetWorthBeforeSpotToAdd = _.first(_.orderBy(tractRecordsBefore, r => r.date, 'desc'))?.amount ?? 0;
-        trackSpot.amount += lastAccumulatedNetWorthBeforeSpotToAdd;
-        trackSpot.date = moment(trackSpot.date.format('YYYY-MM')+'-1');
 
-        for (let trackSpotFuture of tractRecordsAfter) {
-            trackSpotFuture.amount += trackSpot.amount;
+        let currentMonthNethWorthModel: NetWorthMonthGroupModel = undefined;
+        let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date == trackRecord.date));
+
+        if (existingMonthRecord)
+            currentMonthNethWorthModel = {
+                date: moment(trackRecord.date.format('YYYY-MM') + '-1'),
+                amount: currentMonthNethWorthModel.amount + trackRecord.amount
+            };
+        else
+            currentMonthNethWorthModel = {
+                date: moment(trackRecord.date.format('YYYY-MM') + '-1'),
+                amount: lastAccumulatedNetWorthBeforeSpotToAdd + trackRecord.amount
+            };
+
+        for (let trackSpotFuture of tractRecordsAfter)
+            trackSpotFuture.amount += trackRecord.amount;
+
+        this.netWorthTrackRecord = [...tractRecordsBefore, currentMonthNethWorthModel, ...tractRecordsAfter];
+    }
+
+    public addTrackRecordsFromExistingNetWorthTrackRecord(trackRecords: NetWorthMonthGroupModel[]) {
+        if (!trackRecords && trackRecords?.length == 0)
+            return;
+
+        const orderedTractRecords = _.orderBy(trackRecords, r => r.date, 'asc')
+        let lastAddedNetWorth = 0;
+
+        for (let trackRecord of orderedTractRecords) {
+            const recordAmount = trackRecord.amount;
+            trackRecord.amount -= lastAddedNetWorth;
+            this.addTrackRecordSpotWithRecalculation({ ...trackRecord });
+            lastAddedNetWorth = recordAmount;
         }
-
-        this.netWorthTrackRecord = [...tractRecordsBefore, trackSpot, ...tractRecordsAfter];
     }
 
     public getTractRecord = () => this.netWorthTrackRecord;
