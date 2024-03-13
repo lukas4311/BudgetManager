@@ -3,10 +3,12 @@ import logging
 
 import pika
 
+from Scrapers.StockFinacialAndCompanyData import StockScrapeManager
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
+from Services.RoicService import RoicService
 from secret import influxDbUrl, organizationId, token
 
 log_name = 'Logs/newTickerRequest.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -32,9 +34,18 @@ class StockTickerManager:
 
     def __init__(self):
         self.__influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizationId, logging)
+        self.__influx_repository_Roic = InfluxRepository(influxDbUrl, "StocksRoic", token, organizationId, logging)
         self.__stockPriceScraper = StockPriceScraper(self.__influx_repository)
+        self.__roic_service = RoicService()
+        self.__fmpScraper = FmpScraper()
+        self.__stock_scraper = StockScrapeManager(self.__roic_service, self.__fmpScraper, self.__influx_repository_Roic)
 
     def store_new_ticker_info(self, ticker: str):
+        print("Store ticker")
+        company_Name = ticker
+        # FIXME: need to get company name for ticker
+        self.__stock_scraper.storeTickers(ticker, company_Name)
+
         print("Storing stock price")
         self.__stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
 
@@ -46,4 +57,9 @@ class StockTickerManager:
         fmp_scraper = FmpScraper()
         fmp_scraper.download_profile(ticker)
 
-        print("Storing company financial info")
+        print("Storing company profile")
+        fmpScraper = FmpScraper()
+        fmpScraper.download_profile(ticker)
+
+        print("Storing company fin. info")
+        self.__stock_scraper.download_main_fin(ticker)
