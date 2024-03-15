@@ -92,6 +92,16 @@ class StockSplitManager:
         for ticker in tickers_to_scrape:
             self.store_split_data(ticker)
 
+    def store_split_data(self, ticker: str):
+        split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', '1696896000')
+
+        if len(split_data) != 0:
+            self.__split_scraper.scrape_stocks_splits(ticker, split_data)
+            time.sleep(3)
+            if len(split_data) != 0:
+                self.__split_scraper.scrape_stocks_splits(ticker, split_data)
+                time.sleep(3)
+
 
 # tickersToScrape = stockToDownload
 # yahooService = YahooService()
