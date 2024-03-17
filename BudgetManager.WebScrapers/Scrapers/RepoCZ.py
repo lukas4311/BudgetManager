@@ -3,8 +3,6 @@ import requests
 import datetime
 from bs4 import BeautifulSoup
 from influxdb_client import WritePrecision, Point
-
-from Models.InflationAradModel import InflationAradModel
 from Services.DatetimeService import parse_arad_datetime_format
 from Services.InfluxRepository import InfluxRepository
 from configManager import token, organizaiton

@@ -25,7 +25,7 @@ influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizai
 class StockScrapeManager:
 
     def __init__(self, roic_service: RoicService, fmp_scraper: FmpScraper, influx_repo: InfluxRepository):
-        self.influx_repo = influx_repo
+        self.influx_repository = influx_repo
         self.fmp_scraper = fmp_scraper
         self.roic_service = roic_service
 
@@ -203,14 +203,14 @@ def addTickerFromCsvFile(rows, destination: list):
             destination.append(symbol)
 
 
-sp500 = []
-
-with open("..\\SourceFiles\\sp500.csv", 'r') as file:
-    csv_file = csv.DictReader(file)
-    # processTickersToStoreToDb(csv_file)
-    # addTickerFromCsvFile(csv_file, sp500)
-    stock_scraper = StockScrapeManager(roic_service, fmpScraper, influx_repository)
-    stock_scraper.processTickersToCompanyProfileToDb(csv_file)
+# sp500 = []
+#
+# with open("..\\SourceFiles\\sp500.csv", 'r') as file:
+#     csv_file = csv.DictReader(file)
+#     # processTickersToStoreToDb(csv_file)
+#     # addTickerFromCsvFile(csv_file, sp500)
+#     stock_scraper = StockScrapeManager(roic_service, fmpScraper, influx_repository)
+#     stock_scraper.processTickersToCompanyProfileToDb(csv_file)
 
 # for ticker in sp500:
 #     logging.debug('Processing of ticker:' + ticker)
@@ -243,4 +243,4 @@ with open("..\\SourceFiles\\sp500.csv", 'r') as file:
 #     time.sleep(2)
 #
 # influx_repository.save()
-print('Job is done')
+# print('Job is done')
