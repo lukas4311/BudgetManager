@@ -40,8 +40,7 @@ class StockTickerManager:
         stock_split_manager.store_split_data(ticker)
 
         print("Storing company profile")
-        fmp_scraper = FmpScraper()
-        fmp_scraper.download_profile(ticker)
+        self.__fmpScraper.download_profile(ticker)
 
         print("Storing company fin. info")
         self.__stock_scraper.download_main_fin(ticker)

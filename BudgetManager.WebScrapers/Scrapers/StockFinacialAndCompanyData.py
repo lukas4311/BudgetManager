@@ -1,5 +1,7 @@
 import pytz
 from influxdb_client import Point, WritePrecision
+
+from Models.FilterTuple import FilterTuple
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
@@ -114,7 +116,7 @@ class StockScrapeManager:
         bucketName = 'FinMain'
         actualYear = datetime.now().year
         date = datetime.min
-        date_time = self.influx_repository.filter_last_value(bucketName, ticker, date)
+        date_time = self.influx_repository.filter_last_value(bucketName, FilterTuple("ticker", ticker), date)
 
         if date_time:
             time: datetime = date_time[0].records[0]['_time']

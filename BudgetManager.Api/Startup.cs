@@ -48,9 +48,9 @@ namespace BudgetManager.Api
             services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddHttpClient();
 
-            //RabbitMqConfig rabbitSetting = this.Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
-            //rabbitSetting.EndpointsConfiguration = c => c.Publish<TickerRequest>(x => x.ExchangeType = ExchangeType.Direct);
-            //services.AddMassTransitWithRabbitMq(rabbitSetting);
+            RabbitMqConfig rabbitSetting = this.Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
+            rabbitSetting.EndpointsConfiguration = c => c.Publish<TickerRequest>(x => x.ExchangeType = ExchangeType.Direct);
+            services.AddMassTransitWithRabbitMq(rabbitSetting);
 
             services.AddCors(options =>
             {
