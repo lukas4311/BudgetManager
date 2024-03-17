@@ -42,11 +42,12 @@ class StockTickerManager:
         print("Storing company profile")
         self.__fmpScraper.download_profile(ticker)
 
-        print("Storing company fin. info")
-        self.__stock_scraper.download_main_fin(ticker)
-
-        print("Storing company financial summary")
-        self.__stock_scraper.download_fin_summary(ticker)
+        # TODO: temporarily commented cause missing roic stock bucket missing
+        # print("Storing company fin. info")
+        # self.__stock_scraper.download_main_fin(ticker)
+        #
+        # print("Storing company financial summary")
+        # self.__stock_scraper.download_fin_summary(ticker)
 
 
 def receive_new_ticker(ch, method, properties, body):
