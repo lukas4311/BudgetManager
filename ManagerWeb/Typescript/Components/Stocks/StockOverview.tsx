@@ -31,6 +31,8 @@ import { LineChartProps } from "../../Model/LineChartProps";
 import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
 import PublishIcon from '@mui/icons-material/Publish';
 import { SnackbarSeverity } from "../../App";
+import { NewTickerForm } from "./NewTickerForm";
+import NewTickerModel from "../../Model/NewTickerModel";
 
 
 enum DisplayChioce {
@@ -299,6 +301,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ isOpenedTickerRequest: true });
     }
 
+    private sendTickerRequest = (ticker: string) => {
+        this.stockApi.stockTickerRequestPost({ tickerRequest: { ticker: ticker } });
+        this.setState({ isOpenedTickerRequest: false });
+    }
+
     render() {
         const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
         const minStockValue = Math.min(...yValues);
@@ -410,7 +417,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     </Dialog>
                     <Dialog open={this.state.isOpenedTickerRequest != undefined} onClose={this.handleClosetickerRequest} aria-labelledby="" maxWidth="lg" fullWidth={true}>
                         <DialogContent className="bg-prussianBlue">
-                            
+                            <NewTickerForm onSave={this.sendTickerRequest} />
                         </DialogContent>
                     </Dialog>
                 </>
