@@ -31,7 +31,7 @@ export interface ComoditiesDeleteRequest {
 }
 
 export interface ComoditiesGoldActualPriceCurrencyCodeGetRequest {
-    currencyCode: string | null;
+    currencyCode: string;
 }
 
 export interface ComoditiesPostRequest {

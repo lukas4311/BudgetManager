@@ -39,9 +39,9 @@ export interface PaymentsDetailGetRequest {
 }
 
 export interface PaymentsGetRequest {
-    fromDate?: Date | null;
-    toDate?: Date | null;
-    bankAccountId?: number | null;
+    fromDate?: Date;
+    toDate?: Date;
+    bankAccountId?: number;
 }
 
 export interface PaymentsPaymentIdTagTagIdDeleteRequest {

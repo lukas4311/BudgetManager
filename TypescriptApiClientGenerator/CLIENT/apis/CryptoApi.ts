@@ -24,12 +24,12 @@ import {
 } from '../models';
 
 export interface CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
-    fromCurrency: string | null;
-    toCurrency: string | null;
+    fromCurrency: string;
+    toCurrency: string;
 }
 
 export interface CryptosBrokerReportPostRequest {
-    file?: Blob | null;
+    file?: Blob;
 }
 
 export interface CryptosDeleteRequest {
@@ -37,8 +37,8 @@ export interface CryptosDeleteRequest {
 }
 
 export interface CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest {
-    fromCurrency: string | null;
-    toCurrency: string | null;
+    fromCurrency: string;
+    toCurrency: string;
     atDate: Date;
 }
 

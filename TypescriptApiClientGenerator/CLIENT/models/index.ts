@@ -40,6 +40,7 @@ export * from './StockTradeHistoryGetModel';
 export * from './StockTradeHistoryModel';
 export * from './Tag';
 export * from './TagModel';
+export * from './TickerRequest';
 export * from './TradeHistory';
 export * from './UserData';
 export * from './UserIdentity';

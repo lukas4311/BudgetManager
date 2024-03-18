@@ -50,7 +50,7 @@ export interface OtherInvestmentIdLinkedTagGetRequest {
 
 export interface OtherInvestmentIdProfitOverYearsYearsGetRequest {
     id: number;
-    years: number | null;
+    years: number;
 }
 
 export interface OtherInvestmentIdProfitOverallGetRequest {

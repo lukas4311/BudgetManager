@@ -3,7 +3,6 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CurrencySymbol, StockTickerModel } from "../../ApiClient/Main/models";
 import { StockViewModel } from "../../Model/StockViewModel";
-import { createMuiTheme } from "@mui/material/styles";
 
 class StockTradeFormProps {
     stockTradeViewModel: StockViewModel;

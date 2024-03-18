@@ -33,23 +33,26 @@ import {
     StockTradeHistoryModel,
     StockTradeHistoryModelFromJSON,
     StockTradeHistoryModelToJSON,
+    TickerRequest,
+    TickerRequestFromJSON,
+    TickerRequestToJSON,
 } from '../models';
 
 export interface StockBrokerReportPostRequest {
-    file?: Blob | null;
+    file?: Blob;
 }
 
 export interface StockStockTickerCompanyProfileGetRequest {
-    ticker: string | null;
+    ticker: string;
 }
 
 export interface StockStockTickerPriceFromGetRequest {
-    ticker: string | null;
+    ticker: string;
     from: Date;
 }
 
 export interface StockStockTickerPriceGetRequest {
-    ticker: string | null;
+    ticker: string;
 }
 
 export interface StockStockTradeHistoryDeleteRequest {
@@ -69,7 +72,11 @@ export interface StockStockTradeHistoryPutRequest {
 }
 
 export interface StockStockTradeHistoryTickerGetRequest {
-    ticker: string | null;
+    ticker: string;
+}
+
+export interface StockTickerRequestPostRequest {
+    tickerRequest?: TickerRequest;
 }
 
 /**
@@ -232,6 +239,19 @@ export interface StockApiInterface {
     /**
      */
     stockStockTradeHistoryTickerGet(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<Array<StockTradeHistoryGetModel>>;
+
+    /**
+     * 
+     * @param {TickerRequest} [tickerRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockTickerRequestPostRaw(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    stockTickerRequestPost(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<void>;
 
 }
 
@@ -629,6 +649,36 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
     async stockStockTradeHistoryTickerGet(requestParameters: StockStockTradeHistoryTickerGetRequest, initOverrides?: RequestInit): Promise<Array<StockTradeHistoryGetModel>> {
         const response = await this.stockStockTradeHistoryTickerGetRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async stockTickerRequestPostRaw(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/tickerRequest`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TickerRequestToJSON(requestParameters.tickerRequest),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async stockTickerRequestPost(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.stockTickerRequestPostRaw(requestParameters, initOverrides);
     }
 
 }

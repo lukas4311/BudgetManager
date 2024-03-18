@@ -24,12 +24,12 @@ import {
 } from '../models';
 
 export interface BankAccountsAllBalanceToDateGetRequest {
-    toDate: Date | null;
+    toDate: Date;
 }
 
 export interface BankAccountsBankAccountIdBalanceToDateGetRequest {
     bankAccountId: number;
-    toDate: Date | null;
+    toDate: Date;
 }
 
 export interface BankAccountsDeleteRequest {

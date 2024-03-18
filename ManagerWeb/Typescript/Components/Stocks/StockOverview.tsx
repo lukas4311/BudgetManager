@@ -28,7 +28,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
-import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
 import PublishIcon from '@mui/icons-material/Publish';
 import { SnackbarSeverity } from "../../App";
 
@@ -55,6 +55,7 @@ interface StockOverviewState {
     selectedCompany: StockComplexModel;
     lineChartData: LineChartProps;
     selectedDisplayChoice: string;
+    isOpenedTickerRequest: boolean;
 }
 
 export class StockComplexModel {
@@ -75,7 +76,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] }, selectedDisplayChoice: DisplayChioce.Portfolio };
+        this.state = {
+            stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] },
+            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false
+        };
     }
 
     public componentDidMount = () => this.init();
@@ -269,6 +273,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private handleCloseCompanyProfile = () =>
         this.setState({ selectedCompany: undefined });
 
+    private handleClosetickerRequest = () =>
+        this.setState({ isOpenedTickerRequest: false });
+
     private handleDisplayChoice = (_: any, displayChoice: DisplayChioce) => {
         if (displayChoice)
             this.setState({ selectedDisplayChoice: displayChoice });
@@ -286,6 +293,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         } catch (error) {
             appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })
         }
+    }
+
+    private newTickerRequest = () => {
+        this.setState({ isOpenedTickerRequest: true });
     }
 
     render() {
@@ -329,7 +340,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     <div className="flex flex-col">
                                         <h2 className="text-xl font-semibold">Current portfolio</h2>
                                         <div className="text-right mb-6">
-                                            <Button className='bg-vermilion text-mainDarkBlue text-xs'>
+                                            <Button className='bg-vermilion text-mainDarkBlue text-xs' onClick={this.newTickerRequest}>
                                                 <span className="w-4">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="fill-current cursor-pointer">
                                                         <path d="M0 0h24v24H0z" fill="none" />
@@ -395,6 +406,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                     <Dialog open={this.state.selectedCompany != undefined} onClose={this.handleCloseCompanyProfile} aria-labelledby="" maxWidth="lg" fullWidth={true}>
                         <DialogContent className="bg-prussianBlue">
                             <CompanyProfile companyProfile={this.state.selectedCompany}></CompanyProfile>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog open={this.state.isOpenedTickerRequest != undefined} onClose={this.handleClosetickerRequest} aria-labelledby="" maxWidth="lg" fullWidth={true}>
+                        <DialogContent className="bg-prussianBlue">
+                            
                         </DialogContent>
                     </Dialog>
                 </>

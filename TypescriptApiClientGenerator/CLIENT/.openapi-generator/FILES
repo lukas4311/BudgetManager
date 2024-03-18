@@ -49,6 +49,7 @@ models/StockTradeHistoryGetModel.ts
 models/StockTradeHistoryModel.ts
 models/Tag.ts
 models/TagModel.ts
+models/TickerRequest.ts
 models/TradeHistory.ts
 models/UserData.ts
 models/UserIdentity.ts
