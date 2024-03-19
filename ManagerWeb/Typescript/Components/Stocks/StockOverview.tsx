@@ -291,9 +291,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         try {
             const files: Blob = (e.target as HTMLInputElement).files?.[0];
             await this.stockApi.stockBrokerReportPost({ file: files });
-            appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success })
+            appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success });
         } catch (error) {
-            appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })
+            appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error });
         }
     }
 
@@ -301,9 +301,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ isOpenedTickerRequest: true });
     }
 
-    private sendTickerRequest = (ticker: string) => {
-        this.stockApi.stockTickerRequestPost({ tickerRequest: { ticker: ticker } });
+    private sendTickerRequest = async (ticker: string) => {
+        await this.stockApi.stockTickerRequestPost({ tickerRequest: { ticker: ticker } });
         this.setState({ isOpenedTickerRequest: false });
+        const appContext: AppContext = this.context as AppContext;
+        appContext.setSnackbarMessage({ message: "Ticker request has been queued.", severity: SnackbarSeverity.success })
     }
 
     render() {
