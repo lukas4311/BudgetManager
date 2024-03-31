@@ -532,6 +532,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 10 !important;
 }
 
+.z-20 {
+  z-index: 20 !important;
+}
+
+.z-10 {
+  z-index: 10 !important;
+}
+
 .col-span-2 {
   grid-column: span 2 / span 2 !important;
 }
@@ -745,6 +753,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 2.5rem !important;
 }
 
+.ml-16 {
+  margin-left: 4rem !important;
+}
+
+.-ml-5 {
+  margin-left: -1.25rem !important;
+}
+
+.ml-10 {
+  margin-left: 2.5rem !important;
+}
+
 .block {
   display: block !important;
 }
@@ -815,6 +835,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .h-12 {
   height: 3rem !important;
+}
+
+.h-10 {
+  height: 2.5rem !important;
 }
 
 .min-h-full {
@@ -1005,6 +1029,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 3rem !important;
 }
 
+.w-64 {
+  width: 16rem !important;
+}
+
+.w-10 {
+  width: 2.5rem !important;
+}
+
 .shrink {
   flex-shrink: 1 !important;
 }
@@ -1157,6 +1189,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .rounded-xl {
   border-radius: 0.75rem !important;
+}
+
+.rounded-full {
+  border-radius: 9999px !important;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem !important;
 }
 
 .rounded-full {
@@ -1502,6 +1542,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pr-4 {
   padding-right: 1rem !important;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.pr-6 {
+  padding-right: 1.5rem !important;
 }
 
 .pb-2 {
