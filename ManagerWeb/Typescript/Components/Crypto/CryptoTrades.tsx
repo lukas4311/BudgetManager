@@ -150,8 +150,8 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                     </Button>
                     <div className="pr-5 h-full">
                         <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
-                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto">
-                        </BaseList>
+                            header={this.renderHeader()} addItemHandler={this.addNewItem} itemClickHandler={this.budgetEdit} dataAreaClass="h-70vh overflow-y-auto"
+                            narrowIcons={true} />
                         <Dialog open={this.state.openedForm} onClose={this.handleClose} aria-labelledby="Detail transakce"
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Detail transakce</DialogTitle>
