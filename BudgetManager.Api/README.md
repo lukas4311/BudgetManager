@@ -22,6 +22,15 @@
   "Influxdb": {
     "Token": INFLUX_TOKEN,
     "Url": INFLUX_URL
+  },
+  "Elk": {
+    "ElasticUrl": "ELK_URL_",
+    "ElasaticIndexKey": "ELASTIC_KEY_"
+  },
+  "Rabbit": {
+    "RabbitMqUri": "RABBITMQ_HTTPS_URL",
+    "User": "USER_NAME",
+    "Pass": "USER_PASSWORD"
   }
 }
 ```
