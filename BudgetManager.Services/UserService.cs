@@ -22,14 +22,17 @@ namespace BudgetManager.Services
             this.mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public UserIdentification Authenticate(string username, string password) => this.userIdentityRepository.FindByCondition(x => x.Login == username && x.PasswordHash == this.hashManager.HashPasswordToSha512(password)).Select(u => new UserIdentification
         {
             UserId = u.Id,
             UserName = u.Login
         }).SingleOrDefault();
 
+        /// <inheritdoc/>
         public int GetUserId(string userLogin) => this.userIdentityRepository.FindByCondition(a => a.Login == userLogin).Single().Id;
 
+        /// <inheritdoc/>
         public void CreateUser(UserCreateModel userCreateModel)
         {
             UserData userData = this.mapper.Map<UserData>(userCreateModel);
