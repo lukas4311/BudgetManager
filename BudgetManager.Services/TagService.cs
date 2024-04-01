@@ -10,13 +10,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Services
 {
+    /// <summary>
+    /// Represents a service for managing tags.
+    /// </summary>
     internal class TagService : BaseService<TagModel, Tag, ITagRepository>, ITagService
     {
         private const string DoesntExists = "Tag doesn't exists";
+
+        /// <summary>
+        /// The repository for managing tags.
+        /// </summary>
         private readonly ITagRepository tagRepository;
+
+        /// <summary>
+        /// The repository for managing payment tags.
+        /// </summary>
         private readonly IPaymentTagRepository paymentTagRepository;
+
+        /// <summary>
+        /// The repository for managing user identities.
+        /// </summary>
         private readonly IUserIdentityRepository userIdentityRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagService"/> class.
+        /// </summary>
+        /// <param name="tagRepository">The tag repository.</param>
+        /// <param name="paymentTagRepository">The payment tag repository.</param>
+        /// <param name="userIdentityRepository">The user identity repository.</param>
+        /// <param name="autoMapper">The auto mapper.</param>
         public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IMapper autoMapper)
             : base(tagRepository, autoMapper)
         {
@@ -25,6 +47,10 @@ namespace BudgetManager.Services
             this.userIdentityRepository = userIdentityRepository;
         }
 
+        /// <summary>
+        /// Gets the payment tags associated with user identities.
+        /// </summary>
+        /// <returns>An enumerable of <see cref="TagModel"/>.</returns>
         public IEnumerable<TagModel> GetPaymentTags()
         {
             return this.userIdentityRepository.FindAll()
@@ -40,6 +66,11 @@ namespace BudgetManager.Services
                 .Distinct();
         }
 
+        /// <summary>
+        /// Gets the payment tags associated with a specific user.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>An enumerable of <see cref="TagModel"/>.</returns>
         public IEnumerable<TagModel> GetPaymentsTags(int userId)
         {
             return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
@@ -55,6 +86,10 @@ namespace BudgetManager.Services
                 .Distinct();
         }
 
+        /// <summary>
+        /// Adds a tag to a payment.
+        /// </summary>
+        /// <param name="tagModel">The tag model containing payment information.</param>
         public void AddTagToPayment(AddTagModel tagModel)
         {
             PaymentTag paymentTag = new PaymentTag
@@ -82,6 +117,11 @@ namespace BudgetManager.Services
             this.paymentTagRepository.Save();
         }
 
+        /// <summary>
+        /// Removes a tag from a payment.
+        /// </summary>
+        /// <param name="tagId">The tag ID.</param>
+        /// <param name="paymentId">The payment ID.</param>
         public void RemoveTagFromPayment(int tagId, int paymentId)
         {
             PaymentTag paymentTag = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId && t.TagId == tagId).Single();
@@ -90,6 +130,10 @@ namespace BudgetManager.Services
             this.paymentTagRepository.Save();
         }
 
+        /// <summary>
+        /// Deletes a tag.
+        /// </summary>
+        /// <param name="tagId">The tag ID.</param>
         public override void Delete(int tagId)
         {
             Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
@@ -104,6 +148,11 @@ namespace BudgetManager.Services
             this.tagRepository.Save();
         }
 
+        /// <summary>
+        /// Updates tags for a payment.
+        /// </summary>
+        /// <param name="tags">The list of tags to update.</param>
+        /// <param name="paymentId">The payment ID.</param>
         public void UpdateAllTags(List<string> tags, int paymentId)
         {
             List<(string tag, int tagId)> tagsOnPayment = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId).Include(i => i.Tag).ToList().Select(m => (tag: m.Tag.Code, tagId: m.TagId)).ToList();
