@@ -70,6 +70,8 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
                     cfg.CreateMap<StockSplit, StockSplitModel>();
                     cfg.CreateMap<StockSplitModel, StockSplit>();
+                    cfg.CreateMap<UserCreateModel, UserData>();
+                    cfg.CreateMap<UserCreateModel, UserIdentification>();
                 }
             );
 
