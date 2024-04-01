@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import { Link } from "react-router-dom";
 import { RouteComponentProps } from "react-router-dom";
 import { AuthResponseModel } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
@@ -68,7 +69,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
                         <path id="Manager" className="s2T" aria-label="Manager" d="m11.5 234l10.4-69.3h4l26.2 49.8 26.3-49.8h3.9l10.4 69.3h-11.7l-6.1-39.6-20.8 39.6h-4l-20.8-39.6-6.1 39.6zm91.3 0l22.3-48.6h9.5l-9.5-20.7h12.4l31.7 69.3h-12.3l-4.4-9.7h-32.9l-4.4 9.7zm21.9-20.8h22.6l-11.3-24.5zm55.6-35.9v-12.7h4l40.6 43.7v-43.7h11.9v69.3h-4l-40.6-43.8v43.8h-11.9v-46.1h9.8zm67.6 56.6l22.3-48.6h9.5l-9.5-20.7h12.4l31.7 69.3h-12.3l-4.4-9.7h-32.9l-4.4 9.7zm21.9-20.7h22.6l-11.3-24.6zm107.5-17v31q-4.3 3.4-10.5 5.9-6.3 2.4-13.1 2.4-8.9 0-15.7-3.1-6.7-3.2-11.1-8.2-4.5-5.1-6.8-11.5-2.2-6.5-2.2-13.4 0-3.5 0.6-7 0.6-3.6 1.9-6.9h13.9q-2.3 3.5-3.3 7.8-0.9 4.2-0.6 8.4 0.4 4.3 2 8.3 1.7 4 4.6 7.1 2.9 3 7.1 4.9 4.2 1.8 9.7 1.8 4.1 0 6.9-0.9 2.8-1 4.7-2.2v-13.3h-16.3v-11.1zm-42.5-11.7l-8.7-9.2q4.5-5.5 11.3-8.7 7-3.4 16.3-3.4 5.5 0 10.9 1.9 5.3 1.8 9.8 5.1l-7 9.7q-2.1-1.9-5.7-3.4-3.5-1.5-7.9-1.5-6.7 0-11.4 2.7-4.8 2.5-7.6 6.8zm56.6-8.7v-11.1h44.8v11.1h-32.9v18h25.8v11.1h-25.8v18h32.9v11.1h-44.8v-48.6l11.9-9.6zm57.9-11.1h21.9q6.8 0 11.6 2.4 4.9 2.3 7.7 6.2 2.8 3.8 3.7 8.4 0.9 4.6-0.3 9-1.1 4.4-4.2 8.1-3.1 3.8-8.2 5.8l20.1 29.4h-14.2l-18.7-27.6h-7.5v27.6h-11.9v-48.6l11.7-9.5h-11.7zm21.9 11.2h-10v19.3h10q3.7 0 6.2-1.4 2.6-1.5 3.8-3.6 1.2-2.2 1.2-4.6 0-2.6-1.2-4.7-1.3-2.2-3.8-3.6-2.5-1.4-6.2-1.4z" />
                     </svg>
                 </div>
-                <div className="w-2/5 m-auto text-center my-12 px-4 py-12 bg-prussianBlue rounded-lg boxShadow">
+                <div className="w-2/5 m-auto text-center my-12 px-4 pt-12 pb-6 bg-prussianBlue rounded-lg boxShadow">
                     <h1 className="text-2xl">Sign in</h1>
                     <div className="flex flex-col w-4/5 m-auto mt-8">
                         <form onSubmit={this.login}>
@@ -91,6 +92,11 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
                                 <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Confirm" />
                             </div>
                         </form>
+                        <Link to={"/register"} className="block cursor-pointer flex mt-12">
+                            <span className="m-auto text-xs hover:text-vermilion duration-500">
+                                Sign up
+                            </span>
+                        </Link>
                     </div>
                 </div>
                 <Snackbar open={this.state.errorMessage != ""} autoHideDuration={6000} onClose={this.handleClose}>

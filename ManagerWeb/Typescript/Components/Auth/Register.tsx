@@ -33,6 +33,7 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
 
     private registrate = async (event: any) => {
         event.preventDefault();
+        console.log(this.state);
         // let authApi: AuthApi = await this.apiFactory.getAuthClient(AuthApi);
 
         // try {
@@ -45,23 +46,24 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
         // }
     }
 
-    private onChangeLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let login = e.target.value;
-        this.setState({ login: login });
-    }
-
-    private onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let pass = e.target.value;
-        this.setState({ password: pass });
-    }
-
     private onChange(propName: string, e: React.ChangeEvent<HTMLInputElement>) {
         let value = e.target.value;
-        this.setState({ [propName]: value, ...this.state });
+        let stateObject = this.state;
+        stateObject[propName] = value;
+        this.setState(stateObject);
     }
 
     private handleClose = () => {
         this.setState({ errorMessage: "" });
+    }
+
+    private renderField = (propertyName: string, placeholder: string) => {
+        return (<div className="w-full mb-2">
+            <div className="relative inline-block w-2/3 m-auto">
+                <input className="effect-11 w-full" placeholder={placeholder} value={this.state[propertyName]} onChange={e => this.onChange(propertyName, e)} />
+                <span className="focus-bg"></span>
+            </div>
+        </div>)
     }
 
     render = () => {
@@ -81,40 +83,15 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
                     <div className="flex flex-col w-4/5 m-auto mt-8">
                         <form onSubmit={this.registrate}>
                             <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
-                            <div className="flex">
-                                <div className="w-full">
-                                    <div className="relative inline-block w-2/3 m-auto">
-                                        <input className="effect-11 w-full" placeholder="Login" value={this.state.login} onChange={e => this.onChangeLogin(e)} />
-                                        <span className="focus-bg"></span>
-                                    </div>
-                                </div>
-                                <div className="w-full">
-                                    <div className="relative inline-block w-2/3 m-auto">
-                                        <input className="effect-11 w-full" placeholder="Last name" value={this.state.login} onChange={e => this.onChange("lastName", e)} />
-                                        <span className="focus-bg"></span>
-                                    </div>
-                                </div>
-                                <div className="w-full">
-                                    <div className="relative inline-block w-2/3 m-auto">
-                                        <input className="effect-11 w-full" placeholder="First name" value={this.state.login} onChange={e => this.onChange("firstName", e)} />
-                                        <span className="focus-bg"></span>
-                                    </div>
-                                </div>
-                                <div className="w-full">
-                                    <div className="relative inline-block w-2/3 m-auto">
-                                        <input type="password" className="effect-11 w-full" placeholder="Pass" value={this.state.password} onChange={(e) => this.onChangePassword(e)} />
-                                        <span className="focus-bg"></span>
-                                    </div>
-                                </div>
-                                <div className="w-full">
-                                    <div className="relative inline-block w-2/3 m-auto">
-                                        <input type="password" className="effect-11 w-full" placeholder="Pass confirmation" value={this.state.passwordConfirm} onChange={(e) => this.onChange("passwordConfirm", e)} />
-                                        <span className="focus-bg"></span>
-                                    </div>
-                                </div>
+                            <div className="flex flex-col">
+                                {this.renderField("login", "Login")}
+                                {this.renderField("lastName", "Last name")}
+                                {this.renderField("firstName", "First name")}
+                                {this.renderField("password", "Pass")}
+                                {this.renderField("passwordConfirm", "Pass confirmation")}
                             </div>
                             <div className="flex mt-8">
-                                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Confirm" />
+                                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Registrate" />
                             </div>
                         </form>
                     </div>
