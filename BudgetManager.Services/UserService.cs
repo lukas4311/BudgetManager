@@ -40,7 +40,7 @@ namespace BudgetManager.Services
             userIdentity.UserData = userData;
             this.userDataRepository.Create(userData);
             this.userIdentityRepository.Create(userIdentity);
-            //this.userIdentityRepository.Save();
+            this.userIdentityRepository.Save();
         }
     }
 }

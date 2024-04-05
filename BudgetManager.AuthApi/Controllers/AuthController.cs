@@ -12,25 +12,25 @@ namespace BudgetManager.AuthApi.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService userService;
-        private readonly IJwtService jwtService;
+        private readonly IUserService _userService;
+        private readonly IJwtService _jwtService;
 
         public AuthController(IUserService userService, IJwtService jwtService, IOptions<JwtSettingOption> options)
         {
-            this.userService = userService;
-            this.jwtService = jwtService;
-            this.jwtService.SetUp(new JwtSetting(options.Value.Secret, options.Value.Expiration));
+            _userService = userService;
+            _jwtService = jwtService;
+            _jwtService.SetUp(new JwtSetting(options.Value.Secret, options.Value.Expiration));
         }
 
         [HttpPost("authenticate")]
         public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
-            UserIdentification userInfo = this.userService.Authenticate(model.UserName, model.Password);
+            UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
 
             if(userInfo is null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            string token = this.jwtService.GenerateToken(userInfo);
+            string token = _jwtService.GenerateToken(userInfo);
             Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
             return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
         }
@@ -41,7 +41,7 @@ namespace BudgetManager.AuthApi.Controllers
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
                 return BadRequest(new { message = "Token is required" });
 
-            bool isValid = this.jwtService.IsTokenValid(tokenModel.Token);
+            bool isValid = _jwtService.IsTokenValid(tokenModel.Token);
             return Ok(isValid);
         }
 
@@ -51,7 +51,7 @@ namespace BudgetManager.AuthApi.Controllers
             if(string.IsNullOrEmpty(token))
                 return BadRequest(new { message = "Token is required" });
 
-            UserIdentification userIdentification = this.jwtService.GetUserIdentification(token);
+            UserIdentification userIdentification = _jwtService.GetUserIdentification(token);
             return Ok(userIdentification);
         }
     }
