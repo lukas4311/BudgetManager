@@ -12,6 +12,8 @@ namespace BudgetManager.AuthApi.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
+        private const string TokenIsRequired = "Token is required";
+        private const string UsernameOrPasswordIsIncorrect = "Username or password is incorrect";
         private readonly IUserService _userService;
         private readonly IJwtService _jwtService;
 
@@ -28,7 +30,7 @@ namespace BudgetManager.AuthApi.Controllers
             UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
 
             if(userInfo is null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new { message = UsernameOrPasswordIsIncorrect });
 
             string token = _jwtService.GenerateToken(userInfo);
             Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
@@ -39,7 +41,7 @@ namespace BudgetManager.AuthApi.Controllers
         public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
-                return BadRequest(new { message = "Token is required" });
+                return BadRequest(new { message = TokenIsRequired });
 
             bool isValid = _jwtService.IsTokenValid(tokenModel.Token);
             return Ok(isValid);
@@ -49,7 +51,7 @@ namespace BudgetManager.AuthApi.Controllers
         public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
         {
             if(string.IsNullOrEmpty(token))
-                return BadRequest(new { message = "Token is required" });
+                return BadRequest(new { message = TokenIsRequired });
 
             UserIdentification userIdentification = _jwtService.GetUserIdentification(token);
             return Ok(userIdentification);

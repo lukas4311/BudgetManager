@@ -7,6 +7,7 @@ namespace BudgetManager.AuthApi.Controllers;
 [Route("user")]
 public class UserController: ControllerBase
 {
+    private const string UserDefinitionIsRequired = "User definition is not valid";
     private readonly IUserService _userService;
 
     public UserController(IUserService userService)
@@ -18,7 +19,7 @@ public class UserController: ControllerBase
     public IActionResult Validate([FromBody] UserCreateModel userCreateModel)
     {
         if(userCreateModel is null)
-            return BadRequest(new { message = "User definition is required" });
+            return BadRequest(new { message = UserDefinitionIsRequired });
 
         _userService.CreateUser(userCreateModel);
         return Ok();

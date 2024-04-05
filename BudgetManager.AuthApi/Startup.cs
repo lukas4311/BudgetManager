@@ -53,6 +53,7 @@ namespace BudgetManager.AuthApi
             builder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
             builder.RegisterRepositories();
             builder.RegisterServices();
+            builder.RegisterModelMapping();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
