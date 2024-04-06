@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { AuthResponseModel } from "../../ApiClient/Auth";
+import {AuthResponseModel, UserApi} from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Snackbar } from "@mui/material";
@@ -13,6 +13,8 @@ class RegistrationState {
     password: string;
     passwordConfirm: string;
     errorMessage: string;
+    email: string;
+    phone: string;
 }
 
 export default class Auth extends React.Component<RouteComponentProps, RegistrationState>{
@@ -20,30 +22,29 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { login: '', password: '', errorMessage: "", firstName: '', lastName: '', passwordConfirm: '' };
+        this.state = { login: '', password: '', errorMessage: "", firstName: '', lastName: '', passwordConfirm: '', email: '', phone: '' };
     }
 
     componentDidMount() {
-        this.initServies();
+        this.initServices();
     }
 
-    private initServies = async () => {
+    private initServices = async () => {
         this.apiFactory = new ApiClientFactory(this.props.history);
     }
 
-    private registrate = async (event: any) => {
+    private register = async (event: any) => {
         event.preventDefault();
         console.log(this.state);
-        // let authApi: AuthApi = await this.apiFactory.getAuthClient(AuthApi);
+        let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
 
-        // try {
-        //     let authModel: AuthResponseModel = await authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
-        //     localStorage.setItem("user", JSON.stringify(authModel));
-        //     this.props.history.push("/");
-        // } catch (error) {
-        //     console.log(error);
-        //     this.setState({ errorMessage: "Login failed (bad login or pass)" });
-        // }
+        try {
+            await userApi.userRegisterPost({userCreateModel: {login: this.state.login, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, phone: this.state.phone}});
+            this.props.history.push("/");
+        } catch (error) {
+            console.log(error);
+            this.setState({ errorMessage: "Registration failed. Try it again later :(" });
+        }
     }
 
     private onChange(propName: string, e: React.ChangeEvent<HTMLInputElement>) {
@@ -81,7 +82,7 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
                 <div className="w-2/5 m-auto text-center my-12 px-4 py-12 bg-prussianBlue rounded-lg boxShadow">
                     <h1 className="text-2xl">Sign up</h1>
                     <div className="flex flex-col w-4/5 m-auto mt-8">
-                        <form onSubmit={this.registrate}>
+                        <form onSubmit={this.register}>
                             <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
                             <div className="flex flex-col">
                                 {this.renderField("login", "Login")}
