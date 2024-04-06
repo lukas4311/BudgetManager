@@ -34,7 +34,7 @@ export interface AuthAuthenticatePostRequest {
 }
 
 export interface AuthTokenDataGetRequest {
-    token?: string | null;
+    token?: string;
 }
 
 export interface AuthValidatePostRequest {

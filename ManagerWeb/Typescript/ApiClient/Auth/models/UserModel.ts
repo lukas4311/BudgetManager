@@ -61,4 +61,3 @@ export function UserModelToJSON(value?: UserModel | null): any {
         'password': value.password,
     };
 }
-
