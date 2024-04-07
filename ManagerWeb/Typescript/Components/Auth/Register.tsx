@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import {AuthResponseModel, UserApi} from "../../ApiClient/Auth";
+import { AuthResponseModel, UserApi } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Snackbar } from "@mui/material";
@@ -17,12 +17,12 @@ class RegistrationState {
     phone: string;
 }
 
-export default class Auth extends React.Component<RouteComponentProps, RegistrationState>{
+export default class Auth extends React.Component<RouteComponentProps, RegistrationState> {
     apiFactory: ApiClientFactory;
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { login: '', password: '', errorMessage: "", firstName: '', lastName: '', passwordConfirm: '', email: '', phone: '' };
+        this.state = { login: '', password: '', errorMessage: "", firstName: '', lastName: '', passwordConfirm: '', email: '', phone: null };
     }
 
     componentDidMount() {
@@ -39,7 +39,16 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
         let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
 
         try {
-            await userApi.userRegisterPost({userCreateModel: {login: this.state.login, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, phone: this.state.phone}});
+            await userApi.userRegisterPost({
+                userCreateModel: {
+                    login: this.state.login,
+                    password: this.state.password,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    phone: this.state.phone
+                }
+            });
             this.props.history.push("/");
         } catch (error) {
             console.log(error);
@@ -58,10 +67,10 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
         this.setState({ errorMessage: "" });
     }
 
-    private renderField = (propertyName: string, placeholder: string) => {
-        return (<div className="w-full mb-2">
+    private renderField = (propertyName: string, placeholder: string, params: any = {}) => {
+        return (<div className="w-full mb-4">
             <div className="relative inline-block w-2/3 m-auto">
-                <input className="effect-11 w-full" placeholder={placeholder} value={this.state[propertyName]} onChange={e => this.onChange(propertyName, e)} />
+                <input className="effect-11 w-full" placeholder={placeholder} value={this.state[propertyName] ?? ''} onChange={e => this.onChange(propertyName, e)} {...params} />
                 <span className="focus-bg"></span>
             </div>
         </div>)
@@ -85,11 +94,13 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
                         <form onSubmit={this.register}>
                             <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
                             <div className="flex flex-col">
-                                {this.renderField("login", "Login")}
-                                {this.renderField("lastName", "Last name")}
-                                {this.renderField("firstName", "First name")}
-                                {this.renderField("password", "Pass")}
-                                {this.renderField("passwordConfirm", "Pass confirmation")}
+                                {this.renderField("login", "Login", { required: true })}
+                                {this.renderField("lastName", "Last name", { required: true })}
+                                {this.renderField("firstName", "First name", { required: true })}
+                                {this.renderField("email", "Email", { reqired: true })}
+                                {this.renderField("phone", "Phone")}
+                                {this.renderField("password", "Pass", { type: "password", required: true })}
+                                {this.renderField("passwordConfirm", "Pass confirmation", { type: "password", required: true })}
                             </div>
                             <div className="flex mt-8">
                                 <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Registrate" />
