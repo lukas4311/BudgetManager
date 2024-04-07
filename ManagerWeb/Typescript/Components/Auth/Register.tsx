@@ -6,6 +6,8 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 class RegistrationState {
     errorMessage: string;
@@ -26,29 +28,6 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
     private initServices = async () => {
         this.apiFactory = new ApiClientFactory(this.props.history);
     }
-
-    // private register = async (event: any) => {
-    //     event.preventDefault();
-    //     console.log(this.state);
-    //     let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
-
-    //     try {
-    //         await userApi.userRegisterPost({
-    //             userCreateModel: {
-    //                 login: this.state.login,
-    //                 password: this.state.password,
-    //                 firstName: this.state.firstName,
-    //                 lastName: this.state.lastName,
-    //                 email: this.state.email,
-    //                 phone: this.state.phone
-    //             }
-    //         });
-    //         this.props.history.push("/");
-    //     } catch (error) {
-    //         console.log(error);
-    //         this.setState({ errorMessage: "Registration failed. Try it again later :(" });
-    //     }
-    // }
 
     private handleClose = () => {
         this.setState({ errorMessage: "" });
@@ -117,8 +96,20 @@ class RegisterViewModel {
     phone: string;
 }
 
+const schema = yup
+    .object({
+        firstName: yup.string().required(),
+        login: yup.string().required(),
+        lastName: yup.string().required(),
+        email: yup.string().email().required(),
+        phone: yup.string().required(),
+        password: yup.string().required(),
+        passwordConfirm: yup.string().required()
+    })
+    .required()
+
 const RegisterForm = (props: RegisterFormProps) => {
-    const { handleSubmit, control, register } = useForm<RegisterViewModel>({ defaultValues: { ...props.viewModel } });
+    const { handleSubmit, control, register, formState: { errors } } = useForm({ defaultValues: { ...props.viewModel }, resolver: yupResolver(schema) });
 
     const onSubmit = (data: RegisterViewModel) => {
         props.onSave(data);
@@ -130,6 +121,7 @@ const RegisterForm = (props: RegisterFormProps) => {
                 <input className="effect-11 w-full" placeholder={placeholder} {...register(propertyName)} {...params} />
                 <span className="focus-bg"></span>
             </div>
+            <p>{errors[propertyName]?.message}</p>
         </div>)
     }
 
