@@ -2,19 +2,13 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { AuthResponseModel, UserApi } from "../../ApiClient/Auth";
 import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
+import { useForm, SubmitHandler } from "react-hook-form"
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 
 class RegistrationState {
-    login: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-    passwordConfirm: string;
     errorMessage: string;
-    email: string;
-    phone: string;
 }
 
 export default class Auth extends React.Component<RouteComponentProps, RegistrationState> {
@@ -22,7 +16,7 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { login: '', password: '', errorMessage: "", firstName: '', lastName: '', passwordConfirm: '', email: '', phone: null };
+        this.state = { errorMessage: "" };
     }
 
     componentDidMount() {
@@ -33,20 +27,46 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
         this.apiFactory = new ApiClientFactory(this.props.history);
     }
 
-    private register = async (event: any) => {
-        event.preventDefault();
-        console.log(this.state);
+    // private register = async (event: any) => {
+    //     event.preventDefault();
+    //     console.log(this.state);
+    //     let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
+
+    //     try {
+    //         await userApi.userRegisterPost({
+    //             userCreateModel: {
+    //                 login: this.state.login,
+    //                 password: this.state.password,
+    //                 firstName: this.state.firstName,
+    //                 lastName: this.state.lastName,
+    //                 email: this.state.email,
+    //                 phone: this.state.phone
+    //             }
+    //         });
+    //         this.props.history.push("/");
+    //     } catch (error) {
+    //         console.log(error);
+    //         this.setState({ errorMessage: "Registration failed. Try it again later :(" });
+    //     }
+    // }
+
+    private handleClose = () => {
+        this.setState({ errorMessage: "" });
+    }
+
+    private onSubmit = async (registerModel: RegisterViewModel) => {
+        console.log(registerModel);
         let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
 
         try {
             await userApi.userRegisterPost({
                 userCreateModel: {
-                    login: this.state.login,
-                    password: this.state.password,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    email: this.state.email,
-                    phone: this.state.phone
+                    login: registerModel.login,
+                    password: registerModel.password,
+                    firstName: registerModel.firstName,
+                    lastName: registerModel.lastName,
+                    email: registerModel.email,
+                    phone: registerModel.phone
                 }
             });
             this.props.history.push("/");
@@ -54,26 +74,6 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
             console.log(error);
             this.setState({ errorMessage: "Registration failed. Try it again later :(" });
         }
-    }
-
-    private onChange(propName: string, e: React.ChangeEvent<HTMLInputElement>) {
-        let value = e.target.value;
-        let stateObject = this.state;
-        stateObject[propName] = value;
-        this.setState(stateObject);
-    }
-
-    private handleClose = () => {
-        this.setState({ errorMessage: "" });
-    }
-
-    private renderField = (propertyName: string, placeholder: string, params: any = {}) => {
-        return (<div className="w-full mb-4">
-            <div className="relative inline-block w-2/3 m-auto">
-                <input className="effect-11 w-full" placeholder={placeholder} value={this.state[propertyName] ?? ''} onChange={e => this.onChange(propertyName, e)} {...params} />
-                <span className="focus-bg"></span>
-            </div>
-        </div>)
     }
 
     render = () => {
@@ -91,21 +91,7 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
                 <div className="w-2/5 m-auto text-center my-12 px-4 py-12 bg-prussianBlue rounded-lg boxShadow">
                     <h1 className="text-2xl">Sign up</h1>
                     <div className="flex flex-col w-4/5 m-auto mt-8">
-                        <form onSubmit={this.register}>
-                            <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
-                            <div className="flex flex-col">
-                                {this.renderField("login", "Login", { required: true })}
-                                {this.renderField("lastName", "Last name", { required: true })}
-                                {this.renderField("firstName", "First name", { required: true })}
-                                {this.renderField("email", "Email", { reqired: true })}
-                                {this.renderField("phone", "Phone")}
-                                {this.renderField("password", "Pass", { type: "password", required: true })}
-                                {this.renderField("passwordConfirm", "Pass confirmation", { type: "password", required: true })}
-                            </div>
-                            <div className="flex mt-8">
-                                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Registrate" />
-                            </div>
-                        </form>
+                        <RegisterForm viewModel={new RegisterViewModel()} onSave={this.onSubmit}></RegisterForm>
                     </div>
                 </div>
                 <Snackbar open={this.state.errorMessage != ""} autoHideDuration={6000} onClose={this.handleClose}>
@@ -114,4 +100,54 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
             </div>
         );
     }
+}
+
+class RegisterFormProps {
+    viewModel: RegisterViewModel;
+    onSave: (data: RegisterViewModel) => void;
+}
+
+class RegisterViewModel {
+    login: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    passwordConfirm: string;
+    email: string;
+    phone: string;
+}
+
+const RegisterForm = (props: RegisterFormProps) => {
+    const { handleSubmit, control, register } = useForm<RegisterViewModel>({ defaultValues: { ...props.viewModel } });
+
+    const onSubmit = (data: RegisterViewModel) => {
+        props.onSave(data);
+    };
+
+    const renderField = (propertyName: keyof RegisterViewModel, placeholder: string, params: any = {}) => {
+        return (<div className="w-full mb-4">
+            <div className="relative inline-block w-2/3 m-auto">
+                <input className="effect-11 w-full" placeholder={placeholder} {...register(propertyName)} {...params} />
+                <span className="focus-bg"></span>
+            </div>
+        </div>)
+    }
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div asp-validation-summary="All" className="text-red-600 mb-4"></div>
+            <div className="flex flex-col">
+                {renderField("login", "Login")}
+                {renderField("lastName", "Last name")}
+                {renderField("firstName", "First name")}
+                {renderField("email", "Email")}
+                {renderField("phone", "Phone")}
+                {renderField("password", "Pass")}
+                {renderField("passwordConfirm", "Pass confirmation")}
+            </div>
+            <div className="flex mt-8">
+                <input type="submit" className="m-auto bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500" value="Registrate" />
+            </div>
+        </form>
+    );
 }
