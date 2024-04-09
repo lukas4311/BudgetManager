@@ -21,5 +21,7 @@ namespace BudgetManager.Data.DataModels
         public List<ComodityTradeHistory> ComodityTradeHistory { get; set; }
 
         public List<BrokerReportToProcess> BrokerReportsToProcess { get; set; }
+        
+        public List<Notification> Notifications { get; set; }
     }
 }

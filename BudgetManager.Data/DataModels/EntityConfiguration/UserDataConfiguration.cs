@@ -18,9 +18,8 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
                 .IsRequired();
 
             builder.Property(u => u.Phone)
-                .HasMaxLength(9)
-                .IsFixedLength()
-                .IsRequired();
+                .HasMaxLength(10)
+                .IsFixedLength();
 
             builder.HasOne(p => p.UserIdentity)
                 .WithOne(p => p.UserData)

@@ -98,15 +98,17 @@ class RegisterViewModel {
 
 const isRequiredMsg = (field: string) => `${field} is reqiured`;
 
+const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
+
 const schema = yup
     .object({
         firstName: yup.string().required(isRequiredMsg("First name")),
         login: yup.string().required(isRequiredMsg("Login")),
         lastName: yup.string().required(isRequiredMsg("Last name")),
         email: yup.string().email().required(isRequiredMsg("Email")),
-        phone: yup.string().required(isRequiredMsg("Phone")),
-        password: yup.string().required(isRequiredMsg("Password")),
-        passwordConfirm: yup.string().required(isRequiredMsg("Password confirmation"))
+        phone: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+        password: yup.string().required(isRequiredMsg("Password")).min(5, 'Your password is too short.'),
+        passwordConfirm: yup.string().required(isRequiredMsg("Password confirmation")).oneOf([yup.ref('password'), null], 'Passwords must match')
     })
     .required()
 
