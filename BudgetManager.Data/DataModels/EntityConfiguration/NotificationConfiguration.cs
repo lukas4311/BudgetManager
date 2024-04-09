@@ -7,11 +7,6 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
     public void Configure(EntityTypeBuilder<Notification> builder)
     {
-        builder.ToTable("UserNotifications");
-
-        builder.HasKey(n => n.Id);
-        builder.Property(n => n.Id).HasColumnName("NotificationId").IsRequired().ValueGeneratedOnAdd();
-
         builder.Property(n => n.UserId).HasColumnName("UserId").IsRequired();
         builder.Property(n => n.Heading).HasColumnName("Heading").IsRequired();
         builder.Property(n => n.Content).HasColumnName("Content").IsRequired();
