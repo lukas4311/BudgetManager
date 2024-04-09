@@ -1,8 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { AuthResponseModel, UserApi } from "../../ApiClient/Auth";
-import { AuthApi } from "../../ApiClient/Auth/apis/AuthApi";
-import { useForm, SubmitHandler } from "react-hook-form"
+import { UserApi } from "../../ApiClient/Auth";
+import { useForm } from "react-hook-form"
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
@@ -98,7 +97,7 @@ class RegisterViewModel {
 
 const isRequiredMsg = (field: string) => `${field} is required`;
 
-const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/
+const phoneRegExp = /\d{9}/
 
 const schema = yup
     .object({
