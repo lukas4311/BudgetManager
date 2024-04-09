@@ -105,7 +105,7 @@ const schema = yup
         login: yup.string().required(isRequiredMsg("Login")),
         lastName: yup.string().required(isRequiredMsg("Last name")),
         email: yup.string().email().required(isRequiredMsg("Email")),
-        phone: yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+        phone: yup.string().nullable().transform((curr, orig) => (orig === "" ? null : curr)).matches(phoneRegExp, 'Phone number is not valid'),
         password: yup.string().required(isRequiredMsg("Password")).min(5, 'Your password is too short.'),
         passwordConfirm: yup.string().required(isRequiredMsg("Password confirmation")).oneOf([yup.ref('password'), null], 'Passwords must match')
     })
