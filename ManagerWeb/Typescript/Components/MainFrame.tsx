@@ -1,5 +1,6 @@
 import React from "react";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 
 const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: string }) => {
     return (
@@ -36,6 +37,16 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     </div>
                     <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
                         <span className="ml-10 pr-6">lukas4311</span>
+                    </div>
+                </div>
+                <div className="flex flex-row ml-auto">
+                    <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center ml-16 z-20">
+                        <span>
+                            <NotificationsNoneOutlinedIcon className="fill-black" />
+                        </span>
+                    </div>
+                    <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
+                        <span className="ml-10 pr-6">Notifications</span>
                     </div>
                 </div>
             </div>
