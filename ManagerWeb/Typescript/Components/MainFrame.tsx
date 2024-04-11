@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import { Button, MenuList, MenuItem, Badge } from "@mui/material";
+import Menu from "./Menu";
 
 const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: string }) => {
     return (
@@ -29,9 +31,9 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                         <path id="€" className="s2" aria-label="€" d="m0.2 79.6h6.3q1.7 4.4 5.8 7.5 4.1 3.1 9.7 3.1 5.3 0 9.9-3.2l0.1-0.1v-7.9l-0.8 1q-0.1 0.1-0.2 0.3-0.1 0.1-0.3 0.3-0.1 0.2-0.2 0.2-0.1 0.2-0.3 0.4-0.3 0.3-0.4 0.4-3.3 3.2-7.8 3.2-3 0-5.5-1.4-2.4-1.5-3.9-3.8h11.7l3.1-5.2h-16.4v-0.6-0.5h17l3.1-5.3h-18.5q1.5-2.3 3.9-3.7 2.5-1.5 5.5-1.5 5.4 0 8.8 4.3l0.4 0.6 3-5.1-0.2-0.1q-5-5.1-12-5.1-5.6 0-9.7 3.2-4.1 3.1-5.8 7.4h-3.2l-3.1 5.3h5.2v0.1 1h-2.1z" />
                     </svg>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col pl-16">
                     <div className="flex flex-row">
-                        <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center ml-16 z-20">
+                        <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20">
                             <span>
                                 <Person2OutlinedIcon className="fill-black" />
                             </span>
@@ -40,7 +42,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                             <span className="ml-10 pr-6">lukas4311</span>
                         </div>
                     </div>
-                    <div className="flex flex-row mt-4">
+                    {/* <div className="flex flex-row mt-4">
                         <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center ml-16 z-20">
                             <span>
                                 <NotificationsNoneOutlinedIcon className="fill-black" />
@@ -49,7 +51,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                         <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
                             <span className="ml-10 pr-6">Notifications</span>
                         </div>
-                    </div>
+                    </div> */}
+                    <NotificationMenu />
                 </div>
             </div>
             <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
@@ -61,3 +64,46 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
 }
 
 export { MainFrame }
+
+
+function NotificationMenu() {
+    const [showMenu, setShowMenu] = useState(false);
+    const notificationCount = 5; // Replace with your actual notification count
+
+    return (
+        <div className="relative">
+            {/* Button */}
+            <div
+                className="flex flex-row mt-4 cursor-pointer"
+                onClick={() => setShowMenu(!showMenu)}
+            >
+                <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20">
+                    <span>
+                        <NotificationsNoneOutlinedIcon className="fill-black" />
+                    </span>
+                </div>
+                <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
+                    <span className="ml-10 pr-6">Notifications</span>
+                </div>
+            </div>
+
+            {/* Badge */}
+            {notificationCount > 0 && (
+                <div className="absolute top-6 left-0 transform -translate-x-1/2 -translate-y-1/2 z-30">
+                    <Badge badgeContent={notificationCount} color="error">
+                    </Badge>
+                </div>
+            )}
+
+            {/* Menu */}
+            <div className={`text-black absolute top-14 left-6 bg-white shadow-md rounded-md p-4 transition-all duration-300 ease-in-out ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
+                {/* Add your menu items here */}
+                <div>Message 1</div>
+                <div>Message 2</div>
+                {/* ... */}
+            </div>
+        </div>
+    );
+}
+
+export default NotificationMenu;
