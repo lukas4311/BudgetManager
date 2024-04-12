@@ -305,6 +305,14 @@
   font-size: 33.3333333333px;
 }
 
+.sliding-menu-parent .slidingMenuSectionActive {
+  width: 100% !important;
+}
+
+.sliding-menu-parent:hover .slidingMenuSection {
+  width: 100% !important;
+}
+
 .budgetCard:hover {
   transform: scale(1.1);
 }

@@ -49,35 +49,36 @@
         transition: $menuMoveTimig linear;
     }
 
-    .courtain{
-        z-index:5;
+    .courtain {
+        z-index: 5;
     }
 
     @media (max-width: 1024px) {
-        .mainWrapper.opened{
+        .mainWrapper.opened {
             right: 50%;
             top: 50%;
         }
-        .courtain.opened{
+
+        .courtain.opened {
             position: fixed;
             top: 0;
-            left:0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(black, 0.9);
         }
-      }
+    }
 
-      @media (min-width: 1024px) {
-        .mainWrapper.opened{
+    @media (min-width: 1024px) {
+        .mainWrapper.opened {
             right: 140px;
-        top: 140px;
+            top: 140px;
         }
 
-        .courtain{
+        .courtain {
             display: none;
         }
-      }
+    }
 
     .menu-toggler {
         @include absolute-center;
@@ -193,35 +194,51 @@
         right: -15px;
         display: block;
         opacity: 0;
-        transition: $item-transition ($menuMoveTimig - 0.2s);
-        z-index: 10;
-    }
+        transition: $item-transition (
+            $menuMoveTimig - 0.2s
+        );
+    z-index: 10;
+}
 
-    @media (max-width: 1024px) {
-        .menu-item svg{
-            fill: #e03d15ff;
-        }
-      }
-
-    .menu-item a {
-        display: block;
-        width: inherit;
-        height: inherit;
-        line-height: $item-size;
-        color: rgba($item-color, 0.7);
-        background: rgba(white, 0.2);
-        border-radius: 50%;
-        text-align: center;
-        text-decoration: none;
-        font-size: $item-size/2;
-        pointer-events: none;
-        transition: .6s;
-
-        &:hover {
-            box-shadow: 0 0 0 $item-size/40 rgba(white, 0.3);
-            color: $item-color;
-            background: rgba(white, 0.3);
-            font-size: $item-size/1.8;
-        }
+@media (max-width: 1024px) {
+    .menu-item svg {
+        fill: #e03d15ff;
     }
 }
+
+.menu-item a {
+    display: block;
+    width: inherit;
+    height: inherit;
+    line-height: $item-size;
+    color: rgba($item-color, 0.7);
+    background: rgba(white, 0.2);
+    border-radius: 50%;
+    text-align: center;
+    text-decoration: none;
+    font-size: $item-size/2;
+    pointer-events: none;
+    transition: .6s;
+
+    &:hover {
+        box-shadow: 0 0 0 $item-size/40 rgba(white, 0.3);
+        color: $item-color;
+        background: rgba(white, 0.3);
+        font-size: $item-size/1.8;
+    }
+}
+}
+
+.sliding-menu-parent {
+    .slidingMenuSectionActive {
+        width: 100% !important;
+    }
+}
+
+.sliding-menu-parent:hover .slidingMenuSection {
+    width: 100% !important;
+}
+
+
+
+.slidingMenuSection {}

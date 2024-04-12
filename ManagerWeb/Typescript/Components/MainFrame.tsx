@@ -74,16 +74,16 @@ function NotificationMenu() {
         <div className="relative">
             {/* Button */}
             <div
-                className="flex flex-row mt-4 cursor-pointer"
+                className="flex flex-row mt-4 cursor-pointer sliding-menu-parent"
                 onClick={() => setShowMenu(!showMenu)}
             >
-                <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20">
+                <div className={"absolute circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
                     <span>
                         <NotificationsNoneOutlinedIcon className="fill-black" />
                     </span>
                 </div>
-                <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
-                    <span className="ml-10 pr-6">Notifications</span>
+                <div className="h-10 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
+                    <span className="ml-16 pr-6">Notifications</span>
                 </div>
             </div>
 
