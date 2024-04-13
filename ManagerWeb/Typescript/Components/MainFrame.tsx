@@ -42,16 +42,6 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                             <span className="ml-10 pr-6">lukas4311</span>
                         </div>
                     </div>
-                    {/* <div className="flex flex-row mt-4">
-                        <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center ml-16 z-20">
-                            <span>
-                                <NotificationsNoneOutlinedIcon className="fill-black" />
-                            </span>
-                        </div>
-                        <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
-                            <span className="ml-10 pr-6">Notifications</span>
-                        </div>
-                    </div> */}
                     <NotificationMenu />
                 </div>
             </div>
