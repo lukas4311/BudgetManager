@@ -87,8 +87,11 @@ function NotificationMenu() {
             </div>
 
             {/* Menu */}
-            <div className={`text-black absolute top-14 mt-4 bg-white shadow-md rounded-md p-4 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
-                <div>Message 1</div>
+            <div className={`text-black absolute top-14 mt-4 bg-white shadow-md rounded-md p-2 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
+                <div className="border border-vermilion bg-prussianBlue px-4 py-2 flex flex-col rounded-md">
+                    <h2 className="text-lg text-white">Message 1</h2>
+                    <p className="text-sm text-white truncate-2l">lore ajhsdklfjlka sjdflkajsdlk fjalksdjf lka jdslfk jasdlkfj lkasdjf lkajdflk jasdkl fjlkdj flkajdsl kfjaksd jflkasdjflk jdlkfj dslkjf lkadjf kljasdlk fjasdlkfj aklsdjf lkajdf lkjasdlkfjalk sdjflkj dslkjadlk fjaslkd f</p>
+                </div>
                 <div>Message 2</div>
             </div>
         </div>
