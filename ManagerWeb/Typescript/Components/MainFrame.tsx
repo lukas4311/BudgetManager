@@ -31,8 +31,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                         <path id="€" className="s2" aria-label="€" d="m0.2 79.6h6.3q1.7 4.4 5.8 7.5 4.1 3.1 9.7 3.1 5.3 0 9.9-3.2l0.1-0.1v-7.9l-0.8 1q-0.1 0.1-0.2 0.3-0.1 0.1-0.3 0.3-0.1 0.2-0.2 0.2-0.1 0.2-0.3 0.4-0.3 0.3-0.4 0.4-3.3 3.2-7.8 3.2-3 0-5.5-1.4-2.4-1.5-3.9-3.8h11.7l3.1-5.2h-16.4v-0.6-0.5h17l3.1-5.3h-18.5q1.5-2.3 3.9-3.7 2.5-1.5 5.5-1.5 5.4 0 8.8 4.3l0.4 0.6 3-5.1-0.2-0.1q-5-5.1-12-5.1-5.6 0-9.7 3.2-4.1 3.1-5.8 7.4h-3.2l-3.1 5.3h5.2v0.1 1h-2.1z" />
                     </svg>
                 </div>
-                <div className="flex flex-col pl-16">
-                    <div className="flex flex-row">
+                <div className="flex flex-col pl-16 w-1/3">
+                    <div className="flex flex-row ">
                         <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20">
                             <span>
                                 <Person2OutlinedIcon className="fill-black" />
@@ -73,30 +73,32 @@ function NotificationMenu() {
     return (
         <div className="relative">
             {/* Button */}
-            <div
-                className="flex flex-row mt-4 cursor-pointer sliding-menu-parent"
-                onClick={() => setShowMenu(!showMenu)}
-            >
-                <div className={"absolute circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
-                    <span>
-                        <NotificationsNoneOutlinedIcon className="fill-black" />
-                    </span>
+            <div className="flex w-1/3 relative">
+                <div
+                    className="w-full mt-4 cursor-pointer sliding-menu-parent"
+                    onClick={() => setShowMenu(!showMenu)}
+                >
+                    <div className={"absolute circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
+                        <span>
+                            <NotificationsNoneOutlinedIcon className="fill-black" />
+                        </span>
+                    </div>
+                    <div className="h-10 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
+                        <span className="ml-16 pr-6">Notifications</span>
+                    </div>
                 </div>
-                <div className="h-10 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
-                    <span className="ml-16 pr-6">Notifications</span>
-                </div>
+
+                {/* Badge */}
+                {notificationCount > 0 && (
+                    <div className="absolute top-6 left-0 transform -translate-x-1/2 -translate-y-1/2 z-30">
+                        <Badge badgeContent={notificationCount} color="error">
+                        </Badge>
+                    </div>
+                )}
             </div>
 
-            {/* Badge */}
-            {notificationCount > 0 && (
-                <div className="absolute top-6 left-0 transform -translate-x-1/2 -translate-y-1/2 z-30">
-                    <Badge badgeContent={notificationCount} color="error">
-                    </Badge>
-                </div>
-            )}
-
             {/* Menu */}
-            <div className={`text-black absolute top-14 left-6 bg-white shadow-md rounded-md p-4 transition-all duration-300 ease-in-out ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
+            <div className={`text-black absolute top-14 mt-4 bg-white shadow-md rounded-md p-4 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
                 {/* Add your menu items here */}
                 <div>Message 1</div>
                 <div>Message 2</div>
