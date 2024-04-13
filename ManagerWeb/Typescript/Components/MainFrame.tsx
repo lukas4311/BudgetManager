@@ -81,18 +81,15 @@ function NotificationMenu() {
                 {/* Badge */}
                 {notificationCount > 0 && (
                     <div className="absolute top-6 left-0 transform -translate-x-1/2 -translate-y-1/2 z-30">
-                        <Badge badgeContent={notificationCount} color="error">
-                        </Badge>
+                        <Badge badgeContent={notificationCount} color="error" />
                     </div>
                 )}
             </div>
 
             {/* Menu */}
             <div className={`text-black absolute top-14 mt-4 bg-white shadow-md rounded-md p-4 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
-                {/* Add your menu items here */}
                 <div>Message 1</div>
                 <div>Message 2</div>
-                {/* ... */}
             </div>
         </div>
     );
