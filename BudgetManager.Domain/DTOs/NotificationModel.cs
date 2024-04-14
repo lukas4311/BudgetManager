@@ -1,10 +1,10 @@
 using System;
 
-namespace BudgetManager.Data.DataModels;
+namespace BudgetManager.Domain.DTOs;
 
-public class Notification : IDataModel
+public class NotificationModel : IDtoModel
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public int UserId { get; set; }
 
@@ -15,8 +15,4 @@ public class Notification : IDataModel
     public bool IsDisplayed { get; set; }
 
     public DateTime Timestamp { get; set; }
-
-    public string AttachmentUrl { get; set; }
-
-    public UserIdentity User { get; set; }
 }
