@@ -72,6 +72,8 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockSplitModel, StockSplit>();
                     cfg.CreateMap<UserCreateModel, UserData>();
                     cfg.CreateMap<UserCreateModel, UserIdentity>();
+                    cfg.CreateMap<NotificationModel, Notification>();
+                    cfg.CreateMap<Notification, NotificationModel>();
                 }
             );
 
