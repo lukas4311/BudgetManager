@@ -28,127 +28,127 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("all")]
         public ActionResult<IEnumerable<OtherInvestmentModel>> Get()
         {
-            return Ok(this.otherInvestmentService.GetAll(this.GetUserId()));
+            return Ok(otherInvestmentService.GetAll(GetUserId()));
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] OtherInvestmentModel otherInvestment)
         {
-            otherInvestment.UserIdentityId = this.GetUserId();
-            this.otherInvestmentService.Add(otherInvestment);
+            otherInvestment.UserIdentityId = GetUserId();
+            otherInvestmentService.Add(otherInvestment);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Update([FromBody] OtherInvestmentModel otherInvestment)
         {
-            otherInvestment.UserIdentityId = this.GetUserId();
-            this.otherInvestmentService.Update(otherInvestment);
+            otherInvestment.UserIdentityId = GetUserId();
+            otherInvestmentService.Update(otherInvestment);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
-            if (!this.otherInvestmentService.UserHasRightToPayment(id, this.GetUserId()))
+            if (!otherInvestmentService.UserHasRightToPayment(id, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.otherInvestmentService.Delete(id);
+            otherInvestmentService.Delete(id);
             return Ok();
         }
 
         [HttpGet("{otherInvestmentId}/balanceHistory")]
         public ActionResult<IEnumerable<OtherInvestmentBalaceHistoryModel>> Get(int otherInvestmentId)
         {
-            if (this.CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
                 return result;
 
-            return Ok(this.otherInvestmentBalaceHistoryService.Get(c => c.OtherInvestmentId == otherInvestmentId));
+            return Ok(otherInvestmentBalaceHistoryService.Get(c => c.OtherInvestmentId == otherInvestmentId));
         }
 
         [HttpPost("{otherInvestmentId}/balanceHistory")]
         public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
-            if (this.CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
                 return result;
 
             otherInvestmentBalaceHistory.OtherInvestmentId = otherInvestmentId;
-            this.otherInvestmentBalaceHistoryService.Add(otherInvestmentBalaceHistory);
+            otherInvestmentBalaceHistoryService.Add(otherInvestmentBalaceHistory);
             return Ok();
         }
 
         [HttpGet("otherInvestment/balance")]
-        public ActionResult GetAllBalances() => Ok(this.otherInvestmentBalaceHistoryService.Get(b => b.OtherInvestment.UserIdentityId == this.GetUserId()));
+        public ActionResult GetAllBalances() => Ok(otherInvestmentBalaceHistoryService.Get(b => b.OtherInvestment.UserIdentityId == GetUserId()));
 
         [HttpPut("/balanceHistory")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
-            if (this.CheckUserRigth(otherInvestmentBalaceHistory.OtherInvestmentId) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(otherInvestmentBalaceHistory.OtherInvestmentId) is var result && result.StatusCode != OkResult)
                 return result;
 
-            this.otherInvestmentBalaceHistoryService.Update(otherInvestmentBalaceHistory);
+            otherInvestmentBalaceHistoryService.Update(otherInvestmentBalaceHistory);
             return Ok();
         }
 
         [HttpDelete("/balanceHistory")]
         public IActionResult DeleteHistoryBalance([FromBody] int id)
         {
-            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            this.otherInvestmentService.Delete(id);
+            otherInvestmentService.Delete(id);
             return Ok();
         }
 
         [HttpGet("{id}/profitOverYears/{years}")]
         public async Task<ActionResult<decimal>> ProfitOverYears(int id, int? years = null)
         {
-            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            decimal profit = await this.otherInvestmentService.GetProgressForYears(id, years);
+            decimal profit = await otherInvestmentService.GetProgressForYears(id, years);
             return Ok(profit);
         }
 
         [HttpGet("{id}/profitOverall")]
         public async Task<ActionResult<decimal>> ProfitOverall(int id)
-            => await this.ProfitOverYears(id);
+            => await ProfitOverYears(id);
 
         [HttpGet("{id}/tagedPayments/{tagId}")]
         public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)
         {
-            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            return Ok(await this.otherInvestmentTagService.GetPaymentsForTag(id, tagId));
+            return Ok(await otherInvestmentTagService.GetPaymentsForTag(id, tagId));
         }
 
         [HttpGet("{id}/linkedTag")]
         public ActionResult<OtherInvestmentTagModel> GetLinkedTag(int id)
         {
-            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            return Ok(this.otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault());
+            return Ok(otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault());
         }
 
         [HttpPost("{id}/tagedPayments/{tagId}")]
         public IActionResult LinkInvestmentWithTag(int id, int tagId)
         {
-            if (this.CheckUserRigth(id) is var result && result.StatusCode != OkResult)
+            if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
                 return result;
 
-            this.otherInvestmentTagService.ReplaceTagForOtherInvestment(id,tagId);
+            otherInvestmentTagService.ReplaceTagForOtherInvestment(id,tagId);
             return Ok();
         }
 
         [HttpGet("summary")]
         public ActionResult<OtherInvestmentBalanceSummaryModel> GetOtherInvestmentSummary() 
-            => Ok(this.otherInvestmentService.GetAllInvestmentSummary(this.GetUserId()));
+            => Ok(otherInvestmentService.GetAllInvestmentSummary(GetUserId()));
 
         private StatusCodeResult CheckUserRigth(int otherInvestmentId)
         {
-            if (!this.otherInvestmentService.UserHasRightToPayment(otherInvestmentId, this.GetUserId()))
+            if (!otherInvestmentService.UserHasRightToPayment(otherInvestmentId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             return Ok();

@@ -21,48 +21,48 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("all/balance/{toDate}")]
         public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
-            return Ok(this.bankAccountService.GetBankAccountsBalanceToDate(this.GetUserId(), toDate));
+            return Ok(bankAccountService.GetBankAccountsBalanceToDate(GetUserId(), toDate));
         }
 
         [HttpGet("{bankAccountId}/balance/{toDate}")]
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+            if (!bankAccountService.UserHasRightToBankAccount(bankAccountId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            return Ok(this.bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
+            return Ok(bankAccountService.GetBankAccountBalanceToDate(bankAccountId, toDate));
         }
 
         [HttpGet("all")]
         public ActionResult<IEnumerable<BankAccountModel>> All()
         {
-            return Ok(this.bankAccountService.GetAllBankAccounts(this.GetUserId()));
+            return Ok(bankAccountService.GetAllBankAccounts(GetUserId()));
         }
 
         [HttpPost]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            bankAccountViewModel.UserIdentityId = this.GetUserId();
-            int paymentId = this.bankAccountService.Add(bankAccountViewModel);
+            bankAccountViewModel.UserIdentityId = GetUserId();
+            int paymentId = bankAccountService.Add(bankAccountViewModel);
             return Ok(paymentId);
         }
 
         [HttpPut]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
-            bankAccountViewModel.UserIdentityId = this.GetUserId();
-            this.bankAccountService.Update(bankAccountViewModel);
+            bankAccountViewModel.UserIdentityId = GetUserId();
+            bankAccountService.Update(bankAccountViewModel);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(bankAccountId, this.GetUserId()))
+            if (!bankAccountService.UserHasRightToBankAccount(bankAccountId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.bankAccountService.Delete(bankAccountId);
-            return this.Ok();
+            bankAccountService.Delete(bankAccountId);
+            return Ok();
         }
     }
 }

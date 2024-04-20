@@ -24,24 +24,24 @@ namespace BudgetManager.Api.Controllers
         [Route("allUsed")]
         public ActionResult<IEnumerable<TagModel>> GetPaymentsTags()
         {
-            IEnumerable<TagModel> tags = this.tagService.GetPaymentsTags(this.GetUserId());
+            IEnumerable<TagModel> tags = tagService.GetPaymentsTags(GetUserId());
             return Ok(tags);
         }
 
         [HttpPost]
         public IActionResult AddTagToPayment([FromBody] AddTagModel tagModel)
         {
-            if (this.paymentService.UserHasRightToPayment(tagModel.PaymentId, this.GetUserId()))
-                return this.StatusCode(StatusCodes.Status401Unauthorized);
+            if (paymentService.UserHasRightToPayment(tagModel.PaymentId, GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.tagService.AddTagToPayment(tagModel);
+            tagService.AddTagToPayment(tagModel);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult DeleteTag(int tagId)
         {
-            this.tagService.Delete(tagId);
+            tagService.Delete(tagId);
             return Ok();
         }
     }

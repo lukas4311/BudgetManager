@@ -18,8 +18,8 @@ namespace BudgetManager.Api.Services
         {
             return new UserIdentification
             {
-                UserId = int.Parse(this.httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)),
-                UserName = this.httpContextAccessor.HttpContext.User.Identity.Name
+                UserId = int.Parse(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                UserName = httpContextAccessor.HttpContext.User.Identity.Name
             };
         }
     }

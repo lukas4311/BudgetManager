@@ -20,7 +20,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("all")]
         public ActionResult<IEnumerable<CurrencySymbol>> Get()
         {
-            return Ok(this.currencySymbolRepository.FindAll());
+            return Ok(currencySymbolRepository.FindAll());
         }
     }
 }

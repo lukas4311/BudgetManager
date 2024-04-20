@@ -48,7 +48,7 @@ namespace BudgetManager.Api
             services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddHttpClient();
 
-            RabbitMqConfig rabbitSetting = this.Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
+            RabbitMqConfig rabbitSetting = Configuration.GetSection("Rabbit").Get<RabbitMqConfig>();
             rabbitSetting.EndpointsConfiguration = c => c.Publish<TickerRequest>(x => x.ExchangeType = ExchangeType.Direct);
             services.AddMassTransitWithRabbitMq(rabbitSetting);
 
@@ -99,7 +99,7 @@ namespace BudgetManager.Api
             builder.RegisterRepositories();
             builder.RegisterServices();
 
-            InfluxSetting influxSetting = this.Configuration.GetSection("Influxdb").Get<InfluxSetting>();
+            InfluxSetting influxSetting = Configuration.GetSection("Influxdb").Get<InfluxSetting>();
             builder.RegisterInstance(new InfluxContext(influxSetting.Url, influxSetting.Token, influxSetting.OrganizationId)).As<IInfluxContext>();
             builder.RegisterType<CryptoData>();
             builder.RegisterType<ForexData>();

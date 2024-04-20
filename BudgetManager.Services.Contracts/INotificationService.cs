@@ -6,5 +6,6 @@ namespace BudgetManager.Services.Contracts
 {
     public interface INotificationService : IBaseService<NotificationModel, Notification>
     {
+        IEnumerable<NotificationModel> GetUserNotifications(int userId);
     }
 }

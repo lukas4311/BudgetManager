@@ -30,42 +30,42 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("all")]
         public ActionResult<IEnumerable<TradeHistory>> Get()
         {
-            return Ok(this.cryptoService.GetByUser(this.GetUserId()));
+            return Ok(cryptoService.GetByUser(GetUserId()));
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] TradeHistory tradeHistory)
         {
-            tradeHistory.UserIdentityId = this.GetUserId();
-            this.cryptoService.Add(tradeHistory);
+            tradeHistory.UserIdentityId = GetUserId();
+            cryptoService.Add(tradeHistory);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Update([FromBody] TradeHistory tradeHistory)
         {
-            tradeHistory.UserIdentityId = this.GetUserId();
-            this.cryptoService.Update(tradeHistory);
+            tradeHistory.UserIdentityId = GetUserId();
+            cryptoService.Update(tradeHistory);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
-            if (!this.cryptoService.UserHasRightToCryptoTrade(id, this.GetUserId()))
+            if (!cryptoService.UserHasRightToCryptoTrade(id, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.cryptoService.Delete(id);
+            cryptoService.Delete(id);
             return Ok();
         }
 
         [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
-            double exhangeRate = await this.forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
+            double exhangeRate = await forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 
             if (exhangeRate == 0)
-                exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
+                exhangeRate = await cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
 
             return Ok(exhangeRate);
         }
@@ -73,18 +73,18 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}/{atDate}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency, DateTime atDate)
         {
-            double exhangeRate = await this.cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency, atDate).ConfigureAwait(false);
+            double exhangeRate = await cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency, atDate).ConfigureAwait(false);
             return Ok(exhangeRate);
         }
 
         [HttpGet("tradeDetail/{tradeId}")]
         public ActionResult<TradeHistory> Get(int id)
         {
-            return Ok(this.cryptoService.Get(id, this.GetUserId()));
+            return Ok(cryptoService.Get(id, GetUserId()));
         }
 
         [HttpGet("tickers")]
-        public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(this.cryptoTickerRepository.FindAll());
+        public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(cryptoTickerRepository.FindAll());
 
         [HttpPost("brokerReport")]
         public async Task<IActionResult> Post(IFormFile file)
@@ -92,7 +92,7 @@ namespace BudgetManager.Api.Controllers
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);
             byte[] fileBytes = ms.ToArray();
-            this.cryptoService.StoreReportToProcess(fileBytes, this.GetUserId());
+            cryptoService.StoreReportToProcess(fileBytes, GetUserId());
 
             return Ok();
         }

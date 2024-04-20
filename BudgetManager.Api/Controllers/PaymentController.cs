@@ -25,47 +25,47 @@ namespace BudgetManager.Api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PaymentModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
-            if (bankAccountId.HasValue && !this.bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, this.GetUserId()))
+            if (bankAccountId.HasValue && !bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            IEnumerable<PaymentModel> payments = this.paymentService.GetPaymentsData(fromDate, toDate, this.GetUserId(), bankAccountId);
+            IEnumerable<PaymentModel> payments = paymentService.GetPaymentsData(fromDate, toDate, GetUserId(), bankAccountId);
             return Ok(payments);
         }
 
         [HttpGet("types")]
-        public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes() => this.paymentService.GetPaymentTypes();
+        public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes() => paymentService.GetPaymentTypes();
 
         [HttpGet("categories")]
-        public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => this.paymentService.GetPaymentCategories();
+        public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => paymentService.GetPaymentCategories();
 
         [HttpPost]
         public IActionResult AddPayment([FromBody] PaymentModel paymentViewModel)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, this.GetUserId()))
+            if (!bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            int paymentId = this.paymentService.Add(paymentViewModel);
-            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
+            int paymentId = paymentService.Add(paymentViewModel);
+            tagService.UpdateAllTags(paymentViewModel.Tags, paymentId);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult UpdatePayment([FromBody] PaymentModel paymentViewModel)
         {
-            if (!this.bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, this.GetUserId()))
+            if (!bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.Update(paymentViewModel);
-            this.tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
+            paymentService.Update(paymentViewModel);
+            tagService.UpdateAllTags(paymentViewModel.Tags, paymentViewModel.Id.Value);
             return Ok();
         }
 
         [HttpGet("detail")]
         public ActionResult<PaymentModel> GetPayment(int id)
         {
-            PaymentModel payment = this.paymentService.Get(id);
+            PaymentModel payment = paymentService.Get(id);
 
-            if (!this.bankAccountService.UserHasRightToBankAccount(payment.BankAccountId.Value, this.GetUserId()))
+            if (!bankAccountService.UserHasRightToBankAccount(payment.BankAccountId.Value, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             return Ok(payment);
@@ -74,20 +74,20 @@ namespace BudgetManager.Api.Controllers
         [HttpPost("clone/{id}")]
         public IActionResult ClonePayment(int id)
         {
-            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
+            if (!paymentService.UserHasRightToPayment(id, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.ClonePayment(id);
+            paymentService.ClonePayment(id);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult DeletePayment(int id)
         {
-            if (!this.paymentService.UserHasRightToPayment(id, this.GetUserId()))
+            if (!paymentService.UserHasRightToPayment(id, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.paymentService.Delete(id);
+            paymentService.Delete(id);
             return Ok();
         }
 
@@ -95,10 +95,10 @@ namespace BudgetManager.Api.Controllers
         [Route("{paymentId}/tag/{tagId}")]
         public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
         {
-            if (this.paymentService.UserHasRightToPayment(paymentId, this.GetUserId()))
-                return this.StatusCode(StatusCodes.Status401Unauthorized);
+            if (paymentService.UserHasRightToPayment(paymentId, GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.tagService.RemoveTagFromPayment(tagId, paymentId);
+            tagService.RemoveTagFromPayment(tagId, paymentId);
             return Ok();
         }
     }

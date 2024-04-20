@@ -13,6 +13,6 @@ namespace BudgetManager.Api.Controllers
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        protected int GetUserId() => this.httpContextAccessor.HttpContext.GetUserId();
+        protected int GetUserId() => httpContextAccessor.HttpContext.GetUserId();
     }
 }

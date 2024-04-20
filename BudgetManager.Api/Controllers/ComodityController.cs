@@ -26,47 +26,47 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("all")]
         public ActionResult<IEnumerable<ComodityTradeHistoryModel>> Get()
         {
-            return Ok(this.comodityService.GetByUser(this.GetUserId()));
+            return Ok(comodityService.GetByUser(GetUserId()));
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
-            tradeHistory.UserIdentityId = this.GetUserId();
-            this.comodityService.Add(tradeHistory);
+            tradeHistory.UserIdentityId = GetUserId();
+            comodityService.Add(tradeHistory);
             return Ok();
         }
 
         [HttpPut]
         public IActionResult Update([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
-            tradeHistory.UserIdentityId = this.GetUserId();
-            this.comodityService.Update(tradeHistory);
+            tradeHistory.UserIdentityId = GetUserId();
+            comodityService.Update(tradeHistory);
             return Ok();
         }
 
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
-            if (!this.comodityService.UserHasRightToCryptoTrade(id, this.GetUserId()))
+            if (!comodityService.UserHasRightToCryptoTrade(id, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            this.comodityService.Delete(id);
+            comodityService.Delete(id);
             return Ok();
         }
 
         [HttpGet("comodityType/all")]
         public ActionResult<IEnumerable<ComodityTypeModel>> GetComodityTypes() =>
-            this.Ok(this.comodityService.GetComodityTypes());
+            Ok(comodityService.GetComodityTypes());
 
         [HttpGet("comodityUnit/all")]
         public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
-            this.Ok(this.comodityService.GetComodityUnits());
+            Ok(comodityService.GetComodityUnits());
 
         [HttpGet("gold/actualPrice")]
         public async Task<ActionResult<double>> GetCurrentGoldPriceForOunce()
         {
-            double exhangeRate = await this.comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
+            double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
             return Ok(exhangeRate);
         }
 
@@ -77,13 +77,13 @@ namespace BudgetManager.Api.Controllers
 
             if (string.Compare(currencyCode, GoldPriceCurrency, true) != 0)
             {
-                currencyExchangeRate = await this.forexService.GetCurrentExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
+                currencyExchangeRate = await forexService.GetCurrentExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
 
                 if (currencyExchangeRate == 0)
                     throw new ArgumentException("Currency code is not valid");
             }
 
-            double exhangeRate = await this.comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
+            double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
             return Ok(exhangeRate * currencyExchangeRate);
         }
     }

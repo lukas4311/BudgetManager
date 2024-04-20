@@ -34,19 +34,19 @@ namespace BudgetManager.Api.Middlewares
 
             if (token == null)
             {
-                await this.SetUnauthorizedResponse(context);
+                await SetUnauthorizedResponse(context);
                 return;
             }
 
-            bool tokenIsValid = await this.ValidateToken(token);
+            bool tokenIsValid = await ValidateToken(token);
 
             if (!tokenIsValid)
             {
-                await this.SetUnauthorizedResponse(context);
+                await SetUnauthorizedResponse(context);
                 return;
             }
 
-            await this.AttachUserToContext(context, token);
+            await AttachUserToContext(context, token);
             await next(context);
         }
 
@@ -61,7 +61,7 @@ namespace BudgetManager.Api.Middlewares
             HttpClient client = _httpClientFactory.CreateClient();
             string bodyData = JsonSerializer.Serialize(new { Token = token });
             StringContent data = new StringContent(bodyData, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(this.appSettings.ValidateUrl, data);
+            HttpResponseMessage response = await client.PostAsync(appSettings.ValidateUrl, data);
             bool isValid = false;
 
             if (response.IsSuccessStatusCode)
@@ -78,9 +78,9 @@ namespace BudgetManager.Api.Middlewares
             try
             {
                 HttpClient client = _httpClientFactory.CreateClient();
-                string responseUserData = await client.GetStringAsync($"{this.appSettings.DataUrl}?token={token}");
+                string responseUserData = await client.GetStringAsync($"{appSettings.DataUrl}?token={token}");
                 UserDataModel user = JsonSerializer.Deserialize<UserDataModel>(responseUserData);
-                this.SignIn(context, user.userName, user.userId);
+                SignIn(context, user.userName, user.userId);
             }
             catch (Exception)
             {
