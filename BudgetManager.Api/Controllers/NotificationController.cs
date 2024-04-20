@@ -27,7 +27,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNotificaiton([FromBody] NotificationModel tagModel)
+        public IActionResult AddNotification([FromBody] NotificationModel tagModel)
         {
             if (notificationService.UserHasRight(tagModel.UserId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
