@@ -13,7 +13,8 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly INotificationService notificationService;
 
-        public NotificationController(IHttpContextAccessor httpContextAccessor, INotificationService notificationService) : base(httpContextAccessor)
+        public NotificationController(IHttpContextAccessor httpContextAccessor,
+            INotificationService notificationService) : base(httpContextAccessor)
         {
             this.notificationService = notificationService;
         }
@@ -23,6 +24,27 @@ namespace BudgetManager.Api.Controllers
         {
             IEnumerable<NotificationModel> tags = notificationService.GetUserNotifications(GetUserId());
             return Ok(tags);
+        }
+
+        [HttpPost]
+        public IActionResult AddNotificaiton([FromBody] NotificationModel tagModel)
+        {
+            if (notificationService.UserHasRight(tagModel.UserId, GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            notificationService.Add(tagModel);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/{notificationId}/markAsDisplayed")]
+        public IActionResult MarkAsDisplayed(int notificationId)
+        {
+            if (notificationService.UserHasRight(notificationId, GetUserId()))
+                return StatusCode(StatusCodes.Status401Unauthorized);
+
+            // TODO: add method to mark as displayed
+            return Ok();
         }
     }
 }

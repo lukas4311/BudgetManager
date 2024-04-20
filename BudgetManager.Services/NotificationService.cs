@@ -22,5 +22,7 @@ namespace BudgetManager.Services
             return repository.FindByCondition(u => u.Id == userId)
                 .Select(t => mapper.Map<NotificationModel>(t));
         }
+        
+        public bool UserHasRight(int notificationId, int userId) => this.repository.FindByCondition(a => a.Id == notificationId && a.UserId == userId).Count() == 1;
     }
 }
