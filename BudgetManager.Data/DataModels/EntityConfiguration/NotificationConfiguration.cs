@@ -7,7 +7,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
     public void Configure(EntityTypeBuilder<Notification> builder)
     {
-        builder.Property(n => n.UserId).HasColumnName("UserId").IsRequired();
+        builder.Property(n => n.UserIdentityId).HasColumnName("UserIdentityId").IsRequired();
         builder.Property(n => n.Heading).HasColumnName("Heading").IsRequired();
         builder.Property(n => n.Content).HasColumnName("Content").IsRequired();
         builder.Property(n => n.IsDisplayed).HasColumnName("IsDisplayed").IsRequired().HasDefaultValue(false);
@@ -16,9 +16,9 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         // You might want to configure further properties here
 
         // Configure the relationship with UserIdentity
-        builder.HasOne(n => n.User)
+        builder.HasOne(n => n.UserIdentity)
             .WithMany(u => u.Notifications)
-            .HasForeignKey(n => n.UserId)
+            .HasForeignKey(n => n.UserIdentityId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

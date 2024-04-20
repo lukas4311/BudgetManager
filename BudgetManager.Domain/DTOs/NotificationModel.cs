@@ -6,7 +6,7 @@ public class NotificationModel : IDtoModel
 {
     public int? Id { get; set; }
 
-    public int UserId { get; set; }
+    public int UserIdentityId { get; set; }
 
     public string Heading { get; set; }
 

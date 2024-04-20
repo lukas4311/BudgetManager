@@ -29,7 +29,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPost]
         public IActionResult AddNotification([FromBody] NotificationModel tagModel)
         {
-            if (notificationService.UserHasRight(tagModel.UserId, GetUserId()))
+            if (notificationService.UserHasRight(tagModel.UserIdentityId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             notificationService.Add(tagModel);

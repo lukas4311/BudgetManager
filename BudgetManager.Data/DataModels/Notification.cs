@@ -6,7 +6,7 @@ public class Notification : IDataModel
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public int UserIdentityId { get; set; }
 
     public string Heading { get; set; }
 
@@ -18,5 +18,5 @@ public class Notification : IDataModel
 
     public string AttachmentUrl { get; set; }
 
-    public UserIdentity User { get; set; }
+    public UserIdentity UserIdentity { get; set; }
 }
