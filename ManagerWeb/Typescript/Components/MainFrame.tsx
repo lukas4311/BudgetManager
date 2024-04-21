@@ -17,6 +17,7 @@ const Message = ({ message, heading }) => {
 
 const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: string }) => {
     const [notifications, setNotifications] = useState<JSX.Element[]>([]);
+    const [notDisplayedNotificationsCount, setnotDisplayedNotificationsCount] = useState<number>(0);
     const history = useHistory();
 
     useEffect(() => {
@@ -25,6 +26,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                 const apiFactory = new ApiClientFactory(history);
                 const notificationApi = await apiFactory.getClient(NotificationApi);
                 const notifications = await notificationApi.notificationGet();
+                setnotDisplayedNotificationsCount(notifications?.filter(n => n.isDisplayed)?.length ?? 0);
                 const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content}></Message>))
                 setNotifications(notifiMessages);
             } catch (error) {
@@ -63,7 +65,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                 </div>
                 <div className="flex flex-col pl-16 w-1/3">
                     <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profil" messages={[]} />
-                    <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={notifications.length} heading="Notifications" messages={notifications} />
+                    <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={notDisplayedNotificationsCount} heading="Notifications" messages={notifications} />
                 </div>
             </div>
             <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
