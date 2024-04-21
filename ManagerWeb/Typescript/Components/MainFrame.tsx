@@ -4,6 +4,22 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import { Button, MenuList, MenuItem, Badge } from "@mui/material";
 import Menu from "./Menu";
 
+const loremMsg = "lore ajhsdklfjlka sjdflkajsdlk fjalksdjf lka jdslfk jasdlkfj lkasdjf lkajdflk jasdkl fjlkdj flkajdsl kfjaksd jflkasdjflk jdlkfj dslkjf lkadjf kljasdlk fjasdlkfj aklsdjf lkajdf lkjasdlkfjalk sdjflkj dslkjadlk fjaslkd f"
+
+const Message = ({ message, heading }) => {
+    return (
+        <div className="border border-vermilion bg-prussianBlue px-4 py-2 flex flex-col rounded-md">
+            <h2 className="text-lg text-white">{heading}</h2>
+            <p className="text-sm text-white truncate-2l">{message}</p>
+        </div>
+    );
+}
+
+const messages = [
+    <Message heading="Message 1" message={loremMsg}></Message>,
+    <Message heading="Message 2" message={loremMsg}></Message>
+];
+
 const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: string }) => {
     return (
         <div>
@@ -32,17 +48,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     </svg>
                 </div>
                 <div className="flex flex-col pl-16 w-1/3">
-                    <div className="flex flex-row ">
-                        <div className="circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20">
-                            <span>
-                                <Person2OutlinedIcon className="fill-black" />
-                            </span>
-                        </div>
-                        <div className="h-10 flex items-center -ml-5 border border-solid border-white rounded-r-full z-10">
-                            <span className="ml-10 pr-6">lukas4311</span>
-                        </div>
-                    </div>
-                    <NotificationMenu />
+                    <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profile" messages={messages} />
+                    <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={2} heading="Notifications" messages={messages} />
                 </div>
             </div>
             <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
@@ -55,54 +62,42 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
 
 export { MainFrame }
 
-const loremMsg = "lore ajhsdklfjlka sjdflkajsdlk fjalksdjf lka jdslfk jasdlkfj lkasdjf lkajdflk jasdkl fjlkdj flkajdsl kfjaksd jflkasdjflk jdlkfj dslkjf lkadjf kljasdlk fjasdlkfj aklsdjf lkajdf lkjasdlkfjalk sdjflkj dslkjadlk fjaslkd f"
+class IconMenuProps {
+    Icon: React.ComponentType<any>;
+    heading: string;
+    countBadge: number;
+    messages: Array<JSX.Element>
+}
 
-function NotificationMenu() {
+function IconMenu({ Icon, heading, countBadge, messages }: IconMenuProps) {
     const [showMenu, setShowMenu] = useState(false);
-    const notificationCount = 5; // Replace with your actual notification count
 
     return (
         <div className="relative">
-            {/* Button */}
             <div className="flex w-1/3 relative">
                 <div
                     className="w-full mt-4 cursor-pointer sliding-menu-parent"
-                    onClick={() => setShowMenu(!showMenu)}
-                >
+                    onClick={() => setShowMenu(!showMenu)}>
                     <div className={"absolute circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
                         <span>
-                            <NotificationsNoneOutlinedIcon className="fill-black" />
+                            <Icon className="fill-black" />
                         </span>
                     </div>
                     <div className="h-10 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
-                        <span className="ml-16 pr-6">Notifications</span>
+                        <span className="ml-16 pr-6">{heading}</span>
                     </div>
                 </div>
 
-                {/* Badge */}
-                {notificationCount > 0 && (
+                {countBadge != undefined && countBadge > 0 && (
                     <div className="absolute top-6 left-0 transform -translate-x-1/2 -translate-y-1/2 z-30">
-                        <Badge badgeContent={notificationCount} color="error" />
+                        <Badge badgeContent={countBadge} color="error" />
                     </div>
                 )}
             </div>
 
-            {/* Menu */}
-            <div className={`text-black absolute top-14 mt-4 bg-white shadow-md rounded-md p-2 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0'}`} >
-                <Message heading="Message 1" message={loremMsg}></Message>
-                <Message heading="Message 2" message={loremMsg}></Message>
+            <div className={`text-black absolute top-14 mt-4 bg-white z-40 shadow-md rounded-md p-2 transition-all duration-300 ease-in-out w-2/3 ${showMenu ? 'opacity-100 h-auto' : 'opacity-0 h-0 hidden'}`} >
+                {messages.map(e => (e))}
             </div>
         </div>
     );
 }
-
-const Message = ({ message, heading }) => {
-    return (
-        <div className="border border-vermilion bg-prussianBlue px-4 py-2 flex flex-col rounded-md">
-            <h2 className="text-lg text-white">{heading}</h2>
-            <p className="text-sm text-white truncate-2l">{message}</p>
-        </div>
-    );
-}
-
-export default NotificationMenu;
