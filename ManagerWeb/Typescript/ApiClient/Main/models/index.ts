@@ -20,6 +20,8 @@ export * from './CryptoTradeHistory';
 export * from './CurrencySymbol';
 export * from './ECurrencySymbol';
 export * from './InterestRate';
+export * from './Notification';
+export * from './NotificationModel';
 export * from './OtherInvestment';
 export * from './OtherInvestmentBalaceHistory';
 export * from './OtherInvestmentBalaceHistoryModel';
