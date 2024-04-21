@@ -62,7 +62,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     </svg>
                 </div>
                 <div className="flex flex-col pl-16 w-1/3">
-                    <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profile" messages={[]} />
+                    <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profil" messages={[]} />
                     <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={notifications.length} heading="Notifications" messages={notifications} />
                 </div>
             </div>
