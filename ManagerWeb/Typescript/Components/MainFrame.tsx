@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { Badge } from "@mui/material";
-
-const loremMsg = "lore ajhsdklfjlka sjdflkajsdlk fjalksdjf lka jdslfk jasdlkfj lkasdjf lkajdflk jasdkl fjlkdj flkajdsl kfjaksd jflkasdjflk jdlkfj dslkjf lkadjf kljasdlk fjasdlkfj aklsdjf lkajdf lkjasdlkfjalk sdjflkj dslkjadlk fjaslkd f"
+import ApiClientFactory from "../Utils/ApiClientFactory";
+import { useHistory } from "react-router-dom";
+import { NotificationApi } from "../ApiClient/Main/apis";
 
 const Message = ({ message, heading }) => {
     return (
@@ -14,12 +15,26 @@ const Message = ({ message, heading }) => {
     );
 }
 
-const messages = [
-    <Message heading="Message 1" message={loremMsg}></Message>,
-    <Message heading="Message 2" message={loremMsg}></Message>
-];
-
 const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: string }) => {
+    const [notifications, setNotifications] = useState<JSX.Element[]>([]);
+    const history = useHistory();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiFactory = new ApiClientFactory(history);
+                const notificationApi = await apiFactory.getClient(NotificationApi);
+                const notifications = await notificationApi.notificationGet();
+                const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content}></Message>))
+                setNotifications(notifiMessages);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <div>
             <div className="flex flex-row">
@@ -47,8 +62,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     </svg>
                 </div>
                 <div className="flex flex-col pl-16 w-1/3">
-                    <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profile" messages={messages} />
-                    <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={2} heading="Notifications" messages={messages} />
+                    <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profile" messages={[]} />
+                    <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={notifications.length} heading="Notifications" messages={notifications} />
                 </div>
             </div>
             <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
