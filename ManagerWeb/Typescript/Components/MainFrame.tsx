@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { Button, MenuList, MenuItem, Badge } from "@mui/material";
-import Menu from "./Menu";
+import { Badge } from "@mui/material";
 
 const loremMsg = "lore ajhsdklfjlka sjdflkajsdlk fjalksdjf lka jdslfk jasdlkfj lkasdjf lkajdflk jasdkl fjlkdj flkajdsl kfjaksd jflkasdjflk jdlkfj dslkjf lkadjf kljasdlk fjasdlkfj aklsdjf lkajdf lkjasdlkfjalk sdjflkj dslkjadlk fjaslkd f"
 
