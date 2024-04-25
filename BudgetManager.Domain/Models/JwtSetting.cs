@@ -1,4 +1,3 @@
-﻿namespace BudgetManager.Domain.Models
-{
-    public record JwtSetting(string SecretKey, int ExpireMinutes);
-}
+﻿namespace BudgetManager.Domain.Models;
+
+public record JwtSetting(string SecretKey, int ExpireMinutes);

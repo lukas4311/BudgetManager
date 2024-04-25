@@ -1,9 +1,14 @@
 ﻿using BudgetManager.Data.DataModels;
 
-namespace BudgetManager.Domain.DTOs
+namespace BudgetManager.Domain.DTOs;
+
+/// <summary>
+/// Represents an interface for user-specific data transfer objects (DTOs).
+/// </summary>
+public interface IUserDtoModel : IDtoModel
 {
-    public interface IUserDtoModel : IDtoModel
-    {
-        public int UserIdentityId { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the user identity ID associated with this DTO.
+    /// </summary>
+    public int UserIdentityId { get; set; }
 }

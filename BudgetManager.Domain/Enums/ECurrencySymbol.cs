@@ -1,11 +1,10 @@
-﻿namespace BudgetManager.Domain.Enums
+﻿namespace BudgetManager.Domain.Enums;
+
+public enum ECurrencySymbol
 {
-    public enum ECurrencySymbol
-    {
-        USD,
-        CZK,
-        GBP,
-        EUR,
-        JPY
-    }
+    USD,
+    CZK,
+    GBP,
+    EUR,
+    JPY
 }

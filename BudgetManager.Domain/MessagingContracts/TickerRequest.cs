@@ -1,7 +1,6 @@
-﻿namespace BudgetManager.Domain.MessagingContracts
+﻿namespace BudgetManager.Domain.MessagingContracts;
+
+public class TickerRequest
 {
-    public class TickerRequest
-    {
-        public string Ticker { get; set; }
-    }
+    public string Ticker { get; set; }
 }

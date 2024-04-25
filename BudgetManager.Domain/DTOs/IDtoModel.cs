@@ -1,7 +1,12 @@
-﻿namespace BudgetManager.Domain.DTOs
+﻿namespace BudgetManager.Domain.DTOs;
+
+/// <summary>
+/// Represents an interface for data transfer objects (DTOs).
+/// </summary>
+public interface IDtoModel
 {
-    public interface IDtoModel
-    {
-        public int? Id { get; set; }        
-    }
+    /// <summary>
+    /// Gets or sets the unique identifier for the DTO (nullable).
+    /// </summary>
+    public int? Id { get; set; }
 }
