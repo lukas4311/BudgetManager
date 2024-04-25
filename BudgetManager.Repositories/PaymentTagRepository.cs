@@ -3,6 +3,7 @@ using BudgetManager.Data.DataModels;
 
 namespace BudgetManager.Repository
 {
+    /// <inheritdoc cref="IPaymentTagRepository" />
     public class PaymentTagRepository : Repository<PaymentTag>, IPaymentTagRepository
     {
         public PaymentTagRepository(DataContext repositoryContext) : base(repositoryContext)

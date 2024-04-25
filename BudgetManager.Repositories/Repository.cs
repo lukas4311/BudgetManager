@@ -7,24 +7,35 @@ using System.Linq.Expressions;
 
 namespace BudgetManager.Repository
 {
+    /// <inheritdoc cref="IRepository{T}"/>>
     public abstract class Repository<T> : IRepository<T> where T : class, IDataModel
     {
+        /// <summary>
+        /// EF context
+        /// </summary>
         protected DataContext RepositoryContext { get; set; }
 
-        public Repository(DataContext repositoryContext) => this.RepositoryContext = repositoryContext;
+        public Repository(DataContext repositoryContext) => RepositoryContext = repositoryContext;
 
+        /// <inhertidoc/>
         public T Get(int id) => RepositoryContext.Set<T>().SingleOrDefault(e => e.Id == id);
 
-        public IQueryable<T> FindAll() => this.RepositoryContext.Set<T>().AsNoTracking();
+        /// <inhertidoc/>
+        public IQueryable<T> FindAll() => RepositoryContext.Set<T>().AsNoTracking();
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) => this.RepositoryContext.Set<T>().Where(expression).AsNoTracking();
+        /// <inhertidoc/>
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) => RepositoryContext.Set<T>().Where(expression).AsNoTracking();
 
-        public void Create(T entity) => this.RepositoryContext.Set<T>().Add(entity);
+        /// <inhertidoc/>
+        public void Create(T entity) => RepositoryContext.Set<T>().Add(entity);
 
-        public void Update(T entity) => this.RepositoryContext.Set<T>().Update(entity);
+        /// <inhertidoc/>
+        public void Update(T entity) => RepositoryContext.Set<T>().Update(entity);
 
-        public void Delete(T entity) => this.RepositoryContext.Set<T>().Remove(entity);
+        /// <inhertidoc/>
+        public void Delete(T entity) => RepositoryContext.Set<T>().Remove(entity);
 
-        public void Save() => this.RepositoryContext.SaveChanges();
+        /// <inhertidoc/>
+        public void Save() => RepositoryContext.SaveChanges();
     }
 }

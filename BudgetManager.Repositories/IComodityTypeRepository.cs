@@ -2,6 +2,9 @@
 
 namespace BudgetManager.Repository
 {
+    /// <summary>
+    /// Repository for type of comodity
+    /// </summary>
     public interface IComodityTypeRepository : IRepository<ComodityType>
     { }
 }
