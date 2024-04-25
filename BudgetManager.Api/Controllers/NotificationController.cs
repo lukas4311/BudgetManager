@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -36,14 +35,14 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("/{notificationId}/markAsDisplayed")]
         public IActionResult MarkAsDisplayed(int notificationId)
         {
             if (notificationService.UserHasRight(notificationId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
-            // TODO: add method to mark as displayed
+            notificationService.MarkAsDisplayed(notificationId);
             return Ok();
         }
     }

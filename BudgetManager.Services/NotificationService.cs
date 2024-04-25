@@ -10,11 +10,8 @@ namespace BudgetManager.Services
 {
     public class NotificationService : BaseService<NotificationModel, Notification, INotificationRepository>, INotificationService
     {
-        private readonly INotificationRepository repository;
-
         public NotificationService(INotificationRepository repository, IMapper mapper) : base(repository, mapper)
         {
-            this.repository = repository;
         }
         
         public IEnumerable<NotificationModel> GetUserNotifications(int userId)
@@ -22,7 +19,14 @@ namespace BudgetManager.Services
             return repository.FindByCondition(u => u.Id == userId)
                 .Select(t => mapper.Map<NotificationModel>(t));
         }
-        
+
+        public void MarkAsDisplayed(int notificationId)
+        {
+            Notification notification = repository.Get(notificationId);
+            notification.IsDisplayed = true;
+            repository.Save();
+        }
+
         public bool UserHasRight(int notificationId, int userId) => this.repository.FindByCondition(a => a.Id == notificationId && a.UserIdentityId == userId).Count() == 1;
     }
 }

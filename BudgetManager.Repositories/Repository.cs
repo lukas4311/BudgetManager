@@ -13,6 +13,8 @@ namespace BudgetManager.Repository
 
         public Repository(DataContext repositoryContext) => this.RepositoryContext = repositoryContext;
 
+        public T Get(int id) => RepositoryContext.Set<T>().SingleOrDefault(e => e.Id == id);
+
         public IQueryable<T> FindAll() => this.RepositoryContext.Set<T>().AsNoTracking();
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) => this.RepositoryContext.Set<T>().Where(expression).AsNoTracking();

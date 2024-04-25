@@ -7,6 +7,7 @@ namespace BudgetManager.Services.Contracts
     public interface INotificationService : IBaseService<NotificationModel, Notification>
     {
         IEnumerable<NotificationModel> GetUserNotifications(int userId);
+        void MarkAsDisplayed(int notificationId);
         bool UserHasRight(int notificationId, int userId);
     }
 }

@@ -18,5 +18,6 @@ namespace BudgetManager.Repository
         void Delete(T entity);
 
         void Save();
+        T Get(int id);
     }
 }
