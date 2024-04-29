@@ -417,7 +417,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <CompanyProfile companyProfile={this.state.selectedCompany}></CompanyProfile>
                         </DialogContent>
                     </Dialog>
-                    <Dialog open={this.state.isOpenedTickerRequest != undefined} onClose={this.handleClosetickerRequest} aria-labelledby="" maxWidth="lg" fullWidth={true}>
+                    <Dialog open={this.state.isOpenedTickerRequest} onClose={this.handleClosetickerRequest} aria-labelledby="" maxWidth="lg" fullWidth={true}>
                         <DialogContent className="bg-prussianBlue">
                             <NewTickerForm onSave={this.sendTickerRequest} />
                         </DialogContent>
