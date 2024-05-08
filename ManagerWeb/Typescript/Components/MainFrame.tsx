@@ -6,9 +6,9 @@ import ApiClientFactory from "../Utils/ApiClientFactory";
 import { useHistory } from "react-router-dom";
 import { NotificationApi } from "../ApiClient/Main/apis";
 
-const Message = ({ message, heading, isDisplayed }) => {
+const Message = ({ message, heading, isDisplayed, onClick }) => {
     return (
-        <div className={`border border-vermilion bg-prussianBlue px-6 py-2 mb-2 flex flex-col rounded-md ${isDisplayed ? "" : "shadow-md shadow-vermilion"}`}>
+        <div className={`border border-vermilion bg-prussianBlue px-6 py-2 mb-2 flex flex-col rounded-md ${isDisplayed ? "" : "shadow-md shadow-vermilion"}`} onClick={onClick}>
             <h2 className="text-lg text-white">{heading}</h2>
             <p className="text-sm text-white truncate-2l">{message}</p>
         </div>
@@ -19,15 +19,20 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
     const [notifications, setNotifications] = useState<JSX.Element[]>([]);
     const [notDisplayedNotificationsCount, setnotDisplayedNotificationsCount] = useState<number>(0);
     const history = useHistory();
+    let notificationApi: NotificationApi = undefined;
+
+    const markNotificationAsDiplayed = async (notificationId: number) => {
+        await notificationApi.notificationIdMarkAsDisplayedPost({ notificationId: notificationId });
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const apiFactory = new ApiClientFactory(history);
-                const notificationApi = await apiFactory.getClient(NotificationApi);
+                notificationApi = await apiFactory.getClient(NotificationApi);
                 const notifications = await notificationApi.notificationGet();
                 setnotDisplayedNotificationsCount(notifications?.filter(n => !n.isDisplayed)?.length ?? 0);
-                const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content} isDisplayed={n.isDisplayed}></Message>))
+                const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content} isDisplayed={n.isDisplayed} onClick={_ => markNotificationAsDiplayed(n.id)}></Message>))
                 setNotifications(notifiMessages);
             } catch (error) {
                 console.error('Error fetching data:', error);
