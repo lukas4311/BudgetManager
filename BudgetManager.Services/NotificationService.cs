@@ -16,7 +16,7 @@ namespace BudgetManager.Services
         
         public IEnumerable<NotificationModel> GetUserNotifications(int userId)
         {
-            return repository.FindByCondition(u => u.Id == userId)
+            return repository.FindByCondition(u => u.UserIdentityId == userId)
                 .Select(t => mapper.Map<NotificationModel>(t));
         }
 

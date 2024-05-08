@@ -6,9 +6,9 @@ import ApiClientFactory from "../Utils/ApiClientFactory";
 import { useHistory } from "react-router-dom";
 import { NotificationApi } from "../ApiClient/Main/apis";
 
-const Message = ({ message, heading }) => {
+const Message = ({ message, heading, isDisplayed }) => {
     return (
-        <div className="border border-vermilion bg-prussianBlue px-4 py-2 flex flex-col rounded-md">
+        <div className={`border border-vermilion bg-prussianBlue px-6 py-2 mb-2 flex flex-col rounded-md ${isDisplayed ? "" : "shadow-md shadow-vermilion"}`}>
             <h2 className="text-lg text-white">{heading}</h2>
             <p className="text-sm text-white truncate-2l">{message}</p>
         </div>
@@ -26,8 +26,8 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                 const apiFactory = new ApiClientFactory(history);
                 const notificationApi = await apiFactory.getClient(NotificationApi);
                 const notifications = await notificationApi.notificationGet();
-                setnotDisplayedNotificationsCount(notifications?.filter(n => n.isDisplayed)?.length ?? 0);
-                const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content}></Message>))
+                setnotDisplayedNotificationsCount(notifications?.filter(n => !n.isDisplayed)?.length ?? 0);
+                const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content} isDisplayed={n.isDisplayed}></Message>))
                 setNotifications(notifiMessages);
             } catch (error) {
                 console.error('Error fetching data:', error);
