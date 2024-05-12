@@ -11,10 +11,12 @@ using BudgetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Core.SystemWrappers;
+using BudgetManager.WebCore;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureHostWithSerilogToElk();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
