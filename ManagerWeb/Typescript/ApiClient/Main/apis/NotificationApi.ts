@@ -20,7 +20,7 @@ import {
     NotificationModelToJSON,
 } from '../models';
 
-export interface NotificationIdMarkAsDisplayedPostRequest {
+export interface NotificationIdMarkAsDisplayedPutRequest {
     notificationId: number;
 }
 
@@ -54,11 +54,11 @@ export interface NotificationApiInterface {
      * @throws {RequiredError}
      * @memberof NotificationApiInterface
      */
-    notificationIdMarkAsDisplayedPostRaw(requestParameters: NotificationIdMarkAsDisplayedPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    notificationIdMarkAsDisplayedPutRaw(requestParameters: NotificationIdMarkAsDisplayedPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    notificationIdMarkAsDisplayedPost(requestParameters: NotificationIdMarkAsDisplayedPostRequest, initOverrides?: RequestInit): Promise<void>;
+    notificationIdMarkAsDisplayedPut(requestParameters: NotificationIdMarkAsDisplayedPutRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -116,9 +116,9 @@ export class NotificationApi extends runtime.BaseAPI implements NotificationApiI
 
     /**
      */
-    async notificationIdMarkAsDisplayedPostRaw(requestParameters: NotificationIdMarkAsDisplayedPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async notificationIdMarkAsDisplayedPutRaw(requestParameters: NotificationIdMarkAsDisplayedPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.notificationId === null || requestParameters.notificationId === undefined) {
-            throw new runtime.RequiredError('notificationId','Required parameter requestParameters.notificationId was null or undefined when calling notificationIdMarkAsDisplayedPost.');
+            throw new runtime.RequiredError('notificationId','Required parameter requestParameters.notificationId was null or undefined when calling notificationIdMarkAsDisplayedPut.');
         }
 
         const queryParameters: any = {};
@@ -131,7 +131,7 @@ export class NotificationApi extends runtime.BaseAPI implements NotificationApiI
 
         const response = await this.request({
             path: `/{notificationId}/markAsDisplayed`.replace(`{${"notificationId"}}`, this.processPathParam(requestParameters.notificationId)),
-            method: 'POST',
+            method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
@@ -141,8 +141,8 @@ export class NotificationApi extends runtime.BaseAPI implements NotificationApiI
 
     /**
      */
-    async notificationIdMarkAsDisplayedPost(requestParameters: NotificationIdMarkAsDisplayedPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.notificationIdMarkAsDisplayedPostRaw(requestParameters, initOverrides);
+    async notificationIdMarkAsDisplayedPut(requestParameters: NotificationIdMarkAsDisplayedPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.notificationIdMarkAsDisplayedPutRaw(requestParameters, initOverrides);
     }
 
     /**

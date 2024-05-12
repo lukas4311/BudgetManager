@@ -22,7 +22,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
     let notificationApi: NotificationApi = undefined;
 
     const markNotificationAsDiplayed = async (notificationId: number) => {
-        await notificationApi.notificationIdMarkAsDisplayedPost({ notificationId: notificationId });
+        await notificationApi.notificationIdMarkAsDisplayedPut({ notificationId: notificationId });
     }
 
     useEffect(() => {

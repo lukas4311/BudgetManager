@@ -28,7 +28,7 @@ namespace BudgetManager.Api.Controllers
         [HttpPost]
         public IActionResult AddNotification([FromBody] NotificationModel tagModel)
         {
-            if (notificationService.UserHasRight(tagModel.UserIdentityId, GetUserId()))
+            if (!notificationService.UserHasRight(tagModel.UserIdentityId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             notificationService.Add(tagModel);
@@ -39,7 +39,7 @@ namespace BudgetManager.Api.Controllers
         [Route("/{notificationId}/markAsDisplayed")]
         public IActionResult MarkAsDisplayed(int notificationId)
         {
-            if (notificationService.UserHasRight(notificationId, GetUserId()))
+            if (!notificationService.UserHasRight(notificationId, GetUserId()))
                 return StatusCode(StatusCodes.Status401Unauthorized);
 
             notificationService.MarkAsDisplayed(notificationId);
