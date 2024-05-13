@@ -17,7 +17,7 @@ class PaymentFormProps {
     history: H.History<any>;
 }
 
-export default class PaymentForm extends React.Component<PaymentFormProps, IPaymentModel>{
+export default class PaymentForm extends React.Component<PaymentFormProps, IPaymentModel> {
     private requiredMessage: string = "Zadejte hodnotu.";
     private paymentService: any;
 
@@ -140,9 +140,9 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                             })}
                         </div>
                     </div>
-                    <div className="flex mt-4">
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6 w-2/3">
+                    <div className='grid grid-cols-2 gap-x-10 gap-y-4 w-10/12 mx-auto mt-6'>
+                        <div className="flex">
+                            <div className="w-full">
                                 <FormControl className="w-full">
                                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
                                     <Select
@@ -162,41 +162,31 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                                 </FormControl>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex mt-4">
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6 w-2/3">
+                        <div className="amount row-span-3">
+                            <div className="h-full place-self-center">
+                                <TextField label="Amount" type="text" size='small' name="amount" className="w-full h-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} inputProps={{ style: { fontSize: 40 } }} />
+                            </div>
+                        </div>
+                        <div className="">
+                            <div className="">
                                 <TextField label="Name" type="text" size='small' name="name" className="w-full" onChange={(e) => this.handleChange(e, "name", true)} value={this.state["name"]} />
                             </div>
                         </div>
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Amount" type="text" size='small' name="amount" className="w-full" onChange={(e) => this.handleChange(e, "amount", true)} value={this.state["amount"]} />
+                        <div className="">
+                            <div className="">
+                                <div className="">
+                                    <TextField label="Payment date" type="date" size='small' name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
+                                        InputLabelProps={{ shrink: true }}
+                                    />
+                                </div>
+                                {this.generateErrorMessageIfError("date")}
                             </div>
                         </div>
-                    </div>
-                    <div className="flex mt-4">
-                        <div className="w-1/2">
-                            <div className="relative inline-block float-left ml-6 w-2/3">
-                                <TextField label="Payment date" type="date" size='small' name="date" className="w-full" value={this.state.date} onChange={(e) => this.handleChange(e, "date", true)}
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </div>
-                            {this.generateErrorMessageIfError("date")}
+                        <div className="relative inline-block col-span-2">
+                            <TextField label="Description" type="text" size='small' name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
                         </div>
-                    </div>
-                    <div className="flex my-4">
-                        <div className="w-full">
-                            <div className="relative inline-block w-4/5 float-left ml-6">
-                                <TextField label="Description" type="text" size='small' name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex">
-                        <div className="w-full">
-                            <div className="relative inline-block float-left ml-6 mb-6">
-                                <button type="submit" disabled={this.state.disabledConfirm} className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Potvrdit</button>
-                            </div>
+                        <div className="relative inline-block mb-6 col-span-2">
+                            <button type="submit" disabled={this.state.disabledConfirm} className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Add payment</button>
                         </div>
                     </div>
                 </form>

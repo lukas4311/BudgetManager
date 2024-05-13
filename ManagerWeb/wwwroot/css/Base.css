@@ -639,3 +639,14 @@ h1, h2, h3, h4, h5 {
   line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+.h-90p {
+  height: 90%;
+}
+
+.amount .MuiFormControl-root {
+  height: 100% !important;
+}
+.amount .MuiInputBase-root {
+  height: 100% !important;
+}

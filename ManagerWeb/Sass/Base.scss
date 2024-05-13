@@ -209,3 +209,17 @@ $shadowSizeHover: 0px 7px 20px 0px #e03d15;
     line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+
+.h-90p {
+    height: 90%;
+}
+
+.amount {
+    .MuiFormControl-root {
+        height: 100% !important;
+    }
+
+    .MuiInputBase-root {
+        height: 100% !important;
+    }
+}
