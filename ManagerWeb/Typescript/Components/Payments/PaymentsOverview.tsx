@@ -60,7 +60,7 @@ interface DateFilter {
 
 const defaultSelectedBankAccount = -1;
 
-export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewState>{
+export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewState> {
     private defaultBankOption: string = "All";
     private filters: DateFilter[];
     private apiErrorMessage: string = "An error occurred while retrieving the data.";
@@ -264,6 +264,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         return maxValue;
     }
 
+    private deletePayment = (id: number) => {
+        this.paymentService.deletePayment(id);
+    }
+
     public render() {
         let expenses = _.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Expense'), e => e.amount);
         let income = _.sumBy(this.state.payments.filter(a => a.paymentTypeCode == 'Revenue'), e => e.amount);
@@ -337,7 +341,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                     </div>
                                                 </div>
                                                 <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:ml-4 lg:w-6/10 3xl:w-full">
-                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}></BaseList>
+                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit} narrowIcons={true} deleteItemHandler={this.deletePayment}></BaseList>
                                                 </div>
                                             </div>
                                         </>

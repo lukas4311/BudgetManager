@@ -131,6 +131,10 @@ export default class PaymentService implements IPaymentService {
         return paymentGroupedData;
     }
 
+    public async deletePayment(paymentId: number) {
+        await this.paymentApi.paymentsDelete({ id: paymentId });
+    }
+
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {
         if (!payments || payments.length == 0)
             return 0;

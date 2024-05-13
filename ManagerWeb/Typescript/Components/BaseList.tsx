@@ -44,7 +44,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
 
     const showIcons = (): boolean => props.hideIconRowPart == undefined || props.hideIconRowPart == false;
 
-    const getWidthRation = [(props.narrowIcons ? "w-11/12 " : "w-9/12 "),(props.narrowIcons ? "w-1/12 " : "w-3/12 ")]; 
+    const getWidthRation = [(props.narrowIcons ? "w-11/12 " : "w-9/12 "), (props.narrowIcons ? "w-1/12 " : "w-3/12 ")];
 
     return (
         <React.Fragment>

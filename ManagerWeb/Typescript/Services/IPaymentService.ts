@@ -15,4 +15,5 @@ export interface IPaymentService {
     clonePayment(paymentId: number): void;
     getTopPaymentsByAmount(payments: PaymentModel[], count: number, paymentType?: string): PaymentModel[];
     getPaymentsSumGroupedByMonth(dateFrom: Date, dateTo: Date, bankAccountId: number);
+    deletePayment(paymentId: number): Promise<void>;
 }
