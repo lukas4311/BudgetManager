@@ -2,6 +2,8 @@ from datetime import datetime
 import logging
 import json
 
+import pika
+
 from Orm.Notification import Notification
 from Scrapers.StockFinacialAndCompanyData import StockScrapeManager
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
@@ -53,38 +55,36 @@ class StockTickerManager:
 
         self.__send_notification()
 
-
-
-def __send_notification(ticker: str):
-    notify_repo = NotificationRepository()
-    notification = Notification()
-    notification.userIdentityId = 1
-    notification.heading = 'Ticker were added'
-    notification.content = f'Your request for {ticker} was completed.'
-    notification.isDisplayed = False
-    notification.timestamp = datetime.now()
-    notification.attachmentUrl = None
-    notify_repo.insert_stock_trade()
-
 def receive_new_ticker(ch, method, properties, body):
     print(f" [x] Received {body}")
     __process_ticker_from_message_queue(body)
 
 def __process_ticker_from_message_queue(msg: str):
     message_object = json.loads(msg)
+    print(message_object)
 
     try:
+        print(message_object['message'])
         ticker = message_object['message']['ticker']
-        stock_ticker_manager = StockTickerManager
+        user_id = message_object['message']['userId']
+        stock_ticker_manager = StockTickerManager()
         stock_ticker_manager.store_new_ticker_info(ticker)
-    except:
-        print('Error while parsing ticker from message')
+        __send_notification(ticker, user_id)
+    except Exception as e:
+        logging.info('Error while saving data for new ticker: ' + ticker)
+        logging.error(e)
 
 
-stockTickerManager = StockTickerManager()
-stockTickerManager.store_new_ticker_info("PLTR")
-
-exit()
+def __send_notification(ticker: str, user_id: int):
+    notify_repo = NotificationRepository()
+    notification = Notification()
+    notification.userIdentityId = user_id
+    notification.heading = 'Ticker were added'
+    notification.content = f'Your request for {ticker} was completed.'
+    notification.isDisplayed = False
+    notification.timestamp = datetime.now()
+    notification.attachmentUrl = None
+    notify_repo.insert_stock_trade(notification)
 
 queue_name = 'test'
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
