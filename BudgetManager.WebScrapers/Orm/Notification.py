@@ -6,7 +6,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class CurrencySymbol(Base):
+class Notification(Base):
     __tablename__ = 'Notification'
 
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -1,0 +1,30 @@
+from datetime import datetime
+from sqlalchemy import create_engine, insert
+import secret
+from Orm.Notification import Notification
+
+connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
+
+
+class StockRepository:
+    def insert_stock_trade(self, notification: Notification):
+        engine = create_engine(connectionString)
+        insert_command = insert(Notification).values(heading=notification.heading, userIdentityId=1,
+                                                     content=notification.content, isDisplayed=notification.isDisplayed,
+                                                     timestamp=notification.timestamp,
+                                                     attachmentUrl=notification.attachmentUrl)
+
+        with engine.connect() as conn:
+            conn.execute(insert_command)
+            conn.commit()
+
+
+stock_repo = StockRepository()
+notification = Notification()
+notification.userIdentityId = 1
+notification.heading = 'test heading'
+notification.content = 'test content'
+notification.isDisplayed = False
+notification.timestamp = datetime.now()
+notification.attachmentUrl = None
+stock_repo.insert_stock_trade(notification)
