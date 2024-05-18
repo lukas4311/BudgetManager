@@ -1,4 +1,3 @@
-from datetime import datetime
 from sqlalchemy import create_engine, insert
 import secret
 from Orm.Notification import Notification
@@ -6,7 +5,7 @@ from Orm.Notification import Notification
 connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
 
 
-class StockRepository:
+class NotificationRepository:
     def insert_stock_trade(self, notification: Notification):
         engine = create_engine(connectionString)
         insert_command = insert(Notification).values(heading=notification.heading, userIdentityId=1,

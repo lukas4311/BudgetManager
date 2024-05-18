@@ -2,10 +2,12 @@ from datetime import datetime
 import logging
 import json
 
+from Orm.Notification import Notification
 from Scrapers.StockFinacialAndCompanyData import StockScrapeManager
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
 from Scrapers.FmpApi import FmpScraper
+from Services.DB.NotificationRepository import NotificationRepository
 from Services.FmpApiService import FmpApiService
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService
@@ -49,13 +51,26 @@ class StockTickerManager:
         # print("Storing company financial summary")
         # self.__stock_scraper.download_fin_summary(ticker)
 
+        self.__send_notification()
+
+
+
+def __send_notification(ticker: str):
+    notify_repo = NotificationRepository()
+    notification = Notification()
+    notification.userIdentityId = 1
+    notification.heading = 'Ticker were added'
+    notification.content = f'Your request for {ticker} was completed.'
+    notification.isDisplayed = False
+    notification.timestamp = datetime.now()
+    notification.attachmentUrl = None
+    notify_repo.insert_stock_trade()
 
 def receive_new_ticker(ch, method, properties, body):
     print(f" [x] Received {body}")
-    process_ticker_from_message_queue(body)
+    __process_ticker_from_message_queue(body)
 
-
-def process_ticker_from_message_queue(msg: str):
+def __process_ticker_from_message_queue(msg: str):
     message_object = json.loads(msg)
 
     try:
