@@ -17,14 +17,3 @@ class StockRepository:
         with engine.connect() as conn:
             conn.execute(insert_command)
             conn.commit()
-
-
-stock_repo = StockRepository()
-notification = Notification()
-notification.userIdentityId = 1
-notification.heading = 'test heading'
-notification.content = 'test content'
-notification.isDisplayed = False
-notification.timestamp = datetime.now()
-notification.attachmentUrl = None
-stock_repo.insert_stock_trade(notification)
