@@ -135,7 +135,8 @@ namespace BudgetManager.Api.Controllers
 
             await publishEndpoint.Publish(new TickerRequest
             {
-                Ticker = tickerRequest.Ticker
+                Ticker = tickerRequest.Ticker,
+                UserId = GetUserId()
             }, context => context.SetRoutingKey(routingKey));
 
             return Ok();
