@@ -52,7 +52,7 @@ class OtherInvestmentDetailState {
     confirmDialogIsOpen: boolean;
 }
 
-export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState>{
+export default class OtherInvestmentDetail extends React.Component<OtherInvestmentDetailProps, OtherInvestmentDetailState> {
     private otherInvesmentService: OtherInvestmentService;
     private tagSevice: TagService;
     private icons: IconsData = new IconsData();
@@ -267,7 +267,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
                                 {this.state.selectedModel ? <OtherInvestmentBalanceForm viewModel={this.state.selectedModel} onSave={this.saveBalance} /> : <></>}
                             </DialogContent>
                         </Dialog>
-                        <Dialog open={this.state.openedFormTags} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
+                        <Dialog open={this.state.openedFormTags && (this.state.tagViewModel ? true : false)} onClose={this.handleCloseTag} aria-labelledby="Balance at date"
                             maxWidth="md" fullWidth={true}>
                             <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Tag form</DialogTitle>
                             <DialogContent className="bg-prussianBlue">
