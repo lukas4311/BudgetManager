@@ -87,20 +87,23 @@ export default class NetWorthService {
         const otherInvestments = await this.otherInvestmentService.getAll();
         const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(fromDate, toDate, otherInvestments);
 
-        for (let monthTractRecord of otherInvetmentsMonthlyGrouped)
-            tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
+        // for (let monthTractRecord of otherInvetmentsMonthlyGrouped)
+        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
+        tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(otherInvetmentsMonthlyGrouped);
 
         const tradeData = await this.cryptoService.getRawTradeData();
         const cryptoNetWorth = await this.cryptoService.getMonthlyGroupedAccumulatedCrypto(fromDate, toDate, tradeData, czkSymbol);
-        for (let monthTractRecord of cryptoNetWorth)
-            tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
+        // for (let monthTractRecord of cryptoNetWorth)
+        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
+        tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(cryptoNetWorth);
         console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ cryptoNetWorth:", cryptoNetWorth)
 
         const stockTradeData = await this.stockService.getStockTradeHistory();
-        const acumulatedData = await this.stockService.getMonthlyGroupedAccumulated(fromDate, toDate, stockTradeData, czkSymbol);
-        for (let monthTractRecord of acumulatedData)
-            tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
-        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", acumulatedData)
+        const stockAcumulatedData = await this.stockService.getMonthlyGroupedAccumulated(fromDate, toDate, stockTradeData, czkSymbol);
+        // for (let monthTractRecord of acumulatedData)
+        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
+        tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(stockAcumulatedData);
+        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", stockAcumulatedData)
 
         const finalTractRecord = tractRecordCollection.getTractRecord();
 
@@ -120,7 +123,6 @@ class NetWorthCollection {
     }
 
     public addTrackRecordSpotWithRecalculation(trackRecord: NetWorthMonthGroupModel) {
-        // FIXME: there is problem with that i am adding month worth but i need to add only difference from previous
         let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackRecord.date) ?? [];
         let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date > trackRecord.date) ?? [];
         let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date == trackRecord.date));
