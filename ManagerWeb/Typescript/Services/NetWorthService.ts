@@ -120,6 +120,7 @@ class NetWorthCollection {
     }
 
     public addTrackRecordSpotWithRecalculation(trackRecord: NetWorthMonthGroupModel) {
+        // FIXME: there is problem with that i am adding month worth but i need to add only difference from previous
         let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackRecord.date) ?? [];
         let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date > trackRecord.date) ?? [];
         let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date == trackRecord.date));
