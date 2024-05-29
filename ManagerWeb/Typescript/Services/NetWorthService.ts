@@ -87,26 +87,17 @@ export default class NetWorthService {
         const otherInvestments = await this.otherInvestmentService.getAll();
         const otherInvetmentsMonthlyGrouped = await this.otherInvestmentService.getMonthlyGroupedAccumulatedPayments(fromDate, toDate, otherInvestments);
 
-        // for (let monthTractRecord of otherInvetmentsMonthlyGrouped)
-        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
         tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(otherInvetmentsMonthlyGrouped);
 
         const tradeData = await this.cryptoService.getRawTradeData();
         const cryptoNetWorth = await this.cryptoService.getMonthlyGroupedAccumulatedCrypto(fromDate, toDate, tradeData, czkSymbol);
-        // for (let monthTractRecord of cryptoNetWorth)
-        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
         tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(cryptoNetWorth);
-        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ cryptoNetWorth:", cryptoNetWorth)
 
         const stockTradeData = await this.stockService.getStockTradeHistory();
         const stockAcumulatedData = await this.stockService.getMonthlyGroupedAccumulated(fromDate, toDate, stockTradeData, czkSymbol);
-        // for (let monthTractRecord of acumulatedData)
-        //     tractRecordCollection.addTrackRecordSpotWithRecalculation(monthTractRecord);
         tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(stockAcumulatedData);
-        console.log("🚀 ~ NetWorthService ~ getNetWorthGroupedByMonth ~ acumulatedData:", stockAcumulatedData)
 
         const finalTractRecord = tractRecordCollection.getTractRecord();
-
         return finalTractRecord;
     }
 }
@@ -125,13 +116,13 @@ class NetWorthCollection {
     public addTrackRecordSpotWithRecalculation(trackRecord: NetWorthMonthGroupModel) {
         let tractRecordsBefore = _.filter(this.netWorthTrackRecord, r => r.date < trackRecord.date) ?? [];
         let tractRecordsAfter = _.filter(this.netWorthTrackRecord, r => r.date > trackRecord.date) ?? [];
-        let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date == trackRecord.date));
+        let existingMonthRecord = _.first(_.filter(this.netWorthTrackRecord, r => r.date.isSame(trackRecord.date)));
         let currentMonthNethWorthModel: NetWorthMonthGroupModel = undefined;
 
         if (existingMonthRecord)
             currentMonthNethWorthModel = {
                 date: moment(trackRecord.date.format('YYYY-MM') + '-1'),
-                amount: currentMonthNethWorthModel.amount + trackRecord.amount
+                amount: existingMonthRecord.amount + trackRecord.amount
             };
         else {
             const lastAccumulatedNetWorthBeforeSpotToAdd = _.first(_.orderBy(tractRecordsBefore, r => r.date, 'desc'))?.amount ?? 0;
@@ -155,9 +146,10 @@ class NetWorthCollection {
         let lastAddedNetWorth = 0;
 
         for (let trackRecord of orderedTractRecords) {
-            const recordAmount = trackRecord.amount;
-            trackRecord.amount -= lastAddedNetWorth;
-            this.addTrackRecordSpotWithRecalculation({ ...trackRecord });
+            let copyOfRecord = { ...trackRecord };
+            const recordAmount = copyOfRecord.amount;
+            copyOfRecord.amount -= lastAddedNetWorth;
+            this.addTrackRecordSpotWithRecalculation({ ...copyOfRecord });
             lastAddedNetWorth = recordAmount;
         }
     }
