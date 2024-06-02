@@ -94,6 +94,7 @@ export default class NetWorthService {
         tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(cryptoNetWorth);
 
         const stockTradeData = await this.stockService.getStockTradeHistory();
+        // FIXME: problem with bad final value
         const stockAcumulatedData = await this.stockService.getMonthlyGroupedAccumulated(fromDate, toDate, stockTradeData, czkSymbol);
         tractRecordCollection.addTrackRecordsFromExistingNetWorthTrackRecord(stockAcumulatedData);
 
