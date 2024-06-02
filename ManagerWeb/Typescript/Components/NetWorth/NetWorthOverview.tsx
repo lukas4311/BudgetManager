@@ -57,6 +57,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
         const netWorthDetail = await this.netWorthService.getCurrentNetWorth();
         const monthData = await this.netWorthService.getNetWorthGroupedByMonth();
+        console.log("🚀 ~ NetWorthOverview ~ init= ~ monthData:", monthData)
 
         await this.preparePieChartData(netWorthDetail);
         await this.prepareLineChartData(monthData);
