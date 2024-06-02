@@ -10,6 +10,12 @@ using System.Linq.Expressions;
 
 namespace BudgetManager.Services
 {
+    /// <summary>
+    /// Base servie model
+    /// </summary>
+    /// <typeparam name="Model">Data type of model</typeparam>
+    /// <typeparam name="Entity">Data type of entity</typeparam>
+    /// <typeparam name="IRepo">Type of repository</typeparam>
     public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model, Entity>
         where Model : IDtoModel
         where Entity : class, IDataModel
@@ -18,12 +24,22 @@ namespace BudgetManager.Services
         protected readonly IRepo repository;
         protected readonly IMapper mapper;
 
+        /// <summary>
+        /// Create instance of service
+        /// </summary>
+        /// <param name="repository">Repository for model</param>
+        /// <param name="mapper">Auto mapper instance</param>
         public BaseService(IRepo repository, IMapper mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
         }
 
+        /// <summary>
+        /// Method to add database record
+        /// </summary>
+        /// <param name="model">Entity model</param>
+        /// <returns>Id of record in database</returns>
         public virtual int Add(Model model)
         {
             Entity entity = this.mapper.Map<Entity>(model);
@@ -33,6 +49,11 @@ namespace BudgetManager.Services
             return entity.Id;
         }
 
+        /// <summary>
+        /// Method to update database record
+        /// </summary>
+        /// <param name="model">Model to update</param>
+        /// <exception cref="Exception">Model with specific Id not found</exception>
         public virtual void Update(Model model)
         {
             if (!this.repository.FindByCondition(p => p.Id == model.Id).Any())
@@ -43,6 +64,10 @@ namespace BudgetManager.Services
             this.repository.Save();
         }
 
+        /// <summary>
+        /// Method to delete database record
+        /// </summary>
+        /// <param name="model">Model to remove</param>
         public virtual void Delete(int id)
         {
             Entity entity = this.repository.FindByCondition(a => a.Id == id).Single();
@@ -50,15 +75,29 @@ namespace BudgetManager.Services
             this.repository.Save();
         }
 
+        /// <summary>
+        /// Method to get entity by id
+        /// </summary>
+        /// <param name="id">Id of entity</param>
+        /// <returns>Model of entity</returns>
         public virtual Model Get(int id)
         {
             Entity entity = this.repository.FindByCondition(p => p.Id == id).Single();
             return this.mapper.Map<Model>(entity);
         }
 
+        /// <summary>
+        /// Method to get entity aftre applied filter
+        /// </summary>
+        /// <param name="expression">Filter expression</param>
+        /// <returns>Records after filtering</returns>
         public virtual IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression) 
             => this.repository.FindByCondition(expression).Select(a => this.mapper.Map<Model>(a));
 
+        /// <summary>
+        /// Method to get all records
+        /// </summary>
+        /// <returns>All entity models</returns>
         public virtual IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
     }
 }
