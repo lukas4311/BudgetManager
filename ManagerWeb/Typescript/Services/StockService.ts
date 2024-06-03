@@ -148,6 +148,9 @@ export default class StockService implements IStockService {
         const finalCurrency = this.convertStringToForexEnum(currency);
         const stockGroupData: NetWorthMonthGroupModel[] = [];
         const months = this.getMonthsBetween(fromDate, toDate);
+
+        // FIXME: problem is that i am not calculating value in month i am onlz getting value on trade days, i dont have actual value of portfolie casuse i have last buz in 2023 and so this is presented as current value
+
         const accumulatedTrades = await this.getStocksAccumulatedValue(finalCurrency);
         let accumulatedValueInDay: GroupedStockValues[] = []
         accumulatedTrades.forEach((value, key) => {
