@@ -91,6 +91,8 @@ export default class StockService implements IStockService {
 
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
+        const lastRecord = Array.from(accumulatedValueInDays)[accumulatedValueInDays.size - 1][1];
+        stockAccumulatedSizes.set(moment().format("YYYY-MM-DD"), _.clone(lastRecord))
 
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
@@ -161,6 +163,7 @@ export default class StockService implements IStockService {
         });
         accumulatedValueInDay = _.orderBy(accumulatedValueInDay, t => t.date, "asc");
         const lastDate = _.last(accumulatedValueInDay);
+
 
         for (const month of months) {
             const monthValueSum = _.last(accumulatedValueInDay.filter(t => moment(t.date).format('YYYY-MM') <= month.date))?.accumulatedValue ?? lastDate.accumulatedValue;
