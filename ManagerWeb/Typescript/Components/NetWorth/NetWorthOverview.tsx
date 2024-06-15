@@ -9,7 +9,6 @@ import BankAccountService from '../../Services/BankAccountService';
 import OtherInvestmentService from '../../Services/OtherInvestmentService';
 import ApiClientFactory from '../../Utils/ApiClientFactory';
 import { SpinnerCircularSplit } from 'spinners-react';
-import { ThemeProvider, createMuiTheme } from '@mui/material';
 import { MainFrame } from '../MainFrame';
 import { ICryptoService } from '../../Services/ICryptoService';
 import ComodityService from '../../Services/ComodityService';
@@ -21,6 +20,8 @@ import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
 import { LineChartData } from '../../Model/LineChartData';
 import moment from 'moment';
 import { LineChartDataSets } from '../../Model/LineChartDataSets';
+import _ from 'lodash';
+import { ProgressCalculatorService } from '../../Services/ProgressCalculatorService';
 
 class NetWorthOverviewState {
     loading: boolean;
@@ -57,10 +58,10 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         this.netWorthService = new NetWorthService(new PaymentService(paymentApi), new StockService(stockApi, cryptoService, forexApi, stockFinApi), cryptoService, new OtherInvestmentService(otherInvestmentApi), new BankAccountService(bankAccountApi), new ComodityService(comodityApi, comodityFinApi));
         const netWorthDetail = await this.netWorthService.getCurrentNetWorth();
         const monthData = await this.netWorthService.getNetWorthGroupedByMonth();
-        console.log("🚀 ~ NetWorthOverview ~ init= ~ monthData:", monthData)
 
         await this.preparePieChartData(netWorthDetail);
         await this.prepareLineChartData(monthData);
+        const progres = this.calculateYoy(monthData);
 
         this.setState({ loading: false, netWorth: netWorthDetail.total(), netWorthDetail: netWorthDetail });
     }
@@ -77,11 +78,24 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
         this.setState({ pieDiversityData: pieData });
     }
 
-    prepareLineChartData(monthData: NetWorthMonthGroupModel[]) {
+    private prepareLineChartData(monthData: NetWorthMonthGroupModel[]) {
         let netWorthChartData: LineChartData[] = []
         netWorthChartData = monthData.map(b => ({ x: moment(b.date).format('YYYY-MM-DD'), y: b.amount }));
         let chartData = [{ id: 'Net worth', data: netWorthChartData }];
         this.setState({ netWorthLineChartData: chartData });
+    }
+
+    private calculateYoy(monthData: NetWorthMonthGroupModel[]) {
+        const progressCalculator = new ProgressCalculatorService();
+        const last = _.last(monthData);
+        const indexOfYearBefore = monthData.length - 12;
+
+        if(indexOfYearBefore > 0){
+            const beforeYear = monthData[indexOfYearBefore];
+            return progressCalculator.calculareProgress(beforeYear.amount, last.amount);
+        }
+
+        return 0;
     }
 
     render() {
@@ -100,6 +114,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                         <React.Fragment>
                                             <h2 className='text-2xl'>Your net worth is</h2>
                                             <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
+                                            <h3 className='text-2xl'>YoY { }</h3>
 
                                             <div className="h-96 mt-16">
                                                 <LineChart dataSets={this.state.netWorthLineChartData} chartProps={LineChartSettingManager.getNetWorthChartSettingForCompanyInfo()}></LineChart>
