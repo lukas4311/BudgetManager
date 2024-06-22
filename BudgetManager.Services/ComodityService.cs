@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     public class ComodityService : BaseService<ComodityTradeHistoryModel, ComodityTradeHistory, IComodityTradeHistoryRepository>, IComodityService
     {
         private const string bucketComodityV2 = "ComodityV2";
@@ -24,6 +25,17 @@ namespace BudgetManager.Services
         private readonly InfluxDbData.IRepository<ComodityData> comodityRepository;
         private readonly InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComodityService"/> class.
+        /// </summary>
+        /// <param name="comodityTradeHistoryRepository">The commodity trade history repository.</param>
+        /// <param name="userIdentityRepository">The user identity repository.</param>
+        /// <param name="comodityTypeRepository">The commodity type repository.</param>
+        /// <param name="comodityUnitRepository">The commodity unit repository.</param>
+        /// <param name="influxContext">The InfluxDB context.</param>
+        /// <param name="comodityRepository">The commodity repository.</param>
+        /// <param name="autoMapper">The AutoMapper instance.</param>
+        /// <param name="comodityRepositoryV2">The commodity repository for version 2.</param>
         public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository,
             IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository, IInfluxContext influxContext,
             InfluxDbData.IRepository<ComodityData> comodityRepository, IMapper autoMapper, InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2) : base(comodityTradeHistoryRepository, autoMapper)
@@ -37,9 +49,9 @@ namespace BudgetManager.Services
             this.comodityRepositoryV2 = comodityRepositoryV2;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityTypeModel> GetComodityTypes()
         {
-
             return this.comodityTypeRepository.FindAll().Select(c => new ComodityTypeModel
             {
                 Code = c.Code,
@@ -50,6 +62,7 @@ namespace BudgetManager.Services
             });
         }
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityUnitModel> GetComodityUnits()
         {
             return this.comodityUnitRepository.FindAll().Select(c => new ComodityUnitModel
@@ -60,12 +73,15 @@ namespace BudgetManager.Services
             });
         }
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin) =>
             this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Login == userLogin));
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityTradeHistoryModel> GetByUser(int userId) =>
             this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Id == userId));
 
+        /// <inheritdoc/>
         private IEnumerable<ComodityTradeHistoryModel> GetComodityTradeHistoryForUser(IQueryable<UserIdentity> userIdentity) =>
             userIdentity.SelectMany(a => a.ComodityTradeHistory)
                 .Include(s => s.CurrencySymbol)
@@ -73,12 +89,14 @@ namespace BudgetManager.Services
                 .ThenInclude(s => s.ComodityUnit)
                 .Select(e => e.MapToComodityTradeHistoryModel());
 
+        /// <inheritdoc/>
         public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)
         {
             ComodityTradeHistory cryptoTrade = this.comodityTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
             return cryptoTrade.UserIdentityId == userId;
         }
 
+        /// <inheritdoc/>
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
             ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
@@ -86,4 +104,5 @@ namespace BudgetManager.Services
             return data2?.Price ?? 0;
         }
     }
+
 }

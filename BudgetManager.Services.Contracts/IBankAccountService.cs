@@ -6,47 +6,47 @@ using BudgetManager.Domain.DTOs;
 namespace BudgetManager.Services.Contracts
 {
     /// <summary>
-    /// Bank account service
+    /// Service class for handling operations related to bank accounts.
     /// </summary>
     public interface IBankAccountService : IBaseService<BankAccountModel, BankAccount>
     {
         /// <summary>
-        /// Calculate current bank account balance
+        /// Gets the bank accounts balance to a specific date for a user by their login.
         /// </summary>
-        /// <param name="userLogin">User login</param>
-        /// <param name="toDate">Calculation for this date</param>
-        /// <returns>Balance model with current and opening balance</returns>
+        /// <param name="userLogin">The user login.</param>
+        /// <param name="toDate">The date to get the balance to.</param>
+        /// <returns>A collection of bank balance models.</returns>
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate);
 
         /// <summary>
-        /// Calculate current bank account balance
+        /// Gets the bank accounts balance to a specific date for a user by their ID.
         /// </summary>
-        /// <param name="userLogin">User login</param>
-        /// <param name="toDate">Calculation for this date</param>
-        /// <returns>Balance model with current and opening balance</returns>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="toDate">The date to get the balance to.</param>
+        /// <returns>A collection of bank balance models.</returns>
         IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate);
 
         /// <summary>
-        /// Calculate specific bank account balace for specific day
+        /// Gets the bank account balance to a specific date.
         /// </summary>
-        /// <param name="bankAccountId">Bank account id</param>
-        /// <param name="toDate">Specific data for calculation</param>
-        /// <returns>Bank balance modle for specific date</returns>
+        /// <param name="bankAccountId">The bank account ID.</param>
+        /// <param name="toDate">The date to get the balance to.</param>
+        /// <returns>A bank balance model.</returns>
         BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate);
 
         /// <summary>
-        /// Get all bank accounts
+        /// Gets all bank accounts for a specific user.
         /// </summary>
-        /// <param name="userId">User id</param>
-        /// <returns>Models with bank accounts info</returns>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>A collection of bank account models.</returns>
         IEnumerable<BankAccountModel> GetAllBankAccounts(int userId);
 
         /// <summary>
-        /// Check if user has rights for specific bank account
+        /// Checks if a user has the right to access a specific bank account.
         /// </summary>
-        /// <param name="bankAccountId">Bank account id</param>
-        /// <param name="userId">User id</param>
-        /// <returns><see langword="true"/> if user has rights</returns>
+        /// <param name="bankAccountId">The bank account ID.</param>
+        /// <param name="userId">The user ID.</param>
+        /// <returns>True if the user has the right to access the bank account, otherwise false.</returns>
         bool UserHasRightToBankAccount(int bankAccountId, int userId);
     }
 }
