@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
@@ -32,6 +33,20 @@ namespace BudgetManager.Services
         private readonly IBrokerReportToProcessRepository brokerReportToProcessRepository;
         private readonly IDateTime dateTimeProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StockTradeHistoryService"/> class.
+        /// </summary>
+        /// <param name="repository">The repository for stock trade history.</param>
+        /// <param name="mapper">The mapper for mapping between models.</param>
+        /// <param name="stockDataInfluxRepo">The repository for stock price data.</param>
+        /// <param name="influxContext">The context for InfluxDB.</param>
+        /// <param name="stockSplitService">The service for stock splits.</param>
+        /// <param name="forexService">The service for forex operations.</param>
+        /// <param name="currencySymbolRepository">The repository for currency symbols.</param>
+        /// <param name="brokerReportTypeRepository">The repository for broker report types.</param>
+        /// <param name="brokerReportToProcessStateRepository">The repository for broker report process states.</param>
+        /// <param name="brokerReportToProcessRepository">The repository for broker reports to process.</param>
+        /// <param name="dateTimeProvider">The provider for date and time.</param>
         public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper,
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
             IStockSplitService stockSplitService, IForexService forexService, ICurrencySymbolRepository currencySymbolRepository,
@@ -51,6 +66,7 @@ namespace BudgetManager.Services
             this.dateTimeProvider = dateTimeProvider;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
         {
             List<StockTradeHistoryGetModel> trades = repository
@@ -67,6 +83,7 @@ namespace BudgetManager.Services
             return trades;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol)
         {
             List<StockTradeHistoryGetModel> trades = repository
@@ -75,19 +92,18 @@ namespace BudgetManager.Services
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
-            IEnumerable<StockSplitModel> splits = this.stockSplitService.GetAll();
+            IEnumerable<StockSplitModel> splits = stockSplitService.GetAll();
 
             if (splits.Any())
                 ApplySplitsToTrades(trades, splits);
 
-            IEnumerable<CurrencySymbol> currencySymbols = this.currencySymbolRepository.FindAll().ToList();
+            CurrencySymbol currencySymbolEntity = currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
 
             for (int i = 0; i < trades.Count; i++)
             {
                 StockTradeHistoryGetModel trade = trades[i];
-                CurrencySymbol currencySymbolEntity = this.currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
-                double exhangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
-                trade.TradeValue *= exhangeRate;
+                double exchangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                trade.TradeValue *= exchangeRate;
                 trade.CurrencySymbol = currencySymbol.ToString();
                 trade.CurrencySymbolId = currencySymbolEntity.Id;
             }
@@ -95,6 +111,7 @@ namespace BudgetManager.Services
             return trades;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {
             List<StockTradeHistoryGetModel> trades = repository
@@ -105,29 +122,31 @@ namespace BudgetManager.Services
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
-            if (trades.Any())
-            {
-                IEnumerable<StockSplitModel> splits = stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
+            IEnumerable<StockSplitModel> splits = stockSplitService.Get(s => s.StockTickerId == trades[0].StockTickerId);
 
-                if (splits.Any())
-                    ApplySplitsToTrades(trades, splits);
-            }
+            if (splits.Any())
+                ApplySplitsToTrades(trades, splits);
 
             return trades;
         }
 
-        public bool UserHasRightToStockTradeHistory(int stockTradeHistoruId, int userId)
-            => repository.FindByCondition(a => a.Id == stockTradeHistoruId && a.UserIdentityId == userId).Count() == 1;
+        /// <inheritdoc/>
+        public bool UserHasRightToStockTradeHistory(int stockTradeHistoryId, int userId)
+            => repository.FindByCondition(a => a.Id == stockTradeHistoryId && a.UserIdentityId == userId).Count() == 1;
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker)
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), new() { { "ticker", ticker } });
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from)
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), from, new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), from, new() { { "ticker", ticker } });
 
+        /// <inheritdoc/>
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
-            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date)
         {
             List<Task<IEnumerable<StockPrice>>> finPriceTasks = new();
@@ -142,34 +161,40 @@ namespace BudgetManager.Services
             return prices.Where(m => m.Any()).Select(m => m.FirstOrDefault());
         }
 
+        /// <summary>
+        /// Applies stock splits to the trade history records.
+        /// </summary>
+        /// <param name="trades">The list of trade history records.</param>
+        /// <param name="splits">The list of stock splits.</param>
         private void ApplySplitsToTrades(IEnumerable<StockTradeHistoryGetModel> trades, IEnumerable<StockSplitModel> splits)
         {
             foreach (StockTradeHistoryGetModel trade in trades)
             {
-                double splitCoefficient = this.stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
+                double splitCoefficient = stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
                     c.SplitTimeStamp >= trade.TradeTimeStamp && c.StockTickerId == trade.StockTickerId));
                 trade.TradeSizeAfterSplit = splitCoefficient * trade.TradeSize;
             }
         }
 
+        /// <inheritdoc/>
         public void StoreReportToProcess(byte[] brokerFileData, int userId)
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
-            int stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerStockTypeCode).Single().Id;
-            int stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
+            int stockTypeId = brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerStockTypeCode).Single().Id;
+            int stockStateId = brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
 
             BrokerReportToProcess brokerReport = new BrokerReportToProcess
             {
                 BrokerReportToProcessStateId = stockStateId,
                 BrokerReportTypeId = stockTypeId,
                 FileContentBase64 = fileContentBase64,
-                ImportedTime = this.dateTimeProvider.Now.DateTimeInstance,
+                ImportedTime = dateTimeProvider.Now.DateTimeInstance,
                 UserIdentityId = userId
             };
 
-            this.brokerReportToProcessRepository.Create(brokerReport);
-            this.brokerReportToProcessRepository.Save();
+            brokerReportToProcessRepository.Create(brokerReport);
+            brokerReportToProcessRepository.Save();
         }
     }
 }

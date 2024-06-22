@@ -10,42 +10,60 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     internal class PaymentService : BaseService<PaymentModel, Payment, IPaymentRepository>, IPaymentService
     {
         private readonly IPaymentTypeRepository paymentTypeRepository;
         private readonly IPaymentCategoryRepository paymentCategoryRepository;
         private readonly IPaymentRepository paymentRepository;
 
-        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, 
-            IPaymentRepository paymentRepository, IMapper autoMapper) : base(paymentRepository, autoMapper)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PaymentService"/> class.
+        /// </summary>
+        /// <param name="paymentTypeRepository">The repository for payment types.</param>
+        /// <param name="paymentCategoryRepository">The repository for payment categories.</param>
+        /// <param name="paymentRepository">The repository for payments.</param>
+        /// <param name="autoMapper">The mapper for mapping between models.</param>
+        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository,
+                              IPaymentRepository paymentRepository, IMapper autoMapper) : base(paymentRepository, autoMapper)
         {
             this.paymentTypeRepository = paymentTypeRepository;
             this.paymentCategoryRepository = paymentCategoryRepository;
             this.paymentRepository = paymentRepository;
         }
 
+        /// <inheritdoc/>
         public List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int userId, int? bankAccountId)
         {
-            return this.paymentRepository.FindAll().Where(a => a.BankAccount.UserIdentityId == userId && a.Date > (fromDate ?? DateTime.MinValue) && a.Date < (toDate ?? DateTime.MaxValue)
-                && (!bankAccountId.HasValue || a.BankAccountId == bankAccountId))
-            .Include(a => a.PaymentType)
-            .Include(a => a.PaymentCategory)
-            .Select(a => new PaymentModel
-            {
-                Amount = a.Amount,
-                Date = a.Date,
-                Id = a.Id,
-                Name = a.Name,
-                Description = a.Description,
-                PaymentTypeCode = a.PaymentType.Code,
-                PaymentCategoryIcon = a.PaymentCategory.Icon,
-                PaymentCategoryCode = a.PaymentCategory.Code,
-                BankAccountId = a.BankAccountId,
-                PaymentCategoryId = a.PaymentCategoryId,
-                PaymentTypeId = a.PaymentTypeId
-            }).ToList();
+            return this.paymentRepository.FindAll()
+                .Where(a => a.BankAccount.UserIdentityId == userId &&
+                            a.Date > (fromDate ?? DateTime.MinValue) &&
+                            a.Date < (toDate ?? DateTime.MaxValue) &&
+                            (!bankAccountId.HasValue || a.BankAccountId == bankAccountId))
+                .Include(a => a.PaymentType)
+                .Include(a => a.PaymentCategory)
+                .Select(a => new PaymentModel
+                {
+                    Amount = a.Amount,
+                    Date = a.Date,
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description,
+                    PaymentTypeCode = a.PaymentType.Code,
+                    PaymentCategoryIcon = a.PaymentCategory.Icon,
+                    PaymentCategoryCode = a.PaymentCategory.Code,
+                    BankAccountId = a.BankAccountId,
+                    PaymentCategoryId = a.PaymentCategoryId,
+                    PaymentTypeId = a.PaymentTypeId
+                })
+                .ToList();
         }
 
+        /// <summary>
+        /// Retrieves a payment model by its ID, including associated tags.
+        /// </summary>
+        /// <param name="id">The ID of the payment to retrieve.</param>
+        /// <returns>The payment model with associated tags.</returns>
         public override PaymentModel Get(int id)
         {
             PaymentModel model = this.repository.FindByCondition(p => p.Id == id)
@@ -70,6 +88,7 @@ namespace BudgetManager.Services
             return model;
         }
 
+        /// <inheritdoc/>
         public List<PaymentTypeModel> GetPaymentTypes()
         {
             return this.paymentTypeRepository.FindAll().Select(p => new PaymentTypeModel
@@ -79,6 +98,7 @@ namespace BudgetManager.Services
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public List<PaymentCategoryModel> GetPaymentCategories()
         {
             return this.paymentCategoryRepository.FindAll().Select(p => new PaymentCategoryModel
@@ -89,6 +109,7 @@ namespace BudgetManager.Services
             }).ToList();
         }
 
+        /// <inheritdoc/>
         public int ClonePayment(int id)
         {
             Payment paymentToClone = this.paymentRepository.FindByCondition(p => p.Id == id).Single();
@@ -98,6 +119,9 @@ namespace BudgetManager.Services
             return paymentToClone.Id;
         }
 
-        public bool UserHasRightToPayment(int paymentId, int userId) => this.paymentRepository.FindByCondition(a => a.Id == paymentId && a.BankAccount.UserIdentityId == userId).Count() == 1;
+        /// <inheritdoc/>
+        public bool UserHasRightToPayment(int paymentId, int userId) =>
+            this.paymentRepository.FindByCondition(a => a.Id == paymentId && a.BankAccount.UserIdentityId == userId).Count() == 1;
     }
+
 }
