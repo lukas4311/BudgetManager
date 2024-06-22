@@ -11,12 +11,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     public class JwtService : IJwtService
     {
         private JwtSetting jwtSetting;
 
+        /// <inheritdoc/>
         public void SetUp(JwtSetting jwtSetting) => this.jwtSetting = jwtSetting;
 
+        /// <inheritdoc/>
         public string GenerateToken(UserIdentification model)
         {
             this.CheckSettingIsSettedUp();
@@ -40,6 +43,7 @@ namespace BudgetManager.Services
             return jwtSecurityTokenHandler.WriteToken(securityToken);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Claim> GetTokenClaims(string token)
         {
             this.CheckSettingIsSettedUp();
@@ -61,16 +65,19 @@ namespace BudgetManager.Services
             }
         }
 
+        /// <inheritdoc/>
         public UserIdentification GetUserIdentification(string token)
         {
             IEnumerable<Claim> claims = this.GetTokenClaims(token);
 
-            return new UserIdentification() {
+            return new UserIdentification()
+            {
                 UserId = int.Parse(claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value),
                 UserName = claims.Single(c => c.Type == ClaimTypes.Name).Value
             };
         }
 
+        /// <inheritdoc/>
         public bool IsTokenValid(string token)
         {
             this.CheckSettingIsSettedUp();
@@ -92,18 +99,30 @@ namespace BudgetManager.Services
             }
         }
 
+        /// <summary>
+        /// Gets the symmetric security key from the JWT settings.
+        /// </summary>
+        /// <returns>The symmetric security key.</returns>
         private SecurityKey GetSymmetricSecurityKey()
         {
             byte[] symmetricKey = Convert.FromBase64String(this.jwtSetting.SecretKey);
             return new SymmetricSecurityKey(symmetricKey);
         }
 
+        /// <summary>
+        /// Checks if the JWT settings have been set up.
+        /// </summary>
+        /// <exception cref="NotSettedUpException">Thrown when the JWT settings have not been set up.</exception>
         private void CheckSettingIsSettedUp()
         {
             if (this.jwtSetting is null)
                 throw new NotSettedUpException();
         }
 
+        /// <summary>
+        /// Gets the token validation parameters using the symmetric security key.
+        /// </summary>
+        /// <returns>The token validation parameters.</returns>
         private TokenValidationParameters GetTokenValidationParameters() =>
              new TokenValidationParameters()
              {

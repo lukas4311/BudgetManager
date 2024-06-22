@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public class ForexService : IForexService
     {
         private const string bucketForex = "Forex";
@@ -15,6 +18,12 @@ namespace BudgetManager.Services
         private readonly IRepository<ForexDataV2> forexRepositoryV2;
         private readonly IInfluxContext influxContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CryptoService"/> class.
+        /// </summary>
+        /// <param name="forexRepository">Forex repository.</param>
+        /// <param name="forexRepositoryV2">Forex repository v2.</param>
+        /// <param name="influxContext">The InfluxDB context.</param>
         public ForexService(IRepository<ForexData> forexRepository, IRepository<ForexDataV2> forexRepositoryV2, IInfluxContext influxContext)
         {
             this.forexRepository = forexRepository;
@@ -22,6 +31,7 @@ namespace BudgetManager.Services
             this.influxContext = influxContext;
         }
 
+        /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForex);
@@ -30,6 +40,7 @@ namespace BudgetManager.Services
                 && string.Equals(a.Currency, toSymbol, System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
 
+        /// <inheritdoc/>
         public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForexV2);
@@ -37,6 +48,7 @@ namespace BudgetManager.Services
             return data.SingleOrDefault(a => string.Equals(a.Pair, $"{fromSymbol}-{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
 
+        /// </summary>
         public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForexV2);

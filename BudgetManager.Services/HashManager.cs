@@ -5,8 +5,10 @@ using BudgetManager.Services.Contracts;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     public class HashManager : IHashManager
     {
+        /// <inheritdoc/>
         public string HashPasswordToSha512(string password)
         {
             using SHA512 shaM = new SHA512Managed();

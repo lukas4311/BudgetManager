@@ -11,11 +11,19 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.Services
 {
+    /// <inheritdoc/>
     public class OtherInvestmentService : BaseService<OtherInvestmentModel, OtherInvestment, IOtherInvestmentRepository>, IOtherInvestmentService
     {
         private readonly IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository;
         private readonly IOtherInvestmentTagService otherInvestmentTagService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OtherInvestmentService"/> class.
+        /// </summary>
+        /// <param name="repository">The other investment repository.</param>
+        /// <param name="otherInvestmentBalaceHistoryRepository">The other investment balance history repository.</param>
+        /// <param name="otherInvestmentTagService">The other investment tag service.</param>
+        /// <param name="mapper">The mapper for converting between models and entities.</param>
         public OtherInvestmentService(IOtherInvestmentRepository repository, IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository,
             IOtherInvestmentTagService otherInvestmentTagService, IMapper mapper) : base(repository, mapper)
         {
@@ -23,6 +31,11 @@ namespace BudgetManager.Services
             this.otherInvestmentTagService = otherInvestmentTagService;
         }
 
+        /// <summary>
+        /// Adds a new other investment.
+        /// </summary>
+        /// <param name="model">The other investment model to add.</param>
+        /// <returns>The ID of the newly added other investment.</returns>
         public override int Add(OtherInvestmentModel model)
         {
             int id = base.Add(model);
@@ -35,6 +48,10 @@ namespace BudgetManager.Services
             return id;
         }
 
+        /// <summary>
+        /// Updates an existing other investment.
+        /// </summary>
+        /// <param name="model">The other investment model to update.</param>
         public override void Update(OtherInvestmentModel model)
         {
             base.Update(model);
@@ -45,6 +62,10 @@ namespace BudgetManager.Services
             this.otherInvestmentBalaceHistoryRepository.Save();
         }
 
+        /// <summary>
+        /// Deletes an existing other investment.
+        /// </summary>
+        /// <param name="id">The ID of the other investment to delete.</param>
         public override void Delete(int id)
         {
             IEnumerable<OtherInvestmentBalaceHistory> relatedHistoryRecords = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).ToList();
@@ -60,9 +81,11 @@ namespace BudgetManager.Services
             base.Delete(id);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)
             => this.repository.FindByCondition(i => i.UserIdentityId == userId).Select(i => this.mapper.Map<OtherInvestmentModel>(i));
 
+        /// <inheritdoc/>
         public async Task<decimal> GetProgressForYears(int id, int? years = null)
         {
             decimal startBalance = this.repository.FindByCondition(o => o.Id == id).Single().OpeningBalance;
@@ -83,6 +106,7 @@ namespace BudgetManager.Services
             return (endBalance / startBalance) * 100 - 100;
         }
 
+        /// <inheritdoc/>
         public async Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate, DateTime toDate)
         {
             int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == otherinvestmentId).Select(t => t.TagId).SingleOrDefault();
@@ -97,6 +121,7 @@ namespace BudgetManager.Services
             return totalyInvested;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(int otherInvestmentId, decimal totalInvested)> GetTotalyInvested(DateTime fromDate)
         {
             var data = this.repository.FindAll()
@@ -118,9 +143,11 @@ namespace BudgetManager.Services
                 yield return (item.OtherInvestmentId, item.TotalyInvested);
         }
 
+        /// <inheritdoc/>
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
             => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
 
+        /// <inheritdoc/>
         public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary(int userId)
         {
             List<OtherInvestmentBalaceHistory> baseData = this.otherInvestmentBalaceHistoryRepository
@@ -131,6 +158,12 @@ namespace BudgetManager.Services
             return new OtherInvestmentBalanceSummaryModel(lastData, oneYearEarlierData);
         }
 
+        /// <summary>
+        /// Filters the base balance data for a specific date.
+        /// </summary>
+        /// <param name="baseData">The base balance data.</param>
+        /// <param name="balancesFrom">The date to filter from.</param>
+        /// <returns>An enumerable collection of filtered balance history models.</returns>
         private IEnumerable<OtherInvestmentBalaceHistoryModel> FilterBaseBalaceData(List<OtherInvestmentBalaceHistory> baseData, DateTime balancesFrom)
         {
             IEnumerable<(int otherInvestmentId, decimal totalInvested)> totalyInvested = this.GetTotalyInvested(balancesFrom);
@@ -157,6 +190,11 @@ namespace BudgetManager.Services
             return filteredData;
         }
 
+        /// <summary>
+        /// Finds the first related history record for a specific other investment.
+        /// </summary>
+        /// <param name="id">The ID of the other investment.</param>
+        /// <returns>The first related history record.</returns>
         private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
     }
 }
