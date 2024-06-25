@@ -29,5 +29,10 @@
         /// Gets or sets the name of enum item type
         /// </summary>
         public EnumItemType EnumItemType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the metadata
+        /// </summary>
+        public string Metadata { get; set; }
     }
 }
