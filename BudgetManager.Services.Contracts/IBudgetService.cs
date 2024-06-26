@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 
 namespace BudgetManager.Services.Contracts
 {
     /// <summary>
     /// Service class for handling budget-related operations.
     /// </summary>
-    public interface IBudgetService : IBaseService<BudgetModel, Budget>
+    public interface IBudgetService : IBaseService<BudgetModel, Budget, IRepository<Budget>>
     {
         /// <summary>
         /// Retrieves all budgets.

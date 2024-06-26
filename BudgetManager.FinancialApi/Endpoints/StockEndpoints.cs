@@ -2,7 +2,6 @@ using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BudgetManager.FinancialApi.Endpoints
 {

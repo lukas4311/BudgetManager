@@ -2,6 +2,7 @@
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Enums;
 using BudgetManager.InfluxDbData.Models;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service class for managing operations related to stock trade history.
     /// </summary>
-    public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, StockTradeHistory>
+    public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, StockTradeHistory, IRepository<StockTradeHistory>>
     {
         /// <summary>
         /// Retrieves all stock trade history for a user.

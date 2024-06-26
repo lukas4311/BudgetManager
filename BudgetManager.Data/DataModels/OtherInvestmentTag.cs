@@ -1,5 +1,3 @@
-using System;
-
 namespace BudgetManager.Data.DataModels
 {
     /// <summary>

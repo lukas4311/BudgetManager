@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BudgetManager.Services
     /// <summary>
     /// Service class for handling commodity-related operations.
     /// </summary>
-    public interface IComodityService : IBaseService<ComodityTradeHistoryModel, ComodityTradeHistory>
+    public interface IComodityService : IBaseService<ComodityTradeHistoryModel, ComodityTradeHistory, IRepository<ComodityTradeHistory>>
     {
         /// <summary>
         /// Retrieves commodity trade history for a user based on their login.

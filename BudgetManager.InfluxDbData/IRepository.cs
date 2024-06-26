@@ -1,7 +1,6 @@
 ﻿using InfluxDB.Client.Api.Domain;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace BudgetManager.InfluxDbData

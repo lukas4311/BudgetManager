@@ -13,7 +13,6 @@ using BudgetManager.Services.Extensions;
 using BudgetManager.WebCore;
 //using MassTransit;
 using BudgetManager.WebCore.Extensions;
-using MassTransit.RabbitMqTransport.Topology;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

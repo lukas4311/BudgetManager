@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
@@ -7,7 +8,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service for managing notifications.
     /// </summary>
-    public interface INotificationService : IBaseService<NotificationModel, Notification>
+    public interface INotificationService : IBaseService<NotificationModel, Notification, IRepository<Notification>>
     {
         /// <summary>
         /// Gets the notifications for a specific user.

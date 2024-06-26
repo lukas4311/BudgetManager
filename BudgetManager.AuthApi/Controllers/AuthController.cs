@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using BudgetManager.AuthApi.Models;
+﻿using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;

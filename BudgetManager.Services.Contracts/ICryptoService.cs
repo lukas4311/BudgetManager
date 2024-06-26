@@ -10,7 +10,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service class for handling cryptocurrency-related operations.
     /// </summary>
-    public interface ICryptoService : IBaseService<TradeHistory, CryptoTradeHistory>
+    public interface ICryptoService : IBaseService<TradeHistory, CryptoTradeHistory, Repository.IRepository<ComodityTradeHistory>>
     {
         /// <summary>
         /// Retrieves cryptocurrency trade history for a user based on their login.

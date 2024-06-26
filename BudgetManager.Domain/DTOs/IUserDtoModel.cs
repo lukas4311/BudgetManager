@@ -1,6 +1,4 @@
-﻿using BudgetManager.Data.DataModels;
-
-namespace BudgetManager.Domain.DTOs;
+﻿namespace BudgetManager.Domain.DTOs;
 
 /// <summary>
 /// Represents an interface for user-specific data transfer objects (DTOs).

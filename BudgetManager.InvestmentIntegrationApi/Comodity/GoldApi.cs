@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using BudgetManager.FinanceDataMining.Models.Dtos;
 using BudgetManager.FinanceDataMining.Models;

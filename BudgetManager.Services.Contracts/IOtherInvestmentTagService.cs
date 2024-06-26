@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service class for managing operations related to tags associated with other investments.
     /// </summary>
-    public interface IOtherInvestmentTagService : IBaseService<OtherInvestmentTagModel, OtherInvestmentTag>
+    public interface IOtherInvestmentTagService : IBaseService<OtherInvestmentTagModel, OtherInvestmentTag, IRepository<OtherInvestmentTag>>
     {
         /// <summary>
         /// Retrieves all payments associated with a specific tag and other investment.

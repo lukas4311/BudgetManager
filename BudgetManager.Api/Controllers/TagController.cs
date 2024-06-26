@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;

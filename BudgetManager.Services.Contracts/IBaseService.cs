@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace BudgetManager.Services.Contracts
 {
-    public interface IBaseService<Model, Entity>
+    public interface IBaseService<Model, Entity, IRepo>
     {
         int Add(Model model);
 

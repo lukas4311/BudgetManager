@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service for managing other investments.
     /// </summary>
-    public interface IOtherInvestmentService : IBaseService<OtherInvestmentModel, OtherInvestment>
+    public interface IOtherInvestmentService : IBaseService<OtherInvestmentModel, OtherInvestment, IRepository<OtherInvestment>>
     {
         /// <summary>
         /// Gets all other investments for a specific user.

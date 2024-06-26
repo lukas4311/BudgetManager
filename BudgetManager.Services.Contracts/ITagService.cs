@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
@@ -7,7 +8,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Represents a service for managing tags.
     /// </summary>
-    public interface ITagService : IBaseService<TagModel, Tag>
+    public interface ITagService : IBaseService<TagModel, Tag, IRepository<Tag>>
     {
         /// <summary>
         /// Adds a tag to a payment.

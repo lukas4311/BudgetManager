@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 
 namespace BudgetManager.Services.Contracts
 {
     /// <summary>
     /// Service class for managing operations related to payments.
     /// </summary>
-    public interface IPaymentService : IBaseService<PaymentModel, Payment>
+    public interface IPaymentService : IBaseService<PaymentModel, Payment, IRepository<Payment>>
     {
         /// <summary>
         /// Retrieves all payment categories.

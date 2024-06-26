@@ -4,6 +4,7 @@ using AutoMapper;
 using AutoMapper.Internal;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Services.Contracts;
 
 namespace BudgetManager.Services.Extensions
 {
@@ -22,6 +23,10 @@ namespace BudgetManager.Services.Extensions
                 .Where(t => t.Namespace == "BudgetManager.Services")
                .AsImplementedInterfaces()
                .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterGeneric(typeof(BaseService<,,>))
+                .As(typeof(IBaseService<,,>))
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>
@@ -81,6 +86,8 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<UserCreateModel, UserIdentity>();
                     cfg.CreateMap<NotificationModel, Notification>();
                     cfg.CreateMap<Notification, NotificationModel>();
+                    cfg.CreateMap<EnumItem, EnumItemModel>();
+                    //cfg.CreateMap<EnumItemModel, EnumItem>();
                 }
             );
 

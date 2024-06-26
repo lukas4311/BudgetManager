@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 
 namespace BudgetManager.Services.Contracts
 {
     /// <summary>
     /// Service class for handling operations related to bank accounts.
     /// </summary>
-    public interface IBankAccountService : IBaseService<BankAccountModel, BankAccount>
+    public interface IBankAccountService : IBaseService<BankAccountModel, BankAccount, IRepository<BankAccount>>
     {
         /// <summary>
         /// Gets the bank accounts balance to a specific date for a user by their login.

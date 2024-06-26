@@ -1,5 +1,4 @@
-﻿using BudgetManager.Data.DataModels;
-using System;
+﻿using System;
 
 namespace BudgetManager.Domain.DTOs;
 

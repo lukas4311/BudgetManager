@@ -8,7 +8,6 @@ using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BudgetManager.Api.Controllers
 {

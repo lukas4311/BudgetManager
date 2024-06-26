@@ -1,5 +1,3 @@
-using BudgetManager.Data.DataModels;
-
 namespace BudgetManager.Domain.DTOs;
 
 /// <summary>

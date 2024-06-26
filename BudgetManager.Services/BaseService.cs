@@ -16,7 +16,7 @@ namespace BudgetManager.Services
     /// <typeparam name="Model">Data type of model</typeparam>
     /// <typeparam name="Entity">Data type of entity</typeparam>
     /// <typeparam name="IRepo">Type of repository</typeparam>
-    public abstract class BaseService<Model, Entity, IRepo> : IBaseService<Model, Entity>
+    public class BaseService<Model, Entity, IRepo> : IBaseService<Model, Entity, IRepo>
         where Model : IDtoModel
         where Entity : class, IDataModel
         where IRepo : IRepository<Entity>

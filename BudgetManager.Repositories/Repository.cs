@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 namespace BudgetManager.Repository
 {
     /// <inheritdoc cref="IRepository{T}"/>>
-    public abstract class Repository<T> : IRepository<T> where T : class, IDataModel
+    public class Repository<T> : IRepository<T> where T : class, IDataModel
     {
         /// <summary>
         /// EF context

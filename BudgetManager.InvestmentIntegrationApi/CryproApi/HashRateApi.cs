@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BudgetManager.FinanceDataMining.Models;
-using System.Text.Json;
 using BudgetManager.FinanceDataMining.Services;
 using BudgetManager.FinanceDataMining.Models.Dtos;
 using System.Linq;

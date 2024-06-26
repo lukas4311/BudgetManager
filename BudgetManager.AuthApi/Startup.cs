@@ -2,7 +2,6 @@ using Autofac;
 using BudgetManager.AuthApi.Models;
 using BudgetManager.Data;
 using BudgetManager.Repository.Extensions;
-using BudgetManager.Services;
 using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

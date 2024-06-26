@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using BudgetManager.FinanceDataMining.Comodity.JsonModelDto;
 
 namespace BudgetManager.FinanceDataMining.Models
 {

@@ -10,6 +10,10 @@ namespace BudgetManager.Repository.Extensions
                 .Where(t => t.Namespace == "BudgetManager.Repository")
                .AsImplementedInterfaces()
                .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>))
+                .InstancePerLifetimeScope();
         }
     }
 }

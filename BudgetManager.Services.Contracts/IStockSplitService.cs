@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Repository;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
@@ -7,7 +8,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service class for managing operations related to stock splits.
     /// </summary>
-    public interface IStockSplitService : IBaseService<StockSplitModel, StockSplit>
+    public interface IStockSplitService : IBaseService<StockSplitModel, StockSplit, IRepository<StockSplit>>
     {
         /// <summary>
         /// Retrieves grouped accumulated stock split data.

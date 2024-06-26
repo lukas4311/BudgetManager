@@ -1,5 +1,3 @@
-using System;
-
 namespace BudgetManager.ManagerWeb.Models
 {
     public class ErrorViewModel
