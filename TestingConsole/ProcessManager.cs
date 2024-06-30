@@ -66,15 +66,15 @@ namespace BudgetManager.TestingConsole
         /// </summary>
         internal async Task DownloadAssets()
         {
-            CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
-            IEnumerable<CryptoAsset> assets = await cryptoWatch.GetAssets();
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
-            assets = this.FilterNotSavedAssets(assets);
+            //CryptoWatch cryptoWatch = new CryptoWatch(new HttpClient());
+            //IEnumerable<CryptoAsset> assets = await cryptoWatch.GetAssets();
+            //ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            //assets = this.FilterNotSavedAssets(assets);
 
-            foreach (CryptoAsset asset in assets)
-                this.CreateTickerEntity(asset, cryptoTickerRepository);
+            //foreach (CryptoAsset asset in assets)
+            //    this.CreateTickerEntity(asset, cryptoTickerRepository);
 
-            cryptoTickerRepository.Save();
+            //cryptoTickerRepository.Save();
         }
 
         /// <summary>
@@ -141,17 +141,17 @@ namespace BudgetManager.TestingConsole
 
         internal void SaveCoinbaseDataToDb()
         {
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
-            ICurrencySymbolRepository currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);
-            ICryptoTradeHistoryRepository cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(this.DataContext);
-            CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
-            coinbaseParser.ParseCoinbaseReport();
+            //BudgetManager.Repository.IRepository<CryptoTicker> cryptoTickerRepository = new Repository<CryptoTicker>(this.DataContext);
+            //BudgetManager.Repository.IRepository<CurrencySymbol> currencySymbolRepository = new CurrencySymbolRepository(this.DataContext);
+            //BudgetManager.Repository.IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository = new CryptoTradeHistoryRepository(this.DataContext);
+            //CoinbaseParser coinbaseParser = new CoinbaseParser(cryptoTickerRepository, currencySymbolRepository, cryptoTradeHistoryRepository);
+            //coinbaseParser.ParseCoinbaseReport();
         }
 
         internal void ParseCoinbaseReport()
         {
-            var coinbaseParser = new CoinbaseParser(new CryptoTickerRepository(this.GetDataContext()), new CurrencySymbolRepository(this.GetDataContext()), new CryptoTradeHistoryRepository(this.GetDataContext()));
-            coinbaseParser.ParseCoinbaseReport();
+            //var coinbaseParser = new CoinbaseParser(new CryptoTickerRepository(this.GetDataContext()), new CurrencySymbolRepository(this.GetDataContext()), new CryptoTradeHistoryRepository(this.GetDataContext()));
+            //coinbaseParser.ParseCoinbaseReport();
         }
 
         private DataContext GetDataContext()
@@ -163,12 +163,13 @@ namespace BudgetManager.TestingConsole
 
         private IEnumerable<CryptoAsset> FilterNotSavedAssets(IEnumerable<CryptoAsset> allAssets)
         {
-            ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
-            List<Data.DataModels.CryptoTicker> existingAssets = cryptoTickerRepository.FindAll().ToList();
-            return allAssets.Where(a => !existingAssets.Any(ea => string.Compare(ea.Ticker, a.Symbol, true) == 0));
+            //ICryptoTickerRepository cryptoTickerRepository = new CryptoTickerRepository(this.DataContext);
+            //List<Data.DataModels.CryptoTicker> existingAssets = cryptoTickerRepository.FindAll().ToList();
+            //return allAssets.Where(a => !existingAssets.Any(ea => string.Compare(ea.Ticker, a.Symbol, true) == 0));
+            return null;
         }
 
-        private void CreateTickerEntity(CryptoAsset cryptoAsset, ICryptoTickerRepository cryptoTickerRepository)
+        private void CreateTickerEntity(CryptoAsset cryptoAsset, BudgetManager.Repository.IRepository<Data.DataModels.CryptoTicker> cryptoTickerRepository)
         {
             cryptoTickerRepository.Create(new Data.DataModels.CryptoTicker
             {

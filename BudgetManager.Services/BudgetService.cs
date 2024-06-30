@@ -11,16 +11,16 @@ using BudgetManager.Services.Extensions;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class BudgetService : BaseService<BudgetModel, Budget, IBudgetRepository>, IBudgetService
+    public class BudgetService : BaseService<BudgetModel, Budget, IRepository<Budget>>, IBudgetService
     {
-        private readonly IBudgetRepository budgetRepository;
+        private readonly IRepository<Budget> budgetRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BudgetService"/> class.
         /// </summary>
         /// <param name="budgetRepository">The budget repository.</param>
         /// <param name="autoMapper">The AutoMapper instance.</param>
-        public BudgetService(IBudgetRepository budgetRepository, IMapper autoMapper) : base(budgetRepository, autoMapper)
+        public BudgetService(IRepository<Budget> budgetRepository, IMapper autoMapper) : base(budgetRepository, autoMapper)
             => this.budgetRepository = budgetRepository;
 
         /// <inheritdoc/>

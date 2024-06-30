@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class OtherInvestmentService : BaseService<OtherInvestmentModel, OtherInvestment, IOtherInvestmentRepository>, IOtherInvestmentService
+    public class OtherInvestmentService : BaseService<OtherInvestmentModel, OtherInvestment, IRepository<OtherInvestment>>, IOtherInvestmentService
     {
-        private readonly IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository;
+        private readonly IRepository<OtherInvestmentBalaceHistory> otherInvestmentBalaceHistoryRepository;
         private readonly IOtherInvestmentTagService otherInvestmentTagService;
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace BudgetManager.Services
         /// <param name="otherInvestmentBalaceHistoryRepository">The other investment balance history repository.</param>
         /// <param name="otherInvestmentTagService">The other investment tag service.</param>
         /// <param name="mapper">The mapper for converting between models and entities.</param>
-        public OtherInvestmentService(IOtherInvestmentRepository repository, IOtherInvestmentBalaceHistoryRepository otherInvestmentBalaceHistoryRepository,
+        public OtherInvestmentService(IRepository<OtherInvestment> repository, IRepository<OtherInvestmentBalaceHistory> otherInvestmentBalaceHistoryRepository,
             IOtherInvestmentTagService otherInvestmentTagService, IMapper mapper) : base(repository, mapper)
         {
             this.otherInvestmentBalaceHistoryRepository = otherInvestmentBalaceHistoryRepository;

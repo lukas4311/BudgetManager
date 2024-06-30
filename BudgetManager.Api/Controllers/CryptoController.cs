@@ -17,9 +17,9 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly ICryptoService cryptoService;
         private readonly IForexService forexService;
-        private readonly ICryptoTickerRepository cryptoTickerRepository;
+        private readonly IRepository<CryptoTicker> cryptoTickerRepository;
 
-        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService, ICryptoTickerRepository cryptoTickerRepository) : base(httpContextAccessor)
+        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService, IRepository<CryptoTicker> cryptoTickerRepository) : base(httpContextAccessor)
         {
             this.cryptoService = cryptoService;
             this.forexService = forexService;

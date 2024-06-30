@@ -9,12 +9,12 @@ namespace BudgetManager.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IUserDataRepository userDataRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
+        private readonly IRepository<UserData> userDataRepository;
         private readonly IMapper mapper;
         private readonly IHashManager hashManager;
 
-        public UserService(IUserIdentityRepository userIdentityRepository, IHashManager hashManager, IUserDataRepository userDataRepository, IMapper mapper)
+        public UserService(IRepository<UserIdentity> userIdentityRepository, IHashManager hashManager, IRepository<UserData> userDataRepository, IMapper mapper)
         {
             this.userIdentityRepository = userIdentityRepository;
             this.hashManager = hashManager;

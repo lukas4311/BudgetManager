@@ -11,24 +11,24 @@ using Microsoft.EntityFrameworkCore;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    internal class TagService : BaseService<TagModel, Tag, ITagRepository>, ITagService
+    internal class TagService : BaseService<TagModel, Tag, IRepository<Tag>>, ITagService
     {
         private const string DoesntExists = "Tag doesn't exists";
 
         /// <summary>
         /// The repository for managing tags.
         /// </summary>
-        private readonly ITagRepository tagRepository;
+        private readonly IRepository<Tag> tagRepository;
 
         /// <summary>
         /// The repository for managing payment tags.
         /// </summary>
-        private readonly IPaymentTagRepository paymentTagRepository;
+        private readonly IRepository<PaymentTag> paymentTagRepository;
 
         /// <summary>
         /// The repository for managing user identities.
         /// </summary>
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TagService"/> class.
@@ -37,7 +37,7 @@ namespace BudgetManager.Services
         /// <param name="paymentTagRepository">The payment tag repository.</param>
         /// <param name="userIdentityRepository">The user identity repository.</param>
         /// <param name="autoMapper">The auto mapper.</param>
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IMapper autoMapper)
+        public TagService(IRepository<Tag> tagRepository, IRepository<PaymentTag> paymentTagRepository, IRepository<UserIdentity> userIdentityRepository, IMapper autoMapper)
             : base(tagRepository, autoMapper)
         {
             this.tagRepository = tagRepository;

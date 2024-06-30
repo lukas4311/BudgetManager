@@ -11,12 +11,12 @@ namespace BudgetManager.ManagerWeb.Services
 {
     internal class PaymentService : IPaymentService
     {
-        private readonly IPaymentTypeRepository paymentTypeRepository;
-        private readonly IPaymentCategoryRepository paymentCategoryRepository;
-        private readonly IPaymentRepository paymentRepository;
-        private readonly IBankAccountRepository bankAccountRepository;
+        private readonly IRepository<PaymentType> paymentTypeRepository;
+        private readonly IRepository<PaymentCategory> paymentCategoryRepository;
+        private readonly IRepository<Payment> paymentRepository;
+        private readonly IRepository<BankAccount> bankAccountRepository;
 
-        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository, IPaymentRepository paymentRepository, IBankAccountRepository bankAccountRepository)
+        public PaymentService(IRepository<PaymentType> paymentTypeRepository, IRepository<PaymentCategory> paymentCategoryRepository, IRepository<Payment> paymentRepository, IRepository<BankAccount> bankAccountRepository)
         {
             this.paymentTypeRepository = paymentTypeRepository;
             this.paymentCategoryRepository = paymentCategoryRepository;

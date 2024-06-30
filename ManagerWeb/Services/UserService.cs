@@ -7,15 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BudgetManager.Data.DataModels;
 
 namespace BudgetManager.ManagerWeb.Services
 {
     internal class UserService : IUserService
     {
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public UserService(IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
+        public UserService(IRepository<UserIdentity> userIdentityRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.userIdentityRepository = userIdentityRepository;
             this.httpContextAccessor = httpContextAccessor;

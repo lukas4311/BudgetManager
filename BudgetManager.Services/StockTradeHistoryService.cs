@@ -3,7 +3,7 @@ using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Enums;
-using BudgetManager.InfluxDbData;
+using Infl = BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
@@ -16,21 +16,21 @@ using System.Threading.Tasks;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IStockTradeHistoryRepository>, IStockTradeHistoryService
+    public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IRepository<StockTradeHistory>>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
         private const string BrokerStockTypeCode = "Stock";
         private const string BrokerProcessStateCode = "InProcess";
-        private readonly IStockTradeHistoryRepository repository;
+        private readonly IRepository<StockTradeHistory> repository;
         private readonly IMapper mapper;
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
-        private readonly IInfluxContext influxContext;
+        private readonly Infl.IInfluxContext influxContext;
         private readonly IStockSplitService stockSplitService;
         private readonly IForexService forexService;
-        private readonly ICurrencySymbolRepository currencySymbolRepository;
-        private readonly IBrokerReportTypeRepository brokerReportTypeRepository;
-        private readonly IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository;
-        private readonly IBrokerReportToProcessRepository brokerReportToProcessRepository;
+        private readonly IRepository<CurrencySymbol> currencySymbolRepository;
+        private readonly IRepository<BrokerReportType> brokerReportTypeRepository;
+        private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
+        private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -47,11 +47,11 @@ namespace BudgetManager.Services
         /// <param name="brokerReportToProcessStateRepository">The repository for broker report process states.</param>
         /// <param name="brokerReportToProcessRepository">The repository for broker reports to process.</param>
         /// <param name="dateTimeProvider">The provider for date and time.</param>
-        public StockTradeHistoryService(IStockTradeHistoryRepository repository, IMapper mapper,
-            InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, IInfluxContext influxContext,
-            IStockSplitService stockSplitService, IForexService forexService, ICurrencySymbolRepository currencySymbolRepository,
-            IBrokerReportTypeRepository brokerReportTypeRepository, IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository,
-            IBrokerReportToProcessRepository brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
+        public StockTradeHistoryService(IRepository<StockTradeHistory> repository, IMapper mapper,
+            InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, Infl.IInfluxContext influxContext,
+            IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
+            IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -136,15 +136,15 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker)
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucket), new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStockPriceHistory(string ticker, DateTime from)
-            => await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), from, new() { { "ticker", ticker } });
+            => await stockDataInfluxRepo.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucket), from, new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
         public async Task<StockPrice> GetStockPriceAtDate(string ticker, DateTime atDate)
-            => (await stockDataInfluxRepo.GetAllData(new DataSourceIdentification(influxContext.OrganizationId, bucket), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+            => (await stockDataInfluxRepo.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucket), new Infl.DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
         /// <inheritdoc/>
         public async Task<IEnumerable<StockPrice>> GetStocksPriceAtDate(string[] tickers, DateTime date)
@@ -153,7 +153,7 @@ namespace BudgetManager.Services
 
             for (int i = 0; i < tickers.Length; i++)
             {
-                Task<IEnumerable<StockPrice>> taskTicker = stockDataInfluxRepo.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucket), new DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
+                Task<IEnumerable<StockPrice>> taskTicker = stockDataInfluxRepo.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucket), new Infl.DateTimeRange { From = date.AddDays(-5), To = date.AddDays(1) }, new() { { "ticker", tickers[i] } });
                 finPriceTasks.Add(taskTicker);
             }
 

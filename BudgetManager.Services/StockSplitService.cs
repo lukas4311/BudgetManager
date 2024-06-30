@@ -9,14 +9,14 @@ using BudgetManager.Services.Contracts;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class StockSplitService : BaseService<StockSplitModel, StockSplit, IStockSplitRepository>, IStockSplitService
+    public class StockSplitService : BaseService<StockSplitModel, StockSplit, IRepository<StockSplit>>, IStockSplitService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StockSplitService"/> class.
         /// </summary>
         /// <param name="repository">The repository for stock splits.</param>
         /// <param name="mapper">The mapper for mapping between models.</param>
-        public StockSplitService(IStockSplitRepository repository, IMapper mapper) : base(repository, mapper)
+        public StockSplitService(IRepository<StockSplit> repository, IMapper mapper) : base(repository, mapper)
         {
         }
 

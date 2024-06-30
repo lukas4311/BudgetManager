@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
-using BudgetManager.InfluxDbData;
+using Infl = BudgetManager.InfluxDbData;
 using BudgetManager.Repository;
 using BudgetManager.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +13,17 @@ using System.Threading.Tasks;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class ComodityService : BaseService<ComodityTradeHistoryModel, ComodityTradeHistory, IComodityTradeHistoryRepository>, IComodityService
+    public class ComodityService : BaseService<ComodityTradeHistoryModel, ComodityTradeHistory, IRepository<ComodityTradeHistory>>, IComodityService
     {
         private const string bucketComodityV2 = "ComodityV2";
         private const string GoldTicker = "Gold";
-        private readonly IComodityTradeHistoryRepository comodityTradeHistoryRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IComodityTypeRepository comodityTypeRepository;
-        private readonly IComodityUnitRepository comodityUnitRepository;
-        private readonly IInfluxContext influxContext;
-        private readonly InfluxDbData.IRepository<ComodityData> comodityRepository;
-        private readonly InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2;
+        private readonly IRepository<ComodityTradeHistory> comodityTradeHistoryRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
+        private readonly IRepository<ComodityType> comodityTypeRepository;
+        private readonly IRepository<ComodityUnit> comodityUnitRepository;
+        private readonly Infl.IInfluxContext influxContext;
+        private readonly Infl.IRepository<Infl.ComodityData> comodityRepository;
+        private readonly Infl.IRepository<Infl.ComodityDataV2> comodityRepositoryV2;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComodityService"/> class.
@@ -36,9 +36,9 @@ namespace BudgetManager.Services
         /// <param name="comodityRepository">The commodity repository.</param>
         /// <param name="autoMapper">The AutoMapper instance.</param>
         /// <param name="comodityRepositoryV2">The commodity repository for version 2.</param>
-        public ComodityService(IComodityTradeHistoryRepository comodityTradeHistoryRepository, IUserIdentityRepository userIdentityRepository,
-            IComodityTypeRepository comodityTypeRepository, IComodityUnitRepository comodityUnitRepository, IInfluxContext influxContext,
-            InfluxDbData.IRepository<ComodityData> comodityRepository, IMapper autoMapper, InfluxDbData.IRepository<ComodityDataV2> comodityRepositoryV2) : base(comodityTradeHistoryRepository, autoMapper)
+        public ComodityService(IRepository<ComodityTradeHistory> comodityTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository,
+            IRepository<ComodityType> comodityTypeRepository, IRepository<ComodityUnit> comodityUnitRepository, Infl.IInfluxContext influxContext,
+            Infl.IRepository<Infl.ComodityData> comodityRepository, IMapper autoMapper, Infl.IRepository<Infl.ComodityDataV2> comodityRepositoryV2) : base(comodityTradeHistoryRepository, autoMapper)
         {
             this.comodityTradeHistoryRepository = comodityTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -99,7 +99,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
-            ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketComodityV2), new DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
+            Infl.ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketComodityV2), new Infl.DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
             return data2?.Price ?? 0;
         }

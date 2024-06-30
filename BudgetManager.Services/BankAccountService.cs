@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class BankAccountService : BaseService<BankAccountModel, BankAccount, IBankAccountRepository>, IBankAccountService
+    public class BankAccountService : BaseService<BankAccountModel, BankAccount, IRepository<BankAccount>>, IBankAccountService
     {
-        private readonly IPaymentRepository paymentRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IBankAccountRepository bankAccountRepository;
-        private readonly IPaymentTagRepository paymentTagRepository;
-        private readonly IInterestRateRepository interestRateRepository;
+        private readonly IRepository<Payment> paymentRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
+        private readonly IRepository<BankAccount> bankAccountRepository;
+        private readonly IRepository<PaymentTag> paymentTagRepository;
+        private readonly IRepository<InterestRate> interestRateRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BankAccountService"/> class.
@@ -29,9 +29,9 @@ namespace BudgetManager.Services
         /// <param name="paymentTagRepository">The payment tag repository.</param>
         /// <param name="interestRateRepository">The interest rate repository.</param>
         /// <param name="autoMapper">The auto mapper instance.</param>
-        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository, 
-            IInterestRateRepository interestRateRepository, IMapper autoMapper):base(bankAccountRepository, autoMapper)
+        public BankAccountService(IRepository<Payment> paymentRepository, IRepository<UserIdentity> userIdentityRepository,
+            IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository, 
+            IRepository<InterestRate> interestRateRepository, IMapper autoMapper):base(bankAccountRepository, autoMapper)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;

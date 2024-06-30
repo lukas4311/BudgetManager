@@ -12,11 +12,11 @@ namespace BudgetManager.ManagerWeb.Services
 {
     internal class BudgetService : IBudgetService
     {
-        private readonly IBudgetRepository budgetRepository;
+        private readonly IRepository<Budget> budgetRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
 
-        public BudgetService(IBudgetRepository budgetRepository, IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
+        public BudgetService(IRepository<Budget> budgetRepository, IRepository<UserIdentity> userIdentityRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.budgetRepository = budgetRepository;
             this.httpContextAccessor = httpContextAccessor;

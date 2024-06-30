@@ -13,12 +13,12 @@ namespace BudgetManager.ManagerWeb.Services
     {
         private const string AlreadyExist = "Tag with this code already exists";
         private const string DoesntExists = "Tag doesn't exists";
-        private readonly ITagRepository tagRepository;
-        private readonly IPaymentTagRepository paymentTagRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly IRepository<Tag> tagRepository;
+        private readonly IRepository<PaymentTag> paymentTagRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TagService(ITagRepository tagRepository, IPaymentTagRepository paymentTagRepository, IUserIdentityRepository userIdentityRepository, IHttpContextAccessor httpContextAccessor)
+        public TagService(IRepository<Tag> tagRepository, IRepository<PaymentTag> paymentTagRepository, IRepository<UserIdentity> userIdentityRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.tagRepository = tagRepository;
             this.paymentTagRepository = paymentTagRepository;

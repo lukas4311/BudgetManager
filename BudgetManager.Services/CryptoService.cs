@@ -6,7 +6,7 @@ using AutoMapper;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
-using BudgetManager.InfluxDbData;
+using Infl = BudgetManager.InfluxDbData;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
@@ -15,21 +15,21 @@ using Microsoft.EntityFrameworkCore;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class CryptoService : BaseService<TradeHistory, CryptoTradeHistory, ICryptoTradeHistoryRepository>, ICryptoService
+    public class CryptoService : BaseService<TradeHistory, CryptoTradeHistory, IRepository<CryptoTradeHistory>>, ICryptoService
     {
         private const string bucketCrypto = "Crypto";
         private const string bucketCryptoV2 = "CryptoV2";
         private const string BrokerCryptoTypeCode = "Crypto";
         private const string BrokerProcessStateCode = "InProcess";
-        private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
-        private readonly IInfluxContext influxContext;
-        private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;
-        private readonly InfluxDbData.IRepository<CryptoDataV2> cryptoRepositoryV2;
+        private readonly IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
+        private readonly Infl.IInfluxContext influxContext;
+        private readonly Infl.IRepository<Infl.CryptoData> cryptoRepository;
+        private readonly Infl.IRepository<Infl.CryptoDataV2> cryptoRepositoryV2;
         private readonly IMapper autoMapper;
-        private readonly IBrokerReportTypeRepository brokerReportTypeRepository;
-        private readonly IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository;
-        private readonly IBrokerReportToProcessRepository brokerReportToProcessRepository;
+        private readonly IRepository<BrokerReportType> brokerReportTypeRepository;
+        private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
+        private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace BudgetManager.Services
         /// <param name="brokerReportToProcessStateRepository">The broker report to process state repository.</param>
         /// <param name="brokerReportToProcessRepository">The broker report to process repository.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
-        public CryptoService(ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, IInfluxContext influxContext,
-            InfluxDbData.IRepository<CryptoData> cryptoRepository, InfluxDbData.IRepository<CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
-            IBrokerReportTypeRepository brokerReportTypeRepository, IBrokerReportToProcessStateRepository brokerReportToProcessStateRepository,
-            IBrokerReportToProcessRepository brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
+        public CryptoService(IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository, Infl.IInfluxContext influxContext,
+            Infl.IRepository<Infl.CryptoData> cryptoRepository, Infl.IRepository<Infl.CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
+            IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
         {
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -104,31 +104,31 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
-            IEnumerable<CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
+            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
+            IEnumerable<Infl.CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
         /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
-            IEnumerable<CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification,
-                new DateTimeRange { From = atDate, To = atDate.AddDays(1) }, new() { { "ticker", $"{fromSymbol}{toSymbol}" } }).ConfigureAwait(false);
+            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
+            IEnumerable<Infl.CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification,
+                new Infl.DateTimeRange { From = atDate, To = atDate.AddDays(1) }, new() { { "ticker", $"{fromSymbol}{toSymbol}" } }).ConfigureAwait(false);
             return data.FirstOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<CryptoDataV2>> GetCryptoPriceHistory(string ticker)
-            => await cryptoRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new() { { "ticker", ticker } });
+        public async Task<IEnumerable<Infl.CryptoDataV2>> GetCryptoPriceHistory(string ticker)
+            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<CryptoDataV2>> GetCryptoPriceHistory(string ticker, DateTime from)
-            => await cryptoRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), from, new() { { "ticker", ticker } });
+        public async Task<IEnumerable<Infl.CryptoDataV2>> GetCryptoPriceHistory(string ticker, DateTime from)
+            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), from, new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
-        public async Task<CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate)
-            => (await cryptoRepositoryV2.GetAllData(new DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+        public async Task<Infl.CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate)
+            => (await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new Infl.DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
         /// <inheritdoc/>
         public void StoreReportToProcess(byte[] brokerFileData, int userId)

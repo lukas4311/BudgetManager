@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class OtherInvestmentTagService : BaseService<OtherInvestmentTagModel, OtherInvestmentTag, IOtherInvestmentTagRepository>, IOtherInvestmentTagService
+    public class OtherInvestmentTagService : BaseService<OtherInvestmentTagModel, OtherInvestmentTag, IRepository<OtherInvestmentTag>>, IOtherInvestmentTagService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OtherInvestmentTagService"/> class.
         /// </summary>
         /// <param name="repository">The repository for other investment tags.</param>
         /// <param name="mapper">The mapper for mapping between models.</param>
-        public OtherInvestmentTagService(IOtherInvestmentTagRepository repository, IMapper mapper) : base(repository, mapper)
+        public OtherInvestmentTagService(IRepository<OtherInvestmentTag> repository, IMapper mapper) : base(repository, mapper)
         { }
 
         /// <inheritdoc/>

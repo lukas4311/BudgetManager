@@ -6,9 +6,9 @@ using BudgetManager.Services.Contracts;
 
 namespace BudgetManager.Services
 {
-    internal class CompanyProfileService : BaseService<CompanyProfileModel, CompanyProfile, ICompanyProfileRepository>, ICompanyProfileService
+    internal class CompanyProfileService : BaseService<CompanyProfileModel, CompanyProfile, IRepository<CompanyProfile>>, ICompanyProfileService
     {
-        public CompanyProfileService(ICompanyProfileRepository repository, IMapper mapper) : base(repository, mapper)
+        public CompanyProfileService(IRepository<CompanyProfile> repository, IMapper mapper) : base(repository, mapper)
         {
         }
     }

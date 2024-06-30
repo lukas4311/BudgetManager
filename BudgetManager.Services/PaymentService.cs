@@ -11,11 +11,11 @@ using Microsoft.EntityFrameworkCore;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    internal class PaymentService : BaseService<PaymentModel, Payment, IPaymentRepository>, IPaymentService
+    internal class PaymentService : BaseService<PaymentModel, Payment, IRepository<Payment>>, IPaymentService
     {
-        private readonly IPaymentTypeRepository paymentTypeRepository;
-        private readonly IPaymentCategoryRepository paymentCategoryRepository;
-        private readonly IPaymentRepository paymentRepository;
+        private readonly IRepository<PaymentType> paymentTypeRepository;
+        private readonly IRepository<PaymentCategory> paymentCategoryRepository;
+        private readonly IRepository<Payment> paymentRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PaymentService"/> class.
@@ -24,8 +24,8 @@ namespace BudgetManager.Services
         /// <param name="paymentCategoryRepository">The repository for payment categories.</param>
         /// <param name="paymentRepository">The repository for payments.</param>
         /// <param name="autoMapper">The mapper for mapping between models.</param>
-        public PaymentService(IPaymentTypeRepository paymentTypeRepository, IPaymentCategoryRepository paymentCategoryRepository,
-                              IPaymentRepository paymentRepository, IMapper autoMapper) : base(paymentRepository, autoMapper)
+        public PaymentService(IRepository<PaymentType> paymentTypeRepository, IRepository<PaymentCategory> paymentCategoryRepository,
+                              IRepository<Payment> paymentRepository, IMapper autoMapper) : base(paymentRepository, autoMapper)
         {
             this.paymentTypeRepository = paymentTypeRepository;
             this.paymentCategoryRepository = paymentCategoryRepository;

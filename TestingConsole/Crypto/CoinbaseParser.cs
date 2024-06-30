@@ -11,13 +11,13 @@ namespace BudgetManager.TestingConsole.Crypto
 {
     internal class CoinbaseParser
     {
-        private readonly ICryptoTickerRepository cryptoTickerRepository;
-        private readonly ICurrencySymbolRepository currencySymbolRepository;
-        private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
+        private readonly IRepository<Data.DataModels.CryptoTicker> cryptoTickerRepository;
+        private readonly IRepository<CurrencySymbol> currencySymbolRepository;
+        private readonly IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository;
         private List<CurrencySymbol> currencySymbols;
         private List<Data.DataModels.CryptoTicker> cryptoTickers;
 
-        public CoinbaseParser(ICryptoTickerRepository cryptoTickerRepository, ICurrencySymbolRepository currencySymbolRepository, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository)
+        public CoinbaseParser(IRepository<Data.DataModels.CryptoTicker> cryptoTickerRepository, IRepository<CurrencySymbol> currencySymbolRepository, IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository)
         {
             this.cryptoTickerRepository = cryptoTickerRepository;
             this.currencySymbolRepository = currencySymbolRepository;

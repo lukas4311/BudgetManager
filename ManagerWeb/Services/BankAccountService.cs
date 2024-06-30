@@ -13,16 +13,16 @@ namespace BudgetManager.ManagerWeb.Services
 {
     internal class BankAccountService : IBankAccountService
     {
-        private readonly IPaymentRepository paymentRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly IRepository<Payment> paymentRepository;
+        private readonly IRepository<UserIdentity> userIdentityRepository;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IBankAccountRepository bankAccountRepository;
-        private readonly IPaymentTagRepository paymentTagRepository;
-        private readonly IInterestRateRepository interestRateRepository;
+        private readonly IRepository<BankAccount> bankAccountRepository;
+        private readonly IRepository<PaymentTag> paymentTagRepository;
+        private readonly IRepository<InterestRate> interestRateRepository;
 
-        public BankAccountService(IPaymentRepository paymentRepository, IUserIdentityRepository userIdentityRepository,
-            IHttpContextAccessor httpContextAccessor, IBankAccountRepository bankAccountRepository, IPaymentTagRepository paymentTagRepository,
-            IInterestRateRepository interestRateRepository)
+        public BankAccountService(IRepository<Payment> paymentRepository, IRepository<UserIdentity> userIdentityRepository,
+            IHttpContextAccessor httpContextAccessor, IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository,
+            IRepository<InterestRate> interestRateRepository)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;

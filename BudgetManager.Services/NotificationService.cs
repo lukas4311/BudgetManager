@@ -9,14 +9,14 @@ using BudgetManager.Services.Contracts;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class NotificationService : BaseService<NotificationModel, Notification, INotificationRepository>, INotificationService
+    public class NotificationService : BaseService<NotificationModel, Notification, IRepository<Notification>>, INotificationService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationService"/> class.
         /// </summary>
         /// <param name="repository">The notification repository.</param>
         /// <param name="mapper">The mapper for converting between models and entities.</param>
-        public NotificationService(INotificationRepository repository, IMapper mapper) : base(repository, mapper)
+        public NotificationService(IRepository<Notification> repository, IMapper mapper) : base(repository, mapper)
         {
         }
 

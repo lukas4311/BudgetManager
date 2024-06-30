@@ -10,9 +10,9 @@ namespace BudgetManager.Api.Controllers
     [Route("currency")]
     public class CurrencyController : BaseController
     {
-        private readonly ICurrencySymbolRepository currencySymbolRepository;
+        private readonly IRepository<CurrencySymbol> currencySymbolRepository;
 
-        public CurrencyController(IHttpContextAccessor httpContextAccessor, ICurrencySymbolRepository currencySymbolRepository) : base(httpContextAccessor)
+        public CurrencyController(IHttpContextAccessor httpContextAccessor, IRepository<CurrencySymbol> currencySymbolRepository) : base(httpContextAccessor)
         {
             this.currencySymbolRepository = currencySymbolRepository;
         }

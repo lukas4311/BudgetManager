@@ -17,11 +17,11 @@ namespace BudgetManager.ManagerWeb.Services
         private const string bucketForex = "Crypto";
         private const string organizationId = "8f46f33452affe4a";
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ICryptoTradeHistoryRepository cryptoTradeHistoryRepository;
-        private readonly IUserIdentityRepository userIdentityRepository;
+        private readonly Repository.IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository;
+        private readonly Repository.IRepository<UserIdentity> userIdentityRepository;
         private readonly InfluxDbData.IRepository<CryptoData> cryptoRepository;
 
-        public CryptoService(IHttpContextAccessor httpContextAccessor, ICryptoTradeHistoryRepository cryptoTradeHistoryRepository, IUserIdentityRepository userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
+        public CryptoService(IHttpContextAccessor httpContextAccessor, Repository.IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository, Repository.IRepository<UserIdentity> userIdentityRepository, InfluxDbData.IRepository<CryptoData> cryptoRepository)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
