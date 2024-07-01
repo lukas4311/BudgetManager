@@ -53,5 +53,10 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the user identity object associated with the trade.
         /// </summary>
         public UserIdentity UserIdentity { get; set; }
+
+        /// <summary>
+        /// Trade metadata
+        /// </summary>
+        public string Metadata { get; set; }
     }
 }
