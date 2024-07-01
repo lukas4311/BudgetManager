@@ -50,5 +50,11 @@ namespace BudgetManager.Data
         public DbSet<StockTicker> StockTicker { get; set; }
 
         public DbSet<StockTradeHistory> StockTradeHistory { get; set; }
+
+        public DbSet<EnumItem> EnumItem { get; set; }
+
+        public DbSet<EnumItemType> EnumItemType { get; set; }
+
+        public DbSet<Trade> Trade { get; set; }
     }
 }
