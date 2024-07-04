@@ -82,5 +82,7 @@ namespace BudgetManager.Services.Contracts
         /// <param name="brokerFileData">The byte array of broker file data.</param>
         /// <param name="userId">The ID of the user submitting the report.</param>
         void StoreReportToProcess(byte[] brokerFileData, int userId);
+
+        void GetAllTradesGroupedByMonth();
     }
 }
