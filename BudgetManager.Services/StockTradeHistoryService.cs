@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BudgetManager.Services.SqlQuery;
+using BudgetManager.Domain.DTOs.Queries;
 
 namespace BudgetManager.Services
 {
@@ -200,7 +201,7 @@ namespace BudgetManager.Services
 
         public void GetAllTradesGroupedByMonth()
         {
-            var data = brokerReportToProcessRepository.FromSql<object>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(new DateTime(2023, 1, 1), new DateTime(2024, 1, 1)));
+            var data = brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(new DateTime(2023, 1, 1), new DateTime(2024, 1, 1)));
         }
     }
 }
