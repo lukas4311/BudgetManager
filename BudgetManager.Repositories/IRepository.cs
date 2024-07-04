@@ -48,6 +48,14 @@ namespace BudgetManager.Repository
         void Save();
 
         /// <summary>
+        /// Qeury using formatable string
+        /// </summary>
+        /// <typeparam name="ET">Return model type</typeparam>
+        /// <param name="sql">Formatable string with qeury</param>
+        /// <returns>Queryable of return models</returns>
+        IQueryable<ET> FromSql<ET>(FormattableString sql);
+
+        /// <summary>
         /// Retrieves an entity of type T by its identifier.
         /// </summary>
         /// <param name="id">The identifier of the entity to retrieve.</param>

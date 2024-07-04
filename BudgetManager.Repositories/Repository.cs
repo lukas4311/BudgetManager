@@ -37,6 +37,9 @@ namespace BudgetManager.Repository
         public void Delete(T entity) => RepositoryContext.Set<T>().Remove(entity);
 
         /// <inhertidoc/>
+        public IQueryable<ET> FromSql<ET>(FormattableString sql) => RepositoryContext.Database.SqlQuery<ET>(sql);
+
+        /// <inhertidoc/>
         public void Save() => RepositoryContext.SaveChanges();
     }
 }
