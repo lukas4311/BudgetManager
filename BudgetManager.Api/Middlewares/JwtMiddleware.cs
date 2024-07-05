@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BudgetManager.Api.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -29,9 +31,15 @@ namespace BudgetManager.Api.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
+            if (await HasAllowAnonymousAtrribute(context))
+            {
+                await next(context);
+                return;
+            }
+
             string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-            if (token == null)
+            if (token is null)
             {
                 await SetUnauthorizedResponse(context);
                 return;
@@ -47,6 +55,19 @@ namespace BudgetManager.Api.Middlewares
 
             await AttachUserToContext(context, token);
             await next(context);
+        }
+
+        private async Task<bool> HasAllowAnonymousAtrribute(HttpContext context)
+        {
+            var endpoint = context.GetEndpoint();
+
+            if (endpoint is not null)
+            {
+                var allowAnonymous = endpoint.Metadata.GetMetadata<AllowAnonymousAttribute>();
+                return allowAnonymous != null;
+            }
+
+            return false;
         }
 
         private async Task SetUnauthorizedResponse(HttpContext context)

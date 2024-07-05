@@ -1,9 +1,11 @@
 ﻿using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
 using BudgetManager.Domain.MessagingContracts;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -138,6 +140,14 @@ namespace BudgetManager.Api.Controllers
             }, context => context.SetRoutingKey(routingKey));
 
             return Ok();
+        }
+
+        [HttpGet("trade/monthlygrouped")]
+        [AllowAnonymous]
+        public ActionResult<IEnumerable<StockTradesGroupedMonth>> GetGroupedTradesByMonth()
+        {
+            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth();
+            return Ok(data);
         }
     }
 }

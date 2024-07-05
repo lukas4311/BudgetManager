@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
@@ -83,6 +84,6 @@ namespace BudgetManager.Services.Contracts
         /// <param name="userId">The ID of the user submitting the report.</param>
         void StoreReportToProcess(byte[] brokerFileData, int userId);
 
-        void GetAllTradesGroupedByMonth();
+        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth();
     }
 }

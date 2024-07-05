@@ -199,9 +199,10 @@ namespace BudgetManager.Services
             brokerReportToProcessRepository.Save();
         }
 
-        public void GetAllTradesGroupedByMonth()
+        public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth()
         {
-            var data = brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(new DateTime(2023, 1, 1), new DateTime(2024, 1, 1)));
+            var data = brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(new DateTime(2023, 1, 1), new DateTime(2024, 1, 1))).ToList();
+            return data;
         }
     }
 }
