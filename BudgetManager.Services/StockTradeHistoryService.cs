@@ -2,18 +2,18 @@
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
-using Infl = BudgetManager.InfluxDbData;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
+using BudgetManager.Services.SqlQuery;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BudgetManager.Services.SqlQuery;
-using BudgetManager.Domain.DTOs.Queries;
+using Infl = BudgetManager.InfluxDbData;
 
 namespace BudgetManager.Services
 {
@@ -199,10 +199,13 @@ namespace BudgetManager.Services
             brokerReportToProcessRepository.Save();
         }
 
-        public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth()
-        {
-            var data = brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(new DateTime(2023, 1, 1), new DateTime(2024, 1, 1))).ToList();
-            return data;
-        }
+        public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to) 
+            => brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(from, to)).ToList();
+
+        public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTicker() 
+            => brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesGroupedByTicker()).ToList();
+
+        public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTradeDate() 
+            => brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate()).ToList();
     }
 }

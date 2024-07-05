@@ -84,6 +84,24 @@ namespace BudgetManager.Services.Contracts
         /// <param name="userId">The ID of the user submitting the report.</param>
         void StoreReportToProcess(byte[] brokerFileData, int userId);
 
-        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth();
+        /// <summary>
+        /// Get all stock trades grouped to months
+        /// </summary>
+        /// <param name="from">From date</param>
+        /// <param name="to">To date</param>
+        /// <returns></returns>
+        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to);
+
+        /// <summary>
+        /// Get all stock trades grouped by ticker
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTicker();
+
+        /// <summary>
+        /// Get all stock trades grouped by trade date
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTradeDate();
     }
 }

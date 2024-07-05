@@ -154,7 +154,7 @@ ORDER BY
     StockTickerId";
         }
 
-        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate(DateTime from, DateTime to)
+        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate()
         {
             return $@"
 ;WITH TradesWithSplit AS (
