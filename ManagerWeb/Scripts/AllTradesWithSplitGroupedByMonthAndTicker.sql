@@ -61,7 +61,8 @@ AccumulatedTrades AS (
         TradeMonth,
         TradeSize,
         TradeValue,
-        SUM(TradeSize) OVER (PARTITION BY StockTickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize
+        SUM(TradeSize) OVER (PARTITION BY StockTickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize,
+        SUM(TradeValue) OVER (PARTITION BY StockTickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeValue
     FROM
         AggregatedTrades
 )
