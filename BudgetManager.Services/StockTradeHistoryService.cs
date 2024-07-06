@@ -200,12 +200,12 @@ namespace BudgetManager.Services
         }
 
         public IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to) 
-            => brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(from, to)).ToList();
+            => brokerReportToProcessRepository.FromSql<StockTradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker(from, to));
 
         public IEnumerable<StockTradeGroupedTicker> GetAllTradesGroupedByTicker() 
-            => brokerReportToProcessRepository.FromSql<StockTradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker()).ToList();
+            => brokerReportToProcessRepository.FromSql<StockTradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker());
 
         public IEnumerable<StockTradeGroupedTradeTime> GetAllTradesGroupedByTradeDate() 
-            => brokerReportToProcessRepository.FromSql<StockTradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate()).ToList();
+            => brokerReportToProcessRepository.FromSql<StockTradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate());
     }
 }
