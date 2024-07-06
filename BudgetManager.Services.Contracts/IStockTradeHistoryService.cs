@@ -96,12 +96,12 @@ namespace BudgetManager.Services.Contracts
         /// Get all stock trades grouped by ticker
         /// </summary>
         /// <returns></returns>
-        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTicker();
+        IEnumerable<StockTradeGroupedTicker> GetAllTradesGroupedByTicker();
 
         /// <summary>
         /// Get all stock trades grouped by trade date
         /// </summary>
         /// <returns></returns>
-        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByTradeDate();
+        IEnumerable<StockTradeGroupedTradeTime> GetAllTradesGroupedByTradeDate();
     }
 }
