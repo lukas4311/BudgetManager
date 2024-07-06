@@ -38,7 +38,7 @@ AggregatedTrades AS (
         st.StockTickerId,
         YEAR(ms.MonthStart) AS TradeYear,
         MONTH(ms.MonthStart) AS TradeMonth,
-        ISNULL(SUM(tws.TradeSize * tws.SplitAdjustment), 0) AS TradeSize,
+        ISNULL(SUM(CASE WHEN tws.TradeValue >= 0 THEN -tws.TradeSize * tws.SplitAdjustment ELSE tws.TradeSize * tws.SplitAdjustment END), 0) AS TradeSize,
         ISNULL(SUM(tws.TradeValue), 0) AS TradeValue
     FROM
         MonthSeries ms

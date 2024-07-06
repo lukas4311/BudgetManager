@@ -20,7 +20,7 @@ AdjustedTrades AS (
     SELECT
         StockTickerId,
         TradeTimeStamp,
-        TradeSize * SplitAdjustment AS AdjustedTradeSize,
+        CASE WHEN TradeValue >= 0 THEN -TradeSize * SplitAdjustment ELSE TradeSize * SplitAdjustment END AS AdjustedTradeSize,
         TradeValue
     FROM
         TradesWithSplit

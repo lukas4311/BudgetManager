@@ -1,5 +1,4 @@
 --*** GET ALL BANK ACCOUNT CURRENT BALANCE (SEPARATELY)
-
 SELECT 
     ba.Id AS BankAccountId,
     ba.Code AS BankAccountCode,
