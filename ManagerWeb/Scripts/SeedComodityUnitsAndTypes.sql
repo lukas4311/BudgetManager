@@ -82,3 +82,42 @@ ELSE
 BEGIN
     SELECT Id AS ExistingEnumItemTypeId FROM [dbo].[EnumItemType] WHERE [Code] = 'TradeTicker';
 END
+
+GO;
+
+-- Ensure EnumItemType 'CommodityUnit' exists or insert it if not
+IF NOT EXISTS (SELECT 1 FROM [dbo].[EnumItemType] WHERE [Code] = 'CommodityUnit')
+BEGIN
+    INSERT INTO [dbo].[EnumItemType] ([Code], [Name])
+    VALUES ('CommodityUnit', 'Commodity Unit');
+    SELECT SCOPE_IDENTITY() AS NewEnumItemTypeId; -- Optionally retrieve the newly inserted Id
+END
+ELSE
+BEGIN
+    SELECT Id AS ExistingEnumItemTypeId FROM [dbo].[EnumItemType] WHERE [Code] = 'CommodityUnit';
+END
+
+-- Temporary table to hold commodity unit data
+DROP TABLE IF EXISTS #Units;
+CREATE TABLE #Units(
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [nvarchar](20) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+)
+
+-- Insert data into #Units
+INSERT INTO #Units
+VALUES
+    ('g', 'gram'),
+    ('l', 'litre');
+
+-- Insert data from #Units into EnumItem if not already inserted
+INSERT INTO [dbo].[EnumItem] ([Code], [Name], [EnumItemTypeId], [Metadata])
+SELECT u.[Code], u.[Name], et.[Id], NULL
+FROM #Units u
+JOIN [dbo].[EnumItemType] et ON et.[Code] = 'CommodityUnit'
+LEFT JOIN [dbo].[EnumItem] ei ON ei.[Code] = u.[Code] AND ei.[EnumItemTypeId] = et.[Id]
+WHERE ei.[Id] IS NULL;
+
+-- Drop temporary table
+DROP TABLE IF EXISTS #Units;
