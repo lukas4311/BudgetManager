@@ -162,9 +162,6 @@ class StockScrapeManager:
             logging.info('Main fin data already saved ' + ticker)
 
     def storeTickers(self, tickerShortcut: str, companyName: str):
-        conn = pyodbc.connect(
-            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
@@ -183,6 +180,8 @@ class StockScrapeManager:
                 conn.execute(insert_command)
                 conn.commit()
 
+        # conn = pyodbc.connect(
+        #     f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
         # sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
         # df = pd.read_sql_query(sql, conn, params=[tickerShortcut])
         #
