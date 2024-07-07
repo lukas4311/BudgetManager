@@ -213,7 +213,6 @@ namespace BudgetManager.Services.SqlQuery
         public static FormattableString GetAllPaymentsInMonthsAccumulatedBankAccountsTogether(DateTime from, DateTime to)
         {
             return $"""
-
                     ;WITH MonthSeries AS (
                         SELECT
                             DATEFROMPARTS(YEAR({from:s}), MONTH({from:s}), 1) AS MonthStart
