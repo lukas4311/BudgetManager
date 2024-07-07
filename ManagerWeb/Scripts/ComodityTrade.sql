@@ -32,9 +32,14 @@ ComodityTypes AS (
     SELECT DISTINCT ComodityTypeId
     FROM [dbo].[ComodityTradeHistory]
 ),
+CurrencySymbols AS (
+    SELECT DISTINCT CurrencySymbolId
+    FROM [dbo].[ComodityTradeHistory]
+),
 Trades AS (
     SELECT
         cth.ComodityTypeId,
+        cth.CurrencySymbolId,
         cth.TradeTimeStamp,
         CASE WHEN cth.TradeValue >= 0 THEN -cth.TradeSize ELSE cth.TradeSize END AS AdjustedTradeSize,
         cth.TradeValue,
@@ -46,6 +51,7 @@ Trades AS (
 AggregatedTrades AS (
     SELECT
         ct.ComodityTypeId,
+        cs.CurrencySymbolId,
         YEAR(ms.MonthStart) AS TradeYear,
         MONTH(ms.MonthStart) AS TradeMonth,
         ISNULL(SUM(t.AdjustedTradeSize), 0) AS TradeSize,
@@ -54,28 +60,34 @@ AggregatedTrades AS (
         MonthSeries ms
     CROSS JOIN
         ComodityTypes ct
+    CROSS JOIN
+        CurrencySymbols cs
     LEFT JOIN
         Trades t ON 
             ct.ComodityTypeId = t.ComodityTypeId AND
+            cs.CurrencySymbolId = t.CurrencySymbolId AND
             t.TradeYear = YEAR(ms.MonthStart) AND 
             t.TradeMonth = MONTH(ms.MonthStart)
     GROUP BY
         ct.ComodityTypeId,
+        cs.CurrencySymbolId,
         YEAR(ms.MonthStart),
         MONTH(ms.MonthStart)
 ),
 AccumulatedTrades AS (
     SELECT
         ComodityTypeId,
+        CurrencySymbolId,
         TradeYear,
         TradeMonth,
-        SUM(TradeSize) OVER (PARTITION BY ComodityTypeId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize,
-        SUM(TradeValue) OVER (PARTITION BY ComodityTypeId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeValue
+        SUM(TradeSize) OVER (PARTITION BY ComodityTypeId, CurrencySymbolId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize,
+        SUM(TradeValue) OVER (PARTITION BY ComodityTypeId, CurrencySymbolId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeValue
     FROM
         AggregatedTrades
 )
 SELECT
     ComodityTypeId,
+    CurrencySymbolId,
     TradeYear,
     TradeMonth,
     AccumulatedTradeSize,
@@ -83,5 +95,5 @@ SELECT
 FROM
     AccumulatedTrades
 ORDER BY
-    ComodityTypeId, TradeYear, TradeMonth
-OPTION (MAXRECURSION 0);
+    ComodityTypeId, CurrencySymbolId, TradeYear, TradeMonth
+OPTION (MAXRECURSION 0)
