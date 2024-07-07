@@ -75,7 +75,7 @@ class Trading212ReportParser:
 
 
 def process_report_data(stock_repo: StockRepository, parser: Trading212ReportParser):
-    broker_report_data = stock_repo.get_all_crypto_broker_reports_to_process()
+    broker_report_data = stock_repo._get_all_stock_broker_reports_to_process()
     all_reports_data = []
 
     for report_data in broker_report_data:
@@ -91,7 +91,7 @@ def process_report_data(stock_repo: StockRepository, parser: Trading212ReportPar
             stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
         except Exception as e:
             print(parsed_report)
-            stock_repo.changeProcessState(parsed_report["report_id"], "SavinggError")
+            stock_repo.changeProcessState(parsed_report["report_id"], "SavingError")
 
 
 def parse_report_data_to_model(all_reports_data, parser, report_data):

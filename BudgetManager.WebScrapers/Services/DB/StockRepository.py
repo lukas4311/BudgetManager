@@ -6,45 +6,64 @@ from Models.TradingReportData import TradingReportData
 from Orm.BrokerReportToProcess import BrokerReportToProcess
 from Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Orm.BrokerReportType import BrokerReportType
-from Orm.CurrencySymbol import CurrencySymbol
-from Orm.StockTicker import Base, StockTicker
-from Orm.StockTradeHistory import StockTradeHistory
+from Orm.EnumItem import EnumItem
+from Orm.EnumItemType import EnumItemType
+from Orm.StockTicker import Base
+from Orm.Trade import Trade
 
 connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
 
 
 class StockRepository:
-    def get_ticker_id(self, ticker: str):
+    def _get_ticker_enum_type(self):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(StockTicker).where(StockTicker.ticker == ticker)
-        ticker_model = session.scalars(stmt).first()
-        return ticker_model.id if ticker_model is not None else None
+        stmt = select(EnumItem).where(EnumItemType.code == 'TradeTickers')
+        trade_ticker_type = session.scalars(stmt).first()
+        return trade_ticker_type.id if trade_ticker_type is not None else None
 
-    def create_new_ticker(self, ticker: str):
+    def _get_ticker_id(self, ticker: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
+        session = Session(engine)
 
-        insert_command = insert(StockTicker).values(ticker=ticker, name=ticker)
+        trade_ticker_type = self._get_ticker_enum_type()
+
+        stmt = select(EnumItem).where(EnumItem.code == ticker and EnumItem.enumItemTypeId == trade_ticker_type)
+        ticker_model = session.scalars(stmt).first()
+
+        return ticker_model.id if ticker_model is not None else None
+
+    def _create_new_ticker(self, ticker: str):
+        engine = create_engine(connectionString)
+
+        Base.metadata.create_all(engine)
+        enum_item_type_ticker = self._get_ticker_enum_type()
+        insert_command = insert(EnumItem).values(code=ticker, name=ticker, enumItemTypeId=enum_item_type_ticker)
+
         with engine.connect() as conn:
             conn.execute(insert_command)
             conn.commit()
 
-    def get_currency_id(self, currency_code: str):
+    def _get_currency_id(self, currency_code: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(CurrencySymbol).where(CurrencySymbol.symbol == currency_code)
+        stmt = select(EnumItemType).where(EnumItemType.code == 'CurrencySymbols')
+        currency_symbols_type = session.scalars(stmt).first()
+
+        stmt = select(EnumItem).where(
+            EnumItem.code == currency_code and EnumItem.enumItemTypeId == currency_symbols_type)
         currency_model = session.scalars(stmt).first()
         return currency_model.id if currency_model is not None else None
 
-    def get_all_crypto_broker_reports_to_process(self):
+    def _get_all_stock_broker_reports_to_process(self):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
@@ -67,15 +86,15 @@ class StockRepository:
 
         return broker_report_data
 
-    def insert_stock_trade(self, tradingData: TradingReportData, currency_code: str):
+    def _insert_stock_trade(self, trading_data: TradingReportData, currency_code: str):
         print("Insert record")
 
-        ticker_id = int(self.get_ticker_id(tradingData.ticker))
+        ticker_id = int(self._get_ticker_id(trading_data.ticker))
 
         if ticker_id is None:
             print('Throw exception')
 
-        currency_id = int(self.get_currency_id(currency_code))
+        currency_id = int(self._get_currency_id(currency_code))
 
         if currency_id is None:
             print('Throw exception')
@@ -84,20 +103,19 @@ class StockRepository:
 
         Base.metadata.create_all(engine)
         session = Session(engine)
-        stock_trade = (select(StockTradeHistory)
-                       .where(and_(StockTradeHistory.tradeValue == tradingData.total,
-                                   StockTradeHistory.tradeSize == tradingData.number_of_shares
-                                   , StockTradeHistory.stockTickerId == ticker_id
-                                   , StockTradeHistory.tradeTimeStamp == tradingData.time)
+        stock_trade = (select(Trade)
+                       .where(and_(Trade.tradeValue == trading_data.total,
+                                   Trade.tradeSize == trading_data.number_of_shares, Trade.tickerId == ticker_id,
+                                   Trade.tradeTimeStamp == trading_data.time)
                               ))
         stock_data = session.scalars(stock_trade)
         stock_trade = stock_data.first()
 
         if stock_trade is None:
-            insert_command = insert(StockTradeHistory).values(tradeTimeStamp=tradingData.time, stockTickerId=ticker_id,
-                                                              tradeSize=tradingData.number_of_shares,
-                                                              tradeValue=tradingData.total,
-                                                              currencySymbolId=currency_id, userIdentityId=1)
+            insert_command = insert(Trade).values(tradeTimeStamp=trading_data.time, tickerId=ticker_id,
+                                                  tradeSize=trading_data.number_of_shares,
+                                                  tradeValue=trading_data.total, tradeCurrencySymbolId=currency_id,
+                                                  userIdentityId=1)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
@@ -108,12 +126,12 @@ class StockRepository:
 
     def store_trade_data(self, stock_trade_data: List[TradingReportData], currency_code: str):
         for trade in stock_trade_data:
-            ticker_id = self.get_ticker_id(trade.ticker)
+            ticker_id = self._get_ticker_id(trade.ticker)
 
             if not ticker_id:
-                self.create_new_ticker(trade.ticker)
+                self._create_new_ticker(trade.ticker)
 
-            self.insert_stock_trade(trade, currency_code)
+            self._insert_stock_trade(trade, currency_code)
 
     def changeProcessState(self, broker_report_id: int, state_code: str):
         engine = create_engine(
