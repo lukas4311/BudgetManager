@@ -1,14 +1,17 @@
 --**** group by comodity type
 SELECT
     ComodityTypeId,
+    CurrencySymbolId,
     SUM(CASE WHEN TradeValue >= 0 THEN -TradeSize ELSE TradeSize END) AS TotalTradeSize,
     SUM(TradeValue) AS TotalTradeValue
 FROM
     [dbo].[ComodityTradeHistory]
 GROUP BY
-    ComodityTypeId
+    ComodityTypeId,
+    CurrencySymbolId
 ORDER BY
-    ComodityTypeId;
+    ComodityTypeId,
+    CurrencySymbolId
 
 --**** monthly grouped and accumulated
 DECLARE @FromDate DATE = '2021-01-01';  -- Replace with your actual from date
