@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using System;
+﻿using System;
 
 namespace BudgetManager.Services.SqlQuery
 {
