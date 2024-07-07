@@ -87,7 +87,7 @@ def process_report_data(stock_repo: StockRepository, parser: Trading212ReportPar
     print(all_reports_data)
     for parsed_report in all_reports_data:
         try:
-            stock_repo.store_trade_data(parsed_report["data"], "CZK")
+            stock_repo.store_trade_data(parsed_report["data"], "CZK", parsed_report["user_id"])
             stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
         except Exception as e:
             print(parsed_report)

@@ -86,7 +86,7 @@ class StockRepository:
 
         return broker_report_data
 
-    def _insert_stock_trade(self, trading_data: TradingReportData, currency_code: str):
+    def _insert_stock_trade(self, trading_data: TradingReportData, currency_code: str, user_id: int):
         print("Insert record")
 
         ticker_id = int(self._get_ticker_id(trading_data.ticker))
@@ -115,7 +115,7 @@ class StockRepository:
             insert_command = insert(Trade).values(tradeTimeStamp=trading_data.time, tickerId=ticker_id,
                                                   tradeSize=trading_data.number_of_shares,
                                                   tradeValue=trading_data.total, tradeCurrencySymbolId=currency_id,
-                                                  userIdentityId=1)
+                                                  userIdentityId=user_id)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
@@ -124,14 +124,14 @@ class StockRepository:
 
         session.close()
 
-    def store_trade_data(self, stock_trade_data: List[TradingReportData], currency_code: str):
+    def store_trade_data(self, stock_trade_data: List[TradingReportData], currency_code: str, user_id: int):
         for trade in stock_trade_data:
             ticker_id = self._get_ticker_id(trade.ticker)
 
             if not ticker_id:
                 self._create_new_ticker(trade.ticker)
 
-            self._insert_stock_trade(trade, currency_code)
+            self._insert_stock_trade(trade, currency_code, user_id)
 
     def changeProcessState(self, broker_report_id: int, state_code: str):
         engine = create_engine(
