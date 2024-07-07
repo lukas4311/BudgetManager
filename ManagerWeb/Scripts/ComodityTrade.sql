@@ -1,17 +1,22 @@
 --**** group by comodity type
 SELECT
-    ComodityTypeId,
-    CurrencySymbolId,
-    SUM(CASE WHEN TradeValue >= 0 THEN -TradeSize ELSE TradeSize END) AS TotalTradeSize,
-    SUM(TradeValue) AS TotalTradeValue
+    cth.ComodityTypeId,
+    cth.CurrencySymbolId,
+    cs.Symbol,
+    SUM(CASE WHEN cth.TradeValue >= 0 THEN -cth.TradeSize ELSE cth.TradeSize END) AS TotalTradeSize,
+    SUM(cth.TradeValue) AS TotalTradeValue
 FROM
-    [dbo].[ComodityTradeHistory]
+    [dbo].[ComodityTradeHistory] cth
+JOIN
+    [dbo].[CurrencySymbol] cs ON cth.CurrencySymbolId = cs.Id
 GROUP BY
-    ComodityTypeId,
-    CurrencySymbolId
+    cth.ComodityTypeId,
+    cth.CurrencySymbolId,
+    cs.Symbol
 ORDER BY
-    ComodityTypeId,
-    CurrencySymbolId
+    cth.ComodityTypeId,
+    cth.CurrencySymbolId;
+
 
 --**** monthly grouped and accumulated
 DECLARE @FromDate DATE = '2021-01-01';  -- Replace with your actual from date
@@ -86,14 +91,17 @@ AccumulatedTrades AS (
         AggregatedTrades
 )
 SELECT
-    ComodityTypeId,
-    CurrencySymbolId,
-    TradeYear,
-    TradeMonth,
-    AccumulatedTradeSize,
-    AccumulatedTradeValue
+    at.ComodityTypeId,
+    at.CurrencySymbolId,
+    cs.Symbol,
+    at.TradeYear,
+    at.TradeMonth,
+    at.AccumulatedTradeSize,
+    at.AccumulatedTradeValue
 FROM
-    AccumulatedTrades
+    AccumulatedTrades at
+JOIN
+    [dbo].[CurrencySymbol] cs ON at.CurrencySymbolId = cs.Id
 ORDER BY
-    ComodityTypeId, CurrencySymbolId, TradeYear, TradeMonth
+    at.ComodityTypeId, at.CurrencySymbolId, at.TradeYear, at.TradeMonth
 OPTION (MAXRECURSION 0)
