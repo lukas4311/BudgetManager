@@ -1,7 +1,11 @@
 import pytz
 from influxdb_client import Point, WritePrecision
+from sqlalchemy import create_engine, select, insert
+from sqlalchemy.orm import Session
 
 from Models.FilterTuple import FilterTuple
+from Orm.EnumItem import Base, EnumItem
+from Orm.EnumItemType import EnumItemType
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
@@ -160,17 +164,36 @@ class StockScrapeManager:
     def storeTickers(self, tickerShortcut: str, companyName: str):
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-        sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
-        df = pd.read_sql_query(sql, conn, params=[tickerShortcut])
 
-        if len(df.index) == 0:
-            cursor = conn.cursor()
-            params = (tickerShortcut, companyName)
-            cursor.execute('''
-                                INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
-                                VALUES(?,?)
-                            ''', params)
-            conn.commit()
+        engine = create_engine(
+            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        stmt = select(EnumItem).where(EnumItem.code == tickerShortcut)
+        ticker_model = session.scalars(stmt).first()
+
+        if ticker_model is None:
+            stmt_enum_item_type = select(EnumItemType).where(EnumItemType.code == "TradeTicker")
+            enum_item_type = session.scalars(stmt_enum_item_type).first()
+
+            insert_command = insert(EnumItem).values(code=tickerShortcut, name=companyName, enumItemTypeId=enum_item_type.id)
+            with engine.connect() as conn:
+                conn.execute(insert_command)
+                conn.commit()
+
+        # sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
+        # df = pd.read_sql_query(sql, conn, params=[tickerShortcut])
+        #
+        # if len(df.index) == 0:
+        #     cursor = conn.cursor()
+        #     params = (tickerShortcut, companyName)
+        #     cursor.execute('''
+        #                         INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
+        #                         VALUES(?,?)
+        #                     ''', params)
+        #     conn.commit()
 
     def storeCompanyProfile(self, ticker: str):
         self.fmpScraper.download_profile(ticker)
