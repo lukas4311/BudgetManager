@@ -33,7 +33,7 @@ class StockRepository:
 
         trade_ticker_type = self._get_ticker_enum_type()
 
-        stmt = select(EnumItem).where(EnumItem.code == ticker and EnumItem.enumItemTypeId == trade_ticker_type)
+        stmt = select(EnumItem).where(and_(EnumItem.code == ticker, EnumItem.enumItemTypeId == trade_ticker_type))
         ticker_model = session.scalars(stmt).first()
 
         return ticker_model.id if ticker_model is not None else None
