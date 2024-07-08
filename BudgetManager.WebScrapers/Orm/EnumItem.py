@@ -11,4 +11,4 @@ class EnumItem(Base):
     code: Mapped[str] = mapped_column(String, nullable=False)
     name: Mapped[str] = mapped_column(String, nullable=False)
     enumItemTypeId: Mapped[int] = mapped_column(Integer, nullable=False)
-    metadata: Mapped[str] = mapped_column(String, nullable=True)
+    _metadata: Mapped[str] = mapped_column(String, nullable=True, name="metadata")

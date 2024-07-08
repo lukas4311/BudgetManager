@@ -16,4 +16,4 @@ class Trade(Base):
     tradeValue: Mapped[float] = mapped_column(Numeric, nullable=False)
     tradeCurrencySymbolId: Mapped[int] = mapped_column(Integer, nullable=False)
     userIdentityId: Mapped[int] = mapped_column(Integer, nullable=False)
-    metadata: Mapped[str] = mapped_column(String, nullable=True)
+    _metadata: Mapped[str] = mapped_column(String, nullable=True, name="metadata")

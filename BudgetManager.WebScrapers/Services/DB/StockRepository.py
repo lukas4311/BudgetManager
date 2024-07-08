@@ -21,7 +21,7 @@ class StockRepository:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(EnumItem).where(EnumItemType.code == 'TradeTickers')
+        stmt = select(EnumItemType).where(EnumItemType.code == 'TradeTickers')
         trade_ticker_type = session.scalars(stmt).first()
         return trade_ticker_type.id if trade_ticker_type is not None else None
 
@@ -77,9 +77,8 @@ class StockRepository:
         broker_state = session.scalars(broker_state_command).first()
         broker_state_id = broker_state.id
 
-        broker_report_data_command = select(BrokerReportToProcess).where(
-            BrokerReportToProcess.brokerReportTypeId == broker_type_id
-            and BrokerReportToProcess.brokerReportToProcessStateId == broker_state_id)
+        broker_report_data_command = select(BrokerReportToProcess).where(and_(
+            BrokerReportToProcess.brokerReportTypeId == broker_type_id, BrokerReportToProcess.brokerReportToProcessStateId == broker_state_id))
 
         broker_report_data = session.scalars(broker_report_data_command).all()
         session.close()
