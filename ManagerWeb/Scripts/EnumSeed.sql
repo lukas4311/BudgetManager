@@ -77,3 +77,23 @@ WHERE ei.[Id] IS NULL;
 -- Drop temporary table
 DROP TABLE IF EXISTS #Categories;
 
+GO;
+
+-- Insert into EnumItemType if not exists
+IF NOT EXISTS (SELECT 1 FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers')
+BEGIN
+    INSERT INTO [dbo].[EnumItemType] ([Code], [Name])
+    VALUES ('AvailableBrokerParsers', 'Parser available for processing broker reports');
+END
+
+-- Insert into EnumItem if not exists
+INSERT INTO [dbo].[EnumItem] ([Code], [Name], [EnumItemTypeId], [Metadata])
+SELECT *
+FROM (
+    VALUES
+        ('Trading212', 'Trading212', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
+        ('InteractiveBrokers', 'Interactive Brokers', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
+        ('Degiro', 'Degiro', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
+        ('XTB', 'XTB', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL)
+) AS EnumItems (Code, Name, EnumItemTypeId, Metadata)
+WHERE NOT EXISTS (SELECT 1 FROM [dbo].[EnumItem] WHERE [Code] = EnumItems.Code);
