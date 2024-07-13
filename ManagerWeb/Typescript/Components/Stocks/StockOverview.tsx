@@ -60,6 +60,7 @@ interface StockOverviewState {
     isOpenedTickerRequest: boolean;
     stockBrokerParsers: Map<number, string>;
     selectedBroker: number;
+    isFileUploadOpened: boolean;
 }
 
 export class StockComplexModel {
@@ -83,7 +84,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         super(props);
         this.state = {
             stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] },
-            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false, stockBrokerParsers: new Map<number, string>(), selectedBroker: -1
+            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false, stockBrokerParsers: new Map<number, string>(), selectedBroker: -1, isFileUploadOpened: false
         };
     }
 
@@ -284,6 +285,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private handleClosetickerRequest = () =>
         this.setState({ isOpenedTickerRequest: false });
 
+    private handleCloseFileUpload = () =>
+        this.setState({ isFileUploadOpened: false });
+
     private handleDisplayChoice = (_: any, displayChoice: DisplayChioce) => {
         if (displayChoice)
             this.setState({ selectedDisplayChoice: displayChoice });
@@ -337,30 +341,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                         </ToggleButtonGroup>
                                     </div>
                                     <div className="w-1/2">
-                                        <Button
-                                            component="label"
-                                            variant="outlined"
-                                            color="primary"
-                                            className="block ml-auto bg-vermilion text-white mb-3 w-2/3"
-                                        >
-                                            <div className="flex flex-row justify-center">
-                                                <PublishIcon />
-                                                <span className="ml-4">Upload crypto report</span>
-                                            </div>
-                                            <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
+                                        <Button component="label" variant="outlined" color="primary" className="block ml-auto bg-vermilion text-white mb-3 w-2/3"
+                                            onClick={() => this.setState({ isFileUploadOpened: true })}>
+                                            Upload crypto report
                                         </Button>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            size="small"
-                                            value={this.state.selectedBroker}
-                                            onChange={e => this.setState({ selectedBroker: parseInt(e.target.value.toString()) })}
-                                            className="w-full lg:w-1/3"
-                                        >
-                                            {Array.from(this.state.stockBrokerParsers.entries()).map(([key, value]) => (
-                                                <MenuItem key={key} value={key}>{value}</MenuItem>
-                                            ))}
-                                        </Select>
                                     </div>
                                 </div>
                                 {this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? (
@@ -440,6 +424,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <NewTickerForm onSave={this.sendTickerRequest} />
                         </DialogContent>
                     </Dialog>
+                    <Dialog open={this.state.isFileUploadOpened} onClose={this.handleCloseFileUpload} aria-labelledby="" maxWidth="sm" fullWidth={true}>
+                        <DialogContent className="bg-prussianBlue">
+                            <BrokerUpload onUploadBrokerReport={this.uploadBrokerReport} stockBrokerParsers={this.state.stockBrokerParsers}
+                                onBrokerSelect={(e) => this.setState({ selectedBroker: e })} selectedBroker={this.state.selectedBroker} />
+                        </DialogContent>
+                    </Dialog>
                 </>
             </MainFrame>
         );
@@ -449,3 +439,32 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 StockOverview.contextType = AppCtx;
 
 export default StockOverview;
+
+const BrokerUpload = (props) => {
+    return (
+        <div className="flex flex-col">
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                size="small"
+                value={props.selectedBroker}
+                onChange={e => props.onBrokerSelect(e.target.value)}
+                className="w-full lg:w-2/3 mx-auto">
+                {Array.from(props.stockBrokerParsers.entries()).map(([key, value]) => (
+                    <MenuItem key={key} value={key}>{value}</MenuItem>
+                ))}
+            </Select >
+            <Button
+                component="label"
+                variant="outlined"
+                color="primary"
+                className="block ml-auto bg-vermilion text-white mb-3 mt-4 w-full lg:w-2/3 mx-auto">
+                <div className="flex flex-row justify-center">
+                    <PublishIcon />
+                    <span className="ml-4">Upload crypto report</span>
+                </div>
+                <input type="file" accept=".csv" hidden onChange={props.onUploadBrokerReport} />
+            </Button>
+        </div>
+    );
+}
