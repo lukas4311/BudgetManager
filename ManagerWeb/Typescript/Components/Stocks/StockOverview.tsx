@@ -3,7 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
-import { CryptoApi, CurrencyApi, StockApi } from "../../ApiClient/Main/apis";
+import { CryptoApi, CurrencyApi, EnumApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _, { max } from "lodash";
@@ -28,7 +28,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
-import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField } from "@mui/material";
+import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField, Select, MenuItem } from "@mui/material";
 import PublishIcon from '@mui/icons-material/Publish';
 import { SnackbarSeverity } from "../../App";
 import { NewTickerForm } from "./NewTickerForm";
@@ -58,6 +58,8 @@ interface StockOverviewState {
     lineChartData: LineChartProps;
     selectedDisplayChoice: string;
     isOpenedTickerRequest: boolean;
+    stockBrokerParsers: Map<number, string>;
+    selectedBroker: number;
 }
 
 export class StockComplexModel {
@@ -68,6 +70,7 @@ export class StockComplexModel {
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
+    private stockParsersTypeCode = 'AvailableBrokerParsers';
     private tickers: StockTickerModel[] = [];
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
@@ -80,7 +83,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         super(props);
         this.state = {
             stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] },
-            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false
+            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false, stockBrokerParsers: new Map<number, string>(), selectedBroker: -1
         };
     }
 
@@ -91,14 +94,17 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const apiFactory = new ApiClientFactory(this.props.history);
         this.stockApi = await apiFactory.getClient(StockApi);
         const currencyApi = await apiFactory.getClient(CurrencyApi);
+        const enumApi = await apiFactory.getClient(EnumApi);
         this.cryptoApi = await apiFactory.getClient(CryptoApi);
         this.cryptoFinApi = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
         const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
         this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi), this.forexFinApi, stockFinApi);
 
+        const parsers = await enumApi.typeEnumItemTypeCodeGet({ enumItemTypeCode: this.stockParsersTypeCode });
         this.tickers = await this.stockService.getStockTickers();
         this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
+        this.setState({ stockBrokerParsers: new Map(parsers.map(p => [p.id, p.name])) });
         this.loadStockData();
     }
 
@@ -343,6 +349,18 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             </div>
                                             <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
                                         </Button>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            size="small"
+                                            value={this.state.selectedBroker}
+                                            onChange={e => this.setState({ selectedBroker: parseInt(e.target.value.toString()) })}
+                                            className="w-full lg:w-1/3"
+                                        >
+                                            {Array.from(this.state.stockBrokerParsers.entries()).map(([key, value]) => (
+                                                <MenuItem key={key} value={key}>{value}</MenuItem>
+                                            ))}
+                                        </Select>
                                     </div>
                                 </div>
                                 {this.state.selectedDisplayChoice == DisplayChioce.Portfolio ? (
