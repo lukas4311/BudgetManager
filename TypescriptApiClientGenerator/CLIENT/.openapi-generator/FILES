@@ -3,6 +3,7 @@ apis/BudgetApi.ts
 apis/ComodityApi.ts
 apis/CryptoApi.ts
 apis/CurrencyApi.ts
+apis/EnumApi.ts
 apis/NotificationApi.ts
 apis/OtherInvestmentApi.ts
 apis/PaymentApi.ts
@@ -29,6 +30,8 @@ models/CryptoTicker.ts
 models/CryptoTradeHistory.ts
 models/CurrencySymbol.ts
 models/ECurrencySymbol.ts
+models/EnumItemModel.ts
+models/EnumItemModelAdjusted.ts
 models/InterestRate.ts
 models/Notification.ts
 models/NotificationModel.ts
@@ -50,6 +53,7 @@ models/StockPrice.ts
 models/StockTickerModel.ts
 models/StockTradeHistoryGetModel.ts
 models/StockTradeHistoryModel.ts
+models/StockTradesGroupedMonth.ts
 models/Tag.ts
 models/TagModel.ts
 models/TickerRequest.ts

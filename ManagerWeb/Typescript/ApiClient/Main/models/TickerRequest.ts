@@ -25,6 +25,12 @@ export class TickerRequest {
      * @memberof TickerRequest
      */
     ticker?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof TickerRequest
+     */
+    userId?: number;
 }
 
 export function TickerRequestFromJSON(json: any): TickerRequest {
@@ -38,6 +44,7 @@ export function TickerRequestFromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'ticker': !exists(json, 'ticker') ? undefined : json['ticker'],
+        'userId': !exists(json, 'userId') ? undefined : json['userId'],
     };
 }
 
@@ -51,5 +58,6 @@ export function TickerRequestToJSON(value?: TickerRequest | null): any {
     return {
         
         'ticker': value.ticker,
+        'userId': value.userId,
     };
 }

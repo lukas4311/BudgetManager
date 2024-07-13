@@ -30,7 +30,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("/type/{enumItemTypeCode}")]
-        public ActionResult<IEnumerable<EnumItemModelAdjusted>> GetAllByTypeCode(string enumItemTypeCode)
+        public ActionResult<IEnumerable<EnumItemModelAdjusted>> GetAllByTypeCode([FromRoute] string enumItemTypeCode)
         {
             return Ok(enumItemService.GetAllByTypeCode(enumItemTypeCode));
         }

@@ -33,6 +33,9 @@ import {
     StockTradeHistoryModel,
     StockTradeHistoryModelFromJSON,
     StockTradeHistoryModelToJSON,
+    StockTradesGroupedMonth,
+    StockTradesGroupedMonthFromJSON,
+    StockTradesGroupedMonthToJSON,
     TickerRequest,
     TickerRequestFromJSON,
     TickerRequestToJSON,
@@ -252,6 +255,18 @@ export interface StockApiInterface {
     /**
      */
     stockTickerRequestPost(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradesGroupedMonth>>>;
+
+    /**
+     */
+    stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<StockTradesGroupedMonth>>;
 
 }
 
@@ -679,6 +694,34 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
      */
     async stockTickerRequestPost(requestParameters: StockTickerRequestPostRequest, initOverrides?: RequestInit): Promise<void> {
         await this.stockTickerRequestPostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/trade/monthlygrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockTradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<StockTradesGroupedMonth>> {
+        const response = await this.stockTradeMonthlygroupedGetRaw(initOverrides);
+        return await response.value();
     }
 
 }
