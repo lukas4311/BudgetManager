@@ -10,7 +10,7 @@ using System.Linq;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class EnumService : BaseService<EnumItemModelAdjusted, EnumItem, IRepository<EnumItem>>, IEnumService
+    public class EnumService : BaseService<EnumItemModel, EnumItem, IRepository<EnumItem>>, IEnumService
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EnumService"/> class.
@@ -22,7 +22,22 @@ namespace BudgetManager.Services
         }
 
         /// <inheritdoc/>
-        public override EnumItemModelAdjusted Get(int id)
+        public override EnumItemModel Get(int id)
+        {
+            return repository.FindByCondition(p => p.Id == id)
+                .Include(d => d.EnumItemType)
+                .Select(e => new EnumItemModel
+                {
+                    Code = e.Code,
+                    Name = e.Name,
+                    EnumItemTypeId = e.EnumItemTypeId,
+                    Metadata = e.Metadata, 
+                    Id = e.Id
+                })
+                .SingleOrDefault();
+        }
+
+        public EnumItemModelAdjusted GetWithTypeInfo(int id)
         {
             return repository.FindByCondition(p => p.Id == id)
                 .Include(d => d.EnumItemType)

@@ -1,9 +1,8 @@
-﻿using BudgetManager.Data.DataModels;
-using BudgetManager.Domain.DTOs;
-using BudgetManager.Repository;
+﻿using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -11,17 +10,29 @@ namespace BudgetManager.Api.Controllers
     [Route("enumItem")]
     public class EnumController : BaseController
     {
-        private readonly IBaseService<EnumItemModel, EnumItem, IRepository<EnumItem>> enumItemService;
+        private readonly IEnumService enumItemService;
 
-        public EnumController(IHttpContextAccessor httpContextAccessor, IBaseService<EnumItemModel, EnumItem, IRepository<EnumItem>> enumItemService) : base(httpContextAccessor)
+        public EnumController(IHttpContextAccessor httpContextAccessor, IEnumService enumItemService) : base(httpContextAccessor)
         {
             this.enumItemService = enumItemService;
         }
 
         [HttpGet]
-        public void GetAll()
+        public ActionResult<IEnumerable<EnumItemModel>> GetAll()
         {
-            Ok(enumItemService.GetAll());
+            return Ok(enumItemService.GetAll());
+        }
+
+        [HttpGet("/{enumItemCode}")]
+        public ActionResult<EnumItemModelAdjusted> GetByCode([FromRoute] string enumItemCode)
+        {
+            return Ok(enumItemService.GetByCode(enumItemCode));
+        }
+
+        [HttpGet("/type/{enumItemTypeCode}")]
+        public ActionResult<IEnumerable<EnumItemModelAdjusted>> GetAllByTypeCode(string enumItemTypeCode)
+        {
+            return Ok(enumItemService.GetAllByTypeCode(enumItemTypeCode));
         }
     }
 }

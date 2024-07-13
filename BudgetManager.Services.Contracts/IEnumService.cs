@@ -8,7 +8,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service for enum items
     /// </summary>
-    public interface IEnumService : IBaseService<EnumItemModelAdjusted, EnumItem, IRepository<EnumItem>>
+    public interface IEnumService : IBaseService<EnumItemModel, EnumItem, IRepository<EnumItem>>
     {
         /// <summary>
         /// Get enum item by code
