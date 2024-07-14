@@ -117,13 +117,13 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
-        [HttpPost("brokerReport")]
-        public async Task<IActionResult> UploadReport(IFormFile file)
+        [HttpPost("brokerReport/{brokerId}")]
+        public async Task<IActionResult> UploadReport([FromRoute]int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);
             byte[] fileBytes = ms.ToArray();
-            stockTradeHistoryService.StoreReportToProcess(fileBytes, GetUserId());
+            stockTradeHistoryService.StoreReportToProcess(fileBytes, GetUserId(), brokerId);
 
             return Ok();
         }

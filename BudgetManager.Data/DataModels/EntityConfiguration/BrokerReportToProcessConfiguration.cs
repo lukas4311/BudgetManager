@@ -13,11 +13,18 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
 
             builder.HasOne(e => e.UserIdentity)
                 .WithMany(e => e.BrokerReportsToProcess)
-                .HasForeignKey(e => e.UserIdentityId);
+                .HasForeignKey(e => e.UserIdentityId)
+                .IsRequired();
 
             builder.HasOne(e => e.BrokerReportType)
                .WithMany(e => e.BrokerReportsToProcess)
-               .HasForeignKey(e => e.BrokerReportTypeId);
+               .HasForeignKey(e => e.BrokerReportTypeId)
+               .IsRequired();
+
+            builder.HasOne(e => e.Broker)
+               .WithMany()
+               .HasForeignKey(e => e.BrokerId)
+               .IsRequired();
         }
     }
 }

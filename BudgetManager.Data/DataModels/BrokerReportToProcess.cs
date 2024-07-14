@@ -51,5 +51,15 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the type of broker report.
         /// </summary>
         public BrokerReportType BrokerReportType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the broker of report.
+        /// </summary>
+        public int BrokerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the broker of report.
+        /// </summary>
+        public EnumItem Broker { get; set; }
     }
 }

@@ -179,7 +179,7 @@ namespace BudgetManager.Services
         }
 
         /// <inheritdoc/>
-        public void StoreReportToProcess(byte[] brokerFileData, int userId)
+        public void StoreReportToProcess(byte[] brokerFileData, int userId, int brokerId)
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
@@ -192,7 +192,8 @@ namespace BudgetManager.Services
                 BrokerReportTypeId = stockTypeId,
                 FileContentBase64 = fileContentBase64,
                 ImportedTime = dateTimeProvider.Now.DateTimeInstance,
-                UserIdentityId = userId
+                UserIdentityId = userId,
+                BrokerId = brokerId
             };
 
             brokerReportToProcessRepository.Create(brokerReport);
