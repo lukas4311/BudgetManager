@@ -13,6 +13,7 @@ from Orm.CurrencySymbol import CurrencySymbol
 from Orm.StockTicker import StockTicker
 from Orm.StockTradeHistory import Base, StockTradeHistory
 from ReportParsers.BrokerReportParser import BrokerReportParser
+from Services.DB.StockRepository import StockRepository
 from Services.YahooService import YahooService
 
 log_name = 'Logs/IB.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -31,6 +32,11 @@ class IBReportData:
 
 
 class InteractiveBrokersParse(BrokerReportParser):
+    __stockRepo: StockRepository
+
+    def __init__(self):
+        self.__stockRepo = StockRepository()
+
     def map_report_row_to_model(self, row) -> TradingReportData:
         if self.__check_row(row):
             return None
