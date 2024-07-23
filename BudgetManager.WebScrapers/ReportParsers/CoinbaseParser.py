@@ -3,9 +3,7 @@ import csv
 import io
 from dataclasses import dataclass
 from datetime import datetime
-
 import pandas as pd
-
 from Exceptions.ParseCsvError import ParseCsvError
 from Services.CryptoSqlService import CryptoSqlService
 
@@ -18,9 +16,6 @@ class CoinbaseReportData:
     total: float
     total_unit: str
     operationType: str
-
-
-
 
 
 class CoinbaseParser:

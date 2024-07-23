@@ -1,20 +1,15 @@
-import base64 as b64
 import csv
-import io
 import logging
 import warnings
 from datetime import datetime
 import pandas as pd
-from Exceptions.ParseCsvError import ParseCsvError
 from Models.TradingReportData import TradingReportData
-from Services.DB.StockRepository import StockRepository
 
 warnings.filterwarnings('ignore', category=UserWarning)
 
 log_name = 'Logs/degiro.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-
 
 
 class Trading212ReportParser:
