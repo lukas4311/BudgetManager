@@ -8,3 +8,4 @@ class TradingReportData:
     name: str
     number_of_shares: float
     total: float
+    currency_id: str

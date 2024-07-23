@@ -49,7 +49,7 @@ class StockRepository:
             conn.execute(insert_command)
             conn.commit()
 
-    def _get_currency_id(self, currency_code: str):
+    def get_currency_id(self, currency_code: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
@@ -86,8 +86,6 @@ class StockRepository:
         return broker_report_data
 
     def _insert_stock_trade(self, trading_data: TradingReportData, currency_code: str, user_id: int):
-        print("Insert record")
-
         ticker_id = int(self._get_ticker_id(trading_data.ticker))
 
         if ticker_id is None:

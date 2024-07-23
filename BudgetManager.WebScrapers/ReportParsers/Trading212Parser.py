@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 from Exceptions.ParseCsvError import ParseCsvError
 from Models.TradingReportData import TradingReportData
+from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
 
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -16,7 +17,32 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
                     level=logging.DEBUG)
 
 
-class Trading212ReportParser:
+class Trading212ReportParser(BrokerReportParser):
+    _stockRepo: StockRepository
+
+    def __init__(self):
+        _stockRepo = StockRepository()
+
+    def map_report_row_to_model(self, row) -> TradingReportData:
+        action = row["Action"]
+        time = row["Time"]
+        ticker = row["Ticker"]
+        name = row["Name"]
+        number_of_shares = float(row["No. of shares"])
+        total = float(row["Total"])
+        currency_total = row["Currency (Total)"]
+
+        if action == "Market buy":
+            total = total * -1
+
+        pandas_date = pd.to_datetime(time)
+        pandas_date = pandas_date.tz_localize("Europe/Prague")
+        pandas_date = pandas_date.tz_convert("utc")
+
+        currency_id = self._stockRepo.get_currency_id(currency_total)
+
+        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id)
+
     def read_report_csv_file(self):
         parsed_data: list[TradingReportData] = []
         with open("..\\BrokerReports\\Trading212_1.csv", 'r') as file:
