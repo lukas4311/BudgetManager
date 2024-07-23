@@ -16,3 +16,4 @@ class BrokerReportToProcess(Base):
     brokerReportToProcessStateId: Mapped[int] = mapped_column(Integer, nullable=False)
     userIdentityId: Mapped[int] = mapped_column(Integer, nullable=False)
     brokerReportTypeId: Mapped[int] = mapped_column(Integer, nullable=False)
+    brokerId: Mapped[int] = mapped_column(Integer, nullable=False)

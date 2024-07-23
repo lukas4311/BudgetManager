@@ -15,15 +15,25 @@ connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?d
 
 
 class StockRepository:
-    def _get_ticker_enum_type(self):
+    def get_enum_type(self, code: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(EnumItemType).where(EnumItemType.code == 'TradeTickers')
+        stmt = select(EnumItemType).where(EnumItemType.code == code)
         trade_ticker_type = session.scalars(stmt).first()
         return trade_ticker_type.id if trade_ticker_type is not None else None
+
+    def get_enums_by_type_id(self, enum_item_type_id):
+        engine = create_engine(connectionString)
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        stmt = select(EnumItem).where(EnumItem.enumItemTypeId == enum_item_type_id)
+        enums = session.scalars(stmt).all()
+        return enums if enums is not None else None
 
     def _get_ticker_id(self, ticker: str):
         engine = create_engine(connectionString)
@@ -31,7 +41,7 @@ class StockRepository:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        trade_ticker_type = self._get_ticker_enum_type()
+        trade_ticker_type = self.get_enum_type('TradeTickers')
 
         stmt = select(EnumItem).where(and_(EnumItem.code == ticker, EnumItem.enumItemTypeId == trade_ticker_type))
         ticker_model = session.scalars(stmt).first()
@@ -42,7 +52,7 @@ class StockRepository:
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
-        enum_item_type_ticker = self._get_ticker_enum_type()
+        enum_item_type_ticker = self.get_enum_type('TradeTickers')
         insert_command = insert(EnumItem).values(code=ticker, name=ticker, enumItemTypeId=enum_item_type_ticker)
 
         with engine.connect() as conn:
@@ -91,7 +101,7 @@ class StockRepository:
         if ticker_id is None:
             print('Throw exception')
 
-        currency_id = int(self._get_currency_id(currency_code))
+        currency_id = int(self.get_currency_id(currency_code))
 
         if currency_id is None:
             print('Throw exception')

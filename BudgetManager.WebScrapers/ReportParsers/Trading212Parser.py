@@ -18,10 +18,10 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 
 
 class Trading212ReportParser(BrokerReportParser):
-    _stockRepo: StockRepository
+    __stockRepo: StockRepository
 
     def __init__(self):
-        _stockRepo = StockRepository()
+        self.__stockRepo = StockRepository()
 
     def map_report_row_to_model(self, row) -> TradingReportData:
         action = row["Action"]
@@ -39,7 +39,7 @@ class Trading212ReportParser(BrokerReportParser):
         pandas_date = pandas_date.tz_localize("Europe/Prague")
         pandas_date = pandas_date.tz_convert("utc")
 
-        currency_id = self._stockRepo.get_currency_id(currency_total)
+        currency_id = self.__stockRepo.get_currency_id(currency_total)
 
         return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id)
 
@@ -134,6 +134,6 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
         raise ParseCsvError("Error while parsing CSV")
 
 
-parser = Trading212ReportParser()
-stockRepo = StockRepository()
-process_report_data(stockRepo, parser)
+# parser = Trading212ReportParser()
+# stockRepo = StockRepository()
+# process_report_data(stockRepo, parser)
