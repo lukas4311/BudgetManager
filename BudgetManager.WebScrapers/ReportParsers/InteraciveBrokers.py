@@ -32,6 +32,9 @@ class IBReportData:
 
 class InteractiveBrokersParse(BrokerReportParser):
     def map_report_row_to_model(self, row) -> TradingReportData:
+        if self.__check_row(row):
+            return None
+
         currency = row[None][0]
         ticker = row[None][1]
         date = row[None][2]
@@ -52,14 +55,16 @@ class InteractiveBrokersParse(BrokerReportParser):
     def map_report_rows_to_model(self, rows) -> list(TradingReportData):
         records = []
 
-        filtered_rows = [row for row in rows if
-                         row['Statement'] == 'Trades' and row['Field Value'] == 'Stocks' and row['Header'] == 'Data']
-
-        for row in filtered_rows:
+        for row in rows:
             stock_record = self.map_report_row_to_model(row)
-            records.append(stock_record)
+
+            if stock_record is not None:
+                records.append(stock_record)
 
         return records
+
+    def __check_row(self, row):
+        return row['Statement'] == 'Trades' and row['Field Value'] == 'Stocks' and row['Header'] == 'Data'
 
     def read_report_csv_file(self):
         yahoo_service = YahooService()
