@@ -26,6 +26,12 @@ import {
     BrokerReportTypeToJSON,
 } from './BrokerReportType';
 import {
+    EnumItem,
+    EnumItemFromJSON,
+    EnumItemFromJSONTyped,
+    EnumItemToJSON,
+} from './EnumItem';
+import {
     UserIdentity,
     UserIdentityFromJSON,
     UserIdentityFromJSONTyped,
@@ -92,6 +98,18 @@ export class BrokerReportToProcess {
      * @memberof BrokerReportToProcess
      */
     brokerReportType?: BrokerReportType;
+    /**
+     * 
+     * @type {number}
+     * @memberof BrokerReportToProcess
+     */
+    brokerId?: number;
+    /**
+     * 
+     * @type {EnumItem}
+     * @memberof BrokerReportToProcess
+     */
+    broker?: EnumItem;
 }
 
 export function BrokerReportToProcessFromJSON(json: any): BrokerReportToProcess {
@@ -113,6 +131,8 @@ export function BrokerReportToProcessFromJSONTyped(json: any, ignoreDiscriminato
         'userIdentity': !exists(json, 'userIdentity') ? undefined : UserIdentityFromJSON(json['userIdentity']),
         'brokerReportTypeId': !exists(json, 'brokerReportTypeId') ? undefined : json['brokerReportTypeId'],
         'brokerReportType': !exists(json, 'brokerReportType') ? undefined : BrokerReportTypeFromJSON(json['brokerReportType']),
+        'brokerId': !exists(json, 'brokerId') ? undefined : json['brokerId'],
+        'broker': !exists(json, 'broker') ? undefined : EnumItemFromJSON(json['broker']),
     };
 }
 
@@ -134,5 +154,7 @@ export function BrokerReportToProcessToJSON(value?: BrokerReportToProcess | null
         'userIdentity': UserIdentityToJSON(value.userIdentity),
         'brokerReportTypeId': value.brokerReportTypeId,
         'brokerReportType': BrokerReportTypeToJSON(value.brokerReportType),
+        'brokerId': value.brokerId,
+        'broker': EnumItemToJSON(value.broker),
     };
 }

@@ -41,7 +41,8 @@ import {
     TickerRequestToJSON,
 } from '../models';
 
-export interface StockBrokerReportPostRequest {
+export interface StockBrokerReportBrokerIdPostRequest {
+    brokerId: number;
     file?: Blob;
 }
 
@@ -91,16 +92,17 @@ export interface StockTickerRequestPostRequest {
 export interface StockApiInterface {
     /**
      * 
+     * @param {number} brokerId 
      * @param {Blob} [file] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StockApiInterface
      */
-    stockBrokerReportPostRaw(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    stockBrokerReportBrokerIdPostRaw(requestParameters: StockBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    stockBrokerReportPost(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void>;
+    stockBrokerReportBrokerIdPost(requestParameters: StockBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -283,7 +285,11 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
 
     /**
      */
-    async stockBrokerReportPostRaw(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async stockBrokerReportBrokerIdPostRaw(requestParameters: StockBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.brokerId === null || requestParameters.brokerId === undefined) {
+            throw new runtime.RequiredError('brokerId','Required parameter requestParameters.brokerId was null or undefined when calling stockBrokerReportBrokerIdPost.');
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -313,7 +319,7 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
         }
 
         const response = await this.request({
-            path: `/stock/brokerReport`,
+            path: `/stock/brokerReport/{brokerId}`.replace(`{${"brokerId"}}`, this.processPathParam(requestParameters.brokerId)),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -325,8 +331,8 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
 
     /**
      */
-    async stockBrokerReportPost(requestParameters: StockBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.stockBrokerReportPostRaw(requestParameters, initOverrides);
+    async stockBrokerReportBrokerIdPost(requestParameters: StockBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.stockBrokerReportBrokerIdPostRaw(requestParameters, initOverrides);
     }
 
     /**

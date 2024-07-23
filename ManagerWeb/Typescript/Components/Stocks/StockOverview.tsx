@@ -300,7 +300,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const appContext: AppContext = this.context as AppContext;
         try {
             const files: Blob = (e.target as HTMLInputElement).files?.[0];
-            await this.stockApi.stockBrokerReportPost({ file: files });
+            await this.stockApi.stockBrokerReportBrokerIdPost({ brokerId: this.state.selectedBroker, file: files });
             appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success });
         } catch (error) {
             appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error });
@@ -440,7 +440,14 @@ StockOverview.contextType = AppCtx;
 
 export default StockOverview;
 
-const BrokerUpload = (props) => {
+class BrokerUploadProps {
+    onUploadBrokerReport: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+    stockBrokerParsers: Map<number, string>;
+    onBrokerSelect: (e: any) => void;
+    selectedBroker: number;
+}
+
+const BrokerUpload = (props: BrokerUploadProps) => {
     return (
         <div className="flex flex-col">
             <Select

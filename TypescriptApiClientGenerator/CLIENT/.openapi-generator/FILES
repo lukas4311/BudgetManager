@@ -30,8 +30,10 @@ models/CryptoTicker.ts
 models/CryptoTradeHistory.ts
 models/CurrencySymbol.ts
 models/ECurrencySymbol.ts
+models/EnumItem.ts
 models/EnumItemModel.ts
 models/EnumItemModelAdjusted.ts
+models/EnumItemType.ts
 models/InterestRate.ts
 models/Notification.ts
 models/NotificationModel.ts
