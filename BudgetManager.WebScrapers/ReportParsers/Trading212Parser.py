@@ -43,6 +43,14 @@ class Trading212ReportParser(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id)
 
+    def map_report_rows_to_model(self, rows) -> list(TradingReportData):
+        records = []
+        for row in rows:
+            stock_record = self.map_report_row_to_model(row)
+            records.append(stock_record)
+
+        return records
+
     def read_report_csv_file(self):
         parsed_data: list[TradingReportData] = []
         with open("..\\BrokerReports\\Trading212_1.csv", 'r') as file:

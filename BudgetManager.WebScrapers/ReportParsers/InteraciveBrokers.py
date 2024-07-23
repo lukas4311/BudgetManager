@@ -8,9 +8,11 @@ from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 import secret
+from Models.TradingReportData import TradingReportData
 from Orm.CurrencySymbol import CurrencySymbol
 from Orm.StockTicker import StockTicker
 from Orm.StockTradeHistory import Base, StockTradeHistory
+from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.YahooService import YahooService
 
 log_name = 'Logs/IB.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -28,7 +30,37 @@ class IBReportData:
     name: str
 
 
-class InteractiveBrokersParse:
+class InteractiveBrokersParse(BrokerReportParser):
+    def map_report_row_to_model(self, row) -> TradingReportData:
+        currency = row[None][0]
+        ticker = row[None][1]
+        date = row[None][2]
+        date = date.split(',')[0]
+        number_of_shares = float(row[None][3])
+        total_without_fee = float(row[None][6])
+        total = float(row[None][8])
+        buy = total_without_fee < 0
+        total_with_action = total * (-1 if buy else 1)
+
+        pandas_date = pd.to_datetime(date)
+        pandas_date = pandas_date.tz_localize("Europe/Prague")
+        pandas_date = pandas_date.tz_convert("utc")
+        currency_id = self.__stockRepo.get_currency_id(currency)
+
+        return TradingReportData(pandas_date, ticker, ticker, number_of_shares, total_with_action, currency_id)
+
+    def map_report_rows_to_model(self, rows) -> list(TradingReportData):
+        records = []
+
+        filtered_rows = [row for row in rows if
+                         row['Statement'] == 'Trades' and row['Field Value'] == 'Stocks' and row['Header'] == 'Data']
+
+        for row in filtered_rows:
+            stock_record = self.map_report_row_to_model(row)
+            records.append(stock_record)
+
+        return records
+
     def read_report_csv_file(self):
         yahoo_service = YahooService()
         cached_names = {}
@@ -106,8 +138,10 @@ class InteractiveBrokersParse:
         currency_id = currency_record.id
 
         insert_trade_command = insert(StockTradeHistory).values(tradeTimeStamp=trading_data.time.strftime('%Y-%m-%d'),
-                                                                stockTickerId=stock_ticker_id, tradeSize=trading_data.size,
-                                                                tradeValue=trading_data.total, currencySymbolId=currency_id,
+                                                                stockTickerId=stock_ticker_id,
+                                                                tradeSize=trading_data.size,
+                                                                tradeValue=trading_data.total,
+                                                                currencySymbolId=currency_id,
                                                                 userIdentityId=1)
         with engine.connect() as conn:
             conn.execute(insert_trade_command)
@@ -115,6 +149,5 @@ class InteractiveBrokersParse:
 
         session.close()
 
-
-parser = InteractiveBrokersParse()
-parser.save_report_data_to_db()
+# parser = InteractiveBrokersParse()
+# parser.save_report_data_to_db()
