@@ -116,6 +116,6 @@ def parse_report_data_to_model(all_reports_data, parser, report_data):
         raise ParseCsvError("Error while parsing CSV")
 
 
-parser = CoinbaseParser()
-cryptoSqlService = CryptoSqlService()
-process_report_data(cryptoSqlService, parser)
+# parser = CoinbaseParser()
+# cryptoSqlService = CryptoSqlService()
+# process_report_data(cryptoSqlService, parser)
