@@ -28,7 +28,8 @@ export interface CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
     toCurrency: string;
 }
 
-export interface CryptosBrokerReportPostRequest {
+export interface CryptosBrokerReportBrokerIdPostRequest {
+    brokerId: number;
     file?: Blob;
 }
 
@@ -90,16 +91,17 @@ export interface CryptoApiInterface {
 
     /**
      * 
+     * @param {number} brokerId 
      * @param {Blob} [file] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosBrokerReportPostRaw(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    cryptosBrokerReportBrokerIdPostRaw(requestParameters: CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    cryptosBrokerReportPost(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void>;
+    cryptosBrokerReportBrokerIdPost(requestParameters: CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -260,7 +262,11 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async cryptosBrokerReportPostRaw(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async cryptosBrokerReportBrokerIdPostRaw(requestParameters: CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.brokerId === null || requestParameters.brokerId === undefined) {
+            throw new runtime.RequiredError('brokerId','Required parameter requestParameters.brokerId was null or undefined when calling cryptosBrokerReportBrokerIdPost.');
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -290,7 +296,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/cryptos/brokerReport`,
+            path: `/cryptos/brokerReport/{brokerId}`.replace(`{${"brokerId"}}`, this.processPathParam(requestParameters.brokerId)),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -302,8 +308,8 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async cryptosBrokerReportPost(requestParameters: CryptosBrokerReportPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.cryptosBrokerReportPostRaw(requestParameters, initOverrides);
+    async cryptosBrokerReportBrokerIdPost(requestParameters: CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.cryptosBrokerReportBrokerIdPostRaw(requestParameters, initOverrides);
     }
 
     /**

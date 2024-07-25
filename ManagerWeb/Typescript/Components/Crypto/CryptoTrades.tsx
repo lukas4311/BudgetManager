@@ -129,7 +129,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         const appContext: AppContext = this.context as AppContext;
         try {
             const files: Blob = (e.target as HTMLInputElement).files?.[0];
-            await this.cryptoApi.cryptosBrokerReportPost({ file: files });
+            await this.cryptoApi.cryptosBrokerReportBrokerIdPost({brokerId: this.state.selectedBroker, file: files});
             appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success })
         } catch (error) {
             appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })
