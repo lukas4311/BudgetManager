@@ -49,28 +49,3 @@ class DegiroReportParser(BrokerReportParser):
 
         return records
 
-    def read_report_csv_file(self):
-        parsed_data: list[TradingReportData] = []
-        with open("..\\BrokerReports\\Degiro.csv", 'r') as file:
-            rows = csv.DictReader(file)
-            for row in rows:
-                action = row["Datum"]
-                time = row["Čas"]
-                ticker = row["ISIN"]
-                name = row["Produkt"]
-                number_of_shares = row["Počet"]
-                total = float(row["Celkem"])
-
-                if action == "Market buy":
-                    total = total * -1
-
-                pandas_date = pd.to_datetime(time)
-                pandas_date = pandas_date.tz_localize("Europe/Prague")
-                pandas_date = pandas_date.tz_convert("utc")
-
-                try:
-                    model = TradingReportData(pandas_date, ticker, name, number_of_shares, total)
-                    parsed_data.append(model)
-                except Exception as e:
-                    print(ticker + " - error - " + e)
-        return parsed_data
