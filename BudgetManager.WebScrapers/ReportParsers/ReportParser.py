@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Dict
 from Exceptions.ParseCsvError import ParseCsvError
 from BrokerReportParser import BrokerReportParser
+from ReportParsers.DegiroParser import DegiroReportParser
 from ReportParsers.Trading212Parser import Trading212ReportParser
 from Services.DB.StockRepository import StockRepository
 
@@ -16,7 +17,8 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 
 class ReportParser:
     __parserMap: Dict[str, BrokerReportParser] = {
-        "Trading212": Trading212ReportParser()
+        "Trading212": Trading212ReportParser(),
+        "Degiro": DegiroReportParser()
     }
 
     def process_report_data(self, stock_repo: StockRepository):

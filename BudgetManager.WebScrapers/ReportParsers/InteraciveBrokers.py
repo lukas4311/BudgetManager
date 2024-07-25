@@ -3,10 +3,8 @@ import pandas as pd
 import logging
 from datetime import datetime
 from dataclasses import dataclass
-
 from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
-
 import secret
 from Models.TradingReportData import TradingReportData
 from Orm.CurrencySymbol import CurrencySymbol
