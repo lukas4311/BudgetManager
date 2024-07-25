@@ -1,24 +1,9 @@
-import base64 as b64
-import csv
-import io
-from dataclasses import dataclass
-from datetime import datetime
 import pandas as pd
-from Exceptions.ParseCsvError import ParseCsvError
-from Models import TradingReportData
+
+from Models.TradingReportData import TradingReportData
+from Models.CoinbaseReportData import CoinbaseReportData
 from ReportParsers.BrokerReportParser import BrokerReportParser
-from Services.CryptoSqlService import CryptoSqlService
-from Services.DB import StockRepository
-
-
-@dataclass
-class CoinbaseReportData:
-    time: datetime
-    ticker: str
-    size: float
-    total: float
-    total_unit: str
-    operationType: str
+from Services.DB.StockRepository import StockRepository
 
 
 class CoinbaseParser(BrokerReportParser):
@@ -39,7 +24,6 @@ class CoinbaseParser(BrokerReportParser):
             total = total * -1
 
         pandas_date = pd.to_datetime(time)
-        pandas_date = pandas_date.tz_localize("Europe/Prague")
         pandas_date = pandas_date.tz_convert("utc")
         currency_id = self.__stockRepo.get_currency_id(total_unit)
 

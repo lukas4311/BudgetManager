@@ -6,11 +6,11 @@ from sqlalchemy import create_engine, select, update, and_
 from sqlalchemy.orm import Session
 
 import secret
+from Models.CoinbaseReportData import CoinbaseReportData
 from Orm.BrokerReportToProcess import Base, BrokerReportToProcess
 from Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Orm.BrokerReportType import BrokerReportType
 from Orm.CryptoTradeHistory import CryptoTradeHistory
-from ReportParsers.CoinbaseParser import CoinbaseReportData
 
 
 class CryptoSqlService:

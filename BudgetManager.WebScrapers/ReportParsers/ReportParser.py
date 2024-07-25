@@ -7,6 +7,7 @@ from typing import Dict
 from Exceptions.ParseCsvError import ParseCsvError
 from BrokerReportParser import BrokerReportParser
 from Models.TradingReportData import TradingReportData
+from ReportParsers.CoinbaseParser import CoinbaseParser
 from ReportParsers.DegiroParser import DegiroReportParser
 from ReportParsers.InteraciveBrokers import InteractiveBrokersParse
 from ReportParsers.Trading212Parser import Trading212ReportParser
@@ -21,15 +22,20 @@ class ReportParser:
     __parserMap: Dict[str, BrokerReportParser] = {
         "Trading212": Trading212ReportParser(),
         "Degiro": DegiroReportParser(),
-        "InteractiveBrokers": InteractiveBrokersParse()
+        "InteractiveBrokers": InteractiveBrokersParse(),
+        "Coinbase": CoinbaseParser()
     }
 
     def process_report_data(self, stock_repo: StockRepository):
         broker_report_data = stock_repo._get_all_stock_broker_reports_to_process()
         all_reports_data = []
 
-        broker_parser_enum_type_id = stock_repo.get_enum_type('AvailableBrokerParsers')
+        broker_parser_enum_type_id = stock_repo.get_enum_type('AvailableStockBrokerParsers')
         enums = stock_repo.get_enums_by_type_id(broker_parser_enum_type_id)
+
+        broker_parser_enum_type_id = stock_repo.get_enum_type('AvailableCryptoBrokerParsers')
+        crypto_brokers = stock_repo.get_enums_by_type_id(broker_parser_enum_type_id)
+        enums.extend(crypto_brokers)
 
         for report_data in broker_report_data:
             try:

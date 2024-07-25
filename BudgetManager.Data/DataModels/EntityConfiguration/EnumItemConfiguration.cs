@@ -18,7 +18,7 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
                 .HasMaxLength(MaxLengthName)
                 .IsRequired();
 
-            modelBuilder.HasIndex(b => b.Code)
+            modelBuilder.HasIndex(b => new { b.Code, b.EnumItemTypeId })
                 .IsUnique();
 
             modelBuilder.Property(b => b.EnumItemTypeId)

@@ -82,16 +82,16 @@ class StockRepository:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        broker_type_cmd = select(BrokerReportType).where(BrokerReportType.code == "Stock")
-        broker_type = session.scalars(broker_type_cmd).first()
-        broker_type_id = broker_type.id
+        # broker_type_cmd = select(BrokerReportType).where(BrokerReportType.code == "Stock")
+        # broker_type = session.scalars(broker_type_cmd).first()
+        # broker_type_id = broker_type.id
 
         broker_state_command = select(BrokerReportToProcessState).where(BrokerReportToProcessState.code == "InProcess")
         broker_state = session.scalars(broker_state_command).first()
         broker_state_id = broker_state.id
 
-        broker_report_data_command = select(BrokerReportToProcess).where(and_(
-            BrokerReportToProcess.brokerReportTypeId == broker_type_id, BrokerReportToProcess.brokerReportToProcessStateId == broker_state_id))
+        broker_report_data_command = select(BrokerReportToProcess).where(
+            BrokerReportToProcess.brokerReportToProcessStateId == broker_state_id)
 
         broker_report_data = session.scalars(broker_report_data_command).all()
         session.close()
