@@ -1,18 +1,10 @@
-import csv
-import pandas as pd
 import logging
-from datetime import datetime
 from dataclasses import dataclass
-from sqlalchemy import create_engine, select, insert
-from sqlalchemy.orm import Session
-import secret
+from datetime import datetime
+import pandas as pd
 from Models.TradingReportData import TradingReportData
-from Orm.CurrencySymbol import CurrencySymbol
-from Orm.StockTicker import StockTicker
-from Orm.StockTradeHistory import Base, StockTradeHistory
 from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
-from Services.YahooService import YahooService
 
 log_name = 'Logs/IB.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',

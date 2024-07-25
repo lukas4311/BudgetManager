@@ -1,11 +1,7 @@
-import base64 as b64
-import csv
-import io
 import logging
 import warnings
 from datetime import datetime
 import pandas as pd
-from Exceptions.ParseCsvError import ParseCsvError
 from Models.TradingReportData import TradingReportData
 from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
