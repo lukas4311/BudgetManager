@@ -43,7 +43,7 @@ class CoinbaseParser(BrokerReportParser):
         pandas_date = pandas_date.tz_convert("utc")
         currency_id = self.__stockRepo.get_currency_id(total_unit)
 
-        return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id)
+        return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id, 'CryptoTradeTickers')
 
     def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
         records = []

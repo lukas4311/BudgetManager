@@ -132,12 +132,12 @@ class StockRepository:
 
         session.close()
 
-    def store_trade_data(self, trade_data: List[TradingReportData], user_id: int, trade_data_type_code: str):
+    def store_trade_data(self, trade_data: List[TradingReportData], user_id: int):
         for trade in trade_data:
             ticker_id = self._get_ticker_id(trade.ticker)
 
             if not ticker_id:
-                self._create_new_ticker(trade.ticker, trade.name, trade_data_type_code)
+                self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code)
 
             self._insert_stock_trade(trade, trade.currency_id, user_id)
 

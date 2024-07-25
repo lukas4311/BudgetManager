@@ -9,3 +9,4 @@ class TradingReportData:
     number_of_shares: float
     total: float
     currency_id: str
+    trade_ticker_type_code: str
