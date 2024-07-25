@@ -6,7 +6,9 @@ from datetime import datetime
 from typing import Dict
 from Exceptions.ParseCsvError import ParseCsvError
 from BrokerReportParser import BrokerReportParser
+from Models.TradingReportData import TradingReportData
 from ReportParsers.DegiroParser import DegiroReportParser
+from ReportParsers.InteraciveBrokers import InteractiveBrokersParse
 from ReportParsers.Trading212Parser import Trading212ReportParser
 from Services.DB.StockRepository import StockRepository
 
@@ -18,7 +20,8 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 class ReportParser:
     __parserMap: Dict[str, BrokerReportParser] = {
         "Trading212": Trading212ReportParser(),
-        "Degiro": DegiroReportParser()
+        "Degiro": DegiroReportParser(),
+        "InteractiveBrokers": InteractiveBrokersParse()
     }
 
     def process_report_data(self, stock_repo: StockRepository):
@@ -39,7 +42,7 @@ class ReportParser:
 
         for parsed_report in all_reports_data:
             try:
-                stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"])
+                stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"], 'TradeTickers')
                 stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
             except Exception as e:
                 logging.error(e)
@@ -51,7 +54,7 @@ class ReportParser:
             rows = csv.DictReader(io.StringIO(parsed_csv))
             records = []
             for row in rows:
-                stock_record = parser.map_report_row_to_model(row)
+                stock_record: TradingReportData = parser.map_report_row_to_model(row)
                 records.append(stock_record)
 
             all_reports_data.append(

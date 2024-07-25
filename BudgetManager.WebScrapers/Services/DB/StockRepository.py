@@ -35,25 +35,28 @@ class StockRepository:
         enums = session.scalars(stmt).all()
         return enums if enums is not None else None
 
-    def _get_ticker_id(self, ticker: str):
+    def _get_ticker_id(self, ticker: str, ticker_type: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        trade_ticker_type = self.get_enum_type('TradeTickers')
+        trade_ticker_type = self.get_enum_type(ticker_type)
 
         stmt = select(EnumItem).where(and_(EnumItem.code == ticker, EnumItem.enumItemTypeId == trade_ticker_type))
         ticker_model = session.scalars(stmt).first()
 
         return ticker_model.id if ticker_model is not None else None
 
-    def _create_new_ticker(self, ticker: str):
+    def _create_new_ticker(self, ticker: str, ticker_type: str):
+        self._create_new_ticker(ticker, ticker, ticker_type)
+
+    def _create_new_ticker(self, ticker: str, name: str, ticker_type: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
-        enum_item_type_ticker = self.get_enum_type('TradeTickers')
-        insert_command = insert(EnumItem).values(code=ticker, name=ticker, enumItemTypeId=enum_item_type_ticker)
+        enum_item_type_ticker = self.get_enum_type(ticker_type)
+        insert_command = insert(EnumItem).values(code=ticker, name=name, enumItemTypeId=enum_item_type_ticker)
 
         with engine.connect() as conn:
             conn.execute(insert_command)
@@ -99,7 +102,7 @@ class StockRepository:
         ticker_id = int(self._get_ticker_id(trading_data.ticker))
 
         if ticker_id is None:
-            print('Throw exception')
+            print(f'Ticker does not exists {trading_data.ticker}')
 
         if currency_id is None:
             print('Throw exception')
@@ -129,12 +132,12 @@ class StockRepository:
 
         session.close()
 
-    def store_trade_data(self, stock_trade_data: List[TradingReportData], user_id: int):
-        for trade in stock_trade_data:
+    def store_trade_data(self, trade_data: List[TradingReportData], user_id: int, trade_data_type_code: str):
+        for trade in trade_data:
             ticker_id = self._get_ticker_id(trade.ticker)
 
             if not ticker_id:
-                self._create_new_ticker(trade.ticker)
+                self._create_new_ticker(trade.ticker, trade.name, trade_data_type_code)
 
             self._insert_stock_trade(trade, trade.currency_id, user_id)
 
