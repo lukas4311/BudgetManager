@@ -95,13 +95,11 @@ class StockRepository:
 
         return broker_report_data
 
-    def _insert_stock_trade(self, trading_data: TradingReportData, currency_code: str, user_id: int):
+    def _insert_stock_trade(self, trading_data: TradingReportData, currency_id: int, user_id: int):
         ticker_id = int(self._get_ticker_id(trading_data.ticker))
 
         if ticker_id is None:
             print('Throw exception')
-
-        currency_id = int(self.get_currency_id(currency_code))
 
         if currency_id is None:
             print('Throw exception')
@@ -131,14 +129,14 @@ class StockRepository:
 
         session.close()
 
-    def store_trade_data(self, stock_trade_data: List[TradingReportData], currency_code: str, user_id: int):
+    def store_trade_data(self, stock_trade_data: List[TradingReportData], user_id: int):
         for trade in stock_trade_data:
             ticker_id = self._get_ticker_id(trade.ticker)
 
             if not ticker_id:
                 self._create_new_ticker(trade.ticker)
 
-            self._insert_stock_trade(trade, currency_code, user_id)
+            self._insert_stock_trade(trade, trade.currency_id, user_id)
 
     def changeProcessState(self, broker_report_id: int, state_code: str):
         engine = create_engine(
