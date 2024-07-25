@@ -71,7 +71,7 @@ export class StockComplexModel {
 }
 
 class StockOverview extends React.Component<RouteComponentProps, StockOverviewState> {
-    private stockParsersTypeCode = 'AvailableBrokerParsers';
+    private stockParsersTypeCode = 'AvailableStockBrokerParsers';
     private tickers: StockTickerModel[] = [];
     private currencies: CurrencySymbol[] = [];
     private stockApi: StockApi = undefined;
@@ -440,14 +440,14 @@ StockOverview.contextType = AppCtx;
 
 export default StockOverview;
 
-class BrokerUploadProps {
+export class BrokerUploadProps {
     onUploadBrokerReport: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
     stockBrokerParsers: Map<number, string>;
     onBrokerSelect: (e: any) => void;
     selectedBroker: number;
 }
 
-const BrokerUpload = (props: BrokerUploadProps) => {
+export const BrokerUpload = (props: BrokerUploadProps) => {
     return (
         <div className="flex flex-col">
             <Select

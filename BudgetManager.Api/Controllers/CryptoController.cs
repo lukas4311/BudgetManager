@@ -85,13 +85,13 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("tickers")]
         public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(cryptoTickerRepository.FindAll());
 
-        [HttpPost("brokerReport")]
-        public async Task<IActionResult> Post(IFormFile file)
+        [HttpPost("brokerReport/{brokerId}")]
+        public async Task<IActionResult> UploadReport([FromRoute]int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);
             byte[] fileBytes = ms.ToArray();
-            cryptoService.StoreReportToProcess(fileBytes, GetUserId());
+            cryptoService.StoreReportToProcess(fileBytes, GetUserId(), brokerId);
 
             return Ok();
         }

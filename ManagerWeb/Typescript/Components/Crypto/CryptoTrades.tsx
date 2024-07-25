@@ -1,30 +1,32 @@
 import { Button, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import moment from "moment";
-import React, { MouseEventHandler } from "react";
-import { CryptoApi, CryptoApiInterface, CurrencyApi } from "../../ApiClient/Main/apis";
+import React from "react";
+import { CryptoApi, CryptoApiInterface, CurrencyApi, EnumApi } from "../../ApiClient/Main/apis";
 import { CryptoTradeForm, CryptoTradeViewModel } from "./CryptoTradeForm";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { BaseList, IBaseModel } from "../BaseList";
+import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { RouteComponentProps } from "react-router-dom";
-import { CryptoTicker, TradeHistory } from "../../ApiClient/Main/models";
 import CryptoTickerSelectModel from "./CryptoTickerSelectModel";
 import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CurrencyService } from "../../Services/CurrencyService";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
-import PublishIcon from '@mui/icons-material/Publish';
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import { SnackbarSeverity } from "../../App";
+import { BrokerUpload } from "../Stocks/StockOverview";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
     openedForm: boolean;
     selectedTrade: CryptoTradeViewModel;
     cryptoFormKey: number;
+    brokerParsers: Map<number, string>;
+    selectedBroker: number;
+    isFileUploadOpened: boolean;
 }
 
 export default class CryptoTrades extends React.Component<RouteComponentProps, CryptoTradesState> {
+    private cryptoParsersTypeCode = 'AvailableCryptoBrokerParsers';
     private cryptoApi: CryptoApiInterface;
     private cryptoTickers: CryptoTickerSelectModel[];
     private currencies: any[];
@@ -33,7 +35,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
 
     constructor(props: RouteComponentProps) {
         super(props);
-        this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now() };
+        this.state = { trades: [], openedForm: false, selectedTrade: undefined, cryptoFormKey: Date.now(), brokerParsers: new Map<number, string>(), selectedBroker: -1, isFileUploadOpened: false };
     }
 
     public componentDidMount() {
@@ -48,6 +50,9 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         const cryptoFin = await apiFactory.getFinClient(CryptoEndpointsApi);
         this.currencyService = new CurrencyService(currencyApi);
         this.cryptoService = new CryptoService(this.cryptoApi, forexApi, cryptoFin, forexApi);
+        const enumApi = await apiFactory.getClient(EnumApi);
+        const parsers = await enumApi.typeEnumItemTypeCodeGet({ enumItemTypeCode: this.cryptoParsersTypeCode });
+        this.setState({ brokerParsers: new Map(parsers.map(p => [p.id, p.name])) });
         this.loadCryptoTradesData();
     }
 
@@ -131,22 +136,16 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         }
     }
 
+    private handleCloseFileUpload = () =>
+        this.setState({ isFileUploadOpened: false });
+
     render() {
         return (
             <ComponentPanel>
                 <React.Fragment>
-                    <Button
-                        component="label"
-                        variant="outlined"
-                        color="primary"
-                        className="block mr-auto bg-vermilion text-white mb-3 w-1/3"
-
-                    >
-                        <div className="flex flex-row justify-center">
-                            <PublishIcon />
-                            <span className="ml-4">Upload crypto report</span>
-                        </div>
-                        <input type="file" accept=".csv" hidden onChange={this.uploadBrokerReport} />
+                    <Button component="label" variant="outlined" color="primary" className="block ml-auto bg-vermilion text-white mb-3 w-2/3"
+                        onClick={() => this.setState({ isFileUploadOpened: true })}>
+                        Upload crypto report
                     </Button>
                     <div className="pr-5 h-full">
                         <BaseList<CryptoTradeViewModel> title="Trade list" data={this.state.trades} template={this.renderTemplate} deleteItemHandler={this.deleteTrade}
@@ -160,6 +159,12 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
                                     <CryptoTradeForm onSave={this.saveTrade} currencies={this.currencies} cryptoTickers={this.cryptoTickers}
                                         viewModel={this.state.selectedTrade} />
                                 </div>
+                            </DialogContent>
+                        </Dialog>
+                        <Dialog open={this.state.isFileUploadOpened} onClose={this.handleCloseFileUpload} aria-labelledby="" maxWidth="sm" fullWidth={true}>
+                            <DialogContent className="bg-prussianBlue">
+                                <BrokerUpload onUploadBrokerReport={this.uploadBrokerReport} stockBrokerParsers={this.state.brokerParsers}
+                                    onBrokerSelect={(e) => this.setState({ selectedBroker: e })} selectedBroker={this.state.selectedBroker} />
                             </DialogContent>
                         </Dialog>
                     </div>

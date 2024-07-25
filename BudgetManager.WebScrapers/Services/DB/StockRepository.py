@@ -99,7 +99,7 @@ class StockRepository:
         return broker_report_data
 
     def _insert_stock_trade(self, trading_data: TradingReportData, currency_id: int, user_id: int):
-        ticker_id = int(self._get_ticker_id(trading_data.ticker))
+        ticker_id = int(self._get_ticker_id(trading_data.ticker, trading_data.trade_ticker_type_code))
 
         if ticker_id is None:
             print(f'Ticker does not exists {trading_data.ticker}')
@@ -134,7 +134,7 @@ class StockRepository:
 
     def store_trade_data(self, trade_data: List[TradingReportData], user_id: int):
         for trade in trade_data:
-            ticker_id = self._get_ticker_id(trade.ticker)
+            ticker_id = self._get_ticker_id(trade.ticker, trade.trade_ticker_type_code)
 
             if not ticker_id:
                 self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code)

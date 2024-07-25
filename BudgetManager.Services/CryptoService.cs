@@ -131,7 +131,7 @@ namespace BudgetManager.Services
             => (await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new Infl.DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
         /// <inheritdoc/>
-        public void StoreReportToProcess(byte[] brokerFileData, int userId)
+        public void StoreReportToProcess(byte[] brokerFileData, int userId, int brokerId)
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
@@ -144,7 +144,8 @@ namespace BudgetManager.Services
                 BrokerReportTypeId = stockTypeId,
                 FileContentBase64 = fileContentBase64,
                 ImportedTime = this.dateTimeProvider.Now.DateTimeInstance,
-                UserIdentityId = userId
+                UserIdentityId = userId,
+                BrokerId = brokerId
             };
 
             this.brokerReportToProcessRepository.Create(brokerReport);

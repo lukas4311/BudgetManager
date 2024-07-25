@@ -80,10 +80,10 @@ DROP TABLE IF EXISTS #Categories;
 GO;
 
 -- Insert into EnumItemType if not exists
-IF NOT EXISTS (SELECT 1 FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers')
+IF NOT EXISTS (SELECT 1 FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableStockBrokerParsers')
 BEGIN
     INSERT INTO [dbo].[EnumItemType] ([Code], [Name])
-    VALUES ('AvailableBrokerParsers', 'Parser available for processing broker reports');
+    VALUES ('AvailableStockBrokerParsers', 'Stock parser available for processing broker reports');
 END
 
 -- Insert into EnumItem if not exists
@@ -91,9 +91,26 @@ INSERT INTO [dbo].[EnumItem] ([Code], [Name], [EnumItemTypeId], [Metadata])
 SELECT *
 FROM (
     VALUES
-        ('Trading212', 'Trading212', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
-        ('InteractiveBrokers', 'Interactive Brokers', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
-        ('Degiro', 'Degiro', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL),
-        ('XTB', 'XTB', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableBrokerParsers'), NULL)
+        ('Trading212', 'Trading212', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableStockBrokerParsers'), NULL),
+        ('InteractiveBrokers', 'Interactive Brokers', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableStockBrokerParsers'), NULL),
+        ('Degiro', 'Degiro', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableStockBrokerParsers'), NULL),
+        ('XTB', 'XTB', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableStockBrokerParsers'), NULL)
+) AS EnumItems (Code, Name, EnumItemTypeId, Metadata)
+WHERE NOT EXISTS (SELECT 1 FROM [dbo].[EnumItem] WHERE [Code] = EnumItems.Code);
+
+
+-- Insert into EnumItemType if not exists
+IF NOT EXISTS (SELECT 1 FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableCryptoBrokerParsers')
+BEGIN
+    INSERT INTO [dbo].[EnumItemType] ([Code], [Name])
+    VALUES ('AvailableCryptoBrokerParsers', 'Crypto parser available for processing broker reports');
+END
+
+-- Insert into EnumItem if not exists
+INSERT INTO [dbo].[EnumItem] ([Code], [Name], [EnumItemTypeId], [Metadata])
+SELECT *
+FROM (
+    VALUES
+        ('Coinbase', 'Coinbase', (SELECT Id FROM [dbo].[EnumItemType] WHERE [Code] = 'AvailableCryptoBrokerParsers'), NULL)
 ) AS EnumItems (Code, Name, EnumItemTypeId, Metadata)
 WHERE NOT EXISTS (SELECT 1 FROM [dbo].[EnumItem] WHERE [Code] = EnumItems.Code);
