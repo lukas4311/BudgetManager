@@ -91,18 +91,18 @@ namespace BudgetManager.Services.Contracts
         /// <param name="from">From date</param>
         /// <param name="to">To date</param>
         /// <returns></returns>
-        IEnumerable<StockTradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to);
+        IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to);
 
         /// <summary>
         /// Get all stock trades grouped by ticker
         /// </summary>
         /// <returns></returns>
-        IEnumerable<StockTradeGroupedTicker> GetAllTradesGroupedByTicker();
+        IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker();
 
         /// <summary>
         /// Get all stock trades grouped by trade date
         /// </summary>
         /// <returns></returns>
-        IEnumerable<StockTradeGroupedTradeTime> GetAllTradesGroupedByTradeDate();
+        IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate();
     }
 }

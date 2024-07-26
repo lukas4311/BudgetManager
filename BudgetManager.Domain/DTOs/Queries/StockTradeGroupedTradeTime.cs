@@ -2,9 +2,9 @@
 
 namespace BudgetManager.Domain.DTOs.Queries
 {
-    public record StockTradeGroupedTradeTime
+    public record TradeGroupedTradeTime
     {
-        public int StockTickerId { get; init; }
+        public int TickerId { get; init; }
 
         public DateTime TradeTimeStamp { get; init; }
 

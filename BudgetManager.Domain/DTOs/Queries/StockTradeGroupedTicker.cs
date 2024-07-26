@@ -1,8 +1,8 @@
 ﻿namespace BudgetManager.Domain.DTOs.Queries
 {
-    public record StockTradeGroupedTicker
+    public record TradeGroupedTicker
     {
-        public int StockTickerId { get; init; }
+        public int TickerId { get; init; }
 
         public double TotalTradeSize { get; init; }
 
