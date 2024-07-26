@@ -68,7 +68,7 @@ namespace BudgetManager.Services
         {
             return this.repository.FindAll()
                 .ToList()
-                .GroupBy(s => s.StockTickerId)
+                .GroupBy(s => s.TickerId)
                 .Select(g => new GroupedStockAccumulatedSpits
                 (
                     g.Key,
@@ -76,7 +76,7 @@ namespace BudgetManager.Services
                      .Select(e => new StockSplitAccumulated
                      {
                          Id = e.Id,
-                         StockTickerId = e.StockTickerId,
+                         StockTickerId = e.TickerId,
                          SpliDateTime = e.SplitTimeStamp,
                          SplitAccumulatedCoeficient = e.SplitCoefficient
                      })

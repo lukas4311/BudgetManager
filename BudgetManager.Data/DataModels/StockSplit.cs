@@ -13,16 +13,6 @@ namespace BudgetManager.Data.DataModels
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of the stock ticker associated with the split.
-        /// </summary>
-        public int StockTickerId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stock ticker associated with the split.
-        /// </summary>
-        public StockTicker StockTicker { get; set; }
-
-        /// <summary>
         /// Gets or sets the timestamp when the stock split occurred.
         /// </summary>
         public DateTime SplitTimeStamp { get; set; }
@@ -36,5 +26,15 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the coefficient of the stock split.
         /// </summary>
         public double SplitCoefficient { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the ticker associated with the split.
+        /// </summary>
+        public int TickerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticker associated with the split.
+        /// </summary>
+        public EnumItem Ticker { get; set; }
     }
 }

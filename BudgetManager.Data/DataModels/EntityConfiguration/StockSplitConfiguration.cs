@@ -7,12 +7,12 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
     {
         public void Configure(EntityTypeBuilder<StockSplit> builder)
         {
-            builder.Property(i => i.StockTickerId)
+            builder.Property(i => i.TickerId)
                 .IsRequired();
 
-            builder.HasOne(e => e.StockTicker)
+            builder.HasOne(e => e.Ticker)
                 .WithMany()
-                .HasForeignKey(e => e.StockTickerId);
+                .HasForeignKey(e => e.TickerId);
         }
     }
 }
