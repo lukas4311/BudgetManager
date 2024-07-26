@@ -71,6 +71,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
         {
+            // FIXME: need to be fixed cause split has now reference to ticker in enum and will not fit to stocktradehistory table, need to be changed to new table
             List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
@@ -88,6 +89,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol)
         {
+            // FIXME: need to be fixed cause split has now reference to ticker in enum and will not fit to stocktradehistory table, need to be changed to new table
             List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.CurrencySymbol)
