@@ -214,7 +214,7 @@ ORDER BY
     StockTickerId, TradeTimeStamp";
         }
 
-        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate__TradeTable()
+        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate__TradeTable(TickerTypes tickersType)
         {
             return $@"
 ;WITH TradesWithSplit AS (
@@ -235,7 +235,7 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'
+		AND eit.Code = {tickersType}
 ),
 AdjustedTrades AS (
     SELECT
@@ -280,7 +280,7 @@ ORDER BY
     TickerId, TradeTimeStamp";
         }
 
-        public static FormattableString GetAllTradesGroupedByTicker__TradeTable()
+        public static FormattableString GetAllTradesGroupedByTicker__TradeTable(TickerTypes tickersType)
         {
             return $@"
 ;WITH TradesWithSplit AS (
@@ -301,7 +301,7 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'
+		AND eit.Code = {tickersType}
 ),
 AdjustedTrades AS (
     SELECT
@@ -354,7 +354,7 @@ ORDER BY
         }
 
 
-        public static FormattableString GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(DateTime from, DateTime to)
+        public static FormattableString GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(DateTime from, DateTime to, TickerTypes tickersType)
         {
             return $@"
 ;
@@ -376,7 +376,7 @@ AS
 		ON ei.Id = [Trade].TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'),
+		AND eit.Code = {tickersType}),
 TradesWithSplit
 AS
 (SELECT
@@ -397,7 +397,7 @@ AS
 		ON ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'),
+		AND eit.Code = {tickersType}),
 AggregatedTrades
 AS
 (SELECT
@@ -437,4 +437,10 @@ ORDER BY TickerId, TradeYear, TradeMonth
 OPTION (MAXRECURSION 0)";
         }
     }
+}
+
+public enum TickerTypes
+{
+    StockTradeTickers,
+    CryptoTradeTickers
 }
