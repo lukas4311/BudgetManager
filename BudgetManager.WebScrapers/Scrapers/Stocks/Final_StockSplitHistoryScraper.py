@@ -1,10 +1,14 @@
+from typing import List
+
 import pandas as pd
 from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 import secret
+from Orm.EnumItem import EnumItem
 from Orm.StockSplit import StockSplit
 from Orm.StockTicker import Base, StockTicker
+from Services.DB.StockRepository import StockRepository
 from Services.YahooService import YahooService, StockSplitData
 from SourceFiles.stockList import stockToDownload
 from datetime import timedelta
@@ -13,6 +17,9 @@ import logging
 
 
 class StockSplitScraper:
+    def __init__(self):
+        self.__stock_repo = StockRepository()
+
     def scrape_stocks_splits(self, ticker: str, split_data: list[StockSplitData]):
         try:
             split_data_to_save: list[StockSplitData] = []
@@ -49,26 +56,25 @@ class StockSplitScraper:
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(StockTicker).where(StockTicker.ticker == ticker)
-        ticker_model = session.scalars(stmt).first()
+        ticker_id = self.__stock_repo.get_ticker_id(ticker, 'StockTradeTickers')
 
-        if ticker_model is None:
+        if ticker is None:
             print('Not found ticker')
             insert_command = insert(StockTicker).values(ticker=ticker, name=ticker)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
 
-            ticker_model = session.scalars(stmt).first()
+            ticker_id = self.__stock_repo.get_ticker_id(ticker, 'StockTradeTickers')
 
-        stmt = (select(StockSplit).where(StockSplit.stockTickerId == ticker_model.id)
+        stmt = (select(StockSplit).where(StockSplit.tickerId == ticker_id)
                 .order_by(StockSplit.splitTimeStamp.desc()))
         ticker_split_model = session.scalars(stmt).first()
 
-        return ticker_split_model, ticker_model.id
+        return ticker_split_model, ticker_id
 
     def save_split_to_db(self, split: StockSplitData, ticker_id, session, engine):
-        insert_command = insert(StockSplit).values(stockTickerId=ticker_id, splitTimeStamp=split.date,
+        insert_command = insert(StockSplit).values(tickerId=ticker_id, splitTimeStamp=split.date,
                                                    splitTextInfo=split.split, splitCoefficient=split.split_coefficient)
         with engine.connect() as conn:
             conn.execute(insert_command)
@@ -79,17 +85,23 @@ class StockSplitManager:
     def __init__(self):
         self.__yahoo_service = YahooService()
         self.__split_scraper = StockSplitScraper()
+        self.__stock_repo = StockRepository()
 
     def scrape_split_data(self, ticker: str):
-        split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', '1696896000')
+        split_data = self.__yahoo_service.get_stock_split_history(ticker.code, '511056000', '1696896000')
 
         if len(split_data) != 0:
-            self.__split_scraper.scrape_stocks_splits(ticker, split_data)
+            self.__split_scraper.scrape_stocks_splits(ticker.code, split_data)
             time.sleep(3)
 
+    def scrape_split_for_all_ticker_in_db(self):
+        tickers_enum_type_id = self.__stock_repo.get_enum_type('StockTradeTickers')
+        enums: List[EnumItem] = self.__stock_repo.get_enums_by_type_id(tickers_enum_type_id)
+        for enum in enums:
+            self.scrape_split_data(enum)
+
     def scrape_split_data_to_all_predefined_ticker(self):
-        tickers_to_scrape = stockToDownload
-        for ticker in tickers_to_scrape:
+        for ticker in stockToDownload:
             self.store_split_data(ticker)
 
     def store_split_data(self, ticker: str):
@@ -102,11 +114,11 @@ class StockSplitManager:
                 self.__split_scraper.scrape_stocks_splits(ticker, split_data)
                 time.sleep(3)
 
-
 # tickersToScrape = stockToDownload
 # yahooService = YahooService()
 #
-# stockSplitScraper = StockSplitScraper()
+stock_split_manager = StockSplitManager()
+stock_split_manager.scrape_split_for_all_ticker_in_db()
 #
 # for ticker in tickersToScrape:
 #     split_data = yahooService.get_stock_split_history(ticker, '511056000', '1696896000')

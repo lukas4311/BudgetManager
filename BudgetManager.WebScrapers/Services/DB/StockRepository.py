@@ -5,7 +5,6 @@ import secret
 from Models.TradingReportData import TradingReportData
 from Orm.BrokerReportToProcess import BrokerReportToProcess
 from Orm.BrokerReportToProcessState import BrokerReportToProcessState
-from Orm.BrokerReportType import BrokerReportType
 from Orm.EnumItem import EnumItem
 from Orm.EnumItemType import EnumItemType
 from Orm.StockTicker import Base
@@ -25,7 +24,7 @@ class StockRepository:
         trade_ticker_type = session.scalars(stmt).first()
         return trade_ticker_type.id if trade_ticker_type is not None else None
 
-    def get_enums_by_type_id(self, enum_item_type_id):
+    def get_enums_by_type_id(self, enum_item_type_id) -> List[EnumItem]:
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
@@ -35,7 +34,7 @@ class StockRepository:
         enums = session.scalars(stmt).all()
         return enums if enums is not None else None
 
-    def _get_ticker_id(self, ticker: str, ticker_type: str):
+    def get_ticker_id(self, ticker: str, ticker_type: str):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
@@ -99,7 +98,7 @@ class StockRepository:
         return broker_report_data
 
     def _insert_stock_trade(self, trading_data: TradingReportData, currency_id: int, user_id: int):
-        ticker_id = int(self._get_ticker_id(trading_data.ticker, trading_data.trade_ticker_type_code))
+        ticker_id = int(self.get_ticker_id(trading_data.ticker, trading_data.trade_ticker_type_code))
 
         if ticker_id is None:
             print(f'Ticker does not exists {trading_data.ticker}')
@@ -134,7 +133,7 @@ class StockRepository:
 
     def store_trade_data(self, trade_data: List[TradingReportData], user_id: int):
         for trade in trade_data:
-            ticker_id = self._get_ticker_id(trade.ticker, trade.trade_ticker_type_code)
+            ticker_id = self.get_ticker_id(trade.ticker, trade.trade_ticker_type_code)
 
             if not ticker_id:
                 self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code)

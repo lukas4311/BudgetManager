@@ -10,7 +10,7 @@ class Base(DeclarativeBase):
 class StockSplit(Base):
     __tablename__ = 'StockSplit'
     id: Mapped[int] = mapped_column(primary_key=True)
-    stockTickerId: Mapped[int] = mapped_column(Integer, nullable=False)
+    tickerId: Mapped[int] = mapped_column(Integer, nullable=False)
     splitTimeStamp: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     splitTextInfo: Mapped[str] = mapped_column(String, nullable=False)
     splitCoefficient: Mapped[float] = mapped_column(Numeric, nullable=False)
