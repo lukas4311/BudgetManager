@@ -23,7 +23,6 @@ namespace BudgetManager.Services
         private const string bucket = "StockPrice";
         private const string BrokerStockTypeCode = "Stock";
         private const string BrokerProcessStateCode = "InProcess";
-        private const string StockTradesTickers = "StockTradeTickers";
         private readonly IRepository<StockTradeHistory> repository;
         private readonly IMapper mapper;
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
@@ -79,7 +78,7 @@ namespace BudgetManager.Services
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
                 .ThenInclude(t => t.EnumItemType)
-                .Where(t => t.Ticker.EnumItemType.Code == StockTradesTickers)
+                .Where(t => t.Ticker.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers))
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
@@ -99,7 +98,7 @@ namespace BudgetManager.Services
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
                 .ThenInclude(t => t.EnumItemType)
-                .Where(t => t.Ticker.EnumItemType.Code == StockTradesTickers)
+                .Where(t => t.Ticker.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers))
                 .Select(t => mapper.Map<StockTradeHistoryGetModel>(t))
                 .ToList();
 
