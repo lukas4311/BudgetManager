@@ -87,7 +87,10 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<NotificationModel, Notification>();
                     cfg.CreateMap<Notification, NotificationModel>();
                     cfg.CreateMap<EnumItem, EnumItemModel>();
-                    //cfg.CreateMap<EnumItemModel, EnumItem>();
+                    cfg.CreateMap<Trade, StockTradeHistoryGetModel>()
+                        .ForMember(dest => dest.CurrencySymbolId, opt => opt.MapFrom(x => x.TradeCurrencySymbolId))
+                        .ForMember(dest => dest.CurrencySymbol, opt => opt.MapFrom(x => x.TradeCurrencySymbol.Code))
+                        .ForMember(dest => dest.StockTickerId, opt => opt.MapFrom(x => x.TickerId));
                 }
             );
 

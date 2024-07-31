@@ -23,6 +23,7 @@ namespace BudgetManager.Services
         private const string bucket = "StockPrice";
         private const string BrokerStockTypeCode = "Stock";
         private const string BrokerProcessStateCode = "InProcess";
+        private const string StockTradesTickers = "StockTradeTickers";
         private readonly IRepository<StockTradeHistory> repository;
         private readonly IMapper mapper;
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
@@ -33,6 +34,7 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportType> brokerReportTypeRepository;
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
+        private readonly IRepository<Trade> tradeRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -53,7 +55,7 @@ namespace BudgetManager.Services
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, Infl.IInfluxContext influxContext,
             IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IDateTime dateTimeProvider) : base(repository, mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -65,16 +67,19 @@ namespace BudgetManager.Services
             this.brokerReportTypeRepository = brokerReportTypeRepository;
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
+            this.tradeRepository = tradeRepository;
             this.dateTimeProvider = dateTimeProvider;
         }
 
         /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
         {
-            // FIXME: need to be fixed cause split has now reference to ticker in enum and will not fit to stocktradehistory table, need to be changed to new table
-            List<StockTradeHistoryGetModel> trades = repository
+            List<StockTradeHistoryGetModel> trades = tradeRepository
                 .FindByCondition(i => i.UserIdentityId == userId)
-                .Include(t => t.CurrencySymbol)
+                .Include(t => t.TradeCurrencySymbol)
+                .Include(t => t.Ticker)
+                .ThenInclude(t => t.EnumItemType)
+                .Where(t => t.Ticker.EnumItemType.Code == StockTradesTickers)
                 .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
                 .ToList();
 
@@ -89,11 +94,13 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol)
         {
-            // FIXME: need to be fixed cause split has now reference to ticker in enum and will not fit to stocktradehistory table, need to be changed to new table
-            List<StockTradeHistoryGetModel> trades = repository
+            List<StockTradeHistoryGetModel> trades = tradeRepository
                 .FindByCondition(i => i.UserIdentityId == userId)
-                .Include(t => t.CurrencySymbol)
-                .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
+                .Include(t => t.TradeCurrencySymbol)
+                .Include(t => t.Ticker)
+                .ThenInclude(t => t.EnumItemType)
+                .Where(t => t.Ticker.EnumItemType.Code == StockTradesTickers)
+                .Select(t => mapper.Map<StockTradeHistoryGetModel>(t))
                 .ToList();
 
             IEnumerable<StockSplitModel> splits = stockSplitService.GetAll();
@@ -118,13 +125,11 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {
-            // FIXME: need to be fixed cause split has now reference to ticker in enum and will not fit to stocktradehistory table, need to be changed to new table
-            List<StockTradeHistoryGetModel> trades = repository
-                .FindByCondition(i => i.UserIdentityId == userId)
-                .Include(t => t.CurrencySymbol)
-                .Include(t => t.StockTicker)
-                .Where(t => t.StockTicker.Ticker == stockTicker)
-                .Select(d => mapper.Map<StockTradeHistoryGetModel>(d))
+            List<StockTradeHistoryGetModel> trades = tradeRepository.FindAll()
+                .Include(t => t.Ticker)
+                .Include(t => t.TradeCurrencySymbol)
+                .Where(t => t.Ticker.Code == stockTicker && t.UserIdentityId == userId)
+                .Select(t => mapper.Map<StockTradeHistoryGetModel>(t))
                 .ToList();
 
             IEnumerable<StockSplitModel> splits = stockSplitService.Get(s => s.TickerId == trades[0].StockTickerId);
