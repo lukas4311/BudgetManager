@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
 
@@ -68,6 +69,44 @@ namespace BudgetManager.Services
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
             this.tradeRepository = tradeRepository;
             this.dateTimeProvider = dateTimeProvider;
+        }
+
+        public override IEnumerable<StockTradeHistoryModel> GetAll() => this.tradeRepository.FindAll().Select(a => this.mapper.Map<StockTradeHistoryModel>(a));
+
+        /// <inheritdoc/>
+        public override StockTradeHistoryModel Get(int id)
+        {
+            Trade entity = this.tradeRepository.FindByCondition(p => p.Id == id).Single();
+            return this.mapper.Map<StockTradeHistoryModel>(entity);
+        }
+
+        /// <inheritdoc/>
+        public override int Add(StockTradeHistoryModel model)
+        {
+            Trade entity = this.mapper.Map<Trade>(model);
+            entity.Id = default;
+            this.tradeRepository.Create(entity);
+            this.tradeRepository.Save();
+            return entity.Id;
+        }
+
+        /// <inheritdoc/>
+        public override void Update(StockTradeHistoryModel model)
+        {
+            if (!this.repository.FindByCondition(p => p.Id == model.Id).Any())
+                throw new Exception();
+
+            Trade entity = this.mapper.Map<Trade>(model);
+            this.tradeRepository.Update(entity);
+            this.tradeRepository.Save();
+        }
+
+        /// <inheritdoc/>
+        public override void Delete(int id)
+        {
+            Trade entity = this.tradeRepository.FindByCondition(a => a.Id == id).Single();
+            this.tradeRepository.Delete(entity);
+            this.tradeRepository.Save();
         }
 
         /// <inheritdoc/>
