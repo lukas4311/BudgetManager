@@ -11,6 +11,7 @@ using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using BudgetManager.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
+using BudgetManager.Domain.Enums;
 
 namespace BudgetManager.Services
 {
@@ -30,6 +31,7 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportType> brokerReportTypeRepository;
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
+        private readonly IRepository<Trade> tradeRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -48,7 +50,7 @@ namespace BudgetManager.Services
         public CryptoService(IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository, Infl.IInfluxContext influxContext,
             Infl.IRepository<Infl.CryptoData> cryptoRepository, Infl.IRepository<Infl.CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
         {
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -59,38 +61,44 @@ namespace BudgetManager.Services
             this.brokerReportTypeRepository = brokerReportTypeRepository;
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
+            this.tradeRepository = tradeRepository;
             this.dateTimeProvider = dateTimeProvider;
         }
 
         /// <inheritdoc/>
         public IEnumerable<TradeHistory> GetByUser(string userLogin)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Login == userLogin)
-                .SelectMany(a => a.CryptoTradesHistory)
-                .Include(s => s.CurrencySymbol)
-                .Include(s => s.CryptoTicker)
-                .Select(e => e.MapToOverViewViewModel());
+            return this.tradeRepository.FindAll()
+                .Include(t => t.UserIdentity)
+                .Include(t => t.TradeCurrencySymbol)
+                .Include(t => t.Ticker)
+                .ThenInclude(t => t.EnumItemType)
+                .Where(u => u.UserIdentity.Login == userLogin && u.Ticker.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers))
+                .Select(t => mapper.Map<TradeHistory>(t));
         }
 
         /// <inheritdoc/>
         public IEnumerable<TradeHistory> GetByUser(int userId)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
-                .SelectMany(a => a.CryptoTradesHistory)
-                .Include(s => s.CurrencySymbol)
-                .Include(s => s.CryptoTicker)
-                .Select(e => e.MapToOverViewViewModel());
+            return this.tradeRepository.FindAll()
+                .Include(t => t.UserIdentity)
+                .Include(t => t.TradeCurrencySymbol)
+                .Include(t => t.Ticker)
+                .ThenInclude(t => t.EnumItemType)
+                .Where(u => u.UserIdentityId == userId && u.Ticker.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers))
+                .Select(t => mapper.Map<TradeHistory>(t));
         }
 
         /// <inheritdoc/>
         public TradeHistory Get(int id, int userId)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
-                .SelectMany(a => a.CryptoTradesHistory)
-                .Include(s => s.CurrencySymbol)
-                .Include(s => s.CryptoTicker)
-                .Where(s => s.Id == id)
-                .Select(e => e.MapToOverViewViewModel())
+            return this.tradeRepository.FindAll()
+                .Include(t => t.UserIdentity)
+                .Include(t => t.TradeCurrencySymbol)
+                .Include(t => t.Ticker)
+                .ThenInclude(t => t.EnumItemType)
+                .Where(u => u.Id == id && u.Ticker.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers))
+                .Select(t => mapper.Map<TradeHistory>(t))
                 .Single();
         }
 

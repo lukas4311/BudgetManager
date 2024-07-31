@@ -91,6 +91,11 @@ namespace BudgetManager.Services.Extensions
                         .ForMember(dest => dest.CurrencySymbolId, opt => opt.MapFrom(x => x.TradeCurrencySymbolId))
                         .ForMember(dest => dest.CurrencySymbol, opt => opt.MapFrom(x => x.TradeCurrencySymbol.Code))
                         .ForMember(dest => dest.StockTickerId, opt => opt.MapFrom(x => x.TickerId));
+                    cfg.CreateMap<Trade, TradeHistory>()
+                        .ForMember(dest => dest.CurrencySymbolId, opt => opt.MapFrom(x => x.TradeCurrencySymbolId))
+                        .ForMember(dest => dest.CurrencySymbol, opt => opt.MapFrom(x => x.TradeCurrencySymbol.Code))
+                        .ForMember(dest => dest.CryptoTickerId, opt => opt.MapFrom(x => x.TickerId))
+                        .ForMember(dest => dest.CryptoTicker, opt => opt.MapFrom(x => x.Ticker.Code));
                 }
             );
 
