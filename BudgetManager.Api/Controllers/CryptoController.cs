@@ -81,7 +81,7 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("tickers")]
-        public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(cryptoTickerRepository.FindAll());
+        public ActionResult<IEnumerable<CryptoTicker>> GetTickers() => Ok(cryptoService.GetAllTickers());
 
         [HttpPost("brokerReport/{brokerId}")]
         public async Task<IActionResult> UploadReport([FromRoute]int brokerId, IFormFile file)

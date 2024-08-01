@@ -163,7 +163,7 @@ namespace BudgetManager.Services
 
         public IEnumerable<CryptoTicker> GetAllTickers()
         {
-            return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<CryptoTicker>(t));
+            return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers)).Select(t => mapper.Map<CryptoTicker>(t));
         }
     }
 }

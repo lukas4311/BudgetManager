@@ -89,5 +89,11 @@ namespace BudgetManager.Services.Contracts
         /// <param name="userId">The user ID.</param>
         /// <param name="brokerId">The broker ID.</param>
         void StoreReportToProcess(byte[] brokerFileData, int userId, int brokerId);
+
+        /// <summary>
+        /// Get all crypto tickers
+        /// </summary>
+        /// <returns>List of crypto tickers</returns>
+        IEnumerable<CryptoTicker> GetAllTickers();
     }
 }
