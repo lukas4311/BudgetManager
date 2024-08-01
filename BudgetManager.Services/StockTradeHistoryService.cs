@@ -19,12 +19,12 @@ using Infl = BudgetManager.InfluxDbData;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, StockTradeHistory, IRepository<StockTradeHistory>>, IStockTradeHistoryService
+    public class StockTradeHistoryService : BaseService<StockTradeHistoryModel, Trade, IRepository<Trade>>, IStockTradeHistoryService
     {
         private const string bucket = "StockPrice";
         private const string BrokerStockTypeCode = "Stock";
         private const string BrokerProcessStateCode = "InProcess";
-        private readonly IRepository<StockTradeHistory> repository;
+        private readonly IRepository<Trade> repository;
         private readonly IMapper mapper;
         private readonly InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo;
         private readonly Infl.IInfluxContext influxContext;
@@ -34,7 +34,6 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportType> brokerReportTypeRepository;
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
-        private readonly IRepository<Trade> tradeRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -51,11 +50,11 @@ namespace BudgetManager.Services
         /// <param name="brokerReportToProcessStateRepository">The repository for broker report process states.</param>
         /// <param name="brokerReportToProcessRepository">The repository for broker reports to process.</param>
         /// <param name="dateTimeProvider">The provider for date and time.</param>
-        public StockTradeHistoryService(IRepository<StockTradeHistory> repository, IMapper mapper,
+        public StockTradeHistoryService(IRepository<Trade> repository, IMapper mapper,
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, Infl.IInfluxContext influxContext,
             IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IDateTime dateTimeProvider) : base(repository, mapper)
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -67,52 +66,14 @@ namespace BudgetManager.Services
             this.brokerReportTypeRepository = brokerReportTypeRepository;
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
-            this.tradeRepository = tradeRepository;
             this.dateTimeProvider = dateTimeProvider;
         }
 
-        public override IEnumerable<StockTradeHistoryModel> GetAll() => tradeRepository.FindAll().Select(a => mapper.Map<StockTradeHistoryModel>(a));
-
-        /// <inheritdoc/>
-        public override StockTradeHistoryModel Get(int id)
-        {
-            Trade entity = tradeRepository.FindByCondition(p => p.Id == id).Single();
-            return mapper.Map<StockTradeHistoryModel>(entity);
-        }
-
-        /// <inheritdoc/>
-        public override int Add(StockTradeHistoryModel model)
-        {
-            Trade entity = mapper.Map<Trade>(model);
-            entity.Id = default;
-            tradeRepository.Create(entity);
-            tradeRepository.Save();
-            return entity.Id;
-        }
-
-        /// <inheritdoc/>
-        public override void Update(StockTradeHistoryModel model)
-        {
-            if (!repository.FindByCondition(p => p.Id == model.Id).Any())
-                throw new Exception();
-
-            Trade entity = mapper.Map<Trade>(model);
-            tradeRepository.Update(entity);
-            tradeRepository.Save();
-        }
-
-        /// <inheritdoc/>
-        public override void Delete(int id)
-        {
-            Trade entity = tradeRepository.FindByCondition(a => a.Id == id).Single();
-            tradeRepository.Delete(entity);
-            tradeRepository.Save();
-        }
 
         /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetAll(int userId)
         {
-            List<StockTradeHistoryGetModel> trades = tradeRepository
+            List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
@@ -132,7 +93,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<StockTradeHistoryGetModel>> GetAll(int userId, ECurrencySymbol currencySymbol)
         {
-            List<StockTradeHistoryGetModel> trades = tradeRepository
+            List<StockTradeHistoryGetModel> trades = repository
                 .FindByCondition(i => i.UserIdentityId == userId)
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
@@ -163,7 +124,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<StockTradeHistoryGetModel> GetTradeHistory(int userId, string stockTicker)
         {
-            List<StockTradeHistoryGetModel> trades = tradeRepository.FindAll()
+            List<StockTradeHistoryGetModel> trades = repository.FindAll()
                 .Include(t => t.Ticker)
                 .Include(t => t.TradeCurrencySymbol)
                 .Where(t => t.Ticker.Code == stockTicker && t.UserIdentityId == userId)

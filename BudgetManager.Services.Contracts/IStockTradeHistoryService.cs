@@ -13,7 +13,7 @@ namespace BudgetManager.Services.Contracts
     /// <summary>
     /// Service class for managing operations related to stock trade history.
     /// </summary>
-    public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, StockTradeHistory, IRepository<StockTradeHistory>>
+    public interface IStockTradeHistoryService : IBaseService<StockTradeHistoryModel, Trade, IRepository<Trade>>
     {
         /// <summary>
         /// Retrieves all stock trade history for a user.
