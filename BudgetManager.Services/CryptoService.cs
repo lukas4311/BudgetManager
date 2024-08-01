@@ -16,13 +16,13 @@ using BudgetManager.Domain.Enums;
 namespace BudgetManager.Services
 {
     /// <inheritdoc/>
-    public class CryptoService : BaseService<TradeHistory, CryptoTradeHistory, IRepository<CryptoTradeHistory>>, ICryptoService
+    public class CryptoService : BaseService<TradeHistory, Trade, IRepository<Trade>>, ICryptoService
     {
         private const string bucketCrypto = "Crypto";
         private const string bucketCryptoV2 = "CryptoV2";
         private const string BrokerCryptoTypeCode = "Crypto";
         private const string BrokerProcessStateCode = "InProcess";
-        private readonly IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository;
+        private readonly IRepository<Trade> cryptoTradeHistoryRepository;
         private readonly IRepository<UserIdentity> userIdentityRepository;
         private readonly Infl.IInfluxContext influxContext;
         private readonly Infl.IRepository<Infl.CryptoData> cryptoRepository;
@@ -47,7 +47,7 @@ namespace BudgetManager.Services
         /// <param name="brokerReportToProcessStateRepository">The broker report to process state repository.</param>
         /// <param name="brokerReportToProcessRepository">The broker report to process repository.</param>
         /// <param name="dateTimeProvider">The date time provider.</param>
-        public CryptoService(IRepository<CryptoTradeHistory> cryptoTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository, Infl.IInfluxContext influxContext,
+        public CryptoService(IRepository<Trade> cryptoTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository, Infl.IInfluxContext influxContext,
             Infl.IRepository<Infl.CryptoData> cryptoRepository, Infl.IRepository<Infl.CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
             IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
