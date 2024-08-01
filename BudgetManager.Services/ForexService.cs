@@ -34,8 +34,8 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForex);
-            IEnumerable<ForexData> data = await this.forexRepository.GetLastWrittenRecordsTime(dataSourceIdentification);
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(influxContext.OrganizationId, bucketForex);
+            IEnumerable<ForexData> data = await forexRepository.GetLastWrittenRecordsTime(dataSourceIdentification);
             return data.SingleOrDefault(a => string.Equals(a.BaseCurrency, fromSymbol, System.StringComparison.OrdinalIgnoreCase)
                 && string.Equals(a.Currency, toSymbol, System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
@@ -43,17 +43,17 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol)
         {
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForexV2);
-            IEnumerable<ForexDataV2> data = await this.forexRepositoryV2.GetLastWrittenRecordsTime(dataSourceIdentification);
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(influxContext.OrganizationId, bucketForexV2);
+            IEnumerable<ForexDataV2> data = await forexRepositoryV2.GetLastWrittenRecordsTime(dataSourceIdentification);
             return data.SingleOrDefault(a => string.Equals(a.Pair, $"{fromSymbol}-{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
 
         /// </summary>
         public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
-            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(this.influxContext.OrganizationId, bucketForexV2);
+            DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(influxContext.OrganizationId, bucketForexV2);
             string pair = $"{fromSymbol}-{toSymbol}";
-            IEnumerable<ForexDataV2> data = await this.forexRepositoryV2.GetAllData(dataSourceIdentification,
+            IEnumerable<ForexDataV2> data = await forexRepositoryV2.GetAllData(dataSourceIdentification,
                 new DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "pair", pair } }).ConfigureAwait(false);
             return data.LastOrDefault()?.Price ?? 0;
         }

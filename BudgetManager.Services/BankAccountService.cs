@@ -42,23 +42,23 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate)
-            => this.FilterBankAccountsForUser(a => a.Login == userLogin, toDate);
+            => FilterBankAccountsForUser(a => a.Login == userLogin, toDate);
 
         /// <inheritdoc/>
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate)
-            => this.FilterBankAccountsForUser(a => a.Id == userId, toDate);
+            => FilterBankAccountsForUser(a => a.Id == userId, toDate);
 
         /// <inheritdoc/>
         public BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate)
         {
             toDate ??= DateTime.MinValue;
 
-            BankBalanceModel bankAccount = this.bankAccountRepository.FindByCondition(b => b.Id == bankAccountId)
+            BankBalanceModel bankAccount = bankAccountRepository.FindByCondition(b => b.Id == bankAccountId)
                 .AsNoTracking()
                 .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
                 .Single();
 
-            decimal bankAccountsBalance = this.paymentRepository
+            decimal bankAccountsBalance = paymentRepository
                 .FindByCondition(p => bankAccount.Id == p.BankAccountId && p.Date > toDate)
                 .AsNoTracking()
                 .Sum(a => a.Amount);
@@ -73,7 +73,7 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public bool UserHasRightToBankAccount(int bankAccountId, int userId)
-            => this.bankAccountRepository.FindByCondition(a => a.Id == bankAccountId && a.UserIdentityId == userId).Count() == 1;
+            => bankAccountRepository.FindByCondition(a => a.Id == bankAccountId && a.UserIdentityId == userId).Count() == 1;
 
         /// <inheritdoc/>
         public IEnumerable<BankAccountModel> GetAllBankAccounts(int userId)
@@ -90,7 +90,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public override void Delete(int id)
         {
-            PaymentDeleteModel data = this.bankAccountRepository.FindByCondition(b => b.Id == id)
+            PaymentDeleteModel data = bankAccountRepository.FindByCondition(b => b.Id == id)
                     .Include(a => a.InterestRates)
                     .Include(a => a.Payments)
                     .ThenInclude(pt => pt.PaymentTags)
@@ -98,16 +98,16 @@ namespace BudgetManager.Services
                     .Single();
 
             foreach (PaymentTag paymentTag in data.paymentTags)
-                this.paymentTagRepository.Delete(paymentTag);
+                paymentTagRepository.Delete(paymentTag);
 
             foreach (Payment payment in data.payments)
-                this.paymentRepository.Delete(payment);
+                paymentRepository.Delete(payment);
 
             foreach (InterestRate interest in data.interests)
-                this.interestRateRepository.Delete(interest);
+                interestRateRepository.Delete(interest);
 
-            this.bankAccountRepository.Delete(data.bankAccount);
-            this.bankAccountRepository.Save();
+            bankAccountRepository.Delete(data.bankAccount);
+            bankAccountRepository.Save();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace BudgetManager.Services
         {
             toDate ??= DateTime.MinValue;
 
-            List<BankBalanceModel> bankAccounts = this.userIdentityRepository.FindByCondition(userPredicate)
+            List<BankBalanceModel> bankAccounts = userIdentityRepository.FindByCondition(userPredicate)
                 .AsNoTracking()
                 .Include(b => b.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
@@ -128,7 +128,7 @@ namespace BudgetManager.Services
                 .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
                 .ToList();
 
-            List<BankPaymentSumModel> bankAccountsBalance = this.paymentRepository
+            List<BankPaymentSumModel> bankAccountsBalance = paymentRepository
                 .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date > toDate)
                 .AsNoTracking()
                 .GroupBy(a => a.BankAccountId)

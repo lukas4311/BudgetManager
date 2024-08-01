@@ -25,25 +25,25 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public IEnumerable<BudgetModel> Get()
-            => this.budgetRepository.FindAll().Select(b => b.MapToViewModel()).ToList();
+            => budgetRepository.FindAll().Select(b => b.MapToViewModel()).ToList();
 
         /// <inheritdoc/>
         public bool UserHasRightToBudget(int budgetId, int userId)
-            => this.budgetRepository.FindByCondition(a => a.Id == budgetId && a.UserIdentityId == userId).Count() == 1;
+            => budgetRepository.FindByCondition(a => a.Id == budgetId && a.UserIdentityId == userId).Count() == 1;
 
         /// <inheritdoc/>
         public IEnumerable<BudgetModel> GetByUserId(int userId)
-            => this.budgetRepository.FindByCondition(a => a.UserIdentityId == userId).Select(b => b.MapToViewModel()).ToList();
+            => budgetRepository.FindByCondition(a => a.UserIdentityId == userId).Select(b => b.MapToViewModel()).ToList();
 
         /// <inheritdoc/>
         public IEnumerable<BudgetModel> GetActual(int userId)
-            => this.budgetRepository.FindByCondition(s => s.UserIdentityId == userId).ToList().Where(b => this.BudgetIsActual(b)).Select(b => b.MapToViewModel());
+            => budgetRepository.FindByCondition(s => s.UserIdentityId == userId).ToList().Where(b => BudgetIsActual(b)).Select(b => b.MapToViewModel());
 
         /// <inheritdoc/>
         public IEnumerable<BudgetModel> Get(int userId, DateTime fromDate, DateTime? toDate)
         {
             toDate ??= DateTime.MaxValue;
-            return this.budgetRepository.FindByCondition(b => b.UserIdentityId == userId && b.DateFrom >= fromDate && b.DateTo <= toDate).Select(b => b.MapToViewModel());
+            return budgetRepository.FindByCondition(b => b.UserIdentityId == userId && b.DateFrom >= fromDate && b.DateTo <= toDate).Select(b => b.MapToViewModel());
         }
 
         /// <summary>

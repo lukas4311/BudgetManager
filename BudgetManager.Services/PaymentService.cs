@@ -35,7 +35,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public List<PaymentModel> GetPaymentsData(DateTime? fromDate, DateTime? toDate, int userId, int? bankAccountId)
         {
-            return this.paymentRepository.FindAll()
+            return paymentRepository.FindAll()
                 .Where(a => a.BankAccount.UserIdentityId == userId &&
                             a.Date > (fromDate ?? DateTime.MinValue) &&
                             a.Date < (toDate ?? DateTime.MaxValue) &&
@@ -66,7 +66,7 @@ namespace BudgetManager.Services
         /// <returns>The payment model with associated tags.</returns>
         public override PaymentModel Get(int id)
         {
-            PaymentModel model = this.repository.FindByCondition(p => p.Id == id)
+            PaymentModel model = repository.FindByCondition(p => p.Id == id)
                 .Include(a => a.PaymentTags)
                 .ThenInclude(a => a.Tag)
                 .Select(a => new PaymentModel
@@ -91,7 +91,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public List<PaymentTypeModel> GetPaymentTypes()
         {
-            return this.paymentTypeRepository.FindAll().Select(p => new PaymentTypeModel
+            return paymentTypeRepository.FindAll().Select(p => new PaymentTypeModel
             {
                 Id = p.Id,
                 Name = p.Name
@@ -101,7 +101,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public List<PaymentCategoryModel> GetPaymentCategories()
         {
-            return this.paymentCategoryRepository.FindAll().Select(p => new PaymentCategoryModel
+            return paymentCategoryRepository.FindAll().Select(p => new PaymentCategoryModel
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -112,16 +112,16 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public int ClonePayment(int id)
         {
-            Payment paymentToClone = this.paymentRepository.FindByCondition(p => p.Id == id).Single();
+            Payment paymentToClone = paymentRepository.FindByCondition(p => p.Id == id).Single();
             paymentToClone.Id = default;
-            this.paymentRepository.Create(paymentToClone);
-            this.paymentRepository.Save();
+            paymentRepository.Create(paymentToClone);
+            paymentRepository.Save();
             return paymentToClone.Id;
         }
 
         /// <inheritdoc/>
         public bool UserHasRightToPayment(int paymentId, int userId) =>
-            this.paymentRepository.FindByCondition(a => a.Id == paymentId && a.BankAccount.UserIdentityId == userId).Count() == 1;
+            paymentRepository.FindByCondition(a => a.Id == paymentId && a.BankAccount.UserIdentityId == userId).Count() == 1;
     }
 
 }

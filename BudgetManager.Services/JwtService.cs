@@ -22,7 +22,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public string GenerateToken(UserIdentification model)
         {
-            this.CheckSettingIsSettedUp();
+            CheckSettingIsSettedUp();
 
             if (model is null)
                 throw new ArgumentException("Arguments to create token are not valid.");
@@ -34,7 +34,7 @@ namespace BudgetManager.Services
             SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt32(this.jwtSetting.ExpireMinutes)),
+                Expires = DateTime.UtcNow.AddMinutes(Convert.ToInt32(jwtSetting.ExpireMinutes)),
                 SigningCredentials = new SigningCredentials(GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha512)
             };
 
@@ -46,7 +46,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<Claim> GetTokenClaims(string token)
         {
-            this.CheckSettingIsSettedUp();
+            CheckSettingIsSettedUp();
 
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentException("Given token is null or empty.");
@@ -68,7 +68,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public UserIdentification GetUserIdentification(string token)
         {
-            IEnumerable<Claim> claims = this.GetTokenClaims(token);
+            IEnumerable<Claim> claims = GetTokenClaims(token);
 
             return new UserIdentification()
             {
@@ -80,7 +80,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public bool IsTokenValid(string token)
         {
-            this.CheckSettingIsSettedUp();
+            CheckSettingIsSettedUp();
 
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentException("Given token is null or empty.");
@@ -105,7 +105,7 @@ namespace BudgetManager.Services
         /// <returns>The symmetric security key.</returns>
         private SecurityKey GetSymmetricSecurityKey()
         {
-            byte[] symmetricKey = Convert.FromBase64String(this.jwtSetting.SecretKey);
+            byte[] symmetricKey = Convert.FromBase64String(jwtSetting.SecretKey);
             return new SymmetricSecurityKey(symmetricKey);
         }
 
@@ -115,7 +115,7 @@ namespace BudgetManager.Services
         /// <exception cref="NotSettedUpException">Thrown when the JWT settings have not been set up.</exception>
         private void CheckSettingIsSettedUp()
         {
-            if (this.jwtSetting is null)
+            if (jwtSetting is null)
                 throw new NotSettedUpException();
         }
 

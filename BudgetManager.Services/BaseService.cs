@@ -42,10 +42,10 @@ namespace BudgetManager.Services
         /// <returns>Id of record in database</returns>
         public virtual int Add(Model model)
         {
-            Entity entity = this.mapper.Map<Entity>(model);
+            Entity entity = mapper.Map<Entity>(model);
             entity.Id = default;
-            this.repository.Create(entity);
-            this.repository.Save();
+            repository.Create(entity);
+            repository.Save();
             return entity.Id;
         }
 
@@ -56,12 +56,12 @@ namespace BudgetManager.Services
         /// <exception cref="Exception">Model with specific Id not found</exception>
         public virtual void Update(Model model)
         {
-            if (!this.repository.FindByCondition(p => p.Id == model.Id).Any())
+            if (!repository.FindByCondition(p => p.Id == model.Id).Any())
                 throw new Exception();
 
-            Entity entity = this.mapper.Map<Entity>(model);
-            this.repository.Update(entity);
-            this.repository.Save();
+            Entity entity = mapper.Map<Entity>(model);
+            repository.Update(entity);
+            repository.Save();
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace BudgetManager.Services
         /// <param name="model">Model to remove</param>
         public virtual void Delete(int id)
         {
-            Entity entity = this.repository.FindByCondition(a => a.Id == id).Single();
-            this.repository.Delete(entity);
-            this.repository.Save();
+            Entity entity = repository.FindByCondition(a => a.Id == id).Single();
+            repository.Delete(entity);
+            repository.Save();
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace BudgetManager.Services
         /// <returns>Model of entity</returns>
         public virtual Model Get(int id)
         {
-            Entity entity = this.repository.FindByCondition(p => p.Id == id).Single();
-            return this.mapper.Map<Model>(entity);
+            Entity entity = repository.FindByCondition(p => p.Id == id).Single();
+            return mapper.Map<Model>(entity);
         }
 
         /// <summary>
@@ -92,12 +92,12 @@ namespace BudgetManager.Services
         /// <param name="expression">Filter expression</param>
         /// <returns>Records after filtering</returns>
         public virtual IEnumerable<Model> Get(Expression<Func<Entity, bool>> expression) 
-            => this.repository.FindByCondition(expression).Select(a => this.mapper.Map<Model>(a));
+            => repository.FindByCondition(expression).Select(a => mapper.Map<Model>(a));
 
         /// <summary>
         /// Method to get all records
         /// </summary>
         /// <returns>All entity models</returns>
-        public virtual IEnumerable<Model> GetAll() => this.repository.FindAll().Select(a => this.mapper.Map<Model>(a));
+        public virtual IEnumerable<Model> GetAll() => repository.FindAll().Select(a => mapper.Map<Model>(a));
     }
 }

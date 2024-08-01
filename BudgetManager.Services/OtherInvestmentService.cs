@@ -43,8 +43,8 @@ namespace BudgetManager.Services
             otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
             otherInvestmentBalanceHistory.Date = model.Created;
             otherInvestmentBalanceHistory.OtherInvestmentId = id;
-            this.otherInvestmentBalaceHistoryRepository.Create(otherInvestmentBalanceHistory);
-            this.otherInvestmentBalaceHistoryRepository.Save();
+            otherInvestmentBalaceHistoryRepository.Create(otherInvestmentBalanceHistory);
+            otherInvestmentBalaceHistoryRepository.Save();
             return id;
         }
 
@@ -55,11 +55,11 @@ namespace BudgetManager.Services
         public override void Update(OtherInvestmentModel model)
         {
             base.Update(model);
-            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = this.FindFirstRelatedHistoryRecord(model.Id.Value);
+            OtherInvestmentBalaceHistory otherInvestmentBalanceHistory = FindFirstRelatedHistoryRecord(model.Id.Value);
             otherInvestmentBalanceHistory.Balance = model.OpeningBalance;
             otherInvestmentBalanceHistory.Date = model.Created;
-            this.otherInvestmentBalaceHistoryRepository.Update(otherInvestmentBalanceHistory);
-            this.otherInvestmentBalaceHistoryRepository.Save();
+            otherInvestmentBalaceHistoryRepository.Update(otherInvestmentBalanceHistory);
+            otherInvestmentBalaceHistoryRepository.Save();
         }
 
         /// <summary>
@@ -68,28 +68,28 @@ namespace BudgetManager.Services
         /// <param name="id">The ID of the other investment to delete.</param>
         public override void Delete(int id)
         {
-            IEnumerable<OtherInvestmentBalaceHistory> relatedHistoryRecords = this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).ToList();
+            IEnumerable<OtherInvestmentBalaceHistory> relatedHistoryRecords = otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).ToList();
 
             foreach (OtherInvestmentBalaceHistory historyRecord in relatedHistoryRecords)
-                this.otherInvestmentBalaceHistoryRepository.Delete(historyRecord);
+                otherInvestmentBalaceHistoryRepository.Delete(historyRecord);
 
-            OtherInvestmentTagModel otherInvestmentTagRelation = this.otherInvestmentTagService.Get(t => t.OtherInvestmentId == id).SingleOrDefault();
+            OtherInvestmentTagModel otherInvestmentTagRelation = otherInvestmentTagService.Get(t => t.OtherInvestmentId == id).SingleOrDefault();
 
             if (otherInvestmentTagRelation != null)
-                this.otherInvestmentTagService.Delete(otherInvestmentTagRelation.Id.Value);
+                otherInvestmentTagService.Delete(otherInvestmentTagRelation.Id.Value);
 
             base.Delete(id);
         }
 
         /// <inheritdoc/>
         public IEnumerable<OtherInvestmentModel> GetAll(int userId)
-            => this.repository.FindByCondition(i => i.UserIdentityId == userId).Select(i => this.mapper.Map<OtherInvestmentModel>(i));
+            => repository.FindByCondition(i => i.UserIdentityId == userId).Select(i => mapper.Map<OtherInvestmentModel>(i));
 
         /// <inheritdoc/>
         public async Task<decimal> GetProgressForYears(int id, int? years = null)
         {
-            decimal startBalance = this.repository.FindByCondition(o => o.Id == id).Single().OpeningBalance;
-            decimal endBalance = this.otherInvestmentBalaceHistoryRepository
+            decimal startBalance = repository.FindByCondition(o => o.Id == id).Single().OpeningBalance;
+            decimal endBalance = otherInvestmentBalaceHistoryRepository
                 .FindByCondition(o => o.OtherInvestmentId == id)
                 .OrderBy(a => a.Date)
                 .Last().Balance;
@@ -109,11 +109,11 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<decimal> GetTotalyInvested(int otherinvestmentId, DateTime fromDate, DateTime toDate)
         {
-            int tagId = this.otherInvestmentTagService.Get(p => p.OtherInvestmentId == otherinvestmentId).Select(t => t.TagId).SingleOrDefault();
+            int tagId = otherInvestmentTagService.Get(p => p.OtherInvestmentId == otherinvestmentId).Select(t => t.TagId).SingleOrDefault();
             decimal totalyInvested = default;
 
             if (tagId != default)
-                totalyInvested = (await this.otherInvestmentTagService.GetPaymentsForTag(otherinvestmentId, tagId))
+                totalyInvested = (await otherInvestmentTagService.GetPaymentsForTag(otherinvestmentId, tagId))
                     .Where(p => p.Date > fromDate)
                     .Where(p => p.Date < toDate)
                     .Sum(a => a.Amount);
@@ -124,7 +124,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<(int otherInvestmentId, decimal totalInvested)> GetTotalyInvested(DateTime fromDate)
         {
-            var data = this.repository.FindAll()
+            var data = repository.FindAll()
                 .Include(t => t.OtherInvestmentTags)
                 .ThenInclude(t => t.Tag)
                 .ThenInclude(t => t.PaymentTags)
@@ -145,15 +145,15 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public bool UserHasRightToPayment(int otherInvestmentId, int userId)
-            => this.repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
+            => repository.FindByCondition(a => a.Id == otherInvestmentId && a.UserIdentityId == userId).Count() == 1;
 
         /// <inheritdoc/>
         public OtherInvestmentBalanceSummaryModel GetAllInvestmentSummary(int userId)
         {
-            List<OtherInvestmentBalaceHistory> baseData = this.otherInvestmentBalaceHistoryRepository
+            List<OtherInvestmentBalaceHistory> baseData = otherInvestmentBalaceHistoryRepository
                 .FindByCondition(o => o.OtherInvestment.UserIdentityId == userId).ToList();
-            IEnumerable<OtherInvestmentBalaceHistoryModel> lastData = this.FilterBaseBalaceData(baseData, DateTime.MinValue);
-            IEnumerable<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = this.FilterBaseBalaceData(baseData, DateTime.Now.AddYears(-1));
+            IEnumerable<OtherInvestmentBalaceHistoryModel> lastData = FilterBaseBalaceData(baseData, DateTime.MinValue);
+            IEnumerable<OtherInvestmentBalaceHistoryModel> oneYearEarlierData = FilterBaseBalaceData(baseData, DateTime.Now.AddYears(-1));
 
             return new OtherInvestmentBalanceSummaryModel(lastData, oneYearEarlierData);
         }
@@ -166,10 +166,10 @@ namespace BudgetManager.Services
         /// <returns>An enumerable collection of filtered balance history models.</returns>
         private IEnumerable<OtherInvestmentBalaceHistoryModel> FilterBaseBalaceData(List<OtherInvestmentBalaceHistory> baseData, DateTime balancesFrom)
         {
-            IEnumerable<(int otherInvestmentId, decimal totalInvested)> totalyInvested = this.GetTotalyInvested(balancesFrom);
+            IEnumerable<(int otherInvestmentId, decimal totalInvested)> totalyInvested = GetTotalyInvested(balancesFrom);
             IEnumerable<OtherInvestmentBalaceHistoryModel> filteredData = baseData.Where(o => (balancesFrom == DateTime.MinValue) || o.Date <= balancesFrom)
                 .GroupBy(a => a.OtherInvestmentId)
-                .Select(x => this.mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
+                .Select(x => mapper.Map<OtherInvestmentBalaceHistoryModel>(x.OrderByDescending(y => y.Date).FirstOrDefault()))
                 .ToList();
 
             filteredData = filteredData.GroupJoin(
@@ -195,6 +195,6 @@ namespace BudgetManager.Services
         /// </summary>
         /// <param name="id">The ID of the other investment.</param>
         /// <returns>The first related history record.</returns>
-        private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => this.otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
+        private OtherInvestmentBalaceHistory FindFirstRelatedHistoryRecord(int id) => otherInvestmentBalaceHistoryRepository.FindByCondition(e => e.OtherInvestmentId == id).OrderBy(a => a.Date).First();
     }
 }

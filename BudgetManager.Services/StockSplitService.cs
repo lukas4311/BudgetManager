@@ -23,22 +23,22 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<StockSplitAccumulated> GetSplitAccumulated()
         {
-            IEnumerable<List<StockSplitAccumulated>> data = this.GetSplitsMappedToModel().Select(t => t.Splits.ToList());
-            IEnumerable<List<StockSplitAccumulated>> accumulatedData = this.AccumulateSplits(data);
+            IEnumerable<List<StockSplitAccumulated>> data = GetSplitsMappedToModel().Select(t => t.Splits.ToList());
+            IEnumerable<List<StockSplitAccumulated>> accumulatedData = AccumulateSplits(data);
             return accumulatedData.SelectMany(d => d);
         }
 
         /// <inheritdoc/>
         public IEnumerable<(int tickerId, List<StockSplitAccumulated> splits)> GetGrupedAccumulatedSplits()
         {
-            IEnumerable<List<StockSplitAccumulated>> data = this.GetSplitsMappedToModel().Select(t => t.Splits.ToList());
-            IEnumerable<List<StockSplitAccumulated>> accumulatedData = this.AccumulateSplits(data);
+            IEnumerable<List<StockSplitAccumulated>> data = GetSplitsMappedToModel().Select(t => t.Splits.ToList());
+            IEnumerable<List<StockSplitAccumulated>> accumulatedData = AccumulateSplits(data);
             return accumulatedData.Select(g => (g[0].StockTickerId, g));
         }
 
         /// <inheritdoc/>
         public IEnumerable<StockSplitAccumulated> GetTickerSplits(int tickerId)
-            => this.GetSplitsMappedToModel().SingleOrDefault(s => s.TickerId == tickerId)?.Splits;
+            => GetSplitsMappedToModel().SingleOrDefault(s => s.TickerId == tickerId)?.Splits;
 
         /// <inheritdoc/>
         public IEnumerable<List<StockSplitAccumulated>> AccumulateSplits(IEnumerable<List<StockSplitAccumulated>> accumulatedData)
@@ -66,7 +66,7 @@ namespace BudgetManager.Services
         /// <returns>An enumerable of grouped stock accumulated splits.</returns>
         private IEnumerable<GroupedStockAccumulatedSpits> GetSplitsMappedToModel()
         {
-            return this.repository.FindAll()
+            return repository.FindAll()
                 .ToList()
                 .GroupBy(s => s.TickerId)
                 .Select(g => new GroupedStockAccumulatedSpits

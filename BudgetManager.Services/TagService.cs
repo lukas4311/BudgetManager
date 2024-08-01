@@ -48,7 +48,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<TagModel> GetPaymentTags()
         {
-            return this.userIdentityRepository.FindAll()
+            return userIdentityRepository.FindAll()
                 .Include(p => p.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .SelectMany(t => t.Payments)
@@ -64,7 +64,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<TagModel> GetPaymentsTags(int userId)
         {
-            return this.userIdentityRepository.FindByCondition(u => u.Id == userId)
+            return userIdentityRepository.FindByCondition(u => u.Id == userId)
                 .Include(p => p.BankAccounts)
                 .SelectMany(a => a.BankAccounts)
                 .SelectMany(t => t.Payments)
@@ -85,7 +85,7 @@ namespace BudgetManager.Services
                 PaymentId = tagModel.PaymentId
             };
 
-            Tag tag = this.tagRepository.FindAll().ToList().SingleOrDefault(t => string.Compare(t.Code, tagModel.Code, true) == 0);
+            Tag tag = tagRepository.FindAll().ToList().SingleOrDefault(t => string.Compare(t.Code, tagModel.Code, true) == 0);
 
             if (tag is null)
             {
@@ -93,7 +93,7 @@ namespace BudgetManager.Services
                 {
                     Code = tagModel.Code,
                 };
-                this.tagRepository.Create(tag);
+                tagRepository.Create(tag);
                 paymentTag.Tag = tag;
             }
             else
@@ -101,17 +101,17 @@ namespace BudgetManager.Services
                 paymentTag.TagId = tag.Id;
             }
 
-            this.paymentTagRepository.Create(paymentTag);
-            this.paymentTagRepository.Save();
+            paymentTagRepository.Create(paymentTag);
+            paymentTagRepository.Save();
         }
 
         /// <inheritdoc/>
         public void RemoveTagFromPayment(int tagId, int paymentId)
         {
-            PaymentTag paymentTag = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId && t.TagId == tagId).Single();
+            PaymentTag paymentTag = paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId && t.TagId == tagId).Single();
 
-            this.paymentTagRepository.Delete(paymentTag);
-            this.paymentTagRepository.Save();
+            paymentTagRepository.Delete(paymentTag);
+            paymentTagRepository.Save();
         }
 
         /// <summary>
@@ -120,31 +120,31 @@ namespace BudgetManager.Services
         /// <param name="tagId">The tag ID.</param>
         public override void Delete(int tagId)
         {
-            Tag tag = this.tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
+            Tag tag = tagRepository.FindByCondition(t => t.Id == tagId).SingleOrDefault();
 
             if (tag is null)
                 throw new ArgumentException(DoesntExists);
 
-            foreach (PaymentTag paymentTag in this.paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))
-                this.paymentTagRepository.Delete(paymentTag);
+            foreach (PaymentTag paymentTag in paymentTagRepository.FindByCondition(a => a.TagId == tag.Id))
+                paymentTagRepository.Delete(paymentTag);
 
-            this.tagRepository.Delete(tag);
-            this.tagRepository.Save();
+            tagRepository.Delete(tag);
+            tagRepository.Save();
         }
 
         /// <inheritdoc/>
         public void UpdateAllTags(List<string> tags, int paymentId)
         {
-            List<(string tag, int tagId)> tagsOnPayment = this.paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId).Include(i => i.Tag).ToList().Select(m => (tag: m.Tag.Code, tagId: m.TagId)).ToList();
+            List<(string tag, int tagId)> tagsOnPayment = paymentTagRepository.FindByCondition(t => t.PaymentId == paymentId).Include(i => i.Tag).ToList().Select(m => (tag: m.Tag.Code, tagId: m.TagId)).ToList();
 
             IEnumerable<(string tag, int tagId)> toDelete = tagsOnPayment.Where(t => tags.Contains(t.tag));
             IEnumerable<string> toAdd = tags.Where(t => !tagsOnPayment.Exists(a => a.tag == t));
 
             foreach ((string tag, int tagId) in toDelete)
-                this.RemoveTagFromPayment(tagId, paymentId);
+                RemoveTagFromPayment(tagId, paymentId);
 
             foreach (string tag in toAdd)
-                this.AddTagToPayment(new AddTagModel { Code = tag, PaymentId = paymentId });
+                AddTagToPayment(new AddTagModel { Code = tag, PaymentId = paymentId });
         }
     }
 }

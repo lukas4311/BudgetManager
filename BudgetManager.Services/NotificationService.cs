@@ -37,6 +37,6 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public bool UserHasRight(int notificationId, int userId)
-            => this.repository.FindByCondition(a => a.Id == notificationId && a.UserIdentityId == userId).Count() == 1;
+            => repository.FindByCondition(a => a.Id == notificationId && a.UserIdentityId == userId).Count() == 1;
     }
 }

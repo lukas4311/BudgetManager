@@ -68,7 +68,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<TradeHistory> GetByUser(string userLogin)
         {
-            return this.tradeRepository.FindAll()
+            return tradeRepository.FindAll()
                 .Include(t => t.UserIdentity)
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
@@ -80,7 +80,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<TradeHistory> GetByUser(int userId)
         {
-            return this.tradeRepository.FindAll()
+            return tradeRepository.FindAll()
                 .Include(t => t.UserIdentity)
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
@@ -92,7 +92,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public TradeHistory Get(int id, int userId)
         {
-            return this.tradeRepository.FindAll()
+            return tradeRepository.FindAll()
                 .Include(t => t.UserIdentity)
                 .Include(t => t.TradeCurrencySymbol)
                 .Include(t => t.Ticker)
@@ -105,59 +105,59 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)
         {
-            CryptoTradeHistory cryptoTrade = this.cryptoTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
+            CryptoTradeHistory cryptoTrade = cryptoTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
             return cryptoTrade.UserIdentityId == userId;
         }
 
         /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol)
         {
-            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
-            IEnumerable<Infl.CryptoData> data = await this.cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
+            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketCrypto);
+            IEnumerable<Infl.CryptoData> data = await cryptoRepository.GetLastWrittenRecordsTime(dataSourceIdentification).ConfigureAwait(false);
             return data.SingleOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
         /// <inheritdoc/>
         public async Task<double> GetCurrentExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
-            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCrypto);
-            IEnumerable<Infl.CryptoData> data = await this.cryptoRepository.GetAllData(dataSourceIdentification,
+            Infl.DataSourceIdentification dataSourceIdentification = new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketCrypto);
+            IEnumerable<Infl.CryptoData> data = await cryptoRepository.GetAllData(dataSourceIdentification,
                 new Infl.DateTimeRange { From = atDate, To = atDate.AddDays(1) }, new() { { "ticker", $"{fromSymbol}{toSymbol}" } }).ConfigureAwait(false);
             return data.FirstOrDefault(a => string.Equals(a.Ticker, $"{fromSymbol}{toSymbol}", StringComparison.OrdinalIgnoreCase))?.ClosePrice ?? 0;
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<Infl.CryptoDataV2>> GetCryptoPriceHistory(string ticker)
-            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new() { { "ticker", ticker } });
+            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketCryptoV2), new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
         public async Task<IEnumerable<Infl.CryptoDataV2>> GetCryptoPriceHistory(string ticker, DateTime from)
-            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), from, new() { { "ticker", ticker } });
+            => await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketCryptoV2), from, new() { { "ticker", ticker } });
 
         /// <inheritdoc/>
         public async Task<Infl.CryptoDataV2> GetCryptoPriceAtDate(string ticker, DateTime atDate)
-            => (await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketCryptoV2), new Infl.DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
+            => (await cryptoRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketCryptoV2), new Infl.DateTimeRange { From = atDate.AddDays(-5), To = atDate.AddDays(1) }, new() { { "ticker", ticker } })).LastOrDefault();
 
         /// <inheritdoc/>
         public void StoreReportToProcess(byte[] brokerFileData, int userId, int brokerId)
         {
             string fileContentBase64 = Convert.ToBase64String(brokerFileData);
 
-            int stockTypeId = this.brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerCryptoTypeCode).Single().Id;
-            int stockStateId = this.brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
+            int stockTypeId = brokerReportTypeRepository.FindByCondition(t => t.Code == BrokerCryptoTypeCode).Single().Id;
+            int stockStateId = brokerReportToProcessStateRepository.FindByCondition(t => t.Code == BrokerProcessStateCode).Single().Id;
 
             BrokerReportToProcess brokerReport = new BrokerReportToProcess
             {
                 BrokerReportToProcessStateId = stockStateId,
                 BrokerReportTypeId = stockTypeId,
                 FileContentBase64 = fileContentBase64,
-                ImportedTime = this.dateTimeProvider.Now.DateTimeInstance,
+                ImportedTime = dateTimeProvider.Now.DateTimeInstance,
                 UserIdentityId = userId,
                 BrokerId = brokerId
             };
 
-            this.brokerReportToProcessRepository.Create(brokerReport);
-            this.brokerReportToProcessRepository.Save();
+            brokerReportToProcessRepository.Create(brokerReport);
+            brokerReportToProcessRepository.Save();
         }
     }
 }

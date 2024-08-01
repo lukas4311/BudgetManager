@@ -24,12 +24,12 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<PaymentModel>> GetPaymentsForTag(int otherInvestmentId, int tagId)
         {
-            IEnumerable<PaymentModel> payments = await this.repository.FindByCondition(t => t.TagId == tagId && t.OtherInvestmentId == otherInvestmentId)
+            IEnumerable<PaymentModel> payments = await repository.FindByCondition(t => t.TagId == tagId && t.OtherInvestmentId == otherInvestmentId)
                 .Include(t => t.Tag)
                 .ThenInclude(t => t.PaymentTags)
                 .ThenInclude(t => t.Payment)
                 .SelectMany(t => t.Tag.PaymentTags)
-                .Select(t => this.mapper.Map<PaymentModel>(t.Payment))
+                .Select(t => mapper.Map<PaymentModel>(t.Payment))
                 .ToListAsync();
 
             return payments;
@@ -39,13 +39,13 @@ namespace BudgetManager.Services
         public int ReplaceTagForOtherInvestment(int otherInvestmentId, int tagId)
         {
             // Delete existing tag for the other investment, if any
-            OtherInvestmentTag otherInvestmentTag = this.repository.FindByCondition(o => o.OtherInvestmentId == otherInvestmentId).SingleOrDefault();
+            OtherInvestmentTag otherInvestmentTag = repository.FindByCondition(o => o.OtherInvestmentId == otherInvestmentId).SingleOrDefault();
 
             if (otherInvestmentTag != null)
-                this.repository.Delete(otherInvestmentTag);
+                repository.Delete(otherInvestmentTag);
 
             // Add the new tag association for the other investment
-            return this.Add(new OtherInvestmentTagModel
+            return Add(new OtherInvestmentTagModel
             {
                 OtherInvestmentId = otherInvestmentId,
                 TagId = tagId

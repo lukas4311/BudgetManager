@@ -52,7 +52,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<ComodityTypeModel> GetComodityTypes()
         {
-            return this.comodityTypeRepository.FindAll().Select(c => new ComodityTypeModel
+            return comodityTypeRepository.FindAll().Select(c => new ComodityTypeModel
             {
                 Code = c.Code,
                 Name = c.Name,
@@ -65,7 +65,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<ComodityUnitModel> GetComodityUnits()
         {
-            return this.comodityUnitRepository.FindAll().Select(c => new ComodityUnitModel
+            return comodityUnitRepository.FindAll().Select(c => new ComodityUnitModel
             {
                 Code = c.Code,
                 Id = c.Id,
@@ -75,11 +75,11 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public IEnumerable<ComodityTradeHistoryModel> GetByUser(string userLogin) =>
-            this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Login == userLogin));
+            GetComodityTradeHistoryForUser(userIdentityRepository.FindByCondition(u => u.Login == userLogin));
 
         /// <inheritdoc/>
         public IEnumerable<ComodityTradeHistoryModel> GetByUser(int userId) =>
-            this.GetComodityTradeHistoryForUser(this.userIdentityRepository.FindByCondition(u => u.Id == userId));
+            GetComodityTradeHistoryForUser(userIdentityRepository.FindByCondition(u => u.Id == userId));
 
         /// <inheritdoc/>
         private IEnumerable<ComodityTradeHistoryModel> GetComodityTradeHistoryForUser(IQueryable<UserIdentity> userIdentity) =>
@@ -92,14 +92,14 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)
         {
-            ComodityTradeHistory cryptoTrade = this.comodityTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
+            ComodityTradeHistory cryptoTrade = comodityTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
             return cryptoTrade.UserIdentityId == userId;
         }
 
         /// <inheritdoc/>
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
-            Infl.ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new Infl.DataSourceIdentification(this.influxContext.OrganizationId, bucketComodityV2), new Infl.DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
+            Infl.ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketComodityV2), new Infl.DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
             return data2?.Price ?? 0;
         }
