@@ -105,6 +105,9 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<EnumItem, StockTickerModel>()
                         .ForMember(dest => dest.Ticker, opt => opt.MapFrom(x => x.Code))
                         .ReverseMap();
+                    cfg.CreateMap<EnumItem, CryptoTicker>()
+                        .ForMember(dest => dest.Ticker, opt => opt.MapFrom(x => x.Code))
+                        .ReverseMap();
                 }
             );
 

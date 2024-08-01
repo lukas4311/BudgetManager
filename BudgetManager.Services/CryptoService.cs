@@ -31,6 +31,7 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
         private readonly IRepository<Trade> tradeRepository;
+        private readonly IRepository<EnumItem> enumRepository;
         private readonly IDateTime dateTimeProvider;
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace BudgetManager.Services
         public CryptoService(IRepository<Trade> cryptoTradeHistoryRepository, IRepository<UserIdentity> userIdentityRepository, Infl.IInfluxContext influxContext,
             Infl.IRepository<Infl.CryptoData> cryptoRepository, Infl.IRepository<Infl.CryptoDataV2> cryptoRepositoryV2, IMapper autoMapper,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IRepository<Trade> tradeRepository, IRepository<EnumItem> enumRepository, IDateTime dateTimeProvider) : base(cryptoTradeHistoryRepository, autoMapper)
         {
             this.cryptoTradeHistoryRepository = cryptoTradeHistoryRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -61,6 +62,7 @@ namespace BudgetManager.Services
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
             this.tradeRepository = tradeRepository;
+            this.enumRepository = enumRepository;
             this.dateTimeProvider = dateTimeProvider;
         }
 
@@ -157,6 +159,11 @@ namespace BudgetManager.Services
 
             brokerReportToProcessRepository.Create(brokerReport);
             brokerReportToProcessRepository.Save();
+        }
+
+        public IEnumerable<CryptoTicker> GetAllTickers()
+        {
+            return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<CryptoTicker>(t));
         }
     }
 }

@@ -17,13 +17,11 @@ namespace BudgetManager.Api.Controllers
     {
         private readonly ICryptoService cryptoService;
         private readonly IForexService forexService;
-        private readonly IRepository<CryptoTicker> cryptoTickerRepository;
 
-        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService, IRepository<CryptoTicker> cryptoTickerRepository) : base(httpContextAccessor)
+        public CryptoController(IHttpContextAccessor httpContextAccessor, ICryptoService cryptoService, IForexService forexService) : base(httpContextAccessor)
         {
             this.cryptoService = cryptoService;
             this.forexService = forexService;
-            this.cryptoTickerRepository = cryptoTickerRepository;
         }
 
         [HttpGet("all")]
@@ -77,9 +75,9 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("tradeDetail/{tradeId}")]
-        public ActionResult<TradeHistory> Get(int id)
+        public ActionResult<TradeHistory> Get(int tradeId)
         {
-            return Ok(cryptoService.Get(id, GetUserId()));
+            return Ok(cryptoService.Get(tradeId, GetUserId()));
         }
 
         [HttpGet("tickers")]
