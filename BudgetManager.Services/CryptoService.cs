@@ -9,7 +9,6 @@ using BudgetManager.Domain.DTOs;
 using Infl = BudgetManager.InfluxDbData;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
-using BudgetManager.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 using BudgetManager.Domain.Enums;
 
@@ -105,7 +104,7 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId)
         {
-            CryptoTradeHistory cryptoTrade = cryptoTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
+            Trade cryptoTrade = cryptoTradeHistoryRepository.FindByCondition(a => a.Id == cryptoTradeId).Single();
             return cryptoTrade.UserIdentityId == userId;
         }
 
