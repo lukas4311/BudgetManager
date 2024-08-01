@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.Enums;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,13 +30,13 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public StockTickerModel Get(int id)
         {
-            return mapper.Map<StockTickerModel>(repository.Get(id));
+            return mapper.Map<StockTickerModel>(repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers) && t.Id == id));
         }
 
         /// <inheritdoc/>
         public IEnumerable<StockTickerModel> GetAll()
         {
-            return repository.FindAll().Select(t => mapper.Map<StockTickerModel>(t));
+            return repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<StockTickerModel>(t));
         }
     }
 }
