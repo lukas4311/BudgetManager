@@ -4,6 +4,7 @@ using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BudgetManager.InfluxDbData;
+using BudgetManager.Domain.DTOs.Queries;
 
 namespace BudgetManager.Services.Contracts
 {
@@ -95,5 +96,26 @@ namespace BudgetManager.Services.Contracts
         /// </summary>
         /// <returns>List of crypto tickers</returns>
         IEnumerable<CryptoTicker> GetAllTickers();
+
+        /// <summary>
+        /// Get all trades grouped by month and year
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>Trades grouped by month and year</returns>
+        IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId);
+
+        /// <summary>
+        /// Get all trades grouped by ticker
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>Trades grouped by ticker</returns>
+        IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId);
+
+        /// <summary>
+        /// Get all trades grouped by trade date
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>Trades grouped by trade date</returns>
+        IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId);
     }
 }

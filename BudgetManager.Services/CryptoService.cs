@@ -11,6 +11,8 @@ using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using BudgetManager.Domain.Enums;
+using BudgetManager.Domain.DTOs.Queries;
+using BudgetManager.Services.SqlQuery;
 
 namespace BudgetManager.Services
 {
@@ -165,5 +167,14 @@ namespace BudgetManager.Services
         {
             return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers)).Select(t => mapper.Map<CryptoTicker>(t));
         }
+
+        public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
+            => brokerReportToProcessRepository.FromSql<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(userId, TickerTypes.CryptoTradeTickers));
+
+        public IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId)
+            => brokerReportToProcessRepository.FromSql<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(userId, TickerTypes.CryptoTradeTickers));
+
+        public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId)
+            => brokerReportToProcessRepository.FromSql<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(userId, TickerTypes.CryptoTradeTickers));
     }
 }

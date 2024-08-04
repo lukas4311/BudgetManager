@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using Autofac;
 using AutoMapper;
 using AutoMapper.Internal;
@@ -84,8 +85,10 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
                     cfg.CreateMap<CompanyProfile, CompanyProfileModel>();
                     cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
-                    cfg.CreateMap<StockSplit, StockSplitModel>();
-                    cfg.CreateMap<StockSplitModel, StockSplit>();
+                    cfg.CreateMap<StockSplit, StockSplitModel>()
+                        .ForMember(dest => dest.StockTickerId, opt => opt.MapFrom(x => x.TickerId))
+                        .ReverseMap();
+                    //cfg.CreateMap<StockSplitModel, StockSplit>();
                     cfg.CreateMap<UserCreateModel, UserData>();
                     cfg.CreateMap<UserCreateModel, UserIdentity>();
                     cfg.CreateMap<NotificationModel, Notification>();

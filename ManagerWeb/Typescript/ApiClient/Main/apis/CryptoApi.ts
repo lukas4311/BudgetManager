@@ -21,6 +21,9 @@ import {
     TradeHistory,
     TradeHistoryFromJSON,
     TradeHistoryToJSON,
+    TradesGroupedMonth,
+    TradesGroupedMonthFromJSON,
+    TradesGroupedMonthToJSON,
 } from '../models';
 
 export interface CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
@@ -52,8 +55,7 @@ export interface CryptosPutRequest {
 }
 
 export interface CryptosTradeDetailTradeIdGetRequest {
-    tradeId: string;
-    id?: number;
+    tradeId: number;
 }
 
 /**
@@ -171,8 +173,7 @@ export interface CryptoApiInterface {
 
     /**
      * 
-     * @param {string} tradeId 
-     * @param {number} [id] 
+     * @param {number} tradeId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
@@ -182,6 +183,42 @@ export interface CryptoApiInterface {
     /**
      */
     cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+
+    /**
+     */
+    cryptosTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+
+    /**
+     */
+    cryptosTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CryptoApiInterface
+     */
+    cryptosTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+
+    /**
+     */
+    cryptosTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
 
 }
 
@@ -479,10 +516,6 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
         const queryParameters: any = {};
 
-        if (requestParameters.id !== undefined) {
-            queryParameters['id'] = requestParameters.id;
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -503,6 +536,90 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
      */
     async cryptosTradeDetailTradeIdGet(requestParameters: CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory> {
         const response = await this.cryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async cryptosTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos/trade/monthlygrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async cryptosTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.cryptosTradeMonthlygroupedGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async cryptosTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos/trade/tickergrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async cryptosTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.cryptosTradeTickergroupedGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async cryptosTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/cryptos/trade/tradedategrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async cryptosTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.cryptosTradeTradedategroupedGetRaw(initOverrides);
         return await response.value();
     }
 

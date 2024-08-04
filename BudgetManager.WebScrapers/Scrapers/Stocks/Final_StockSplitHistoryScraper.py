@@ -88,6 +88,7 @@ class StockSplitManager:
         self.__stock_repo = StockRepository()
 
     def scrape_split_data(self, ticker: str):
+        # FIXME: fix problem with max date in past time
         split_data = self.__yahoo_service.get_stock_split_history(ticker.code, '511056000', '1696896000')
 
         if len(split_data) != 0:
@@ -105,6 +106,7 @@ class StockSplitManager:
             self.store_split_data(ticker)
 
     def store_split_data(self, ticker: str):
+        #FIXME: fix problem with max date in past time
         split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', '1696896000')
 
         if len(split_data) != 0:

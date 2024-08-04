@@ -4,7 +4,9 @@ using System.IO;
 using System.Threading.Tasks;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Repository;
+using BudgetManager.Services;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +94,27 @@ namespace BudgetManager.Api.Controllers
             cryptoService.StoreReportToProcess(fileBytes, GetUserId(), brokerId);
 
             return Ok();
+        }
+
+        [HttpGet("trade/monthlygrouped")]
+        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
+        {
+            var data = cryptoService.GetAllTradesGroupedByMonth(GetUserId());
+            return Ok(data);
+        }
+
+        [HttpGet("trade/tradedategrouped")]
+        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
+        {
+            var data = cryptoService.GetAllTradesGroupedByTradeDate(GetUserId());
+            return Ok(data);
+        }
+
+        [HttpGet("trade/tickergrouped")]
+        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
+        {
+            var data = cryptoService.GetAllTradesGroupedByTicker(GetUserId());
+            return Ok(data);
         }
     }
 }
