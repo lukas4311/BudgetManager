@@ -354,19 +354,29 @@ ORDER BY
         }
 
 
-        public static FormattableString GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(DateTime from, DateTime to, TickerTypes tickersType)
+        public static FormattableString GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(int userId, TickerTypes tickersType)
         {
             return $@"
 ;
-WITH MonthSeries
+WITH TradesBoundry AS (
+	SELECT
+		ISNULL(MIN(TradeTimeStamp), GETDATE()) AS MinDate
+	   ,ISNULL(MAX(TradeTimeStamp), GETDATE()) AS MaxDate
+	FROM [dbo].[Trade]
+	WHERE
+		UserIdentityId = {userId}
+),
+MonthSeries
 AS
 (SELECT
-		DATEFROMPARTS(YEAR({from:yyyy-MM-dd}), MONTH({from:yyyy-MM-dd}), 1) AS MonthStart
+		DATEFROMPARTS(YEAR(TradesBoundry.MinDate), MONTH(TradesBoundry.MinDate), 1) AS MonthStart
+	FROM TradesBoundry
 	UNION ALL
 	SELECT
 		DATEADD(MONTH, 1, MonthStart)
 	FROM MonthSeries
-	WHERE MonthStart < DATEFROMPARTS(YEAR({to:yyyy-MM-dd}), MONTH({to:yyyy-MM-dd}), 1)),
+	JOIN TradesBoundry ON 1 = 1
+	WHERE MonthStart < DATEFROMPARTS(YEAR(TradesBoundry.MaxDate), MONTH(TradesBoundry.MaxDate), 1)),
 StockTickers
 AS
 (SELECT DISTINCT
@@ -376,7 +386,9 @@ AS
 		ON ei.Id = [Trade].TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}),
+		AND eit.Code = 'StockTradeTickers'
+	WHERE
+		UserIdentityId = {userId}),
 TradesWithSplit
 AS
 (SELECT
@@ -397,7 +409,9 @@ AS
 		ON ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}),
+		AND eit.Code = 'StockTradeTickers'
+	WHERE
+		UserIdentityId = {userId}),
 AggregatedTrades
 AS
 (SELECT

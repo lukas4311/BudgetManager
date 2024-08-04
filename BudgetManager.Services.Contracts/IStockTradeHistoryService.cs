@@ -91,7 +91,7 @@ namespace BudgetManager.Services.Contracts
         /// <param name="from">From date</param>
         /// <param name="to">To date</param>
         /// <returns></returns>
-        IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(DateTime from, DateTime to);
+        IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId);
 
         /// <summary>
         /// Get all stock trades grouped by ticker

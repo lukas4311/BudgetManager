@@ -111,10 +111,10 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("split")]
-        public IActionResult GetSplitTest()
+        public ActionResult<IEnumerable<StockSplitAccumulated>> GetSplitTest()
         {
-            stockSplitService.GetSplitAccumulated();
-            return Ok();
+            IEnumerable<StockSplitAccumulated> splitData = stockSplitService.GetSplitAccumulated();
+            return Ok(splitData);
         }
 
         [HttpPost("brokerReport/{brokerId}")]
@@ -143,10 +143,9 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("trade/monthlygrouped")]
-        [AllowAnonymous]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
-            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(new DateTime(2021,1,1), new DateTime(2023, 1, 1));
+            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(GetUserId());
             return Ok(data);
         }
     }
