@@ -366,7 +366,7 @@ AS
 	SELECT
 		DATEADD(MONTH, 1, MonthStart)
 	FROM MonthSeries
-	WHERE MonthStart < DATEFROMPARTS(YEAR({to:yyyy-MM-dd}), MONTH({to:yyyy-MM-dd}), 1),
+	WHERE MonthStart < DATEFROMPARTS(YEAR({to:yyyy-MM-dd}), MONTH({to:yyyy-MM-dd}), 1)),
 StockTickers
 AS
 (SELECT DISTINCT
@@ -376,7 +376,7 @@ AS
 		ON ei.Id = [Trade].TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType}),
+		AND eit.Code = {tickersType.ToString()}),
 TradesWithSplit
 AS
 (SELECT
@@ -397,7 +397,7 @@ AS
 		ON ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType}),
+		AND eit.Code = {tickersType.ToString()}),
 AggregatedTrades
 AS
 (SELECT

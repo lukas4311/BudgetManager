@@ -70,6 +70,10 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<StockTickerModel, StockTicker>();
                     cfg.CreateMap<StockTicker, StockTickerModel>();
                     cfg.CreateMap<StockTradeHistoryModel, StockTradeHistory>();
+                    cfg.CreateMap<StockTradeHistoryModel, Trade>()
+                        .ForMember(dest => dest.TickerId, opt => opt.MapFrom(x => x.StockTickerId))
+                        .ForMember(dest => dest.TradeCurrencySymbolId, opt => opt.MapFrom(x => x.CurrencySymbolId))
+                        .ReverseMap();
                     cfg.CreateMap<StockTradeHistory, StockTradeHistoryModel>();
                     cfg.CreateMap<StockTradeHistory, StockTradeHistoryGetModel>()
                     .ForMember(dest => dest.CurrencySymbol, opt =>

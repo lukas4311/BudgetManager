@@ -146,7 +146,7 @@ namespace BudgetManager.Api.Controllers
         [AllowAnonymous]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
-            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(DateTime.MinValue, DateTime.MaxValue);
+            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(new DateTime(2021,1,1), new DateTime(2023, 1, 1));
             return Ok(data);
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace BudgetManager.Domain.DTOs.Queries
 {
-    public record TradesGroupedMonth
+    public class TradesGroupedMonth
     {
         public int TickerId { get; init; }
 
