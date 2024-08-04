@@ -214,7 +214,7 @@ ORDER BY
     StockTickerId, TradeTimeStamp";
         }
 
-        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate__TradeTable(TickerTypes tickersType)
+        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate__TradeTable(int userId, TickerTypes tickersType)
         {
             return $@"
 ;WITH TradesWithSplit AS (
@@ -235,7 +235,9 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType}
+		AND eit.Code = {tickersType.ToString()}
+    WHERE
+		sth.UserIdentityId = {userId}
 ),
 AdjustedTrades AS (
     SELECT
@@ -280,7 +282,7 @@ ORDER BY
     TickerId, TradeTimeStamp";
         }
 
-        public static FormattableString GetAllTradesGroupedByTicker__TradeTable(TickerTypes tickersType)
+        public static FormattableString GetAllTradesGroupedByTicker__TradeTable(int userId, TickerTypes tickersType)
         {
             return $@"
 ;WITH TradesWithSplit AS (
@@ -301,7 +303,9 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType}
+		AND eit.Code = {tickersType.ToString()}
+    WHERE
+		sth.UserIdentityId = {userId}
 ),
 AdjustedTrades AS (
     SELECT
@@ -386,7 +390,7 @@ AS
 		ON ei.Id = [Trade].TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'
+		AND eit.Code = {tickersType.ToString()}
 	WHERE
 		UserIdentityId = {userId}),
 TradesWithSplit
@@ -409,7 +413,7 @@ AS
 		ON ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = 'StockTradeTickers'
+		AND eit.Code = {tickersType.ToString()}
 	WHERE
 		UserIdentityId = {userId}),
 AggregatedTrades

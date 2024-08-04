@@ -148,5 +148,19 @@ namespace BudgetManager.Api.Controllers
             var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(GetUserId());
             return Ok(data);
         }
+
+        [HttpGet("trade/tradedategrouped")]
+        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
+        {
+            var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
+            return Ok(data);
+        }
+
+        [HttpGet("trade/tickergrouped")]
+        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
+        {
+            var data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());
+            return Ok(data);
+        }
     }
 }
