@@ -119,15 +119,5 @@ class StockSplitManager:
     def __convert_to_unix_timestamp(self, date: datetime):
         return int(time.mktime(date.timetuple()))
 
-# tickersToScrape = stockToDownload
-# yahooService = YahooService()
-#
 stock_split_manager = StockSplitManager()
 stock_split_manager.scrape_split_for_all_ticker_in_db()
-#
-# for ticker in tickersToScrape:
-#     split_data = yahooService.get_stock_split_history(ticker, '511056000', '1696896000')
-#
-#     if len(split_data) != 0:
-#         stockSplitScraper.scrape_stocks_splits(ticker, split_data)
-#         time.sleep(3)
