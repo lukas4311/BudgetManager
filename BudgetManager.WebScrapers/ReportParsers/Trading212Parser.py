@@ -27,6 +27,7 @@ class Trading212ReportParser(BrokerReportParser):
         number_of_shares = float(row["No. of shares"])
         total = float(row["Total"])
         currency_total = row["Currency (Total)"]
+        isin = row["ISIN"]
 
         if action == "Market buy":
             total = total * -1
@@ -37,7 +38,7 @@ class Trading212ReportParser(BrokerReportParser):
 
         currency_id = self.__stockRepo.get_currency_id(currency_total)
 
-        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers')
+        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin)
 
     def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
         records = []

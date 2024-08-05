@@ -28,13 +28,14 @@ class DegiroReportParser(BrokerReportParser):
         number_of_shares = row["Počet"]
         total = float(row["Celkem"])
         currency = list(row.values())[self.__index_of_currency] if self.__index_of_currency != -1 else 'EUR'
+        isin = row["ISIN"]
 
         pandas_date = pd.to_datetime(date)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
         pandas_date = pandas_date.tz_convert("utc")
         currency_id = self.__stockRepo.get_currency_id(currency)
 
-        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers')
+        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin)
 
     def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
         records = []

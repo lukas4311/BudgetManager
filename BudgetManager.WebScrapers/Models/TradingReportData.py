@@ -10,3 +10,4 @@ class TradingReportData:
     total: float
     currency_id: str
     trade_ticker_type_code: str
+    isin: str

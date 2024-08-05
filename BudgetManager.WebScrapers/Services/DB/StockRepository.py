@@ -1,4 +1,6 @@
-from sqlalchemy import create_engine, select, insert, and_, update
+import json
+
+from sqlalchemy import create_engine, select, insert, and_, update, Null
 from sqlalchemy.orm import Session
 from typing import List
 import secret
@@ -47,15 +49,23 @@ class StockRepository:
 
         return ticker_model.id if ticker_model is not None else None
 
-    def _create_new_ticker(self, ticker: str, ticker_type: str):
-        self._create_new_ticker(ticker, ticker, ticker_type)
+    def _create_new_ticker(self, ticker: str, ticker_type: str, isin: str | None):
+        self._create_new_ticker(ticker, ticker, ticker_type, isin)
 
-    def _create_new_ticker(self, ticker: str, name: str, ticker_type: str):
+    def _create_new_ticker(self, ticker: str, name: str, ticker_type: str, isin: str | None):
         engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         enum_item_type_ticker = self.get_enum_type(ticker_type)
-        insert_command = insert(EnumItem).values(code=ticker, name=name, enumItemTypeId=enum_item_type_ticker)
+
+        metadata = Null
+
+        if isin is not None:
+            data = {"ISIN": isin}
+            metadata = json.dump(data)
+
+        insert_command = insert(EnumItem).values(code=ticker, name=name, enumItemTypeId=enum_item_type_ticker,
+                                                 _metadata=metadata)
 
         with engine.connect() as conn:
             conn.execute(insert_command)
@@ -136,7 +146,7 @@ class StockRepository:
             ticker_id = self.get_ticker_id(trade.ticker, trade.trade_ticker_type_code)
 
             if not ticker_id:
-                self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code)
+                self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code, trade.isin)
 
             self._insert_stock_trade(trade, trade.currency_id, user_id)
 
