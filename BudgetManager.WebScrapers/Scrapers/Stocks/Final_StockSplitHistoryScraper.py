@@ -11,7 +11,7 @@ from Orm.StockTicker import Base, StockTicker
 from Services.DB.StockRepository import StockRepository
 from Services.YahooService import YahooService, StockSplitData
 from SourceFiles.stockList import stockToDownload
-from datetime import timedelta
+from datetime import timedelta, datetime
 import time
 import logging
 
@@ -89,7 +89,7 @@ class StockSplitManager:
 
     def scrape_split_data(self, ticker: str):
         # FIXME: fix problem with max date in past time
-        split_data = self.__yahoo_service.get_stock_split_history(ticker.code, '511056000', '1696896000')
+        split_data = self.__yahoo_service.get_stock_split_history(ticker.code, '511056000', self.__convert_to_unix_timestamp(datetime.now()))
 
         if len(split_data) != 0:
             self.__split_scraper.scrape_stocks_splits(ticker.code, split_data)
@@ -107,7 +107,7 @@ class StockSplitManager:
 
     def store_split_data(self, ticker: str):
         #FIXME: fix problem with max date in past time
-        split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', '1696896000')
+        split_data = self.__yahoo_service.get_stock_split_history(ticker, '511056000', self.__convert_to_unix_timestamp(datetime.now()))
 
         if len(split_data) != 0:
             self.__split_scraper.scrape_stocks_splits(ticker, split_data)
@@ -115,6 +115,9 @@ class StockSplitManager:
             if len(split_data) != 0:
                 self.__split_scraper.scrape_stocks_splits(ticker, split_data)
                 time.sleep(3)
+
+    def __convert_to_unix_timestamp(self, date: datetime):
+        return int(time.mktime(date.timetuple()))
 
 # tickersToScrape = stockToDownload
 # yahooService = YahooService()
