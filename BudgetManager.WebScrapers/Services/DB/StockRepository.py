@@ -49,9 +49,6 @@ class StockRepository:
 
         return ticker_model.id if ticker_model is not None else None
 
-    def _create_new_ticker(self, ticker: str, ticker_type: str, isin: str | None):
-        self._create_new_ticker(ticker, ticker, ticker_type, isin)
-
     def _create_new_ticker(self, ticker: str, name: str, ticker_type: str, isin: str | None):
         engine = create_engine(connectionString)
 
