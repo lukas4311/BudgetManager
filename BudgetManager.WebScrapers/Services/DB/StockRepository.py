@@ -59,7 +59,7 @@ class StockRepository:
 
         if isin is not None:
             data = {"ISIN": isin}
-            metadata = json.dump(data)
+            metadata = json.dumps(data)
 
         insert_command = insert(EnumItem).values(code=ticker, name=name, enumItemTypeId=enum_item_type_ticker,
                                                  _metadata=metadata)
@@ -129,7 +129,7 @@ class StockRepository:
             insert_command = insert(Trade).values(tradeTimeStamp=trading_data.time, tickerId=ticker_id,
                                                   tradeSize=trading_data.number_of_shares,
                                                   tradeValue=trading_data.total, tradeCurrencySymbolId=currency_id,
-                                                  userIdentityId=user_id)
+                                                  userIdentityId=user_id, transactionId=trading_data.transaction_id)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()

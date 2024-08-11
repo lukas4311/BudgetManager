@@ -58,5 +58,10 @@ namespace BudgetManager.Data.DataModels
         /// Trade metadata
         /// </summary>
         public string Metadata { get; set; }
+
+        /// <summary>
+        /// External id of transaction
+        /// </summary>
+        public string TransactionId { get; set; }
     }
 }

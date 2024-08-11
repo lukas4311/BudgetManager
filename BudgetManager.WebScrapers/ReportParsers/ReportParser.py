@@ -69,6 +69,32 @@ class ReportParser:
             logging.error(e)
             raise ParseCsvError("Error while parsing CSV")
 
+    def parse_report_from_file(self, all_reports_data, file_path):
+        try:
+            with open(file_path, newline='') as csvfile:
+                rows = csv.DictReader(csvfile)
+                records = []
+                for row in rows:
+                    stock_record: TradingReportData = Trading212ReportParser().map_report_row_to_model(row)
+                    records.append(stock_record)
+
+                all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
+        except Exception as e:
+            logging.error(e)
+            raise ParseCsvError("Error while parsing CSV")
+
+    def test_file_parsing(self, stock_repo: StockRepository):
+        all_reports_data = []
+        self.parse_report_from_file(all_reports_data, '../BrokerReports/trading212.csv')
+
+        for parsed_report in all_reports_data:
+            try:
+                print(parsed_report)
+                stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"])
+            except Exception as e:
+                logging.error(e)
+
 
 parser = ReportParser()
-parser.process_report_data(StockRepository())
+# parser.process_report_data(StockRepository())
+# parser.test(StockRepository())

@@ -13,13 +13,16 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.TradeCurrencySymbol)
-               .WithMany()
-               .HasForeignKey(e => e.TradeCurrencySymbolId)
-               .OnDelete(DeleteBehavior.Restrict);
+                .WithMany()
+                .HasForeignKey(e => e.TradeCurrencySymbolId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.UserIdentity)
                 .WithMany()
                 .HasForeignKey(e => e.UserIdentityId);
+
+            builder.Property(p => p.TransactionId)
+                .HasMaxLength(100);
         }
     }
 }
