@@ -26,8 +26,6 @@ namespace BudgetManager.ManagerWeb.Extensions
             services.AddTransient<IRepository<PaymentTag>, Repository<PaymentTag>>();
             services.AddTransient<IRepository<Tag>, Repository<Tag>>();
             services.AddTransient<IRepository<Budget>, Repository<Budget>>();
-            services.AddTransient<IRepository<CryptoTradeHistory>, Repository<CryptoTradeHistory>>();
-            services.AddTransient<IRepository<CryptoTicker>, Repository<CryptoTicker>>();
             services.AddTransient<IRepository<CurrencySymbol>, Repository<CurrencySymbol>>();
             services.AddTransient< IRepository<InterestRate>, Repository<InterestRate>>();
         }
