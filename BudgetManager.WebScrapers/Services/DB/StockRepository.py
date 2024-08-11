@@ -1,6 +1,6 @@
 import json
 
-from sqlalchemy import create_engine, select, insert, and_, update, Null
+from sqlalchemy import create_engine, select, insert, and_, update, Null, text
 from sqlalchemy.orm import Session
 from typing import List
 import secret
@@ -148,8 +148,7 @@ class StockRepository:
             self._insert_stock_trade(trade, trade.currency_id, user_id)
 
     def changeProcessState(self, broker_report_id: int, state_code: str):
-        engine = create_engine(
-            f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
+        engine = create_engine(connectionString)
 
         Base.metadata.create_all(engine)
         session = Session(engine)
@@ -168,3 +167,16 @@ class StockRepository:
             conn.commit()
 
         session.close()
+
+    def get_ticker_id_by_isin(self, isin: str):
+        engine = create_engine(connectionString)
+
+        with Session(engine) as session:
+            query = text("""
+                SELECT Id
+                FROM EnumItem
+                WHERE JSON_VALUE(Metadata, '$.ISIN') = :isin
+            """)
+
+            result = session.execute(query, {"isin": isin})
+            return result.first()
