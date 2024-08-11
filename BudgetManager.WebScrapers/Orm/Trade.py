@@ -17,3 +17,4 @@ class Trade(Base):
     tradeCurrencySymbolId: Mapped[int] = mapped_column(Integer, nullable=False)
     userIdentityId: Mapped[int] = mapped_column(Integer, nullable=False)
     _metadata: Mapped[str] = mapped_column(String, nullable=True, name="metadata")
+    transactionId: Mapped[str] = mapped_column(String, nullable=True)

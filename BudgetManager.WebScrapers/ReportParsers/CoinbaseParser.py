@@ -19,6 +19,7 @@ class CoinbaseParser(BrokerReportParser):
         size = float(row['size'])
         total = abs(float(row['total']))
         total_unit = row['price/fee/total unit']
+        transaction_id = row['trade id']
 
         if buy_or_sell == "BUY":
             total = total * -1
@@ -27,7 +28,7 @@ class CoinbaseParser(BrokerReportParser):
         pandas_date = pandas_date.tz_convert("utc")
         currency_id = self.__stockRepo.get_currency_id(total_unit)
 
-        return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id, 'CryptoTradeTickers', None)
+        return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id, 'CryptoTradeTickers', None, transaction_id)
 
     def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
         records = []
