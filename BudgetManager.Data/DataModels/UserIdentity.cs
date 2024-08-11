@@ -31,12 +31,7 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the list of bank accounts associated with this user identity.
         /// </summary>
         public List<BankAccount> BankAccounts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the list of crypto trade histories associated with this user identity.
-        /// </summary>
-        public List<CryptoTradeHistory> CryptoTradesHistory { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the list of other investments associated with this user identity.
         /// </summary>

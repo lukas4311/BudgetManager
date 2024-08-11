@@ -95,7 +95,7 @@ namespace BudgetManager.Services.Contracts
         /// Get all crypto tickers
         /// </summary>
         /// <returns>List of crypto tickers</returns>
-        IEnumerable<CryptoTicker> GetAllTickers();
+        IEnumerable<CryptoTickerModel> GetAllTickers();
 
         /// <summary>
         /// Get all trades grouped by month and year

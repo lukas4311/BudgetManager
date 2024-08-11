@@ -56,8 +56,6 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<Budget, BudgetModel>();
                     cfg.CreateMap<ComodityTradeHistoryModel, ComodityTradeHistory>();
                     cfg.CreateMap<ComodityTradeHistory, ComodityTradeHistoryModel>();
-                    cfg.CreateMap<CryptoTradeHistory, TradeHistory>();
-                    cfg.CreateMap<TradeHistory, CryptoTradeHistory>();
                     cfg.CreateMap<Tag, TagModel>();
                     cfg.CreateMap<TagModel, Tag>();
                     cfg.CreateMap<PaymentModel, Payment>();
@@ -68,21 +66,10 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<OtherInvestmentBalaceHistoryModel, OtherInvestmentBalaceHistory>();
                     cfg.CreateMap<OtherInvestmentTag, OtherInvestmentTagModel>();
                     cfg.CreateMap<OtherInvestmentTagModel, OtherInvestmentTag>();
-                    cfg.CreateMap<StockTickerModel, StockTicker>();
-                    cfg.CreateMap<StockTicker, StockTickerModel>();
-                    cfg.CreateMap<StockTradeHistoryModel, StockTradeHistory>();
                     cfg.CreateMap<StockTradeHistoryModel, Trade>()
                         .ForMember(dest => dest.TickerId, opt => opt.MapFrom(x => x.StockTickerId))
                         .ForMember(dest => dest.TradeCurrencySymbolId, opt => opt.MapFrom(x => x.CurrencySymbolId))
                         .ReverseMap();
-                    cfg.CreateMap<StockTradeHistory, StockTradeHistoryModel>();
-                    cfg.CreateMap<StockTradeHistory, StockTradeHistoryGetModel>()
-                    .ForMember(dest => dest.CurrencySymbol, opt =>
-                    {
-                        opt.PreCondition(src => src.CurrencySymbol is not null);
-                        opt.MapFrom(x => x.CurrencySymbol.Symbol);
-                    });
-                    cfg.CreateMap<StockTradeHistoryGetModel, StockTradeHistory>();
                     cfg.CreateMap<CompanyProfile, CompanyProfileModel>();
                     cfg.CreateMap<CompanyProfileModel, CompanyProfile>();
                     cfg.CreateMap<StockSplit, StockSplitModel>()
@@ -112,7 +99,7 @@ namespace BudgetManager.Services.Extensions
                     cfg.CreateMap<EnumItem, StockTickerModel>()
                         .ForMember(dest => dest.Ticker, opt => opt.MapFrom(x => x.Code))
                         .ReverseMap();
-                    cfg.CreateMap<EnumItem, CryptoTicker>()
+                    cfg.CreateMap<EnumItem, CryptoTickerModel>()
                         .ForMember(dest => dest.Ticker, opt => opt.MapFrom(x => x.Code))
                         .ReverseMap();
                 }

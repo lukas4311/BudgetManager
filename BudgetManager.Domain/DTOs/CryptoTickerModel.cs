@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace BudgetManager.Data.DataModels
+﻿namespace BudgetManager.Domain.DTOs
 {
-    /// <summary>
-    /// Represents a cryptocurrency ticker symbol.
-    /// </summary>
-    public class CryptoTicker : IDataModel
+    public class CryptoTickerModel
     {
         /// <summary>
         /// Gets or sets the unique identifier for the cryptocurrency ticker.
@@ -21,10 +16,5 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the name of the cryptocurrency.
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of trade histories associated with this cryptocurrency ticker.
-        /// </summary>
-        public IList<CryptoTradeHistory> CryptoTradeHistories { get; set; }
     }
 }

@@ -16,12 +16,7 @@ namespace BudgetManager.Data.DataModels
         /// Gets or sets the symbol representing the currency.
         /// </summary>
         public string Symbol { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of cryptocurrency trade histories associated with this currency symbol.
-        /// </summary>
-        public List<CryptoTradeHistory> CryptoTradeHistory { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the collection of commodity trade histories associated with this currency symbol.
         /// </summary>

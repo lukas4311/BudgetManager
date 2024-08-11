@@ -47,10 +47,6 @@ namespace BudgetManager.Data
 
         public DbSet<CompanyProfile> CompanyProfile { get; set; }
 
-        public DbSet<StockTicker> StockTicker { get; set; }
-
-        public DbSet<StockTradeHistory> StockTradeHistory { get; set; }
-
         public DbSet<EnumItem> EnumItem { get; set; }
 
         public DbSet<EnumItemType> EnumItemType { get; set; }

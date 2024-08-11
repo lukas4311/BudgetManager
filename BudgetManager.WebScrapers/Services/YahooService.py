@@ -2,6 +2,8 @@ import urllib.request
 import csv
 import io
 import pandas as pd
+import requests
+
 from Models.Fmp.StockPriceData import StockPriceData
 import yfinance as yf
 from datetime import datetime
@@ -70,8 +72,10 @@ class YahooService:
         try:
             data = yf.Ticker(ticker)
             info = data.info
+            # print(data)
             return info["shortName"]
-        except:
+        except Exception as ex:
+            print(ex)
             return None
 
     def calculate_split_coefficient(self, split_string: str) -> float:
@@ -84,3 +88,12 @@ class YahooService:
             ratio = numerator / denominator
 
         return ratio
+
+# yahoo_service = YahooService()
+# yahoo_service.get_company_name('AAPL')
+
+url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=aapl&apikey=demo'
+r = requests.get(url)
+data = r.json()
+
+print(data)

@@ -163,9 +163,9 @@ namespace BudgetManager.Services
             brokerReportToProcessRepository.Save();
         }
 
-        public IEnumerable<CryptoTicker> GetAllTickers()
+        public IEnumerable<CryptoTickerModel> GetAllTickers()
         {
-            return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers)).Select(t => mapper.Map<CryptoTicker>(t));
+            return enumRepository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.CryptoTradeTickers)).Select(t => mapper.Map<CryptoTickerModel>(t));
         }
 
         public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
