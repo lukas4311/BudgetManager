@@ -30,13 +30,17 @@ class OpenFigiService:
         securities = [Security(**item) for item in json_data[0]['data']]
         return SecurityData(data=securities)
 
-    def get_ticker_figi_exchange_info(self, ticker):
+    def get_ticker_figi_exchange_info(self, ticker) -> Security | None:
         ticker_payload = [{"idType": "TICKER", "idValue": f"{ticker}"}]
-        return self.__do_mapping_request(ticker_payload)
+        securities_data = self.__do_mapping_request(ticker_payload)
+        security_info = securities_data.data[0]
+        return security_info
 
-    def get_isin_figi_exchange_info(self, isin: str):
+    def get_isin_figi_exchange_info(self, isin: str) -> Security | None:
         isin_payload = [{"idType": "ID_ISIN", "idValue": f"{isin}"}]
-        return self.__do_mapping_request(isin_payload)
+        securities_data = self.__do_mapping_request(isin_payload)
+        security_info = securities_data.data[0]
+        return security_info
 
     def __do_mapping_request(self, payload):
         openfigi_url = f'{self.__open_figi_url}/mapping'

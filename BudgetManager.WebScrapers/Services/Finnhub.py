@@ -31,8 +31,3 @@ class FinnhubService:
             return None
 
         return finnhub_symbol_model.result[0]
-
-
-# finnhub = FinnhubService(Client('c8ua7kaad3ibddueerq0'))
-# data = finnhub.get_ticker_from_isin('IE00B3XXRP09')
-# print(data.symbol, data.displaySymbol)
