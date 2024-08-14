@@ -3,6 +3,8 @@ from typing import List
 from dacite import from_dict
 from finnhub import Client
 
+from secret import finnhubApiToken
+
 
 @dataclass
 class SymbolInfo:
@@ -18,6 +20,17 @@ class StockResponse:
     result: List[SymbolInfo]
 
 
+@dataclass
+class Stock:
+    currency: str
+    description: str
+    displaySymbol: str
+    figi: str
+    mic: str
+    symbol: str
+    type: str
+
+
 class FinnhubService:
 
     def __init__(self, finnhub_client: Client):
@@ -31,3 +44,17 @@ class FinnhubService:
             return None
 
         return finnhub_symbol_model.result[0]
+
+    def get_symbols(self, exchange_code: str, mic: str = None):
+        response = self.__finnhub_client.stock_symbols(exchange_code, mic)
+        stocks = [from_dict(data_class=Stock, data=item) for item in response]
+        print(response)
+        # Print the parsed data
+        for stock in stocks:
+            print(f"Symbol: {stock.symbol}, Description: {stock.description}, ISNI: {stock.figi}")
+
+        return stocks
+
+finhub = FinnhubService(Client(finnhubApiToken))
+data = finhub.get_symbols('L', 'XLON')
+print(data)
