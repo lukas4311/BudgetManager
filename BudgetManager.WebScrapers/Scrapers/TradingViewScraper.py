@@ -74,7 +74,7 @@ class TickerMetadata:
 
 class TradingviewScraper:
 
-    def scrape_data(self, ticker:str):
+    def scrape_data_for_ticker(self, ticker:str):
         url = f"https://www.tradingview.com/symbols/{ticker}/"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -114,11 +114,14 @@ class TradingviewScraper:
             print(f"Failed to retrieve the page. Status code: {response.status_code}")
             return None, None, None
 
+    def store_ticker_metadata(self, ticker_id: int):
+        print('TOOD: fill logic to download ticker and scrape metadata and extend metadata from DB')
+
 
 tradingview_scraper = TradingviewScraper()
 
 # Call the function
-isin, figi, symbol_info = tradingview_scraper.scrape_data('VUAA')
+isin, figi, symbol_info = tradingview_scraper.scrape_data_for_ticker('VUAA')
 
 metadata = TickerMetadata(
     isin=isin,
