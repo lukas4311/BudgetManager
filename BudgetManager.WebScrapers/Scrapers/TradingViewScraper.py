@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Optional, List, Any
 import dacite
 from bs4 import BeautifulSoup
@@ -72,51 +72,53 @@ class TickerMetadata:
     type: Optional[str] = None
 
 
-def scrape_data(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    response = requests.get(url, headers=headers)
+class TradingviewScraper:
 
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+    def scrape_data(self, ticker:str):
+        url = f"https://www.tradingview.com/symbols/{ticker}/"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        response = requests.get(url, headers=headers)
 
-        def find_value(label):
-            label_elem = soup.find('div', class_='label-GgmpMpKr', string=label)
-            if label_elem:
-                block = label_elem.find_parent('div', class_='block-GgmpMpKr')
-                if block:
-                    value_elem = block.find('div', class_='value-GgmpMpKr')
-                    if value_elem:
-                        return value_elem.text.strip()
-            return None
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Find ISIN and FIGI
-        isin = find_value('ISIN')
-        figi = find_value('FIGI')
+            def find_value(label):
+                label_elem = soup.find('div', class_='label-GgmpMpKr', string=label)
+                if label_elem:
+                    block = label_elem.find_parent('div', class_='block-GgmpMpKr')
+                    if block:
+                        value_elem = block.find('div', class_='value-GgmpMpKr')
+                        if value_elem:
+                            return value_elem.text.strip()
+                return None
 
-        # Find Currency
-        # Find the script tag containing the JSON data
-        script = soup.find('script', string=lambda s: s and 'window.initData.symbolInfo' in s)
+            # Find ISIN and FIGI
+            isin = find_value('ISIN')
+            figi = find_value('FIGI')
 
-        if script:
-            # Extract JSON data from the script
-            json_text = script.string.split('window.initData.symbolInfo = ')[1].strip().rstrip(';')
-            print(json_text)
-            data_dict = json.loads(json_text)
-            symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
+            # Find Currency
+            # Find the script tag containing the JSON data
+            script = soup.find('script', string=lambda s: s and 'window.initData.symbolInfo' in s)
 
-        return isin, figi, symbol_info
-    else:
-        print(f"Failed to retrieve the page. Status code: {response.status_code}")
-        return None, None, None
+            if script:
+                # Extract JSON data from the script
+                json_text = script.string.split('window.initData.symbolInfo = ')[1].strip().rstrip(';')
+                print(json_text)
+                data_dict = json.loads(json_text)
+                symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
+
+            return isin, figi, symbol_info
+        else:
+            print(f"Failed to retrieve the page. Status code: {response.status_code}")
+            return None, None, None
 
 
-# URL of the page you want to scrape
-url = "https://www.tradingview.com/symbols/VUAA/"
+tradingview_scraper = TradingviewScraper()
 
 # Call the function
-isin, figi, symbol_info = scrape_data(url)
+isin, figi, symbol_info = tradingview_scraper.scrape_data('VUAA')
 
 metadata = TickerMetadata(
     isin=isin,
@@ -131,4 +133,5 @@ metadata = TickerMetadata(
     type=symbol_info.type
 )
 
+metadata = json.dumps(asdict(metadata))
 print(metadata)
