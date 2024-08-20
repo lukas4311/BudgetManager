@@ -49,6 +49,17 @@ class StockRepository:
 
         return ticker_model.id if ticker_model is not None else None
 
+    def get_all_tickers(self, ticker_type: str):
+        engine = create_engine(connectionString)
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        trade_ticker_type = self.get_enum_type(ticker_type)
+
+        stmt = select(EnumItem).where(EnumItem.enumItemTypeId == trade_ticker_type)
+        return session.scalars(stmt).all()
+
     def _create_new_ticker(self, ticker: str, name: str, ticker_type: str, isin: str | None):
         engine = create_engine(connectionString)
 

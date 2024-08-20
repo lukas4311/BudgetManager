@@ -74,7 +74,7 @@ class TickerMetadata:
 
 class TradingviewScraper:
 
-    def scrape_data(self, ticker:str):
+    def scrape_stock_data(self, ticker: str) -> object:
         url = f"https://www.tradingview.com/symbols/{ticker}/"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -94,12 +94,9 @@ class TradingviewScraper:
                             return value_elem.text.strip()
                 return None
 
-            # Find ISIN and FIGI
             isin = find_value('ISIN')
             figi = find_value('FIGI')
 
-            # Find Currency
-            # Find the script tag containing the JSON data
             script = soup.find('script', string=lambda s: s and 'window.initData.symbolInfo' in s)
 
             if script:
@@ -118,7 +115,7 @@ class TradingviewScraper:
 tradingview_scraper = TradingviewScraper()
 
 # Call the function
-isin, figi, symbol_info = tradingview_scraper.scrape_data('VUAA')
+isin, figi, symbol_info = tradingview_scraper.scrape_stock_data('VUAA')
 
 metadata = TickerMetadata(
     isin=isin,
