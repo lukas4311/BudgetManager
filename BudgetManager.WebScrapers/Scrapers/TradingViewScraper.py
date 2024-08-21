@@ -102,33 +102,22 @@ class TradingviewScraper:
             if script:
                 # Extract JSON data from the script
                 json_text = script.string.split('window.initData.symbolInfo = ')[1].strip().rstrip(';')
-                print(json_text)
+                # print(json_text)
                 data_dict = json.loads(json_text)
                 symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
-
-            return isin, figi, symbol_info
+                mappped_data = TickerMetadata(
+                    isin=isin,
+                    figi=figi,
+                    short_name=symbol_info.short_name,
+                    short_description=symbol_info.short_description,
+                    description=symbol_info.description,
+                    currency=symbol_info.currency,
+                    resolved_symbol=symbol_info.resolved_symbol,
+                    exchange=symbol_info.exchange,
+                    pro_symbol=symbol_info.pro_symbol,
+                    type=symbol_info.type
+                )
+            return isin, figi, mappped_data
         else:
             print(f"Failed to retrieve the page. Status code: {response.status_code}")
             return None, None, None
-
-
-tradingview_scraper = TradingviewScraper()
-
-# Call the function
-isin, figi, symbol_info = tradingview_scraper.scrape_stock_data('VUAA')
-
-metadata = TickerMetadata(
-    isin=isin,
-    figi=figi,
-    short_name=symbol_info.short_name,
-    short_description=symbol_info.short_description,
-    description=symbol_info.description,
-    currency=symbol_info.currency,
-    resolved_symbol=symbol_info.resolved_symbol,
-    exchange=symbol_info.exchange,
-    pro_symbol=symbol_info.pro_symbol,
-    type=symbol_info.type
-)
-
-metadata = json.dumps(asdict(metadata))
-print(metadata)

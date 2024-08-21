@@ -2,13 +2,13 @@ import json
 
 from dacite import from_dict
 
-from Scrapers import TradingViewScraper
+from Scrapers.TradingViewScraper import TradingviewScraper
 from Scrapers.TradingViewScraper import TickerMetadata
 from Services.DB.StockRepository import StockRepository
 
 
 class StockService:
-    def __init__(self, stock_repo: StockRepository, tradingview_scraper: TradingViewScraper):
+    def __init__(self, stock_repo: StockRepository, tradingview_scraper: TradingviewScraper):
         self.stock_repo = stock_repo
         self.tradingview_scraper = tradingview_scraper
 
@@ -16,20 +16,35 @@ class StockService:
         tickers = self.stock_repo.get_all_tickers('StockTradeTickers')
 
         for ticker in tickers:
-            if ticker.metadata is not None:
-                db_metadata = json.loads(ticker.metadata)
+            print(ticker)
+
+            if ticker._metadata is not None:
+                print(ticker._metadata, ticker.code)
+                db_metadata = json.loads(ticker._metadata)
                 db_metadata_model = from_dict(TickerMetadata, db_metadata)
 
                 if db_metadata_model.isin is None or db_metadata_model.figi is None or db_metadata_model.currency is None:
+                    scraped_data = self.__get_scraped_metadata(ticker.code)
                     merged_data = {}
 
-                    # if obj2.key1 in merged_data:
-                    #     merged_data[obj2.key1].key2 = obj2.key2
-                    #     merged_data[obj2.key1].key3 = obj2.key3
-                    # else:
-                    #     merged_data[obj2.key1] = obj2
+                    for key, value in db_metadata_model.__dict__.items():
+                        if key not in merged_data:
+                            merged_data[key] = value
+                        else:
+                            merged_data[key] = value
 
+                    for key, value in scraped_data.__dict__.items():
+                        if key not in merged_data:
+                            merged_data[key] = value
+                        else:
+                            merged_data[key] = value
+
+                    print(merged_data)
 
     def __get_scraped_metadata(self, ticker: str):
         isin, figi, symbol_info = self.tradingview_scraper.scrape_stock_data(ticker)
         return symbol_info
+
+
+stock_service = StockService(StockRepository(), TradingviewScraper())
+stock_service.check_tickers_metadata()
