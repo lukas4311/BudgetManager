@@ -1,3 +1,4 @@
+import dataclasses
 import json
 
 from dacite import from_dict
@@ -16,9 +17,10 @@ class StockService:
         tickers = self.stock_repo.get_all_tickers('StockTradeTickers')
 
         for ticker in tickers:
-            print(ticker)
-
-            if ticker._metadata is not None:
+            if ticker._metadata is None:
+                scraped_data = self.__get_scraped_metadata(ticker.code)
+                self.stock_repo.update_ticker_metadata(ticker.code, 'StockTradeTickers', dataclasses.asdict(scraped_data))
+            else:
                 print(ticker._metadata, ticker.code)
                 db_metadata = json.loads(ticker._metadata)
                 db_metadata_model = from_dict(TickerMetadata, db_metadata)
@@ -40,6 +42,7 @@ class StockService:
                             merged_data[key] = value
 
                     print(merged_data)
+                    self.stock_repo.update_ticker_metadata(ticker.code, 'StockTradeTickers', merged_data)
 
     def __get_scraped_metadata(self, ticker: str):
         isin, figi, symbol_info = self.tradingview_scraper.scrape_stock_data(ticker)
