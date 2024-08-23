@@ -74,7 +74,7 @@ class TickerMetadata:
 
 class TradingviewScraper:
 
-    def scrape_data_for_ticker(self, ticker:str):
+    def scrape_stock_data(self, ticker: str) -> object:
         url = f"https://www.tradingview.com/symbols/{ticker}/"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -94,47 +94,30 @@ class TradingviewScraper:
                             return value_elem.text.strip()
                 return None
 
-            # Find ISIN and FIGI
             isin = find_value('ISIN')
             figi = find_value('FIGI')
 
-            # Find Currency
-            # Find the script tag containing the JSON data
             script = soup.find('script', string=lambda s: s and 'window.initData.symbolInfo' in s)
 
             if script:
                 # Extract JSON data from the script
                 json_text = script.string.split('window.initData.symbolInfo = ')[1].strip().rstrip(';')
-                print(json_text)
+                # print(json_text)
                 data_dict = json.loads(json_text)
                 symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
-
-            return isin, figi, symbol_info
+                mappped_data = TickerMetadata(
+                    isin=isin,
+                    figi=figi,
+                    short_name=symbol_info.short_name,
+                    short_description=symbol_info.short_description,
+                    description=symbol_info.description,
+                    currency=symbol_info.currency,
+                    resolved_symbol=symbol_info.resolved_symbol,
+                    exchange=symbol_info.exchange,
+                    pro_symbol=symbol_info.pro_symbol,
+                    type=symbol_info.type
+                )
+            return isin, figi, mappped_data
         else:
             print(f"Failed to retrieve the page. Status code: {response.status_code}")
             return None, None, None
-
-    def store_ticker_metadata(self, ticker_id: int):
-        print('TOOD: fill logic to download ticker and scrape metadata and extend metadata from DB')
-
-
-tradingview_scraper = TradingviewScraper()
-
-# Call the function
-isin, figi, symbol_info = tradingview_scraper.scrape_data_for_ticker('VUAA')
-
-metadata = TickerMetadata(
-    isin=isin,
-    figi=figi,
-    short_name=symbol_info.short_name,
-    short_description=symbol_info.short_description,
-    description=symbol_info.description,
-    currency=symbol_info.currency,
-    resolved_symbol=symbol_info.resolved_symbol,
-    exchange=symbol_info.exchange,
-    pro_symbol=symbol_info.pro_symbol,
-    type=symbol_info.type
-)
-
-metadata = json.dumps(asdict(metadata))
-print(metadata)

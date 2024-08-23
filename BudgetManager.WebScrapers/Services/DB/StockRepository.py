@@ -49,6 +49,17 @@ class StockRepository:
 
         return ticker_model.id if ticker_model is not None else None
 
+    def get_all_tickers(self, ticker_type: str):
+        engine = create_engine(connectionString)
+
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        trade_ticker_type = self.get_enum_type(ticker_type)
+
+        stmt = select(EnumItem).where(EnumItem.enumItemTypeId == trade_ticker_type)
+        return session.scalars(stmt).all()
+
     def _create_new_ticker(self, ticker: str, name: str, ticker_type: str, isin: str | None):
         engine = create_engine(connectionString)
 
@@ -58,7 +69,7 @@ class StockRepository:
         metadata = Null
 
         if isin is not None:
-            data = {"ISIN": isin}
+            data = {"isin": isin}
             metadata = json.dumps(data)
 
         insert_command = insert(EnumItem).values(code=ticker, name=name, enumItemTypeId=enum_item_type_ticker,
@@ -67,6 +78,23 @@ class StockRepository:
         with engine.connect() as conn:
             conn.execute(insert_command)
             conn.commit()
+
+    def update_ticker_metadata(self, ticker: str, ticker_type: str, metadata):
+        engine = create_engine(connectionString)
+
+        Base.metadata.create_all(engine)
+        enum_item_type_ticker = self.get_enum_type(ticker_type)
+
+        if metadata is not None:
+            metadata_string = json.dumps(metadata)
+            update_command = (update(EnumItem)
+                              .where(and_(EnumItem.code == ticker,
+                                          EnumItem.enumItemTypeId == enum_item_type_ticker))
+                              .values(_metadata=metadata_string))
+
+            with engine.connect() as conn:
+                conn.execute(update_command)
+                conn.commit()
 
     def get_currency_id(self, currency_code: str):
         engine = create_engine(connectionString)
