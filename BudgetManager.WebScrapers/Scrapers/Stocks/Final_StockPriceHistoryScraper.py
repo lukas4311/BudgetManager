@@ -1,10 +1,14 @@
 from datetime import datetime, timedelta
 import logging
+from typing import List
+
 from influxdb_client import Point, WritePrecision
 import time
 
 from Models.FilterTuple import FilterTuple
 from Models.Fmp import StockPriceData
+from Orm.EnumItem import EnumItem
+from Services.DB.StockRepository import StockRepository
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
 from SourceFiles.stockList import stockToDownload
@@ -71,8 +75,10 @@ class StockPriceScraper:
 
 
 class StockPriceManager:
-    def __init__(self):
+    def __init__(self, stock_repo:StockRepository):
+        self.__stock_repo = stock_repo
         self.__stockPriceScraper = StockPriceScraper(influx_repository)
+
 
     def scrape_ticker_price(self, ticker: str, delay=0):
         message = 'Loading data for ' + ticker
@@ -105,9 +111,30 @@ class StockPriceManager:
             time.sleep(delay)
             print("Sleeping is done.")
 
+    def scrape_all_enum_item_tickers(self, delay:int = 0):
+        tickers_enum_type_id = self.__stock_repo.get_enum_type('StockTradeTickers')
+        enums: List[EnumItem] = self.__stock_repo.get_enums_by_type_id(tickers_enum_type_id)
+
+        for ticker in enums:
+            message = 'Loading data for ' + ticker.code
+            print(message)
+            logging.info(message)
+
+            try:
+                self.__stockPriceScraper.scrape_stocks_prices('Price', ticker.code, ticker.code)
+            except Exception:
+                influx_repository.clear()
+                print(ticker.code + " - error")
+
+            print(f'Sleeping for {delay} seconds')
+            time.sleep(delay)
+            print("Sleeping is done.")
+
 #
 # tickersToScrape = stockToDownload
 # stockPriceScraper = StockPriceScraper(influx_repository)
 #
 # for ticker in tickersToScrape:
 #      stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
+# pricescraper = StockPriceManager(StockRepository())
+# pricescraper.scape_all_enum_item_tickers(1)
