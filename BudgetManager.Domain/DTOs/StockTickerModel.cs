@@ -19,4 +19,9 @@ public class StockTickerModel : IDtoModel
     /// Gets or sets the name of the stock.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Metadata of ticker
+    /// </summary>
+    public string Metadata { get; set; }
 }
