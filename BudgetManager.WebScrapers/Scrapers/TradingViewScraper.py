@@ -105,6 +105,7 @@ class TradingviewScraper:
                 # print(json_text)
                 data_dict = json.loads(json_text)
                 symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
+                print(symbol_info)
                 mappped_data = TickerMetadata(
                     isin=isin,
                     figi=figi,
