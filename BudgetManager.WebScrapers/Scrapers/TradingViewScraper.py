@@ -70,6 +70,7 @@ class TickerMetadata:
     exchange: Optional[str] = None
     pro_symbol: Optional[str] = None
     type: Optional[str] = None
+    price_ticker: Optional[str] = None
 
 
 class TradingviewScraper:
@@ -115,7 +116,8 @@ class TradingviewScraper:
                     resolved_symbol=symbol_info.resolved_symbol,
                     exchange=symbol_info.exchange,
                     pro_symbol=symbol_info.pro_symbol,
-                    type=symbol_info.type
+                    type=symbol_info.type,
+                    price_ticker=ticker
                 )
             return isin, figi, mappped_data
         else:
