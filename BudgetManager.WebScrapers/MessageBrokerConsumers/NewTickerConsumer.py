@@ -61,36 +61,37 @@ class StockTickerManager:
 
         self.__send_notification()
 
+    def process_ticker_from_message_queue(self, msg: str):
+        message_object = json.loads(msg)
+        print(message_object)
+
+        try:
+            print(message_object['message'])
+            ticker = message_object['message']['ticker']
+            user_id = message_object['message']['userId']
+            stock_ticker_manager = StockTickerManager()
+            stock_ticker_manager.store_new_ticker_info(ticker)
+            self.__send_notification(ticker, user_id)
+        except Exception as e:
+            logging.info('Error while saving data for new ticker: ' + ticker)
+            logging.error(e)
+
+
+    def __send_notification(self, ticker: str, user_id: int):
+        notify_repo = NotificationRepository()
+        notification = Notification()
+        notification.userIdentityId = user_id
+        notification.heading = 'Ticker were added'
+        notification.content = f'Your request for {ticker} was completed.'
+        notification.isDisplayed = False
+        notification.timestamp = datetime.now()
+        notification.attachmentUrl = None
+        notify_repo.insert_stock_trade(notification)
+
 def receive_new_ticker(ch, method, properties, body):
     print(f" [x] Received {body}")
-    __process_ticker_from_message_queue(body)
-
-def __process_ticker_from_message_queue(msg: str):
-    message_object = json.loads(msg)
-    print(message_object)
-
-    try:
-        print(message_object['message'])
-        ticker = message_object['message']['ticker']
-        user_id = message_object['message']['userId']
-        stock_ticker_manager = StockTickerManager()
-        stock_ticker_manager.store_new_ticker_info(ticker)
-        __send_notification(ticker, user_id)
-    except Exception as e:
-        logging.info('Error while saving data for new ticker: ' + ticker)
-        logging.error(e)
-
-
-def __send_notification(ticker: str, user_id: int):
-    notify_repo = NotificationRepository()
-    notification = Notification()
-    notification.userIdentityId = user_id
-    notification.heading = 'Ticker were added'
-    notification.content = f'Your request for {ticker} was completed.'
-    notification.isDisplayed = False
-    notification.timestamp = datetime.now()
-    notification.attachmentUrl = None
-    notify_repo.insert_stock_trade(notification)
+    stock_ticker_Manager = StockTickerManager()
+    stock_ticker_Manager.process_ticker_from_message_queue(body)
 
 queue_name = 'test'
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
