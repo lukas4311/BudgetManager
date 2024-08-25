@@ -9,10 +9,13 @@ from Scrapers.StockFinacialAndCompanyData import StockScrapeManager
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
 from Scrapers.FmpApi import FmpScraper
+from Scrapers.TradingViewScraper import TradingviewScraper
 from Services.DB.NotificationRepository import NotificationRepository
+from Services.DB.StockRepository import StockRepository
 from Services.FmpApiService import FmpApiService
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService
+from Services.StockService import StockService
 from secret import influxDbUrl, organizationId, token, fmpApiToken
 
 log_name = 'Logs/newTickerRequest.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -35,6 +38,9 @@ class StockTickerManager:
         profile = self.__fmp_service.get_company_profile(ticker)
         company_Name = profile.companyName
         self.__stock_scraper.storeTickers(ticker, company_Name)
+
+        stock_service = StockService(StockRepository(), TradingviewScraper())
+        stock_service.check_tickers_metadata()
 
         print("Storing stock price")
         self.__stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
