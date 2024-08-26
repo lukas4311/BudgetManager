@@ -106,7 +106,7 @@ class StockPriceManager:
             try:
                 self.__stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
             except Exception:
-                influx_repository.clear()
+                influx_repository.clear_entities()
                 print(ticker + " - error")
 
             print(f'Sleeping for {delay} seconds')
@@ -128,7 +128,7 @@ class StockPriceManager:
                 ticker_to_scrape_price = ticker.code if db_metadata_model.price_ticker is None else db_metadata_model.price_ticker
                 self.__stockPriceScraper.scrape_stocks_prices('Price', ticker_to_scrape_price, ticker_to_scrape_price)
             except Exception:
-                influx_repository.clear()
+                influx_repository.clear_entities()
                 print(ticker.code + " - error")
 
             print(f'Sleeping for {delay} seconds')
