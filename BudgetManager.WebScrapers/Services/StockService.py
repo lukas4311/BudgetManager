@@ -38,14 +38,11 @@ class StockService:
                         merged_data = {}
 
                         for key, value in db_metadata_model.__dict__.items():
-                            if key not in merged_data:
-                                merged_data[key] = value
-                            else:
-                                merged_data[key] = value
+                            merged_data[key] = value
 
                         for key, value in scraped_data.__dict__.items():
-                            if key not in merged_data:
-                                merged_data[key] = value
+                            if key == 'price_ticker' and ticker.code != db_metadata_model.price_ticker:
+                                continue
                             else:
                                 merged_data[key] = value
 
