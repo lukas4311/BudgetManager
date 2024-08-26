@@ -1,13 +1,16 @@
+import json
 from datetime import datetime, timedelta
 import logging
 from typing import List
 
+from dacite import from_dict
 from influxdb_client import Point, WritePrecision
 import time
 
 from Models.FilterTuple import FilterTuple
 from Models.Fmp import StockPriceData
 from Orm.EnumItem import EnumItem
+from Scrapers.TradingViewScraper import TickerMetadata
 from Services.DB.StockRepository import StockRepository
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
@@ -75,10 +78,9 @@ class StockPriceScraper:
 
 
 class StockPriceManager:
-    def __init__(self, stock_repo:StockRepository):
+    def __init__(self, stock_repo: StockRepository):
         self.__stock_repo = stock_repo
         self.__stockPriceScraper = StockPriceScraper(influx_repository)
-
 
     def scrape_ticker_price(self, ticker: str, delay=0):
         message = 'Loading data for ' + ticker
@@ -111,7 +113,7 @@ class StockPriceManager:
             time.sleep(delay)
             print("Sleeping is done.")
 
-    def scrape_all_enum_item_tickers(self, delay:int = 0):
+    def scrape_all_enum_item_tickers(self, delay: int = 0):
         tickers_enum_type_id = self.__stock_repo.get_enum_type('StockTradeTickers')
         enums: List[EnumItem] = self.__stock_repo.get_enums_by_type_id(tickers_enum_type_id)
 
@@ -121,7 +123,10 @@ class StockPriceManager:
             logging.info(message)
 
             try:
-                self.__stockPriceScraper.scrape_stocks_prices('Price', ticker.code, ticker.code)
+                db_metadata = json.loads(ticker._metadata)
+                db_metadata_model = from_dict(TickerMetadata, db_metadata)
+                ticker_to_scrape_price = ticker.code if db_metadata_model.price_ticker is None else db_metadata_model.price_ticker
+                self.__stockPriceScraper.scrape_stocks_prices('Price', ticker_to_scrape_price, ticker_to_scrape_price)
             except Exception:
                 influx_repository.clear()
                 print(ticker.code + " - error")
@@ -130,6 +135,7 @@ class StockPriceManager:
             time.sleep(delay)
             print("Sleeping is done.")
 
+
 #
 # tickersToScrape = stockToDownload
 # stockPriceScraper = StockPriceScraper(influx_repository)
@@ -137,4 +143,4 @@ class StockPriceManager:
 # for ticker in tickersToScrape:
 #      stockPriceScraper.scrape_stocks_prices('Price', ticker, ticker)
 # pricescraper = StockPriceManager(StockRepository())
-# pricescraper.scape_all_enum_item_tickers(1)
+# pricescraper.scrape_all_enum_item_tickers(1)
