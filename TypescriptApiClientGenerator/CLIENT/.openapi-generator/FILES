@@ -26,8 +26,7 @@ models/ComodityTypeModel.ts
 models/ComodityUnit.ts
 models/ComodityUnitModel.ts
 models/CompanyProfileModel.ts
-models/CryptoTicker.ts
-models/CryptoTradeHistory.ts
+models/CryptoTickerModel.ts
 models/CurrencySymbol.ts
 models/ECurrencySymbol.ts
 models/EnumItem.ts
@@ -52,14 +51,15 @@ models/PaymentTag.ts
 models/PaymentType.ts
 models/PaymentTypeModel.ts
 models/StockPrice.ts
+models/StockSplitAccumulated.ts
 models/StockTickerModel.ts
 models/StockTradeHistoryGetModel.ts
 models/StockTradeHistoryModel.ts
-models/StockTradesGroupedMonth.ts
 models/Tag.ts
 models/TagModel.ts
 models/TickerRequest.ts
 models/TradeHistory.ts
+models/TradesGroupedMonth.ts
 models/UserData.ts
 models/UserIdentity.ts
 models/index.ts

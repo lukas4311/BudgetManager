@@ -15,9 +15,9 @@
 
 import * as runtime from '../../runtime';
 import {
-    CryptoTicker,
-    CryptoTickerFromJSON,
-    CryptoTickerToJSON,
+    CryptoTickerModel,
+    CryptoTickerModelFromJSON,
+    CryptoTickerModelToJSON,
     TradeHistory,
     TradeHistoryFromJSON,
     TradeHistoryToJSON,
@@ -165,11 +165,11 @@ export interface CryptoApiInterface {
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTicker>>>;
+    cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>>;
 
     /**
      */
-    cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTicker>>;
+    cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>>;
 
     /**
      * 
@@ -481,7 +481,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTicker>>> {
+    async cryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -497,12 +497,12 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CryptoTickerFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CryptoTickerModelFromJSON));
     }
 
     /**
      */
-    async cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTicker>> {
+    async cryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>> {
         const response = await this.cryptosTickersGetRaw(initOverrides);
         return await response.value();
     }

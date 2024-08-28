@@ -24,6 +24,9 @@ import {
     StockPrice,
     StockPriceFromJSON,
     StockPriceToJSON,
+    StockSplitAccumulated,
+    StockSplitAccumulatedFromJSON,
+    StockSplitAccumulatedToJSON,
     StockTickerModel,
     StockTickerModelFromJSON,
     StockTickerModelToJSON,
@@ -33,12 +36,12 @@ import {
     StockTradeHistoryModel,
     StockTradeHistoryModelFromJSON,
     StockTradeHistoryModelToJSON,
-    StockTradesGroupedMonth,
-    StockTradesGroupedMonthFromJSON,
-    StockTradesGroupedMonthToJSON,
     TickerRequest,
     TickerRequestFromJSON,
     TickerRequestToJSON,
+    TradesGroupedMonth,
+    TradesGroupedMonthFromJSON,
+    TradesGroupedMonthToJSON,
 } from '../models';
 
 export interface StockBrokerReportBrokerIdPostRequest {
@@ -110,11 +113,11 @@ export interface StockApiInterface {
      * @throws {RequiredError}
      * @memberof StockApiInterface
      */
-    stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockSplitAccumulated>>>;
 
     /**
      */
-    stockSplitGet(initOverrides?: RequestInit): Promise<void>;
+    stockSplitGet(initOverrides?: RequestInit): Promise<Array<StockSplitAccumulated>>;
 
     /**
      * 
@@ -264,11 +267,35 @@ export interface StockApiInterface {
      * @throws {RequiredError}
      * @memberof StockApiInterface
      */
-    stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradesGroupedMonth>>>;
+    stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
 
     /**
      */
-    stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<StockTradesGroupedMonth>>;
+    stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+
+    /**
+     */
+    stockTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+
+    /**
+     */
+    stockTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
 
 }
 
@@ -337,7 +364,7 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
 
     /**
      */
-    async stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async stockSplitGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockSplitAccumulated>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -353,13 +380,14 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockSplitAccumulatedFromJSON));
     }
 
     /**
      */
-    async stockSplitGet(initOverrides?: RequestInit): Promise<void> {
-        await this.stockSplitGetRaw(initOverrides);
+    async stockSplitGet(initOverrides?: RequestInit): Promise<Array<StockSplitAccumulated>> {
+        const response = await this.stockSplitGetRaw(initOverrides);
+        return await response.value();
     }
 
     /**
@@ -704,7 +732,7 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
 
     /**
      */
-    async stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<StockTradesGroupedMonth>>> {
+    async stockTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -720,13 +748,69 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StockTradesGroupedMonthFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
     }
 
     /**
      */
-    async stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<StockTradesGroupedMonth>> {
+    async stockTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
         const response = await this.stockTradeMonthlygroupedGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async stockTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/trade/tickergrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async stockTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.stockTradeTickergroupedGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async stockTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/trade/tradedategrouped`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TradesGroupedMonthFromJSON));
+    }
+
+    /**
+     */
+    async stockTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.stockTradeTradedategroupedGetRaw(initOverrides);
         return await response.value();
     }
 

@@ -37,6 +37,12 @@ export class StockTickerModel {
      * @memberof StockTickerModel
      */
     name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof StockTickerModel
+     */
+    metadata?: string | null;
 }
 
 export function StockTickerModelFromJSON(json: any): StockTickerModel {
@@ -52,6 +58,7 @@ export function StockTickerModelFromJSONTyped(json: any, ignoreDiscriminator: bo
         'id': !exists(json, 'id') ? undefined : json['id'],
         'ticker': !exists(json, 'ticker') ? undefined : json['ticker'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'metadata': !exists(json, 'metadata') ? undefined : json['metadata'],
     };
 }
 
@@ -67,5 +74,6 @@ export function StockTickerModelToJSON(value?: StockTickerModel | null): any {
         'id': value.id,
         'ticker': value.ticker,
         'name': value.name,
+        'metadata': value.metadata,
     };
 }
