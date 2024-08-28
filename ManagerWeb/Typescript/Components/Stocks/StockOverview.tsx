@@ -261,17 +261,17 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
         return (
             <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
-                <div className="grid grid-cols-2 mb-2">
-                    <div className="flex flex-row">
+                <div className="grid grid-cols-3 mb-2">
+                    <div className="flex flex-row col-span-2">
                         {(profitOrLoss >= 0 ? <ArrowDropUpIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownIcon className="fill-red-700 h-10 w-10" />)}
-                        <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
+                        <div className="flex flex-col text-left">
+                            <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
+                            {ticker.stockCurrentWealth != 0 ? (<p className="text-2xl font-extrabold">{profitOrLoss.toFixed(2)} %</p>) : <></>}
+                        </div>
                     </div>
                     <div className="text-right">
                         <p className="text-lg">{ticker.size.toFixed(3)}</p>
                         <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
-                        {ticker.stockCurrentWealth != 0 ? (
-                            <p className="text-lg">{profitOrLoss.toFixed(2)} %</p>
-                        ) : <></>}
                     </div>
                 </div>
                 {this.renderChart(ticker.tickerName)}
