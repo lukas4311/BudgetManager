@@ -245,6 +245,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private showCompanyProfile = async (companyTicker: string) => {
+        const tickerModel = _.first(this.tickers.filter(t => t.ticker == companyTicker));
+        let loaded: boolean = true;
+        
+        if (tickerModel.metadata == null)
+            loaded = false;
+
+        const metadata = tickerModel.metadata
         const companyProfile = await this.stockService.getCompanyProfile(companyTicker);
         const last5YearDate = moment(new Date()).subtract(5, "y").toDate();
         const companyPrice = await this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
