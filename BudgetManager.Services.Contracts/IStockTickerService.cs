@@ -1,5 +1,4 @@
-﻿using BudgetManager.Data.DataModels;
-using BudgetManager.Domain.DTOs;
+﻿using BudgetManager.Domain.DTOs;
 using System.Collections.Generic;
 
 namespace BudgetManager.Services.Contracts
@@ -21,5 +20,12 @@ namespace BudgetManager.Services.Contracts
         /// <param name="id">Ticker id</param>
         /// <returns>Ticker model with specified Id</returns>
         StockTickerModel Get(int id);
+
+        /// <summary>
+        /// Method to update ticker metadata
+        /// </summary>
+        /// <param name="tickerId">Ticker id</param>
+        /// <param name="metadata">Metadata</param>
+        void UpdateTickerMetadata(int tickerId, string metadata);
     }
 }

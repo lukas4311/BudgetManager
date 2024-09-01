@@ -38,5 +38,14 @@ namespace BudgetManager.Services
         {
             return repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<StockTickerModel>(t));
         }
+
+        /// <inheritdoc/>
+        public void UpdateTickerMetadata(int tickerId, string metadata)
+        {
+            EnumItem ticker = repository.Get(tickerId);
+            ticker.Metadata = metadata;
+            repository.Update(ticker);
+            repository.Save();
+        }
     }
 }

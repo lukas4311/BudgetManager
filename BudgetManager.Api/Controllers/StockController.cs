@@ -44,6 +44,13 @@ namespace BudgetManager.Api.Controllers
             return Ok(tags);
         }
 
+        [HttpPut("stockTicker/{tickerId}")]
+        public ActionResult UpdateTickerMetadata(int tickerId, [FromBody]string metadata)
+        {
+            stockTickerService.UpdateTickerMetadata(tickerId, metadata);
+            return Ok();
+        }
+
         [HttpGet("stockTradeHistory")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(stockTradeHistoryService.GetAll(GetUserId()));
 
