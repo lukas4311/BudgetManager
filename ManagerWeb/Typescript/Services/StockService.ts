@@ -91,17 +91,21 @@ export default class StockService implements IStockService {
 
         let accumulatedValueInDays: Map<string, Map<string, number>> = new Map<string, Map<string, number>>();
         let stockAccumulatedValue = new Map<string, number>();
-
+        let finApiReachable = true;
 
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
             const tickers = Array.from(tickersSizeAccumulated.keys());
             let tickersPrice = [];
 
-            try {
-                tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+            if (finApiReachable) {
+                try {
+                    tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+                }
+                catch {
+                    finApiReachable = false;
+                }
             }
-            catch { }
 
             const finalExchangeRate = (currency == undefined || currency == ForexSymbol.Usd ? 1 : await this.getExchangeRate(usdSymbol, currency)) ?? 1;
 
