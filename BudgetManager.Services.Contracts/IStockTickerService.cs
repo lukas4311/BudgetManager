@@ -27,5 +27,11 @@ namespace BudgetManager.Services.Contracts
         /// <param name="tickerId">Ticker id</param>
         /// <param name="metadata">Metadata</param>
         void UpdateTickerMetadata(int tickerId, string metadata);
+
+        /// <summary>
+        /// Update ticker
+        /// </summary>
+        /// <param name="stockTickerModel">Stock ticker model</param>
+        void UpdateTicker(StockTickerModel stockTickerModel);
     }
 }

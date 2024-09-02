@@ -96,7 +96,13 @@ export default class StockService implements IStockService {
         for (const [dateKey, tickersSizeAccumulated] of stockAccumulatedSizes) {
             const date = moment(dateKey).toDate();
             const tickers = Array.from(tickersSizeAccumulated.keys());
-            const tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+            let tickersPrice = [];
+
+            try {
+                tickersPrice = await this.stockFinApi.getStocksPriceDataAtDate({ date: date, tickers: tickers })
+            }
+            catch { }
+
             const finalExchangeRate = (currency == undefined || currency == ForexSymbol.Usd ? 1 : await this.getExchangeRate(usdSymbol, currency)) ?? 1;
 
             for (const stockPriceInfo of tickersPrice) {
@@ -197,7 +203,10 @@ export default class StockService implements IStockService {
 
     public async getStockPriceHistory(ticker: string, from?: Date): Promise<StockPrice[]> {
         const fromDate = from ?? moment(new Date()).subtract(30, "d").toDate();
-        const priceHistory = await this.stockFinApi.getStockPriceDataFromDate({ from: fromDate, ticker: ticker });
+        let priceHistory = [];
+        try {
+            priceHistory = await this.stockFinApi.getStockPriceDataFromDate({ from: fromDate, ticker: ticker });
+        } catch (error) { }
         return priceHistory;
     }
 

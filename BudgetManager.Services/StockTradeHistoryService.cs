@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
 
@@ -108,11 +109,26 @@ namespace BudgetManager.Services
                 ApplySplitsToTrades(trades, splits);
 
             CurrencySymbol currencySymbolEntity = currencySymbolRepository.FindByCondition(a => a.Symbol == currencySymbol.ToString()).Single();
+            bool notReachableData = false;
 
             for (int i = 0; i < trades.Count; i++)
             {
                 StockTradeHistoryGetModel trade = trades[i];
-                double exchangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                double exchangeRate = 0;
+
+                if (!notReachableData)
+                {
+                    try
+                    {
+                        exchangeRate = await forexService.GetExchangeRate(trade.CurrencySymbol, currencySymbol.ToString(), trade.TradeTimeStamp);
+                    }
+                    catch (WebException)
+                    {
+                        notReachableData = true;
+                    }
+                    catch (Exception) { }
+                }
+                
                 trade.TradeValue *= exchangeRate;
                 trade.CurrencySymbol = currencySymbol.ToString();
                 trade.CurrencySymbolId = currencySymbolEntity.Id;

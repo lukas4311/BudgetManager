@@ -47,5 +47,16 @@ namespace BudgetManager.Services
             repository.Update(ticker);
             repository.Save();
         }
+
+        /// <inheritdoc/>
+        public void UpdateTicker(StockTickerModel stockTickerModel)
+        {
+            EnumItem ticker = repository.Get(stockTickerModel.Id.Value);
+            ticker.Code = stockTickerModel.Ticker;
+            ticker.Name = stockTickerModel.Name;
+            ticker.Metadata = stockTickerModel.Metadata;
+            repository.Update(ticker);
+            repository.Save();
+        }
     }
 }

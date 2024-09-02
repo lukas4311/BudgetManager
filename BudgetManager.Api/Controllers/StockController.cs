@@ -44,10 +44,17 @@ namespace BudgetManager.Api.Controllers
             return Ok(tags);
         }
 
-        [HttpPut("stockTicker/{tickerId}")]
+        [HttpPut("stockTicker/{tickerId}/metadata")]
         public ActionResult UpdateTickerMetadata(int tickerId, [FromBody]string metadata)
         {
             stockTickerService.UpdateTickerMetadata(tickerId, metadata);
+            return Ok();
+        }
+
+        [HttpPut("stockTicker/{tickerId}")]
+        public ActionResult UpdateTicker(StockTickerModel stockTickerModel)
+        {
+            stockTickerService.UpdateTicker(stockTickerModel);
             return Ok();
         }
 
