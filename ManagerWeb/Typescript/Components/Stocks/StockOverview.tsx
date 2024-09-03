@@ -30,6 +30,7 @@ import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
 import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField, Select, MenuItem } from "@mui/material";
 import PublishIcon from '@mui/icons-material/Publish';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { SnackbarSeverity } from "../../App";
 import { NewTickerForm } from "./NewTickerForm";
 import NewTickerModel from "../../Model/NewTickerModel";
@@ -113,7 +114,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getStocksTickerGroupedTradeHistory();
 
-        // console.log(getAccumulatedNetWorh);
         const stockSummaryBuy = _.sumBy(stockGrouped, s => s.stockSpentPrice);
         const stockSummarySell = _.sumBy(stockGrouped, s => s.stockSellPrice);
         const stockSummaryWealth = _.sumBy(stockGrouped, s => s.stockCurrentWealth);
@@ -247,11 +247,10 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private showCompanyProfile = async (companyTicker: string) => {
         const tickerModel = _.first(this.tickers.filter(t => t.ticker == companyTicker));
         let loaded: boolean = true;
-        
+
         if (tickerModel.metadata == null)
             loaded = false;
 
-        const metadata = tickerModel.metadata
         const companyProfile = await this.stockService.getCompanyProfile(companyTicker);
         const last5YearDate = moment(new Date()).subtract(5, "y").toDate();
         const companyPrice = await this.stockService.getStockPriceHistory(companyTicker, last5YearDate);
@@ -263,11 +262,27 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             this.setState({ selectedCompany: complexModel });
     }
 
+    private getTickerWarnings = (ticker: StockGroupModel): [boolean, boolean] => {
+        const hasMetadata = _.first(this.tickers.filter(t => t.id == ticker.tickerId))?.metadata != undefined ?? false;
+        const hasPrice = _.first(this.state.stockPrice.filter(t => t.ticker == ticker.tickerName))?.price.length != 0 ?? false;
+        return [hasMetadata, hasPrice];
+    }
+
+    private onWarningClick = (ticker: StockGroupModel): void => {
+        const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
+        
+    }
+
     private renderTickerFinInfo = (ticker: StockGroupModel) => {
         const profitOrLoss = this.calculareProfit(ticker.stockCurrentWealth, ticker.stockSpentPrice);
+        const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
 
         return (
-            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
+            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl relative" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
+                {hasMetadata && hasPrice ?
+                    <></> :
+                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={_ => this.onWarningClick(ticker)}></WarningAmberOutlinedIcon>
+                }
                 <div className="grid grid-cols-3 mb-2">
                     <div className="flex flex-row col-span-2">
                         {(profitOrLoss >= 0 ? <ArrowDropUpIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownIcon className="fill-red-700 h-10 w-10" />)}
