@@ -311,8 +311,16 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private handleClosetickerRequest = () =>
         this.setState({ isOpenedTickerRequest: false });
 
-    private handleCloseTickerFix = () =>
+    private handleCloseTickerFix = () => {
+
+        if(!this.state.selectedFixTicker.hasMetadata)
+            console.log('Call API to fix price ticker');
+
+        if(!this.state.selectedFixTicker.hasMetadata)
+            console.log('Call API to fix price ticker');
+
         this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });
+    }
 
     private handleCloseFileUpload = () =>
         this.setState({ isFileUploadOpened: false });
