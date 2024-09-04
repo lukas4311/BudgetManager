@@ -83,7 +83,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private cryptoApi: CryptoApi;
     private cryptoFinApi: CryptoEndpointsApi;
     private forexFinApi: ForexEndpointsApi;
-    onFixTickerSave: (priceTicker: string, metadataTicker: string) => void;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -277,32 +276,21 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ selectedFixTicker: { hasMetadata, hasPrice, tickerId: ticker.tickerId }, isOpenedTickerFix: true });
     }
 
-    private renderTickerFinInfo = (ticker: StockGroupModel) => {
-        const profitOrLoss = this.calculareProfit(ticker.stockCurrentWealth, ticker.stockSpentPrice);
-        const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
+    private onFixTickerSave = (priceTicker: string, metadataTicker: string) => {
+        const fixTicker = this.state.selectedFixTicker;
+        const ticker = _.first(this.tickers.filter(t => t.id == fixTicker.tickerId));
 
-        return (
-            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl relative" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
-                {hasMetadata && hasPrice ?
-                    <></> :
-                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={_ => this.onWarningClick(ticker)}></WarningAmberOutlinedIcon>
-                }
-                <div className="grid grid-cols-3 mb-2">
-                    <div className="flex flex-row col-span-2">
-                        {(profitOrLoss >= 0 ? <ArrowDropUpIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownIcon className="fill-red-700 h-10 w-10" />)}
-                        <div className="flex flex-col text-left">
-                            <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
-                            {ticker.stockCurrentWealth != 0 ? (<p className="text-2xl font-extrabold">{profitOrLoss.toFixed(2)} %</p>) : <></>}
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-lg">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
-                    </div>
-                </div>
-                {this.renderChart(ticker.tickerName)}
-            </div>
-        );
+        if (!fixTicker.hasMetadata) {
+            // FIXME: need to update API cause route param is not used
+            this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId.toString(), stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
+        }
+
+        if (!fixTicker.hasPrice) {
+            const metadata = ticker?.metadata;
+            const metadataObj = JSON.parse(metadata);
+            metadataObj['priceTicker'] = priceTicker;
+            this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
+        }
     }
 
     private handleCloseCompanyProfile = () =>
@@ -312,13 +300,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ isOpenedTickerRequest: false });
 
     private handleCloseTickerFix = () => {
-
-        if(!this.state.selectedFixTicker.hasMetadata)
-            console.log('Call API to fix price ticker');
-
-        if(!this.state.selectedFixTicker.hasMetadata)
-            console.log('Call API to fix price ticker');
-
         this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });
     }
 
@@ -353,6 +334,34 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         this.setState({ isOpenedTickerRequest: false });
         const appContext: AppContext = this.context as AppContext;
         appContext.setSnackbarMessage({ message: "Ticker request has been queued.", severity: SnackbarSeverity.success })
+    }
+
+    private renderTickerFinInfo = (ticker: StockGroupModel) => {
+        const profitOrLoss = this.calculareProfit(ticker.stockCurrentWealth, ticker.stockSpentPrice);
+        const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
+
+        return (
+            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl relative" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
+                {hasMetadata && hasPrice ?
+                    <></> :
+                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={_ => this.onWarningClick(ticker)}></WarningAmberOutlinedIcon>
+                }
+                <div className="grid grid-cols-3 mb-2">
+                    <div className="flex flex-row col-span-2">
+                        {(profitOrLoss >= 0 ? <ArrowDropUpIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownIcon className="fill-red-700 h-10 w-10" />)}
+                        <div className="flex flex-col text-left">
+                            <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
+                            {ticker.stockCurrentWealth != 0 ? (<p className="text-2xl font-extrabold">{profitOrLoss.toFixed(2)} %</p>) : <></>}
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-lg">{ticker.size.toFixed(3)}</p>
+                        <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
+                    </div>
+                </div>
+                {this.renderChart(ticker.tickerName)}
+            </div>
+        );
     }
 
     render() {

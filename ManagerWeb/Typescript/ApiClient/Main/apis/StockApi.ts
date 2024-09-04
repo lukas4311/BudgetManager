@@ -62,6 +62,16 @@ export interface StockStockTickerPriceGetRequest {
     ticker: string;
 }
 
+export interface StockStockTickerTickerIdMetadataPutRequest {
+    tickerId: number;
+    body?: string;
+}
+
+export interface StockStockTickerTickerIdPutRequest {
+    tickerId: string;
+    stockTickerModel?: StockTickerModel;
+}
+
 export interface StockStockTradeHistoryDeleteRequest {
     body?: number;
 }
@@ -170,6 +180,34 @@ export interface StockApiInterface {
     /**
      */
     stockStockTickerPriceGet(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>>;
+
+    /**
+     * 
+     * @param {number} tickerId 
+     * @param {string} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTickerTickerIdMetadataPutRaw(requestParameters: StockStockTickerTickerIdMetadataPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    stockStockTickerTickerIdMetadataPut(requestParameters: StockStockTickerTickerIdMetadataPutRequest, initOverrides?: RequestInit): Promise<void>;
+
+    /**
+     * 
+     * @param {string} tickerId 
+     * @param {StockTickerModel} [stockTickerModel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StockApiInterface
+     */
+    stockStockTickerTickerIdPutRaw(requestParameters: StockStockTickerTickerIdPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    stockStockTickerTickerIdPut(requestParameters: StockStockTickerTickerIdPutRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
@@ -516,6 +554,74 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
     async stockStockTickerPriceGet(requestParameters: StockStockTickerPriceGetRequest, initOverrides?: RequestInit): Promise<Array<StockPrice>> {
         const response = await this.stockStockTickerPriceGetRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async stockStockTickerTickerIdMetadataPutRaw(requestParameters: StockStockTickerTickerIdMetadataPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.tickerId === null || requestParameters.tickerId === undefined) {
+            throw new runtime.RequiredError('tickerId','Required parameter requestParameters.tickerId was null or undefined when calling stockStockTickerTickerIdMetadataPut.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stockTicker/{tickerId}/metadata`.replace(`{${"tickerId"}}`, this.processPathParam(requestParameters.tickerId)),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body as any,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async stockStockTickerTickerIdMetadataPut(requestParameters: StockStockTickerTickerIdMetadataPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.stockStockTickerTickerIdMetadataPutRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async stockStockTickerTickerIdPutRaw(requestParameters: StockStockTickerTickerIdPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.tickerId === null || requestParameters.tickerId === undefined) {
+            throw new runtime.RequiredError('tickerId','Required parameter requestParameters.tickerId was null or undefined when calling stockStockTickerTickerIdPut.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
+        }
+
+        const response = await this.request({
+            path: `/stock/stockTicker/{tickerId}`.replace(`{${"tickerId"}}`, this.processPathParam(requestParameters.tickerId)),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StockTickerModelToJSON(requestParameters.stockTickerModel),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async stockStockTickerTickerIdPut(requestParameters: StockStockTickerTickerIdPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.stockStockTickerTickerIdPutRaw(requestParameters, initOverrides);
     }
 
     /**
