@@ -6,9 +6,10 @@ class FixFormProps {
     onSave: (priceTicker: string, metadataTicker: string) => void;
     hasMetadata: boolean;
     hasPrice: boolean;
+    tickerId: number;
 }
 
-const FixForm = (props: FixFormProps) => {
+const FixTickerForm = (props: FixFormProps) => {
     const { handleSubmit, control } = useForm<FixTickerModel>({ defaultValues: { priceTicker: '', priceMetadata: '' } });
 
     const onSubmit = (data: FixTickerModel) => {
@@ -17,17 +18,17 @@ const FixForm = (props: FixFormProps) => {
 
     return (
         (<form onSubmit={handleSubmit(onSubmit)}>
-            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Send request</Button>
+            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Fix tickers</Button>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 {!props.hasPrice ? <></> :
                     <div className="w-2/3">
-                        <Controller render={({ field }) => <TextField label="Ticker" size='small' type="text" {...field} className="place-self-end w-full" />}
+                        <Controller render={({ field }) => <TextField label="Ticker for price" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="priceTicker" control={control} />
                     </div>
                 }
                 {!props.hasMetadata ? <></> :
                     <div className="w-2/3">
-                        <Controller render={({ field }) => <TextField label="Ticker" size='small' type="text" {...field} className="place-self-end w-full" />}
+                        <Controller render={({ field }) => <TextField label="Ticker for metadata" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="priceMetadata" control={control} />
                     </div>
                 }
@@ -36,7 +37,7 @@ const FixForm = (props: FixFormProps) => {
     );
 };
 
-export { FixFormProps }
+export { FixTickerForm, FixFormProps }
 
 export class FixTickerModel {
     public priceTicker: string;

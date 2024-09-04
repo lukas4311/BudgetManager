@@ -34,6 +34,7 @@ import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { SnackbarSeverity } from "../../App";
 import { NewTickerForm } from "./NewTickerForm";
 import NewTickerModel from "../../Model/NewTickerModel";
+import { FixTickerForm } from "./FixTickerForm";
 
 
 enum DisplayChioce {
@@ -62,6 +63,8 @@ interface StockOverviewState {
     stockBrokerParsers: Map<number, string>;
     selectedBroker: number;
     isFileUploadOpened: boolean;
+    isOpenedTickerFix: boolean;
+    selectedFixTicker: FixTickerParams;
 }
 
 export class StockComplexModel {
@@ -80,12 +83,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private cryptoApi: CryptoApi;
     private cryptoFinApi: CryptoEndpointsApi;
     private forexFinApi: ForexEndpointsApi;
+    onFixTickerSave: (priceTicker: string, metadataTicker: string) => void;
 
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
             stocks: [], stockGrouped: [], formKey: Date.now(), openedForm: false, selectedModel: undefined, stockSummary: undefined, stockPrice: [], selectedCompany: undefined, lineChartData: { dataSets: [] },
-            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false, stockBrokerParsers: new Map<number, string>(), selectedBroker: -1, isFileUploadOpened: false
+            selectedDisplayChoice: DisplayChioce.Portfolio, isOpenedTickerRequest: false, stockBrokerParsers: new Map<number, string>(), selectedBroker: -1, isFileUploadOpened: false, isOpenedTickerFix: false, selectedFixTicker: undefined
         };
     }
 
@@ -270,7 +274,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private onWarningClick = (ticker: StockGroupModel): void => {
         const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
-        
+        this.setState({ selectedFixTicker: { hasMetadata, hasPrice, tickerId: ticker.tickerId }, isOpenedTickerFix: true });
     }
 
     private renderTickerFinInfo = (ticker: StockGroupModel) => {
@@ -306,6 +310,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
 
     private handleClosetickerRequest = () =>
         this.setState({ isOpenedTickerRequest: false });
+
+    private handleCloseTickerFix = () =>
+        this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });
 
     private handleCloseFileUpload = () =>
         this.setState({ isFileUploadOpened: false });
@@ -446,6 +453,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             <NewTickerForm onSave={this.sendTickerRequest} />
                         </DialogContent>
                     </Dialog>
+                    <Dialog open={this.state.isOpenedTickerFix && this.state.selectedFixTicker != undefined} onClose={this.handleCloseTickerFix} aria-labelledby="" maxWidth="lg" fullWidth={true}>
+                        <DialogContent className="bg-prussianBlue">
+                            <FixTickerForm onSave={this.onFixTickerSave} {...this.state.selectedFixTicker} />
+                        </DialogContent>
+                    </Dialog>
                     <Dialog open={this.state.isFileUploadOpened} onClose={this.handleCloseFileUpload} aria-labelledby="" maxWidth="sm" fullWidth={true}>
                         <DialogContent className="bg-prussianBlue">
                             <BrokerUpload onUploadBrokerReport={this.uploadBrokerReport} stockBrokerParsers={this.state.stockBrokerParsers}
@@ -456,6 +468,12 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             </MainFrame>
         );
     }
+}
+
+class FixTickerParams {
+    hasMetadata: boolean;
+    hasPrice: boolean;
+    tickerId: number;
 }
 
 StockOverview.contextType = AppCtx;
