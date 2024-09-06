@@ -52,8 +52,9 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpPut("stockTicker/{tickerId}")]
-        public ActionResult UpdateTicker(StockTickerModel stockTickerModel)
+        public ActionResult UpdateTicker(int tickerId, StockTickerModel stockTickerModel)
         {
+            stockTickerModel.Id = tickerId;
             stockTickerService.UpdateTicker(stockTickerModel);
             return Ok();
         }
