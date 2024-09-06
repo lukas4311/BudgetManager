@@ -6,7 +6,7 @@ import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, EnumApi, StockApi } from "../../ApiClient/Main/apis";
 import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel } from "../../ApiClient/Main/models";
 import moment from "moment";
-import _, { max } from "lodash";
+import _ from "lodash";
 import { StockViewModel } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
@@ -21,17 +21,15 @@ import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { CompanyProfile } from "./CompanyProfile";
 import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi, StockEndpointsApi } from "../../ApiClient/Fin";
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
 import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField, Select, MenuItem } from "@mui/material";
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { SnackbarSeverity } from "../../App";
 import { NewTickerForm } from "./NewTickerForm";
 import { FixTickerForm } from "./FixTickerForm";
 import { BrokerUpload } from "./BrokerUpload";
+import { TickerCard } from "./TickerCard";
 
 
 enum DisplayChioce {
@@ -202,24 +200,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         await this.loadStockData();
     }
 
-    private renderChart = (ticker: string) => {
-        let lineChartData: LineChartDataSets[] = [{ id: 'Price', data: [] }];
-        let tradeHistory = _.first(this.state.stockPrice.filter(f => f.ticker == ticker));
-
-        if (tradeHistory != undefined && tradeHistory.price.length > 5) {
-            let prices = tradeHistory.price;
-            const sortedArray = _.orderBy(prices, [(obj) => new Date(obj.time)], ['asc']);
-            let priceData: LineChartData[] = sortedArray.map(b => ({ x: moment(b.time).format('YYYY-MM-DD'), y: b.price }));
-            lineChartData = [{ id: 'Price', data: priceData }];
-        }
-
-        return (
-            <div className="h-8">
-                <LineChart dataSets={lineChartData} chartProps={LineChartSettingManager.getStockChartSetting()}></LineChart>
-            </div>
-        );
-    }
-
     private renderChartPortfolio = () => {
         let element: JSX.Element;
 
@@ -233,15 +213,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         }
 
         return element;
-    }
-
-    private calculareProfit = (actualPrice: number, buyPrice: number) => {
-        if (buyPrice <= 0 || actualPrice <= 0)
-            return 0;
-
-        let profitOrLoss = ((actualPrice - buyPrice) / buyPrice) * 100;
-
-        return profitOrLoss;
     }
 
     private showCompanyProfile = async (companyTicker: string) => {
@@ -277,7 +248,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const fixTicker = this.state.selectedFixTicker;
         const ticker = _.first(this.tickers.filter(t => t.id == fixTicker.tickerId));
 
-        if (!fixTicker.hasMetadata) 
+        if (!fixTicker.hasMetadata)
             this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
 
         if (!fixTicker.hasPrice) {
@@ -331,34 +302,6 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         appContext.setSnackbarMessage({ message: "Ticker request has been queued.", severity: SnackbarSeverity.success })
     }
 
-    private renderTickerFinInfo = (ticker: StockGroupModel) => {
-        const profitOrLoss = this.calculareProfit(ticker.stockCurrentWealth, ticker.stockSpentPrice);
-        const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
-
-        return (
-            <div key={ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl relative" onClick={_ => this.showCompanyProfile(ticker.tickerName)}>
-                {hasMetadata && hasPrice ?
-                    <></> :
-                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={_ => this.onWarningClick(ticker)}></WarningAmberOutlinedIcon>
-                }
-                <div className="grid grid-cols-3 mb-2">
-                    <div className="flex flex-row col-span-2">
-                        {(profitOrLoss >= 0 ? <ArrowDropUpIcon className="fill-green-700 h-10 w-10" /> : <ArrowDropDownIcon className="fill-red-700 h-10 w-10" />)}
-                        <div className="flex flex-col text-left">
-                            <p className={"text-xl font-bold text-left mt-1"}>{ticker.tickerName}</p>
-                            {ticker.stockCurrentWealth != 0 ? (<p className="text-2xl font-extrabold">{profitOrLoss.toFixed(2)} %</p>) : <></>}
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-lg">{ticker.size.toFixed(3)}</p>
-                        <p className="text-lg">{Math.abs(ticker.stockCurrentWealth).toFixed(2)} $</p>
-                    </div>
-                </div>
-                {this.renderChart(ticker.tickerName)}
-            </div>
-        );
-    }
-
     render() {
         const yValues: number[] = this.state?.lineChartData?.dataSets[0]?.data?.map(a => a.y) ?? [];
         const minStockValue = Math.min(...yValues);
@@ -403,7 +346,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                             </Button>
                                         </div>
                                         <div className="flex flex-wrap justify-around ">
-                                            {this.state.stockGrouped.map(g => this.renderTickerFinInfo(g))}
+                                            {this.state.stockGrouped.map(g => <TickerCard key={g.tickerId} ticker={g} tickers={this.tickers} tickersPrice={this.state.stockPrice}
+                                                onTickerCardClick={this.showCompanyProfile} onWarningClick={this.onWarningClick}></TickerCard>)}
                                         </div>
                                     </div>
                                 ) : (
