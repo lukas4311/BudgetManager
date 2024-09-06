@@ -280,10 +280,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const fixTicker = this.state.selectedFixTicker;
         const ticker = _.first(this.tickers.filter(t => t.id == fixTicker.tickerId));
 
-        if (!fixTicker.hasMetadata) {
-            // FIXME: need to update API cause route param is not used
-            this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId.toString(), stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
-        }
+        if (!fixTicker.hasMetadata) 
+            this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
 
         if (!fixTicker.hasPrice) {
             const metadata = ticker?.metadata;

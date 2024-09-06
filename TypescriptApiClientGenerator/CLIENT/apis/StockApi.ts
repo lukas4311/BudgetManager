@@ -68,7 +68,7 @@ export interface StockStockTickerTickerIdMetadataPutRequest {
 }
 
 export interface StockStockTickerTickerIdPutRequest {
-    tickerId: string;
+    tickerId: number;
     stockTickerModel?: StockTickerModel;
 }
 
@@ -197,7 +197,7 @@ export interface StockApiInterface {
 
     /**
      * 
-     * @param {string} tickerId 
+     * @param {number} tickerId 
      * @param {StockTickerModel} [stockTickerModel] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
