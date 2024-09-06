@@ -387,7 +387,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     <div className="w-1/2">
                                         <Button component="label" variant="outlined" color="primary" className="block ml-auto bg-vermilion text-white mb-3 w-2/3"
                                             onClick={() => this.setState({ isFileUploadOpened: true })}>
-                                            Upload crypto report
+                                            Upload stock report
                                         </Button>
                                     </div>
                                 </div>
