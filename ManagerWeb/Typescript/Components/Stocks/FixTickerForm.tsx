@@ -27,7 +27,7 @@ const FixTickerForm = (props: FixFormProps) => {
                             name="priceMetadata" control={control} />
                     </div>
                 }
-                {!props.hasPrice ? <></> :
+                {!props.hasPrice && props.hasMetadata ? <></> :
                     <div className="w-2/3">
                         <p>Fill ticker from Yahoo Finance to get price.</p>
                         <Controller render={({ field }) => <TextField label="Ticker for price" size='small' type="text" {...field} className="place-self-end w-full" />}
