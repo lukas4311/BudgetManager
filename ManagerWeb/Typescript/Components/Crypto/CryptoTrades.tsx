@@ -13,7 +13,7 @@ import CryptoService from "../../Services/CryptoService";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import { SnackbarSeverity } from "../../App";
-import { BrokerUpload } from "../Stocks/StockOverview";
+import { BrokerUpload } from "../Stocks/BrokerUpload";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];

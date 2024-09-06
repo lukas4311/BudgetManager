@@ -4,13 +4,11 @@ import { MainFrame } from "../MainFrame";
 import { BaseList } from "../BaseList";
 import ApiClientFactory from "../../Utils/ApiClientFactory";
 import { CryptoApi, CurrencyApi, EnumApi, StockApi } from "../../ApiClient/Main/apis";
-import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel, StockTradeHistoryModel } from "../../ApiClient/Main/models";
+import { CompanyProfileModel, CurrencySymbol, StockPrice, StockTickerModel } from "../../ApiClient/Main/models";
 import moment from "moment";
 import _, { max } from "lodash";
-// import { Button, ButtonGroup, Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { StockViewModel, TradeAction } from "../../Model/StockViewModel";
+import { StockViewModel } from "../../Model/StockViewModel";
 import { StockTradeForm } from "./StockTradeForm";
-import { createMuiTheme, ThemeProvider, useTheme } from "@mui/material/styles";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import StockService, { StockGroupModel, TickersWithPriceHistory } from "../../Services/StockService";
 import { BuySellBadge } from "../Crypto/CryptoTrades";
@@ -29,12 +27,11 @@ import { PieChart, PieChartData } from "../Charts/PieChart";
 import { IStockService } from "../../Services/IStockService";
 import { LineChartProps } from "../../Model/LineChartProps";
 import { ToggleButtonGroup, ToggleButton, Button, Dialog, DialogTitle, DialogContent, TextField, Select, MenuItem } from "@mui/material";
-import PublishIcon from '@mui/icons-material/Publish';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 import { SnackbarSeverity } from "../../App";
 import { NewTickerForm } from "./NewTickerForm";
-import NewTickerModel from "../../Model/NewTickerModel";
 import { FixTickerForm } from "./FixTickerForm";
+import { BrokerUpload } from "./BrokerUpload";
 
 
 enum DisplayChioce {
@@ -494,39 +491,3 @@ class FixTickerParams {
 StockOverview.contextType = AppCtx;
 
 export default StockOverview;
-
-export class BrokerUploadProps {
-    onUploadBrokerReport: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
-    stockBrokerParsers: Map<number, string>;
-    onBrokerSelect: (e: any) => void;
-    selectedBroker: number;
-}
-
-export const BrokerUpload = (props: BrokerUploadProps) => {
-    return (
-        <div className="flex flex-col">
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                size="small"
-                value={props.selectedBroker}
-                onChange={e => props.onBrokerSelect(e.target.value)}
-                className="w-full lg:w-2/3 mx-auto">
-                {Array.from(props.stockBrokerParsers.entries()).map(([key, value]) => (
-                    <MenuItem key={key} value={key}>{value}</MenuItem>
-                ))}
-            </Select >
-            <Button
-                component="label"
-                variant="outlined"
-                color="primary"
-                className="block ml-auto bg-vermilion text-white mb-3 mt-4 w-full lg:w-2/3 mx-auto">
-                <div className="flex flex-row justify-center">
-                    <PublishIcon />
-                    <span className="ml-4">Upload crypto report</span>
-                </div>
-                <input type="file" accept=".csv" hidden onChange={props.onUploadBrokerReport} />
-            </Button>
-        </div>
-    );
-}
