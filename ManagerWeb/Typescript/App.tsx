@@ -23,6 +23,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
 import Register from "./Components/Auth/Register";
+import PaymentsOverviewV2 from "./Components/Payments/PaymentsOverviewV2";
 
 const theme = createTheme({
   palette: {
@@ -120,7 +121,7 @@ export default function App() {
                       <Switch>
                         <Route path="/login" component={Auth} />
                         <Route path="/register" component={Register} />
-                        <PrivateRoute path="/payments" component={PaymentsOverview} />
+                        <PrivateRoute path="/payments" component={PaymentsOverviewV2} />
                         <PrivateRoute path="/crypto-overview" component={Crypto} />
                         <PrivateRoute path="/budget" component={BudgetComponent} />
                         <PrivateRoute path="/bankaccount-overview" component={BankAccountOverview} />

@@ -1,9 +1,7 @@
-using BudgetManager.Domain.Models;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace BudgetManager.FinancialApi.Endpoints
 {
