@@ -31,6 +31,7 @@ import { FixTickerForm } from "./FixTickerForm";
 import { BrokerUpload } from "./BrokerUpload";
 import { TickerCard } from "./TickerCard";
 
+const tickerMetadataAttribute = "price_ticker";
 
 enum DisplayChioce {
     Portfolio = "Portfolio",
@@ -115,12 +116,24 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stockSummaryBuy = _.sumBy(stockGrouped, s => s.stockSpentPrice);
         const stockSummarySell = _.sumBy(stockGrouped, s => s.stockSellPrice);
         const stockSummaryWealth = _.sumBy(stockGrouped, s => s.stockCurrentWealth);
-        const tickers = stockGrouped.map(a => a.tickerName);
-        const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickers);
+        const tickersAdjustedWithPriceTicker = stockGrouped.map(a => this.tryToGetPriceTicker(a.tickerName));
+
+        const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickersAdjustedWithPriceTicker);
         const lineChartData = await this.prepareStockDataToLineChart();
 
         stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentWealth, 'desc');
         this.setState({ stocks, stockGrouped, stockSummary: { totalyBought: stockSummaryBuy, totalySold: stockSummarySell, totalWealth: stockSummaryWealth }, stockPrice: tickerPrices, lineChartData: { dataSets: lineChartData } });
+    }
+
+    private tryToGetPriceTicker(ticker: string) {
+        const metadata = _.first(this.tickers.filter(t => t.ticker == ticker))?.metadata;
+
+        if (!metadata)
+            return ticker;
+
+        const metadataObject = JSON.parse(metadata);
+        const priceTicker = metadataObject[tickerMetadataAttribute];
+        return priceTicker ?? ticker;
     }
 
     private prepareStockDataToLineChart = async () => {
@@ -254,7 +267,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         if (!fixTicker.hasPrice) {
             const metadata = ticker?.metadata;
             const metadataObj = JSON.parse(metadata);
-            metadataObj['price_ticker'] = priceTicker;
+            metadataObj[tickerMetadataAttribute] = priceTicker;
             this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
         }
 
