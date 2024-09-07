@@ -2,11 +2,13 @@
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Enums;
+using BudgetManager.Domain.Models;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace BudgetManager.Services
 {
@@ -28,15 +30,20 @@ namespace BudgetManager.Services
         }
 
         /// <inheritdoc/>
-        public StockTickerModel Get(int id)
-        {
-            return mapper.Map<StockTickerModel>(repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers) && t.Id == id));
-        }
+        public StockTickerModel Get(int id) 
+            => mapper.Map<StockTickerModel>(repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers) && t.Id == id));
 
         /// <inheritdoc/>
-        public IEnumerable<StockTickerModel> GetAll()
+        public IEnumerable<StockTickerModel> GetAll() 
+            => repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<StockTickerModel>(t));
+
+        /// <inheritdoc/>
+        public IEnumerable<string> GetAllAvailableTickersForPriceSearch()
         {
-            return repository.FindAll().Include(t => t.EnumItemType).Where(t => t.EnumItemType.Code == nameof(EEnumTypes.StockTradeTickers)).Select(t => mapper.Map<StockTickerModel>(t));
+            var tickers = GetAll().Select(t => t.Ticker);
+            var tickersMetadata = tickers.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
+            IEnumerable<string> allAvailableTickerForPrice = tickers.Union(tickersMetadata.Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker));
+            return allAvailableTickerForPrice;
         }
 
         /// <inheritdoc/>

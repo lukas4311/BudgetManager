@@ -1,7 +1,9 @@
+using BudgetManager.Domain.Models;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BudgetManager.FinancialApi.Endpoints
 {
@@ -40,6 +42,10 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound, NoContent>> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)
         {
             var empty = Array.Empty<StockPrice>().AsEnumerable();
+            var tickers = stockTickerService.GetAll().Select(t => t.Ticker);
+            var tickersMetadata = tickers.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
+            IEnumerable<string> result = tickers.Union(tickersMetadata.Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker));
+
             if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
                 return TypedResults.NotFound();
 

@@ -33,5 +33,11 @@ namespace BudgetManager.Services.Contracts
         /// </summary>
         /// <param name="stockTickerModel">Stock ticker model</param>
         void UpdateTicker(StockTickerModel stockTickerModel);
+
+        /// <summary>
+        /// Get all tickers for price search
+        /// </summary>
+        /// <returns>List of tickers for price search</returns>
+        IEnumerable<string> GetAllAvailableTickersForPriceSearch();
     }
 }
