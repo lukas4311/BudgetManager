@@ -42,11 +42,9 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound, NoContent>> GetStockPriceData([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService, [FromRoute] string ticker)
         {
             var empty = Array.Empty<StockPrice>().AsEnumerable();
-            var tickers = stockTickerService.GetAll().Select(t => t.Ticker);
-            var tickersMetadata = tickers.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
-            IEnumerable<string> result = tickers.Union(tickersMetadata.Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker));
+            var tickers = stockTickerService.GetAllAvailableTickersForPriceSearch();
 
-            if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
+            if (tickers.Count(t => string.Compare(t, ticker, true) == 0) == 0)
                 return TypedResults.NotFound();
 
             IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker);
@@ -60,7 +58,9 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static async Task<Results<Ok<IEnumerable<StockPrice>>, NotFound, NoContent>> GetStockPriceDataFromDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
-            if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
+            var tickers = stockTickerService.GetAllAvailableTickersForPriceSearch();
+
+            if (tickers.Count(t => string.Compare(t, ticker, true) == 0) == 0)
                 return TypedResults.NotFound();
 
             IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker, from);
@@ -74,7 +74,9 @@ namespace BudgetManager.FinancialApi.Endpoints
         public static async Task<Results<Ok<StockPrice>, NotFound, NoContent>> GetStockPriceDataAtDate([FromServices] IStockTradeHistoryService stockTradeHistoryService, [FromServices] IStockTickerService stockTickerService,
             [FromRoute] string ticker, [FromRoute] DateTime date)
         {
-            if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
+            var tickers = stockTickerService.GetAllAvailableTickersForPriceSearch();
+
+            if (tickers.Count(t => string.Compare(t, ticker, true) == 0) == 0)
                 return TypedResults.NotFound();
 
             StockPrice data = await stockTradeHistoryService.GetStockPriceAtDate(ticker, date);
