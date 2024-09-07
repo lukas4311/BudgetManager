@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StockTickerModel } from "../../ApiClient/Main";
 import { StockGroupModel, TickersWithPriceHistory } from "../../Services/StockService";
 import { StockLineChart } from "./StockLineChart";
@@ -16,6 +16,9 @@ class TickerCardProp {
 }
 
 const TickerCard = (props: TickerCardProp) => {
+    // const [hasMetadata, setHasMetadata] = useState(false);
+    // const [hasPrice, setHasPrice] = useState(false);
+
     const calculareProfit = (actualPrice: number, buyPrice: number) => {
         if (buyPrice <= 0 || actualPrice <= 0)
             return 0;
@@ -25,14 +28,11 @@ const TickerCard = (props: TickerCardProp) => {
         return profitOrLoss;
     }
 
-    const getTickerWarnings = (ticker: StockGroupModel): [boolean, boolean] => {
-        const hasMetadata = _.first(props.tickers.filter(t => t.id == ticker.tickerId))?.metadata != undefined ?? false;
-        const hasPrice = _.first(props.tickersPrice.filter(t => t.ticker == ticker.tickerName))?.price.length != 0 ?? false;
-        return [hasMetadata, hasPrice];
-    }
+    const hasMetadata = _.first(props.tickers.filter(t => t.id == props.ticker.tickerId))?.metadata != undefined ?? false;
+    const hasPrice = _.first(props.tickersPrice.filter(t => t.ticker == props.ticker.tickerName))?.price.length != 0 ?? false;
 
     const profitOrLoss = calculareProfit(props.ticker.stockCurrentWealth, props.ticker.stockSpentPrice);
-    const [hasMetadata, hasPrice] = getTickerWarnings(props.ticker);
+    // getTickerWarnings(props.ticker);
 
     return (
         <>

@@ -18,23 +18,23 @@ const FixTickerForm = (props: FixFormProps) => {
 
     return (
         (<form onSubmit={handleSubmit(onSubmit)}>
-            <Button type="submit" variant="contained" color="primary" className="block ml-auto">Fix tickers</Button>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
-                {!props.hasMetadata ? <></> :
+                {props.hasMetadata ? <></> :
                     <div className="w-2/3">
-                        <p>Fill ticker from Tradingview to get metadata. After saving wait 1 day to get metadata for this ticker.</p>
                         <Controller render={({ field }) => <TextField label="Ticker for metadata" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="priceMetadata" control={control} />
+                        <p className="text-xs mt-2">Fill ticker from Tradingview to get metadata. After saving wait 1 day to get metadata for this ticker.</p>
                     </div>
                 }
-                {!props.hasPrice && props.hasMetadata ? <></> :
+                {props.hasPrice || !props.hasMetadata ? <></> :
                     <div className="w-2/3">
-                        <p>Fill ticker from Yahoo Finance to get price.</p>
                         <Controller render={({ field }) => <TextField label="Ticker for price" size='small' type="text" {...field} className="place-self-end w-full" />}
                             name="priceTicker" control={control} />
+                        <p className="text-xs mt-2">Fill ticker from Yahoo Finance to get price.</p>
                     </div>
                 }
             </div>
+            <Button variant="contained" type="submit" color="primary" className="block ml-auto">Fix tickers</Button>
         </form>)
     );
 };

@@ -254,9 +254,11 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         if (!fixTicker.hasPrice) {
             const metadata = ticker?.metadata;
             const metadataObj = JSON.parse(metadata);
-            metadataObj['priceTicker'] = priceTicker;
+            metadataObj['price_ticker'] = priceTicker;
             this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
         }
+
+        this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });
     }
 
     private handleCloseCompanyProfile = () =>
