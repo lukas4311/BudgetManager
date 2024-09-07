@@ -5,6 +5,12 @@ import { IconsData } from '../Enums/IconsEnum';
 interface IBaseModel {
     id?: number;
 }
+
+export enum EListStyle {
+    RowStyle,
+    CardStyle
+}
+
 interface IBaseListProps<T extends IBaseModel> {
     data: T[];
     template: (model: T) => JSX.Element;
@@ -17,6 +23,7 @@ interface IBaseListProps<T extends IBaseModel> {
     useRowBorderColor?: boolean;
     hideIconRowPart?: boolean;
     narrowIcons?: boolean;
+    style?: EListStyle;
 }
 
 const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseListProps<T>>) => {
@@ -45,10 +52,11 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
     const showIcons = (): boolean => props.hideIconRowPart == undefined || props.hideIconRowPart == false;
 
     const getWidthRation = [(props.narrowIcons ? "w-11/12 " : "w-9/12 "), (props.narrowIcons ? "w-1/12 " : "w-3/12 ")];
+    const style = props.style ?? EListStyle.RowStyle;
 
     return (
         <React.Fragment>
-            <div className="flex w-full flex-col bg-battleshipGrey rounded-t-md">
+            <div className={`flex w-full flex-col ${(style != EListStyle.RowStyle ? "" : "bg-battleshipGrey")} rounded-t-md`}>
                 <div className={(props.addItemHandler != undefined ? "pt-4" : "") + " flex w-full"}>
                     {props.title != undefined ? (<h1 className="ml-6 text-xl">{props.title}</h1>) : <></>}
                     {props.addItemHandler != undefined ? (
@@ -60,31 +68,45 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                         </span>
                     ) : <></>}
                 </div>
-                <div className="text-center flex pr-5">
-                    <div className={(showIcons() ? getWidthRation[0] : "w-full ") + "flex flex-row text-sm"}>
-                        {props.header}
-                    </div>
-                </div>
-                <div className={"pr-5 " + props.dataAreaClass}>
-                    {props.data.map(d => (
-                        <div key={d.id} className="paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
-                            <div className={(showIcons() ? getWidthRation[0] : "w-full ") + "flex flex-row"}>
-                                {props.template(d)}
+                {style == EListStyle.RowStyle ?
+                    (<>
+                        <div className="text-center flex pr-5">
+                            <div className={(showIcons() ? getWidthRation[0] : "w-full ") + "flex flex-row text-sm"}>
+                                {props.header}
                             </div>
-                            {showIcons() ? (
-                                <div className={`${getWidthRation[1]} flex items-center rounded-r-full ` + (props.useRowBorderColor ? "border border-vermilion" : "")}>
-                                    {
-                                        props.deleteItemHandler != undefined ? (
-                                            <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
-                                                {renderBinIcon()}
-                                            </div>
-                                        ) : <></>
-                                    }
-                                </div>
-                            ) : <></>}
                         </div>
-                    ))}
-                </div>
+                        <div className={"pr-5 " + props.dataAreaClass}>
+                            {props.data.map(d => (
+                                <div key={d.id} className="paymentRecord bg-mainDarkBlue rounded-r-full flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                                    <div className={(showIcons() ? getWidthRation[0] : "w-full ") + "flex flex-row"}>
+                                        {props.template(d)}
+                                    </div>
+                                    {showIcons() ? (
+                                        <div className={`${getWidthRation[1]} flex items-center rounded-r-full ` + (props.useRowBorderColor ? "border border-vermilion" : "")}>
+                                            {
+                                                props.deleteItemHandler != undefined ? (
+                                                    <div onClick={(e) => onDeleteClick(e, d.id)} className="w-6 m-auto">
+                                                        {renderBinIcon()}
+                                                    </div>
+                                                ) : <></>
+                                            }
+                                        </div>
+                                    ) : <></>}
+                                </div>
+                            ))}
+                        </div>
+                    </>)
+                    : style == EListStyle.CardStyle ?
+                        (<>
+                            <div className={props.dataAreaClass ?? ""}>
+                                {props.data.map(d => (
+                                    <div key={d.id} className="bg-battleshipGrey rounded-lg mb-3 flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                                        {props.template(d)}
+                                    </div>
+                                ))}
+                            </div>
+                        </>)
+                        : <></>}
             </div>
             <Dialog
                 open={open} onClose={handleClose} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">

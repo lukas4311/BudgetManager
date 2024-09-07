@@ -13,7 +13,7 @@ import DateRangeComponent from '../../Utils/DateRangeComponent';
 import BudgetComponent from '../Budget/BudgetComponent';
 import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
-import { BaseList } from '../BaseList';
+import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentCategoryModel, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps } from 'react-router-dom';
@@ -61,13 +61,8 @@ interface DateFilter {
 const defaultSelectedBankAccount = -1;
 
 export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewStateV2> {
-    private defaultBankOption: string = "All";
-    private filters: DateFilter[];
-    private apiErrorMessage: string = "An error occurred while retrieving the data.";
-    private chartDataProcessor: ChartDataProcessor;
-    private bankAccountApi: BankAccountApiInterface;
     private paymentService: PaymentService;
-    private categories: PaymentCategoryModel[];
+    private bankAccountApi: BankAccountApi;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -78,9 +73,22 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         };
     }
 
-    public async componentDidMount() {
-
+    public componentDidMount() {
+        this.loadData();
     }
+
+    private loadData = async () => {
+        const apiFactory = new ApiClientFactory(this.props.history);
+        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
+        const paymentApi = await apiFactory.getClient(PaymentApi);
+        this.paymentService = new PaymentService(paymentApi);
+        const payments = await this.getExactDateRangeDaysPaymentData(moment(Date.now()).subtract(1, 'months').toDate(), moment(Date.now()).toDate(), null);
+        const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
+        this.setState({ payments: fromLastOrderder });
+    }
+
+    private getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> =>
+        await this.paymentService.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
 
     private paymentEdit = (id: number): void =>
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
@@ -115,14 +123,19 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let iconsData: IconsData = new IconsData();
 
         return (
-            <>
-                <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
+            <div className="flex flex-row w-full">
+                <div className="flex flex-row p-4 w-full">
+                    <p className="mr-auto">{moment(p.date).format('DD.MM.YYYY')}</p>
+                    <span className="ml-auto categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
+                </div>
+
+                {/* <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
                 <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
                 <p className="mx-6 my-1 w-2/12 truncate">{p.name}</p>
                 <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
                 <span className="mx-6 my-1 w-1/12 categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
-                <span className="ml-auto my-1 w-2/12 categoryIcon fill-white" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span>
-            </>
+                <span className="ml-auto my-1 w-2/12 categoryIcon fill-white" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span> */}
+            </div>
         );
     }
 
@@ -145,13 +158,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                     </svg>
                                                 </span>
                                             </div>
-                                            <div className='flex flex-col lg:flex-row 3xl:flex-col'>
-                                                <div className='w-full lg:w-4/10 3xl:w-full'>
-
-                                                </div>
-                                                <div className="pb-10 h-64 overflow-y-scroll pr-4 lg:ml-4 lg:w-6/10 3xl:w-full">
-                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit} narrowIcons={true} deleteItemHandler={this.deletePayment}></BaseList>
-                                                </div>
+                                            <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
+                                                <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
+                                                    narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
                                             </div>
                                         </>
                                     </ComponentPanel>
