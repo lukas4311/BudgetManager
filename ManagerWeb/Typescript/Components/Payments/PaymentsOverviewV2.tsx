@@ -94,12 +94,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         await this.paymentService.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
 
     private paymentEdit = (id: number): void => {
-        console.log("EDIT")
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
     }
 
     private addNewPayment = () => {
-        console.log("ADD")
         this.setState({ showPaymentFormModal: true, paymentId: null, formKey: Date.now() });
     }
 
