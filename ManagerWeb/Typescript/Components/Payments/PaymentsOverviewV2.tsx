@@ -74,14 +74,17 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     }
 
     public componentDidMount() {
-        this.loadData();
+        this.init();
     }
 
-    private loadData = async () => {
+    private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         const paymentApi = await apiFactory.getClient(PaymentApi);
         this.paymentService = new PaymentService(paymentApi);
+    }
+
+    private loadData = async () => {
         const payments = await this.getExactDateRangeDaysPaymentData(moment(Date.now()).subtract(1, 'months').toDate(), moment(Date.now()).toDate(), null);
         const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
         this.setState({ payments: fromLastOrderder });
@@ -133,14 +136,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let iconsData: IconsData = new IconsData();
 
         return (
-            <div className="flex flex-col w-full p-4">
+            <div className="flex flex-col w-full py-2 px-4">
                 <div className="flex flex-row w-full">
-                    <p className="mr-auto text-md">{moment(p.date).format('DD.MM.YYYY')}</p>
+                    <p className="mr-auto text-sm font-medium">{moment(p.date).format('DD.MM.YYYY')}</p>
                     <span className="ml-auto categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
                 <div className='text-left'>
                     <p className="text-3xl font-bold">{p.amount},-</p>
-                    <p className="text-lg truncate">{p.name}</p>
+                    <p className="text-md truncate">{p.name}</p>
                 </div>
             </div>
         );
