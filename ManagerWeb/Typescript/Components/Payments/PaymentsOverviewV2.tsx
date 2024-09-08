@@ -90,10 +90,13 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> =>
         await this.paymentService.getExactDateRangeDaysPaymentData(dateFrom, dateTo, bankAccountId);
 
-    private paymentEdit = (id: number): void =>
+    private paymentEdit = (id: number): void => {
+        console.log("EDIT")
         this.setState({ paymentId: id, showPaymentFormModal: true, formKey: Date.now() });
+    }
 
     private addNewPayment = () => {
+        console.log("ADD")
         this.setState({ showPaymentFormModal: true, paymentId: null, formKey: Date.now() });
     }
 
@@ -119,22 +122,26 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.paymentService.clonePayment(id);
     }
 
+    private hideModal = () => this.setState({ showPaymentFormModal: false, paymentId: null, formKey: Date.now() });
+
+    private handleConfirmationClose = () => {
+        this.hideModal();
+        // this.getFilteredPaymentData(this.state.selectedBankAccount);
+    }
+
     private renderTemplate = (p: PaymentModel): JSX.Element => {
         let iconsData: IconsData = new IconsData();
 
         return (
-            <div className="flex flex-row w-full">
-                <div className="flex flex-row p-4 w-full">
-                    <p className="mr-auto">{moment(p.date).format('DD.MM.YYYY')}</p>
+            <div className="flex flex-col w-full p-4">
+                <div className="flex flex-row w-full">
+                    <p className="mr-auto text-md">{moment(p.date).format('DD.MM.YYYY')}</p>
                     <span className="ml-auto categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
-
-                {/* <span className={"min-h-full w-4 inline-block " + this.getPaymentColor(p.paymentTypeCode)}></span>
-                <p className="mx-6 my-1 w-2/12">{p.amount},-</p>
-                <p className="mx-6 my-1 w-2/12 truncate">{p.name}</p>
-                <p className="mx-6 my-1 w-3/12">{moment(p.date).format('DD.MM.YYYY')}</p>
-                <span className="mx-6 my-1 w-1/12 categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
-                <span className="ml-auto my-1 w-2/12 categoryIcon fill-white" onClick={e => this.clonePayment(e, p.id)}>{iconsData.copy}</span> */}
+                <div className='text-left'>
+                    <p className="text-3xl font-bold">{p.amount},-</p>
+                    <p className="text-lg truncate">{p.name}</p>
+                </div>
             </div>
         );
     }
@@ -145,36 +152,39 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 <div className="">
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
-                            <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
-                                <div className="xl:w-full 3xl:w-1/2">
-                                    <ComponentPanel classStyle="">
-                                        <>
-                                            <div className="py-4 flex">
-                                                <h2 className="text-xl ml-12">Income/expense</h2>
-                                                <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                                        <path d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                                    </svg>
-                                                </span>
-                                            </div>
-                                            <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
-                                                <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
-                                                    narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
-                                            </div>
-                                        </>
-                                    </ComponentPanel>
+                            <div className='grid grid-cols-4'>
+                                <div className='col-span-3'>NECO</div>
+                                <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
+                                    <div className="w-full">
+                                        <ComponentPanel classStyle="">
+                                            <>
+                                                <div className="py-4 flex">
+                                                    <h2 className="text-xl ml-12">Income/expense</h2>
+                                                    <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                                            <path d="M0 0h24v24H0z" fill="none" />
+                                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                                <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
+                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
+                                                        narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
+                                                </div>
+                                            </>
+                                        </ComponentPanel>
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
+                            <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
                                 maxWidth="md" fullWidth={true}>
                                 <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Payment detail</DialogTitle>
                                 <DialogContent className="bg-prussianBlue">
-                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccount}
+                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={undefined}
                                         handleClose={this.handleConfirmationClose} history={this.props.history} />
                                 </DialogContent>
-                            </Dialog> */}
+                            </Dialog>
                         </React.Fragment>
                     </MainFrame>
                 </div >
