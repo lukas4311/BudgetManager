@@ -2,32 +2,16 @@
 import moment from 'moment';
 import PaymentForm from './PaymentForm'
 import { IconsData } from '../../Enums/IconsEnum';
-import { LineChart } from '../Charts/LineChart';
-import { LineChartProps } from '../../Model/LineChartProps';
-import { CalendarChartProps } from '../../Model/CalendarChartProps';
-import { CalendarChart } from '../Charts/CalendarChart';
-import { RadarChartProps } from '../../Model/RadarChartProps';
-import { RadarChart } from '../Charts/RadarChart';
-import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
-import DateRangeComponent from '../../Utils/DateRangeComponent';
-import BudgetComponent from '../Budget/BudgetComponent';
-import { Select, MenuItem, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { createMuiTheme, ThemeProvider } from "@mui/material/styles";
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
-import { BankAccountApi, BankAccountApiInterface, BankAccountModel, BankBalanceModel, PaymentApi, PaymentCategoryModel, PaymentModel } from '../../ApiClient/Main';
-import { RouteComponentProps } from 'react-router-dom';
-import { LineChartSettingManager } from '../Charts/LineChartSettingManager';
+import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import _ from 'lodash';
-import { BarChart, BarData } from '../Charts/BarChart';
-import { BarChartSettingManager } from '../Charts/BarChartSettingManager';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
-import PaymentService, { MonthlyGroupedPayments } from '../../Services/PaymentService';
-import ScoreList from '../../Utils/ScoreList';
-import { LineChartDataSets } from '../../Model/LineChartDataSets';
-import { LineChartData } from '../../Model/LineChartData';
-import { PieChart, PieChartData, PieChartProps } from '../Charts/PieChart';
+import PaymentService from '../../Services/PaymentService';
+import { useEffect } from 'react';
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
@@ -82,6 +66,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         const paymentApi = await apiFactory.getClient(PaymentApi);
         this.paymentService = new PaymentService(paymentApi);
+        await this.loadData();
     }
 
     private loadData = async () => {
@@ -108,11 +93,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private getPaymentColor(paymentTypeCode: string): string {
         switch (paymentTypeCode) {
             case "Revenue":
-                return "bg-green-800";
+                return " text-green-800";
             case "Expense":
-                return "bg-red-600";
+                return " text-red-600";
             case "Transfer":
-                return "bg-blue-500";
+                return " text-blue-500";
         }
     }
 
@@ -127,7 +112,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
     private handleConfirmationClose = () => {
         this.hideModal();
-        // this.getFilteredPaymentData(this.state.selectedBankAccount);
     }
 
     private renderTemplate = (p: PaymentModel): JSX.Element => {
@@ -140,7 +124,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <span className="ml-auto categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
                 <div className='text-left'>
-                    <p className="text-3xl font-bold">{p.amount},-</p>
+                    <p className={"text-3xl font-bold" + this.getPaymentColor(p.paymentTypeCode)}>{p.amount},-</p>
                     <p className="text-md truncate">{p.name}</p>
                 </div>
             </div>
@@ -154,7 +138,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
                             <div className='grid grid-cols-4'>
-                                <div className='col-span-3'>NECO</div>
+                                <div className='col-span-3'>
+                                    NECO
+                                    <BankAccountSelector />
+                                </div>
                                 <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
                                     <div className="w-full">
                                         <ComponentPanel classStyle="">
@@ -192,4 +179,35 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             </React.Fragment>
         )
     }
+}
+
+class BankAccountWithBalance {
+    bankAccountName: string;
+    bankAccountBalance: number;
+}
+
+const BankAccountSelector = () => {
+    const history = useHistory();
+    const [bankAccounts, setBankAccounts] = React.useState<BankAccountWithBalance[]>([]);
+
+    useEffect(() => {
+        const apiFactory = new ApiClientFactory(history);
+        const fetchData = async () => {
+            const bankAccountApi = await apiFactory.getClient(BankAccountApi);
+            const bankAccountsBalance = await bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
+            const bankAccountInfo = await bankAccountApi.bankAccountsAllGet();
+            setBankAccounts(bankAccountInfo.map(a => ({ bankAccountBalance: _.first(bankAccountsBalance.filter(b => b.id == a.id))?.balance, bankAccountName: a.code })))
+        }
+        fetchData();
+    }, [])
+
+    return (
+        <div className='flex flex-row'>
+            {bankAccounts.map(b => (
+                <div className='flex flex-col'>
+                    <p className='text-3xl font-bold'>{b.bankAccountBalance}</p>
+                    <span className="ml-auto categoryIcon fill-white">{b.bankAccountName}</span>
+                </div>))}
+        </div>
+    );
 }
