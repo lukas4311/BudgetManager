@@ -30,8 +30,8 @@ namespace BudgetManager.Services
         /// <param name="interestRateRepository">The interest rate repository.</param>
         /// <param name="autoMapper">The auto mapper instance.</param>
         public BankAccountService(IRepository<Payment> paymentRepository, IRepository<UserIdentity> userIdentityRepository,
-            IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository, 
-            IRepository<InterestRate> interestRateRepository, IMapper autoMapper):base(bankAccountRepository, autoMapper)
+            IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository,
+            IRepository<InterestRate> interestRateRepository, IMapper autoMapper) : base(bankAccountRepository, autoMapper)
         {
             this.paymentRepository = paymentRepository;
             this.userIdentityRepository = userIdentityRepository;
@@ -42,11 +42,11 @@ namespace BudgetManager.Services
 
         /// <inheritdoc/>
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(string userLogin, DateTime? toDate)
-            => FilterBankAccountsForUser(a => a.Login == userLogin, toDate);
+            => FilterBankAccountsForUserLogin(userLogin, toDate);
 
         /// <inheritdoc/>
         public IEnumerable<BankBalanceModel> GetBankAccountsBalanceToDate(int userId, DateTime? toDate)
-            => FilterBankAccountsForUser(a => a.Id == userId, toDate);
+            => FilterBankAccountsForUser(userId, toDate);
 
         /// <inheritdoc/>
         public BankBalanceModel GetBankAccountBalanceToDate(int bankAccountId, DateTime? toDate)
@@ -116,36 +116,39 @@ namespace BudgetManager.Services
         /// <param name="userPredicate">The user predicate for filtering.</param>
         /// <param name="toDate">The date to filter balances to.</param>
         /// <returns>A collection of bank balance models.</returns>
-        private IEnumerable<BankBalanceModel> FilterBankAccountsForUser(Expression<Func<UserIdentity, bool>> userPredicate, DateTime? toDate)
+        private IEnumerable<BankBalanceModel> FilterBankAccountsForUser(int userId, DateTime? toDate)
         {
             toDate ??= DateTime.MinValue;
 
-            List<BankBalanceModel> bankAccounts = userIdentityRepository.FindByCondition(userPredicate)
-                .AsNoTracking()
-                .Include(b => b.BankAccounts)
-                .SelectMany(a => a.BankAccounts)
-                .AsEnumerable()
-                .Select(b => new BankBalanceModel { Id = b.Id, OpeningBalance = b.OpeningBalance })
-                .ToList();
+            return bankAccountRepository
+                .FindAll()
+                .Include(b => b.Payments)
+                .ThenInclude(p => p.PaymentType)
+                .Where(b => b.UserIdentityId == userId)
+                .Select(ToBalanceModel);
+        }
 
-            List<BankPaymentSumModel> bankAccountsBalance = paymentRepository
-                .FindByCondition(p => bankAccounts.Select(b => b.Id).Contains(p.BankAccountId) && p.Date > toDate)
-                .AsNoTracking()
-                .GroupBy(a => a.BankAccountId)
-                .Select(g => new BankPaymentSumModel
-                {
-                    BankAccountId = g.Key,
-                    Sum = g.Sum(a => a.Amount)
-                })
-                .ToList();
+        private IEnumerable<BankBalanceModel> FilterBankAccountsForUserLogin(string userLogin, DateTime? toDate)
+        {
+            toDate ??= DateTime.MinValue;
 
-            return bankAccounts
-                .GroupJoin(bankAccountsBalance, bank => bank.Id, balance => balance.BankAccountId, (x, y) => new { Bank = x, BankBalance = y })
-                .SelectMany(x => x.BankBalance.DefaultIfEmpty(), (x, y) =>
-                {
-                    x.Bank.Balance = y?.Sum ?? 0;
-                    return x.Bank;
-                });
+            return bankAccountRepository
+                .FindAll()
+                .Include(b => b.Payments)
+                .ThenInclude(p => p.PaymentType)
+                .Include(b => b.UserIdentity)
+                .Where(b => b.UserIdentity.Login == userLogin)
+                .Select(ToBalanceModel);
+        }
+
+        private BankBalanceModel ToBalanceModel(BankAccount b)
+        {
+            return new BankBalanceModel
+            {
+                Id = b.Id,
+                OpeningBalance = b.OpeningBalance,
+                Balance = b.OpeningBalance + b.Payments.Where(p => p.BankAccountId == b.Id && p.PaymentType.Code == "Revenue").Sum(a => a.Amount) - b.Payments.Where(p => p.BankAccountId == b.Id && p.PaymentType.Code == "Expense").Sum(a => a.Amount)
+            };
         }
     }
 }
