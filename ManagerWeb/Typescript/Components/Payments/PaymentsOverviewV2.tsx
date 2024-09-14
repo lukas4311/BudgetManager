@@ -193,7 +193,11 @@ class BankAccountWithBalance {
     bankAccountId: number;
 }
 
-const BankAccountSelector = () => {
+class BankAccountSelectorProps {
+    onBankAccountSelect?: (bankAccount: BankAccountWithBalance) => void;
+}
+
+const BankAccountSelector = (props: BankAccountSelectorProps) => {
     const history = useHistory();
     const [bankAccounts, setBankAccounts] = React.useState<BankAccountWithBalance[]>([]);
     const [selectedBankaccount, setSelectedBankaccount] = React.useState<number>(undefined);
@@ -209,14 +213,19 @@ const BankAccountSelector = () => {
         fetchData();
     }, [])
 
+    const selectBankAccount = (bankAccountInfo: BankAccountWithBalance) => {
+        setSelectedBankaccount(bankAccountInfo.bankAccountId);
+        props.onBankAccountSelect(bankAccountInfo);
+    }
+
     return (
         <Carousel>
             <CarouselContent>
                 {bankAccounts.map(b =>
                 (
                     <CarouselItem className="basis-1/2">
-                        <div className='flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative' onClick={_ => setSelectedBankaccount(b.bankAccountId)}>
-                            {b.bankAccountId == selectedBankaccount ? <BookmarkBorderOutlinedIcon className='absolute top-4 right-4'/> : <></>}
+                        <div className='flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative' onClick={_ => selectBankAccount(b)}>
+                            {b.bankAccountId == selectedBankaccount ? <BookmarkBorderOutlinedIcon className='absolute top-4 right-4' /> : <></>}
                             <p className='text-3xl font-bold mb-2'>{b.bankAccountBalance},-</p>
                             <span className="ml-auto text-xl categoryIcon fill-white">{b.bankAccountName}</span>
                         </div>
