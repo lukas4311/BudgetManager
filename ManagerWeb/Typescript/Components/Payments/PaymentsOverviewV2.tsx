@@ -6,14 +6,13 @@ import { Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import _ from 'lodash';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
-import { useEffect } from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../Shadcn/Carousel';
-import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
+
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
@@ -43,8 +42,6 @@ interface DateFilter {
     days: number;
     key: number;
 }
-
-const defaultSelectedBankAccount = -1;
 
 export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewStateV2> {
     private paymentService: PaymentService;
@@ -185,55 +182,4 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             </React.Fragment>
         )
     }
-}
-
-class BankAccountWithBalance {
-    bankAccountName: string;
-    bankAccountBalance: number;
-    bankAccountId: number;
-}
-
-class BankAccountSelectorProps {
-    onBankAccountSelect?: (bankAccount: BankAccountWithBalance) => void;
-}
-
-const BankAccountSelector = (props: BankAccountSelectorProps) => {
-    const history = useHistory();
-    const [bankAccounts, setBankAccounts] = React.useState<BankAccountWithBalance[]>([]);
-    const [selectedBankaccount, setSelectedBankaccount] = React.useState<number>(undefined);
-
-    useEffect(() => {
-        const apiFactory = new ApiClientFactory(history);
-        const fetchData = async () => {
-            const bankAccountApi = await apiFactory.getClient(BankAccountApi);
-            const bankAccountsBalance = await bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
-            const bankAccountInfo = await bankAccountApi.bankAccountsAllGet();
-            setBankAccounts(bankAccountInfo.map(a => ({ bankAccountBalance: _.first(bankAccountsBalance.filter(b => b.id == a.id))?.balance, bankAccountName: a.code, bankAccountId: a.id })));
-        }
-        fetchData();
-    }, [])
-
-    const selectBankAccount = (bankAccountInfo: BankAccountWithBalance) => {
-        setSelectedBankaccount(bankAccountInfo.bankAccountId);
-        props.onBankAccountSelect(bankAccountInfo);
-    }
-
-    return (
-        <Carousel>
-            <CarouselContent>
-                {bankAccounts.map(b =>
-                (
-                    <CarouselItem className="basis-1/2">
-                        <div className='flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative' onClick={_ => selectBankAccount(b)}>
-                            {b.bankAccountId == selectedBankaccount ? <BookmarkBorderOutlinedIcon className='absolute top-4 right-4' /> : <></>}
-                            <p className='text-3xl font-bold mb-2'>{b.bankAccountBalance},-</p>
-                            <span className="ml-auto text-xl categoryIcon fill-white">{b.bankAccountName}</span>
-                        </div>
-                    </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-        </Carousel>
-    );
 }
