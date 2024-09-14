@@ -12,6 +12,8 @@ import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
 import { useEffect } from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../Shadcn/Carousel';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
@@ -137,17 +139,21 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 <div className="">
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
-                            <div className='grid grid-cols-4'>
+                            <div className='grid grid-cols-4 gap-6'>
                                 <div className='col-span-3'>
-                                    NECO
-                                    <BankAccountSelector />
+                                    <ComponentPanel classStyle="flex flex-row w-full px-5 py-5">
+                                        <div className='w-1/2 px-16 text-left'>
+                                            <h2 className="text-xl mb-4">Balance info</h2>
+                                            <BankAccountSelector />
+                                        </div>
+                                    </ComponentPanel>
                                 </div>
                                 <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
                                     <div className="w-full">
-                                        <ComponentPanel classStyle="">
+                                        <ComponentPanel classStyle="px-5 py-5">
                                             <>
-                                                <div className="py-4 flex">
-                                                    <h2 className="text-xl ml-12">Income/expense</h2>
+                                                <div className="py-4 flex text-left">
+                                                    <h2 className="text-xl">Income/expense</h2>
                                                     <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
                                                             <path d="M0 0h24v24H0z" fill="none" />
@@ -184,11 +190,13 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 class BankAccountWithBalance {
     bankAccountName: string;
     bankAccountBalance: number;
+    bankAccountId: number;
 }
 
 const BankAccountSelector = () => {
     const history = useHistory();
     const [bankAccounts, setBankAccounts] = React.useState<BankAccountWithBalance[]>([]);
+    const [selectedBankaccount, setSelectedBankaccount] = React.useState<number>(undefined);
 
     useEffect(() => {
         const apiFactory = new ApiClientFactory(history);
@@ -196,18 +204,27 @@ const BankAccountSelector = () => {
             const bankAccountApi = await apiFactory.getClient(BankAccountApi);
             const bankAccountsBalance = await bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
             const bankAccountInfo = await bankAccountApi.bankAccountsAllGet();
-            setBankAccounts(bankAccountInfo.map(a => ({ bankAccountBalance: _.first(bankAccountsBalance.filter(b => b.id == a.id))?.balance, bankAccountName: a.code })))
+            setBankAccounts(bankAccountInfo.map(a => ({ bankAccountBalance: _.first(bankAccountsBalance.filter(b => b.id == a.id))?.balance, bankAccountName: a.code, bankAccountId: a.id })));
         }
         fetchData();
     }, [])
 
     return (
-        <div className='flex flex-row'>
-            {bankAccounts.map(b => (
-                <div className='flex flex-col'>
-                    <p className='text-3xl font-bold'>{b.bankAccountBalance}</p>
-                    <span className="ml-auto categoryIcon fill-white">{b.bankAccountName}</span>
-                </div>))}
-        </div>
+        <Carousel>
+            <CarouselContent>
+                {bankAccounts.map(b =>
+                (
+                    <CarouselItem className="basis-1/2">
+                        <div className='flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative' onClick={_ => setSelectedBankaccount(b.bankAccountId)}>
+                            {b.bankAccountId == selectedBankaccount ? <BookmarkBorderOutlinedIcon className='absolute top-4 right-4'/> : <></>}
+                            <p className='text-3xl font-bold mb-2'>{b.bankAccountBalance},-</p>
+                            <span className="ml-auto text-xl categoryIcon fill-white">{b.bankAccountName}</span>
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+        </Carousel>
     );
 }
