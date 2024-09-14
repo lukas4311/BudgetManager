@@ -140,7 +140,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <div className='col-span-3'>
                                     <ComponentPanel classStyle="flex flex-row w-full px-5 py-5">
                                         <div className='w-1/2 px-16 text-left'>
-                                            <h2 className="text-xl mb-4">Balance info</h2>
+                                            <h2 className="text-2xl mb-4">Balance info</h2>
                                             <BankAccountSelector />
                                         </div>
                                     </ComponentPanel>
@@ -150,7 +150,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         <ComponentPanel classStyle="px-5 py-5">
                                             <>
                                                 <div className="py-4 flex text-left">
-                                                    <h2 className="text-xl">Income/expense</h2>
+                                                    <h2 className="text-2xl">Income/expense</h2>
                                                     <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
                                                             <path d="M0 0h24v24H0z" fill="none" />

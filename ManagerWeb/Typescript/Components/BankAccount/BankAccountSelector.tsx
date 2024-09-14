@@ -29,8 +29,14 @@ const BankAccountSelector = (props: BankAccountSelectorProps) => {
     }, [])
 
     const selectBankAccount = (bankAccountInfo: BankAccountWithBalanceModel) => {
-        setSelectedBankaccount(bankAccountInfo.bankAccountId);
-        props.onBankAccountSelect(bankAccountInfo);
+        if (selectedBankaccount == bankAccountInfo.bankAccountId) {
+            setSelectedBankaccount(undefined);
+            props.onBankAccountSelect(undefined);
+        }
+        else {
+            setSelectedBankaccount(bankAccountInfo.bankAccountId);
+            props.onBankAccountSelect(bankAccountInfo);
+        }
     }
 
     return (
