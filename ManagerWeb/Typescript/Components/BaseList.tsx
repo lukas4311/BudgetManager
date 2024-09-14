@@ -100,7 +100,7 @@ const BaseList = <T extends IBaseModel,>(props: React.PropsWithChildren<IBaseLis
                         (<>
                             <div className={props.dataAreaClass ?? ""}>
                                 {props.data.map(d => (
-                                    <div key={d.id} className="bg-battleshipGrey rounded-lg mb-3 flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
+                                    <div key={d.id} className="bg-white rounded-lg mb-3 flex hover:bg-vermilion cursor-pointer" onClick={(_) => props.itemClickHandler(d.id)}>
                                         {props.template(d)}
                                     </div>
                                 ))}

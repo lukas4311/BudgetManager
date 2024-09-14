@@ -117,13 +117,13 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         let iconsData: IconsData = new IconsData();
 
         return (
-            <div className="flex flex-col w-full py-2 px-4">
+            <div className="flex flex-col w-full py-2 px-4 text-prussianBlue">
                 <div className="flex flex-row w-full">
                     <p className="mr-auto text-sm font-medium">{moment(p.date).format('DD.MM.YYYY')}</p>
-                    <span className="ml-auto categoryIcon fill-white">{iconsData[p.paymentCategoryIcon]}</span>
+                    <span className="ml-auto categoryIcon fill-prussianBlue">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
                 <div className='text-left'>
-                    <p className={"text-3xl font-bold" + this.getPaymentColor(p.paymentTypeCode)}>{p.amount},-</p>
+                    <p className="text-3xl font-bold">{p.amount},-</p>
                     <p className="text-md truncate">{p.name}</p>
                 </div>
             </div>
