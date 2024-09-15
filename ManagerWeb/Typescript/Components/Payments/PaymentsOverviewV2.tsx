@@ -12,6 +12,7 @@ import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
 import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
+import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 
 
 interface PaymentsOverviewStateV2 {
@@ -141,6 +142,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <ComponentPanel classStyle="flex flex-row w-full px-5 py-5">
                                         <div className='w-1/2 px-16 text-left'>
                                             <h2 className="text-2xl mb-4">Balance info</h2>
+                                            <BankAccountBalanceCard cardClass='mb-4'/>
                                             <BankAccountSelector />
                                         </div>
                                     </ComponentPanel>
