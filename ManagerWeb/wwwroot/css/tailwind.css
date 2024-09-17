@@ -852,14 +852,6 @@ body {
   margin-bottom: 3rem !important;
 }
 
-.ml-auto {
-  margin-left: auto !important;
-}
-
-.mb-2 {
-  margin-bottom: 0.5rem !important;
-}
-
 .block {
   display: block !important;
 }
@@ -1284,10 +1276,6 @@ body {
   border-radius: 0.75rem !important;
 }
 
-.rounded-lg {
-  border-radius: var(--radius) !important;
-}
-
 .rounded-t-md {
   border-top-left-radius: calc(var(--radius) - 2px) !important;
   border-top-right-radius: calc(var(--radius) - 2px) !important;
@@ -1428,10 +1416,6 @@ body {
   background-color: hsl(var(--secondary)) !important;
 }
 
-.bg-battleshipGrey {
-  background-color: #707F99ff !important;
-}
-
 .fill-current {
   fill: currentColor !important;
 }
@@ -1458,10 +1442,6 @@ body {
 
 .fill-red-700 {
   fill: #b91c1c !important;
-}
-
-.fill-white {
-  fill: #fff !important;
 }
 
 .p-4 {
@@ -1558,16 +1538,6 @@ body {
 .px-3 {
   padding-left: 0.75rem !important;
   padding-right: 0.75rem !important;
-}
-
-.px-4 {
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
-.py-6 {
-  padding-top: 1.5rem !important;
-  padding-bottom: 1.5rem !important;
 }
 
 .pt-4 {
@@ -1668,6 +1638,11 @@ body {
   line-height: 1rem !important;
 }
 
+.text-4xl {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+}
+
 .text-3xl {
   font-size: 1.875rem !important;
   line-height: 2.25rem !important;
@@ -1676,16 +1651,6 @@ body {
 .text-7xl {
   font-size: 4.5rem !important;
   line-height: 1 !important;
-}
-
-.text-xl {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-4xl {
-  font-size: 2.25rem !important;
-  line-height: 2.5rem !important;
 }
 
 .font-black {
@@ -1710,10 +1675,6 @@ body {
 
 .font-extrabold {
   font-weight: 800 !important;
-}
-
-.font-black {
-  font-weight: 900 !important;
 }
 
 .text-white {

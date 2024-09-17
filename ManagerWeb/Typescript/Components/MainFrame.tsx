@@ -72,8 +72,9 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                     <IconMenu Icon={Person2OutlinedIcon} countBadge={undefined} heading="Profil" messages={[]} />
                     <IconMenu Icon={NotificationsNoneOutlinedIcon} countBadge={notDisplayedNotificationsCount} heading="Notifications" messages={notifications} />
                 </div>
+                <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
             </div>
-            <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
+
             <div className="text-center p-2 rounded-lg">
                 {props.children}
             </div>

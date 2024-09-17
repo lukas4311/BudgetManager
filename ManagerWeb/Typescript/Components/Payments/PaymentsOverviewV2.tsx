@@ -46,7 +46,6 @@ interface DateFilter {
 
 export default class PaymentsOverview extends React.Component<RouteComponentProps, PaymentsOverviewStateV2> {
     private paymentService: PaymentService;
-    private bankAccountApi: BankAccountApi;
 
     constructor(props: RouteComponentProps) {
         super(props);
@@ -63,7 +62,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
     private init = async () => {
         const apiFactory = new ApiClientFactory(this.props.history);
-        this.bankAccountApi = await apiFactory.getClient(BankAccountApi);
         const paymentApi = await apiFactory.getClient(PaymentApi);
         this.paymentService = new PaymentService(paymentApi);
         await this.loadData();
@@ -139,11 +137,19 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <React.Fragment>
                             <div className='grid grid-cols-4 gap-6'>
                                 <div className='col-span-3'>
-                                    <ComponentPanel classStyle="flex flex-row w-full px-5 py-5">
-                                        <div className='w-1/2 px-16 text-left'>
-                                            <h2 className="text-2xl mb-4">Balance info</h2>
-                                            <BankAccountBalanceCard cardClass='mb-4'/>
-                                            <BankAccountSelector />
+                                    <ComponentPanel classStyle="w-full px-5 py-5">
+                                        <div className='flex flex-col'>
+                                            <h2 className="text-2xl mb-4 text-left">Balance info</h2>
+                                            <div className='flex flex-row'>
+                                                <div className='w-1/2 px-16 text-left'>
+                                                    <BankAccountBalanceCard cardClass='mb-4' />
+                                                    <BankAccountSelector />
+                                                </div>
+                                                <div className='w-1/2 px-16 text-left'>
+                                                    <IncomeCard payments={this.state.payments} cardClass='mb-4'/>
+                                                    <ExpenseCard payments={this.state.payments} />
+                                                </div>
+                                            </div>
                                         </div>
                                     </ComponentPanel>
                                 </div>
@@ -174,7 +180,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 maxWidth="md" fullWidth={true}>
                                 <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Payment detail</DialogTitle>
                                 <DialogContent className="bg-prussianBlue">
-                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={undefined}
+                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={1}
                                         handleClose={this.handleConfirmationClose} history={this.props.history} />
                                 </DialogContent>
                             </Dialog>
@@ -184,4 +190,33 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
             </React.Fragment>
         )
     }
+}
+
+class IncomeExpenseCardProps {
+    payments: PaymentModel[];
+    cardClass?: string;
+}
+
+const IncomeCard = (props: IncomeExpenseCardProps) => {
+    const revenues = props.payments.filter(p => p.paymentTypeCode == "Revenue");
+    const sum = _.sumBy(revenues, p => p.amount);
+
+    return (
+        <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
+            <span className="text-2xl text-left font-semibold categoryIcon fill-white">Income</span>
+            <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
+        </div>
+    );
+}
+
+const ExpenseCard = (props: IncomeExpenseCardProps) => {
+    const revenues = props.payments.filter(p => p.paymentTypeCode == "Expense");
+    const sum = _.sumBy(revenues, p => p.amount);
+
+    return (
+        <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
+            <span className="text-2xl text-left font-semibold categoryIcon fill-white">Expense</span>
+            <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
+        </div>
+    );
 }
