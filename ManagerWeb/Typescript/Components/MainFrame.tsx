@@ -45,7 +45,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
     return (
         <div>
             <div className="flex flex-row">
-                <div className="w-64">
+                <div className="w-56">
                     <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 658 403" >
                         <title>Logo3</title>
                         <defs>
@@ -74,8 +74,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
                 </div>
                 <h2 className={(props.classStyle ?? "") + "text-5xl pb-2 text-center"}>{props.header}</h2>
             </div>
-
-            <div className="text-center p-2 rounded-lg">
+            <div className="text-center p-2 rounded-lg mt-2">
                 {props.children}
             </div>
         </div>

@@ -20,6 +20,7 @@ interface PaymentsOverviewStateV2 {
     showPaymentFormModal: boolean;
     paymentId: number;
     formKey: number;
+    selectedBankAccountId: number;
     // selectedFilter: DateFilter;
     // filterDateFrom: string;
     // filterDateTo: string;
@@ -52,7 +53,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         moment.locale('cs');
 
         this.state = {
-            payments: [], paymentId: undefined, showPaymentFormModal: false, formKey: Date.now()
+            payments: [], paymentId: undefined, showPaymentFormModal: false, formKey: Date.now(), selectedBankAccountId: undefined
         };
     }
 
@@ -143,10 +144,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             <div className='flex flex-row'>
                                                 <div className='w-1/2 px-16 text-left'>
                                                     <BankAccountBalanceCard cardClass='mb-4' />
-                                                    <BankAccountSelector />
+                                                    <BankAccountSelector onBankAccountSelect={b => this.setState({ selectedBankAccountId: b.bankAccountId })} />
                                                 </div>
                                                 <div className='w-1/2 px-16 text-left'>
-                                                    <IncomeCard payments={this.state.payments} cardClass='mb-4'/>
+                                                    <IncomeCard payments={this.state.payments} cardClass='mb-4' />
                                                     <ExpenseCard payments={this.state.payments} />
                                                 </div>
                                             </div>
@@ -180,7 +181,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 maxWidth="md" fullWidth={true}>
                                 <DialogTitle id="form-dialog-title" className="bg-prussianBlue">Payment detail</DialogTitle>
                                 <DialogContent className="bg-prussianBlue">
-                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={1}
+                                    <PaymentForm key={this.state.formKey} paymentId={this.state.paymentId} bankAccountId={this.state.selectedBankAccountId}
                                         handleClose={this.handleConfirmationClose} history={this.props.history} />
                                 </DialogContent>
                             </Dialog>
