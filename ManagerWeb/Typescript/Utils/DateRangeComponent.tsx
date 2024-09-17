@@ -8,9 +8,10 @@ class DateRangeState {
 
 class DateRangeProps {
     datesFilledHandler: (dateFrom: string, dateTo: string) => void;
+    className?: string;
 }
 
-export default class DateRangeComponent extends React.Component<DateRangeProps, DateRangeState>{
+export default class DateRangeComponent extends React.Component<DateRangeProps, DateRangeState> {
     constructor(props: DateRangeProps) {
         super(props);
         this.state = { filterDateFrom: '', filterDateTo: '' };
@@ -32,7 +33,7 @@ export default class DateRangeComponent extends React.Component<DateRangeProps, 
 
     render() {
         return (
-            <div className="exactDates w-full flex flex-row text-white">
+            <div className={`exactDates flex flex-row text-white ${this.props.className ?? ""}`}>
                 <TextField
                     id="dateFrom"
                     label="Date from"

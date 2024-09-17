@@ -1,8 +1,8 @@
 ﻿import * as React from 'react'
-import moment from 'moment';
+import moment, { unitOfTime } from 'moment';
 import PaymentForm from './PaymentForm'
 import { IconsData } from '../../Enums/IconsEnum';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
@@ -13,6 +13,7 @@ import { MainFrame } from '../MainFrame';
 import PaymentService from '../../Services/PaymentService';
 import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
 import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
+import DateRangeComponent from '../../Utils/DateRangeComponent';
 
 
 interface PaymentsOverviewStateV2 {
@@ -21,6 +22,8 @@ interface PaymentsOverviewStateV2 {
     paymentId: number;
     formKey: number;
     selectedBankAccountId: number;
+    filterDateFrom: Date;
+    filterDateTo: Date;
     // selectedFilter: DateFilter;
     // filterDateFrom: string;
     // filterDateTo: string;
@@ -53,7 +56,8 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         moment.locale('cs');
 
         this.state = {
-            payments: [], paymentId: undefined, showPaymentFormModal: false, formKey: Date.now(), selectedBankAccountId: undefined
+            payments: [], paymentId: undefined, showPaymentFormModal: false, formKey: Date.now(), selectedBankAccountId: undefined,
+            filterDateFrom: undefined, filterDateTo: undefined
         };
     }
 
@@ -113,6 +117,12 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.hideModal();
     }
 
+    private filterPayments = async (from: Date, to: Date) => {
+        const payments = await this.getExactDateRangeDaysPaymentData(from, to, null);
+        const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
+        this.setState({ payments: fromLastOrderder });
+    }
+
     private renderTemplate = (p: PaymentModel): JSX.Element => {
         let iconsData: IconsData = new IconsData();
 
@@ -137,6 +147,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
                             <div className='grid grid-cols-4 gap-6'>
+                                <div className='col-span-4 justify-self-end w-2/5'>
+                                    <DateFilter onFilter={this.filterPayments}></DateFilter>
+                                </div>
                                 <div className='col-span-3'>
                                     <ComponentPanel classStyle="w-full px-5 py-5">
                                         <div className='flex flex-col'>
@@ -218,6 +231,32 @@ const ExpenseCard = (props: IncomeExpenseCardProps) => {
         <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
             <span className="text-2xl text-left font-semibold categoryIcon fill-white">Expense</span>
             <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
+        </div>
+    );
+}
+
+class DateFilterProps {
+    onFilter: (from: Date, to: Date) => void;
+    className?: string;
+}
+
+const DateFilter = (props: DateFilterProps) => {
+    const onSelectDateClick = (momentCode: unitOfTime.Base | unitOfTime._quarter) => {
+        const from = moment(Date.now()).subtract(1, momentCode).toDate();
+        const to = moment(Date.now()).toDate();
+        props?.onFilter(from, to);
+    }
+
+    const onRangeChange = (from: string, to: string) => {
+        props?.onFilter(moment(from).toDate(), moment(to).toDate());
+    }
+
+    return (
+        <div className={`flex flex-row justify-between ${props.className ?? ""}`}>
+            <Button type="button" variant="contained" color="primary" className="block mr-4" onClick={_ => onSelectDateClick('w')}>This week</Button>
+            <Button type="button" variant="contained" color="primary" className="block mr-4" onClick={_ => onSelectDateClick('M')}>This month</Button>
+            <Button type="button" variant="contained" color="primary" className="block mr-6" onClick={_ => onSelectDateClick('y')}>This year</Button>
+            <DateRangeComponent datesFilledHandler={onRangeChange} className='w-1/2'></DateRangeComponent>
         </div>
     );
 }
