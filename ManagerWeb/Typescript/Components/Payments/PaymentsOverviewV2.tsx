@@ -6,7 +6,7 @@ import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
 import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
@@ -14,6 +14,7 @@ import PaymentService from '../../Services/PaymentService';
 import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
 import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
+import { useEffect } from 'react';
 
 
 interface PaymentsOverviewStateV2 {
@@ -258,5 +259,30 @@ const DateFilter = (props: DateFilterProps) => {
             <Button type="button" variant="contained" color="primary" className="block mr-6" onClick={_ => onSelectDateClick('y')}>This year</Button>
             <DateRangeComponent datesFilledHandler={onRangeChange} className='w-1/2'></DateRangeComponent>
         </div>
+    );
+}
+
+class MonthlyGroupedPaymentsProps {
+    payments: PaymentModel[];
+}
+
+const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
+    const history = useHistory();
+
+    useEffect(() => {
+
+        const loadData = async () => {
+            const apiFactory = new ApiClientFactory(history);
+            const paymentApi = await apiFactory.getClient(PaymentApi);
+            const paymentService = new PaymentService(paymentApi);
+            const groupedPayments = paymentService.groupPaymentsAndExpenseByMonth(props.payments);
+            //TODO: map to new model to use data in bar chart
+        }
+
+        loadData();
+    }, [])
+
+    return (
+        <div>GROUPED MONTHLY</div>
     );
 }

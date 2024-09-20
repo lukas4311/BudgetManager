@@ -64,6 +64,20 @@ export default class PaymentService implements IPaymentService {
         return grouped;
     }
 
+    // Group payments and expense by month and year
+    public groupPaymentsAndExpenseByMonth = (payments: PaymentModel[]) => {
+        const grouped = _.chain(payments.map(m => ({ ...m, date: moment(m.date).format("YYYY-MM"), amount: m.paymentTypeCode == this.expenseCode ? m.amount * -1 : m.amount })))
+            .groupBy(g => moment(g.date).format("YYYY-MM"))
+            .map((value, key) => ({
+                dateGroup: key,
+                revenueSum: _.sumBy(value.filter(p => p.paymentTypeCode == this.revenueCode), 'amount'),
+                expenseSum: _.sumBy(value.filter(p => p.paymentTypeCode == this.expenseCode), 'amount')
+            }))
+            .value();
+
+        return grouped;
+    }
+
     /* Gets the average expense per month for a given set of payments */
     public getAverageMonthExpense = (payments: PaymentModel[]) => {
         const expenses = payments.filter(f => f.paymentTypeCode == this.expenseCode);
