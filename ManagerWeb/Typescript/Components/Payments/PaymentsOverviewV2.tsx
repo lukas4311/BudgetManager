@@ -14,7 +14,8 @@ import PaymentService from '../../Services/PaymentService';
 import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
 import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ResponsiveBar } from '@nivo/bar'
 
 
 interface PaymentsOverviewStateV2 {
@@ -168,6 +169,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </ComponentPanel>
                                 </div>
+                                <div className='col-span-3'>
+                                    <ComponentPanel classStyle="w-full px-5 py-5">
+                                        <MonthlyGroupedPayments payments={this.state.payments} />
+                                    </ComponentPanel>
+                                </div>
                                 <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
                                     <div className="w-full">
                                         <ComponentPanel classStyle="px-5 py-5">
@@ -268,6 +274,7 @@ class MonthlyGroupedPaymentsProps {
 
 const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
     const history = useHistory();
+    const [data, setData] = useState<any>([]);
 
     useEffect(() => {
 
@@ -276,13 +283,45 @@ const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
             const paymentApi = await apiFactory.getClient(PaymentApi);
             const paymentService = new PaymentService(paymentApi);
             const groupedPayments = paymentService.groupPaymentsAndExpenseByMonth(props.payments);
-            //TODO: map to new model to use data in bar chart
+            const data = groupedPayments.map(g => ({ key: g.dateGroup, revenue: g.revenueSum, expense: Math.abs(g.expenseSum), savings: g.revenueSum + g.expenseSum }));
+            setData(data);
         }
 
         loadData();
-    }, [])
+    }, [props])
 
     return (
-        <div>GROUPED MONTHLY</div>
+        <div>
+            <h2 className="text-2xl mb-4 text-left">Monthly grouped</h2>
+            <div className='h-64'>
+                <ResponsiveBar
+                    data={data}
+                    keys={[
+                        'revenue',
+                        'expense',
+                        'savings'
+                    ]}
+                    indexBy="key"
+                    margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
+                    padding={0.6}
+                    groupMode="grouped"
+                    valueScale={{ type: 'linear' }}
+                    indexScale={{ type: 'band', round: true }}
+                    colors={{ scheme: 'nivo' }}
+                    borderColor={{
+                        from: 'color',
+                        modifiers: [
+                            [
+                                'darker',
+                                1.6
+                            ]
+                        ]
+                    }}
+                    axisTop={null}
+                    axisRight={null}
+                    role="application"
+                />
+            </div>
+        </div>
     );
 }
