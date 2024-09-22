@@ -169,11 +169,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                         </div>
                                     </ComponentPanel>
                                 </div>
-                                <div className='col-span-3'>
-                                    <ComponentPanel classStyle="w-full px-5 py-5">
-                                        <MonthlyGroupedPayments payments={this.state.payments} />
-                                    </ComponentPanel>
-                                </div>
                                 <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
                                     <div className="w-full">
                                         <ComponentPanel classStyle="px-5 py-5">
@@ -194,6 +189,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             </>
                                         </ComponentPanel>
                                     </div>
+                                </div>
+                                <div className='col-span-3'>
+                                    <ComponentPanel classStyle="w-full px-5 py-5">
+                                        <MonthlyGroupedPayments payments={this.state.payments} />
+                                    </ComponentPanel>
                                 </div>
                             </div>
 
@@ -302,12 +302,13 @@ const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
                         'savings'
                     ]}
                     indexBy="key"
+                    enableLabel={false}
                     margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
                     padding={0.6}
                     groupMode="grouped"
                     valueScale={{ type: 'linear' }}
                     indexScale={{ type: 'band', round: true }}
-                    colors={{ scheme: 'nivo' }}
+                    colors={['#007E04', '#920000', '#3572EF']}
                     borderColor={{
                         from: 'color',
                         modifiers: [
@@ -317,10 +318,27 @@ const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
                             ]
                         ]
                     }}
-                    axisTop={null}
-                    axisRight={null}
+                    theme={{
+                        axis: {
+                            ticks: {
+                                line: { stroke: "white" },
+                                text: { fill: "white" }
+                            }
+                        },
+                        grid: {
+                            line: { stroke: "white" }
+                        }
+                    }}
                     role="application"
-                />
+                    tooltip={({
+                        id,
+                        value,
+                    }) => <div className='px-4 py-2 bg-prussianBlue text-white border border-white'>
+                            <strong>
+                                {id}: {value}
+                            </strong>
+                        </div>
+                    } />
             </div>
         </div>
     );
