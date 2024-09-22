@@ -148,53 +148,63 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 <div className="">
                     <MainFrame header='Payments overview'>
                         <React.Fragment>
-                            <div className='grid grid-cols-4 gap-6'>
-                                <div className='col-span-4 justify-self-end w-2/5'>
+                            <div className='flex flex-col'>
+                                <div className='self-end w-2/4'>
                                     <DateFilter onFilter={this.filterPayments}></DateFilter>
                                 </div>
-                                <div className='col-span-3'>
-                                    <ComponentPanel classStyle="w-full px-5 py-5">
-                                        <div className='flex flex-col'>
-                                            <h2 className="text-2xl mb-4 text-left">Balance info</h2>
-                                            <div className='flex flex-row'>
-                                                <div className='w-1/2 px-16 text-left'>
-                                                    <BankAccountBalanceCard cardClass='mb-4' />
-                                                    <BankAccountSelector onBankAccountSelect={b => this.setState({ selectedBankAccountId: b.bankAccountId })} />
+                                <div className="flex flex-row">
+                                    <div className='w-9/12'>
+                                        <div className="flex flex-col">
+                                            <ComponentPanel classStyle="w-full px-5 py-5 my-4">
+                                                <div className='flex flex-col'>
+                                                    <h2 className="text-2xl mb-4 text-left">Balance info</h2>
+                                                    <div className='flex flex-row'>
+                                                        <div className='w-1/2 px-16 text-left'>
+                                                            <BankAccountBalanceCard cardClass='mb-4' />
+                                                            <BankAccountSelector onBankAccountSelect={b => this.setState({ selectedBankAccountId: b.bankAccountId })} />
+                                                        </div>
+                                                        <div className='w-1/2 px-16 text-left'>
+                                                            <IncomeCard payments={this.state.payments} cardClass='mb-4' />
+                                                            <ExpenseCard payments={this.state.payments} />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className='w-1/2 px-16 text-left'>
-                                                    <IncomeCard payments={this.state.payments} cardClass='mb-4' />
-                                                    <ExpenseCard payments={this.state.payments} />
-                                                </div>
-                                            </div>
+                                            </ComponentPanel>
+                                            <ComponentPanel classStyle="w-full px-5 py-5">
+                                                <MonthlyGroupedPayments payments={this.state.payments} />
+                                            </ComponentPanel>
                                         </div>
-                                    </ComponentPanel>
-                                </div>
-                                <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-full">
-                                    <div className="w-full">
-                                        <ComponentPanel classStyle="px-5 py-5">
-                                            <>
-                                                <div className="py-4 flex text-left">
-                                                    <h2 className="text-2xl">Income/expense</h2>
-                                                    <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                                            <path d="M0 0h24v24H0z" fill="none" />
-                                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                                <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
-                                                    <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
-                                                        narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
-                                                </div>
-                                            </>
-                                        </ComponentPanel>
+                                    </div>
+                                    <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
+                                        <div className="w-full my-4">
+                                            <ComponentPanel classStyle="px-5 py-5">
+                                                <>
+                                                    <div className="py-4 flex text-left">
+                                                        <h2 className="text-2xl">Income/expense</h2>
+                                                        <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                                                <path d="M0 0h24v24H0z" fill="none" />
+                                                                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                    <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
+                                                        <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
+                                                            narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
+                                                    </div>
+                                                </>
+                                            </ComponentPanel>
+                                        </div>
+                                    </div>
+                                    <div className='col-span-3'>
+
                                     </div>
                                 </div>
-                                <div className='col-span-3'>
-                                    <ComponentPanel classStyle="w-full px-5 py-5">
-                                        <MonthlyGroupedPayments payments={this.state.payments} />
-                                    </ComponentPanel>
-                                </div>
+
+
+
+
+
                             </div>
 
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
