@@ -650,3 +650,15 @@ h1, h2, h3, h4, h5 {
 .amount .MuiInputBase-root {
   height: 100% !important;
 }
+
+.paymentsRadar text {
+  fill: white !important;
+}
+
+.paymentsRadar svg + div {
+  color: white !important;
+}
+.paymentsRadar svg + div > div {
+  background-color: #032b4aff !important;
+  border: 1px solid white !important;
+}

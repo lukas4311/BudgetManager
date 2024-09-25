@@ -16,6 +16,8 @@ import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
 import { useEffect, useState } from 'react';
 import { ResponsiveBar } from '@nivo/bar'
+import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
+import { ResponsiveRadar } from '@nivo/radar';
 
 
 interface PaymentsOverviewStateV2 {
@@ -173,6 +175,11 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             <ComponentPanel classStyle="w-full px-5 py-5">
                                                 <MonthlyGroupedPayments payments={this.state.payments} />
                                             </ComponentPanel>
+                                            <div className=''>
+                                                <ComponentPanel>
+                                                    <CategoryGroupedPayments payments={this.state.payments} />
+                                                </ComponentPanel>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
@@ -195,16 +202,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                 </>
                                             </ComponentPanel>
                                         </div>
-                                    </div>
-                                    <div className='col-span-3'>
 
                                     </div>
                                 </div>
-
-
-
-
-
                             </div>
 
                             <Dialog open={this.state.showPaymentFormModal} onClose={this.hideModal} aria-labelledby="Payment_detail"
@@ -349,6 +349,41 @@ const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
                             </strong>
                         </div>
                     } />
+            </div>
+        </div>
+    );
+}
+
+class CategoryGroupedPaymentsProps {
+    payments: PaymentModel[];
+}
+
+const CategoryGroupedPayments = (props: CategoryGroupedPaymentsProps) => {
+    const data = _.chain(props.payments).filter(a => a.paymentTypeCode == "Expense")
+        .map(r => ({ label: r.paymentCategoryCode, spend: r.amount }))
+        .groupBy(p => p.label).value();
+
+    const result = _.chain(data)
+        .map(group =>
+            ({ label: group[0].label, value: _.sumBy(group, g => g.spend) })
+        )
+        .value();
+
+    return (
+        <div>
+            <h2 className="text-2xl mb-4 text-left">Monthly grouped</h2>
+            <div className='h-64 paymentsRadar'>
+                <ResponsiveRadar
+                    data={result}
+                    keys={['value']}
+                    indexBy="label"
+                    margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
+                    borderColor={{ from: 'color' }}
+                    dotSize={2}
+                    dotColor={{ theme: 'background' }}
+                    dotBorderWidth={2}
+                    colors={['#920000']}
+                />
             </div>
         </div>
     );
