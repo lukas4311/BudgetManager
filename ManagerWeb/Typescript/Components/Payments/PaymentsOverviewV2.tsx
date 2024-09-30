@@ -175,11 +175,9 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             <ComponentPanel classStyle="w-full px-5 py-5">
                                                 <MonthlyGroupedPayments payments={this.state.payments} />
                                             </ComponentPanel>
-                                            <div className=''>
-                                                <ComponentPanel>
-                                                    <CategoryGroupedPayments payments={this.state.payments} />
-                                                </ComponentPanel>
-                                            </div>
+                                            <ComponentPanel classStyle="w-full px-5 py-5 my-4">
+                                                <CategoryGroupedPayments payments={this.state.payments} />
+                                            </ComponentPanel>
                                         </div>
                                     </div>
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">

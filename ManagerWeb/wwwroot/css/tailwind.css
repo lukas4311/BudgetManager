@@ -664,10 +664,6 @@ body {
   grid-column: span 2 / span 2 !important;
 }
 
-.col-span-3 {
-  grid-column: span 3 / span 3 !important;
-}
-
 .row-span-3 {
   grid-row: span 3 / span 3 !important;
 }
