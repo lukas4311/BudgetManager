@@ -119,6 +119,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
     private handleConfirmationClose = () => {
         this.hideModal();
+        this.loadData();
     }
 
     private filterPayments = async (from: Date, to: Date) => {
