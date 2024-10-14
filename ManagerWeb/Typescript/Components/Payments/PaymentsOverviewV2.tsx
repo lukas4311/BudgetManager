@@ -165,9 +165,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                             <ComponentPanel classStyle="w-full px-5 py-5">
                                                 <MonthlyGroupedPayments payments={this.state.payments} />
                                             </ComponentPanel>
-                                            <ComponentPanel classStyle="w-full px-5 py-5 my-4">
-                                                <CategoryGroupedPayments payments={this.state.payments} />
-                                            </ComponentPanel>
+                                            <div className='flex flex-row'>
+                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 mr-4">
+                                                    <CategoryGroupedPayments payments={this.state.payments} />
+                                                </ComponentPanel>
+                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 ml-4">
+                                                    <PaymentsStats payments={this.state.payments} />
+                                                </ComponentPanel>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
@@ -372,6 +377,30 @@ const CategoryGroupedPayments = (props: CategoryGroupedPaymentsProps) => {
                     dotBorderWidth={2}
                     colors={['#920000']}
                 />
+            </div>
+        </div>
+    );
+}
+
+class PaymentsStatsProps {
+    payments: PaymentModel[];
+}
+
+const PaymentsStats = (props: PaymentsStatsProps) => {
+
+    
+
+    return (
+        <div>
+            <h2 className="text-2xl mb-8 text-left">Payment stats</h2>
+
+            <div className='grid grid-cols-2 gap-y-5 text-left text-2xl'>
+                <p>Monthly average income</p>
+                <p>50,-</p>
+                <p>Monthly average expense</p>
+                <p>50,-</p>
+                <p>Monthly average saved</p>
+                <p>50,-</p>
             </div>
         </div>
     );
