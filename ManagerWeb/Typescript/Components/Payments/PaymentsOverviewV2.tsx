@@ -97,17 +97,6 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.paymentService.deletePayment(id);
     }
 
-    private getPaymentColor(paymentTypeCode: string): string {
-        switch (paymentTypeCode) {
-            case "Revenue":
-                return " text-green-800";
-            case "Expense":
-                return " text-red-600";
-            case "Transfer":
-                return " text-blue-500";
-        }
-    }
-
     private clonePayment = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>, id: number) => {
         console.log("clone: " + id);
         e.preventDefault();

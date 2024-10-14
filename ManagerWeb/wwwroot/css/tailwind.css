@@ -1721,11 +1721,6 @@ body {
   color: #b00000ff !important;
 }
 
-.text-blue-500 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(59 130 246 / var(--tw-text-opacity)) !important;
-}
-
 .text-prussianBlue {
   color: #032b4aff !important;
 }
