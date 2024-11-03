@@ -1,9 +1,10 @@
+import json
 import urllib.request
 import csv
 import io
 import pandas as pd
 import requests
-
+from typing import List, Optional
 from Models.Fmp.StockPriceData import StockPriceData
 import yfinance as yf
 from datetime import datetime
@@ -15,6 +16,40 @@ class StockSplitData:
     date: datetime
     split: str
     split_coefficient: float
+
+
+@dataclass
+class StockData:
+    symbol: str
+    currency: str
+    exchange_name: str
+    prices: List[StockPriceData]
+
+    @classmethod
+    def from_json(self, json_data: str) -> 'StockData':
+        """Parse JSON string into StockData object"""
+        data = json.loads(json_data)
+
+        # Extract data from nested structure
+        chart_data = data['chart']['result'][0]
+        meta = chart_data['meta']
+        timestamps = chart_data['timestamp']
+        quotes = chart_data['indicators']['quote'][0]
+        # Create list of StockPrice objects
+        prices = [
+            StockPriceData(
+                date=pd.to_datetime(datetime.fromtimestamp(ts)).tz_localize("Europe/Prague").tz_convert("utc"),
+                value=close
+            )
+            for ts, close in zip(timestamps, quotes['close'])
+        ]
+
+        return self(
+            symbol=meta['symbol'],
+            currency=meta['currency'],
+            exchange_name=meta['exchangeName'],
+            prices=prices
+        )
 
 
 class YahooService:
@@ -43,6 +78,23 @@ class YahooService:
                 stockPriceData.append(priceModel)
 
         return stockPriceData
+
+    def get_stock_price_history_new(self, ticker: str, unix_from: str, unix_to: str):
+        print('Downloading stock history for: ' + ticker)
+        url = f'https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?events=capitalGain%7Cdiv%7Csplit&formatted=true&includeAdjustedClose=true&interval=1d&period1={unix_from}&period2={unix_to}'
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            stock_data = StockData.from_json(response.text)
+            return stock_data.prices
+        except requests.RequestException as e:
+            raise requests.RequestException(f"Failed to fetch data: {str(e)}")
+        except (KeyError, json.JSONDecodeError) as e:
+            raise ValueError(f"Invalid response data: {str(e)}")
 
     def get_stock_split_history(self, ticker: str, unix_from: str, unix_to: str) -> list[StockSplitData]:
         print('Downloading stock split history for: ' + ticker)

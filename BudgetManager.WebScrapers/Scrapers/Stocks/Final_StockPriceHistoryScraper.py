@@ -56,7 +56,7 @@ class StockPriceScraper:
         unix_from = '511056000' if date_from is None else str(
             self.__convert_to_unix_timestamp(date_from + timedelta(days=1)))
         unix_to = str(self.__convert_to_unix_timestamp(date_to))
-        return yahooService.get_stock_price_history(ticker, unix_from, unix_to)
+        return yahooService.get_stock_price_history_new(ticker, unix_from, unix_to)
 
     def __save_price_data_to_influx(self, measurement: str, ticker: str, priceData: list):
         priceModel: StockPriceData
