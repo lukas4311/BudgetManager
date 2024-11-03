@@ -40,8 +40,9 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<string> GetAllAvailableTickersForPriceSearch()
         {
+            var tickerMetadata = GetAll().Select(t => t.Metadata);
             var tickers = GetAll().Select(t => t.Ticker);
-            var tickersMetadata = tickers.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
+            var tickersMetadata = tickerMetadata.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
             IEnumerable<string> allAvailableTickerForPrice = tickers.Union(tickersMetadata.Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker));
             return allAvailableTickerForPrice;
         }
