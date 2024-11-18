@@ -30,6 +30,7 @@ import { NewTickerForm } from "./NewTickerForm";
 import { FixTickerForm } from "./FixTickerForm";
 import { BrokerUpload } from "./BrokerUpload";
 import { TickerCard } from "./TickerCard";
+import StyleConstants from "../../Utils/StyleConstants";
 
 const tickerMetadataAttribute = "price_ticker";
 
@@ -326,7 +327,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
             <MainFrame header='Stocks'>
                 <>
                     <div className="flex flex-row pt-5">
-                        <ComponentPanel classStyle="w-7/12 py-3 px-2 mr-4">
+                        <ComponentPanel classStyle={"w-7/12 mr-4" + StyleConstants.componentPanelStyles}>
                             <div className="flex flex-col h-full">
                                 <div className="flex flex-row">
                                     <div className="w-1/2 text-left">
@@ -377,7 +378,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                             </div>
                         </ComponentPanel>
                         <div className="flex flex-col w-5/12">
-                            <ComponentPanel classStyle="py-3 px-2">
+                            <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
                                 <>
                                     <h2 className="text-xl font-semibold mb-6">Stock summary</h2>
                                     {this.state.stockSummary == undefined ? <Loading className="m-auto mt-4" /> : (
@@ -389,7 +390,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     )}
                                 </>
                             </ComponentPanel>
-                            <ComponentPanel classStyle="py-3 px-2 mt-4">
+                            <ComponentPanel classStyle={"mt-4" + StyleConstants.componentPanelStyles}>
                                 <>
                                     <h2 className="text-xl font-semibold mb-6">Stock portfolio</h2>
                                     <div>
@@ -397,7 +398,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
                                     </div>
                                 </>
                             </ComponentPanel>
-                            <ComponentPanel classStyle="py-3 px-2 mt-4">
+                            <ComponentPanel classStyle={"mt-4" + StyleConstants.componentPanelStyles}>
                                 <>
                                     <h2 className="text-xl font-semibold mb-6">Stock value history</h2>
                                     <div className="h-64">

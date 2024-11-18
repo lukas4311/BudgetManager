@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { ResponsiveBar } from '@nivo/bar'
 import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import { ResponsiveRadar } from '@nivo/radar';
+import StyleConstants from '../../Utils/StyleConstants';
 
 
 interface PaymentsOverviewStateV2 {
@@ -131,7 +132,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <div className="flex flex-row">
                                     <div className='w-9/12'>
                                         <div className="flex flex-col">
-                                            <ComponentPanel classStyle="w-full px-5 py-5 my-4">
+                                            <ComponentPanel classStyle={"w-full my-4" + StyleConstants.componentPanelStyles}>
                                                 <div className='flex flex-col'>
                                                     <h2 className="text-2xl mb-4 text-left">Balance info</h2>
                                                     <div className='flex flex-row'>
@@ -146,14 +147,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                     </div>
                                                 </div>
                                             </ComponentPanel>
-                                            <ComponentPanel classStyle="w-full px-5 py-5">
+                                            <ComponentPanel classStyle={"w-full" + StyleConstants.componentPanelStyles}>
                                                 <MonthlyGroupedPayments payments={this.state.payments} />
                                             </ComponentPanel>
                                             <div className='flex flex-row'>
-                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 mr-4">
+                                                <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
                                                     <CategoryGroupedPayments payments={this.state.payments} />
                                                 </ComponentPanel>
-                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 ml-4">
+                                                <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
                                                     <PaymentsStats payments={this.state.payments} />
                                                 </ComponentPanel>
                                             </div>
@@ -161,7 +162,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     </div>
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
                                         <div className="w-full my-4">
-                                            <ComponentPanel classStyle="px-5 py-5">
+                                            <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
                                                 <>
                                                     <div className="py-4 flex text-left">
                                                         <h2 className="text-2xl">Income/expense</h2>

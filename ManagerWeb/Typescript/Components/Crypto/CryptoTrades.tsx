@@ -14,6 +14,7 @@ import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import { AppContext, AppCtx } from "../../Context/AppCtx";
 import { SnackbarSeverity } from "../../App";
 import { BrokerUpload } from "../Stocks/BrokerUpload";
+import StyleConstants from "../../Utils/StyleConstants";
 
 class CryptoTradesState {
     trades: CryptoTradeViewModel[];
@@ -141,7 +142,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
 
     render() {
         return (
-            <ComponentPanel classStyle="p-5">
+            <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
                 <React.Fragment>
                     <Button component="label" variant="outlined" color="primary" className="block ml-auto bg-vermilion text-white w-full mt-2 mb-3"
                         onClick={() => this.setState({ isFileUploadOpened: true })}>

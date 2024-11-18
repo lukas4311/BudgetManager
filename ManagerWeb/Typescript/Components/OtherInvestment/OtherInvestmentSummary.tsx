@@ -16,6 +16,7 @@ import { LineChart } from "../Charts/LineChart";
 import { LineChartSettingManager } from "../Charts/LineChartSettingManager";
 import { PieChart, PieChartData } from "../Charts/PieChart";
 import { OtherInvestmentBalaceHistoryViewModel } from "./OtherInvestmentDetail";
+import StyleConstants from "../../Utils/StyleConstants";
 
 class OtherInvestmentSummaryState {
     balanceSum: number;
@@ -142,7 +143,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
         return (
             <div>
                 <h3 className="text-2xl p-4 text-center">Other investment summary</h3>
-                <ComponentPanel classStyle="mx-auto w-1/3">
+                <ComponentPanel classStyle={"mx-auto w-1/3" + StyleConstants.componentPanelStyles}>
                     <React.Fragment>
                         <div className="flex flex-row justify-around">
                             <p className="text-2xl text-white font-black">Balance: {this.state.balanceSum}</p>
@@ -155,7 +156,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                 </ComponentPanel>
 
                 <div className="flex flex-row mt-4">
-                    <ComponentPanel classStyle="w-1/3 px-2 py-3">
+                    <ComponentPanel classStyle={"w-1/3" + StyleConstants.componentPanelStyles}>
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Investment balance progress</h4>
                             <div className="h-80">
@@ -163,7 +164,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                             </div>
                         </React.Fragment>
                     </ComponentPanel>
-                    <ComponentPanel classStyle="w-1/3 mx-4 px-2 py-3">
+                    <ComponentPanel classStyle={"w-1/3 mx-4" + StyleConstants.componentPanelStyles}>
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Top</h4>
                             <div className="h-80">
@@ -171,7 +172,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                             </div>
                         </React.Fragment>
                     </ComponentPanel>
-                    <ComponentPanel classStyle="w-1/3 px-2 py-3">
+                    <ComponentPanel classStyle={"w-1/3" + StyleConstants.componentPanelStyles}>
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Investments diversification</h4>
                             <div className="h-80">

@@ -16,6 +16,7 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import ComodityService from "../../Services/ComodityService";
 import { CurrencyService } from "../../Services/CurrencyService";
 import { ComodityEndpointsApi } from "../../ApiClient/Fin";
+import StyleConstants from "../../Utils/StyleConstants";
 
 class ComoditiesState {
     goldIngots: ComoditiesFormViewModel[];
@@ -163,7 +164,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         return (
             <div className="">
                 <MainFrame header='Comodities overview'>
-                    <ComponentPanel classStyle="w-2/3 mx-auto p-5">
+                    <ComponentPanel classStyle={"w-2/3 mx-auto" + StyleConstants.componentPanelStyles}>
                         <>
                             <div className="flex">
                                 <div className="w-7/12 overflow-y-auto flex p-4">
