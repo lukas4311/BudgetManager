@@ -131,7 +131,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
 
     public render() {
         const bounds = this.getMinLineChartData();
-        const profit = (this.state.balanceSum - this.state.investedSum) ?? 0;
+        const profit = (this.state.balanceSum - this.state.investedSum);
         let profitPct = 0;
 
         if (this.state.balanceSum != 0 && profit != 0)
@@ -154,8 +154,8 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                     </React.Fragment>
                 </ComponentPanel>
 
-                <div className="flex flex-row">
-                    <ComponentPanel classStyle="w-1/3">
+                <div className="flex flex-row mt-4">
+                    <ComponentPanel classStyle="w-1/3 px-2 py-3">
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Investment balance progress</h4>
                             <div className="h-80">
@@ -163,7 +163,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                             </div>
                         </React.Fragment>
                     </ComponentPanel>
-                    <ComponentPanel classStyle="w-1/3">
+                    <ComponentPanel classStyle="w-1/3 mx-4 px-2 py-3">
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Top</h4>
                             <div className="h-80">
@@ -171,7 +171,7 @@ export default class OtherInvestmentSummary extends React.Component<RouteCompone
                             </div>
                         </React.Fragment>
                     </ComponentPanel>
-                    <ComponentPanel classStyle="w-1/3">
+                    <ComponentPanel classStyle="w-1/3 px-2 py-3">
                         <React.Fragment>
                             <h4 className="text-left text-2xl text-white font-black">Investments diversification</h4>
                             <div className="h-80">

@@ -142,18 +142,18 @@ export default class OtherInvestmentOverview extends React.Component<RouteCompon
             <MainFrame header='Other investments'>
                 <>
                     <div className="flex flex-row mb-6">
-                        <ComponentPanel classStyle="w-3/5 ml-4">
+                        <ComponentPanel classStyle="w-3/5 mr-4 py-3 px-2">
                             <>
                                 <h2 className="text-2xl"></h2>
                                 <div className="flex flex-row">
-                                    <div className="m-5 overflow-y-scroll w-full">
+                                    <div className="overflow-y-scroll w-full">
                                         <BaseList<OtherInvestmentViewModel> data={this.state.otherInvestments} template={this.renderTemplate} header={this.renderHeader()}
                                             addItemHandler={this.addInvesment} itemClickHandler={this.editInvesment} useRowBorderColor={true} hideIconRowPart={true}></BaseList>
                                     </div>
                                 </div>
                             </>
                         </ComponentPanel>
-                        <ComponentPanel classStyle="w-2/5">
+                        <ComponentPanel classStyle="w-2/5 py-3 px-2">
                             <div className="w-full">{this.state.showDetail && this.state.selectedModel ? <OtherInvestmentDetail key={this.state.formKey} selectedInvestment={this.state.selectedModel} route={this.props} refreshRecords={this.refresh} /> : <div />}</div>
                         </ComponentPanel>
                     </div>
