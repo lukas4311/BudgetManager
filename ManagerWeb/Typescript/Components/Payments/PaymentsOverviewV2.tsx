@@ -28,22 +28,6 @@ interface PaymentsOverviewStateV2 {
     selectedBankAccountId: number;
     filterDateFrom: Date;
     filterDateTo: Date;
-    // selectedFilter: DateFilter;
-    // filterDateFrom: string;
-    // filterDateTo: string;
-    // bankAccounts: Array<BankAccountModel>;
-    // selectedBankAccount?: number;
-    // showBankAccountError: boolean;
-    // apiError: string;
-    // expenseChartData: LineChartProps;
-    // balanceChartData: LineChartProps;
-    // calendarChartData: CalendarChartProps;
-    // barChartData: BarData[];
-    // monthlyGrouped: any[];
-    // averageMonthExpense: number;
-    // averageMonthRevenue: number;
-    // averageMonthInvestments: number;
-    // topPayments: PaymentModel[];
 }
 
 interface DateFilter {

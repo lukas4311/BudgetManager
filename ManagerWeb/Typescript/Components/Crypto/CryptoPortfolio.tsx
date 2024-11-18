@@ -80,7 +80,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
     render() {
         return (
-            <ComponentPanel>
+            <ComponentPanel classStyle="p-5">
                 <div>
                     <h2 className="text-xl ml-12">Crypto portfolio</h2>
                     {this.state.allCryptoSum != undefined ?

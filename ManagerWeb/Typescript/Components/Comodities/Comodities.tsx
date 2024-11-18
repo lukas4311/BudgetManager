@@ -163,7 +163,7 @@ export default class Comodities extends React.Component<RouteComponentProps, Com
         return (
             <div className="">
                 <MainFrame header='Comodities overview'>
-                    <ComponentPanel classStyle="w-2/3 mx-auto">
+                    <ComponentPanel classStyle="w-2/3 mx-auto p-5">
                         <>
                             <div className="flex">
                                 <div className="w-7/12 overflow-y-auto flex p-4">
