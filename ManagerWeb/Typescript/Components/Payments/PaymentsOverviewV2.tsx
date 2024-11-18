@@ -397,12 +397,12 @@ const PaymentsStats = (props: PaymentsStatsProps) => {
         <div>
             <h2 className="text-2xl mb-8 text-left">Payment stats</h2>
 
-            <div className='grid grid-cols-2 gap-y-5 text-left text-2xl'>
-                <p>Monthly average income</p>
+            <div className='grid grid-cols-3 gap-y-5 text-left text-2xl'>
+                <p className='col-span-2'>Monthly average income</p>
                 <p className='font-bold'>{(sumRevenues / months).toFixed(0)}</p>
-                <p>Monthly average expense</p>
+                <p className='col-span-2'>Monthly average expense</p>
                 <p className='font-bold'>{(sumExpense / months).toFixed(0)}</p>
-                <p>Monthly average saved</p>
+                <p className='col-span-2'>Monthly average saved</p>
                 <p className='font-bold'>{(sumSaved / months).toFixed(0)}</p>
             </div>
         </div>
