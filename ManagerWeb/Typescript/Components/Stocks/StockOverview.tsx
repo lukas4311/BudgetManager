@@ -112,6 +112,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     private loadStockData = async () => {
         const stocks = await this.stockService.getStockTradeHistory();
         let stockGrouped = await this.stockService.getStocksTickerGroupedTradeHistory();
+        console.log("🚀 ~ StockOverview ~ loadStockData= ~ stockGrouped:", stockGrouped)
 
         const stockSummaryBuy = _.sumBy(stockGrouped, s => s.stockSpentPrice);
         const stockSummarySell = _.sumBy(stockGrouped, s => s.stockSellPrice);
@@ -119,6 +120,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const tickersAdjustedWithPriceTicker = stockGrouped.map(a => this.tryToGetPriceTicker(a.tickerName));
 
         const tickerPrices = await this.stockService.getLastMonthTickersPrice(tickersAdjustedWithPriceTicker);
+        console.log("🚀 ~ StockOverview ~ loadStockData= ~ tickerPrices:", tickerPrices)
         const lineChartData = await this.prepareStockDataToLineChart();
 
         stockGrouped = _.orderBy(stockGrouped, a => a.stockCurrentWealth, 'desc');
@@ -247,8 +249,8 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private getTickerWarnings = (ticker: StockGroupModel): [boolean, boolean] => {
-        const hasMetadata = _.first(this.tickers.filter(t => t.id == ticker.tickerId))?.metadata != undefined ?? false;
-        const hasPrice = _.first(this.state.stockPrice.filter(t => t.ticker == ticker.tickerName))?.price.length != 0 ?? false;
+        const hasMetadata = _.first(this.tickers.filter(t => t.id == ticker.tickerId))?.metadata != undefined;
+        const hasPrice = _.first(this.state.stockPrice.filter(t => t.ticker == ticker.tickerName))?.price.length != 0;
         return [hasMetadata, hasPrice];
     }
 

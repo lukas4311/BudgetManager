@@ -28,8 +28,8 @@ const TickerCard = (props: TickerCardProp) => {
         return profitOrLoss;
     }
 
-    const hasMetadata = _.first(props.tickers.filter(t => t.id == props.ticker.tickerId))?.metadata != undefined ?? false;
-    const hasPrice = _.first(props.tickersPrice.filter(t => t.ticker == props.ticker.tickerName))?.price.length != 0 ?? false;
+    const hasMetadata = _.first(props.tickers.filter(t => t.id == props.ticker.tickerId))?.metadata != undefined ;
+    const hasPrice = _.first(props.tickersPrice.filter(t => t.ticker == props.ticker.tickerName))?.price.length != 0;
 
     const profitOrLoss = calculareProfit(props.ticker.stockCurrentWealth, props.ticker.stockSpentPrice);
     // getTickerWarnings(props.ticker);
