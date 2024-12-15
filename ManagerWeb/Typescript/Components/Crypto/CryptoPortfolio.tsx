@@ -8,6 +8,7 @@ import { ComponentPanel } from "../../Utils/ComponentPanel";
 import { CryptoEndpointsApi, ForexEndpointsApi } from "../../ApiClient/Fin";
 import { CurrencySymbol as ForexSymbol } from "../../ApiClient/Fin";
 import CryptoService from "../../Services/CryptoService";
+import StyleConstants from "../../Utils/StyleConstants";
 
 
 class CryptoSum {
@@ -80,7 +81,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
 
     render() {
         return (
-            <ComponentPanel>
+            <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
                 <div>
                     <h2 className="text-xl ml-12">Crypto portfolio</h2>
                     {this.state.allCryptoSum != undefined ?

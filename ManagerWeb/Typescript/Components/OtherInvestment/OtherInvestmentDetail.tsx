@@ -230,7 +230,7 @@ export default class OtherInvestmentDetail extends React.Component<OtherInvestme
             <React.Fragment>
                 {this.props ? (
                     <>
-                        <div className="bg-lightGray rounded-xl m-6 p-4">
+                        <div className="bg-lightGray rounded-xl p-4">
                             <div className="w-8 binWithAnimation" onClick={this.showDialog}>{new IconsData().bin}</div>
                             <div className="flex flex-row justify-center">
                                 <h2 className="text-vermilion text-3xl font-bold">{this.props.selectedInvestment?.code} detail</h2>

@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { ResponsiveBar } from '@nivo/bar'
 import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import { ResponsiveRadar } from '@nivo/radar';
+import StyleConstants from '../../Utils/StyleConstants';
 
 
 interface PaymentsOverviewStateV2 {
@@ -28,22 +29,6 @@ interface PaymentsOverviewStateV2 {
     selectedBankAccountId: number;
     filterDateFrom: Date;
     filterDateTo: Date;
-    // selectedFilter: DateFilter;
-    // filterDateFrom: string;
-    // filterDateTo: string;
-    // bankAccounts: Array<BankAccountModel>;
-    // selectedBankAccount?: number;
-    // showBankAccountError: boolean;
-    // apiError: string;
-    // expenseChartData: LineChartProps;
-    // balanceChartData: LineChartProps;
-    // calendarChartData: CalendarChartProps;
-    // barChartData: BarData[];
-    // monthlyGrouped: any[];
-    // averageMonthExpense: number;
-    // averageMonthRevenue: number;
-    // averageMonthInvestments: number;
-    // topPayments: PaymentModel[];
 }
 
 interface DateFilter {
@@ -147,7 +132,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                 <div className="flex flex-row">
                                     <div className='w-9/12'>
                                         <div className="flex flex-col">
-                                            <ComponentPanel classStyle="w-full px-5 py-5 my-4">
+                                            <ComponentPanel classStyle={"w-full my-4" + StyleConstants.componentPanelStyles}>
                                                 <div className='flex flex-col'>
                                                     <h2 className="text-2xl mb-4 text-left">Balance info</h2>
                                                     <div className='flex flex-row'>
@@ -162,14 +147,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                     </div>
                                                 </div>
                                             </ComponentPanel>
-                                            <ComponentPanel classStyle="w-full px-5 py-5">
+                                            <ComponentPanel classStyle={"w-full" + StyleConstants.componentPanelStyles}>
                                                 <MonthlyGroupedPayments payments={this.state.payments} />
                                             </ComponentPanel>
                                             <div className='flex flex-row'>
-                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 mr-4">
+                                                <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
                                                     <CategoryGroupedPayments payments={this.state.payments} />
                                                 </ComponentPanel>
-                                                <ComponentPanel classStyle="w-1/2 px-5 py-5 my-4 ml-4">
+                                                <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
                                                     <PaymentsStats payments={this.state.payments} />
                                                 </ComponentPanel>
                                             </div>
@@ -177,7 +162,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     </div>
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
                                         <div className="w-full my-4">
-                                            <ComponentPanel classStyle="px-5 py-5">
+                                            <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
                                                 <>
                                                     <div className="py-4 flex text-left">
                                                         <h2 className="text-2xl">Income/expense</h2>
@@ -412,12 +397,12 @@ const PaymentsStats = (props: PaymentsStatsProps) => {
         <div>
             <h2 className="text-2xl mb-8 text-left">Payment stats</h2>
 
-            <div className='grid grid-cols-2 gap-y-5 text-left text-2xl'>
-                <p>Monthly average income</p>
+            <div className='grid grid-cols-3 gap-y-5 text-left text-2xl'>
+                <p className='col-span-2'>Monthly average income</p>
                 <p className='font-bold'>{(sumRevenues / months).toFixed(0)}</p>
-                <p>Monthly average expense</p>
+                <p className='col-span-2'>Monthly average expense</p>
                 <p className='font-bold'>{(sumExpense / months).toFixed(0)}</p>
-                <p>Monthly average saved</p>
+                <p className='col-span-2'>Monthly average saved</p>
                 <p className='font-bold'>{(sumSaved / months).toFixed(0)}</p>
             </div>
         </div>
