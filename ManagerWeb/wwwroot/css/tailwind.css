@@ -680,14 +680,6 @@ body {
   margin: auto !important;
 }
 
-.m-6 {
-  margin: 1.5rem !important;
-}
-
-.m-5 {
-  margin: 1.25rem !important;
-}
-
 .mx-auto {
   margin-left: auto !important;
   margin-right: auto !important;
@@ -731,6 +723,10 @@ body {
 .mx-2 {
   margin-left: 0.5rem !important;
   margin-right: 0.5rem !important;
+}
+
+.ml-4 {
+  margin-left: 1rem !important;
 }
 
 .ml-auto {
@@ -831,10 +827,6 @@ body {
 
 .mt-16 {
   margin-top: 4rem !important;
-}
-
-.ml-4 {
-  margin-left: 1rem !important;
 }
 
 .mr-auto {
@@ -1449,12 +1441,12 @@ body {
   fill: #b91c1c !important;
 }
 
-.p-4 {
-  padding: 1rem !important;
-}
-
 .p-2 {
   padding: 0.5rem !important;
+}
+
+.p-4 {
+  padding: 1rem !important;
 }
 
 .p-3 {
@@ -1478,6 +1470,16 @@ body {
 .py-2 {
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
+}
+
+.py-3 {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.px-2 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
 }
 
 .px-4 {
@@ -1505,11 +1507,6 @@ body {
   padding-right: 2.5rem !important;
 }
 
-.px-2 {
-  padding-left: 0.5rem !important;
-  padding-right: 0.5rem !important;
-}
-
 .px-1 {
   padding-left: 0.25rem !important;
   padding-right: 0.25rem !important;
@@ -1525,16 +1522,6 @@ body {
   padding-bottom: 1rem !important;
 }
 
-.px-5 {
-  padding-left: 1.25rem !important;
-  padding-right: 1.25rem !important;
-}
-
-.py-5 {
-  padding-top: 1.25rem !important;
-  padding-bottom: 1.25rem !important;
-}
-
 .px-16 {
   padding-left: 4rem !important;
   padding-right: 4rem !important;
@@ -1543,16 +1530,6 @@ body {
 .px-3 {
   padding-left: 0.75rem !important;
   padding-right: 0.75rem !important;
-}
-
-.py-3 {
-  padding-top: 0.75rem !important;
-  padding-bottom: 0.75rem !important;
-}
-
-.px-2 {
-  padding-left: 0.5rem !important;
-  padding-right: 0.5rem !important;
 }
 
 .pt-4 {
