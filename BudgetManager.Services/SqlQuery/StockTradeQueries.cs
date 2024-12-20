@@ -13,6 +13,7 @@ namespace BudgetManager.Services.SqlQuery
         sth.TradeTimeStamp,
         sth.TradeSize,
         sth.TradeValue,
+		sth.TradeCurrencySymbolId,
         COALESCE((
             SELECT EXP(SUM(LOG(ss.SplitCoefficient)))
             FROM [dbo].[StockSplit] ss
@@ -34,7 +35,8 @@ AdjustedTrades AS (
         TickerId,
         TradeTimeStamp,
         TradeSize * SplitAdjustment AS AdjustedTradeSize,
-        TradeValue
+        TradeValue,
+		TradeCurrencySymbolId
     FROM
         TradesWithSplit
 ),
@@ -43,7 +45,8 @@ AggregatedTrades AS (
         TickerId,
         TradeTimeStamp,
         ISNULL(SUM(AdjustedTradeSize), 0) AS TotalTradeSize,
-        ISNULL(SUM(TradeValue), 0) AS TotalTradeValue
+        ISNULL(SUM(TradeValue), 0) AS TotalTradeValue,
+		MIN(TradeCurrencySymbolId) AS TradeCurrencySymbolId
     FROM
         AdjustedTrades
     GROUP BY
@@ -56,6 +59,7 @@ AccumulatedTrades AS (
         TradeTimeStamp,
         TotalTradeSize,
         TotalTradeValue,
+		TradeCurrencySymbolId,
         SUM(TotalTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize
     FROM
         AggregatedTrades
@@ -65,6 +69,7 @@ SELECT
     TradeTimeStamp,
     TotalTradeSize,
     TotalTradeValue,
+	TradeCurrencySymbolId,
     AccumulatedTradeSize
 FROM
     AccumulatedTrades
@@ -81,6 +86,7 @@ ORDER BY
         sth.TradeTimeStamp,
         sth.TradeSize,
         sth.TradeValue,
+		sth.TradeCurrencySymbolId,
         COALESCE((
             SELECT EXP(SUM(LOG(ss.SplitCoefficient)))
             FROM [dbo].[StockSplit] ss
@@ -93,16 +99,17 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}
+		AND eit.Code = {{tickersType.ToString()}}
     WHERE
-		sth.UserIdentityId = {userId}
+		sth.UserIdentityId = {{userId}}
 ),
 AdjustedTrades AS (
     SELECT
         TickerId,
         TradeTimeStamp,
         TradeSize * SplitAdjustment AS AdjustedTradeSize,
-        TradeValue
+        TradeValue,
+		TradeCurrencySymbolId
     FROM
         TradesWithSplit
 ),
@@ -121,7 +128,8 @@ AccumulatedTrades AS (
         TickerId,
         TradeTimeStamp,
         AdjustedTradeSize,
-        SUM(AdjustedTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize
+        SUM(AdjustedTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize,
+		TradeCurrencySymbolId
     FROM
         AdjustedTrades
 )
@@ -129,7 +137,8 @@ SELECT
     AT.TickerId,
     TotalTradeSize,
     TotalTradeValue,
-    AccumulatedTradeSize
+    AccumulatedTradeSize,
+	TradeCurrencySymbolId
 FROM
     AggregatedTrades AS AT
 JOIN
@@ -138,9 +147,7 @@ JOIN
      GROUP BY TickerId) AS lastTrade
 ON
     AT.TickerId = lastTrade.TickerId
-JOIN
-    AccumulatedTrades acc
-ON
+JOIN AccumulatedTrades acc ON
     lastTrade.TickerId = acc.TickerId
     AND lastTrade.LastTradeTimeStamp = acc.TradeTimeStamp
 ORDER BY
