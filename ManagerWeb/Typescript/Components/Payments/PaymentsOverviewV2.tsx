@@ -5,7 +5,7 @@ import { IconsData } from '../../Enums/IconsEnum';
 import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
-import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { PaymentApi, PaymentModel } from '../../ApiClient/Main';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
@@ -16,10 +16,10 @@ import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
 import { useEffect, useState } from 'react';
 import { ResponsiveBar } from '@nivo/bar'
-import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
 import { ResponsiveRadar } from '@nivo/radar';
 import StyleConstants from '../../Utils/StyleConstants';
-
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
@@ -111,9 +111,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <p className="mr-auto text-sm font-medium">{moment(p.date).format('DD.MM.YYYY')}</p>
                     <span className="ml-auto categoryIcon fill-prussianBlue">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
-                <div className='text-left'>
-                    <p className="text-3xl font-bold">{p.amount},-</p>
-                    <p className="text-md truncate">{p.name}</p>
+                <div className='text-left flex flex-row'>
+                    <div className='flex flex-col w-1/2 justify-start'>
+                        <p className="text-3xl font-bold">{p.amount},-</p>
+                        <p className="text-md truncate">{p.name}</p>
+                    </div>
+                    <div className='flex w-1/2 justify-end items-center'>
+                        {p.paymentTypeCode == 'Expense' ? <ExpandMoreIcon className='fill-red-700 w-12 h-12' viewBox="0 0 18 16"/> : <ExpandLessIcon className='fill-green-700 w-12 h-12' viewBox="0 0 18 16"/>}
+                    </div>
                 </div>
             </div>
         );
@@ -195,7 +200,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                             </Dialog>
                         </React.Fragment>
                     </MainFrame>
-                </div >
+                </div>
             </React.Fragment>
         )
     }
