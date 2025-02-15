@@ -1,5 +1,7 @@
+using System.Net.Mime;
 using BudgetManager.InfluxDbData;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,19 +14,19 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("/crypto/{ticker}/price/all", GetCryptoPriceData)
             .WithName(nameof(GetCryptoPriceData))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status200OK,contentType: "application/json")
             .Produces(StatusCodes.Status204NoContent);
 
             app.MapGet("/crypto/{ticker}/priceFrom/{from}", GetCryptoPriceDataFromDate)
             .WithName(nameof(GetCryptoPriceDataFromDate))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status200OK, contentType: "application/json")
             .Produces(StatusCodes.Status204NoContent);
 
             app.MapGet("/crypto/{ticker}/price/{date}", GetCryptoPriceDataAtDate)
             .WithName(nameof(GetCryptoPriceDataAtDate))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status200OK, contentType: "application/json")
             .Produces(StatusCodes.Status204NoContent);
         }
 

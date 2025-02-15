@@ -14,12 +14,12 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("/gold/actualPrice", GetCurrentGoldPriceForOunce)
                 .WithName(nameof(GetCurrentGoldPriceForOunce))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK);
+                .Produces(StatusCodes.Status200OK, contentType: "application/json");
 
             app.MapGet("gold/actualPrice/{currencyCode}", GetCurrentGoldPriceForOunceForSpecificCurrency)
                 .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status200OK, contentType: "application/json")
                 .Produces(StatusCodes.Status400BadRequest);
         }
 
