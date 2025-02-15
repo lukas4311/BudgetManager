@@ -1,5 +1,6 @@
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.AuthApi.Controllers;
@@ -14,9 +15,17 @@ public class UserController: ControllerBase
     {
         _userService = userService;
     }
-    
+
+    /// <summary>
+    /// Endpoint to register new user
+    /// </summary>
+    /// <param name="userCreateModel">User model</param>
+    /// <returns>Action result</returns>
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("register")]
-    public IActionResult Validate([FromBody] UserCreateModel userCreateModel)
+    public IActionResult Register([FromBody] UserCreateModel userCreateModel)
     {
         if(userCreateModel is null)
             return BadRequest(new { message = UserDefinitionIsRequired });
