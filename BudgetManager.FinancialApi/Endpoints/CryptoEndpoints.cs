@@ -28,6 +28,12 @@ namespace BudgetManager.FinancialApi.Endpoints
             .Produces(StatusCodes.Status204NoContent);
         }
 
+        /// <summary>
+        /// Endpoint to get history price of crypto currency
+        /// </summary>
+        /// <param name="cryptoService">Crypto service</param>
+        /// <param name="ticker">Ticker of crypto currency</param>
+        /// <returns>Price history</returns>
         public static async Task<Results<Ok<IEnumerable<CryptoDataV2>>, NoContent>> GetCryptoPriceData([FromServices] ICryptoService cryptoService, [FromRoute] string ticker)
         {
             IEnumerable<CryptoDataV2> data = await cryptoService.GetCryptoPriceHistory(ticker);
@@ -38,6 +44,13 @@ namespace BudgetManager.FinancialApi.Endpoints
             return TypedResults.Ok(data);
         }
 
+        /// <summary>
+        /// Endpoint to get history price of crypto currency from specific date
+        /// </summary>
+        /// <param name="cryptoService">Crypto service</param>
+        /// <param name="ticker">Ticker of crypto currency</param>
+        /// <param name="from">From date for price history</param>
+        /// <returns>Price history from specific date</returns>
         public static async Task<Results<Ok<IEnumerable<CryptoDataV2>>, NoContent>> GetCryptoPriceDataFromDate([FromServices] ICryptoService cryptoService,
             [FromRoute] string ticker, [FromRoute] DateTime from)
         {
@@ -49,6 +62,13 @@ namespace BudgetManager.FinancialApi.Endpoints
             return TypedResults.Ok(data);
         }
 
+        /// <summary>
+        /// Endpoint to get price of crypto currency at specific date
+        /// </summary>
+        /// <param name="cryptoService">Crypto service</param>
+        /// <param name="ticker">Ticker of crypto currency</param>
+        /// <param name="date">Date of price</param>
+        /// <returns>Price of crypto currency at specific date</returns>
         public static async Task<Results<Ok<CryptoDataV2>, NoContent>> GetCryptoPriceDataAtDate([FromServices] ICryptoService cryptoService,
             [FromRoute] string ticker, [FromRoute] DateTime date)
         {
