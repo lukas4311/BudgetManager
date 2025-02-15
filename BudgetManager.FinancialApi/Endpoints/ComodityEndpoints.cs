@@ -20,25 +20,38 @@ namespace BudgetManager.FinancialApi.Endpoints
                 .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status204NoContent);
+                .Produces(StatusCodes.Status400BadRequest);
         }
 
+        /// <summary>
+        /// Method to get current price for ounce of gold
+        /// </summary>
+        /// <param name="comodityService">Comodity service</param>
+        /// <returns>Price ounce of gold</returns>
         public static async Task<Ok<double>> GetCurrentGoldPriceForOunce([FromServices] IComodityService comodityService)
         {
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
             return TypedResults.Ok(exhangeRate);
         }
 
-        public static async Task<Ok<double>> GetCurrentGoldPriceForOunceForSpecificCurrency([FromServices] IComodityService comodityService, [FromServices] IForexService forexService, string currencyCode)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="comodityService"></param>
+        /// <param name="forexService"></param>
+        /// <param name="currencyCode"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static async Task<Results<Ok<double>, BadRequest<string>>> GetCurrentGoldPriceForOunceForSpecificCurrency([FromServices] IComodityService comodityService, [FromServices] IForexService forexService, string currencyCode)
         {
             double currencyExchangeRate = 1.0;
 
-            if (string.Compare(currencyCode, GoldPriceCurrency, true) != 0)
+            if (string.Compare(currencyCode, GoldPriceCurrency, StringComparison.OrdinalIgnoreCase) != 0)
             {
                 currencyExchangeRate = await forexService.GetExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
 
                 if (currencyExchangeRate == 0)
-                    throw new ArgumentException("Currency code is not valid");
+                    return TypedResults.BadRequest("Currency code is not valid");
             }
 
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
