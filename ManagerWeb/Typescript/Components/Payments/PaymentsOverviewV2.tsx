@@ -5,8 +5,8 @@ import { IconsData } from '../../Enums/IconsEnum';
 import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import { BaseList, EListStyle } from '../BaseList';
 import ApiClientFactory from '../../Utils/ApiClientFactory'
-import { BankAccountApi, PaymentApi, PaymentModel } from '../../ApiClient/Main';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { PaymentApi, PaymentModel } from '../../ApiClient/Main';
+import { RouteComponentProps } from 'react-router-dom';
 import _ from 'lodash';
 import { ComponentPanel } from '../../Utils/ComponentPanel';
 import { MainFrame } from '../MainFrame';
@@ -14,12 +14,15 @@ import PaymentService from '../../Services/PaymentService';
 import { BankAccountSelector } from '../BankAccount/BankAccountSelector';
 import { BankAccountBalanceCard } from '../BankAccount/BankAccountBalanceCard';
 import DateRangeComponent from '../../Utils/DateRangeComponent';
-import { useEffect, useState } from 'react';
-import { ResponsiveBar } from '@nivo/bar'
-import { ChartDataProcessor } from '../../Services/ChartDataProcessor';
-import { ResponsiveRadar } from '@nivo/radar';
 import StyleConstants from '../../Utils/StyleConstants';
-
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IncomeCard } from './IncomeCard';
+import { ExpenseCard } from './ExpenseCard';
+import { DateFilterProps } from './DateFilterProps';
+import { MonthlyGroupedPayments } from './MonthlyGroupedPayments';
+import { CategoryGroupedPayments } from './CategoryGroupedPayments';
+import { PaymentsStats } from './PaymentsStats';
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
@@ -111,9 +114,14 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                     <p className="mr-auto text-sm font-medium">{moment(p.date).format('DD.MM.YYYY')}</p>
                     <span className="ml-auto categoryIcon fill-prussianBlue">{iconsData[p.paymentCategoryIcon]}</span>
                 </div>
-                <div className='text-left'>
-                    <p className="text-3xl font-bold">{p.amount},-</p>
-                    <p className="text-md truncate">{p.name}</p>
+                <div className='text-left flex flex-row'>
+                    <div className='flex flex-col w-1/2 justify-start'>
+                        <p className="text-3xl font-bold">{p.amount},-</p>
+                        <p className="text-md truncate">{p.name}</p>
+                    </div>
+                    <div className='flex w-1/2 justify-end items-center'>
+                        {p.paymentTypeCode == 'Expense' ? <ExpandMoreIcon className='fill-red-700 w-12 h-12' viewBox="0 0 18 16"/> : <ExpandLessIcon className='fill-green-700 w-12 h-12' viewBox="0 0 18 16"/>}
+                    </div>
                 </div>
             </div>
         );
@@ -195,44 +203,10 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                             </Dialog>
                         </React.Fragment>
                     </MainFrame>
-                </div >
+                </div>
             </React.Fragment>
         )
     }
-}
-
-class IncomeExpenseCardProps {
-    payments: PaymentModel[];
-    cardClass?: string;
-}
-
-const IncomeCard = (props: IncomeExpenseCardProps) => {
-    const revenues = props.payments.filter(p => p.paymentTypeCode == "Revenue");
-    const sum = _.sumBy(revenues, p => p.amount);
-
-    return (
-        <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
-            <span className="text-2xl text-left font-semibold categoryIcon fill-white">Income</span>
-            <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
-        </div>
-    );
-}
-
-const ExpenseCard = (props: IncomeExpenseCardProps) => {
-    const expense = props.payments.filter(p => p.paymentTypeCode == "Expense");
-    const sum = _.sumBy(expense, p => p.amount);
-
-    return (
-        <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
-            <span className="text-2xl text-left font-semibold categoryIcon fill-white">Expense</span>
-            <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
-        </div>
-    );
-}
-
-class DateFilterProps {
-    onFilter: (from: Date, to: Date) => void;
-    className?: string;
 }
 
 const DateFilter = (props: DateFilterProps) => {
@@ -252,159 +226,6 @@ const DateFilter = (props: DateFilterProps) => {
             <Button type="button" variant="contained" color="primary" className="block mr-4" onClick={_ => onSelectDateClick('M')}>This month</Button>
             <Button type="button" variant="contained" color="primary" className="block mr-6" onClick={_ => onSelectDateClick('y')}>This year</Button>
             <DateRangeComponent datesFilledHandler={onRangeChange} className='w-1/2'></DateRangeComponent>
-        </div>
-    );
-}
-
-class MonthlyGroupedPaymentsProps {
-    payments: PaymentModel[];
-}
-
-const MonthlyGroupedPayments = (props: MonthlyGroupedPaymentsProps) => {
-    const history = useHistory();
-    const [data, setData] = useState<any>([]);
-
-    useEffect(() => {
-
-        const loadData = async () => {
-            const apiFactory = new ApiClientFactory(history);
-            const paymentApi = await apiFactory.getClient(PaymentApi);
-            const paymentService = new PaymentService(paymentApi);
-            const groupedPayments = paymentService.groupPaymentsAndExpenseByMonth(props.payments);
-            const data = groupedPayments.map(g => ({ key: g.dateGroup, revenue: g.revenueSum, expense: Math.abs(g.expenseSum), savings: g.revenueSum + g.expenseSum }));
-            setData(data);
-        }
-
-        loadData();
-    }, [props])
-
-    return (
-        <div>
-            <h2 className="text-2xl mb-4 text-left">Monthly grouped</h2>
-            <div className='h-64'>
-                <ResponsiveBar
-                    data={data}
-                    keys={[
-                        'revenue',
-                        'expense',
-                        'savings'
-                    ]}
-                    indexBy="key"
-                    enableLabel={false}
-                    margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
-                    padding={0.6}
-                    groupMode="grouped"
-                    valueScale={{ type: 'linear' }}
-                    indexScale={{ type: 'band', round: true }}
-                    colors={['#007E04', '#920000', '#3572EF']}
-                    borderColor={{
-                        from: 'color',
-                        modifiers: [
-                            [
-                                'darker',
-                                1.6
-                            ]
-                        ]
-                    }}
-                    theme={{
-                        axis: {
-                            ticks: {
-                                line: { stroke: "white" },
-                                text: { fill: "white" }
-                            }
-                        },
-                        grid: {
-                            line: { stroke: "white" }
-                        }
-                    }}
-                    role="application"
-                    tooltip={({
-                        id,
-                        value,
-                    }) => <div className='px-4 py-2 bg-prussianBlue text-white border border-white'>
-                            <strong>
-                                {id}: {value}
-                            </strong>
-                        </div>
-                    } />
-            </div>
-        </div>
-    );
-}
-
-class CategoryGroupedPaymentsProps {
-    payments: PaymentModel[];
-}
-
-const CategoryGroupedPayments = (props: CategoryGroupedPaymentsProps) => {
-    const data = _.chain(props.payments).filter(a => a.paymentTypeCode == "Expense")
-        .map(r => ({ label: r.paymentCategoryCode, spend: r.amount }))
-        .groupBy(p => p.label).value();
-
-    const result = _.chain(data)
-        .map(group =>
-            ({ label: group[0].label, value: _.sumBy(group, g => g.spend) })
-        )
-        .value();
-
-    return (
-        <div>
-            <h2 className="text-2xl mb-4 text-left">Monthly grouped</h2>
-            <div className='h-64 paymentsRadar'>
-                <ResponsiveRadar
-                    data={result}
-                    keys={['value']}
-                    indexBy="label"
-                    margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
-                    borderColor={{ from: 'color' }}
-                    dotSize={2}
-                    dotColor={{ theme: 'background' }}
-                    dotBorderWidth={2}
-                    colors={['#920000']}
-                />
-            </div>
-        </div>
-    );
-}
-
-class PaymentsStatsProps {
-    payments: PaymentModel[];
-}
-
-const PaymentsStats = (props: PaymentsStatsProps) => {
-    let sumRevenues = 0
-    let sumExpense = 0
-    let sumSaved = 0
-    let months = 1
-
-    if (props.payments.length > 0) {
-        const minDate = moment(props.payments[0].date);
-        const maxDate = moment(props.payments[props.payments.length - 1].date);
-        months = minDate.diff(maxDate, 'months');
-
-        if (months == 0)
-            months = 1
-
-        const revenues = props.payments.filter(p => p.paymentTypeCode == "Revenue");
-        sumRevenues = _.sumBy(revenues, p => p.amount);
-
-        const expense = props.payments.filter(p => p.paymentTypeCode == "Expense");
-        sumExpense = _.sumBy(expense, p => p.amount);
-        sumSaved = sumRevenues - sumExpense;
-    }
-
-    return (
-        <div>
-            <h2 className="text-2xl mb-8 text-left">Payment stats</h2>
-
-            <div className='grid grid-cols-3 gap-y-5 text-left text-2xl'>
-                <p className='col-span-2'>Monthly average income</p>
-                <p className='font-bold'>{(sumRevenues / months).toFixed(0)}</p>
-                <p className='col-span-2'>Monthly average expense</p>
-                <p className='font-bold'>{(sumExpense / months).toFixed(0)}</p>
-                <p className='col-span-2'>Monthly average saved</p>
-                <p className='font-bold'>{(sumSaved / months).toFixed(0)}</p>
-            </div>
         </div>
     );
 }
