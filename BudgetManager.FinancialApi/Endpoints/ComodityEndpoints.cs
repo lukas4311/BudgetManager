@@ -35,13 +35,12 @@ namespace BudgetManager.FinancialApi.Endpoints
         }
 
         /// <summary>
-        /// 
+        /// Endpoint to get price for ounce of gold in specific currency
         /// </summary>
-        /// <param name="comodityService"></param>
-        /// <param name="forexService"></param>
-        /// <param name="currencyCode"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <param name="comodityService">Comodity service</param>
+        /// <param name="forexService">Forex service</param>
+        /// <param name="currencyCode">Currency of price of gold</param>
+        /// <returns>Price ounce of gold</returns>
         public static async Task<Results<Ok<double>, BadRequest<string>>> GetCurrentGoldPriceForOunceForSpecificCurrency([FromServices] IComodityService comodityService, [FromServices] IForexService forexService, string currencyCode)
         {
             double currencyExchangeRate = 1.0;
