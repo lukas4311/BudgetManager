@@ -23,6 +23,14 @@ namespace BudgetManager.AuthApi.Controllers
             _jwtService.SetUp(new JwtSetting(options.Value.Secret, options.Value.Expiration));
         }
 
+        /// <summary>
+        /// Method to authenticate user and get token
+        /// </summary>
+        /// <param name="model">Model containing authentication model</param>
+        /// <returns>Model containing token and user info</returns>
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate")]
         public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
@@ -36,6 +44,14 @@ namespace BudgetManager.AuthApi.Controllers
             return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
         }
 
+        /// <summary>
+        /// Method to validate token
+        /// </summary>
+        /// <param name="tokenModel">Token model</param>
+        /// <returns><see langword="true"/> if token is valid</returns>
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("validate")]
         public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
@@ -46,6 +62,14 @@ namespace BudgetManager.AuthApi.Controllers
             return Ok(isValid);
         }
 
+        /// <summary>
+        /// Method to get user data using access token
+        /// </summary>
+        /// <param name="token">Model for access token</param>
+        /// <returns>Model with user data</returns>
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("tokenData")]
         public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
         {

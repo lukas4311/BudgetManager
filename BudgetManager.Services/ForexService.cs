@@ -48,7 +48,7 @@ namespace BudgetManager.Services
             return data.SingleOrDefault(a => string.Equals(a.Pair, $"{fromSymbol}-{toSymbol}", System.StringComparison.OrdinalIgnoreCase))?.Price ?? 0;
         }
 
-        /// </summary>
+        /// <inheritdoc/>
         public async Task<double> GetExchangeRate(string fromSymbol, string toSymbol, DateTime atDate)
         {
             DataSourceIdentification dataSourceIdentification = new DataSourceIdentification(influxContext.OrganizationId, bucketForexV2);
