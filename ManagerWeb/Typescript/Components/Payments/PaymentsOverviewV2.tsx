@@ -23,9 +23,11 @@ import { DateFilterProps } from './DateFilterProps';
 import { MonthlyGroupedPayments } from './MonthlyGroupedPayments';
 import { CategoryGroupedPayments } from './CategoryGroupedPayments';
 import { PaymentsStats } from './PaymentsStats';
+import PaymentCategoryFilter from './PaymentCategoryFilter';
 
 interface PaymentsOverviewStateV2 {
     payments: PaymentModel[];
+    originalPayments: PaymentModel[];
     showPaymentFormModal: boolean;
     paymentId: number;
     formKey: number;
@@ -49,7 +51,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
 
         this.state = {
             payments: [], paymentId: undefined, showPaymentFormModal: false, formKey: Date.now(), selectedBankAccountId: undefined,
-            filterDateFrom: undefined, filterDateTo: undefined
+            filterDateFrom: undefined, filterDateTo: undefined, originalPayments: []
         };
     }
 
@@ -67,7 +69,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private loadData = async () => {
         const payments = await this.getExactDateRangeDaysPaymentData(moment(Date.now()).subtract(1, 'months').toDate(), moment(Date.now()).toDate(), null);
         const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
-        this.setState({ payments: fromLastOrderder });
+        this.setState({ payments: fromLastOrderder, originalPayments: fromLastOrderder });
     }
 
     private getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> =>
@@ -102,7 +104,17 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
     private filterPayments = async (from: Date, to: Date) => {
         const payments = await this.getExactDateRangeDaysPaymentData(from, to, null);
         const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
-        this.setState({ payments: fromLastOrderder });
+        this.setState({ payments: fromLastOrderder, originalPayments: fromLastOrderder });
+    }
+
+    private filterPaymentByCategory = async (selectedCategories: string[]) => {
+        if(selectedCategories.length == 0){
+            this.setState({ payments: this.state.originalPayments });
+        }
+        else{
+            const payments = _.orderBy(this.state.originalPayments.filter(p => selectedCategories.includes(p.paymentCategoryCode)), a => a.date, "desc");
+            this.setState({ payments: payments });
+        }
     }
 
     private renderTemplate = (p: PaymentModel): JSX.Element => {
@@ -120,7 +132,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                         <p className="text-md truncate">{p.name}</p>
                     </div>
                     <div className='flex w-1/2 justify-end items-center'>
-                        {p.paymentTypeCode == 'Expense' ? <ExpandMoreIcon className='fill-red-700 w-12 h-12' viewBox="0 0 18 16"/> : <ExpandLessIcon className='fill-green-700 w-12 h-12' viewBox="0 0 18 16"/>}
+                        {p.paymentTypeCode == 'Expense' ? <ExpandMoreIcon className='fill-red-700 w-12 h-12' viewBox="0 0 18 16" /> : <ExpandLessIcon className='fill-green-700 w-12 h-12' viewBox="0 0 18 16" />}
                     </div>
                 </div>
             </div>
@@ -171,21 +183,26 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                     <div className="flex flex-col lg:flex-row lg:flex-wrap 2xl:flex-nowrap w-3/12 ml-4">
                                         <div className="w-full my-4">
                                             <ComponentPanel classStyle={StyleConstants.componentPanelStyles}>
-                                                <>
-                                                    <div className="py-4 flex text-left">
-                                                        <h2 className="text-2xl">Income/expense</h2>
-                                                        <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
-                                                                <path d="M0 0h24v24H0z" fill="none" />
-                                                                <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-                                                            </svg>
-                                                        </span>
+                                                <div className='flex flex-row'>
+                                                    <div className='w-4/5'>
+                                                        <div className="py-4 flex text-left">
+                                                            <h2 className="text-2xl">Income/expense</h2>
+                                                            <span className="inline-block ml-auto mr-5" onClick={this.addNewPayment}>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" className="fill-current text-white hover:text-vermilion transition ease-out duration-700 cursor-pointer">
+                                                                    <path d="M0 0h24v24H0z" fill="none" />
+                                                                    <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                        <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
+                                                            <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
+                                                                narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
+                                                        </div>
                                                     </div>
-                                                    <div className="pb-10 overflow-y-scroll pr-4 lg:ml-4 w-full">
-                                                        <BaseList<PaymentModel> data={this.state.payments} template={this.renderTemplate} itemClickHandler={this.paymentEdit}
-                                                            narrowIcons={true} deleteItemHandler={this.deletePayment} style={EListStyle.CardStyle}></BaseList>
+                                                    <div className='w-1/5'>
+                                                        <PaymentCategoryFilter onFilter={this.filterPaymentByCategory} payments={this.state.originalPayments}></PaymentCategoryFilter>
                                                     </div>
-                                                </>
+                                                </div>
                                             </ComponentPanel>
                                         </div>
 
@@ -229,3 +246,4 @@ const DateFilter = (props: DateFilterProps) => {
         </div>
     );
 }
+
