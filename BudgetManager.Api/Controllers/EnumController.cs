@@ -6,17 +6,31 @@ using System.Collections.Generic;
 
 namespace BudgetManager.Api.Controllers
 {
+    /// <summary>
+    /// Controller responsible for handling enum item related operations in the Budget Manager API.
+    /// Provides endpoints for retrieving enum items.
+    /// </summary>
     [ApiController]
     [Route("enumItem")]
     public class EnumController : BaseController
     {
         private readonly IEnumService enumItemService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnumController"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The HTTP context accessor for accessing the current HTTP context.</param>
+        /// <param name="enumItemService">The service responsible for enum item operations.</param>
         public EnumController(IHttpContextAccessor httpContextAccessor, IEnumService enumItemService) : base(httpContextAccessor)
         {
             this.enumItemService = enumItemService;
         }
 
+        /// <summary>
+        /// Retrieves all enum items.
+        /// </summary>
+        /// <returns>A collection of all enum items.</returns>
+        /// <response code="200">Returns the collection of enum items.</response>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
@@ -25,6 +39,12 @@ namespace BudgetManager.Api.Controllers
             return Ok(enumItemService.GetAll());
         }
 
+        /// <summary>
+        /// Retrieves an enum item by its code.
+        /// </summary>
+        /// <param name="enumItemCode">The code of the enum item to retrieve.</param>
+        /// <returns>The enum item with the specified code.</returns>
+        /// <response code="200">Returns the enum item with the specified code.</response>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("/{enumItemCode}")]
@@ -33,6 +53,12 @@ namespace BudgetManager.Api.Controllers
             return Ok(enumItemService.GetByCode(enumItemCode));
         }
 
+        /// <summary>
+        /// Retrieves all enum items of a specific type.
+        /// </summary>
+        /// <param name="enumItemTypeCode">The code of the enum item type to filter by.</param>
+        /// <returns>A collection of enum items of the specified type.</returns>
+        /// <response code="200">Returns the collection of enum items of the specified type.</response>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("/type/{enumItemTypeCode}")]

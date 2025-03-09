@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace BudgetManager.Api.Controllers
 {
+    /// <summary>
+    /// Controller for handling stock-related operations, including stock tickers, trade history, pricing data, and company profiles.
+    /// </summary>
     [ApiController]
     [Route("stock")]
     public class StockController : BaseController
@@ -26,8 +29,22 @@ namespace BudgetManager.Api.Controllers
         private readonly IStockSplitService stockSplitService;
         private readonly IPublishEndpoint publishEndpoint;
 
-        public StockController(IHttpContextAccessor httpContextAccessor, IStockTickerService stockTickerService, IStockTradeHistoryService stockTradeHistoryService,
-            ICompanyProfileService companyProfileService, IStockSplitService stockSplitService, IPublishEndpoint publishEndpoint) : base(httpContextAccessor)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StockController"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">Provides access to the current HTTP context.</param>
+        /// <param name="stockTickerService">Service for stock ticker management.</param>
+        /// <param name="stockTradeHistoryService">Service for managing stock trade history.</param>
+        /// <param name="companyProfileService">Service for retrieving company profiles.</param>
+        /// <param name="stockSplitService">Service for managing stock splits.</param>
+        /// <param name="publishEndpoint">MassTransit endpoint for event publishing.</param>
+        public StockController(
+            IHttpContextAccessor httpContextAccessor,
+            IStockTickerService stockTickerService,
+            IStockTradeHistoryService stockTradeHistoryService,
+            ICompanyProfileService companyProfileService,
+            IStockSplitService stockSplitService,
+            IPublishEndpoint publishEndpoint) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
@@ -36,16 +53,20 @@ namespace BudgetManager.Api.Controllers
             this.publishEndpoint = publishEndpoint;
         }
 
+        /// <summary>
+        /// Retrieves all stock tickers available in the system.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet]
-        [Route("stockTicker")]
+        [HttpGet("stockTicker")]
         public ActionResult<IEnumerable<StockTickerModel>> GetTickers()
         {
-            IEnumerable<StockTickerModel> tags = stockTickerService.GetAll();
-            return Ok(tags);
+            return Ok(stockTickerService.GetAll());
         }
 
+        /// <summary>
+        /// Updates metadata for a specific stock ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTicker/{tickerId}/metadata")]
@@ -55,6 +76,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates details of a specific stock ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTicker/{tickerId}")]
@@ -65,21 +89,36 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves all stock trade history entries for the current user.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory")]
-        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(stockTradeHistoryService.GetAll(GetUserId()));
+        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get()
+            => Ok(stockTradeHistoryService.GetAll(GetUserId()));
 
+        /// <summary>
+        /// Retrieves stock trade history converted to a specified foreign currency.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}")]
-        public async Task<ActionResult<IEnumerable<StockTradeHistoryGetModel>>> Get(ECurrencySymbol forexSymbol) => Ok(await stockTradeHistoryService.GetAll(GetUserId(), forexSymbol));
+        public async Task<ActionResult<IEnumerable<StockTradeHistoryGetModel>>> Get(ECurrencySymbol forexSymbol)
+            => Ok(await stockTradeHistoryService.GetAll(GetUserId(), forexSymbol));
 
+        /// <summary>
+        /// Retrieves stock trade history for a specific ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory/{ticker}")]
-        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker) => Ok(stockTradeHistoryService.GetTradeHistory(GetUserId(), ticker));
+        public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker)
+            => Ok(stockTradeHistoryService.GetTradeHistory(GetUserId(), ticker));
 
+        /// <summary>
+        /// Adds a new stock trade history entry.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("stockTradeHistory")]
@@ -90,6 +129,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Updates an existing stock trade history entry.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTradeHistory")]
@@ -100,6 +142,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes a stock trade history entry if the user has the right permissions.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -113,39 +158,31 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves stock price history for a specific ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stock/{ticker}/price")]
         public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker)
         {
-            if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
+            if (!stockTickerService.GetAll().Any(t => string.Equals(t.Ticker, ticker, StringComparison.OrdinalIgnoreCase)))
                 return StatusCode(StatusCodes.Status204NoContent);
 
-            IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker);
-            return Ok(data);
+            return Ok(await stockTradeHistoryService.GetStockPriceHistory(ticker));
         }
 
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("stock/{ticker}/price/{from}")]
-        public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker, DateTime from)
-        {
-            if (stockTickerService.GetAll().Count(t => string.Compare(t.Ticker, ticker, true) == 0) == 0)
-                return StatusCode(StatusCodes.Status204NoContent);
-
-            IEnumerable<StockPrice> data = await stockTradeHistoryService.GetStockPriceHistory(ticker, from);
-            return Ok(data);
-        }
-
+        /// <summary>
+        /// Retrieves the company profile for a given stock ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stock/{ticker}/companyProfile")]
         public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
         {
-            CompanyProfileModel companyProfile = companyProfileService.Get(c => ticker == c.Symbol).SingleOrDefault();
+            var companyProfile = companyProfileService.Get(c => c.Symbol == ticker).SingleOrDefault();
 
             if (companyProfile is null)
                 return StatusCode(StatusCodes.Status204NoContent);
@@ -153,15 +190,9 @@ namespace BudgetManager.Api.Controllers
             return companyProfile;
         }
 
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("split")]
-        public ActionResult<IEnumerable<StockSplitAccumulated>> GetSplitTest()
-        {
-            IEnumerable<StockSplitAccumulated> splitData = stockSplitService.GetSplitAccumulated();
-            return Ok(splitData);
-        }
-
+        /// <summary>
+        /// Uploads a broker report file for processing.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("brokerReport/{brokerId}")]
@@ -169,28 +200,26 @@ namespace BudgetManager.Api.Controllers
         {
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            byte[] fileBytes = ms.ToArray();
-            stockTradeHistoryService.StoreReportToProcess(fileBytes, GetUserId(), brokerId);
-
+            stockTradeHistoryService.StoreReportToProcess(ms.ToArray(), GetUserId(), brokerId);
             return Ok();
         }
 
+        /// <summary>
+        /// Publishes a request for a new stock ticker.
+        /// </summary>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("tickerRequest")]
         public async Task<IActionResult> TickerRequest(TickerRequest tickerRequest)
         {
-            string routingKey = "new_ticker";
-
-            await publishEndpoint.Publish(new TickerRequest
-            {
-                Ticker = tickerRequest.Ticker,
-                UserId = GetUserId()
-            }, context => context.SetRoutingKey(routingKey));
-
+            await publishEndpoint.Publish(new TickerRequest { Ticker = tickerRequest.Ticker, UserId = GetUserId() }, context => context.SetRoutingKey("new_ticker"));
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves all trades grouped by month for the current user.
+        /// </summary>
+        /// <returns>A list of trades grouped by month.</returns>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/monthlygrouped")]
@@ -200,6 +229,10 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        /// <summary>
+        /// Retrieves all trades grouped by ticker and trade date for the current user.
+        /// </summary>
+        /// <returns>A list of trades grouped by ticker and trade date.</returns>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tradedategrouped")]
@@ -209,6 +242,10 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        /// <summary>
+        /// Retrieves all trades grouped by ticker for the current user.
+        /// </summary>
+        /// <returns>A list of trades grouped by ticker.</returns>
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tickergrouped")]
