@@ -19,6 +19,8 @@ namespace BudgetManager.Api.Controllers
             this.paymentService = paymentService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         [Route("allUsed")]
         public ActionResult<IEnumerable<TagModel>> GetPaymentsTags()
@@ -27,6 +29,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(tags);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost]
         public IActionResult AddTagToPayment([FromBody] AddTagModel tagModel)
         {
@@ -37,6 +42,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpDelete]
         public IActionResult DeleteTag(int tagId)
         {

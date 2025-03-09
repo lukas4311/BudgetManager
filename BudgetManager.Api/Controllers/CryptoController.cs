@@ -26,12 +26,16 @@ namespace BudgetManager.Api.Controllers
             this.forexService = forexService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public ActionResult<IEnumerable<TradeHistory>> Get()
         {
             return Ok(cryptoService.GetByUser(GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public IActionResult Add([FromBody] TradeHistory tradeHistory)
         {
@@ -40,6 +44,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut]
         public IActionResult Update([FromBody] TradeHistory tradeHistory)
         {
@@ -48,6 +54,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
@@ -58,6 +67,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
@@ -69,6 +80,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(exhangeRate);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}/{atDate}")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency, DateTime atDate)
         {
@@ -76,15 +89,21 @@ namespace BudgetManager.Api.Controllers
             return Ok(exhangeRate);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("tradeDetail/{tradeId}")]
         public ActionResult<TradeHistory> Get(int tradeId)
         {
             return Ok(cryptoService.Get(tradeId, GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("tickers")]
         public ActionResult<IEnumerable<CryptoTickerModel>> GetTickers() => Ok(cryptoService.GetAllTickers());
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("brokerReport/{brokerId}")]
         public async Task<IActionResult> UploadReport([FromRoute]int brokerId, IFormFile file)
         {
@@ -96,6 +115,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/monthlygrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
@@ -103,6 +124,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tradedategrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
         {
@@ -110,6 +133,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tickergrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
         {

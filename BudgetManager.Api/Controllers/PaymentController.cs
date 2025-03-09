@@ -22,6 +22,9 @@ namespace BudgetManager.Api.Controllers
             this.bankAccountService = bankAccountService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet]
         public ActionResult<IEnumerable<PaymentModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
@@ -32,12 +35,19 @@ namespace BudgetManager.Api.Controllers
             return Ok(payments);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("types")]
         public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes() => paymentService.GetPaymentTypes();
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("categories")]
         public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => paymentService.GetPaymentCategories();
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost]
         public IActionResult AddPayment([FromBody] PaymentModel paymentViewModel)
         {
@@ -49,6 +59,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPut]
         public IActionResult UpdatePayment([FromBody] PaymentModel paymentViewModel)
         {
@@ -60,6 +73,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("detail")]
         public ActionResult<PaymentModel> GetPayment(int id)
         {
@@ -71,6 +87,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(payment);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("clone/{id}")]
         public IActionResult ClonePayment(int id)
         {
@@ -81,6 +100,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         public IActionResult DeletePayment(int id)
         {
@@ -91,6 +113,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         [Route("{paymentId}/tag/{tagId}")]
         public IActionResult RemoveTagFromPayment(int tagId, int paymentId)

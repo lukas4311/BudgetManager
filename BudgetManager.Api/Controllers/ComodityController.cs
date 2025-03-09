@@ -23,12 +23,16 @@ namespace BudgetManager.Api.Controllers
             this.forexService = forexService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public ActionResult<IEnumerable<ComodityTradeHistoryModel>> Get()
         {
             return Ok(comodityService.GetByUser(GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public IActionResult Add([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
@@ -37,6 +41,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut]
         public IActionResult Update([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
@@ -45,6 +51,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
@@ -55,14 +64,20 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("comodityType/all")]
         public ActionResult<IEnumerable<ComodityTypeModel>> GetComodityTypes() =>
             Ok(comodityService.GetComodityTypes());
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("comodityUnit/all")]
         public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
             Ok(comodityService.GetComodityUnits());
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("gold/actualPrice")]
         public async Task<ActionResult<double>> GetCurrentGoldPriceForOunce()
         {
@@ -70,6 +85,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(exhangeRate);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("gold/actualPrice/{currencyCode}")]
         public async Task<ActionResult<double>> GetCurrentGoldPriceForOunce(string currencyCode)
         {
@@ -80,7 +98,7 @@ namespace BudgetManager.Api.Controllers
                 currencyExchangeRate = await forexService.GetCurrentExchangeRate(GoldPriceCurrency, currencyCode).ConfigureAwait(false);
 
                 if (currencyExchangeRate == 0)
-                    throw new ArgumentException("Currency code is not valid");
+                    return BadRequest("Currency code is not valid");
             }
 
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);

@@ -36,6 +36,8 @@ namespace BudgetManager.Api.Controllers
             this.publishEndpoint = publishEndpoint;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         [Route("stockTicker")]
         public ActionResult<IEnumerable<StockTickerModel>> GetTickers()
@@ -44,13 +46,17 @@ namespace BudgetManager.Api.Controllers
             return Ok(tags);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTicker/{tickerId}/metadata")]
-        public ActionResult UpdateTickerMetadata(int tickerId, [FromBody]string metadata)
+        public ActionResult UpdateTickerMetadata(int tickerId, [FromBody] string metadata)
         {
             stockTickerService.UpdateTickerMetadata(tickerId, metadata);
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTicker/{tickerId}")]
         public ActionResult UpdateTicker(int tickerId, StockTickerModel stockTickerModel)
         {
@@ -59,15 +65,23 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get() => Ok(stockTradeHistoryService.GetAll(GetUserId()));
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}")]
         public async Task<ActionResult<IEnumerable<StockTradeHistoryGetModel>>> Get(ECurrencySymbol forexSymbol) => Ok(await stockTradeHistoryService.GetAll(GetUserId(), forexSymbol));
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("stockTradeHistory/{ticker}")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker) => Ok(stockTradeHistoryService.GetTradeHistory(GetUserId(), ticker));
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("stockTradeHistory")]
         public IActionResult Add([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
         {
@@ -76,6 +90,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut("stockTradeHistory")]
         public IActionResult Update([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
         {
@@ -84,6 +100,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete("stockTradeHistory")]
         public IActionResult Delete([FromBody] int id)
         {
@@ -94,6 +113,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stock/{ticker}/price")]
         public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker)
         {
@@ -104,6 +126,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stock/{ticker}/price/{from}")]
         public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker, DateTime from)
         {
@@ -114,6 +139,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [HttpGet("stock/{ticker}/companyProfile")]
         public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
         {
@@ -125,6 +153,8 @@ namespace BudgetManager.Api.Controllers
             return companyProfile;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("split")]
         public ActionResult<IEnumerable<StockSplitAccumulated>> GetSplitTest()
         {
@@ -132,8 +162,10 @@ namespace BudgetManager.Api.Controllers
             return Ok(splitData);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("brokerReport/{brokerId}")]
-        public async Task<IActionResult> UploadReport([FromRoute]int brokerId, IFormFile file)
+        public async Task<IActionResult> UploadReport([FromRoute] int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
             await file.CopyToAsync(ms);
@@ -143,6 +175,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost("tickerRequest")]
         public async Task<IActionResult> TickerRequest(TickerRequest tickerRequest)
         {
@@ -157,6 +191,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/monthlygrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
@@ -164,6 +200,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tradedategrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
         {
@@ -171,6 +209,8 @@ namespace BudgetManager.Api.Controllers
             return Ok(data);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tickergrouped")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
         {

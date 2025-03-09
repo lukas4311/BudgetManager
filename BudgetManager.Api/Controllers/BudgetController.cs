@@ -17,12 +17,17 @@ namespace BudgetManager.Api.Controllers
             this.budgetService = budgetService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public ActionResult<IEnumerable<BudgetModel>> Get()
         {
             return Ok(budgetService.GetByUserId(GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet]
         public ActionResult<BudgetModel> Get(int id)
         {
@@ -32,12 +37,16 @@ namespace BudgetManager.Api.Controllers
             return Ok(budgetService.Get(id));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("actual")]
         public ActionResult<IEnumerable<BudgetModel>> GetActual()
         {
             return Ok(budgetService.GetActual(GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {
@@ -46,6 +55,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut]
         public IActionResult Update([FromBody] BudgetModel budgetModel)
         {
@@ -54,6 +65,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {

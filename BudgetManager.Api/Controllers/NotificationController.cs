@@ -18,6 +18,8 @@ namespace BudgetManager.Api.Controllers
             this.notificationService = notificationService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         public ActionResult<IEnumerable<NotificationModel>> GetNotifications()
         {
@@ -25,6 +27,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(tags);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost]
         public IActionResult AddNotification([FromBody] NotificationModel tagModel)
         {
@@ -35,6 +40,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPut]
         [Route("/{notificationId}/markAsDisplayed")]
         public IActionResult MarkAsDisplayed(int notificationId)

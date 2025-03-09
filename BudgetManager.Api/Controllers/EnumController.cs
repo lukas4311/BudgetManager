@@ -17,18 +17,24 @@ namespace BudgetManager.Api.Controllers
             this.enumItemService = enumItemService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
         public ActionResult<IEnumerable<EnumItemModel>> GetAll()
         {
             return Ok(enumItemService.GetAll());
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("/{enumItemCode}")]
         public ActionResult<EnumItemModelAdjusted> GetByCode([FromRoute] string enumItemCode)
         {
             return Ok(enumItemService.GetByCode(enumItemCode));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("/type/{enumItemTypeCode}")]
         public ActionResult<IEnumerable<EnumItemModelAdjusted>> GetAllByTypeCode([FromRoute] string enumItemTypeCode)
         {

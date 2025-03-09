@@ -25,12 +25,16 @@ namespace BudgetManager.Api.Controllers
             this.otherInvestmentTagService = otherInvestmentTagService;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public ActionResult<IEnumerable<OtherInvestmentModel>> Get()
         {
             return Ok(otherInvestmentService.GetAll(GetUserId()));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPost]
         public IActionResult Add([FromBody] OtherInvestmentModel otherInvestment)
         {
@@ -39,6 +43,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpPut]
         public IActionResult Update([FromBody] OtherInvestmentModel otherInvestment)
         {
@@ -47,6 +53,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete]
         public IActionResult Delete([FromBody] int id)
         {
@@ -57,6 +66,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("{otherInvestmentId}/balanceHistory")]
         public ActionResult<IEnumerable<OtherInvestmentBalaceHistoryModel>> Get(int otherInvestmentId)
         {
@@ -66,6 +77,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(otherInvestmentBalaceHistoryService.Get(c => c.OtherInvestmentId == otherInvestmentId));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("{otherInvestmentId}/balanceHistory")]
         public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
@@ -77,9 +91,14 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("otherInvestment/balance")]
         public ActionResult GetAllBalances() => Ok(otherInvestmentBalaceHistoryService.Get(b => b.OtherInvestment.UserIdentityId == GetUserId()));
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPut("/balanceHistory")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
@@ -90,6 +109,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpDelete("/balanceHistory")]
         public IActionResult DeleteHistoryBalance([FromBody] int id)
         {
@@ -100,6 +122,9 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{id}/profitOverYears/{years}")]
         public async Task<ActionResult<decimal>> ProfitOverYears(int id, int? years = null)
         {
@@ -110,10 +135,15 @@ namespace BudgetManager.Api.Controllers
             return Ok(profit);
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("{id}/profitOverall")]
         public async Task<ActionResult<decimal>> ProfitOverall(int id)
             => await ProfitOverYears(id);
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{id}/tagedPayments/{tagId}")]
         public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)
         {
@@ -123,6 +153,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(await otherInvestmentTagService.GetPaymentsForTag(id, tagId));
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpGet("{id}/linkedTag")]
         public ActionResult<OtherInvestmentTagModel> GetLinkedTag(int id)
         {
@@ -132,6 +165,9 @@ namespace BudgetManager.Api.Controllers
             return Ok(otherInvestmentTagService.Get(c => c.OtherInvestmentId == id).SingleOrDefault());
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("{id}/tagedPayments/{tagId}")]
         public IActionResult LinkInvestmentWithTag(int id, int tagId)
         {
@@ -142,6 +178,8 @@ namespace BudgetManager.Api.Controllers
             return Ok();
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("summary")]
         public ActionResult<OtherInvestmentBalanceSummaryModel> GetOtherInvestmentSummary() 
             => Ok(otherInvestmentService.GetAllInvestmentSummary(GetUserId()));

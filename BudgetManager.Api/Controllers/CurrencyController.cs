@@ -17,6 +17,8 @@ namespace BudgetManager.Api.Controllers
             this.currencySymbolRepository = currencySymbolRepository;
         }
 
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("all")]
         public ActionResult<IEnumerable<CurrencySymbol>> Get()
         {
