@@ -1037,6 +1037,10 @@ body {
   width: 2rem !important;
 }
 
+.w-12 {
+  width: 3rem !important;
+}
+
 .w-10\/12 {
   width: 83.333333% !important;
 }
@@ -1047,10 +1051,6 @@ body {
 
 .w-4 {
   width: 1rem !important;
-}
-
-.w-12 {
-  width: 3rem !important;
 }
 
 .w-2\/4 {
@@ -1281,10 +1281,6 @@ body {
   border-radius: 0.75rem !important;
 }
 
-.rounded-full {
-  border-radius: 9999px !important;
-}
-
 .rounded-t-md {
   border-top-left-radius: calc(var(--radius) - 2px) !important;
   border-top-right-radius: calc(var(--radius) - 2px) !important;
@@ -1395,6 +1391,11 @@ body {
   background-color: #A2ACBDff !important;
 }
 
+.bg-gray-200 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
+}
+
 .bg-rufous {
   background-color: #b00000ff !important;
 }
@@ -1423,16 +1424,6 @@ body {
 
 .bg-secondary {
   background-color: hsl(var(--secondary)) !important;
-}
-
-.bg-blue-500 {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity)) !important;
-}
-
-.bg-gray-200 {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity)) !important;
 }
 
 .fill-current {
@@ -1477,10 +1468,6 @@ body {
 
 .p-1 {
   padding: 0.25rem !important;
-}
-
-.p-2 {
-  padding: 0.5rem !important;
 }
 
 .px-12 {
@@ -1738,6 +1725,11 @@ body {
   color: rgb(22 101 52 / var(--tw-text-opacity)) !important;
 }
 
+.text-gray-700 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(55 65 81 / var(--tw-text-opacity)) !important;
+}
+
 .text-rufous {
   color: #b00000ff !important;
 }
@@ -1760,16 +1752,6 @@ body {
 
 .text-primary {
   color: hsl(var(--primary)) !important;
-}
-
-.text-white {
-  --tw-text-opacity: 1 !important;
-  color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
-}
-
-.text-gray-700 {
-  --tw-text-opacity: 1 !important;
-  color: rgb(55 65 81 / var(--tw-text-opacity)) !important;
 }
 
 .underline-offset-4 {
@@ -1951,11 +1933,6 @@ body {
 .hover\:underline:hover {
   -webkit-text-decoration-line: underline !important;
           text-decoration-line: underline !important;
-}
-
-.focus\:outline-none:focus {
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
 }
 
 .focus-visible\:outline-none:focus-visible {
