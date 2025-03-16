@@ -186,7 +186,7 @@ export default class PaymentForm extends React.Component<PaymentFormProps, IPaym
                             <TextField label="Description" type="text" size='small' name="description" className="w-full" onChange={(e) => this.handleChange(e, "description")} value={this.state["description"]} />
                         </div>
                         <div className="relative inline-block mb-6 col-span-2">
-                            <button type="submit" disabled={this.state.disabledConfirm} className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Add payment</button>
+                            <button type="submit" disabled={this.state.disabledConfirm} className="bg-vermilion px-4 py-1 rounded-sm hover:text-vermilion hover:bg-white duration-500">Save payment</button>
                         </div>
                     </div>
                 </form>
