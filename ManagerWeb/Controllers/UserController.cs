@@ -21,6 +21,10 @@ namespace BudgetManager.ManagerWeb.Controllers
             this.hashManager = new HashManager();
         }
 
+        /// <summary>
+        /// Show auth form
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("authenticate")]
         public IActionResult Authenticate()
@@ -28,6 +32,11 @@ namespace BudgetManager.ManagerWeb.Controllers
             return this.View(new UserModel());
         }
 
+        /// <summary>
+        /// Authenticate user and sign in
+        /// </summary>
+        /// <param name="model">User model</param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromForm] UserModel model)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using AutoMapper;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
@@ -15,7 +14,6 @@ namespace BudgetManager.Services
     public class BankAccountService : BaseService<BankAccountModel, BankAccount, IRepository<BankAccount>>, IBankAccountService
     {
         private readonly IRepository<Payment> paymentRepository;
-        private readonly IRepository<UserIdentity> userIdentityRepository;
         private readonly IRepository<BankAccount> bankAccountRepository;
         private readonly IRepository<PaymentTag> paymentTagRepository;
         private readonly IRepository<InterestRate> interestRateRepository;
@@ -29,12 +27,10 @@ namespace BudgetManager.Services
         /// <param name="paymentTagRepository">The payment tag repository.</param>
         /// <param name="interestRateRepository">The interest rate repository.</param>
         /// <param name="autoMapper">The auto mapper instance.</param>
-        public BankAccountService(IRepository<Payment> paymentRepository, IRepository<UserIdentity> userIdentityRepository,
-            IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository,
+        public BankAccountService(IRepository<Payment> paymentRepository, IRepository<BankAccount> bankAccountRepository, IRepository<PaymentTag> paymentTagRepository,
             IRepository<InterestRate> interestRateRepository, IMapper autoMapper) : base(bankAccountRepository, autoMapper)
         {
             this.paymentRepository = paymentRepository;
-            this.userIdentityRepository = userIdentityRepository;
             this.bankAccountRepository = bankAccountRepository;
             this.paymentTagRepository = paymentTagRepository;
             this.interestRateRepository = interestRateRepository;
