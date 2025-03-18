@@ -174,7 +174,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                                                 <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
                                                     <CategoryGroupedPayments payments={this.state.payments} />
                                                 </ComponentPanel>
-                                                <ComponentPanel classStyle={"w-1/2 my-4 mr-4" + StyleConstants.componentPanelStyles}>
+                                                <ComponentPanel classStyle={"w-1/2 my-4" + StyleConstants.componentPanelStyles}>
                                                     <PaymentsStats payments={this.state.payments} />
                                                 </ComponentPanel>
                                             </div>

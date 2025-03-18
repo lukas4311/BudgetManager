@@ -95,16 +95,16 @@ function IconMenu({ Icon, heading, countBadge, messages }: IconMenuProps) {
 
     return (
         <div className="relative">
-            <div className="flex w-1/3 relative">
+            <div className="flex w-2/5 relative">
                 <div
                     className="w-full mt-4 cursor-pointer sliding-menu-parent"
                     onClick={() => setShowMenu(!showMenu)}>
-                    <div className={"absolute circle w-10 h-10 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
+                    <div className={"absolute circle w-8 h-8 bg-white rounded-full flex items-center justify-center z-20 hover:w-full duration-500 slidingMenuSection" + (showMenu ? " slidingMenuSectionActive" : "")}>
                         <span>
                             <Icon className="fill-black" />
                         </span>
                     </div>
-                    <div className="h-10 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
+                    <div className="h-8 flex items-center border border-solid border-white rounded-l-full rounded-r-full z-10">
                         <span className="ml-16 pr-6">{heading}</span>
                     </div>
                 </div>
