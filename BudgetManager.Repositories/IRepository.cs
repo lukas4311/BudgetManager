@@ -56,6 +56,15 @@ namespace BudgetManager.Repository
         IQueryable<ET> FromSql<ET>(FormattableString sql);
 
         /// <summary>
+        /// Query using raw string
+        /// </summary>
+        /// <typeparam name="ET">Return model type</typeparam>
+        /// <param name="sql">String with qeury</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns></returns>
+        IQueryable<ET> FromSqlRaw<ET>(string sql, params object[] parameters) where ET : class;
+
+        /// <summary>
         /// Retrieves an entity of type T by its identifier.
         /// </summary>
         /// <param name="id">The identifier of the entity to retrieve.</param>

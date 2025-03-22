@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BudgetManager.Domain.DTOs.Queries;
+using BudgetManager.Services.SqlQuery;
 
 namespace BudgetManager.Services
 {
@@ -103,6 +105,12 @@ namespace BudgetManager.Services
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
             return data2?.Price ?? 0;
         }
+
+        public IEnumerable<ComodityTradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
+            => comodityUnitRepository.FromSqlRaw<ComodityTradesGroupedMonth>(ComodityQueries.GetAllComodityTradeSizeAndValue(), userId);
+
+        public IEnumerable<ComodityTradeGroupedTicker> GetAllTradesGroupedByTicker(int userId)
+            => comodityUnitRepository.FromSqlRaw<ComodityTradeGroupedTicker>(ComodityQueries.GetAllComodityAccumulatedSizeAndValueInMonths(), userId);
     }
 
 }

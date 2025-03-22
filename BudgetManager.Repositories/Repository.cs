@@ -38,6 +38,9 @@ namespace BudgetManager.Repository
         /// <inhertidoc/>
         public IQueryable<ET> FromSql<ET>(FormattableString sql) => RepositoryContext.Database.SqlQuery<ET>(sql);
 
+        /// <inheritdoc />
+        public IQueryable<ET> FromSqlRaw<ET>(string sql, params object[] parameters) where ET : class => RepositoryContext.Database.SqlQueryRaw<ET>(sql, parameters);
+
         /// <inhertidoc/>
         public void Save() => RepositoryContext.SaveChanges();
     }
