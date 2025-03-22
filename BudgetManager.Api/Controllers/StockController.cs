@@ -236,7 +236,7 @@ namespace BudgetManager.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tradedategrouped")]
-        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
+        public ActionResult<IEnumerable<TradeGroupedTradeTime>> GetGroupedByTickerAndTradeDate()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
             return Ok(data);
@@ -249,7 +249,7 @@ namespace BudgetManager.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("trade/tickergrouped")]
-        public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
+        public ActionResult<IEnumerable<TradeGroupedTicker>> GetGroupedByTicker()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());
             return Ok(data);
