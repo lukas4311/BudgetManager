@@ -252,23 +252,25 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         return [hasMetadata, hasPrice];
     }
 
-    private onWarningClick = (ticker: StockGroupModel): void => {
+    private onWarningClick = (e: React.MouseEvent<SVGSVGElement, MouseEvent>, ticker: StockGroupModel): void => {
+        e.preventDefault();
+        e.stopPropagation();
         const [hasMetadata, hasPrice] = this.getTickerWarnings(ticker);
         this.setState({ selectedFixTicker: { hasMetadata, hasPrice, tickerId: ticker.tickerId }, isOpenedTickerFix: true });
     }
 
-    private onFixTickerSave = (priceTicker: string, metadataTicker: string) => {
+    private onFixTickerSave = async (priceTicker: string, metadataTicker: string) => {
         const fixTicker = this.state.selectedFixTicker;
         const ticker = _.first(this.tickers.filter(t => t.id == fixTicker.tickerId));
 
         if (!fixTicker.hasMetadata)
-            this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
+            await this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
 
         if (!fixTicker.hasPrice) {
             const metadata = ticker?.metadata;
             const metadataObj = JSON.parse(metadata);
             metadataObj[tickerMetadataAttribute] = priceTicker;
-            this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
+            await this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
         }
 
         this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });

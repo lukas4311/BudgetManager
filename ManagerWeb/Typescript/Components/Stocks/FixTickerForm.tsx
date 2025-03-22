@@ -18,6 +18,7 @@ const FixTickerForm = (props: FixFormProps) => {
 
     return (
         (<form onSubmit={handleSubmit(onSubmit)}>
+            <h3 className="text-xl font-semibold mb-4">Fix ticker info</h3>
             <div className="grid grid-cols-2 gap-4 mb-6 place-items-center">
                 {props.hasMetadata ? <></> :
                     <div className="w-2/3">

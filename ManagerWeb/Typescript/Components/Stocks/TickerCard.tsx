@@ -11,7 +11,7 @@ class TickerCardProp {
     ticker: StockGroupModel;
     tickers: StockTickerModel[];
     tickersPrice: TickersWithPriceHistory[];
-    onWarningClick: (ticker: StockGroupModel) => void;
+    onWarningClick: (e: React.MouseEvent<SVGSVGElement, MouseEvent>, ticker: StockGroupModel) => void;
     onTickerCardClick: (companyTicker: string) => Promise<void>;
 }
 
@@ -48,7 +48,7 @@ const TickerCard = (props: TickerCardProp) => {
             <div key={props.ticker.tickerId} className="w-3/12 bg-battleshipGrey border-2 border-vermilion p-4 mx-2 mb-6 rounded-xl relative" onClick={_ => props.onTickerCardClick(props.ticker.tickerName)}>
                 {hasMetadata && hasPrice ?
                     <></> :
-                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={_ => props.onWarningClick(props.ticker)}></WarningAmberOutlinedIcon>
+                    <WarningAmberOutlinedIcon className="fill-yellow-500 h-6 w-6 absolute z-40 bottom-1 right-2" onClick={e => props.onWarningClick(e, props.ticker)}></WarningAmberOutlinedIcon>
                 }
                 <div className="grid grid-cols-3 mb-2">
                     <div className="flex flex-row col-span-2">
