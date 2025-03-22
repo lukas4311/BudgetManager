@@ -106,9 +106,11 @@ namespace BudgetManager.Services
             return data2?.Price ?? 0;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityTradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
             => comodityUnitRepository.FromSqlRaw<ComodityTradesGroupedMonth>(ComodityQueries.GetAllComodityTradeSizeAndValue(), userId);
 
+        /// <inheritdoc/>
         public IEnumerable<ComodityTradeGroupedTicker> GetAllTradesGroupedByTicker(int userId)
             => comodityUnitRepository.FromSqlRaw<ComodityTradeGroupedTicker>(ComodityQueries.GetAllComodityAccumulatedSizeAndValueInMonths(), userId);
     }

@@ -1,5 +1,6 @@
 ﻿using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
+using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Repository;
 using BudgetManager.Services.Contracts;
 using System.Collections.Generic;
@@ -51,5 +52,19 @@ namespace BudgetManager.Services
         /// <param name="userId">The user identifier.</param>
         /// <returns><c>true</c> if the user has rights to the crypto trade; otherwise, <c>false</c>.</returns>
         bool UserHasRightToCryptoTrade(int cryptoTradeId, int userId);
+
+        /// <summary>
+        /// Get all trades grouped by month
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>List of trades grouped by month</returns>
+        IEnumerable<ComodityTradesGroupedMonth> GetAllTradesGroupedByMonth(int userId);
+
+        /// <summary>
+        /// Get all trades grouped by ticker
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>List of trades grouped by month</returns>
+        IEnumerable<ComodityTradeGroupedTicker> GetAllTradesGroupedByTicker(int userId);
     }
 }
