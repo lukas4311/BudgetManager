@@ -13,6 +13,8 @@ using BudgetManager.Repository.Extensions;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.WebCore;
 using Scalar.AspNetCore;
+using BudgetManager.FinancialApi.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -20,8 +22,21 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureHostWithSerilogToElk();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Instance =
+            $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
 
-builder.Services.AddSwaggerGen();
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+
+        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+        context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+    };
+}); ;
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -54,6 +69,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

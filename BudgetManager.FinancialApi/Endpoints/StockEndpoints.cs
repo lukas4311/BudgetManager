@@ -13,28 +13,28 @@ namespace BudgetManager.FinancialApi.Endpoints
                 .WithName(nameof(GetStockPriceData))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json");
 
             app.MapGet("stock/{ticker}/priceFrom/{from}", GetStockPriceDataFromDate)
                 .WithName(nameof(GetStockPriceDataFromDate))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json");
 
             app.MapGet("stock/{ticker}/price/{date}", GetStockPriceDataAtDate)
                 .WithName(nameof(GetStockPriceDataAtDate))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json");
 
             app.MapGet("stocks/price/{date}", GetStocksPriceDataAtDate)
                 .WithName(nameof(GetStocksPriceDataAtDate))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent);
+                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json");
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace BudgetManager.FinancialApi.Endpoints
                 .WithName(nameof(GetCurrentGoldPriceForOunceForSpecificCurrency))
                 .WithOpenApi()
                 .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status400BadRequest);
+                .Produces(StatusCodes.Status400BadRequest, contentType: "application/problem+json");
         }
 
         /// <summary>
