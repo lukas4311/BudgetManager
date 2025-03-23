@@ -12,12 +12,15 @@ using Microsoft.EntityFrameworkCore;
 using BudgetManager.Repository.Extensions;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.WebCore;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureHostWithSerilogToElk();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
@@ -55,8 +58,16 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = "/openapi/{documentName}.json";
+    });
+    app.MapScalarApiReference(opt =>
+    {
+        opt.Title = "Scalar Example";
+        opt.Theme = ScalarTheme.DeepSpace;
+        opt.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.Http);
+    });
 }
 
 app.UseHttpsRedirection();
