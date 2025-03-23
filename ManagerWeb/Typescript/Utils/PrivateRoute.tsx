@@ -23,7 +23,7 @@ const PrivateRoute = (props: any) => {
         let apiFactory = new ApiClientFactory(props.history);
         let authApi = await apiFactory.getAuthClient(AuthApi);
         try {
-            const isValid = await authApi.authValidatePost({ tokenModel: { token: token } });
+            const isValid = await authApi.authV1ValidatePost({ tokenModel: { token: token } });
             setIsValid(isValid);
         } catch (error) {
             setIsValid(false);

@@ -34,7 +34,7 @@ export default class Auth extends React.Component<RouteComponentProps, AuthState
         let authApi: AuthApi = await this.apiFactory.getAuthClient(AuthApi);
 
         try {
-            let authModel: AuthResponseModel = await authApi.authAuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
+            let authModel: AuthResponseModel = await authApi.authV1AuthenticatePost({ userModel: { password: this.state.password, userName: this.state.login } });
             localStorage.setItem("user", JSON.stringify(authModel));
             this.props.history.push("/");
         } catch (error) {

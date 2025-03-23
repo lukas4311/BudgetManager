@@ -37,7 +37,7 @@ export default class Auth extends React.Component<RouteComponentProps, Registrat
         let userApi: UserApi = await this.apiFactory.getAuthClient(UserApi);
 
         try {
-            await userApi.userRegisterPost({
+            await userApi.userV1RegisterPost({
                 userCreateModel: {
                     login: registerModel.login,
                     password: registerModel.password,
