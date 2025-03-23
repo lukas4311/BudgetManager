@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Autofac;
 using BudgetManager.AuthApi.Models;
 using BudgetManager.Data;
@@ -7,11 +8,14 @@ using BudgetManager.Services.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace BudgetManager.AuthApi
 {
@@ -55,11 +59,13 @@ namespace BudgetManager.AuthApi
                                             .AllowAnyMethod();
                 });
             });
+            services.AddSwaggerGen();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v1" });
-            });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v1" });
+            //    c.SwaggerDoc("v2", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v2" });
+            //});
         }
 
         /// <summary>
@@ -72,6 +78,7 @@ namespace BudgetManager.AuthApi
             DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlServer(Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
             builder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
+            builder.RegisterType<ConfigureSwaggerOptions>().As<IConfigureOptions<SwaggerGenOptions>>();
             builder.RegisterRepositories();
             builder.RegisterServices();
             builder.RegisterModelMapping();
@@ -82,9 +89,17 @@ namespace BudgetManager.AuthApi
         {
             if (env.IsDevelopment())
             {
+                var apiVersionDescriptionProvider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BudgetManager.AuthApi v1"));
+                app.UseSwaggerUI(options =>
+                {
+                    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpperInvariant());
+                    }
+                });
             }
 
             app.UseHttpsRedirection();
@@ -99,4 +114,31 @@ namespace BudgetManager.AuthApi
             });
         }
     }
+
+    public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+    {
+        private readonly IApiVersionDescriptionProvider _provider;
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
+        {
+            _provider = provider;
+        }
+        public void Configure(SwaggerGenOptions options)
+        {
+            foreach (var description in _provider.ApiVersionDescriptions)
+            {
+                options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+            }
+        }
+        private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        {
+            var info = new OpenApiInfo
+            {
+                Title = "API Title",
+                Version = description.ApiVersion.ToString(),
+                Description = "API Description. This API version has been deprecated."
+            };
+            return info;
+        }
+    }
+    
 }
