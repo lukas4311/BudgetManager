@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Autofac;
 using BudgetManager.AuthApi.Models;
 using BudgetManager.Data;
@@ -28,22 +29,43 @@ namespace BudgetManager.AuthApi
         {
             services.AddControllers();
             services.Configure<JwtSettingOption>(Configuration.GetSection(nameof(JwtSettingOption)));
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+                config.ApiVersionReader = ApiVersionReader.Combine(
+                    new QueryStringApiVersionReader("api-version"),
+                    new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("X-Api-Version"),
+                    new MediaTypeApiVersionReader("ver"));
+            }).AddMvc() // This is needed for controllers
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            }); ;
+
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("https://localhost:44386", "https://localhost:5001")
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("https://localhost:44386", "https://localhost:5001")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
-                    });
+                });
             });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.AuthApi", Version = "v1" });
             });
         }
 
+        /// <summary>
+        /// Configure Autofac container
+        /// </summary>
+        /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.Register<IHttpContextAccessor>(a => new HttpContextAccessor());

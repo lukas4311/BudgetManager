@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -5,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetManager.AuthApi.Controllers;
 
-[Route("user")]
+[ApiController]
+[ApiVersion("1.0")]
+[Route("user/v{version:apiVersion}")]
 public class UserController: ControllerBase
 {
     private const string UserDefinitionIsRequired = "User definition is not valid";
@@ -24,7 +27,7 @@ public class UserController: ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("register")]
+    [HttpPost("register"), MapToApiVersion("1.0")]
     public IActionResult Register([FromBody] UserCreateModel userCreateModel)
     {
         if(userCreateModel is null)

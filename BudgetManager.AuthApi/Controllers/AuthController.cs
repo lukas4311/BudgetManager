@@ -1,4 +1,5 @@
-﻿using BudgetManager.AuthApi.Models;
+﻿using Asp.Versioning;
+using BudgetManager.AuthApi.Models;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.Models;
 using BudgetManager.Services.Contracts;
@@ -8,7 +9,10 @@ using Microsoft.Extensions.Options;
 
 namespace BudgetManager.AuthApi.Controllers
 {
-    [Route("auth")]
+    [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    [Route("auth/v{version:apiVersion}")]
     public class AuthController : ControllerBase
     {
         private const string TokenIsRequired = "Token is required";
@@ -31,12 +35,33 @@ namespace BudgetManager.AuthApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPost("authenticate")]
+        [HttpPost("authenticate"), MapToApiVersion("1.0")]
         public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
             UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
 
             if(userInfo is null)
+                return BadRequest(new { message = UsernameOrPasswordIsIncorrect });
+
+            string token = _jwtService.GenerateToken(userInfo);
+            Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+            return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
+        }
+
+        /// <summary>
+        /// Method to authenticate user and get token
+        /// </summary>
+        /// <param name="model">Model containing authentication model</param>
+        /// <returns>Model containing token and user info</returns>
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("authenticate"), MapToApiVersion("2.0")]
+        public ActionResult<AuthResponseModel> AuthenticateV2([FromBody] UserModel model)
+        {
+            UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
+
+            if (userInfo is null)
                 return BadRequest(new { message = UsernameOrPasswordIsIncorrect });
 
             string token = _jwtService.GenerateToken(userInfo);
@@ -52,7 +77,7 @@ namespace BudgetManager.AuthApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPost("validate")]
+        [HttpPost("validate"), MapToApiVersion("1.0")]
         public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
             if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
@@ -70,7 +95,7 @@ namespace BudgetManager.AuthApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpGet("tokenData")]
+        [HttpGet("tokenData"), MapToApiVersion("1.0")]
         public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
         {
             if(string.IsNullOrEmpty(token))
