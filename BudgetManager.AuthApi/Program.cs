@@ -1,24 +1,123 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using BudgetManager.WebCore;
+using BudgetManager.AuthApi.Models;
+using BudgetManager.Data;
+using BudgetManager.Repository.Extensions;
+using BudgetManager.Services.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace BudgetManager.AuthApi
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.Configure<JwtSettingOption>(builder.Configuration.GetSection(nameof(JwtSettingOption)));
+builder.Services.AddApiVersioning(config =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    config.DefaultApiVersion = new ApiVersion(1, 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+    config.ReportApiVersions = true;
+    config.ApiVersionReader = ApiVersionReader.Combine(
+        new QueryStringApiVersionReader("api-version"),
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version"),
+        new MediaTypeApiVersionReader("ver"));
+}).AddMvc() // This is needed for controllers
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureHostWithSerilogToElk()
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("https://localhost:44386", "https://localhost:5001")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+    });
+});
+builder.Services.AddSwaggerGen();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.Register<IHttpContextAccessor>(a => new HttpContextAccessor());
+    DbContextOptionsBuilder<DataContext> optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+    optionsBuilder.UseSqlServer(builder.Configuration.GetSection($"{nameof(DbSetting)}:ConnectionString").Value);
+    containerBuilder.Register<DataContext>(_ => new DataContext(optionsBuilder.Options));
+    containerBuilder.RegisterType<ConfigureSwaggerOptions>().As<IConfigureOptions<SwaggerGenOptions>>();
+    containerBuilder.RegisterRepositories();
+    containerBuilder.RegisterServices();
+    containerBuilder.RegisterModelMapping();
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = "/openapi/{documentName}.json";
+    });
+    app.MapScalarApiReference(opt =>
+    {
+        opt.Title = "Scalar Example";
+        opt.Theme = ScalarTheme.DeepSpace;
+        opt.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.Http);
+        opt.AddDocument("v1", "/openapi/v1.0.json");
+        opt.AddDocument("v2", "/openapi/v2.0.json");
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+app.UseCors();
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+app.Run();
+
+public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+{
+    private readonly IApiVersionDescriptionProvider _provider;
+    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
+    {
+        _provider = provider;
+    }
+    public void Configure(SwaggerGenOptions options)
+    {
+        foreach (var description in _provider.ApiVersionDescriptions)
+        {
+            options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+        }
+    }
+    private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+    {
+        var info = new OpenApiInfo
+        {
+            Title = "API Title",
+            Version = description.ApiVersion.ToString(),
+            Description = "API Description. This API version has been deprecated."
+        };
+        return info;
     }
 }
