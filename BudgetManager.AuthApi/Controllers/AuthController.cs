@@ -6,6 +6,7 @@ using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace BudgetManager.AuthApi.Controllers
 {
@@ -13,6 +14,7 @@ namespace BudgetManager.AuthApi.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [Route("auth/v{version:apiVersion}")]
+    [Produces("application/json", "application/problem+json")]
     public class AuthController : ControllerBase
     {
         private const string TokenIsRequired = "Token is required";
@@ -32,7 +34,6 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
-        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate"), MapToApiVersion("1.0")]
@@ -53,20 +54,12 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
-        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate"), MapToApiVersion("2.0")]
         public ActionResult<AuthResponseModel> AuthenticateV2([FromBody] UserModel model)
         {
-            UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
-
-            if (userInfo is null)
-                return BadRequest(new { message = UsernameOrPasswordIsIncorrect });
-
-            string token = _jwtService.GenerateToken(userInfo);
-            Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
-            return Ok(new AuthResponseModel(token, userInfo.UserId, userInfo.UserName));
+            throw new NotImplementedException();
         }
 
         /// <summary>
