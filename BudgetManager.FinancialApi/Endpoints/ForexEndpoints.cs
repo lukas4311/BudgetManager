@@ -14,12 +14,14 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("/forex/exchangerate/{from}/{to}", GetForexPairPrice)
             .WithName(nameof(GetForexPairPrice))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK, contentType: "application/json");
+            .Produces(StatusCodes.Status200OK, contentType: "application/json")
+            .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("/forex/exchangerate/{from}/{to}/{date}", GetForexPairPriceAtDate)
             .WithName(nameof(GetForexPairPriceAtDate))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK, contentType: "application/json");
+            .Produces(StatusCodes.Status200OK, contentType: "application/json")
+            .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
         }
 
         /// <summary>

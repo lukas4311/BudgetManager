@@ -14,6 +14,9 @@ namespace BudgetManager.AuthApi.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [Route("auth/v{version:apiVersion}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json", "application/problem+json")]
     public class AuthController : ControllerBase
     {
@@ -34,8 +37,7 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        
         [HttpPost("authenticate"), MapToApiVersion("1.0")]
         public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
@@ -54,8 +56,6 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate"), MapToApiVersion("2.0")]
         public ActionResult<AuthResponseModel> AuthenticateV2([FromBody] UserModel model)
         {
@@ -67,9 +67,6 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="tokenModel">Token model</param>
         /// <returns><see langword="true"/> if token is valid</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("validate"), MapToApiVersion("1.0")]
         public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
@@ -85,9 +82,6 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="token">Model for access token</param>
         /// <returns>Model with user data</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("tokenData"), MapToApiVersion("1.0")]
         public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
         {
