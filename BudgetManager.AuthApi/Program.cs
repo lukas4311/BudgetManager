@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BudgetManager.AuthApi.Models;
@@ -13,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -89,35 +87,6 @@ app.UseRouting();
 app.UseCors();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.Run();
-
-public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
-{
-    private readonly IApiVersionDescriptionProvider _provider;
-    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
-    {
-        _provider = provider;
-    }
-    public void Configure(SwaggerGenOptions options)
-    {
-        foreach (var description in _provider.ApiVersionDescriptions)
-        {
-            options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
-        }
-    }
-    private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
-    {
-        var info = new OpenApiInfo
-        {
-            Title = "API Title",
-            Version = description.ApiVersion.ToString(),
-            Description = "API Description. This API version has been deprecated."
-        };
-        return info;
-    }
-}
