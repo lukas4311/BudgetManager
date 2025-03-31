@@ -12,7 +12,7 @@ export default class BudgetService implements IBudgetService {
     }
 
     public async getAllBudgets(): Promise<BudgetViewModel[]> {
-        let budgets = await this.budgetApi.budgetsActualGet();
+        let budgets = await this.budgetApi.v1BudgetsActualGet();
         let budgetViewModels: BudgetViewModel[] = this.getMappedViewModels(budgets);
         return budgetViewModels;
     }
@@ -23,7 +23,7 @@ export default class BudgetService implements IBudgetService {
             dateTo: new Date(model.to), id: model.id, name: model.name
         };
 
-        await this.budgetApi.budgetsPut({ budgetModel: budgetModel });
+        await this.budgetApi.v1BudgetsPut({ budgetModel: budgetModel });
     }
 
     public async createBudget(model: BudgetFormModel) {
@@ -32,7 +32,7 @@ export default class BudgetService implements IBudgetService {
             dateTo: new Date(model.to), id: model.id, name: model.name
         };
 
-        await this.budgetApi.budgetsPost({ budgetModel: budgetModel });
+        await this.budgetApi.v1BudgetsPost({ budgetModel: budgetModel });
     }
 
     private getMappedViewModels = (bankAccountModels: BudgetModel[]): BudgetViewModel[] =>

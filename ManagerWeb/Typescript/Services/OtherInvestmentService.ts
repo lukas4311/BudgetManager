@@ -14,38 +14,38 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
     }
 
     public async getBalanceHistory(id: number): Promise<OtherInvestmentBalaceHistoryViewModel[]> {
-        const balanceHistory = await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: id });
+        const balanceHistory = await this.otherInvestmentApi.v1OtherInvestmentOtherInvestmentIdBalanceHistoryGet({ otherInvestmentId: id });
         let viewModels: OtherInvestmentBalaceHistoryViewModel[] = balanceHistory.map(d => this.mapBalanceHistoryDataModelToViewModel(d));
         return viewModels;
     }
 
     public async getTagConnectedWithInvetment(id: number): Promise<OtherInvestmentTagModel> {
-        const linkedTag = await this.otherInvestmentApi.otherInvestmentIdLinkedTagGet({ id: id });
+        const linkedTag = await this.otherInvestmentApi.v1OtherInvestmentIdLinkedTagGet({ id: id });
         return linkedTag;
     }
 
     public async getPaymentLinkedToTagOfOtherInvestment(otherinvestmentid: number, tagId: number): Promise<PaymentModel[]> {
-        let linkedPayments: PaymentModel[] = await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: tagId });
+        let linkedPayments: PaymentModel[] = await this.otherInvestmentApi.v1OtherInvestmentIdTagedPaymentsTagIdGet({ id: otherinvestmentid, tagId: tagId });
         return linkedPayments;
     }
 
     public async getYearToYearProfit(id: number, years: number): Promise<number> {
-        let otherInvestmentProfit = await this.otherInvestmentApi.otherInvestmentIdProfitOverYearsYearsGet({ id: id, years: years });
+        let otherInvestmentProfit = await this.otherInvestmentApi.v1OtherInvestmentIdProfitOverYearsYearsGet({ id: id, years: years });
         return otherInvestmentProfit;
     }
 
     public async getOverallProfit(id: number): Promise<number> {
-        let overallProfit = await this.otherInvestmentApi.otherInvestmentIdProfitOverallGet({ id: id });
+        let overallProfit = await this.otherInvestmentApi.v1OtherInvestmentIdProfitOverallGet({ id: id });
         return overallProfit;
     }
 
     public async getSummary(): Promise<OtherInvestmentBalanceSummaryModel> {
-        let summary = await this.otherInvestmentApi.otherInvestmentSummaryGet();
+        let summary = await this.otherInvestmentApi.v1OtherInvestmentSummaryGet();
         return summary;
     }
 
     public async getAll(): Promise<OtherInvestmentViewModel[]> {
-        const otherInvestments = await this.otherInvestmentApi.otherInvestmentAllGet();
+        const otherInvestments = await this.otherInvestmentApi.v1OtherInvestmentAllGet();
         let viewModels: OtherInvestmentViewModel[] = otherInvestments.map(d => this.mapOtherInvetsmentDataModelToViewModel(d));
         return viewModels;
     }
@@ -84,27 +84,27 @@ export default class OtherInvestmentService implements IOtherInvestmentService {
     }
 
     public async updateOtherInvestmentBalanceHistory(otherInvestmentModel: OtherInvestmentBalaceHistoryModel): Promise<void> {
-        await this.otherInvestmentApi.balanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+        await this.otherInvestmentApi.v1OtherInvestmentBalanceHistoryPut({ otherInvestmentBalaceHistoryModel: otherInvestmentModel });
     }
 
     public async updateOtherInvestment(otherInvestment: OtherInvestmentModel): Promise<void> {
-        await this.otherInvestmentApi.otherInvestmentPut({ otherInvestmentModel: otherInvestment });
+        await this.otherInvestmentApi.v1OtherInvestmentPut({ otherInvestmentModel: otherInvestment });
     }
 
     public async createOtherInvestmentBalanceHistory(otherInvestmentId: number, otherInvestmentModel: OtherInvestmentBalaceHistoryModel): Promise<void> {
-        await this.otherInvestmentApi.otherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentModel });
+        await this.otherInvestmentApi.v1OtherInvestmentOtherInvestmentIdBalanceHistoryPost({ otherInvestmentId: otherInvestmentId, otherInvestmentBalaceHistoryModel: otherInvestmentModel });
     }
 
     public async createOtherInvestment(otherInvestment: OtherInvestmentModel): Promise<void> {
-        await this.otherInvestmentApi.otherInvestmentPost({ otherInvestmentModel: otherInvestment });
+        await this.otherInvestmentApi.v1OtherInvestmentPost({ otherInvestmentModel: otherInvestment });
     }
 
     public async createConnectionWithPaymentTag(otherInvestmentId: number, tagId: number): Promise<void> {
-        await this.otherInvestmentApi.otherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: otherInvestmentId });
+        await this.otherInvestmentApi.v1OtherInvestmentIdTagedPaymentsTagIdPost({ tagId, id: otherInvestmentId });
     }
 
     public async deleteOtherInvestment(id: number): Promise<void> {
-        await this.otherInvestmentApi.otherInvestmentDelete({ body: id });
+        await this.otherInvestmentApi.v1OtherInvestmentDelete({ body: id });
     }
 
     private mapBalanceHistoryDataModelToViewModel = (otherInvestmentBalance: OtherInvestmentBalaceHistoryModel): OtherInvestmentBalaceHistoryViewModel => {

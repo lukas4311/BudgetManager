@@ -19,12 +19,12 @@ export default class ComodityService implements IComodityService {
     }
 
     public async getComodityTypes(): Promise<ComodityTypeModel[]> {
-        const comodityTypes: ComodityTypeModel[] = await this.comodityApi.comoditiesComodityTypeAllGet();
+        const comodityTypes: ComodityTypeModel[] = await this.comodityApi.v1ComoditiesComodityTypeAllGet();
         return comodityTypes.map(c => this.mapComodityTypeToViewModel(c))
     }
 
     public async getAllComodityTrades(comodityId: number): Promise<ComoditiesFormViewModel[]> {
-        const comodities = await this.comodityApi.comoditiesAllGet();
+        const comodities = await this.comodityApi.v1ComoditiesAllGet();
         return comodities.filter(a => a.comodityTypeId == comodityId).map(g => this.mapDataModelToViewModel(g))
     }
 
@@ -34,15 +34,15 @@ export default class ComodityService implements IComodityService {
     }
 
     public async createComodityTrade(tradeModel: ComodityTradeHistoryModel) {
-        await this.comodityApi.comoditiesPost({ comodityTradeHistoryModel: tradeModel });
+        await this.comodityApi.v1ComoditiesPost({ comodityTradeHistoryModel: tradeModel });
     }
 
     public async updateComodityTrade(tradeModel: ComodityTradeHistoryModel) {
-        await this.comodityApi.comoditiesPut({ comodityTradeHistoryModel: tradeModel });
+        await this.comodityApi.v1ComoditiesPut({ comodityTradeHistoryModel: tradeModel });
     }
 
     public async deleteComodityTrade(comodityId: number) {
-        await this.comodityApi.comoditiesDelete({ body: comodityId });
+        await this.comodityApi.v1ComoditiesDelete({ body: comodityId });
     }
 
     public async getComodityNetWorth(): Promise<number> {

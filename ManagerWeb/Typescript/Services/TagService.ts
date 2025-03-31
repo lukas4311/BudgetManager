@@ -9,7 +9,7 @@ export default class TagService implements ITagService {
     }
 
     public async getAllUsedTags() {
-        const tags = await this.tagApi.tagsAllUsedGet();
+        const tags = await this.tagApi.v1TagsAllUsedGet();
         return tags;
     }
 }

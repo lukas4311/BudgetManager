@@ -20,37 +20,37 @@ export default class PaymentService implements IPaymentService {
 
     // Get payment types from API
     public async getPaymentTypes() {
-        const types: PaymentTypeModel[] = await this.paymentApi.paymentsTypesGet();
+        const types: PaymentTypeModel[] = await this.paymentApi.v1PaymentsTypesGet();
         return types;
     }
 
     // This code gets the payment categories from the server.
     public async getPaymentCategories() {
-        const categories: PaymentCategoryModel[] = await this.paymentApi.paymentsCategoriesGet();
+        const categories: PaymentCategoryModel[] = await this.paymentApi.v1PaymentsCategoriesGet();
         return categories;
     }
 
     // This function retrieves a payment by its id.
     public async getPaymentById(id: number) {
-        const paymentResponse = await this.paymentApi.paymentsDetailGet({ id: id });
+        const paymentResponse = await this.paymentApi.v1PaymentsDetailGet({ id: id });
         return paymentResponse;
     }
 
     // This code creates a payment for the specified payment model.
     public async createPayment(paymentModel: PaymentModel) {
-        const response = await this.paymentApi.paymentsPost({ paymentModel: paymentModel });
+        const response = await this.paymentApi.v1PaymentsPost({ paymentModel: paymentModel });
         return response;
     }
 
     // This function updates the payment data for the specified payment model.
     public async updatePayment(paymentModel: PaymentModel) {
-        const response = await this.paymentApi.paymentsPut({ paymentModel: paymentModel });
+        const response = await this.paymentApi.v1PaymentsPut({ paymentModel: paymentModel });
         return response;
     }
 
     // Get the payment data for the exact date range
     public getExactDateRangeDaysPaymentData = async (dateFrom: Date, dateTo: Date, bankAccountId: number): Promise<PaymentModel[]> => {
-        return await this.paymentApi.paymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
+        return await this.paymentApi.v1PaymentsGet({ fromDate: dateFrom, toDate: dateTo, bankAccountId });
     }
 
     // This code gets the sum of payments grouped by month.
@@ -116,7 +116,7 @@ export default class PaymentService implements IPaymentService {
     }
 
     public clonePayment(paymentId: number) {
-        this.paymentApi.paymentsCloneIdPost({ id: paymentId });
+        this.paymentApi.v1PaymentsCloneIdPost({ id: paymentId });
     }
 
     public getTopPaymentsByAmount(payments: PaymentModel[], count: number, paymentType?: string): PaymentModel[] {
@@ -146,7 +146,7 @@ export default class PaymentService implements IPaymentService {
     }
 
     public async deletePayment(paymentId: number) {
-        await this.paymentApi.paymentsDelete({ id: paymentId });
+        await this.paymentApi.v1PaymentsDelete({ id: paymentId });
     }
 
     private getAverageAmountFromPayments = (payments: PaymentModel[]) => {

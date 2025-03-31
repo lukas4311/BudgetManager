@@ -11,7 +11,7 @@ export default class BankAccountService implements IBankAccountService {
     }
 
     public async getAllBankAccounts(): Promise<BankAccountViewModel[]> {
-        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.bankAccountsAllGet();
+        let bankAccounts: BankAccountModel[] = await this.bankAccountApi.v1BankAccountsAllGet();
         let bankViewModels: BankAccountViewModel[] = this.getMappedViewModels(bankAccounts);
         return bankViewModels;
     }
@@ -21,7 +21,7 @@ export default class BankAccountService implements IBankAccountService {
             code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
         };
 
-        await this.bankAccountApi.bankAccountsPut({ bankAccountModel: bankModel });
+        await this.bankAccountApi.v1BankAccountsPut({ bankAccountModel: bankModel });
     }
 
     public async createBankAccount(model: BankAccountViewModel) {
@@ -29,11 +29,11 @@ export default class BankAccountService implements IBankAccountService {
             code: model.code, id: model.id, openingBalance: parseInt(model.openingBalance.toString())
         };
 
-        await this.bankAccountApi.bankAccountsPost({ bankAccountModel: bankModel });
+        await this.bankAccountApi.v1BankAccountsPost({ bankAccountModel: bankModel });
     }
 
     public deleteBankAccount = async (id: number) =>
-        await this.bankAccountApi.bankAccountsDelete({ body: id });
+        await this.bankAccountApi.v1BankAccountsDelete({ body: id });
 
     private getMappedViewModels = (bankAccountModels: BankAccountModel[]): BankAccountViewModel[] =>
         bankAccountModels.map(b => this.mapDataModelToViewModel(b));
