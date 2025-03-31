@@ -31,7 +31,7 @@ namespace BudgetManager.Api.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            if (await HasAllowAnonymousAtrribute(context))
+            if (await HasAllowAnonymousAtrribute(context) || context.Request.Path.ToString().ToLower().Contains("/scalar"))
             {
                 await next(context);
                 return;

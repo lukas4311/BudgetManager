@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BudgetManager.Api.Middlewares;
@@ -20,8 +21,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
+using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
@@ -40,6 +41,18 @@ RabbitMqConfig rabbitSetting = builder.Configuration.GetSection("Rabbit").Get<Ra
 rabbitSetting.EndpointsConfiguration = c => c.Publish<TickerRequest>(x => x.ExchangeType = ExchangeType.Direct);
 builder.Services.AddMassTransitWithRabbitMq(rabbitSetting);
 
+builder.Services.AddApiVersioning(config =>
+{
+    config.DefaultApiVersion = new ApiVersion(1, 0);
+    config.AssumeDefaultVersionWhenUnspecified = true;
+    config.ReportApiVersions = true;
+    config.ApiVersionReader = ApiVersionReader.Combine(
+        new QueryStringApiVersionReader("api-version"),
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-Api-Version"),
+        new MediaTypeApiVersionReader("ver"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -50,30 +63,7 @@ builder.Services.AddCors(options =>
                                     .AllowAnyMethod();
         });
 });
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BudgetManager.Api", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please insert JWT with Bearer into field",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-       {
-         new OpenApiSecurityScheme
-         {
-           Reference = new OpenApiReference
-           {
-             Type = ReferenceType.SecurityScheme,
-             Id = "Bearer"
-           }
-          },
-          new string[] { }
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -101,10 +91,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BudgetManager.Api v1"));
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = "/openapi/{documentName}.json";
+    });
+    app.MapScalarApiReference(opt =>
+    {
+        opt.Title = "Scalar Example";
+        opt.Theme = ScalarTheme.DeepSpace;
+        opt.DefaultHttpClient = new(ScalarTarget.CSharp, ScalarClient.Http);
+        opt.AddDocument("v1", "/openapi/v1.0.json");
+    });
 }
-
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();

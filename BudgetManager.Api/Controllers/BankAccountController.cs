@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,12 @@ namespace BudgetManager.Api.Controllers
     /// as well as fetching account balances.
     /// </summary>
     [ApiController]
-    [Route("bankAccounts")]
+    [ApiVersion("1.0")]
+    [Route("bankAccounts/v{version:apiVersion}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public partial class BankAccountController : BaseController
     {
         private readonly IBankAccountService bankAccountService;
@@ -33,9 +39,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="toDate">Optional. The date up to which to calculate the balance. If not provided, the current date is used.</param>
         /// <returns>A collection of bank account balances.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all/balance/{toDate}")]
+        [HttpGet("all/balance/{toDate}"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<BankBalanceModel>> GetUserBankAccountsBalanceToDate(DateTime? toDate = null)
         {
             return Ok(bankAccountService.GetBankAccountsBalanceToDate(GetUserId(), toDate));
@@ -47,10 +51,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="bankAccountId">The ID of the bank account.</param>
         /// <param name="toDate">Optional. The date up to which to calculate the balance. If not provided, the current date is used.</param>
         /// <returns>The bank account balance or an unauthorized status code if the user doesn't have access to the specified account.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{bankAccountId}/balance/{toDate}")]
+        [HttpGet("{bankAccountId}/balance/{toDate}"), MapToApiVersion("1.0")]
         public ActionResult<BankBalanceModel> GetBalance(int bankAccountId, DateTime? toDate = null)
         {
             if (!bankAccountService.UserHasRightToBankAccount(bankAccountId, GetUserId()))
@@ -62,9 +63,7 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves all bank accounts belonging to the current user.
         /// </summary>
         /// <returns>A collection of bank accounts.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<BankAccountModel>> All()
         {
             return Ok(bankAccountService.GetAllBankAccounts(GetUserId()));
@@ -75,9 +74,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="bankAccountViewModel">The bank account data.</param>
         /// <returns>The ID of the newly created bank account.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult AddBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             bankAccountViewModel.UserIdentityId = GetUserId();
@@ -90,9 +87,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="bankAccountViewModel">The updated bank account data.</param>
         /// <returns>A success status code.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult UpdateBankAccount([FromBody] BankAccountModel bankAccountViewModel)
         {
             bankAccountViewModel.UserIdentityId = GetUserId();
@@ -105,10 +100,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="bankAccountId">The ID of the bank account to delete.</param>
         /// <returns>A success status code or an unauthorized status code if the user doesn't have access to the specified account.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult DeleteBankAccount([FromBody] int bankAccountId)
         {
             if (!bankAccountService.UserHasRightToBankAccount(bankAccountId, GetUserId()))
