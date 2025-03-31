@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
 using Scalar.AspNetCore;
 using System.Text.Json.Serialization;
@@ -63,7 +64,29 @@ builder.Services.AddCors(options =>
                                     .AllowAnyMethod();
         });
 });
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+       {
+         new OpenApiSecurityScheme
+         {
+           Reference = new OpenApiReference
+           {
+             Type = ReferenceType.SecurityScheme,
+             Id = "Bearer"
+           }
+          },
+          new string[] { }
+        }
+    });
+});
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
