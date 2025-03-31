@@ -93,7 +93,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
         this.paymentService = new PaymentService(paymentApi);
         this.setState({ selectedFilter: this.filters[0] });
         let bankAccounts: BankAccountModel[] = [];
-        bankAccounts = await this.bankAccountApi.bankAccountsAllGet();
+        bankAccounts = await this.bankAccountApi.v1BankAccountsAllGet();
 
         bankAccounts.unshift({ code: this.defaultBankOption, id: -1, openingBalance: 0 });
         this.categories = await this.paymentService.getPaymentCategories();
@@ -131,7 +131,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 dateTo = this.state.filterDateTo;
 
             const fromLastOrderder = _.orderBy(payments, a => a.date, "desc");
-            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
+            let bankAccountBalanceResponse: BankBalanceModel[] = await this.bankAccountApi.v1BankAccountsAllBalanceToDateGet({ toDate: moment((dateTo)).toDate() });
             const balance = await this.chartDataProcessor.prepareBalanceChartData(payments, bankAccountBalanceResponse, this.state.selectedBankAccount);
             const barChartData = pieData.map(d => ({ key: d.id, value: d.value }));
             const averageMonthExpense = this.paymentService.getAverageMonthExpense(payments);

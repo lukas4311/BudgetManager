@@ -103,9 +103,9 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const stockFinApi = await apiFactory.getFinClient(StockEndpointsApi);
         this.stockService = new StockService(this.stockApi, new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi), this.forexFinApi, stockFinApi);
 
-        const parsers = await enumApi.typeEnumItemTypeCodeGet({ enumItemTypeCode: this.stockParsersTypeCode });
+        const parsers = await enumApi.v1EnumItemTypeEnumItemTypeCodeGet({ enumItemTypeCode: this.stockParsersTypeCode });
         this.tickers = await this.stockService.getStockTickers();
-        this.currencies = (await currencyApi.currencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
+        this.currencies = (await currencyApi.v1CurrencyAllGet()).map(c => ({ id: c.id, symbol: c.symbol }));
         this.setState({ stockBrokerParsers: new Map(parsers.map(p => [p.id, p.name])) });
         this.loadStockData();
     }
@@ -264,13 +264,13 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const ticker = _.first(this.tickers.filter(t => t.id == fixTicker.tickerId));
 
         if (!fixTicker.hasMetadata)
-            await this.stockApi.stockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
+            await this.stockApi.v1StockStockTickerTickerIdPut({ tickerId: fixTicker.tickerId, stockTickerModel: { id: ticker.id, name: ticker.name, metadata: ticker.metadata, ticker: metadataTicker } });
 
         if (!fixTicker.hasPrice) {
             const metadata = ticker?.metadata;
             const metadataObj = JSON.parse(metadata);
             metadataObj[tickerMetadataAttribute] = priceTicker;
-            await this.stockApi.stockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
+            await this.stockApi.v1StockStockTickerTickerIdMetadataPut({ tickerId: fixTicker.tickerId, body: JSON.stringify(metadataObj) });
         }
 
         this.setState({ isOpenedTickerFix: false, selectedFixTicker: undefined });
@@ -301,7 +301,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
         const appContext: AppContext = this.context as AppContext;
         try {
             const files: Blob = (e.target as HTMLInputElement).files?.[0];
-            await this.stockApi.stockBrokerReportBrokerIdPost({ brokerId: this.state.selectedBroker, file: files });
+            await this.stockApi.v1StockBrokerReportBrokerIdPost({ brokerId: this.state.selectedBroker, file: files });
             appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success });
         } catch (error) {
             appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error });
@@ -313,7 +313,7 @@ class StockOverview extends React.Component<RouteComponentProps, StockOverviewSt
     }
 
     private sendTickerRequest = async (ticker: string) => {
-        await this.stockApi.stockTickerRequestPost({ tickerRequest: { ticker: ticker } });
+        await this.stockApi.v1StockTickerRequestPost({ tickerRequest: { ticker: ticker } });
         this.setState({ isOpenedTickerRequest: false });
         const appContext: AppContext = this.context as AppContext;
         appContext.setSnackbarMessage({ message: "Ticker request has been queued.", severity: SnackbarSeverity.success })

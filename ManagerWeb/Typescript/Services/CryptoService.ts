@@ -26,31 +26,31 @@ export default class CryptoService implements ICryptoService {
     }
 
     public async getTradeData(): Promise<CryptoTradeViewModel[]> {
-        const data = await this.cryptoApi.cryptosAllGet();
+        const data = await this.cryptoApi.v1CryptosAllGet();
         let trades: CryptoTradeViewModel[] = data.map(t => this.mapDataModelToViewModel(t));
         return trades;
     }
 
     public async getRawTradeData(): Promise<TradeHistory[]> {
-        return await this.cryptoApi.cryptosAllGet();
+        return await this.cryptoApi.v1CryptosAllGet();
     }
 
     public async getCryptoTickers(): Promise<CryptoTickerSelectModel[]> {
-        return (await this.cryptoApi.cryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }))
+        return (await this.cryptoApi.v1CryptosTickersGet()).map(c => ({ id: c.id, ticker: c.ticker }))
     }
 
     public async createCryptoTrade(tradeModel: CryptoTradeViewModel) {
         const tradeHistory = this.mapViewModelToDataModel(tradeModel);
-        await this.cryptoApi.cryptosPost({ tradeHistory: tradeHistory });
+        await this.cryptoApi.v1CryptosPost({ tradeHistory: tradeHistory });
     }
 
     public async updateCryptoTrade(tradeModel: CryptoTradeViewModel) {
         const tradeHistory = this.mapViewModelToDataModel(tradeModel);
-        await this.cryptoApi.cryptosPut({ tradeHistory: tradeHistory });
+        await this.cryptoApi.v1CryptosPut({ tradeHistory: tradeHistory });
     }
 
     public async deleteCryptoTrade(tradeId: number) {
-        await this.cryptoApi.cryptosDelete({ body: tradeId });
+        await this.cryptoApi.v1CryptosDelete({ body: tradeId });
     }
 
     public async getExchangeRate(from: string, to: string): Promise<number> {

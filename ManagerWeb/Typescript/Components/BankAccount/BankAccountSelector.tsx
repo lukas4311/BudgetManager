@@ -21,8 +21,8 @@ const BankAccountSelector = (props: BankAccountSelectorProps) => {
         const apiFactory = new ApiClientFactory(history);
         const fetchData = async () => {
             const bankAccountApi = await apiFactory.getClient(BankAccountApi);
-            const bankAccountsBalance = await bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
-            const bankAccountInfo = await bankAccountApi.bankAccountsAllGet();
+            const bankAccountsBalance = await bankAccountApi.v1BankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
+            const bankAccountInfo = await bankAccountApi.v1BankAccountsAllGet();
             setBankAccounts(bankAccountInfo.map(a => ({ bankAccountBalance: _.first(bankAccountsBalance.filter(b => b.id == a.id))?.balance, bankAccountName: a.code, bankAccountId: a.id })));
         }
         fetchData();

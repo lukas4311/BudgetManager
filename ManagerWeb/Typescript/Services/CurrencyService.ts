@@ -10,6 +10,6 @@ export class CurrencyService implements ICurrencyService {
     }
 
     public async getAllCurrencies(): Promise<CurrencyTickerSelectModel[]> {
-        return (await this.currencyApi.currencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
+        return (await this.currencyApi.v1CurrencyAllGet()).map(c => ({ id: c.id, ticker: c.symbol }));
     }
 }

@@ -52,7 +52,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         this.currencyService = new CurrencyService(currencyApi);
         this.cryptoService = new CryptoService(this.cryptoApi, forexApi, cryptoFin, forexApi);
         const enumApi = await apiFactory.getClient(EnumApi);
-        const parsers = await enumApi.typeEnumItemTypeCodeGet({ enumItemTypeCode: this.cryptoParsersTypeCode });
+        const parsers = await enumApi.v1EnumItemTypeEnumItemTypeCodeGet({ enumItemTypeCode: this.cryptoParsersTypeCode });
         this.setState({ brokerParsers: new Map(parsers.map(p => [p.id, p.name])) });
         this.loadCryptoTradesData();
     }
@@ -130,7 +130,7 @@ export default class CryptoTrades extends React.Component<RouteComponentProps, C
         const appContext: AppContext = this.context as AppContext;
         try {
             const files: Blob = (e.target as HTMLInputElement).files?.[0];
-            await this.cryptoApi.cryptosBrokerReportBrokerIdPost({brokerId: this.state.selectedBroker, file: files});
+            await this.cryptoApi.v1CryptosBrokerReportBrokerIdPost({brokerId: this.state.selectedBroker, file: files});
             appContext.setSnackbarMessage({ message: "Broker report was uploaded to be processed", severity: SnackbarSeverity.success })
         } catch (error) {
             appContext.setSnackbarMessage({ message: "Error while uploading", severity: SnackbarSeverity.error })

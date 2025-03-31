@@ -19,7 +19,7 @@ const BankAccountBalanceCard = (props: BankAccountBalanceCardProps) => {
         const apiFactory = new ApiClientFactory(history);
         const fetchData = async () => {
             const bankAccountApi = await apiFactory.getClient(BankAccountApi);
-            const bankAccountsBalance = await bankAccountApi.bankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
+            const bankAccountsBalance = await bankAccountApi.v1BankAccountsAllBalanceToDateGet({ toDate: new Date(Date.now()) });
             const total = _.sumBy(bankAccountsBalance, s => s.balance);
             setTotal(total);
         }

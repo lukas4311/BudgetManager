@@ -46,7 +46,7 @@ export default class CryptoPortfolio extends React.Component<RouteComponentProps
         this.forexFinApi = await apiFactory.getFinClient(ForexEndpointsApi);
         this.cryptoService = new CryptoService(this.cryptoApi, this.forexFinApi, this.cryptoFinApi, this.forexFinApi);
 
-        let trades: TradeHistory[] = await this.cryptoApi.cryptosAllGet();
+        let trades: TradeHistory[] = await this.cryptoApi.v1CryptosAllGet();
         let groupedTrades = _.groupBy(trades, t => t.cryptoTicker);
         let cryptoSums: CryptoSum[] = [];
 
