@@ -22,6 +22,7 @@ export * from './EnumItem';
 export * from './EnumItemModel';
 export * from './EnumItemModelAdjusted';
 export * from './EnumItemType';
+export * from './InlineObject';
 export * from './InlineObject1';
 export * from './InterestRate';
 export * from './Notification';

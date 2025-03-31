@@ -33,6 +33,7 @@ models/EnumItem.ts
 models/EnumItemModel.ts
 models/EnumItemModelAdjusted.ts
 models/EnumItemType.ts
+models/InlineObject.ts
 models/InlineObject1.ts
 models/InterestRate.ts
 models/Notification.ts

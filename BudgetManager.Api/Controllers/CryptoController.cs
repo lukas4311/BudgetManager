@@ -18,7 +18,7 @@ namespace BudgetManager.Api.Controllers
     /// Controller responsible for handling cryptocurrency-related operations in the Budget Manager API.
     /// Provides endpoints for managing crypto trades, exchange rates, and broker reports.
     /// </summary>
-    //[ApiController]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/cryptos")]
     [ProducesResponseType(StatusCodes.Status200OK)]

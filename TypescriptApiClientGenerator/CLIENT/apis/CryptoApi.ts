@@ -18,6 +18,9 @@ import {
     CryptoTickerModel,
     CryptoTickerModelFromJSON,
     CryptoTickerModelToJSON,
+    ProblemDetails,
+    ProblemDetailsFromJSON,
+    ProblemDetailsToJSON,
     TradeHistory,
     TradeHistoryFromJSON,
     TradeHistoryToJSON,
@@ -26,63 +29,36 @@ import {
     TradesGroupedMonthToJSON,
 } from '../models';
 
-export interface VversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
+export interface V1CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest {
     fromCurrency: string;
     toCurrency: string;
-    version: string;
 }
 
-export interface VversionCryptosAllGetRequest {
-    version: string;
-}
-
-export interface VversionCryptosBrokerReportBrokerIdPostRequest {
+export interface V1CryptosBrokerReportBrokerIdPostRequest {
     brokerId: number;
-    version: string;
     file?: Blob;
 }
 
-export interface VversionCryptosDeleteRequest {
-    version: string;
+export interface V1CryptosDeleteRequest {
     body?: number;
 }
 
-export interface VversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest {
+export interface V1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest {
     fromCurrency: string;
     toCurrency: string;
     atDate: Date;
-    version: string;
 }
 
-export interface VversionCryptosPostRequest {
-    version: string;
+export interface V1CryptosPostRequest {
     tradeHistory?: TradeHistory;
 }
 
-export interface VversionCryptosPutRequest {
-    version: string;
+export interface V1CryptosPutRequest {
     tradeHistory?: TradeHistory;
 }
 
-export interface VversionCryptosTickersGetRequest {
-    version: string;
-}
-
-export interface VversionCryptosTradeDetailTradeIdGetRequest {
+export interface V1CryptosTradeDetailTradeIdGetRequest {
     tradeId: number;
-    version: string;
-}
-
-export interface VversionCryptosTradeMonthlygroupedGetRequest {
-    version: string;
-}
-
-export interface VversionCryptosTradeTickergroupedGetRequest {
-    version: string;
-}
-
-export interface VversionCryptosTradeTradedategroupedGetRequest {
-    version: string;
 }
 
 /**
@@ -96,168 +72,156 @@ export interface CryptoApiInterface {
      * 
      * @param {string} fromCurrency 
      * @param {string} toCurrency 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: VversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+    v1CryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: V1CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    vversionCryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: VversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number>;
+    v1CryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: V1CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosAllGetRaw(requestParameters: VversionCryptosAllGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
+    v1CryptosAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>>;
 
     /**
      */
-    vversionCryptosAllGet(requestParameters: VversionCryptosAllGetRequest, initOverrides?: RequestInit): Promise<Array<TradeHistory>>;
+    v1CryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>>;
 
     /**
      * 
      * @param {number} brokerId 
-     * @param {string} version 
      * @param {Blob} [file] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosBrokerReportBrokerIdPostRaw(requestParameters: VversionCryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    v1CryptosBrokerReportBrokerIdPostRaw(requestParameters: V1CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    vversionCryptosBrokerReportBrokerIdPost(requestParameters: VversionCryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void>;
+    v1CryptosBrokerReportBrokerIdPost(requestParameters: V1CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
-     * @param {string} version 
      * @param {number} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosDeleteRaw(requestParameters: VversionCryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    v1CryptosDeleteRaw(requestParameters: V1CryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    vversionCryptosDelete(requestParameters: VversionCryptosDeleteRequest, initOverrides?: RequestInit): Promise<void>;
+    v1CryptosDelete(requestParameters: V1CryptosDeleteRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
      * @param {string} fromCurrency 
      * @param {string} toCurrency 
      * @param {Date} atDate 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters: VversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
+    v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters: V1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>>;
 
     /**
      */
-    vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet(requestParameters: VversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<number>;
+    v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGet(requestParameters: V1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<number>;
 
     /**
      * 
-     * @param {string} version 
      * @param {TradeHistory} [tradeHistory] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosPostRaw(requestParameters: VversionCryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    v1CryptosPostRaw(requestParameters: V1CryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    vversionCryptosPost(requestParameters: VversionCryptosPostRequest, initOverrides?: RequestInit): Promise<void>;
+    v1CryptosPost(requestParameters: V1CryptosPostRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
-     * @param {string} version 
      * @param {TradeHistory} [tradeHistory] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosPutRaw(requestParameters: VversionCryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
+    v1CryptosPutRaw(requestParameters: V1CryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    vversionCryptosPut(requestParameters: VversionCryptosPutRequest, initOverrides?: RequestInit): Promise<void>;
+    v1CryptosPut(requestParameters: V1CryptosPutRequest, initOverrides?: RequestInit): Promise<void>;
 
     /**
      * 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosTickersGetRaw(requestParameters: VversionCryptosTickersGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>>;
+    v1CryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>>;
 
     /**
      */
-    vversionCryptosTickersGet(requestParameters: VversionCryptosTickersGetRequest, initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>>;
+    v1CryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>>;
 
     /**
      * 
      * @param {number} tradeId 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosTradeDetailTradeIdGetRaw(requestParameters: VversionCryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>>;
+    v1CryptosTradeDetailTradeIdGetRaw(requestParameters: V1CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>>;
 
     /**
      */
-    vversionCryptosTradeDetailTradeIdGet(requestParameters: VversionCryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory>;
+    v1CryptosTradeDetailTradeIdGet(requestParameters: V1CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory>;
 
     /**
      * 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosTradeMonthlygroupedGetRaw(requestParameters: VversionCryptosTradeMonthlygroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+    v1CryptosTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
 
     /**
      */
-    vversionCryptosTradeMonthlygroupedGet(requestParameters: VversionCryptosTradeMonthlygroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+    v1CryptosTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
 
     /**
      * 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosTradeTickergroupedGetRaw(requestParameters: VversionCryptosTradeTickergroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+    v1CryptosTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
 
     /**
      */
-    vversionCryptosTradeTickergroupedGet(requestParameters: VversionCryptosTradeTickergroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+    v1CryptosTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
 
     /**
      * 
-     * @param {string} version 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CryptoApiInterface
      */
-    vversionCryptosTradeTradedategroupedGetRaw(requestParameters: VversionCryptosTradeTradedategroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
+    v1CryptosTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>>;
 
     /**
      */
-    vversionCryptosTradeTradedategroupedGet(requestParameters: VversionCryptosTradeTradedategroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
+    v1CryptosTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>>;
 
 }
 
@@ -274,17 +238,13 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: VversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+    async v1CryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters: V1CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
-            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling vversionCryptosActualExchangeRateFromCurrencyToCurrencyGet.');
+            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling v1CryptosActualExchangeRateFromCurrencyToCurrencyGet.');
         }
 
         if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
-            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling vversionCryptosActualExchangeRateFromCurrencyToCurrencyGet.');
-        }
-
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosActualExchangeRateFromCurrencyToCurrencyGet.');
+            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling v1CryptosActualExchangeRateFromCurrencyToCurrencyGet.');
         }
 
         const queryParameters: any = {};
@@ -296,7 +256,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)).replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/actualExchangeRate/{fromCurrency}/{toCurrency}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -307,18 +267,14 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: VversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number> {
-        const response = await this.vversionCryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
+    async v1CryptosActualExchangeRateFromCurrencyToCurrencyGet(requestParameters: V1CryptosActualExchangeRateFromCurrencyToCurrencyGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.v1CryptosActualExchangeRateFromCurrencyToCurrencyGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosAllGetRaw(requestParameters: VversionCryptosAllGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosAllGet.');
-        }
-
+    async v1CryptosAllGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradeHistory>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -328,7 +284,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/all`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/all`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -339,20 +295,16 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosAllGet(requestParameters: VversionCryptosAllGetRequest, initOverrides?: RequestInit): Promise<Array<TradeHistory>> {
-        const response = await this.vversionCryptosAllGetRaw(requestParameters, initOverrides);
+    async v1CryptosAllGet(initOverrides?: RequestInit): Promise<Array<TradeHistory>> {
+        const response = await this.v1CryptosAllGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosBrokerReportBrokerIdPostRaw(requestParameters: VversionCryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
+    async v1CryptosBrokerReportBrokerIdPostRaw(requestParameters: V1CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.brokerId === null || requestParameters.brokerId === undefined) {
-            throw new runtime.RequiredError('brokerId','Required parameter requestParameters.brokerId was null or undefined when calling vversionCryptosBrokerReportBrokerIdPost.');
-        }
-
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosBrokerReportBrokerIdPost.');
+            throw new runtime.RequiredError('brokerId','Required parameter requestParameters.brokerId was null or undefined when calling v1CryptosBrokerReportBrokerIdPost.');
         }
 
         const queryParameters: any = {};
@@ -364,7 +316,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const consumes: runtime.Consume[] = [
-            { contentType: 'multipart/form-data' },
+            { contentType: 'multipart/form-data; ver=1.0' },
         ];
         // @ts-ignore: canConsumeForm may be unused
         const canConsumeForm = runtime.canConsumeForm(consumes);
@@ -384,7 +336,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/brokerReport/{brokerId}`.replace(`{${"brokerId"}}`, this.processPathParam(requestParameters.brokerId)).replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/brokerReport/{brokerId}`.replace(`{${"brokerId"}}`, this.processPathParam(requestParameters.brokerId)),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -396,29 +348,25 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosBrokerReportBrokerIdPost(requestParameters: VversionCryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.vversionCryptosBrokerReportBrokerIdPostRaw(requestParameters, initOverrides);
+    async v1CryptosBrokerReportBrokerIdPost(requestParameters: V1CryptosBrokerReportBrokerIdPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.v1CryptosBrokerReportBrokerIdPostRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async vversionCryptosDeleteRaw(requestParameters: VversionCryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosDelete.');
-        }
-
+    async v1CryptosDeleteRaw(requestParameters: V1CryptosDeleteRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
+        headerParameters['Content-Type'] = 'application/json; ver=1.0';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos`,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -430,27 +378,23 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosDelete(requestParameters: VversionCryptosDeleteRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.vversionCryptosDeleteRaw(requestParameters, initOverrides);
+    async v1CryptosDelete(requestParameters: V1CryptosDeleteRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.v1CryptosDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters: VversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
+    async v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters: V1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<number>> {
         if (requestParameters.fromCurrency === null || requestParameters.fromCurrency === undefined) {
-            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
+            throw new runtime.RequiredError('fromCurrency','Required parameter requestParameters.fromCurrency was null or undefined when calling v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
         }
 
         if (requestParameters.toCurrency === null || requestParameters.toCurrency === undefined) {
-            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
+            throw new runtime.RequiredError('toCurrency','Required parameter requestParameters.toCurrency was null or undefined when calling v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
         }
 
         if (requestParameters.atDate === null || requestParameters.atDate === undefined) {
-            throw new runtime.RequiredError('atDate','Required parameter requestParameters.atDate was null or undefined when calling vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
-        }
-
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
+            throw new runtime.RequiredError('atDate','Required parameter requestParameters.atDate was null or undefined when calling v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGet.');
         }
 
         const queryParameters: any = {};
@@ -462,7 +406,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/exchangeRate/{fromCurrency}/{toCurrency}/{atDate}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)).replace(`{${"atDate"}}`, this.processPathParam(requestParameters.atDate)).replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/exchangeRate/{fromCurrency}/{toCurrency}/{atDate}`.replace(`{${"fromCurrency"}}`, this.processPathParam(requestParameters.fromCurrency)).replace(`{${"toCurrency"}}`, this.processPathParam(requestParameters.toCurrency)).replace(`{${"atDate"}}`, this.processPathParam(requestParameters.atDate)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -473,30 +417,26 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGet(requestParameters: VversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<number> {
-        const response = await this.vversionCryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters, initOverrides);
+    async v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGet(requestParameters: V1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRequest, initOverrides?: RequestInit): Promise<number> {
+        const response = await this.v1CryptosExchangeRateFromCurrencyToCurrencyAtDateGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosPostRaw(requestParameters: VversionCryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosPost.');
-        }
-
+    async v1CryptosPostRaw(requestParameters: V1CryptosPostRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
+        headerParameters['Content-Type'] = 'application/json; ver=1.0';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -508,29 +448,25 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosPost(requestParameters: VversionCryptosPostRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.vversionCryptosPostRaw(requestParameters, initOverrides);
+    async v1CryptosPost(requestParameters: V1CryptosPostRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.v1CryptosPostRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async vversionCryptosPutRaw(requestParameters: VversionCryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosPut.');
-        }
-
+    async v1CryptosPutRaw(requestParameters: V1CryptosPutRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        headerParameters['Content-Type'] = 'application/json';
+        headerParameters['Content-Type'] = 'application/json; ver=1.0';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = this.configuration.apiKey("Authorization"); // Bearer authentication
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos`,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -542,17 +478,13 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosPut(requestParameters: VversionCryptosPutRequest, initOverrides?: RequestInit): Promise<void> {
-        await this.vversionCryptosPutRaw(requestParameters, initOverrides);
+    async v1CryptosPut(requestParameters: V1CryptosPutRequest, initOverrides?: RequestInit): Promise<void> {
+        await this.v1CryptosPutRaw(requestParameters, initOverrides);
     }
 
     /**
      */
-    async vversionCryptosTickersGetRaw(requestParameters: VversionCryptosTickersGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosTickersGet.');
-        }
-
+    async v1CryptosTickersGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<CryptoTickerModel>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -562,7 +494,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/tickers`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/tickers`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -573,20 +505,16 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosTickersGet(requestParameters: VversionCryptosTickersGetRequest, initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>> {
-        const response = await this.vversionCryptosTickersGetRaw(requestParameters, initOverrides);
+    async v1CryptosTickersGet(initOverrides?: RequestInit): Promise<Array<CryptoTickerModel>> {
+        const response = await this.v1CryptosTickersGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosTradeDetailTradeIdGetRaw(requestParameters: VversionCryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>> {
+    async v1CryptosTradeDetailTradeIdGetRaw(requestParameters: V1CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<TradeHistory>> {
         if (requestParameters.tradeId === null || requestParameters.tradeId === undefined) {
-            throw new runtime.RequiredError('tradeId','Required parameter requestParameters.tradeId was null or undefined when calling vversionCryptosTradeDetailTradeIdGet.');
-        }
-
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosTradeDetailTradeIdGet.');
+            throw new runtime.RequiredError('tradeId','Required parameter requestParameters.tradeId was null or undefined when calling v1CryptosTradeDetailTradeIdGet.');
         }
 
         const queryParameters: any = {};
@@ -598,7 +526,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/tradeDetail/{tradeId}`.replace(`{${"tradeId"}}`, this.processPathParam(requestParameters.tradeId)).replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/tradeDetail/{tradeId}`.replace(`{${"tradeId"}}`, this.processPathParam(requestParameters.tradeId)),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -609,18 +537,14 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosTradeDetailTradeIdGet(requestParameters: VversionCryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory> {
-        const response = await this.vversionCryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
+    async v1CryptosTradeDetailTradeIdGet(requestParameters: V1CryptosTradeDetailTradeIdGetRequest, initOverrides?: RequestInit): Promise<TradeHistory> {
+        const response = await this.v1CryptosTradeDetailTradeIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosTradeMonthlygroupedGetRaw(requestParameters: VversionCryptosTradeMonthlygroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosTradeMonthlygroupedGet.');
-        }
-
+    async v1CryptosTradeMonthlygroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -630,7 +554,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/trade/monthlygrouped`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/trade/monthlygrouped`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -641,18 +565,14 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosTradeMonthlygroupedGet(requestParameters: VversionCryptosTradeMonthlygroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
-        const response = await this.vversionCryptosTradeMonthlygroupedGetRaw(requestParameters, initOverrides);
+    async v1CryptosTradeMonthlygroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.v1CryptosTradeMonthlygroupedGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosTradeTickergroupedGetRaw(requestParameters: VversionCryptosTradeTickergroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosTradeTickergroupedGet.');
-        }
-
+    async v1CryptosTradeTickergroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -662,7 +582,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/trade/tickergrouped`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/trade/tickergrouped`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -673,18 +593,14 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosTradeTickergroupedGet(requestParameters: VversionCryptosTradeTickergroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
-        const response = await this.vversionCryptosTradeTickergroupedGetRaw(requestParameters, initOverrides);
+    async v1CryptosTradeTickergroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.v1CryptosTradeTickergroupedGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      */
-    async vversionCryptosTradeTradedategroupedGetRaw(requestParameters: VversionCryptosTradeTradedategroupedGetRequest, initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
-        if (requestParameters.version === null || requestParameters.version === undefined) {
-            throw new runtime.RequiredError('version','Required parameter requestParameters.version was null or undefined when calling vversionCryptosTradeTradedategroupedGet.');
-        }
-
+    async v1CryptosTradeTradedategroupedGetRaw(initOverrides?: RequestInit): Promise<runtime.ApiResponse<Array<TradesGroupedMonth>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -694,7 +610,7 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
         }
 
         const response = await this.request({
-            path: `/v{version}/cryptos/trade/tradedategrouped`.replace(`{${"version"}}`, this.processPathParam(requestParameters.version)),
+            path: `/v1/cryptos/trade/tradedategrouped`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -705,8 +621,8 @@ export class CryptoApi extends runtime.BaseAPI implements CryptoApiInterface {
 
     /**
      */
-    async vversionCryptosTradeTradedategroupedGet(requestParameters: VversionCryptosTradeTradedategroupedGetRequest, initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
-        const response = await this.vversionCryptosTradeTradedategroupedGetRaw(requestParameters, initOverrides);
+    async v1CryptosTradeTradedategroupedGet(initOverrides?: RequestInit): Promise<Array<TradesGroupedMonth>> {
+        const response = await this.v1CryptosTradeTradedategroupedGetRaw(initOverrides);
         return await response.value();
     }
 
