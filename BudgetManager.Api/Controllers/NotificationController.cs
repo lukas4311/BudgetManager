@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,13 @@ namespace BudgetManager.Api.Controllers
     /// Controller responsible for managing user notifications in the Budget Manager application.
     /// </summary>
     [ApiController]
-    [Route("notification")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/notification")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class NotificationController : BaseController
     {
         private readonly INotificationService notificationService;
@@ -30,9 +37,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of notification models for the current user.</returns>
         /// <response code="200">Returns the user's notifications successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet]
+        [HttpGet, MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<NotificationModel>> GetNotifications()
         {
             IEnumerable<NotificationModel> tags = notificationService.GetUserNotifications(GetUserId());
@@ -46,10 +51,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The notification was added successfully.</response>
         /// <response code="401">If the user doesn't have rights to add notifications for the specified user.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult AddNotification([FromBody] NotificationModel tagModel)
         {
             if (!notificationService.UserHasRight(tagModel.UserIdentityId, GetUserId()))
@@ -65,11 +67,8 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The notification was marked as displayed successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified notification.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPut]
-        [Route("/{notificationId}/markAsDisplayed")]
+        [HttpPut, MapToApiVersion("1.0")]
+        [Route("{notificationId}/markAsDisplayed"), MapToApiVersion("1.0")]
         public IActionResult MarkAsDisplayed(int notificationId)
         {
             if (!notificationService.UserHasRight(notificationId, GetUserId()))

@@ -33,12 +33,12 @@ export default class StockService implements IStockService {
     }
 
     public getStockTickers = async (): Promise<StockTickerModel[]> => {
-        return await this.stockApi.stockStockTickerGet();
+        return await this.stockApi.v1StockStockTickerGet();
     }
 
     public async getStockTradeHistory(): Promise<StockViewModel[]> {
         const tickers = await this.getStockTickers();
-        const stockTrades = await this.stockApi.stockStockTradeHistoryGet();
+        const stockTrades = await this.stockApi.v1StockStockTradeHistoryGet();
         return stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
             viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
@@ -48,7 +48,7 @@ export default class StockService implements IStockService {
 
     public async getStockTradeHistoryInSelectedCurrency(currencySymbol: ECurrencySymbol): Promise<StockViewModel[]> {
         const tickers = await this.getStockTickers();
-        const stockTrades = await this.stockApi.stockStockTradeHistoryExhangedToForexSymbolGet({ forexSymbol: currencySymbol });
+        const stockTrades = await this.stockApi.v1StockStockTradeHistoryExhangedToForexSymbolGet({ forexSymbol: currencySymbol });
         return stockTrades.map(s => {
             let viewModel = StockViewModel.mapFromDataModel(s);
             viewModel.stockTicker = _.first(tickers.filter(f => f.id == viewModel.stockTickerId))?.ticker ?? "undefined"
@@ -57,7 +57,7 @@ export default class StockService implements IStockService {
     }
 
     public async getStockTradeHistoryByTicker(ticker: string) {
-        return await this.stockApi.stockStockTradeHistoryTickerGet({ ticker: ticker });
+        return await this.stockApi.v1StockStockTradeHistoryTickerGet({ ticker: ticker });
     }
 
     public getStockTradesHistoryInSelectedCurrency = async (): Promise<StockViewModel[]> => {
@@ -224,7 +224,7 @@ export default class StockService implements IStockService {
             tradeValue: data.tradeValue
         };
 
-        await this.stockApi.stockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade });
+        await this.stockApi.v1StockStockTradeHistoryPut({ stockTradeHistoryModel: stockHistoryTrade});
     }
 
     public async createStockTradeHistory(data: StockViewModel) {
@@ -237,15 +237,15 @@ export default class StockService implements IStockService {
             tradeValue: data.tradeValue
         };
 
-        await this.stockApi.stockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
+        await this.stockApi.v1StockStockTradeHistoryPost({ stockTradeHistoryModel: stockHistoryTrade });
     }
 
     public async deleteStockTradeHistory(id: number) {
-        await this.stockApi.stockStockTradeHistoryDelete({ body: id });
+        await this.stockApi.v1StockStockTradeHistoryDelete({ body: id });
     }
 
     public async getCompanyProfile(ticker: string) {
-        return await this.stockApi.stockStockTickerCompanyProfileGet({ ticker: ticker })
+        return await this.stockApi.v1StockStockTickerCompanyProfileGet({ ticker: ticker })
     }
 
     public async getExchangeRate(from: string, to: string): Promise<number> {

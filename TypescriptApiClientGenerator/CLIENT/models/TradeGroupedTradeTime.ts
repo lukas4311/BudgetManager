@@ -16,67 +16,60 @@ import { exists, mapValues } from '../../runtime';
 /**
  * 
  * @export
- * @class TradesGroupedMonth
+ * @class TradeGroupedTradeTime
  */
-export class TradesGroupedMonth {
+export class TradeGroupedTradeTime {
     /**
      * 
      * @type {number}
-     * @memberof TradesGroupedMonth
+     * @memberof TradeGroupedTradeTime
      */
     tickerId?: number;
     /**
      * 
-     * @type {number}
-     * @memberof TradesGroupedMonth
+     * @type {Date}
+     * @memberof TradeGroupedTradeTime
      */
-    tradeYear?: number;
+    tradeTimeStamp?: Date;
     /**
      * 
      * @type {number}
-     * @memberof TradesGroupedMonth
+     * @memberof TradeGroupedTradeTime
      */
-    tradeMonth?: number;
+    totalTradeSize?: number;
     /**
      * 
      * @type {number}
-     * @memberof TradesGroupedMonth
+     * @memberof TradeGroupedTradeTime
      */
-    tradeSize?: number;
+    totalTradeValue?: number;
     /**
      * 
      * @type {number}
-     * @memberof TradesGroupedMonth
-     */
-    tradeValue?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TradesGroupedMonth
+     * @memberof TradeGroupedTradeTime
      */
     accumulatedTradeSize?: number;
 }
 
-export function TradesGroupedMonthFromJSON(json: any): TradesGroupedMonth {
-    return TradesGroupedMonthFromJSONTyped(json, false);
+export function TradeGroupedTradeTimeFromJSON(json: any): TradeGroupedTradeTime {
+    return TradeGroupedTradeTimeFromJSONTyped(json, false);
 }
 
-export function TradesGroupedMonthFromJSONTyped(json: any, ignoreDiscriminator: boolean): TradesGroupedMonth {
+export function TradeGroupedTradeTimeFromJSONTyped(json: any, ignoreDiscriminator: boolean): TradeGroupedTradeTime {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'tickerId': !exists(json, 'tickerId') ? undefined : json['tickerId'],
-        'tradeYear': !exists(json, 'tradeYear') ? undefined : json['tradeYear'],
-        'tradeMonth': !exists(json, 'tradeMonth') ? undefined : json['tradeMonth'],
-        'tradeSize': !exists(json, 'tradeSize') ? undefined : json['tradeSize'],
-        'tradeValue': !exists(json, 'tradeValue') ? undefined : json['tradeValue'],
+        'tradeTimeStamp': !exists(json, 'tradeTimeStamp') ? undefined : (new Date(json['tradeTimeStamp'])),
+        'totalTradeSize': !exists(json, 'totalTradeSize') ? undefined : json['totalTradeSize'],
+        'totalTradeValue': !exists(json, 'totalTradeValue') ? undefined : json['totalTradeValue'],
         'accumulatedTradeSize': !exists(json, 'accumulatedTradeSize') ? undefined : json['accumulatedTradeSize'],
     };
 }
 
-export function TradesGroupedMonthToJSON(value?: TradesGroupedMonth | null): any {
+export function TradeGroupedTradeTimeToJSON(value?: TradeGroupedTradeTime | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -86,10 +79,9 @@ export function TradesGroupedMonthToJSON(value?: TradesGroupedMonth | null): any
     return {
         
         'tickerId': value.tickerId,
-        'tradeYear': value.tradeYear,
-        'tradeMonth': value.tradeMonth,
-        'tradeSize': value.tradeSize,
-        'tradeValue': value.tradeValue,
+        'tradeTimeStamp': value.tradeTimeStamp === undefined ? undefined : (value.tradeTimeStamp.toISOString()),
+        'totalTradeSize': value.totalTradeSize,
+        'totalTradeValue': value.totalTradeValue,
         'accumulatedTradeSize': value.accumulatedTradeSize,
     };
 }

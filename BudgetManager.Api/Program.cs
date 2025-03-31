@@ -52,7 +52,12 @@ builder.Services.AddApiVersioning(config =>
         new UrlSegmentApiVersionReader(),
         new HeaderApiVersionReader("X-Api-Version"),
         new MediaTypeApiVersionReader("ver"));
-});
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+}); ;
 
 builder.Services.AddCors(options =>
 {

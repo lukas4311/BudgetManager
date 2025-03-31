@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,13 @@ namespace BudgetManager.Api.Controllers
     /// Controller for managing tags related to payments.
     /// </summary>
     [ApiController]
-    [Route("tags")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/tags")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class TagController : BaseController
     {
         private readonly ITagService tagService;
@@ -33,10 +40,8 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves all tags that have been used in payments by the current user.
         /// </summary>
         /// <returns>A list of tags used in payments.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet]
-        [Route("allUsed")]
+        [HttpGet, MapToApiVersion("1.0")]
+        [Route("allUsed"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TagModel>> GetPaymentsTags()
         {
             IEnumerable<TagModel> tags = tagService.GetPaymentsTags(GetUserId());
@@ -48,10 +53,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="tagModel">The tag model containing tag details and the associated payment ID.</param>
         /// <returns>A status code indicating success or failure.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult AddTagToPayment([FromBody] AddTagModel tagModel)
         {
             if (paymentService.UserHasRightToPayment(tagModel.PaymentId, GetUserId()))
@@ -66,9 +68,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <param name="tagId">The unique identifier of the tag to delete.</param>
         /// <returns>A status code indicating success.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult DeleteTag(int tagId)
         {
             tagService.Delete(tagId);

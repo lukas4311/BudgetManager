@@ -16,39 +16,32 @@ import { exists, mapValues } from '../../runtime';
 /**
  * 
  * @export
- * @class AddTagModel
+ * @class InlineObject1
  */
-export class AddTagModel {
+export class InlineObject1 {
     /**
      * 
-     * @type {string}
-     * @memberof AddTagModel
+     * @type {Blob}
+     * @memberof InlineObject1
      */
-    code?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof AddTagModel
-     */
-    paymentId?: number;
+    file?: Blob;
 }
 
-export function AddTagModelFromJSON(json: any): AddTagModel {
-    return AddTagModelFromJSONTyped(json, false);
+export function InlineObject1FromJSON(json: any): InlineObject1 {
+    return InlineObject1FromJSONTyped(json, false);
 }
 
-export function AddTagModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): AddTagModel {
+export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineObject1 {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'code': !exists(json, 'code') ? undefined : json['code'],
-        'paymentId': !exists(json, 'paymentId') ? undefined : json['paymentId'],
+        'file': !exists(json, 'file') ? undefined : json['file'],
     };
 }
 
-export function AddTagModelToJSON(value?: AddTagModel | null): any {
+export function InlineObject1ToJSON(value?: InlineObject1 | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,7 +50,6 @@ export function AddTagModelToJSON(value?: AddTagModel | null): any {
     }
     return {
         
-        'code': value.code,
-        'paymentId': value.paymentId,
+        'file': value.file,
     };
 }

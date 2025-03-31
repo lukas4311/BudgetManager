@@ -1,4 +1,5 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using Asp.Versioning;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,13 @@ namespace BudgetManager.Api.Controllers
     /// Controller responsible for managing other investment operations in the Budget Manager application.
     /// </summary>
     [ApiController]
-    [Route("otherInvestment")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/otherInvestment")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class OtherInvestmentController : BaseController
     {
         private const int OkResult = 200;
@@ -40,9 +47,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of other investment models.</returns>
         /// <response code="200">Returns the investment data successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<OtherInvestmentModel>> Get()
         {
             return Ok(otherInvestmentService.GetAll(GetUserId()));
@@ -54,9 +59,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="otherInvestment">The investment model containing the investment details.</param>
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The investment was added successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult Add([FromBody] OtherInvestmentModel otherInvestment)
         {
             otherInvestment.UserIdentityId = GetUserId();
@@ -70,9 +73,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="otherInvestment">The investment model containing the updated investment details.</param>
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The investment was updated successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult Update([FromBody] OtherInvestmentModel otherInvestment)
         {
             otherInvestment.UserIdentityId = GetUserId();
@@ -87,10 +88,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The investment was deleted successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult Delete([FromBody] int id)
         {
             if (!otherInvestmentService.UserHasRightToPayment(id, GetUserId()))
@@ -107,9 +105,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>A collection of balance history models for the specified investment.</returns>
         /// <response code="200">Returns the balance history successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("{otherInvestmentId}/balanceHistory")]
+        [HttpGet("{otherInvestmentId}/balanceHistory"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<OtherInvestmentBalaceHistoryModel>> Get(int otherInvestmentId)
         {
             if (CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
@@ -126,10 +122,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The balance history entry was added successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost("{otherInvestmentId}/balanceHistory")]
+        [HttpPost("{otherInvestmentId}/balanceHistory"), MapToApiVersion("1.0")]
         public IActionResult AddHistoryBalance(int otherInvestmentId, [FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
             if (CheckUserRigth(otherInvestmentId) is var result && result.StatusCode != OkResult)
@@ -145,9 +138,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of all balance history entries for the user's investments.</returns>
         /// <response code="200">Returns the balance history entries successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("otherInvestment/balance")]
+        [HttpGet("otherInvestment/balance"), MapToApiVersion("1.0")]
         public ActionResult GetAllBalances() => Ok(otherInvestmentBalaceHistoryService.Get(b => b.OtherInvestment.UserIdentityId == GetUserId()));
 
         /// <summary>
@@ -157,10 +148,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The balance history entry was updated successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPut("/balanceHistory")]
+        [HttpPut("balanceHistory"), MapToApiVersion("1.0")]
         public IActionResult UpdateHistoryBalance([FromBody] OtherInvestmentBalaceHistoryModel otherInvestmentBalaceHistory)
         {
             if (CheckUserRigth(otherInvestmentBalaceHistory.OtherInvestmentId) is var result && result.StatusCode != OkResult)
@@ -177,10 +165,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The balance history entry was deleted successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("/balanceHistory")]
+        [HttpDelete("balanceHistory"), MapToApiVersion("1.0")]
         public IActionResult DeleteHistoryBalance([FromBody] int id)
         {
             if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
@@ -198,10 +183,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>The calculated profit amount.</returns>
         /// <response code="200">Returns the profit calculation successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{id}/profitOverYears/{years}")]
+        [HttpGet("{id}/profitOverYears/{years}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<decimal>> ProfitOverYears(int id, int? years = null)
         {
             if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
@@ -217,9 +199,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="id">The ID of the investment to calculate overall profit for.</param>
         /// <returns>The calculated overall profit amount.</returns>
         /// <response code="200">Returns the overall profit calculation successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("{id}/profitOverall")]
+        [HttpGet("{id}/profitOverall"), MapToApiVersion("1.0")]
         public async Task<ActionResult<decimal>> ProfitOverall(int id)
             => await ProfitOverYears(id);
 
@@ -231,10 +211,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>A collection of payment models associated with the specified tag and investment.</returns>
         /// <response code="200">Returns the tagged payments successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{id}/tagedPayments/{tagId}")]
+        [HttpGet("{id}/tagedPayments/{tagId}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<PaymentModel>>> GetTagedPayments(int id, int tagId)
         {
             if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
@@ -250,10 +227,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>The investment tag model linked to the specified investment.</returns>
         /// <response code="200">Returns the linked tag successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("{id}/linkedTag")]
+        [HttpGet("{id}/linkedTag"), MapToApiVersion("1.0")]
         public ActionResult<OtherInvestmentTagModel> GetLinkedTag(int id)
         {
             if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
@@ -270,10 +244,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The investment was linked with the tag successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified investment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost("{id}/tagedPayments/{tagId}")]
+        [HttpPost("{id}/tagedPayments/{tagId}"), MapToApiVersion("1.0")]
         public IActionResult LinkInvestmentWithTag(int id, int tagId)
         {
             if (CheckUserRigth(id) is var result && result.StatusCode != OkResult)
@@ -288,9 +259,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A summary model containing aggregated information about the user's investments.</returns>
         /// <response code="200">Returns the investment summary successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("summary")]
+        [HttpGet("summary"), MapToApiVersion("1.0")]
         public ActionResult<OtherInvestmentBalanceSummaryModel> GetOtherInvestmentSummary()
             => Ok(otherInvestmentService.GetAllInvestmentSummary(GetUserId()));
 

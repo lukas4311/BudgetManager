@@ -1,4 +1,5 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using Asp.Versioning;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
 using BudgetManager.Domain.MessagingContracts;
@@ -20,7 +21,13 @@ namespace BudgetManager.Api.Controllers
     /// Controller for handling stock-related operations, including stock tickers, trade history, pricing data, and company profiles.
     /// </summary>
     [ApiController]
-    [Route("stock")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/stock")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class StockController : BaseController
     {
         private readonly IStockTickerService stockTickerService;
@@ -56,9 +63,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Retrieves all stock tickers available in the system.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("stockTicker")]
+        [HttpGet("stockTicker"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<StockTickerModel>> GetTickers()
         {
             return Ok(stockTickerService.GetAll());
@@ -67,9 +72,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Updates metadata for a specific stock ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut("stockTicker/{tickerId}/metadata")]
+        [HttpPut("stockTicker/{tickerId}/metadata"), MapToApiVersion("1.0")]
         public ActionResult UpdateTickerMetadata(int tickerId, [FromBody] string metadata)
         {
             stockTickerService.UpdateTickerMetadata(tickerId, metadata);
@@ -79,9 +82,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Updates details of a specific stock ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut("stockTicker/{tickerId}")]
+        [HttpPut("stockTicker/{tickerId}"), MapToApiVersion("1.0")]
         public ActionResult UpdateTicker(int tickerId, StockTickerModel stockTickerModel)
         {
             stockTickerModel.Id = tickerId;
@@ -92,36 +93,28 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Retrieves all stock trade history entries for the current user.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("stockTradeHistory")]
+        [HttpGet("stockTradeHistory"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> Get()
             => Ok(stockTradeHistoryService.GetAll(GetUserId()));
 
         /// <summary>
         /// Retrieves stock trade history converted to a specified foreign currency.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}")]
+        [HttpGet("stockTradeHistory/exhangedTo/{forexSymbol}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<StockTradeHistoryGetModel>>> Get(ECurrencySymbol forexSymbol)
             => Ok(await stockTradeHistoryService.GetAll(GetUserId(), forexSymbol));
 
         /// <summary>
         /// Retrieves stock trade history for a specific ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("stockTradeHistory/{ticker}")]
+        [HttpGet("stockTradeHistory/{ticker}"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<StockTradeHistoryGetModel>> GetTickerTradeHistory(string ticker)
             => Ok(stockTradeHistoryService.GetTradeHistory(GetUserId(), ticker));
 
         /// <summary>
         /// Adds a new stock trade history entry.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost("stockTradeHistory")]
+        [HttpPost("stockTradeHistory"), MapToApiVersion("1.0")]
         public IActionResult Add([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
         {
             stockTradeHistoryModel.UserIdentityId = GetUserId();
@@ -132,9 +125,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Updates an existing stock trade history entry.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut("stockTradeHistory")]
+        [HttpPut("stockTradeHistory"), MapToApiVersion("1.0")]
         public IActionResult Update([FromBody] StockTradeHistoryModel stockTradeHistoryModel)
         {
             stockTradeHistoryModel.UserIdentityId = GetUserId();
@@ -145,10 +136,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Deletes a stock trade history entry if the user has the right permissions.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete("stockTradeHistory")]
+        [HttpDelete("stockTradeHistory"), MapToApiVersion("1.0")]
         public IActionResult Delete([FromBody] int id)
         {
             if (!stockTradeHistoryService.UserHasRightToStockTradeHistory(id, GetUserId()))
@@ -161,10 +149,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Retrieves stock price history for a specific ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("stock/{ticker}/price")]
+        [HttpGet("stock/{ticker}/price"), MapToApiVersion("1.0")]
         public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker)
         {
             if (!stockTickerService.GetAll().Any(t => string.Equals(t.Ticker, ticker, StringComparison.OrdinalIgnoreCase)))
@@ -176,10 +161,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Retrieves the company profile for a given stock ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [HttpGet("stock/{ticker}/companyProfile")]
+        [HttpGet("stock/{ticker}/companyProfile"), MapToApiVersion("1.0")]
         public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
         {
             var companyProfile = companyProfileService.Get(c => c.Symbol == ticker).SingleOrDefault();
@@ -193,9 +175,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Uploads a broker report file for processing.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost("brokerReport/{brokerId}")]
+        [HttpPost("brokerReport/{brokerId}"), MapToApiVersion("1.0")]
         public async Task<IActionResult> UploadReport([FromRoute] int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
@@ -207,9 +187,7 @@ namespace BudgetManager.Api.Controllers
         /// <summary>
         /// Publishes a request for a new stock ticker.
         /// </summary>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost("tickerRequest")]
+        [HttpPost("tickerRequest"), MapToApiVersion("1.0")]
         public async Task<IActionResult> TickerRequest(TickerRequest tickerRequest)
         {
             await publishEndpoint.Publish(new TickerRequest { Ticker = tickerRequest.Ticker, UserId = GetUserId() }, context => context.SetRoutingKey("new_ticker"));
@@ -220,9 +198,7 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves all trades grouped by month for the current user.
         /// </summary>
         /// <returns>A list of trades grouped by month.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/monthlygrouped")]
+        [HttpGet("trade/monthlygrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(GetUserId());
@@ -233,9 +209,7 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves all trades grouped by ticker and trade date for the current user.
         /// </summary>
         /// <returns>A list of trades grouped by ticker and trade date.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/tradedategrouped")]
+        [HttpGet("trade/tradedategrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradeGroupedTradeTime>> GetGroupedByTickerAndTradeDate()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
@@ -246,9 +220,7 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves all trades grouped by ticker for the current user.
         /// </summary>
         /// <returns>A list of trades grouped by ticker.</returns>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/tickergrouped")]
+        [HttpGet("trade/tickergrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradeGroupedTicker>> GetGroupedByTicker()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());

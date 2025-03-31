@@ -15,9 +15,10 @@ namespace BudgetManager.Api.Controllers
     /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("bankAccounts/v{version:apiVersion}")]
+    [Route("v{version:apiVersion}/bankAccounts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json", "application/problem+json")]
     public partial class BankAccountController : BaseController

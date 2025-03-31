@@ -1,4 +1,5 @@
-﻿using BudgetManager.Domain.DTOs;
+﻿using Asp.Versioning;
+using BudgetManager.Domain.DTOs;
 using BudgetManager.Services;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,13 @@ namespace BudgetManager.Api.Controllers
     /// Provides endpoints for managing commodity trades, retrieving commodity types and units, and getting gold prices.
     /// </summary>
     [ApiController]
-    [Route("comodities")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/comodities")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class ComodityController : BaseController
     {
         private readonly IComodityService comodityService;
@@ -38,9 +45,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of commodity trade histories belonging to the current user.</returns>
         /// <response code="200">Returns the collection of commodity trade histories.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<ComodityTradeHistoryModel>> Get()
         {
             return Ok(comodityService.GetByUser(GetUserId()));
@@ -52,9 +57,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="tradeHistory">The commodity trade history record to add.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The commodity trade history was successfully added.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult Add([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
             tradeHistory.UserIdentityId = GetUserId();
@@ -68,9 +71,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="tradeHistory">The commodity trade history record with updated information.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The commodity trade history was successfully updated.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult Update([FromBody] ComodityTradeHistoryModel tradeHistory)
         {
             tradeHistory.UserIdentityId = GetUserId();
@@ -85,10 +86,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The commodity trade history was successfully deleted.</response>
         /// <response code="401">The user is not authorized to delete this commodity trade history.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult Delete([FromBody] int id)
         {
             if (!comodityService.UserHasRightToCryptoTrade(id, GetUserId()))
@@ -103,9 +101,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of commodity type models.</returns>
         /// <response code="200">Returns the collection of commodity types.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("comodityType/all")]
+        [HttpGet("comodityType/all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<ComodityTypeModel>> GetComodityTypes() =>
             Ok(comodityService.GetComodityTypes());
 
@@ -114,9 +110,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of commodity unit models.</returns>
         /// <response code="200">Returns the collection of commodity units.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("comodityUnit/all")]
+        [HttpGet("comodityUnit/all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<ComodityUnitModel>> GetComodityUnits() =>
             Ok(comodityService.GetComodityUnits());
 
@@ -125,9 +119,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>The current gold price per ounce in USD.</returns>
         /// <response code="200">Returns the current gold price per ounce in USD.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("gold/actualPrice")]
+        [HttpGet("gold/actualPrice"), MapToApiVersion("1.0")]
         public async Task<ActionResult<double>> GetCurrentGoldPriceForOunce()
         {
             double exhangeRate = await comodityService.GetCurrentGoldPriceForOunce().ConfigureAwait(false);
@@ -141,10 +133,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>The current gold price per ounce in the specified currency.</returns>
         /// <response code="200">Returns the current gold price per ounce in the specified currency.</response>
         /// <response code="400">The specified currency code is not valid.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpGet("gold/actualPrice/{currencyCode}")]
+        [HttpGet("gold/actualPrice/{currencyCode}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<double>> GetCurrentGoldPriceForOunce(string currencyCode)
         {
             double currencyExchangeRate = 1.0;

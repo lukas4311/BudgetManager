@@ -33,6 +33,7 @@ models/EnumItem.ts
 models/EnumItemModel.ts
 models/EnumItemModelAdjusted.ts
 models/EnumItemType.ts
+models/InlineObject1.ts
 models/InterestRate.ts
 models/Notification.ts
 models/NotificationModel.ts
@@ -50,14 +51,16 @@ models/PaymentModel.ts
 models/PaymentTag.ts
 models/PaymentType.ts
 models/PaymentTypeModel.ts
+models/ProblemDetails.ts
 models/StockPrice.ts
-models/StockSplitAccumulated.ts
 models/StockTickerModel.ts
 models/StockTradeHistoryGetModel.ts
 models/StockTradeHistoryModel.ts
 models/Tag.ts
 models/TagModel.ts
 models/TickerRequest.ts
+models/TradeGroupedTicker.ts
+models/TradeGroupedTradeTime.ts
 models/TradeHistory.ts
 models/TradesGroupedMonth.ts
 models/UserData.ts

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Repository;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,13 @@ namespace BudgetManager.Api.Controllers
     /// Provides endpoints for retrieving currency information.
     /// </summary>
     [ApiController]
-    [Route("currency")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/currency")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class CurrencyController : BaseController
     {
         private readonly IRepository<CurrencySymbol> currencySymbolRepository;
@@ -31,9 +38,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of all currency symbols.</returns>
         /// <response code="200">Returns the collection of currency symbols.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<CurrencySymbol>> Get()
         {
             return Ok(currencySymbolRepository.FindAll());

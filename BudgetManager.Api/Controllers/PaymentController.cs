@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,13 @@ namespace BudgetManager.Api.Controllers
     /// Controller responsible for managing payment operations in the Budget Manager application.
     /// </summary>
     [ApiController]
-    [Route("payments")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/payments")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class PaymentController : BaseController
     {
         private readonly IPaymentService paymentService;
@@ -41,10 +48,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>A collection of payment models matching the specified criteria.</returns>
         /// <response code="200">Returns the payment data successfully.</response>
         /// <response code="401">If the user doesn't have rights to access the specified bank account.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet]
+        [HttpGet, MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<PaymentModel>> GetPaymentsData([FromQuery] DateTime? fromDate, DateTime? toDate, int? bankAccountId = null)
         {
             if (bankAccountId.HasValue && !bankAccountService.UserHasRightToBankAccount(bankAccountId.Value, GetUserId()))
@@ -59,9 +63,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of payment type models.</returns>
         /// <response code="200">Returns the payment types successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("types")]
+        [HttpGet("types"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<PaymentTypeModel>> GetPaymentTypes() => paymentService.GetPaymentTypes();
 
         /// <summary>
@@ -69,9 +71,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of payment category models.</returns>
         /// <response code="200">Returns the payment categories successfully.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("categories")]
+        [HttpGet("categories"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<PaymentCategoryModel>> GetPaymentCategories() => paymentService.GetPaymentCategories();
 
         /// <summary>
@@ -81,10 +81,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The payment was added successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified bank account.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult AddPayment([FromBody] PaymentModel paymentViewModel)
         {
             if (!bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, GetUserId()))
@@ -102,10 +99,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The payment was updated successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified bank account.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult UpdatePayment([FromBody] PaymentModel paymentViewModel)
         {
             if (!bankAccountService.UserHasRightToBankAccount(paymentViewModel.BankAccountId.Value, GetUserId()))
@@ -123,10 +117,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>The detailed payment model.</returns>
         /// <response code="200">Returns the payment details successfully.</response>
         /// <response code="401">If the user doesn't have rights to access the bank account associated with the payment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet("detail")]
+        [HttpGet("detail"), MapToApiVersion("1.0")]
         public ActionResult<PaymentModel> GetPayment(int id)
         {
             PaymentModel payment = paymentService.Get(id);
@@ -144,10 +135,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The payment was cloned successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified payment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpPost("clone/{id}")]
+        [HttpPost("clone/{id}"), MapToApiVersion("1.0")]
         public IActionResult ClonePayment(int id)
         {
             if (!paymentService.UserHasRightToPayment(id, GetUserId()))
@@ -164,10 +152,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The payment was deleted successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified payment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult DeletePayment(int id)
         {
             if (!paymentService.UserHasRightToPayment(id, GetUserId()))
@@ -185,11 +170,8 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An IActionResult indicating success or failure.</returns>
         /// <response code="200">The tag was removed successfully.</response>
         /// <response code="401">If the user doesn't have rights to the specified payment.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
-        [Route("{paymentId}/tag/{tagId}")]
+        [HttpDelete, MapToApiVersion("1.0")]
+        [Route("{paymentId}/tag/{tagId}"), MapToApiVersion("1.0")]
         public IActionResult RemoveTagFromPayment(int tagId, int paymentId)
         {
             if (paymentService.UserHasRightToPayment(paymentId, GetUserId()))

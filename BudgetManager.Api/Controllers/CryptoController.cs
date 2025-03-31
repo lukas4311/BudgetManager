@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using BudgetManager.Data.DataModels;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.DTOs.Queries;
@@ -17,8 +18,14 @@ namespace BudgetManager.Api.Controllers
     /// Controller responsible for handling cryptocurrency-related operations in the Budget Manager API.
     /// Provides endpoints for managing crypto trades, exchange rates, and broker reports.
     /// </summary>
-    [ApiController]
-    [Route("cryptos")]
+    //[ApiController]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/cryptos")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class CryptoController : BaseController
     {
         private readonly ICryptoService cryptoService;
@@ -41,9 +48,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of trade histories belonging to the current user.</returns>
         /// <response code="200">Returns the collection of trade histories.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradeHistory>> Get()
         {
             return Ok(cryptoService.GetByUser(GetUserId()));
@@ -55,9 +60,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="tradeHistory">The trade history record to add.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The trade history was successfully added.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult Add([FromBody] TradeHistory tradeHistory)
         {
             tradeHistory.UserIdentityId = GetUserId();
@@ -71,9 +74,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="tradeHistory">The trade history record with updated information.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The trade history was successfully updated.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult Update([FromBody] TradeHistory tradeHistory)
         {
             tradeHistory.UserIdentityId = GetUserId();
@@ -88,10 +89,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The trade history was successfully deleted.</response>
         /// <response code="401">The user is not authorized to delete this trade history.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult Delete([FromBody] int id)
         {
             if (!cryptoService.UserHasRightToCryptoTrade(id, GetUserId()))
@@ -109,9 +107,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="toCurrency">The target currency code.</param>
         /// <returns>The current exchange rate as a double value.</returns>
         /// <response code="200">Returns the current exchange rate.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}")]
+        [HttpGet("actualExchangeRate/{fromCurrency}/{toCurrency}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency)
         {
             double exhangeRate = await forexService.GetCurrentExchangeRate(fromCurrency, toCurrency).ConfigureAwait(false);
@@ -130,9 +126,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="atDate">The date for which to retrieve the exchange rate.</param>
         /// <returns>The exchange rate at the specified date as a double value.</returns>
         /// <response code="200">Returns the exchange rate at the specified date.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}/{atDate}")]
+        [HttpGet("exchangeRate/{fromCurrency}/{toCurrency}/{atDate}"), MapToApiVersion("1.0")]
         public async Task<ActionResult<double>> GetCurrentExchangeRate(string fromCurrency, string toCurrency, DateTime atDate)
         {
             double exhangeRate = await cryptoService.GetCurrentExchangeRate(fromCurrency, toCurrency, atDate).ConfigureAwait(false);
@@ -145,9 +139,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="tradeId">The ID of the trade history record to retrieve.</param>
         /// <returns>The trade history record with the specified ID.</returns>
         /// <response code="200">Returns the trade history record.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("tradeDetail/{tradeId}")]
+        [HttpGet("tradeDetail/{tradeId}"), MapToApiVersion("1.0")]
         public ActionResult<TradeHistory> Get(int tradeId)
         {
             return Ok(cryptoService.Get(tradeId, GetUserId()));
@@ -158,9 +150,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of cryptocurrency ticker models.</returns>
         /// <response code="200">Returns the collection of cryptocurrency tickers.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("tickers")]
+        [HttpGet("tickers"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<CryptoTickerModel>> GetTickers() => Ok(cryptoService.GetAllTickers());
 
         /// <summary>
@@ -170,9 +160,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="file">The broker report file to upload.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The broker report was successfully uploaded for processing.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost("brokerReport/{brokerId}")]
+        [HttpPost("brokerReport/{brokerId}"), MapToApiVersion("1.0")]
         public async Task<IActionResult> UploadReport([FromRoute] int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();
@@ -188,9 +176,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of trades grouped by month.</returns>
         /// <response code="200">Returns the collection of trades grouped by month.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/monthlygrouped")]
+        [HttpGet("trade/monthlygrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
             var data = cryptoService.GetAllTradesGroupedByMonth(GetUserId());
@@ -202,9 +188,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of trades grouped by ticker and trade date.</returns>
         /// <response code="200">Returns the collection of trades grouped by ticker and trade date.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/tradedategrouped")]
+        [HttpGet("trade/tradedategrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
         {
             var data = cryptoService.GetAllTradesGroupedByTradeDate(GetUserId());
@@ -216,9 +200,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of trades grouped by ticker.</returns>
         /// <response code="200">Returns the collection of trades grouped by ticker.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("trade/tickergrouped")]
+        [HttpGet("trade/tickergrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
         {
             var data = cryptoService.GetAllTradesGroupedByTicker(GetUserId());

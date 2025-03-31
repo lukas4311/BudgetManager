@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Asp.Versioning;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,13 @@ namespace BudgetManager.Api.Controllers
     /// Provides endpoints for creating, retrieving, updating, and deleting budgets.
     /// </summary>
     [ApiController]
-    [Route("budgets")]
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/budgets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json", "application/problem+json")]
     public class BudgetController : BaseController
     {
         private readonly IBudgetService budgetService;
@@ -31,9 +38,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of budget models belonging to the current user.</returns>
         /// <response code="200">Returns the collection of budgets.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("all")]
+        [HttpGet("all"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<BudgetModel>> Get()
         {
             return Ok(budgetService.GetByUserId(GetUserId()));
@@ -46,10 +51,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>The budget model with the specified ID.</returns>
         /// <response code="200">Returns the budget with the specified ID.</response>
         /// <response code="401">The user is not authorized to access this budget.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpGet]
+        [HttpGet, MapToApiVersion("1.0")]
         public ActionResult<BudgetModel> Get(int id)
         {
             if (!budgetService.UserHasRightToBudget(id, GetUserId()))
@@ -62,9 +64,7 @@ namespace BudgetManager.Api.Controllers
         /// </summary>
         /// <returns>A collection of active budget models for the current user.</returns>
         /// <response code="200">Returns the collection of active budgets.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("actual")]
+        [HttpGet("actual"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<BudgetModel>> GetActual()
         {
             return Ok(budgetService.GetActual(GetUserId()));
@@ -76,9 +76,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="budgetModel">The budget model to add.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The budget was successfully added.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPost]
+        [HttpPost, MapToApiVersion("1.0")]
         public IActionResult Add([FromBody] BudgetModel budgetModel)
         {
             budgetModel.UserIdentityId = GetUserId();
@@ -92,9 +90,7 @@ namespace BudgetManager.Api.Controllers
         /// <param name="budgetModel">The budget model with updated information.</param>
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The budget was successfully updated.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpPut]
+        [HttpPut, MapToApiVersion("1.0")]
         public IActionResult Update([FromBody] BudgetModel budgetModel)
         {
             budgetModel.UserIdentityId = GetUserId();
@@ -109,10 +105,7 @@ namespace BudgetManager.Api.Controllers
         /// <returns>An OK result if the operation is successful.</returns>
         /// <response code="200">The budget was successfully deleted.</response>
         /// <response code="401">The user is not authorized to delete this budget.</response>
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [HttpDelete]
+        [HttpDelete, MapToApiVersion("1.0")]
         public IActionResult Delete([FromBody] int id)
         {
             if (!budgetService.UserHasRightToBudget(id, GetUserId()))
