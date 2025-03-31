@@ -31,7 +31,8 @@ namespace BudgetManager.Api.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            if (await HasAllowAnonymousAtrribute(context) || context.Request.Path.ToString().ToLower().Contains("/scalar"))
+            if (await HasAllowAnonymousAtrribute(context) || context.Request.Path.ToString().ToLower().Contains("/scalar")
+                || context.Request.Path.ToString().ToLower().Contains("/openapi"))
             {
                 await next(context);
                 return;
