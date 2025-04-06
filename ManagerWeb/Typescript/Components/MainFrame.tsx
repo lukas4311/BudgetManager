@@ -22,7 +22,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
     let notificationApi: NotificationApi = undefined;
 
     const markNotificationAsDiplayed = async (notificationId: number) => {
-        await notificationApi.notificationIdMarkAsDisplayedPut({ notificationId: notificationId });
+        await notificationApi.v1NotificationNotificationIdMarkAsDisplayedPut({ notificationId: notificationId });
     }
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const MainFrame = (props: { children: JSX.Element, classStyle?: string, header: 
             try {
                 const apiFactory = new ApiClientFactory(history);
                 notificationApi = await apiFactory.getClient(NotificationApi);
-                const notifications = await notificationApi.notificationGet();
+                const notifications = await notificationApi.v1NotificationGet();
                 setnotDisplayedNotificationsCount(notifications?.filter(n => !n.isDisplayed)?.length ?? 0);
                 const notifiMessages = notifications.map((n, i) => (<Message key={i} heading={n.heading} message={n.content} isDisplayed={n.isDisplayed} onClick={_ => markNotificationAsDiplayed(n.id)}></Message>))
                 setNotifications(notifiMessages);
