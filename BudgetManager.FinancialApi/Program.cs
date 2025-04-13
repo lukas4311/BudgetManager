@@ -34,7 +34,7 @@ builder.Services.AddProblemDetails(options =>
         var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
         context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
     };
-}); ;
+});
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddCors(options =>
