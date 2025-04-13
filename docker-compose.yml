@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  authapi:
+    build:
+      context: .
+      dockerfile: /BudgetManager.AuthApi/dockerfile
+    container_name: authapi
+    ports:
+      - "8000:8080"  # HTTP
+      - "8001:8081"  # HTTPS
+    networks:
+      - budget-network
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  mainapi:
+    build:
+      context: .
+      dockerfile: /BudgetManager.Api/dockerfile
+    container_name: mainapi
+    ports:
+      - "8002:8080"  # HTTP
+      - "8003:8081"  # HTTPS
+    depends_on:
+      - authapi
+    networks:
+      - budget-network
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+      - ASPNETCORE_ENVIRONMENT=Development
+      - AuthApi__BaseUrl=https://authapi:8081
+
+networks:
+  budget-network:
+    driver: bridge
