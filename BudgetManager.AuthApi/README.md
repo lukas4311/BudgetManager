@@ -23,8 +23,11 @@
 
 ### Docker commands
 
+
+```bash
 Run from root project folder
 
-docker build --pull --rm -f 'BudgetManager.AuthApi/dockerfile' -t 'budgetmanager:latest' '.'
+docker build --pull --rm -f 'BudgetManager.AuthApi/dockerfile' -t 'budgetmanagerauthapi:latest' '.'
 
-docker run --rm -it -p 8000:8080 -p 8001:8081 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_Kestrel__Certificates__Default__Password="12345" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v C:\Users\lukas.salficky\AppData\Local\.aspnet\https:/https/ budgetmanager
+docker run --rm --name budgetmanagerauthapi -it -p 8000:8080 -p 8001:8081 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_Kestrel__Certificates__Default__Password="12345" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v C:\Users\lukas.salficky\AppData\Local\.aspnet\https:/https/ budgetmanagerauthapi
+```

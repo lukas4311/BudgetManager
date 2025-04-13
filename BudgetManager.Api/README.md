@@ -40,7 +40,7 @@
 Run from root project folder
 
 ```bash
-docker build --pull --rm -f 'BudgetManager.AuthApi/dockerfile' -t 'budgetmanager:latest' '.'
+docker build --pull --rm -f 'BudgetManager.Api/dockerfile' -t 'budgetmanager:latest' '.'
 
-docker run --rm -it -p 8002:8080 -p 8003:8081 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_Kestrel__Certificates__Default__Password="12345" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v C:\Users\lukas.salficky\AppData\Local\.aspnet\https:/https/ budgetmanagerapi
+docker run --rm --name budgetmanagerapi -it -p 8002:8080 -p 8003:8081 -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_Kestrel__Certificates__Default__Password="12345" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx -v C:\Users\f\.aspnet\https\:/https/ budgetmanagerapi
 ```
