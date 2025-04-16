@@ -38,6 +38,26 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - AuthApi__BaseUrl=https://authapi:8081
 
+  finapi:
+    build:
+      context: .
+      dockerfile: /BudgetManager.FinancialApi/dockerfile
+    container_name: mainapi
+    ports:
+      - "8004:8080"  # HTTP
+      - "8005:8081"  # HTTPS
+    depends_on:
+      - authapi
+    networks:
+      - budget-network
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+      - ASPNETCORE_ENVIRONMENT=Development
+      - AuthApi__BaseUrl=https://authapi:8081
+
 networks:
   budget-network:
     driver: bridge
