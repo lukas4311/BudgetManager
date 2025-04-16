@@ -10,7 +10,7 @@ services:
       - "8000:8080"  # HTTP
       - "8001:8081"  # HTTPS
     networks:
-      - budget-network
+      - budget-manager-net
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro
     environment:
@@ -29,27 +29,29 @@ services:
     depends_on:
       - authapi
     networks:
-      - budget-network
+      - budget-manager-net
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro
     environment:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
       - ASPNETCORE_ENVIRONMENT=Development
-      - AuthApi__BaseUrl=https://authapi:8081
+      - AuthApi__ValidateUrl=https://authapi:8081/auth/v1/validate
+      - AuthApi__DataUrl=https://authapi:8081/auth/v1/tokendata
+      - Rabbit__RabbitMqUri=rabbitmq://rabbitmq:5672/
 
   finapi:
     build:
       context: .
       dockerfile: /BudgetManager.FinancialApi/dockerfile
-    container_name: mainapi
+    container_name: finapi
     ports:
       - "8004:8080"  # HTTP
       - "8005:8081"  # HTTPS
     depends_on:
       - authapi
     networks:
-      - budget-network
+      - budget-manager-net
     volumes:
       - ${USERPROFILE}/.aspnet/https:/https:ro
     environment:
@@ -59,5 +61,5 @@ services:
       - AuthApi__BaseUrl=https://authapi:8081
 
 networks:
-  budget-network:
-    driver: bridge
+  budget-manager-net:
+    external: true
