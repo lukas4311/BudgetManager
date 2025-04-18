@@ -17,6 +17,9 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/budgetmanager.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
       - ASPNETCORE_ENVIRONMENT=Development
+      - DbSetting__ConnectionString=Server=host.docker.internal;Database=BudgetManager;User ID=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mainapi:
     build:

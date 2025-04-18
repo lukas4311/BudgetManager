@@ -351,3 +351,4 @@ secret.py
 
 /BudgetManager.WebScrapers/BrokerReports/**
 .env
+budgetmanager.crt
