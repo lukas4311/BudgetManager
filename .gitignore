@@ -350,3 +350,4 @@ appsettings.Development.json
 secret.py
 
 /BudgetManager.WebScrapers/BrokerReports/**
+.env

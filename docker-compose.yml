@@ -39,6 +39,9 @@ services:
       - AuthApi__ValidateUrl=https://authapi:8081/auth/v1/validate
       - AuthApi__DataUrl=https://authapi:8081/auth/v1/tokendata
       - Rabbit__RabbitMqUri=rabbitmq://rabbitmq:5672/
+      - DbSetting__ConnectionString=Server=host.docker.internal;Database=BudgetManager;User ID=${SQL_USER};Password=${SQL_PASSWORD};TrustServerCertificate=True
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   finapi:
     build:
