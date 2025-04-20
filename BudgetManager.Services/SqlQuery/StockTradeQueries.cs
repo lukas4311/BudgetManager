@@ -190,6 +190,15 @@ AS
 		AND eit.Code = {tickersType.ToString()}
 	WHERE
 		UserIdentityId = {userId}),
+TradesTickerWIthCurrency AS (
+	SELECT
+		sth.TickerId
+		,MIN(sth.TradeCurrencySymbolId) AS TradeCurrencySymbolId
+	FROM 
+		[dbo].[Trade] sth
+	GROUP BY
+		sth.TickerId
+),
 TradesWithSplit
 AS
 (SELECT
@@ -233,13 +242,17 @@ AS
 AccumulatedTrades
 AS
 (SELECT
-		TickerId
+		agt.TickerId
 	   ,TradeYear
 	   ,TradeMonth
 	   ,TradeSize
 	   ,TradeValue
-	   ,SUM(TradeSize) OVER (PARTITION BY TickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize
-	FROM AggregatedTrades)
+	   ,SUM(TradeSize) OVER (PARTITION BY agt.TickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize
+	   ,ttc.TradeCurrencySymbolId
+	FROM AggregatedTrades agt
+	LEFT JOIN TradesTickerWIthCurrency ttc ON
+		ttc.TickerId = agt.TickerId
+)
 SELECT
 	TickerId
    ,TradeYear
@@ -247,6 +260,7 @@ SELECT
    ,TradeSize
    ,TradeValue
    ,AccumulatedTradeSize
+   ,TradeCurrencySymbolId
 FROM AccumulatedTrades
 ORDER BY TickerId, TradeYear, TradeMonth
 OPTION (MAXRECURSION 0)";
