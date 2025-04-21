@@ -4,9 +4,9 @@ namespace BudgetManager.Services.SqlQuery
 {
     internal static class ComodityQueries
     {
-        public static string GetAllComodityTradeSizeAndValue()
+        public static string GetAllComodityTradeSizeAndValue(int userId)
         {
-            return @"
+            return $@"
                     SELECT
                         ComodityTypeId,
                         SUM(CASE WHEN TradeValue >= 0 THEN -TradeSize ELSE TradeSize END) AS TotalTradeSize,
@@ -14,7 +14,7 @@ namespace BudgetManager.Services.SqlQuery
                     FROM
                         [dbo].[ComodityTradeHistory]
                     WHERE
-                        UserIdentityId = {0}
+                        UserIdentityId = {userId}
                     GROUP BY
                         ComodityTypeId
                     ORDER BY
@@ -22,9 +22,9 @@ namespace BudgetManager.Services.SqlQuery
                     ";
         }
 
-        public static string GetAllComodityAccumulatedSizeAndValueInMonths()
+        public static string GetAllComodityTradesGroupedByTickerAndTradeDate__TradeTable(int userId)
         {
-            return @"
+            return $@"
 ;
 WITH TradesBoundry AS (
 	SELECT
@@ -32,7 +32,7 @@ WITH TradesBoundry AS (
 	   ,ISNULL(MAX(TradeTimeStamp), GETDATE()) AS MaxDate
 	FROM [dbo].[ComodityTradeHistory]
 	WHERE
-		UserIdentityId = {0}
+		UserIdentityId = {userId}
 ),
 MonthSeries
 AS
@@ -61,7 +61,7 @@ Trades AS (
     FROM
         [dbo].[ComodityTradeHistory] cth
     WHERE
-      		cth.UserIdentityId = {0}
+      		cth.UserIdentityId = {userId}
 ),
 AggregatedTrades AS (
     SELECT
@@ -105,6 +105,54 @@ FROM
 ORDER BY
     ComodityTypeId, TradeYear, TradeMonth
 OPTION (MAXRECURSION 0)
+                    ";
+        }
+
+        public static string GetAllComodityAccumulatedSizeAndValueInMonths(int userId)
+        {
+            return $@"
+WITH Trades AS (
+    SELECT
+        cth.ComodityTypeId,
+        cth.CurrencySymbolId,
+        CAST(cth.TradeTimeStamp AS DATE) AS TradeDate,
+        SUM(cth.TradeSize) AS TradeSize,
+        SUM(cth.TradeValue) AS TradeValue
+    FROM
+        [dbo].[ComodityTradeHistory] cth
+    WHERE
+        cth.UserIdentityId = {userId}
+    GROUP BY
+        cth.ComodityTypeId,
+        cth.CurrencySymbolId,
+        CAST(cth.TradeTimeStamp AS DATE)
+),
+AccumulatedTrades AS (
+    SELECT
+        ComodityTypeId,
+        CurrencySymbolId,
+        TradeDate,
+        TradeSize,
+        TradeValue,
+        SUM(TradeSize) OVER (PARTITION BY ComodityTypeId, CurrencySymbolId ORDER BY TradeDate) AS AccumulatedTradeSize,
+        SUM(TradeValue) OVER (PARTITION BY ComodityTypeId, CurrencySymbolId ORDER BY TradeDate) AS AccumulatedTradeValue
+    FROM
+        Trades
+)
+SELECT
+    ComodityTypeId,
+    CurrencySymbolId,
+    TradeDate,
+    TradeSize,
+    AccumulatedTradeSize,
+    TradeValue,
+    AccumulatedTradeValue
+FROM
+    AccumulatedTrades
+ORDER BY
+    ComodityTypeId, 
+    CurrencySymbolId,
+    TradeDate
                     ";
         }
     }
