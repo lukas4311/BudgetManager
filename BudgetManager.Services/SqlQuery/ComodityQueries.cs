@@ -4,9 +4,9 @@ namespace BudgetManager.Services.SqlQuery
 {
     internal static class ComodityQueries
     {
-        public static string GetAllComodityTradeSizeAndValue(int userId)
+        public static string GetAllComodityTradeSizeAndValue()
         {
-            return $@"
+            return @"
                     SELECT
                         ComodityTypeId,
                         SUM(CASE WHEN TradeValue >= 0 THEN -TradeSize ELSE TradeSize END) AS TotalTradeSize,
@@ -14,7 +14,7 @@ namespace BudgetManager.Services.SqlQuery
                     FROM
                         [dbo].[ComodityTradeHistory]
                     WHERE
-                        UserIdentityId = {userId}
+                        UserIdentityId = {0}
                     GROUP BY
                         ComodityTypeId
                     ORDER BY
@@ -22,9 +22,9 @@ namespace BudgetManager.Services.SqlQuery
                     ";
         }
 
-        public static string GetAllComodityTradesGroupedByTickerAndTradeDate__TradeTable(int userId)
+        public static string GetAllComodityTradesGroupedByTickerAndTradeDate__TradeTable()
         {
-            return $@"
+            return @"
 ;
 WITH TradesBoundry AS (
 	SELECT
@@ -32,7 +32,7 @@ WITH TradesBoundry AS (
 	   ,ISNULL(MAX(TradeTimeStamp), GETDATE()) AS MaxDate
 	FROM [dbo].[ComodityTradeHistory]
 	WHERE
-		UserIdentityId = {userId}
+		UserIdentityId = {0}
 ),
 MonthSeries
 AS
@@ -61,7 +61,7 @@ Trades AS (
     FROM
         [dbo].[ComodityTradeHistory] cth
     WHERE
-      		cth.UserIdentityId = {userId}
+      		cth.UserIdentityId = {0}
 ),
 AggregatedTrades AS (
     SELECT
@@ -108,9 +108,9 @@ OPTION (MAXRECURSION 0)
                     ";
         }
 
-        public static string GetAllComodityAccumulatedSizeAndValueInMonths(int userId)
+        public static string GetAllComodityAccumulatedSizeAndValueInMonths()
         {
-            return $@"
+            return @"
 WITH Trades AS (
     SELECT
         cth.ComodityTypeId,
@@ -121,7 +121,7 @@ WITH Trades AS (
     FROM
         [dbo].[ComodityTradeHistory] cth
     WHERE
-        cth.UserIdentityId = {userId}
+        cth.UserIdentityId = {0}
     GROUP BY
         cth.ComodityTypeId,
         cth.CurrencySymbolId,
