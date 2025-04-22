@@ -1,13 +1,33 @@
 ﻿namespace BudgetManager.Domain.DTOs.Queries
 {
+    /// <summary>
+    /// Model representing a grouped ticker for stock trades.
+    /// </summary>
     public record TradeGroupedTicker
     {
+        /// <summary>
+        /// Gets or sets the ticker identifier.
+        /// </summary>
         public int TickerId { get; init; }
 
+        /// <summary>
+        /// Gets or sets the total trade size for the ticker.
+        /// </summary>
         public double TotalTradeSize { get; init; }
 
+        /// <summary>
+        /// Gets or sets the total trade value for the ticker.
+        /// </summary>
         public double TotalTradeValue { get; init; }
 
+        /// <summary>
+        /// Gets or sets the accumulated trade size up to this point.
+        /// </summary>
         public double AccumulatedTradeSize { get; init; }
+
+        /// <summary>
+        /// Gets or sets the identifier for the trade currency symbol.
+        /// </summary>
+        public int TradeCurrencySymbolId { get; init; }
     }
 }

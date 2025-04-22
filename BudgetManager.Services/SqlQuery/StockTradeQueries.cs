@@ -19,7 +19,9 @@ namespace BudgetManager.Services.SqlQuery
             FROM [dbo].[StockSplit] ss
             WHERE ss.TickerId = sth.TickerId
               AND ss.SplitTimeStamp > sth.TradeTimeStamp
-        ), 1) AS SplitAdjustment
+        ), 1) AS SplitAdjustment,
+		ei.Code AS TickerCode,
+		cei.Code AS CurrencyCode
     FROM
         [dbo].[Trade] sth
 	JOIN [dbo].[EnumItem] ei ON
@@ -27,6 +29,8 @@ namespace BudgetManager.Services.SqlQuery
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
 		AND eit.Code = {1}
+	JOIN dbo.EnumItem AS cei ON
+		cei.Id = sth.TradeCurrencySymbolId
     WHERE
 		sth.UserIdentityId = {0}
 ),
@@ -36,7 +40,9 @@ AdjustedTrades AS (
         TradeTimeStamp,
         TradeSize * SplitAdjustment AS AdjustedTradeSize,
         TradeValue,
-		TradeCurrencySymbolId
+		TradeCurrencySymbolId,
+		TickerCode,
+		CurrencyCode
     FROM
         TradesWithSplit
 ),
@@ -46,11 +52,14 @@ AggregatedTrades AS (
         TradeTimeStamp,
         ISNULL(SUM(AdjustedTradeSize), 0) AS TotalTradeSize,
         ISNULL(SUM(TradeValue), 0) AS TotalTradeValue,
-		MIN(TradeCurrencySymbolId) AS TradeCurrencySymbolId
+		MIN(TradeCurrencySymbolId) AS TradeCurrencySymbolId,
+		MIN(CurrencyCode) AS CurrencyCode,
+		TickerCode
     FROM
         AdjustedTrades
     GROUP BY
         TickerId,
+		TickerCode,
         TradeTimeStamp
 ),
 AccumulatedTrades AS (
@@ -60,7 +69,9 @@ AccumulatedTrades AS (
         TotalTradeSize,
         TotalTradeValue,
 		TradeCurrencySymbolId,
-        SUM(TotalTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize
+        SUM(TotalTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize,
+		TickerCode,
+		CurrencyCode
     FROM
         AggregatedTrades
 )
@@ -70,11 +81,14 @@ SELECT
     TotalTradeSize,
     TotalTradeValue,
 	TradeCurrencySymbolId,
-    AccumulatedTradeSize
+    AccumulatedTradeSize,
+	TickerCode,
+	CurrencyCode
 FROM
     AccumulatedTrades
 ORDER BY
-    TickerId, TradeTimeStamp";
+    TickerId, TradeTimeStamp
+";
         }
 
         public static string GetAllTradesGroupedByTicker__TradeTable()
@@ -92,7 +106,9 @@ ORDER BY
             FROM [dbo].[StockSplit] ss
             WHERE ss.TickerId = sth.TickerId
               AND ss.SplitTimeStamp > sth.TradeTimeStamp
-        ), 1) AS SplitAdjustment
+        ), 1) AS SplitAdjustment,
+		ei.Code AS TickerCode,
+		cei.Code AS CurrencyCode
     FROM
         [dbo].[Trade] sth
 	JOIN [dbo].[EnumItem] ei ON
@@ -100,6 +116,8 @@ ORDER BY
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
 		AND eit.Code = {1}
+    JOIN dbo.EnumItem AS cei ON
+		cei.Id = sth.TradeCurrencySymbolId
     WHERE
 		sth.UserIdentityId = {0}
 ),
@@ -109,7 +127,9 @@ AdjustedTrades AS (
         TradeTimeStamp,
         TradeSize * SplitAdjustment AS AdjustedTradeSize,
         TradeValue,
-		TradeCurrencySymbolId
+		TradeCurrencySymbolId,
+		TickerCode,
+		CurrencyCode
     FROM
         TradesWithSplit
 ),
@@ -129,7 +149,9 @@ AccumulatedTrades AS (
         TradeTimeStamp,
         AdjustedTradeSize,
         SUM(AdjustedTradeSize) OVER (PARTITION BY TickerId ORDER BY TradeTimeStamp) AS AccumulatedTradeSize,
-		TradeCurrencySymbolId
+		TradeCurrencySymbolId,
+		TickerCode,
+		CurrencyCode
     FROM
         AdjustedTrades
 )
@@ -138,7 +160,9 @@ SELECT
     TotalTradeSize,
     TotalTradeValue,
     AccumulatedTradeSize,
-	TradeCurrencySymbolId
+	TradeCurrencySymbolId,
+	TickerCode,
+	CurrencyCode
 FROM
     AggregatedTrades AS AT
 JOIN
@@ -151,7 +175,8 @@ JOIN AccumulatedTrades acc ON
     lastTrade.TickerId = acc.TickerId
     AND lastTrade.LastTradeTimeStamp = acc.TradeTimeStamp
 ORDER BY
-    TickerId";
+    TickerId
+";
         }
 
 
@@ -249,9 +274,15 @@ AS
 	   ,TradeValue
 	   ,SUM(TradeSize) OVER (PARTITION BY agt.TickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize
 	   ,ttc.TradeCurrencySymbolId
+	   ,sei.Code AS TickerCode
+	   ,cei.Code AS CurrencyCode
 	FROM AggregatedTrades agt
 	LEFT JOIN TradesTickerWIthCurrency ttc ON
 		ttc.TickerId = agt.TickerId
+	LEFT JOIN dbo.EnumItem AS sei ON
+		sei.Id = agt.TickerId
+	LEFT JOIN dbo.EnumItem AS cei ON
+		cei.Id = ttc.TradeCurrencySymbolId
 )
 SELECT
 	TickerId
@@ -261,6 +292,8 @@ SELECT
    ,TradeValue
    ,AccumulatedTradeSize
    ,TradeCurrencySymbolId
+   ,TickerCode
+   ,CurrencyCode
 FROM AccumulatedTrades
 ORDER BY TickerId, TradeYear, TradeMonth
 OPTION (MAXRECURSION 0)";
