@@ -36,5 +36,15 @@ namespace BudgetManager.Domain.DTOs.Queries
         /// Gets or sets Id of currency.
         /// </summary>
         public int TradeCurrencySymbolId { get; init; }
+
+        /// <summary>
+        /// Gets or sets the code for the ticker.
+        /// </summary>
+        public string TickerCode { get; init; }
+
+        /// <summary>
+        /// Gets or sets the code for the currency.
+        /// </summary>
+        public string CurrencyCode { get; init; }
     }
 }
