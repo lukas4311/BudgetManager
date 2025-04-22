@@ -24,7 +24,6 @@ namespace BudgetManager.Services
         private readonly IRepository<ComodityType> comodityTypeRepository;
         private readonly IRepository<ComodityUnit> comodityUnitRepository;
         private readonly Infl.IInfluxContext influxContext;
-        private readonly Infl.IRepository<Infl.ComodityData> comodityRepository;
         private readonly Infl.IRepository<Infl.ComodityDataV2> comodityRepositoryV2;
 
         /// <summary>
@@ -47,7 +46,6 @@ namespace BudgetManager.Services
             this.comodityTypeRepository = comodityTypeRepository;
             this.comodityUnitRepository = comodityUnitRepository;
             this.influxContext = influxContext;
-            this.comodityRepository = comodityRepository;
             this.comodityRepositoryV2 = comodityRepositoryV2;
         }
 

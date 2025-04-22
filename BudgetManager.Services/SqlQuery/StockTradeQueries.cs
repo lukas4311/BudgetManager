@@ -4,9 +4,9 @@ namespace BudgetManager.Services.SqlQuery
 {
     internal static class StockTradeQueries
     {
-        public static FormattableString GetAllTradesGroupedByTickerAndTradeDate__TradeTable(int userId, TickerTypes tickersType)
+        public static string GetAllTradesGroupedByTickerAndTradeDate__TradeTable()
         {
-            return $@"
+            return @"
 ;WITH TradesWithSplit AS (
     SELECT
         sth.TickerId,
@@ -26,9 +26,9 @@ namespace BudgetManager.Services.SqlQuery
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}
+		AND eit.Code = {1}
     WHERE
-		sth.UserIdentityId = {userId}
+		sth.UserIdentityId = {0}
 ),
 AdjustedTrades AS (
     SELECT
@@ -77,9 +77,9 @@ ORDER BY
     TickerId, TradeTimeStamp";
         }
 
-        public static FormattableString GetAllTradesGroupedByTicker__TradeTable(int userId, TickerTypes tickersType)
+        public static string GetAllTradesGroupedByTicker__TradeTable()
         {
-            return $@"
+            return @"
 ;WITH TradesWithSplit AS (
     SELECT
         sth.TickerId,
@@ -99,9 +99,9 @@ ORDER BY
 		ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit ON
 		eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {{tickersType.ToString()}}
+		AND eit.Code = {1}
     WHERE
-		sth.UserIdentityId = {{userId}}
+		sth.UserIdentityId = {0}
 ),
 AdjustedTrades AS (
     SELECT
@@ -155,9 +155,9 @@ ORDER BY
         }
 
 
-        public static FormattableString GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(int userId, TickerTypes tickersType)
+        public static string GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable()
         {
-            return $@"
+            return @"
 ;
 WITH TradesBoundry AS (
 	SELECT
@@ -165,7 +165,7 @@ WITH TradesBoundry AS (
 	   ,ISNULL(MAX(TradeTimeStamp), GETDATE()) AS MaxDate
 	FROM [dbo].[Trade]
 	WHERE
-		UserIdentityId = {userId}
+		UserIdentityId = {0}
 ),
 MonthSeries
 AS
@@ -187,9 +187,9 @@ AS
 		ON ei.Id = [Trade].TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}
+		AND eit.Code = {1}
 	WHERE
-		UserIdentityId = {userId}),
+		UserIdentityId = {0}),
 TradesTickerWIthCurrency AS (
 	SELECT
 		sth.TickerId
@@ -219,9 +219,9 @@ AS
 		ON ei.Id = sth.TickerId
 	JOIN dbo.EnumItemType eit
 		ON eit.Id = ei.EnumItemTypeId
-		AND eit.Code = {tickersType.ToString()}
+		AND eit.Code = {1}
 	WHERE
-		UserIdentityId = {userId}),
+		UserIdentityId = {0}),
 AggregatedTrades
 AS
 (SELECT
