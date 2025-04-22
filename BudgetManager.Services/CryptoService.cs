@@ -169,12 +169,12 @@ namespace BudgetManager.Services
         }
 
         public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
-            => brokerReportToProcessRepository.FromSql<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(userId, TickerTypes.CryptoTradeTickers));
+            => brokerReportToProcessRepository.FromSqlRaw<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(), userId, nameof(TickerTypes.CryptoTradeTickers));
 
         public IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId)
-            => brokerReportToProcessRepository.FromSql<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(userId, TickerTypes.CryptoTradeTickers));
+            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(), userId, nameof(TickerTypes.CryptoTradeTickers));
 
         public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId)
-            => brokerReportToProcessRepository.FromSql<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(userId, TickerTypes.CryptoTradeTickers));
+            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.CryptoTradeTickers));
     }
 }

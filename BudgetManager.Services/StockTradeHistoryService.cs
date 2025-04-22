@@ -224,12 +224,12 @@ namespace BudgetManager.Services
         }
 
         public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId) 
-            => brokerReportToProcessRepository.FromSqlRaw<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(), userId, TickerTypes.StockTradeTickers);
+            => brokerReportToProcessRepository.FromSqlRaw<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
         public IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId) 
-            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(), userId, TickerTypes.StockTradeTickers);
+            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
         public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId) 
-            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, TickerTypes.StockTradeTickers);
+            => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
     }
 }
