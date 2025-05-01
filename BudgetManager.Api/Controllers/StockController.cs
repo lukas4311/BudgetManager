@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BudgetManager.Api.Enums;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
@@ -6,14 +7,15 @@ using BudgetManager.Domain.MessagingContracts;
 using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using MassTransit;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using FinancialClient = BudgetManager.Client.FinancialApiClient.FinancialClient;
 
 namespace BudgetManager.Api.Controllers
 {
@@ -35,6 +37,7 @@ namespace BudgetManager.Api.Controllers
         private readonly ICompanyProfileService companyProfileService;
         private readonly IStockSplitService stockSplitService;
         private readonly IPublishEndpoint publishEndpoint;
+        private readonly HttpClient finHttpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StockController"/> class.
@@ -51,13 +54,15 @@ namespace BudgetManager.Api.Controllers
             IStockTradeHistoryService stockTradeHistoryService,
             ICompanyProfileService companyProfileService,
             IStockSplitService stockSplitService,
-            IPublishEndpoint publishEndpoint) : base(httpContextAccessor)
+            IPublishEndpoint publishEndpoint,
+            IHttpClientFactory httpClientFactory) : base(httpContextAccessor)
         {
             this.stockTickerService = stockTickerService;
             this.stockTradeHistoryService = stockTradeHistoryService;
             this.companyProfileService = companyProfileService;
             this.stockSplitService = stockSplitService;
             this.publishEndpoint = publishEndpoint;
+            this.finHttpClient = httpClientFactory.CreateClient(nameof(HttpClientKeys.FinApi));
         }
 
         /// <summary>
@@ -224,6 +229,14 @@ namespace BudgetManager.Api.Controllers
         public ActionResult<IEnumerable<TradeGroupedTicker>> GetGroupedByTicker()
         {
             var data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());
+            return Ok(data);
+        }
+
+        [HttpGet("trade/tickergrouped-in-currency"), MapToApiVersion("1.0")]
+        public IActionResult GetStockTradesInCurrency()
+        {
+            FinancialClient client = new FinancialClient(finHttpClient);
+            var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
             return Ok(data);
         }
     }

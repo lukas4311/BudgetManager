@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BudgetManager.Api.Enums;
 using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
@@ -25,6 +26,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
 using Scalar.AspNetCore;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
@@ -106,6 +108,12 @@ builder.Services.AddSwaggerGen(c =>
           new string[] { }
         }
     });
+});
+
+builder.Services.AddHttpClient(nameof(HttpClientKeys.FinApi), client =>
+{
+    var finApi = builder.Configuration.GetSection(nameof(FinApi)).Get<FinApi>();
+    client.BaseAddress = new Uri(finApi.Url);
 });
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());

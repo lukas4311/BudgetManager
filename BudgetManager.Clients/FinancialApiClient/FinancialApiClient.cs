@@ -27,19 +27,14 @@ namespace BudgetManager.Client.FinancialApiClient
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FinancialClient
     {
-#pragma warning disable 8618
-        private string _baseUrl;
-#pragma warning restore 8618
-
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<System.Text.Json.JsonSerializerOptions> _settings = new System.Lazy<System.Text.Json.JsonSerializerOptions>(CreateSerializerSettings, true);
         private System.Text.Json.JsonSerializerOptions _instanceSettings;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public FinancialClient(string baseUrl, System.Net.Http.HttpClient httpClient)
+        public FinancialClient(System.Net.Http.HttpClient httpClient)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            BaseUrl = baseUrl;
             _httpClient = httpClient;
             Initialize();
         }
@@ -49,17 +44,6 @@ namespace BudgetManager.Client.FinancialApiClient
             var settings = new System.Text.Json.JsonSerializerOptions();
             UpdateJsonSerializerSettings(settings);
             return settings;
-        }
-
-        public string BaseUrl
-        {
-            get { return _baseUrl; }
-            set
-            {
-                _baseUrl = value;
-                if (!string.IsNullOrEmpty(_baseUrl) && !_baseUrl.EndsWith("/"))
-                    _baseUrl += '/';
-            }
         }
 
         protected System.Text.Json.JsonSerializerOptions JsonSerializerSettings { get { return _instanceSettings ?? _settings.Value; } }
@@ -94,7 +78,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "gold/actualPrice"
                     urlBuilder_.Append("gold/actualPrice");
 
@@ -182,7 +166,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "gold/actualPrice/{currencyCode}"
                     urlBuilder_.Append("gold/actualPrice/");
                     if (currencyCode != null)
@@ -287,7 +271,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "crypto/{ticker}/price/all"
                     urlBuilder_.Append("crypto/");
                     if (ticker != null)
@@ -396,7 +380,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "crypto/{ticker}/priceFrom/{from}"
                     urlBuilder_.Append("crypto/");
                     if (ticker != null)
@@ -506,7 +490,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "crypto/{ticker}/price/{date}"
                     urlBuilder_.Append("crypto/");
                     if (ticker != null)
@@ -619,7 +603,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "forex/exchangerate/{from}/{to}"
                     urlBuilder_.Append("forex/exchangerate/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(from, System.Globalization.CultureInfo.InvariantCulture)));
@@ -719,7 +703,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "forex/exchangerate/{from}/{to}/{date}"
                     urlBuilder_.Append("forex/exchangerate/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(from, System.Globalization.CultureInfo.InvariantCulture)));
@@ -812,7 +796,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "stock/{ticker}/price/all"
                     urlBuilder_.Append("stock/");
                     if (ticker != null)
@@ -931,7 +915,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "stock/{ticker}/priceFrom/{from}"
                     urlBuilder_.Append("stock/");
                     if (ticker != null)
@@ -1051,7 +1035,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "stock/{ticker}/price/{date}"
                     urlBuilder_.Append("stock/");
                     if (ticker != null)
@@ -1171,7 +1155,7 @@ namespace BudgetManager.Client.FinancialApiClient
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-                    if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
+
                     // Operation Path: "stocks/price/{date}"
                     urlBuilder_.Append("stocks/price/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(date.ToString("s", System.Globalization.CultureInfo.InvariantCulture)));

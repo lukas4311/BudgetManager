@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinancialApi"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{BFB48207-D936-4B7C-8BF4-C7C2DD8EF557}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialApiClient", "BudgetManager.Clients\FinancialApiClient\FinancialApiClient.csproj", "{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BudgetManager.FinancialApiClient", "BudgetManager.Clients\FinancialApiClient\BudgetManager.FinancialApiClient.csproj", "{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
