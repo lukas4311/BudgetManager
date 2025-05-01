@@ -12,33 +12,33 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("/stock/{ticker}/price/all", GetStockPriceData)
                 .WithName(nameof(GetStockPriceData))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+                .Produces<IEnumerable<StockPrice>>(StatusCodes.Status200OK, contentType: "application/json")
+                .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status404NotFound, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("stock/{ticker}/priceFrom/{from}", GetStockPriceDataFromDate)
                 .WithName(nameof(GetStockPriceDataFromDate))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+                .Produces<IEnumerable<StockPrice>>(StatusCodes.Status200OK, contentType: "application/json")
+                .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status404NotFound, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("stock/{ticker}/price/{date}", GetStockPriceDataAtDate)
                 .WithName(nameof(GetStockPriceDataAtDate))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status404NotFound, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+                .Produces<StockPrice>(StatusCodes.Status200OK, contentType: "application/json")
+                .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status404NotFound, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("stocks/price/{date}", GetStocksPriceDataAtDate)
                 .WithName(nameof(GetStocksPriceDataAtDate))
                 .WithOpenApi()
-                .Produces(StatusCodes.Status200OK, contentType: "application/json")
-                .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-                .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+                .Produces<IEnumerable<StockPrice>>(StatusCodes.Status200OK, contentType: "application/json")
+                .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+                .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
         }
 
         /// <summary>

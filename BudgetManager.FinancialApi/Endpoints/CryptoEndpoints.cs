@@ -14,23 +14,23 @@ namespace BudgetManager.FinancialApi.Endpoints
             app.MapGet("/crypto/{ticker}/price/all", GetCryptoPriceData)
             .WithName(nameof(GetCryptoPriceData))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK,contentType: "application/json")
-            .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-            .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+            .Produces<IEnumerable<CryptoDataV2>>(StatusCodes.Status200OK,contentType: "application/json")
+            .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("/crypto/{ticker}/priceFrom/{from}", GetCryptoPriceDataFromDate)
             .WithName(nameof(GetCryptoPriceDataFromDate))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK, contentType: "application/json")
-            .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-            .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+            .Produces<IEnumerable<CryptoDataV2>>(StatusCodes.Status200OK, contentType: "application/json")
+            .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
 
             app.MapGet("/crypto/{ticker}/price/{date}", GetCryptoPriceDataAtDate)
             .WithName(nameof(GetCryptoPriceDataAtDate))
             .WithOpenApi()
-            .Produces(StatusCodes.Status200OK, contentType: "application/json")
-            .Produces(StatusCodes.Status204NoContent, contentType: "application/problem+json")
-            .Produces(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
+            .Produces<CryptoDataV2>(StatusCodes.Status200OK, contentType: "application/json")
+            .Produces<NoContent>(StatusCodes.Status204NoContent, contentType: "application/problem+json")
+            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, contentType: "application/problem+json");
         }
 
         /// <summary>
