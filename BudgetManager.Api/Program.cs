@@ -6,6 +6,7 @@ using BudgetManager.Api.Middlewares;
 using BudgetManager.Api.Models;
 using BudgetManager.Api.Services;
 using BudgetManager.Api.Services.SettingModels;
+using BudgetManager.Client.FinancialApiClient;
 using BudgetManager.Core.SystemWrappers;
 using BudgetManager.Data;
 using BudgetManager.Domain.MessagingContracts;
@@ -28,11 +29,12 @@ using RabbitMQ.Client;
 using Scalar.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text.Json.Serialization;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using MvcJsonOptions = Microsoft.AspNetCore.Mvc.JsonOptions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -71,7 +73,7 @@ builder.Services.AddProblemDetails(options =>
 
         context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
 
-        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+        System.Diagnostics.Activity activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
         context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
     };
 });
@@ -112,7 +114,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddHttpClient(nameof(HttpClientKeys.FinApi), client =>
 {
-    var finApi = builder.Configuration.GetSection(nameof(FinApi)).Get<FinApi>();
+    FinApi finApi = builder.Configuration.GetSection(nameof(FinApi)).Get<FinApi>();
     client.BaseAddress = new Uri(finApi.Url);
 });
 
@@ -134,9 +136,15 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<ForexData>();
     containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
     containerBuilder.RegisterModelMapping();
+    containerBuilder.Register(ctx =>
+    {
+        IHttpClientFactory httpClientFactory = ctx.Resolve<IHttpClientFactory>();
+        HttpClient client = httpClientFactory.CreateClient(nameof(HttpClientKeys.FinApi));
+        return new FinancialClient(client);
+    }).As<IFinancialClient>().InstancePerLifetimeScope();
 });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

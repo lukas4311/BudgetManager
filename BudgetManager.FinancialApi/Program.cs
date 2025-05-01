@@ -15,6 +15,8 @@ using BudgetManager.WebCore;
 using Scalar.AspNetCore;
 using BudgetManager.FinancialApi.Services;
 using Microsoft.AspNetCore.Http.Features;
+using BudgetManager.FinancialApi.Enums;
+using BudgetManager.Client.FinancialApiClient;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
@@ -48,6 +50,12 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddHttpClient(nameof(HttpClientKeys.FinApi), client =>
+{
+    FinApi finApi = builder.Configuration.GetSection(nameof(FinApi)).Get<FinApi>();
+    client.BaseAddress = new Uri(finApi.Url);
+});
+
 builder.Services.Configure<JsnOptions>(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.Configure<MvcJsonOptions>(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -66,6 +74,12 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterType<CryptoData>();
     containerBuilder.RegisterType<ForexData>();
     containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+    containerBuilder.Register(ctx =>
+    {
+        IHttpClientFactory httpClientFactory = ctx.Resolve<IHttpClientFactory>();
+        HttpClient client = httpClientFactory.CreateClient(nameof(HttpClientKeys.FinApi));
+        return new FinancialClient(client);
+    }).As<IFinancialClient>().InstancePerLifetimeScope();
 });
 
 var app = builder.Build();

@@ -12,10 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
+using IFinancialClient = BudgetManager.Client.FinancialApiClient.IFinancialClient;
 
 namespace BudgetManager.Services
 {
@@ -36,6 +36,7 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
         private readonly IDateTime dateTimeProvider;
+        private readonly IFinancialClient financialClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StockTradeHistoryService"/> class.
@@ -55,7 +56,8 @@ namespace BudgetManager.Services
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, Infl.IInfluxContext influxContext,
             IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider) : base(repository, mapper)
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider,
+            IFinancialClient financialClient) : base(repository, mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -68,6 +70,7 @@ namespace BudgetManager.Services
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
             this.dateTimeProvider = dateTimeProvider;
+            this.financialClient = financialClient;
         }
 
 
@@ -231,5 +234,18 @@ namespace BudgetManager.Services
 
         public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId) 
             => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
+
+        public async void GetStockTradesInCurrency(int userId, string currency)
+        {
+            IEnumerable<TradeGroupedTradeTime> data = this.GetAllTradesGroupedByTradeDate(userId);
+
+            foreach (TradeGroupedTradeTime item in data)
+            {
+                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
+                Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
+                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
+                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
+            }
+        }
     }
 }

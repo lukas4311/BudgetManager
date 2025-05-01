@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using BudgetManager.Api.Enums;
+using BudgetManager.Client.FinancialApiClient;
 using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
@@ -155,7 +156,7 @@ namespace BudgetManager.Api.Controllers
         /// Retrieves stock price history for a specific ticker.
         /// </summary>
         [HttpGet("stock/{ticker}/price"), MapToApiVersion("1.0")]
-        public async Task<ActionResult<IEnumerable<StockPrice>>> GetStockPriceData(string ticker)
+        public async Task<ActionResult<IEnumerable<InfluxDbData.Models.StockPrice>>> GetStockPriceData(string ticker)
         {
             if (!stockTickerService.GetAll().Any(t => string.Equals(t.Ticker, ticker, StringComparison.OrdinalIgnoreCase)))
                 return StatusCode(StatusCodes.Status204NoContent);
@@ -169,7 +170,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("stock/{ticker}/companyProfile"), MapToApiVersion("1.0")]
         public ActionResult<CompanyProfileModel> GetCompanyProfile(string ticker)
         {
-            var companyProfile = companyProfileService.Get(c => c.Symbol == ticker).SingleOrDefault();
+            CompanyProfileModel companyProfile = companyProfileService.Get(c => c.Symbol == ticker).SingleOrDefault();
 
             if (companyProfile is null)
                 return StatusCode(StatusCodes.Status204NoContent);
@@ -206,7 +207,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/monthlygrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
-            var data = stockTradeHistoryService.GetAllTradesGroupedByMonth(GetUserId());
+            IEnumerable<TradesGroupedMonth> data = stockTradeHistoryService.GetAllTradesGroupedByMonth(GetUserId());
             return Ok(data);
         }
 
@@ -217,7 +218,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/tradedategrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradeGroupedTradeTime>> GetGroupedByTickerAndTradeDate()
         {
-            var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
+            IEnumerable<TradeGroupedTradeTime> data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
             return Ok(data);
         }
 
@@ -228,15 +229,24 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/tickergrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradeGroupedTicker>> GetGroupedByTicker()
         {
-            var data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());
+            IEnumerable<TradeGroupedTicker> data = stockTradeHistoryService.GetAllTradesGroupedByTicker(GetUserId());
             return Ok(data);
         }
 
         [HttpGet("trade/tickergrouped-in-currency"), MapToApiVersion("1.0")]
-        public IActionResult GetStockTradesInCurrency()
+        public async Task<IActionResult> GetStockTradesInCurrency([FromQuery]string currency)
         {
             FinancialClient client = new FinancialClient(finHttpClient);
-            var data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
+            IEnumerable<TradeGroupedTradeTime> data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
+
+            foreach (TradeGroupedTradeTime item in data)
+            {
+                Enum.TryParse(item.CurrencyCode, out CurrencySymbol fromSymbol);
+                Enum.TryParse(currency, out CurrencySymbol toSymbol);
+                InfluxDbData.Models.StockPrice stockPrice = await stockTradeHistoryService.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
+                double currencyPrice = await client.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
+            }
+
             return Ok(data);
         }
     }

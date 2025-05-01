@@ -60,11 +60,11 @@ namespace BudgetManager.Api.Middlewares
 
         private async Task<bool> HasAllowAnonymousAtrribute(HttpContext context)
         {
-            var endpoint = context.GetEndpoint();
+            Endpoint endpoint = context.GetEndpoint();
 
             if (endpoint is not null)
             {
-                var allowAnonymous = endpoint.Metadata.GetMetadata<AllowAnonymousAttribute>();
+                AllowAnonymousAttribute allowAnonymous = endpoint.Metadata.GetMetadata<AllowAnonymousAttribute>();
                 return allowAnonymous != null;
             }
 

@@ -179,7 +179,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/monthlygrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedTradesByMonth()
         {
-            var data = cryptoService.GetAllTradesGroupedByMonth(GetUserId());
+            IEnumerable<TradesGroupedMonth> data = cryptoService.GetAllTradesGroupedByMonth(GetUserId());
             return Ok(data);
         }
 
@@ -191,7 +191,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/tradedategrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTickerAndTradeDate()
         {
-            var data = cryptoService.GetAllTradesGroupedByTradeDate(GetUserId());
+            IEnumerable<TradeGroupedTradeTime> data = cryptoService.GetAllTradesGroupedByTradeDate(GetUserId());
             return Ok(data);
         }
 
@@ -203,7 +203,7 @@ namespace BudgetManager.Api.Controllers
         [HttpGet("trade/tickergrouped"), MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<TradesGroupedMonth>> GetGroupedByTicker()
         {
-            var data = cryptoService.GetAllTradesGroupedByTicker(GetUserId());
+            IEnumerable<TradeGroupedTicker> data = cryptoService.GetAllTradesGroupedByTicker(GetUserId());
             return Ok(data);
         }
     }
