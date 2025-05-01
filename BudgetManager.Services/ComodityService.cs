@@ -99,9 +99,9 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public async Task<double> GetCurrentGoldPriceForOunce()
         {
-            Infl.ComodityDataV2 data2 = (await comodityRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketComodityV2), new Infl.DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
+            Infl.ComodityDataV2 goldPriceHisotry = (await comodityRepositoryV2.GetAllData(new Infl.DataSourceIdentification(influxContext.OrganizationId, bucketComodityV2), new Infl.DateTimeRange { From = DateTime.Now.AddDays(-5), To = DateTime.Now.AddDays(1) },
                 new() { { "ticker", GoldTicker } })).LastOrDefault();
-            return data2?.Price ?? 0;
+            return goldPriceHisotry?.Price ?? 0;
         }
 
         /// <inheritdoc/>

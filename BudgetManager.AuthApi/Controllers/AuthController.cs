@@ -14,9 +14,6 @@ namespace BudgetManager.AuthApi.Controllers
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [Route("auth/v{version:apiVersion}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json", "application/problem+json")]
     public class AuthController : ControllerBase
     {
@@ -37,14 +34,22 @@ namespace BudgetManager.AuthApi.Controllers
         /// </summary>
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
-        
         [HttpPost("authenticate"), MapToApiVersion("1.0")]
+        [ProducesResponseType(typeof(AuthResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public ActionResult<AuthResponseModel> Authenticate([FromBody] UserModel model)
         {
             UserIdentification userInfo = _userService.Authenticate(model.UserName, model.Password);
 
-            if(userInfo is null)
-                return BadRequest(new { message = UsernameOrPasswordIsIncorrect });
+            if (userInfo is null)
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Invalid request",
+                    Detail = UsernameOrPasswordIsIncorrect,
+                    Status = StatusCodes.Status400BadRequest
+                });
 
             string token = _jwtService.GenerateToken(userInfo);
             Response.Cookies.Append("X-Access-Token", token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
@@ -57,6 +62,10 @@ namespace BudgetManager.AuthApi.Controllers
         /// <param name="model">Model containing authentication model</param>
         /// <returns>Model containing token and user info</returns>
         [HttpPost("authenticate"), MapToApiVersion("2.0")]
+        [ProducesResponseType(typeof(AuthResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public ActionResult<AuthResponseModel> AuthenticateV2([FromBody] UserModel model)
         {
             throw new NotImplementedException();
@@ -68,10 +77,19 @@ namespace BudgetManager.AuthApi.Controllers
         /// <param name="tokenModel">Token model</param>
         /// <returns><see langword="true"/> if token is valid</returns>
         [HttpPost("validate"), MapToApiVersion("1.0")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public ActionResult<bool> Validate([FromBody] TokenModel tokenModel)
         {
-            if(tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
-                return BadRequest(new { message = TokenIsRequired });
+            if (tokenModel is null || string.IsNullOrEmpty(tokenModel.Token))
+                return BadRequest(new ProblemDetails
+                {
+                    Title = TokenIsRequired,
+                    Detail = TokenIsRequired,
+                    Status = StatusCodes.Status400BadRequest
+                });
 
             bool isValid = _jwtService.IsTokenValid(tokenModel.Token);
             return Ok(isValid);
@@ -83,10 +101,19 @@ namespace BudgetManager.AuthApi.Controllers
         /// <param name="token">Model for access token</param>
         /// <returns>Model with user data</returns>
         [HttpGet("tokenData"), MapToApiVersion("1.0")]
-        public ActionResult<UserIdentification> GetTokenData([FromQuery]string token)
+        [ProducesResponseType(typeof(UserIdentification), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public ActionResult<UserIdentification> GetTokenData([FromQuery] string token)
         {
-            if(string.IsNullOrEmpty(token))
-                return BadRequest(new { message = TokenIsRequired });
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new ProblemDetails
+                {
+                    Title = TokenIsRequired,
+                    Detail = TokenIsRequired,
+                    Status = StatusCodes.Status400BadRequest
+                });
 
             UserIdentification userIdentification = _jwtService.GetUserIdentification(token);
             return Ok(userIdentification);
