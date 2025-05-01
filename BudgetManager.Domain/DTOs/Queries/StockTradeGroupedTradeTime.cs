@@ -47,4 +47,17 @@ namespace BudgetManager.Domain.DTOs.Queries
         /// </summary>
         public string CurrencyCode { get; init; }
     }
+
+    public record TradeGroupedTradeTimeWithProfitLoss : TradeGroupedTradeTime
+    {
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalAccumulatedValue { get; init; }
+
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalPercentageProfitOrLoss { get; init; }
+    }
 }

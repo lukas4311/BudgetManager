@@ -235,9 +235,10 @@ namespace BudgetManager.Services
         public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId) 
             => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
-        public async void GetStockTradesInCurrency(int userId, string currency)
+        public async Task<IEnumerable<TradeGroupedTradeTimeWithProfitLoss>> GetStockTradesInCurrency(int userId, string currency)
         {
             IEnumerable<TradeGroupedTradeTime> data = this.GetAllTradesGroupedByTradeDate(userId);
+            List<TradeGroupedTradeTimeWithProfitLoss> dataWithProfit = [];
 
             foreach (TradeGroupedTradeTime item in data)
             {
@@ -245,7 +246,23 @@ namespace BudgetManager.Services
                 Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
                 double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
+                TradeGroupedTradeTimeWithProfitLoss profitData = new TradeGroupedTradeTimeWithProfitLoss
+                {
+                    TickerId = item.TickerId,
+                    TradeTimeStamp = item.TradeTimeStamp,
+                    TotalTradeSize = item.TotalTradeSize,
+                    TotalTradeValue = item.TotalTradeValue,
+                    AccumulatedTradeSize = item.AccumulatedTradeSize,
+                    TradeCurrencySymbolId = item.TradeCurrencySymbolId,
+                    TickerCode = item.TickerCode,
+                    CurrencyCode = currency,
+                    TotalAccumulatedValue = item.AccumulatedTradeSize * currencyPrice,
+                    TotalPercentageProfitOrLoss = 0
+                };
+                dataWithProfit.Add(profitData);
             }
+
+            return dataWithProfit;
         }
     }
 }

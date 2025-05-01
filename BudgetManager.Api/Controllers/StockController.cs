@@ -5,7 +5,6 @@ using BudgetManager.Domain.DTOs;
 using BudgetManager.Domain.DTOs.Queries;
 using BudgetManager.Domain.Enums;
 using BudgetManager.Domain.MessagingContracts;
-using BudgetManager.InfluxDbData.Models;
 using BudgetManager.Services.Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
