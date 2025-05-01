@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.WebCore", "Bu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BudgetManager.FinancialApi", "BudgetManager.FinancialApi\BudgetManager.FinancialApi.csproj", "{DC94A553-BC79-42F6-AA8B-B41474812CA4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{BFB48207-D936-4B7C-8BF4-C7C2DD8EF557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialApiClient", "BudgetManager.Clients\FinancialApiClient\FinancialApiClient.csproj", "{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +109,10 @@ Global
 		{DC94A553-BC79-42F6-AA8B-B41474812CA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC94A553-BC79-42F6-AA8B-B41474812CA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC94A553-BC79-42F6-AA8B-B41474812CA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{065EB94D-AFE2-49C5-B788-8A5D5D52A99C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +130,7 @@ Global
 		{4FCAB9C9-7727-450B-AB5B-C9AEA2BEC023} = {EB89D496-6A94-4DCC-BCF7-6BE25DE46C09}
 		{37A3B825-73AF-47C2-B2A7-0E78EE57DCD1} = {54814E60-332C-469F-888D-43E468D61D7B}
 		{DC94A553-BC79-42F6-AA8B-B41474812CA4} = {E74A8A66-07C0-444E-91DA-04A2CA077430}
+		{065EB94D-AFE2-49C5-B788-8A5D5D52A99C} = {BFB48207-D936-4B7C-8BF4-C7C2DD8EF557}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B1D0D492-7D14-450A-82BF-4483B63FE10E}
