@@ -13,17 +13,17 @@
         /// <summary>
         /// Gets or sets the year in which the trades occurred.
         /// </summary>
-        public int TradeYear { get; init; }
+        public int Year { get; init; }
 
         /// <summary>
         /// Gets or sets the month in which the trades occurred.
         /// </summary>
-        public int TradeMonth { get; init; }
+        public int Month { get; init; }
 
         /// <summary>
         /// Gets or sets the total trade size for the specified month.
         /// </summary>
-        public double TradeSize { get; init; }
+        public double Size { get; init; }
 
         /// <summary>
         /// Gets or sets the total trade value for the specified month.
@@ -33,12 +33,12 @@
         /// <summary>
         /// Gets or sets the accumulated trade size up to and including the specified month.
         /// </summary>
-        public double AccumulatedTradeSize { get; init; }
+        public double AccumulatedSize { get; init; }
 
         /// <summary>
         /// Gets or sets the identifier for the trade currency symbol.
         /// </summary>
-        public int TradeCurrencySymbolId { get; init; }
+        public int CurrencySymbolId { get; init; }
 
         /// <summary>
         /// Gets or sets the code for the ticker.
@@ -49,5 +49,18 @@
         /// Gets or sets the code for the currency.
         /// </summary>
         public string CurrencyCode { get; init; }
+    }
+
+    public class TradesGroupedMonthWithProfitLoss : TradesGroupedMonth
+    {
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalAccumulatedValue { get; init; }
+
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalPercentageProfitOrLoss { get; init; }
     }
 }

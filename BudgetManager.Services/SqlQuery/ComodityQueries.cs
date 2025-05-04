@@ -56,7 +56,7 @@ Trades AS (
         cth.TradeTimeStamp,
         cth.TradeSize AS AdjustedTradeSize,
         cth.TradeValue,
-        YEAR(cth.TradeTimeStamp) AS TradeYear,
+        YEAR(cth.TradeTimeStamp) AS Year,
         MONTH(cth.TradeTimeStamp) AS TradeMonth
     FROM
         [dbo].[ComodityTradeHistory] cth
@@ -66,7 +66,7 @@ Trades AS (
 AggregatedTrades AS (
     SELECT
         ct.ComodityTypeId,
-        YEAR(ms.MonthStart) AS TradeYear,
+        YEAR(ms.MonthStart) AS Year,
         MONTH(ms.MonthStart) AS TradeMonth,
         ISNULL(SUM(t.AdjustedTradeSize), 0) AS TradeSize,
         ISNULL(SUM(t.TradeValue), 0) AS TradeValue
@@ -77,7 +77,7 @@ AggregatedTrades AS (
     LEFT JOIN
         Trades t ON 
             ct.ComodityTypeId = t.ComodityTypeId AND
-            t.TradeYear = YEAR(ms.MonthStart) AND 
+            t.Year = YEAR(ms.MonthStart) AND 
             t.TradeMonth = MONTH(ms.MonthStart)
     GROUP BY
         ct.ComodityTypeId,
@@ -87,23 +87,23 @@ AggregatedTrades AS (
 AccumulatedTrades AS (
     SELECT
         ComodityTypeId,
-        TradeYear,
+        Year,
         TradeMonth,
-        SUM(TradeSize) OVER (PARTITION BY ComodityTypeId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize,
-        SUM(TradeValue) OVER (PARTITION BY ComodityTypeId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeValue
+        SUM(TradeSize) OVER (PARTITION BY ComodityTypeId ORDER BY Year, TradeMonth) AS AccumulatedTradeSize,
+        SUM(TradeValue) OVER (PARTITION BY ComodityTypeId ORDER BY Year, TradeMonth) AS AccumulatedTradeValue
     FROM
         AggregatedTrades
 )
 SELECT
     ComodityTypeId,
-    TradeYear,
+    Year,
     TradeMonth,
     AccumulatedTradeSize,
     AccumulatedTradeValue
 FROM
     AccumulatedTrades
 ORDER BY
-    ComodityTypeId, TradeYear, TradeMonth
+    ComodityTypeId, Year, TradeMonth
 OPTION (MAXRECURSION 0)
                     ";
         }

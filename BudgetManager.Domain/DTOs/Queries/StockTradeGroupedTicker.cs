@@ -13,12 +13,12 @@
         /// <summary>
         /// Gets or sets the total trade size for the ticker.
         /// </summary>
-        public double TotalTradeSize { get; init; }
+        public double Size { get; init; }
 
         /// <summary>
         /// Gets or sets the total trade value for the ticker.
         /// </summary>
-        public double TotalTradeValue { get; init; }
+        public double Value { get; init; }
 
         /// <summary>
         /// Gets or sets the accumulated trade size up to this point.
@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the identifier for the trade currency symbol.
         /// </summary>
-        public int TradeCurrencySymbolId { get; init; }
+        public int CurrencySymbolId { get; init; }
 
         /// <summary>
         /// Gets or sets the code for the ticker.
@@ -39,5 +39,18 @@
         /// Gets or sets the code for the currency.
         /// </summary>
         public string CurrencyCode { get; init; }
+    }
+
+    public record TradeGroupedTickerWithProfitLoss : TradeGroupedTicker
+    {
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalAccumulatedValue { get; init; }
+
+        /// <summary>
+        /// Gets or sets the currency symbol.
+        /// </summary>
+        public double TotalPercentageProfitOrLoss { get; init; }
     }
 }

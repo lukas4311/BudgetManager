@@ -16,6 +16,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
 using IFinancialClient = BudgetManager.Client.FinancialApiClient.IFinancialClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BudgetManager.Services
 {
@@ -131,7 +132,7 @@ namespace BudgetManager.Services
                     }
                     catch (Exception) { }
                 }
-                
+
                 trade.TradeValue *= exchangeRate;
                 trade.CurrencySymbol = currencySymbol.ToString();
                 trade.CurrencySymbolId = currencySymbolEntity.Id;
@@ -226,26 +227,90 @@ namespace BudgetManager.Services
             brokerReportToProcessRepository.Save();
         }
 
-        public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId) 
+        public IEnumerable<TradesGroupedMonth> GetAllTradesGroupedByMonth(int userId)
             => brokerReportToProcessRepository.FromSqlRaw<TradesGroupedMonth>(StockTradeQueries.GetAllTradesWithSplitGroupedByMonthAndTicker__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
-        public IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId) 
+        public IEnumerable<TradeGroupedTicker> GetAllTradesGroupedByTicker(int userId)
             => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTicker>(StockTradeQueries.GetAllTradesGroupedByTicker__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
-        public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId) 
+        public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId)
             => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
-        public async Task<IEnumerable<TradeGroupedTradeTimeWithProfitLoss>> GetStockTradesInCurrency(int userId, string currency)
+        public async Task<IEnumerable<TradesGroupedMonth>> GetAllTradesGroupedByMonthWithProfitInfo(int userId, string currency)
+        {
+            IEnumerable<TradesGroupedMonth> data = this.GetAllTradesGroupedByMonth(userId);
+            List<TradesGroupedMonthWithProfitLoss> dataWithProfit = new List<TradesGroupedMonthWithProfitLoss>();
+            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
+
+            foreach (TradesGroupedMonth item in data)
+            {
+                var tradeDate = new DateTime(item.Year, item.Month, 1);
+                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
+                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, tradeDate);
+                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, tradeDate);
+
+                TradesGroupedMonthWithProfitLoss profitData = new TradesGroupedMonthWithProfitLoss
+                {
+                    TickerId = item.TickerId,
+                    Year = item.Year,
+                    Month = item.Month,
+                    Size = item.Size,
+                    TradeValue = item.TradeValue,
+                    AccumulatedSize = item.AccumulatedSize,
+                    CurrencySymbolId = item.CurrencySymbolId,
+                    TickerCode = item.TickerCode,
+                    CurrencyCode = currency,
+                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.TradeValue * currencyPrice) * 100
+                };
+                dataWithProfit.Add(profitData);
+            }
+
+            return dataWithProfit;
+        }
+
+        public async Task<IEnumerable<TradeGroupedTickerWithProfitLoss>> GetAllTradesGroupedByTickerWithProfitInfo(int userId, string currency)
+        {
+            IEnumerable<TradeGroupedTicker> data = this.GetAllTradesGroupedByTicker(userId);
+            List<TradeGroupedTickerWithProfitLoss> dataWithProfit = new List<TradeGroupedTickerWithProfitLoss>();
+            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
+
+            foreach (TradeGroupedTicker item in data)
+            {
+                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
+                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, DateTime.Now);
+                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, DateTime.Now);
+
+                TradeGroupedTickerWithProfitLoss profitData = new TradeGroupedTickerWithProfitLoss
+                {
+                    TickerId = item.TickerId,
+                    Size = item.Size,
+                    Value = item.Value,
+                    AccumulatedTradeSize = item.AccumulatedTradeSize,
+                    CurrencySymbolId = item.CurrencySymbolId,
+                    TickerCode = item.TickerCode,
+                    CurrencyCode = currency,
+                    TotalAccumulatedValue = item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                    TotalPercentageProfitOrLoss = (item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
+                };
+                dataWithProfit.Add(profitData);
+            }
+
+            return dataWithProfit;
+        }
+
+        public async Task<IEnumerable<TradeGroupedTradeTimeWithProfitLoss>> GetAllTradesGroupedByTradeDateWithProfitInfo(int userId, string currency)
         {
             IEnumerable<TradeGroupedTradeTime> data = this.GetAllTradesGroupedByTradeDate(userId);
-            List<TradeGroupedTradeTimeWithProfitLoss> dataWithProfit = [];
+            List<TradeGroupedTradeTimeWithProfitLoss> dataWithProfit = new List<TradeGroupedTradeTimeWithProfitLoss>();
+            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
 
             foreach (TradeGroupedTradeTime item in data)
             {
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-                Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
                 double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
+
                 TradeGroupedTradeTimeWithProfitLoss profitData = new TradeGroupedTradeTimeWithProfitLoss
                 {
                     TickerId = item.TickerId,
@@ -256,8 +321,8 @@ namespace BudgetManager.Services
                     TradeCurrencySymbolId = item.TradeCurrencySymbolId,
                     TickerCode = item.TickerCode,
                     CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedTradeSize * currencyPrice,
-                    TotalPercentageProfitOrLoss = 0
+                    TotalAccumulatedValue = item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                    TotalPercentageProfitOrLoss = (item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.TotalTradeValue * currencyPrice) * 100
                 };
                 dataWithProfit.Add(profitData);
             }

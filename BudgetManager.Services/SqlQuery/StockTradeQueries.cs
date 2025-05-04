@@ -237,8 +237,8 @@ AS
 			WHERE ss.TickerId = sth.TickerId
 			AND ss.SplitTimeStamp > sth.TradeTimeStamp)
 		, 1) AS SplitAdjustment
-	   ,YEAR(sth.TradeTimeStamp) AS TradeYear
-	   ,MONTH(sth.TradeTimeStamp) AS TradeMonth
+	   ,YEAR(sth.TradeTimeStamp) AS Year
+	   ,MONTH(sth.TradeTimeStamp) AS Month
 	FROM [dbo].[Trade] sth
 	JOIN [dbo].[EnumItem] ei
 		ON ei.Id = sth.TickerId
@@ -251,16 +251,16 @@ AggregatedTrades
 AS
 (SELECT
 		st.TickerId
-	   ,YEAR(ms.MonthStart) AS TradeYear
-	   ,MONTH(ms.MonthStart) AS TradeMonth
-	   ,ISNULL(SUM(tws.TradeSize * tws.SplitAdjustment), 0) AS TradeSize
-	   ,ISNULL(SUM(tws.TradeValue), 0) AS TradeValue
+	   ,YEAR(ms.MonthStart) AS Year
+	   ,MONTH(ms.MonthStart) AS Month
+	   ,ISNULL(SUM(tws.TradeSize * tws.SplitAdjustment), 0) AS Size
+	   ,ISNULL(SUM(tws.TradeValue), 0) AS Value
 	FROM MonthSeries ms
 	CROSS JOIN StockTickers st
 	LEFT JOIN TradesWithSplit tws
 		ON st.TickerId = tws.TickerId
-		AND tws.TradeYear = YEAR(ms.MonthStart)
-		AND tws.TradeMonth = MONTH(ms.MonthStart)
+		AND tws.Year = YEAR(ms.MonthStart)
+		AND tws.Month = MONTH(ms.MonthStart)
 	GROUP BY st.TickerId
 			,YEAR(ms.MonthStart)
 			,MONTH(ms.MonthStart)),
@@ -268,12 +268,12 @@ AccumulatedTrades
 AS
 (SELECT
 		agt.TickerId
-	   ,TradeYear
-	   ,TradeMonth
-	   ,TradeSize
-	   ,TradeValue
-	   ,SUM(TradeSize) OVER (PARTITION BY agt.TickerId ORDER BY TradeYear, TradeMonth) AS AccumulatedTradeSize
-	   ,ttc.TradeCurrencySymbolId
+	   ,Year
+	   ,Month
+	   ,Size
+	   ,Value
+	   ,SUM(Size) OVER (PARTITION BY agt.TickerId ORDER BY Year, Month) AS AccumulatedSize
+	   ,ttc.TradeCurrencySymbolId AS CurrencySymbolId
 	   ,sei.Code AS TickerCode
 	   ,cei.Code AS CurrencyCode
 	FROM AggregatedTrades agt
@@ -286,16 +286,16 @@ AS
 )
 SELECT
 	TickerId
-   ,TradeYear
-   ,TradeMonth
-   ,TradeSize
-   ,TradeValue
-   ,AccumulatedTradeSize
-   ,TradeCurrencySymbolId
+   ,Year
+   ,Month
+   ,Size
+   ,Value
+   ,AccumulatedSize
+   ,CurrencySymbolId
    ,TickerCode
    ,CurrencyCode
 FROM AccumulatedTrades
-ORDER BY TickerId, TradeYear, TradeMonth
+ORDER BY TickerId, Year, Month
 OPTION (MAXRECURSION 0)";
         }
     }
