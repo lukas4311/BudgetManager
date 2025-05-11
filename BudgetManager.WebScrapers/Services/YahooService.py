@@ -59,7 +59,7 @@ class YahooService:
 
     def get_stock_price_history(self, ticker: str, unix_from: str, unix_to: str):
         print('Downloading stock history for: ' + ticker)
-        stockPriceData = []
+        stock_price_data = []
         with urllib.request.urlopen(f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={unix_from}&period2={unix_to}&interval=1d&events=history&includeAdjustedClose=true') as url:
             data = url.read().decode()
             rows = csv.DictReader(io.StringIO(data))
@@ -74,10 +74,10 @@ class YahooService:
                 except ValueError:
                     continue
 
-                priceModel = StockPriceData(pandas_date, close_price)
-                stockPriceData.append(priceModel)
+                price_model = StockPriceData(pandas_date, close_price)
+                stock_price_data.append(price_model)
 
-        return stockPriceData
+        return stock_price_data
 
     def get_stock_price_history_new(self, ticker: str, unix_from: str, unix_to: str):
         print('Downloading stock history for: ' + ticker)
@@ -101,8 +101,8 @@ class YahooService:
         stock_split_data = []
 
         try:
-            urlDefinition = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={unix_from}&period2={unix_to}&interval=1d&events=split&includeAdjustedClose=true'
-            with urllib.request.urlopen(urlDefinition) as url:
+            url_definition = f'https://query1.finance.yahoo.com/v7/finance/download/{ticker}?period1={unix_from}&period2={unix_to}&interval=1d&events=split&includeAdjustedClose=true'
+            with urllib.request.urlopen(url_definition) as url:
                 data = url.read().decode()
                 rows = csv.DictReader(io.StringIO(data))
                 for row in rows:
@@ -113,8 +113,8 @@ class YahooService:
                     pandas_date = pandas_date.tz_localize("Europe/Prague")
                     pandas_date = pandas_date.tz_convert("utc")
 
-                    priceModel = StockSplitData(pandas_date, split, self.calculate_split_coefficient(split))
-                    stock_split_data.append(priceModel)
+                    price_model = StockSplitData(pandas_date, split, self.calculate_split_coefficient(split))
+                    stock_split_data.append(price_model)
         except:
             return stock_split_data
 
@@ -143,6 +143,7 @@ class YahooService:
 
 # yahoo_service = YahooService()
 # yahoo_service.get_company_name('AAPL')
+
 
 url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=aapl&apikey=demo'
 r = requests.get(url)

@@ -2,6 +2,7 @@ from sqlalchemy import String, Integer, DateTime, Boolean
 from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
 import datetime
 
+
 class Base(DeclarativeBase):
     pass
 

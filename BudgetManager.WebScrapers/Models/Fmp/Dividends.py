@@ -14,8 +14,8 @@ class Dividends:
         self.historical = []
 
         for value in data["historical"]:
-            historyData = HistoricalDividend(**value)
-            self.historical.append(historyData)
+            history_data = HistoricalDividend(**value)
+            self.historical.append(history_data)
 
     @staticmethod
     def create_from_json(data):

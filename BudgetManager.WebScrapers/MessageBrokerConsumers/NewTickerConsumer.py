@@ -4,7 +4,7 @@ import json
 
 import pika
 
-from Orm.Notification import Notification
+from Services.DB.Orm.Notification import Notification
 from Scrapers.StockFinacialAndCompanyData import StockScrapeManager
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
@@ -36,8 +36,8 @@ class StockTickerManager:
     def store_new_ticker_info(self, ticker: str):
         print("Store ticker")
         profile = self.__fmp_service.get_company_profile(ticker)
-        company_Name = profile.companyName
-        self.__stock_scraper.storeTickers(ticker, company_Name)
+        company_name = profile.companyName
+        self.__stock_scraper.storeTickers(ticker, company_name)
 
         stock_service = StockService(StockRepository(), TradingviewScraper())
         stock_service.check_tickers_metadata()
@@ -64,6 +64,7 @@ class StockTickerManager:
     def process_ticker_from_message_queue(self, msg: str):
         message_object = json.loads(msg)
         print(message_object)
+        ticker = 'Unknown'
 
         try:
             print(message_object['message'])
@@ -76,7 +77,6 @@ class StockTickerManager:
             logging.info('Error while saving data for new ticker: ' + ticker)
             logging.error(e)
 
-
     def __send_notification(self, ticker: str, user_id: int):
         notify_repo = NotificationRepository()
         notification = Notification()
@@ -88,10 +88,12 @@ class StockTickerManager:
         notification.attachmentUrl = None
         notify_repo.insert_stock_trade(notification)
 
+
 def receive_new_ticker(ch, method, properties, body):
     print(f" [x] Received {body}")
-    stock_ticker_Manager = StockTickerManager()
-    stock_ticker_Manager.process_ticker_from_message_queue(body)
+    stock_ticker_manager = StockTickerManager()
+    stock_ticker_manager.process_ticker_from_message_queue(body)
+
 
 queue_name = 'test'
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))

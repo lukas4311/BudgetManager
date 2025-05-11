@@ -5,12 +5,12 @@ from sqlalchemy.orm import Session
 from typing import List
 import secret
 from Models.TradingReportData import TradingReportData
-from Orm.BrokerReportToProcess import BrokerReportToProcess
-from Orm.BrokerReportToProcessState import BrokerReportToProcessState
-from Orm.EnumItem import EnumItem
-from Orm.EnumItemType import EnumItemType
-from Orm.StockTicker import Base
-from Orm.Trade import Trade
+from Services.DB.Orm.BrokerReportToProcess import BrokerReportToProcess
+from Services.DB.Orm.BrokerReportToProcessState import BrokerReportToProcessState
+from Services.DB.Orm.EnumItem import EnumItem
+from Services.DB.Orm.EnumItemType import EnumItemType
+from Services.DB.Orm.StockTicker import Base
+from Services.DB.Orm.Trade import Trade
 
 connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
 

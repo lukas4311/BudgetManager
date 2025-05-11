@@ -51,14 +51,14 @@ class InfluxQueryBuilder:
         self.__orderDesc = desc
         self.__orderColumns = columns
 
-    def set_highestMax(self, column: str):
+    def set_highest_max(self, column: str):
         self.__highestMaxColumn = column
 
     def set_do_pivot(self):
         self.__pivotColumns = True
 
     def build(self):
-        queryParams = {"_bucket": self.__bucket, "_measurement": self.__measurement}
+        query_params = {"_bucket": self.__bucket, "_measurement": self.__measurement}
 
         self.__query += 'from(bucket: _bucket)'
 
@@ -67,40 +67,40 @@ class InfluxQueryBuilder:
 
             if self.__start is not None:
                 self.__query += 'start: _start'
-                queryParams['_start'] = self.__start
+                query_params['_start'] = self.__start
 
             if self.__end is not None:
                 if self.__start is not None:
                     self.__query += ','
 
                 self.__query += 'stop: _stop'
-                queryParams['_stop'] = self.__end
+                query_params['_stop'] = self.__end
 
             self.__query += ')'
 
         self.__query += ' |> filter(fn: (r) => r["_measurement"] == _measurement)'
 
         for filterItem in self.__conditions:
-            filterName = filterItem.key
-            self.__query += f' |> filter(fn: (r) => r["{filterName}"] == _{filterName})'
-            queryParams[f'_{filterName}'] = filterItem.value
+            filter_name = filterItem.key
+            self.__query += f' |> filter(fn: (r) => r["{filter_name}"] == _{filter_name})'
+            query_params[f'_{filter_name}'] = filterItem.value
 
         if self.__pivotColumns:
             self.__query += self.__pivotCommand
 
         if self.__top is not None:
             self.__query += ' |> sort(columns: ["_time"], desc: _orderDesc)'
-            queryParams['_orderDesc'] = self.__orderDesc
+            query_params['_orderDesc'] = self.__orderDesc
 
         if self.__top is not None:
             self.__query += ' |> top(n:_top)'
-            queryParams['_top'] = self.__top
+            query_params['_top'] = self.__top
 
         if self.__highestMaxColumn is not None:
             self.__query += ' |> highestMax(n:1, column:_highestMaxColumn, groupColumns: [_highestMaxColumn])'
-            queryParams["_highestMaxColumn"] = self.__highestMaxColumn
+            query_params["_highestMaxColumn"] = self.__highestMaxColumn
 
-        returnQuery = self.__query
+        return_query = self.__query
         self.__query = ''
-        return returnQuery, queryParams
+        return return_query, query_params
 

@@ -4,8 +4,8 @@ from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 from Models.FilterTuple import FilterTuple
-from Orm.EnumItem import Base, EnumItem
-from Orm.EnumItemType import EnumItemType
+from Services.DB.Orm.EnumItem import Base, EnumItem
+from Services.DB.Orm.EnumItemType import EnumItemType
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
@@ -14,10 +14,7 @@ from secret import influxDbUrl
 from datetime import datetime
 import secret
 import pandas as pd
-import csv
 import logging
-import time
-import pyodbc
 
 # logging.basicConfig(level=logging.DEBUG)
 log_name = 'app.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -93,7 +90,7 @@ class StockScrapeManager:
             logging.info('Saving fin summary about ' + ticker)
             logging.debug('START: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add_range(points)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Fin summary already saved ' + ticker)
@@ -111,7 +108,7 @@ class StockScrapeManager:
             logging.info('Saving fin data about ' + ticker)
             logging.debug('START: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add_range(points)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Fin data already saved ' + ticker)
@@ -156,7 +153,7 @@ class StockScrapeManager:
             logging.info('Saving main data about ' + ticker)
             logging.debug('START: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add(point)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Main fin data already saved ' + ticker)

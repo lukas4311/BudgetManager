@@ -36,28 +36,28 @@ class RoicService:
         children = main.findAll("div", recursive=False)[-1]
         children = children.findAll("div", recursive=False)[0]
         children = children.findAll("div", recursive=False)[0]
-        childrenBase = children.findAll("div", recursive=False)[0]
-        children = childrenBase.findAll("div", recursive=False)[-1]
+        children_base = children.findAll("div", recursive=False)[0]
+        children = children_base.findAll("div", recursive=False)[-1]
 
-        years = childrenBase.findAll("div", recursive=False)[-2]
-        childrenYears = years.findAll("div", recursive=False)[0].findAll("div", recursive=False)[-1] \
+        years = children_base.findAll("div", recursive=False)[-2]
+        children_years = years.findAll("div", recursive=False)[0].findAll("div", recursive=False)[-1] \
             .findAll("div", recursive=False)
 
-        yearData: list[str] = []
+        year_data: list[str] = []
 
-        for year in childrenYears:
-            yearData.append(year.text)
+        for year in children_years:
+            year_data.append(year.text)
 
         values = children.findAll("div", recursive=False)
         data: list[FinData] = []
 
         for value in values:
             text = value.findAll("span")[0]
-            finDataBase = value.findAll("div", recursive=False)[-1]
-            allFindData = finDataBase.findAll("div", recursive=False)
-            for i in range(0, len(yearData)):
-                year = yearData[i]
-                fin_data = allFindData[i]
+            fin_data_base = value.findAll("div", recursive=False)[-1]
+            all_find_data = fin_data_base.findAll("div", recursive=False)
+            for i in range(0, len(year_data)):
+                year = year_data[i]
+                fin_data = all_find_data[i]
 
                 if text.text == 'SEC Link':
                     continue
@@ -77,15 +77,15 @@ class RoicService:
         children = children.findAll("div", recursive=False)[-1]
         base = children.findAll("div", recursive=False)[-1]
 
-        baseSpans = base.findAll("span", recursive=True)
-        pe = baseSpans[0].text
-        fwd_pe = baseSpans[2].text
-        pe_to_sp = baseSpans[4].text
-        market_cap = baseSpans[6].text
-        div_yield = baseSpans[8].text
+        base_spans = base.findAll("span", recursive=True)
+        pe = base_spans[0].text
+        fwd_pe = base_spans[2].text
+        pe_to_sp = base_spans[4].text
+        market_cap = base_spans[6].text
+        div_yield = base_spans[8].text
 
-        finSummary = FinSummary(pe, fwd_pe, pe_to_sp, div_yield, market_cap)
-        return finSummary
+        fin_summary = FinSummary(pe, fwd_pe, pe_to_sp, div_yield, market_cap)
+        return fin_summary
 
     def get_fin_summary(self, ticker: str):
         request = requests.get(f'https://roic.ai/company/{ticker}')
@@ -98,20 +98,20 @@ class RoicService:
         children = children.findAll("div", recursive=False)[1:]
         fin_data_base_html = children[1:]
         years = children[0].findAll("div", recursive=False)[-1].findAll("div", recursive=False)
-        yearData: list[str] = []
+        year_data: list[str] = []
 
         for year in years:
-            yearData.append(year.text)
+            year_data.append(year.text)
 
         data: list[FinData] = []
 
         for value in fin_data_base_html:
             text = value.findAll("span")[0]
-            finDataBase = value.findAll("div", recursive=False)[-1]
-            allFindData = finDataBase.findAll("div", recursive=False)
-            for i in range(0, len(yearData)):
-                year = yearData[i]
-                fin_data = allFindData[i]
+            fin_data_base = value.findAll("div", recursive=False)[-1]
+            all_find_data = fin_data_base.findAll("div", recursive=False)
+            for i in range(0, len(year_data)):
+                year = year_data[i]
+                fin_data = all_find_data[i]
                 model = FinData(year, text.text, fin_data.text)
                 data.append(model)
 
@@ -128,28 +128,28 @@ class RoicService:
         children = children.findAll("div", recursive=False)[-1]
         children = children.findAll("div", recursive=False)[0]
         children = children.findAll("div", recursive=False)[0]
-        companyInfo = children.findAll("div", recursive=False)[-2]
+        company_info = children.findAll("div", recursive=False)[-2]
 
-        companyInfo = companyInfo.findAll("div", recursive=False)
+        company_info = company_info.findAll("div", recursive=False)
 
         company = CompanyData()
-        for companyInfoTag in companyInfo:
-            innerData = companyInfoTag.findAll("div", recursive=False)
-            for data in innerData:
-                innerDesc = data.findAll("div", recursive=False)[0]
-                innerData = data.findAll("div", recursive=False)[1]
-                desc = innerDesc.text[0:-2]
-                companyData = innerData.text
+        for companyInfoTag in company_info:
+            inner_data = companyInfoTag.findAll("div", recursive=False)
+            for data in inner_data:
+                inner_desc = data.findAll("div", recursive=False)[0]
+                inner_data = data.findAll("div", recursive=False)[1]
+                desc = inner_desc.text[0:-2]
+                company_data = inner_data.text
 
                 if desc == "Sector":
-                    company.sector = companyData
+                    company.sector = company_data
                 elif desc == "Industry":
-                    company.industry = companyData
+                    company.industry = company_data
                 elif desc == "CEO":
-                    company.ceo = companyData
+                    company.ceo = company_data
                 elif desc == "Full-time employees":
-                    company.employees = companyData
+                    company.employees = company_data
                 elif desc == "City":
-                    company.city = companyData
+                    company.city = company_data
 
         return company

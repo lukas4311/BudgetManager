@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker, Session
-import pyodbc
+from sqlalchemy.orm import Session
 
 import secret
-from Orm.CryptoTradeHistory import CryptoTradeHistory
-from Orm.CurrencySymbol import Base, CurrencySymbol
+from Services.DB.Orm.CryptoTradeHistory import CryptoTradeHistory
+from Services.DB.Orm.CurrencySymbol import Base, CurrencySymbol
 
 # Create an engine that connects to a local MSSQL database using a trusted connection.
 engine = create_engine(f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
