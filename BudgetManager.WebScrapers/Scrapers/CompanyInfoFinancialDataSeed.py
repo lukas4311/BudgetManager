@@ -23,7 +23,7 @@ tickers = []
 sp500 = []
 
 
-def addTickerFromCsvFile(rows, destination: list):
+def add_ticker_from_csv_file(rows, destination: list):
     for row in rows:
         symbol = row["Symbol"]
         if "^" not in symbol:
@@ -33,31 +33,31 @@ def addTickerFromCsvFile(rows, destination: list):
 def get_tickers_for_measurement(measurement: str):
     influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
     data = influx_repository.find_all_last_value_for_tag(measurement, "ticker")
-    storedTickers = []
+    stored_tickers = []
 
     for table in data:
         for record in table.records:
             ticker = TickerRecord(record["ticker"], record["_time"])
-            storedTickers.append(ticker)
+            stored_tickers.append(ticker)
 
-    return storedTickers
+    return stored_tickers
 
 
 with open("..\\SourceFiles\\nasdaq_screener_1649418624867.csv", 'r') as file:
     csv_file = csv.DictReader(file)
-    addTickerFromCsvFile(csv_file, tickers)
+    add_ticker_from_csv_file(csv_file, tickers)
 
 with open("..\\SourceFiles\\nasdaq_screener_1649418684428.csv", 'r') as file:
     csv_file = csv.DictReader(file)
-    addTickerFromCsvFile(csv_file, tickers)
+    add_ticker_from_csv_file(csv_file, tickers)
 
 with open("..\\SourceFiles\\nasdaq_screener_1649418699710.csv", 'r') as file:
     csv_file = csv.DictReader(file)
-    addTickerFromCsvFile(csv_file, tickers)
+    add_ticker_from_csv_file(csv_file, tickers)
 
 with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
-    addTickerFromCsvFile(csv_file, sp500)
+    add_ticker_from_csv_file(csv_file, sp500)
 
 storedTickers = get_tickers_for_measurement("CashFlow")
 macroTrend = MacroTrendScraper()

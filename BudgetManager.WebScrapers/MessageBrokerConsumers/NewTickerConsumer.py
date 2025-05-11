@@ -37,7 +37,7 @@ class StockTickerManager:
         print("Store ticker")
         profile = self.__fmp_service.get_company_profile(ticker)
         company_name = profile.companyName
-        self.__stock_scraper.storeTickers(ticker, company_name)
+        self.__stock_scraper.store_tickers(ticker, company_name)
 
         stock_service = StockService(StockRepository(), TradingviewScraper())
         stock_service.check_tickers_metadata()
