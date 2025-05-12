@@ -2,6 +2,7 @@ from Scrapers.Comodity.ComodityHistoryPriceScraper import ComodityPriceManager
 from Scrapers.Crypto.CryptoHistoryPriceScraper import CryptoPriceManager
 from Scrapers.Forex.ForexHistoryPriceScraper import ForexService
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceManager
+from Scrapers.Stocks.Final_StockSplitHistoryScraper import StockSplitManager
 from Services.DB.StockRepository import StockRepository
 
 print('Scraping all data')
@@ -21,3 +22,7 @@ commodity_manager.scrape_comodity_price()
 print('\n\n_________________________________________Forex_________________________________________')
 forex_manager = ForexService()
 forex_manager.run()
+
+print('\n\n_________________________________________Stocks splits_________________________________________')
+stock_split_manager = StockSplitManager()
+stock_split_manager.scrape_split_for_all_ticker_in_db()

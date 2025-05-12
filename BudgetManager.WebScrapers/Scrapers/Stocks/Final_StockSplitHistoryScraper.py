@@ -118,6 +118,3 @@ class StockSplitManager:
 
     def __convert_to_unix_timestamp(self, date: datetime):
         return int(time.mktime(date.timetuple()))
-
-stock_split_manager = StockSplitManager()
-stock_split_manager.scrape_split_for_all_ticker_in_db()
