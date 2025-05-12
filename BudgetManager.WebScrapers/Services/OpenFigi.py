@@ -1,6 +1,7 @@
 import requests
 from dataclasses import dataclass
 from typing import List
+from config import open_figi_url
 
 
 @dataclass
@@ -23,7 +24,6 @@ class SecurityData:
 
 
 class OpenFigiService:
-    __open_figi_url = "https://api.openfigi.com/v3"
 
     def parse_security_data(self, response: requests.Response) -> SecurityData:
         json_data = response.json()
@@ -43,7 +43,7 @@ class OpenFigiService:
         return security_info
 
     def __do_mapping_request(self, payload):
-        openfigi_url = f'{self.__open_figi_url}/mapping'
+        openfigi_url = f'{open_figi_url}/mapping'
         response = requests.post(url=openfigi_url, json=payload)
 
         if response.status_code != 200:

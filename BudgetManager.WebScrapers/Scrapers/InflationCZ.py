@@ -6,11 +6,11 @@ from influxdb_client import WritePrecision, Point
 from Models.InflationAradModel import InflationAradModel
 from Services.DatetimeService import parse_arad_datetime_format
 from Services.InfluxRepository import InfluxRepository
-from config import token, influxUrl, organizaiton
+from config import token, influxUrl, organizaiton, cnbBaseUrl
 
 influx_repository = InfluxRepository(influxUrl, "FinancialIndicators", token, organizaiton)
 page = requests.get(
-    "https://www.cnb.cz/cnb/STAT.ARADY_PKG.VYSTUP?p_period=1&p_sort=2&p_des=50&p_sestuid=21727&p_uka=1%2C5%2C9%2C11%2C13&p_strid=ACBAA&p_od=200701&p_do=202105&p_lang=EN&p_format=0&p_decsep=.")
+    f"{cnbBaseUrl}/cnb/STAT.ARADY_PKG.VYSTUP?p_period=1&p_sort=2&p_des=50&p_sestuid=21727&p_uka=1%2C5%2C9%2C11%2C13&p_strid=ACBAA&p_od=200701&p_do=202105&p_lang=EN&p_format=0&p_decsep=.")
 soup = BeautifulSoup(page.content, 'html.parser')
 tableOfValues = soup.findChild("tbody").findAll('tr')
 inflationModels = []

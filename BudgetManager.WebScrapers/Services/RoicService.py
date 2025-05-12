@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import requests
 from bs4 import BeautifulSoup
+from config import roicBaseUrl
 
 
 @dataclass
@@ -30,7 +31,7 @@ class FinSummary:
 
 class RoicService:
     def get_main_financial_history(self, ticker: str):
-        request = requests.get(f'https://roic.ai/financials/{ticker}')
+        request = requests.get(f'{roicBaseUrl}/financials/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
         children = main.findAll("div", recursive=False)[-1]
@@ -69,7 +70,7 @@ class RoicService:
         return data
 
     def get_main_summary(self, ticker: str):
-        request = requests.get(f'https://roic.ai/financials/{ticker}')
+        request = requests.get(f'{roicBaseUrl}/financials/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
         children = main.findAll("div", recursive=False)[1]
@@ -88,7 +89,7 @@ class RoicService:
         return fin_summary
 
     def get_fin_summary(self, ticker: str):
-        request = requests.get(f'https://roic.ai/company/{ticker}')
+        request = requests.get(f'{roicBaseUrl}/company/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
         children = main.findAll("div", recursive=False)[-1]
@@ -119,7 +120,7 @@ class RoicService:
         return data
 
     def get_main_company_data(self, ticker: str):
-        request = requests.get(f'https://roic.ai/company/{ticker}')
+        request = requests.get(f'{roicBaseUrl}/company/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
         children = main.findAll("div", recursive=False)[-1]
