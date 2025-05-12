@@ -2,7 +2,6 @@ import pytz
 from influxdb_client import Point, WritePrecision
 from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
-
 from Models.FilterTuple import FilterTuple
 from Services.DB.Orm.EnumItem import Base, EnumItem
 from Services.DB.Orm.EnumItemType import EnumItemType

@@ -103,7 +103,6 @@ class TradingviewScraper:
             if script:
                 # Extract JSON data from the script
                 json_text = script.string.split('window.initData.symbolInfo = ')[1].strip().rstrip(';')
-                # print(json_text)
                 data_dict = json.loads(json_text)
                 symbol_info = dacite.from_dict(FinancialIndicator, data_dict)
                 print(symbol_info)

@@ -3,10 +3,8 @@ import datetime
 import pytz
 import pandas as pd
 from influxdb_client import Point, WritePrecision
-
-
 from Services.InfluxRepository import InfluxRepository
-from config import token, organizaiton
+from config import token, organizaiton, influxUrl
 
 
 class MoneyVelocityModel:
@@ -40,7 +38,7 @@ for assets_data in assets_total:
         pandas_date = pandas_date.tz_convert("utc")
         m_models.append(MoneyVelocityModel(float(split_values[1]), pandas_date))
 
-influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
+influx_repository = InfluxRepository(influxUrl, "FinancialIndicators", token, organizaiton)
 min_date = influx_repository.find_last_for_state_tag(measurement, state)
 
 filtered = []

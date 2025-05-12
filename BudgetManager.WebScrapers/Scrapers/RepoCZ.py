@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from influxdb_client import WritePrecision, Point
 from Services.DatetimeService import parse_arad_datetime_format
 from Services.InfluxRepository import InfluxRepository
-from config import token, organizaiton
+from config import token, organizaiton, influxUrl
 
 
 class InterestRateModel:
@@ -14,7 +14,7 @@ class InterestRateModel:
         self.value = value
 
 
-influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
+influx_repository = InfluxRepository(influxUrl, "FinancialIndicators", token, organizaiton)
 page = requests.get(
     "https://www.cnb.cz/cnb/STAT.ARADY_PKG.VYSTUP?p_period=1&p_sort=2&p_des=50&p_sestuid=41549&p_uka=3&p_strid=FBC&p_od=199301&p_do=202106&p_lang=CS&p_format=0&p_decsep=%2C")
 soup = BeautifulSoup(page.content, 'html.parser')

@@ -4,7 +4,7 @@ import pytz
 from influxdb_client import Point, WritePrecision
 
 from Services.InfluxRepository import InfluxRepository
-from config import token, organizaiton
+from config import token, organizaiton, influxUrl
 
 
 class AssetsModel:
@@ -34,7 +34,7 @@ for assets_data in assets_total:
         date = datetime.datetime(int(date_string[0]), int(date_string[1]), int(date_string[2]))
         m_models.append(AssetsModel(float(split_values[1]), date))
 
-influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
+influx_repository = InfluxRepository(influxUrl, "FinancialIndicators", token, organizaiton)
 min_date = influx_repository.find_last_for_state_tag("TotalAssets", state)
 filtered = list(filter(lambda m: m.date.astimezone(pytz.utc) > min_date, m_models))
 

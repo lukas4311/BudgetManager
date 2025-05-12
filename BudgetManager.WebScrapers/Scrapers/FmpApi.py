@@ -7,7 +7,7 @@ import pandas as pd
 from Services.InfluxRepository import InfluxRepository
 from secret import fmpApiToken
 from Services.FmpApiService import FmpApiService
-from config import token, organizaiton
+from config import token, organizaiton, influxUrl
 
 
 class FmpScraper:
@@ -16,7 +16,7 @@ class FmpScraper:
 
     def __init__(self):
         self.fmp_service = FmpApiService(fmpApiToken)
-        self.influx_repository = InfluxRepository("http://localhost:8086", "Stocks", token, organizaiton)
+        self.influx_repository = InfluxRepository(influxUrl, "Stocks", token, organizaiton)
 
     def download_profile(self, ticker: str):
         conn = pyodbc.connect(
