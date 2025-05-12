@@ -1,4 +1,3 @@
-import csv
 import logging
 import warnings
 from datetime import datetime

@@ -1,6 +1,6 @@
 from Services.InfluxRepository import InfluxRepository
 from Services.MoneySupplyUsService import MoneySupplyUsService
-from configManager import token, organizaiton
+from config import token, organizaiton
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
 moneySupplyService = MoneySupplyUsService(influx_repository)

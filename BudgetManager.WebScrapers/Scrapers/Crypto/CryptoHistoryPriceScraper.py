@@ -10,14 +10,14 @@ from Models.FilterTuple import FilterTuple
 from Services.InfluxRepository import InfluxRepository
 from enum import Enum
 from secret import token, organizationId
-from secret import influxDbUrl
+from config import influxUrl
 from influxdb_client import Point, WritePrecision
 from typing import List
 
 log_name = 'Logs/cryptoPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "CryptoV2", token, organizationId, logging)
+influx_repository = InfluxRepository(influxUrl, "CryptoV2", token, organizationId, logging)
 measurement = "Price"
 coinbaseExchange = "coinbase-pro"
 geminiExchange = "gemini"

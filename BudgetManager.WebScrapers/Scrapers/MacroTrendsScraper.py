@@ -12,8 +12,8 @@ from bs4 import BeautifulSoup
 import json
 import pandas as pd
 from Services.InfluxRepository import InfluxRepository
-from configManager import token, organizaiton
-from secret import influxDbUrl
+from config import token, organizaiton
+from config import influxUrl
 utc = pytz.UTC
 
 
@@ -43,7 +43,7 @@ class MacroTrendScraper:
     points = []
 
     def __init__(self):
-        self.influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
+        self.influx_repository = InfluxRepository(influxUrl, "Stocks", token, organizaiton)
 
     def download_income_statement(self, ticker: str, frequency: str = "A"):
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", None)

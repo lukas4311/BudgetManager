@@ -1,4 +1,3 @@
-import dataclasses
 from dataclasses import dataclass
 from typing import List
 from Models.Fmp.HistoricalDividend import HistoricalDividend

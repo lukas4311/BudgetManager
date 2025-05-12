@@ -1,14 +1,11 @@
 import csv
-import sys
 import time
 from dataclasses import dataclass
 import datetime
 from datetime import timedelta
 import pytz
 from Scrapers.MacroTrendsScraper import MacroTrendScraper
-from secret import influxDbUrl
-from configManager import token
-from configManager import organizaiton
+from config import token, influxUrl, organizaiton
 from Services.InfluxRepository import InfluxRepository
 utc = pytz.UTC
 
@@ -31,7 +28,7 @@ def add_ticker_from_csv_file(rows, destination: list):
 
 
 def get_tickers_for_measurement(measurement: str):
-    influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
+    influx_repository = InfluxRepository(influxUrl, "Stocks", token, organizaiton)
     data = influx_repository.find_all_last_value_for_tag(measurement, "ticker")
     stored_tickers = []
 

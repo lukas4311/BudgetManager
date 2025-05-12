@@ -4,7 +4,7 @@ import pytz
 from influxdb_client import Point, WritePrecision
 
 from Services.InfluxRepository import InfluxRepository
-from configManager import token, organizaiton
+from config import token, organizaiton
 
 
 class AssetsModel:

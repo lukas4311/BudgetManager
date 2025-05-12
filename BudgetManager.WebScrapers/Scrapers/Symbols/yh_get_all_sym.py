@@ -1,5 +1,4 @@
 import requests
-import json
 #from array import array
 #from datetime import datetime
 import logging

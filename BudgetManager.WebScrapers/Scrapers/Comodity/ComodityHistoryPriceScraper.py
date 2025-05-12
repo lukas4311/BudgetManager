@@ -4,13 +4,13 @@ import logging
 
 from Scrapers.Stocks.Final_StockPriceHistoryScraper import StockPriceScraper
 from Services.InfluxRepository import InfluxRepository
-from secret import influxDbUrl
+from config import influxUrl
 from secret import token, organizationId
 
 log_name = 'ComodityHistoryPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "ComodityV2", token, organizationId, logging)
+influx_repository = InfluxRepository(influxUrl, "ComodityV2", token, organizationId, logging)
 
 
 class ComodityTicker(Enum):

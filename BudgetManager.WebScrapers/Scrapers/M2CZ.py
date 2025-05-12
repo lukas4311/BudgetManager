@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from Services.InfluxRepository import InfluxRepository
 from Services.MoneySupplyCz import MoneySupplyCz
-from configManager import token, organizaiton
+from config import token, organizaiton
 
 influx_repository = InfluxRepository("http://localhost:8086", "FinancialIndicators", token, organizaiton)
 page = requests.get(

@@ -9,8 +9,8 @@ from Services.DB.Orm.EnumItemType import EnumItemType
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
-from configManager import token, organizaiton
-from secret import influxDbUrl
+from config import token, organizaiton
+from config import influxUrl
 from datetime import datetime
 import secret
 import pandas as pd
@@ -22,7 +22,7 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
                     level=logging.DEBUG)
 roic_service = RoicService()
 fmpScraper = FmpScraper()
-influx_repository = InfluxRepository(influxDbUrl, "StocksRoic", token, organizaiton, logging)
+influx_repository = InfluxRepository(influxUrl, "StocksRoic", token, organizaiton, logging)
 
 
 class StockScrapeManager:

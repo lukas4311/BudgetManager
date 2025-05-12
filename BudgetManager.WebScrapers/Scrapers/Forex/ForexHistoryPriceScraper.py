@@ -10,13 +10,13 @@ from influxdb_client import Point, WritePrecision
 from Models.FilterTuple import FilterTuple
 from Services.InfluxRepository import InfluxRepository
 from secret import token, organizationId
-from secret import influxDbUrl
+from config import influxUrl
 from secret import tokenTwelveData
 
 log_name = 'Logs/forexPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "ForexV2", token, organizationId, logging)
+influx_repository = InfluxRepository(influxUrl, "ForexV2", token, organizationId, logging)
 measurement = "ExchangeRates"
 
 

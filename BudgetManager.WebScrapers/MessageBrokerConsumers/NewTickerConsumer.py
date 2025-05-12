@@ -16,7 +16,8 @@ from Services.FmpApiService import FmpApiService
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService
 from Services.StockService import StockService
-from secret import influxDbUrl, organizationId, token, fmpApiToken
+from secret import organizationId, token, fmpApiToken
+from config import influxUrl
 
 log_name = 'Logs/newTickerRequest.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
@@ -25,8 +26,8 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 
 class StockTickerManager:
     def __init__(self):
-        self.__influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizationId, logging)
-        self.__influx_repository_Roic = InfluxRepository(influxDbUrl, "StocksRoic", token, organizationId, logging)
+        self.__influx_repository = InfluxRepository(influxUrl, "StockPrice", token, organizationId, logging)
+        self.__influx_repository_Roic = InfluxRepository(influxUrl, "StocksRoic", token, organizationId, logging)
         self.__stockPriceScraper = StockPriceScraper(self.__influx_repository)
         self.__roic_service = RoicService()
         self.__fmpScraper = FmpScraper()

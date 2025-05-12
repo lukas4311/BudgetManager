@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Optional, List, Any
 import dacite
 from bs4 import BeautifulSoup

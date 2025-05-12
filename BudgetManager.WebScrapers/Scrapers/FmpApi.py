@@ -7,7 +7,7 @@ import pandas as pd
 from Services.InfluxRepository import InfluxRepository
 from secret import fmpApiToken
 from Services.FmpApiService import FmpApiService
-from configManager import token, organizaiton
+from config import token, organizaiton
 
 
 class FmpScraper:

@@ -4,7 +4,7 @@ import csv
 import io
 import pandas as pd
 import requests
-from typing import List, Optional
+from typing import List
 from Models.Fmp.StockPriceData import StockPriceData
 import yfinance as yf
 from datetime import datetime

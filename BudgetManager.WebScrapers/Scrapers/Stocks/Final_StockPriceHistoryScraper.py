@@ -16,12 +16,12 @@ from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
 from SourceFiles.stockList import stock_to_download
 from secret import token, organizationId
-from secret import influxDbUrl
+from config import influxUrl
 
 log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
-influx_repository = InfluxRepository(influxDbUrl, "StockPrice", token, organizationId, logging)
+influx_repository = InfluxRepository(influxUrl, "StockPrice", token, organizationId, logging)
 
 
 class StockPriceScraper:
