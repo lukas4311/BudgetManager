@@ -10,7 +10,7 @@ from Orm.StockSplit import StockSplit
 from Orm.StockTicker import Base, StockTicker
 from Services.DB.StockRepository import StockRepository
 from Services.YahooService import YahooService, StockSplitData
-from SourceFiles.stockList import stockToDownload
+from SourceFiles.stockList import stock_to_download
 from datetime import timedelta, datetime
 import time
 import logging
@@ -22,7 +22,7 @@ class StockSplitScraper:
 
     def scrape_stocks_splits(self, ticker: str, split_data: list[StockSplitData]):
         try:
-            split_data_to_save: list[StockSplitData] = []
+            split_data_to_save: list[StockSplitData] = None
             last_split, ticker_id = self.get_last_ticker_stored_split(ticker)
 
             if last_split is None:
@@ -102,7 +102,7 @@ class StockSplitManager:
             self.scrape_split_data(enum)
 
     def scrape_split_data_to_all_predefined_ticker(self):
-        for ticker in stockToDownload:
+        for ticker in stock_to_download:
             self.store_split_data(ticker)
 
     def store_split_data(self, ticker: str):

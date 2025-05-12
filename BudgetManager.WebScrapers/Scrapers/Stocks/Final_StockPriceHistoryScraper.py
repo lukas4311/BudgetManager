@@ -14,7 +14,7 @@ from Scrapers.TradingViewScraper import TickerMetadata
 from Services.DB.StockRepository import StockRepository
 from Services.InfluxRepository import InfluxRepository
 from Services.YahooService import YahooService
-from SourceFiles.stockList import stockToDownload
+from SourceFiles.stockList import stock_to_download
 from secret import token, organizationId
 from secret import influxDbUrl
 
@@ -32,45 +32,45 @@ class StockPriceScraper:
 
     def scrape_stocks_prices(self, measurement: str, ticker: str, tag: str):
         try:
-            stockPriceData: list[StockPriceData] = []
+            stock_price_data: list[StockPriceData] = []
             date_to = datetime.now()
-            lastValue = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", tag), datetime.min)
+            last_value = self.influx_repo.filter_last_value(measurement, FilterTuple("ticker", tag), datetime.min)
 
-            if len(lastValue) != 0:
-                last_downloaded_time = lastValue[0].records[0]["_time"]
+            if len(last_value) != 0:
+                last_downloaded_time = last_value[0].records[0]["_time"]
                 now_datetime_with_offset = datetime.now().astimezone(last_downloaded_time.tzinfo) - timedelta(days=1)
 
                 if last_downloaded_time < now_datetime_with_offset:
-                    stockPriceData = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
-                    stockPriceData = [d for d in stockPriceData if d.date > last_downloaded_time]
+                    stock_price_data = self.__scrape_stock_data(ticker, last_downloaded_time, date_to)
+                    stock_price_data = [d for d in stock_price_data if d.date > last_downloaded_time]
             else:
-                stockPriceData = self.__scrape_stock_data(ticker, None, date_to)
+                stock_price_data = self.__scrape_stock_data(ticker, None, date_to)
 
-            self.__save_price_data_to_influx(measurement, tag, stockPriceData)
+            self.__save_price_data_to_influx(measurement, tag, stock_price_data)
         except Exception as e:
             logging.info('Error while downloading price for ticker: ' + ticker)
             logging.error(e)
 
     def __scrape_stock_data(self, ticker: str, date_from: datetime, date_to: datetime):
-        yahooService = YahooService()
+        yahoo_service = YahooService()
         unix_from = '511056000' if date_from is None else str(
             self.__convert_to_unix_timestamp(date_from + timedelta(days=1)))
         unix_to = str(self.__convert_to_unix_timestamp(date_to))
-        return yahooService.get_stock_price_history_new(ticker, unix_from, unix_to)
+        return yahoo_service.get_stock_price_history_new(ticker, unix_from, unix_to)
 
     def __save_price_data_to_influx(self, measurement: str, ticker: str, priceData: list):
-        priceModel: StockPriceData
-        pointsToSave = []
+        price_model: StockPriceData
+        points_to_save = []
         logging.info('Saving price for stock: ' + ticker)
-        for priceModel in priceData:
+        for price_model in priceData:
             point = Point(measurement) \
                 .tag("ticker", ticker) \
-                .field('price', priceModel.value)
-            point = point.time(priceModel.date, WritePrecision.NS)
-            pointsToSave.append(point)
+                .field('price', price_model.value)
+            point = point.time(price_model.date, WritePrecision.NS)
+            points_to_save.append(point)
 
-        print(len(pointsToSave))
-        self.influx_repo.add_range(pointsToSave)
+        print(len(points_to_save))
+        self.influx_repo.add_range(points_to_save)
         self.influx_repo.save()
 
     def __convert_to_unix_timestamp(self, date: datetime):
@@ -98,7 +98,7 @@ class StockPriceManager:
         print("Sleeping is done.")
 
     def scrape_tickers_price(self, delay=0):
-        for ticker in stockToDownload:
+        for ticker in stock_to_download:
             message = 'Loading data for ' + ticker
             print(message)
             logging.info(message)

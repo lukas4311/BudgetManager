@@ -33,14 +33,14 @@ def addTickerFromCsvFile(rows, destination: list):
 def get_tickers_for_measurement(measurement: str):
     influx_repository = InfluxRepository(influxDbUrl, "Stocks", token, organizaiton)
     data = influx_repository.find_all_last_value_for_tag(measurement, "ticker")
-    storedTickers = []
+    stored_tickers = []
 
     for table in data:
         for record in table.records:
             ticker = TickerRecord(record["ticker"], record["_time"])
-            storedTickers.append(ticker)
+            stored_tickers.append(ticker)
 
-    return storedTickers
+    return stored_tickers
 
 
 with open("..\\SourceFiles\\nasdaq_screener_1649418624867.csv", 'r') as file:
@@ -59,8 +59,8 @@ with open("..\\SourceFiles\\sp500.csv", 'r') as file:
     csv_file = csv.DictReader(file)
     addTickerFromCsvFile(csv_file, sp500)
 
-storedTickers = get_tickers_for_measurement("CashFlow")
-macroTrend = MacroTrendScraper()
+stored_tickers = get_tickers_for_measurement("CashFlow")
+macro_trend = MacroTrendScraper()
 # tickers = [tick for tick in sp500 if tick == "AAPL"]
 
 # print(storedTickers)
@@ -130,20 +130,20 @@ for ticker in sp500:
     try:
         skip_sleep = False
         print("Searching for ticker: " + ticker)
-        founded: TickerRecord = [tickerInfo for tickerInfo in storedTickers if tickerInfo.ticker == ticker]
+        founded: TickerRecord = [tickerInfo for tickerInfo in stored_tickers if tickerInfo.ticker == ticker]
 
         if founded:
             print("Ticker was founded in Influx.")
             if founded[0].time < utc.localize(datetime.datetime.utcnow() - timedelta(days=360)):
                 print(f'Company data are old. New data will be downloaded. Last data are form: {founded[0].time}')
                 edgeTime = founded[0].time
-                macroTrend.download_cash_flow_from_date(ticker, edgeTime)
+                macro_trend.download_cash_flow_from_date(ticker, edgeTime)
             else:
                 print("Company data are actual.")
                 skip_sleep = True
         else:
             print("Ticker data was not found in Influx. All company data will be stored.")
-            macroTrend.download_cash_flow(ticker)
+            macro_trend.download_cash_flow(ticker)
 
         if not skip_sleep:
             print("Waiting before new data:", end="")
@@ -154,5 +154,3 @@ for ticker in sp500:
             print('\n')
     except Exception:
         print(f'{ticker} cannot be downloaded')
-
-

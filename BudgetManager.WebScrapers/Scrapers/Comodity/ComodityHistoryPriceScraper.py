@@ -21,7 +21,7 @@ class ComodityTicker(Enum):
 
 class ComodityPriceManager:
     def scrape_comodity_price(self):
-        stockPriceScraper = StockPriceScraper(influx_repository)
-        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
-        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Silver.value, ComodityTicker.Silver.name)
-        stockPriceScraper.scrape_stocks_prices('Price', ComodityTicker.Oil.value, ComodityTicker.Oil.name)
+        stock_price_scraper = StockPriceScraper(influx_repository)
+        stock_price_scraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
+        stock_price_scraper.scrape_stocks_prices('Price', ComodityTicker.Silver.value, ComodityTicker.Silver.name)
+        stock_price_scraper.scrape_stocks_prices('Price', ComodityTicker.Oil.value, ComodityTicker.Oil.name)

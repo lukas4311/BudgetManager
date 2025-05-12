@@ -158,31 +158,31 @@ class ForexService:
         for key in symbol_models:
             print(f'{key}: [{symbol_models[key][-1].symbol}]')
 
-            exchangeRates = symbol_models[key]
+            exchange_rates = symbol_models[key]
             last_record = self.get_last_record_time(key)
             print(f"last record: {last_record}")
-            filteredExchangeRates = [d for d in exchangeRates if
+            filtered_exchange_rates = [d for d in exchange_rates if
                                      datetime.now().astimezone(d.datetime.tzinfo) > d.datetime > last_record]
 
-            if len(filteredExchangeRates) > 0:
-                self.save_data_to_influx(filteredExchangeRates)
+            if len(filtered_exchange_rates) > 0:
+                self.save_data_to_influx(filtered_exchange_rates)
             else:
                 print(f"No new data for pair: {key}")
 
     def save_data_to_influx(self, priceData: list[PriceModel]):
-        pointsToSave = []
+        points_to_save = []
         transferred_symbol = priceData[0].symbol.replace('/', '-')
         logging.info('Saving forex pair: ' + transferred_symbol)
 
-        for priceModel in priceData:
+        for price_model in priceData:
             point = Point(measurement) \
-                .tag("pair", priceModel.symbol.replace('/', '-')) \
-                .field('price', priceModel.close_price)
-            point = point.time(priceModel.datetime, WritePrecision.NS)
-            pointsToSave.append(point)
+                .tag("pair", price_model.symbol.replace('/', '-')) \
+                .field('price', price_model.close_price)
+            point = point.time(price_model.datetime, WritePrecision.NS)
+            points_to_save.append(point)
 
-        influx_repository.add_range(pointsToSave)
-        for point in pointsToSave:
+        influx_repository.add_range(points_to_save)
+        for point in points_to_save:
             print(point.to_line_protocol())
 
         influx_repository.save()
@@ -191,10 +191,10 @@ class ForexService:
 
     def get_last_record_time(self, ticker: str):
         transferred_symbol = ticker.replace('/', '-')
-        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("pair", transferred_symbol), datetime.min)
+        last_value = influx_repository.filter_last_value(measurement, FilterTuple("pair", transferred_symbol), datetime.min)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
-        if len(lastValue) != 0:
-            last_downloaded_time = lastValue[0].records[0]["_time"]
+        if len(last_value) != 0:
+            last_downloaded_time = last_value[0].records[0]["_time"]
 
         return last_downloaded_time

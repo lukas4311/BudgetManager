@@ -74,23 +74,23 @@ class CryptoTickerTranslator:
 
 
 class CryptoWatchService:
-    oneDayLimit = 1440
-    cryptoWatchBaseUrl = "https://api.kraken.com/0/public"
+    one_day_limit = 1440
+    crypto_watch_base_url = "https://api.kraken.com/0/public"
 
     def get_crypto_price_history(self, ticker: CryptoTickers):
-        cryptoTickerTranslator = CryptoTickerTranslator()
-        translated_ticker = cryptoTickerTranslator.translate(ticker)
-        lastRecordTime = self.__get_last_record_time(translated_ticker)
-        now_datetime_with_offset = datetime.now().astimezone(lastRecordTime.tzinfo)
+        crypto_ticker_translator = CryptoTickerTranslator()
+        translated_ticker = crypto_ticker_translator.translate(ticker)
+        last_record_time = self.__get_last_record_time(translated_ticker)
+        now_datetime_with_offset = datetime.now().astimezone(last_record_time.tzinfo)
 
-        if lastRecordTime < now_datetime_with_offset:
-            fromTime = int(time.mktime(lastRecordTime.timetuple()))
+        if last_record_time < now_datetime_with_offset:
+            fromTime = int(time.mktime(last_record_time.timetuple()))
             # exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
-            url = f"{self.cryptoWatchBaseUrl}/OHLC?pair={ticker.value}&interval={self.oneDayLimit}&since={fromTime}"
+            url = f"{self.crypto_watch_base_url}/OHLC?pair={ticker.value}&interval={self.one_day_limit}&since={fromTime}"
             print(url)
             response = requests.get(url)
-            jsonData = response.text
-            parsed_data = json.loads(jsonData)
+            json_data = response.text
+            parsed_data = json.loads(json_data)
             print(parsed_data)
             result_objects = [Result(*item) for item in parsed_data['result'][ticker.value]]
             result_data_instance = ResultData(result_objects)
@@ -101,30 +101,30 @@ class CryptoWatchService:
         return []
 
     def __get_last_record_time(self, ticker: str):
-        lastValue = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
+        last_value = influx_repository.filter_last_value(measurement, FilterTuple("ticker", ticker), datetime.min)
         print(ticker)
-        print(lastValue)
+        print(last_value)
         last_downloaded_time = datetime(1975, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
 
-        if len(lastValue) != 0:
-            last_downloaded_time = lastValue[0].records[0]["_time"]
+        if len(last_value) != 0:
+            last_downloaded_time = last_value[0].records[0]["_time"]
 
         return last_downloaded_time
 
     def save_data_to_influx(self, priceData: List[CryptoPriceData]):
-        pointsToSave = []
+        points_to_save = []
         logging.info('Saving price for stock: ' + priceData[0].ticker)
 
-        for priceModel in priceData:
+        for price_model in priceData:
             point = Point(measurement) \
-                .tag("ticker", priceModel.ticker) \
-                .field('price', priceModel.price)
-            point = point.time(priceModel.date, WritePrecision.NS)
-            pointsToSave.append(point)
+                .tag("ticker", price_model.ticker) \
+                .field('price', price_model.price)
+            point = point.time(price_model.date, WritePrecision.NS)
+            points_to_save.append(point)
 
-        influx_repository.add_range(pointsToSave)
+        influx_repository.add_range(points_to_save)
 
-        for point in pointsToSave:
+        for point in points_to_save:
             print(point.to_line_protocol())
 
         influx_repository.save()
@@ -134,30 +134,30 @@ class CryptoWatchService:
 
 class CryptoPriceManager:
     def scrape_crypto_price(self):
-        cryptoService = CryptoWatchService()
+        crypto_service = CryptoWatchService()
 
-        btcData = cryptoService.get_crypto_price_history(CryptoTickers.XXBTZUSD)
-        print(btcData)
-        if len(btcData) > 0:
-            cryptoService.save_data_to_influx(btcData)
+        btc_data = crypto_service.get_crypto_price_history(CryptoTickers.XXBTZUSD)
+        print(btc_data)
+        if len(btc_data) > 0:
+            crypto_service.save_data_to_influx(btc_data)
 
-        ethData = cryptoService.get_crypto_price_history(CryptoTickers.XETHZUSD)
-        print(ethData)
-        if len(ethData) > 0:
-            cryptoService.save_data_to_influx(ethData)
+        eth_data = crypto_service.get_crypto_price_history(CryptoTickers.XETHZUSD)
+        print(eth_data)
+        if len(eth_data) > 0:
+            crypto_service.save_data_to_influx(eth_data)
 
-        link = cryptoService.get_crypto_price_history(CryptoTickers.LINKUSD)
+        link = crypto_service.get_crypto_price_history(CryptoTickers.LINKUSD)
         if len(link) > 0:
-            cryptoService.save_data_to_influx(link)
+            crypto_service.save_data_to_influx(link)
 
-        matic = cryptoService.get_crypto_price_history(CryptoTickers.MATICUSD)
+        matic = crypto_service.get_crypto_price_history(CryptoTickers.MATICUSD)
         if len(matic) > 0:
-            cryptoService.save_data_to_influx(matic)
+            crypto_service.save_data_to_influx(matic)
 
-        snx = cryptoService.get_crypto_price_history(CryptoTickers.SNXUSD)
+        snx = crypto_service.get_crypto_price_history(CryptoTickers.SNXUSD)
         if len(snx) > 0:
-            cryptoService.save_data_to_influx(snx)
+            crypto_service.save_data_to_influx(snx)
 
-        usdc = cryptoService.get_crypto_price_history(CryptoTickers.USDCUSD)
+        usdc = crypto_service.get_crypto_price_history(CryptoTickers.USDCUSD)
         if len(snx) > 0:
-            cryptoService.save_data_to_influx(usdc)
+            crypto_service.save_data_to_influx(usdc)
