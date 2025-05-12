@@ -29,7 +29,7 @@ const BankAccountBalanceCard = (props: BankAccountBalanceCardProps) => {
     return (
         <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
             <span className="text-2xl text-left font-semibold categoryIcon fill-white">Current balance</span>
-            <p className='text-4xl text-center font-black mb-2'>{total},-</p>
+            <p className='text-4xl text-center font-black mb-2'>{total}</p>
         </div>
     );
 }

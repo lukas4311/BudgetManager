@@ -47,7 +47,7 @@ const BankAccountSelector = (props: BankAccountSelectorProps) => {
                     <CarouselItem className="basis-1/2" key={b.bankAccountId}>
                         <div className='flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative' onClick={_ => selectBankAccount(b)}>
                             {b.bankAccountId == selectedBankaccount ? <BookmarkBorderOutlinedIcon className='absolute top-4 right-4' /> : <></>}
-                            <p className='text-3xl font-bold mb-2'>{b.bankAccountBalance},-</p>
+                            <p className='text-3xl font-bold mb-2'>{b.bankAccountBalance}</p>
                             <span className="ml-auto text-xl categoryIcon fill-white">{b.bankAccountName}</span>
                         </div>
                     </CarouselItem>

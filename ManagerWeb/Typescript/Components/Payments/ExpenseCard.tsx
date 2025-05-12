@@ -9,7 +9,7 @@ export const ExpenseCard = (props: IncomeExpenseCardProps) => {
     return (
         <div className={`flex flex-col bg-battleshipGrey px-4 py-6 rounded-lg relative ${props?.cardClass ?? ""}`}>
             <span className="text-2xl text-left font-semibold categoryIcon fill-white">Expense</span>
-            <p className='text-4xl text-center font-black mb-2'>{sum},-</p>
+            <p className='text-4xl text-center font-black mb-2'>{sum}</p>
         </div>
     );
 };

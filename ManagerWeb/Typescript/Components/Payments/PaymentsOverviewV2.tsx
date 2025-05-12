@@ -128,7 +128,7 @@ export default class PaymentsOverview extends React.Component<RouteComponentProp
                 </div>
                 <div className='text-left flex flex-row'>
                     <div className='flex flex-col w-1/2 justify-start'>
-                        <p className="text-3xl font-bold">{p.amount},-</p>
+                        <p className="text-3xl font-bold">{p.amount}</p>
                         <p className="text-md truncate">{p.name}</p>
                     </div>
                     <div className='flex w-1/2 justify-end items-center'>

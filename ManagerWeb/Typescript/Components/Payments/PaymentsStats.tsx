@@ -12,7 +12,7 @@ export const PaymentsStats = (props: PaymentsStatsProps) => {
     if (props.payments.length > 0) {
         const minDate = moment(props.payments[0].date);
         const maxDate = moment(props.payments[props.payments.length - 1].date);
-        months = minDate.diff(maxDate, 'months');
+        months = minDate.diff(maxDate, 'months') + 1;
 
         if (months == 0)
             months = 1;
