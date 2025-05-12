@@ -10,10 +10,10 @@ class MoneySupplyCz:
     def __init__(self, influx_repository: InfluxRepository):
         self.influx_repository = influx_repository
 
-    def download_money_supply_data(self, measurement: str, tableOfValues: ResultSet):
+    def download_money_supply_data(self, measurement: str, table_of_values: ResultSet):
         money_supply_models = []
 
-        for tableRow in tableOfValues:
+        for tableRow in table_of_values:
             values = tableRow.findAll('td')
             raw_date = str(values[0].text)
             value = str(values[1].text)

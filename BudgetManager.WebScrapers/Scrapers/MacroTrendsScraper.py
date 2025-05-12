@@ -106,11 +106,11 @@ class MacroTrendScraper:
                         from_date = utc.localize(from_date) if from_date is not None and from_date.tzinfo is None else from_date
 
                         if from_date is None or from_date < parsed_date:
-                            financialData = FinancialData(parsed_date, value)
-                            financial_data_values.append(financialData)
+                            financial_data = FinancialData(parsed_date, value)
+                            financial_data_values.append(financial_data)
 
-                financialRecord = FinancialRecord(parsed_filed_element.text, financial_data_values)
-                self.__save_data(financialRecord, ticker, measurement, frequency)
+                financial_record = FinancialRecord(parsed_filed_element.text, financial_data_values)
+                self.__save_data(financial_record, ticker, measurement, frequency)
 
             self.influx_repository.add_range(self.points)
             self.influx_repository.save()
@@ -124,13 +124,13 @@ class MacroTrendScraper:
         return pandas_date.astimezone(pytz.utc)
 
     def __save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
-        fieldName = financial_record.description.replace('-', '').replace(' ', '')
+        field_name = financial_record.description.replace('-', '').replace(' ', '')
 
         for data in financial_record.financial_data_values:
             if data.value != "":
-                calculatedValue = float(data.value) * 1000000
+                calculated_value = float(data.value) * 1000000
                 point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
-                    .tag("frequency", frequency).field(fieldName, calculatedValue)
+                    .tag("frequency", frequency).field(field_name, calculated_value)
                 print(f'Data saved ({ticker}): ' + point.to_line_protocol())
                 self.points.append(point)
 

@@ -20,8 +20,8 @@ class InfluxRepository:
     __entities: List[Point]
     __logger: logging
 
-    def __init__(self, influxUrl: str, bucket: str, token: str, organization: str, logger=None):
-        self.__client = InfluxDBClient(url=influxUrl, token=token, org=organization, timeout=30_000)
+    def __init__(self, influx_url: str, bucket: str, token: str, organization: str, logger=None):
+        self.__client = InfluxDBClient(url=influx_url, token=token, org=organization, timeout=30_000)
         self.__bucket = bucket
         self.__entities = []
         self.__logger = logger
@@ -60,11 +60,11 @@ class InfluxRepository:
             self.__logger and self.__logger.debug('Error while Influx save ' + get_datetime_to_log())
             self.clear_entities()
 
-    def save_batch(self, saveAfter: int = 10):
+    def save_batch(self, save_after: int = 10):
         try:
             write_api = self.__client.write_api(write_options=ASYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
-            if len(self.__entities) > saveAfter:
+            if len(self.__entities) > save_after:
                 write_api.write(bucket=self.__bucket, record=self.__entities)
                 self.__entities.clear()
                 self.__logger and self.__logger.debug('END: Influx batch save' + get_datetime_to_log())
@@ -73,11 +73,11 @@ class InfluxRepository:
             self.__logger and self.__logger.debug('Error while Influx save ' + get_datetime_to_log())
             self.clear_entities()
 
-    def save_batch_async(self, saveAfter: int = 10):
+    def save_batch_async(self, save_after: int = 10):
         try:
             write_api = self.__client.write_api(write_options=SYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
-            if len(self.__entities) > saveAfter:
+            if len(self.__entities) > save_after:
                 write_api.write(bucket=self.__bucket, record=self.__entities)
                 self.__entities.clear()
                 self.__logger and self.__logger.debug('END: Influx batch save' + get_datetime_to_log())
@@ -143,29 +143,29 @@ class InfluxRepository:
     def filter_last_value(self, measurement: str, ticker: str, start: datetime):
         query_api = self.__client.query_api()
 
-        queryBuilder = InfluxQueryBuilder()
-        queryBuilder.set_bucket(self.__bucket)
-        queryBuilder.set_start(start)
-        queryBuilder.set_end(datetime(2099, 12, 31))
-        queryBuilder.set_measurement(measurement)
-        queryBuilder.set_filter(FilterTuple("ticker", ticker))
-        queryBuilder.set_highestMax("_time")
-        query_data = queryBuilder.build()
+        query_builder = InfluxQueryBuilder()
+        query_builder.set_bucket(self.__bucket)
+        query_builder.set_start(start)
+        query_builder.set_end(datetime(2099, 12, 31))
+        query_builder.set_measurement(measurement)
+        query_builder.set_filter(FilterTuple("ticker", ticker))
+        query_builder.set_highest_max("_time")
+        query_data = query_builder.build()
 
         tables = query_api.query(query_data[0], params=query_data[1])
         return tables
 
-    def filter_last_value(self, measurement: str, customFilter: FilterTuple, start: datetime):
+    def filter_last_value(self, measurement: str, custom_filter: FilterTuple, start: datetime):
         query_api = self.__client.query_api()
 
-        queryBuilder = InfluxQueryBuilder()
-        queryBuilder.set_bucket(self.__bucket)
-        queryBuilder.set_start(start)
-        queryBuilder.set_end(datetime(2099, 12, 31))
-        queryBuilder.set_measurement(measurement)
-        queryBuilder.set_filter(customFilter)
-        queryBuilder.set_highestMax("_time")
-        query_data = queryBuilder.build()
+        query_builder = InfluxQueryBuilder()
+        query_builder.set_bucket(self.__bucket)
+        query_builder.set_start(start)
+        query_builder.set_end(datetime(2099, 12, 31))
+        query_builder.set_measurement(measurement)
+        query_builder.set_filter(custom_filter)
+        query_builder.set_highest_max("_time")
+        query_data = query_builder.build()
 
         tables = query_api.query(query_data[0], params=query_data[1])
         return tables

@@ -9,7 +9,7 @@ import time
 
 from Models.FilterTuple import FilterTuple
 from Models.Fmp import StockPriceData
-from Orm.EnumItem import EnumItem
+from Services.DB.Orm.EnumItem import EnumItem
 from Scrapers.TradingViewScraper import TickerMetadata
 from Services.DB.StockRepository import StockRepository
 from Services.InfluxRepository import InfluxRepository

@@ -7,13 +7,13 @@ from sqlalchemy.orm import Session
 
 import secret
 from Models.CoinbaseReportData import CoinbaseReportData
-from Orm.BrokerReportToProcess import Base, BrokerReportToProcess
-from Orm.BrokerReportToProcessState import BrokerReportToProcessState
-from Orm.BrokerReportType import BrokerReportType
-from Orm.CryptoTradeHistory import CryptoTradeHistory
+from Services.DB.Orm.BrokerReportToProcess import Base, BrokerReportToProcess
+from Services.DB.Orm.BrokerReportToProcessState import BrokerReportToProcessState
+from Services.DB.Orm.BrokerReportType import BrokerReportType
+from Services.DB.Orm.CryptoTradeHistory import CryptoTradeHistory
 
 
-class CryptoSqlService:
+class CryptoRepository:
     def get_ticker_id(self, ticker: str):
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
@@ -110,7 +110,7 @@ class CryptoSqlService:
 
             self.insert_crypto_trade(trade)
 
-    def changeProcessState(self, broker_report_id: int, state_code: str):
+    def change_process_state(self, broker_report_id: int, state_code: str):
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 

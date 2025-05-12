@@ -55,6 +55,7 @@ class FinnhubService:
 
         return stocks
 
+
 finhub = FinnhubService(Client(finnhubApiToken))
 data = finhub.get_symbols('L', 'XLON')
 print(data)

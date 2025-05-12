@@ -4,8 +4,8 @@ from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 from Models.FilterTuple import FilterTuple
-from Orm.EnumItem import Base, EnumItem
-from Orm.EnumItemType import EnumItemType
+from Services.DB.Orm.EnumItem import Base, EnumItem
+from Services.DB.Orm.EnumItemType import EnumItemType
 from Scrapers.FmpApi import FmpScraper
 from Services.InfluxRepository import InfluxRepository
 from Services.RoicService import RoicService, FinData
@@ -14,10 +14,7 @@ from secret import influxDbUrl
 from datetime import datetime
 import secret
 import pandas as pd
-import csv
 import logging
-import time
-import pyodbc
 
 # logging.basicConfig(level=logging.DEBUG)
 log_name = 'app.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -35,38 +32,38 @@ class StockScrapeManager:
         self.fmp_scraper = fmp_scraper
         self.roic_service = roic_service
 
-    def isRecordToSave(self, dataYear: str, fluxYear: int):
+    def is_record_to_save(self, data_year: str, flux_year: int):
         try:
-            if dataYear == 'TTM':
-                dataYear = datetime.now().year
+            if data_year == 'TTM':
+                data_year = datetime.now().year
 
-            convertedYear = int(dataYear)
-            return convertedYear > fluxYear
+            converted_year = int(data_year)
+            return converted_year > flux_year
         except:
             return False
 
-    def filterFinancialData(self, bucketName, ticker, data):
+    def filter_financial_data(self, bucket_name, ticker, data):
         logging.debug('START: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         date = datetime.min
-        data_time = influx_repository.filter_last_value(bucketName, ticker, date)
+        data_time = influx_repository.filter_last_value(bucket_name, ticker, date)
         time: datetime = datetime.min
         filtered_data: list[FinData] = data
 
         if len(data_time) > 0:
             time: datetime = data_time[0].records[0]['_time']
-            filtered_data = list(filter(lambda c: self.isRecordToSave(c.year, time.year), data))
+            filtered_data = list(filter(lambda c: self.is_record_to_save(c.year, time.year), data))
 
         logging.debug('END: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         return filtered_data
 
-    def processFinancialDataPoint(self, bucketName, pointData, points, ticker):
-        point = Point(bucketName) \
-            .tag("ticker", ticker).field(pointData.name, float(
-            pointData.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
+    def process_financial_data_point(self, bucket_name, point_data, points, ticker):
+        point = Point(bucket_name) \
+            .tag("ticker", ticker).field(point_data.name, float(
+            point_data.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
         pandas_date: str
 
-        if pointData.year != 'TTM':
-            pandas_date = pd.to_datetime(f"{pointData.year}-12-31")
+        if point_data.year != 'TTM':
+            pandas_date = pd.to_datetime(f"{point_data.year}-12-31")
             point = point.tag("prediction", "N")
         else:
             now = datetime.now()
@@ -81,68 +78,68 @@ class StockScrapeManager:
         points.append(point)
 
     def download_fin_summary(self, ticker: str):
-        bucketName = 'FinSummary'
+        bucket_name = 'FinSummary'
         data = self.roic_service.get_fin_summary(ticker)
         points = []
-        filtered_data = self.filterFinancialData(bucketName, ticker, data)
+        filtered_data = self.filter_financial_data(bucket_name, ticker, data)
 
         for pointData in filtered_data:
-            self.processFinancialDataPoint(bucketName, pointData, points, ticker)
+            self.process_financial_data_point(bucket_name, pointData, points, ticker)
 
         if len(points) > 0:
             logging.info('Saving fin summary about ' + ticker)
             logging.debug('START: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add_range(points)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save fin summary:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Fin summary already saved ' + ticker)
 
     def download_fin_data(self, ticker: str):
-        bucketName = 'FinData'
+        bucket_name = 'FinData'
         data = self.roic_service.get_main_financial_history(ticker)
         points = []
-        filtered_data = self.filterFinancialData(bucketName, ticker, data)
+        filtered_data = self.filter_financial_data(bucket_name, ticker, data)
 
         for pointData in filtered_data:
-            self.processFinancialDataPoint(bucketName, pointData, points, ticker)
+            self.process_financial_data_point(bucket_name, pointData, points, ticker)
 
         if len(points) > 0:
             logging.info('Saving fin data about ' + ticker)
             logging.debug('START: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add_range(points)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save fin data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Fin data already saved ' + ticker)
 
     def download_main_fin(self, ticker: str):
-        bucketName = 'FinMain'
-        actualYear = datetime.now().year
+        bucket_name = 'FinMain'
+        actual_year = datetime.now().year
         date = datetime.min
-        date_time = self.influx_repository.filter_last_value(bucketName, FilterTuple("ticker", ticker), date)
+        date_time = self.influx_repository.filter_last_value(bucket_name, FilterTuple("ticker", ticker), date)
 
         if date_time:
             time: datetime = date_time[0].records[0]['_time']
         else:
             time: datetime = datetime(1, 1, 1)
 
-        if time.year < actualYear:
-            mainInfo = self.roic_service.get_main_summary('AAPL')
-            bucketName = bucketName
-            point = Point(bucketName) \
+        if time.year < actual_year:
+            main_info = self.roic_service.get_main_summary('AAPL')
+            bucket_name = bucket_name
+            point = Point(bucket_name) \
                 .tag("ticker", ticker) \
                 .field('Pe', float(
-                mainInfo.pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
+                main_info.pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
                 .field('Fw_Pe', float(
-                mainInfo.fw_pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
+                main_info.fw_pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
                 .field('Pe_To_Sp', float(
-                mainInfo.pe_to_sp.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
+                main_info.pe_to_sp.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
                 .field('Div_Yield', float(
-                mainInfo.div_yield.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
+                main_info.div_yield.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
                                                                                                                ''))) \
                 .field('MarketCap', float(
-                mainInfo.market_cap.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
+                main_info.market_cap.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
                                                                                                                 '')))
 
             now = datetime.now()
@@ -156,69 +153,55 @@ class StockScrapeManager:
             logging.info('Saving main data about ' + ticker)
             logging.debug('START: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
             self.influx_repository.add(point)
-            self.influx_repository.save_batch(saveAfter=100)
+            self.influx_repository.save_batch(save_after=100)
             logging.debug('END: Save main data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         else:
             logging.info('Main fin data already saved ' + ticker)
 
-    def storeTickers(self, tickerShortcut: str, companyName: str):
+    def store_tickers(self, ticker_shortcut: str, company_name: str):
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
         Base.metadata.create_all(engine)
         session = Session(engine)
 
-        stmt = select(EnumItem).where(EnumItem.code == tickerShortcut)
+        stmt = select(EnumItem).where(EnumItem.code == ticker_shortcut)
         ticker_model = session.scalars(stmt).first()
 
         if ticker_model is None:
             stmt_enum_item_type = select(EnumItemType).where(EnumItemType.code == "TradeTicker")
             enum_item_type = session.scalars(stmt_enum_item_type).first()
 
-            insert_command = insert(EnumItem).values(code=tickerShortcut, name=companyName, enumItemTypeId=enum_item_type.id)
+            insert_command = insert(EnumItem).values(code=ticker_shortcut, name=company_name, enumItemTypeId=enum_item_type.id)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
 
-        # conn = pyodbc.connect(
-        #     f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
-        # sql = """SELECT [Ticker] FROM [dbo].[StockTicker] WHERE [Ticker] = ?"""
-        # df = pd.read_sql_query(sql, conn, params=[tickerShortcut])
-        #
-        # if len(df.index) == 0:
-        #     cursor = conn.cursor()
-        #     params = (tickerShortcut, companyName)
-        #     cursor.execute('''
-        #                         INSERT INTO [dbo].[StockTicker]([Ticker], [Name])
-        #                         VALUES(?,?)
-        #                     ''', params)
-        #     conn.commit()
-
-    def storeCompanyProfile(self, ticker: str):
+    def store_company_profile(self, ticker: str):
         self.fmpScraper.download_profile(ticker)
 
-    def processTickersToCompanyProfileToDb(self, rows):
+    def process_tickers_to_company_profile_to_db(self, rows):
         for row in rows:
             symbol = row["Symbol"]
             name = row["Name"]
 
             try:
-                self.storeCompanyProfile(symbol)
+                self.store_company_profile(symbol)
             except Exception:
                 print(symbol + " - error")
 
-    def processTickersToStoreToDb(self, rows):
+    def process_tickers_to_store_to_db(self, rows):
         for row in rows:
             symbol = row["Symbol"]
             name = row["Name"]
 
             try:
-                self.storeTickers(symbol, name)
+                self.store_tickers(symbol, name)
             except Exception:
                 print(symbol + " - error")
 
 
-def addTickerFromCsvFile(rows, destination: list):
+def add_ticker_from_csv_file(rows, destination: list):
     for row in rows:
         symbol = row["Symbol"]
         logging.debug('Loaded ticker: ' + symbol)

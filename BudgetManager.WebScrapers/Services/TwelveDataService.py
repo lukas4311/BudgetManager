@@ -47,6 +47,7 @@ class TwelveDataService:
         symbols = ','.join(tickers)
         return self.__twelve_data_client.symbol_search(symbol=symbols).as_json()
 
+
 twelvedata = TwelveDataService(tokenTwelveData, logging)
 data = twelvedata.get_ticker_info('AAPL')
 print(data)

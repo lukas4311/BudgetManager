@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, insert
 import secret
-from Orm.Notification import Notification
+from Services.DB.Orm.Notification import Notification
 
 connectionString = f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes'
 

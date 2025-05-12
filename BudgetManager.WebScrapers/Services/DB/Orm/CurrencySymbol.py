@@ -11,13 +11,3 @@ class CurrencySymbol(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     symbol: Mapped[str] = mapped_column(String(20), nullable=False)
-
-# metadata_obj = MetaData()
-#
-#
-# currencySymbol = Table(
-#     "CurrencySymbol",
-#     metadata_obj,
-#     Column("id", Integer, primary_key=True),
-#     Column("symbol", String(20)),
-# )

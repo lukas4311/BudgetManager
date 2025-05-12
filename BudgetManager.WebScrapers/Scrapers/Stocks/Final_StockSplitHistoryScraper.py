@@ -5,9 +5,9 @@ from sqlalchemy import create_engine, select, insert
 from sqlalchemy.orm import Session
 
 import secret
-from Orm.EnumItem import EnumItem
-from Orm.StockSplit import StockSplit
-from Orm.StockTicker import Base, StockTicker
+from Services.DB.Orm.EnumItem import EnumItem
+from Services.DB.Orm.StockSplit import StockSplit
+from Services.DB.Orm.StockTicker import Base, StockTicker
 from Services.DB.StockRepository import StockRepository
 from Services.YahooService import YahooService, StockSplitData
 from SourceFiles.stockList import stock_to_download
