@@ -18,7 +18,7 @@ from SourceFiles.stockList import stock_to_download
 from secret import token, organizationId
 from config import influxUrl
 
-log_name = 'Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
+log_name = './Scrapers/Stocks/Logs/stockPriceScraper.' + datetime.now().strftime('%Y-%m-%d') + '.log'
 logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.DEBUG)
 influx_repository = InfluxRepository(influxUrl, "StockPrice", token, organizationId, logging)

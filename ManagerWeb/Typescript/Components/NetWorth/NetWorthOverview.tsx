@@ -110,7 +110,7 @@ export default class NetWorthOverview extends Component<RouteComponentProps, Net
                                 </div>
                             ) :
                                 <div className='flex flex-row'>
-                                    <ComponentPanel classStyle="w-1/2 text-center">
+                                    <ComponentPanel classStyle="w-1/2 text-center mr-4">
                                         <React.Fragment>
                                             <h2 className='text-2xl'>Your net worth is</h2>
                                             <h2 className='text-3xl'>{this.state.netWorth.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</h2>
