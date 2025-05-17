@@ -27,16 +27,30 @@ class InfluxRepository:
         self.__logger = logger
 
     def add(self, point: Point):
+        """
+        Adds a single InfluxDB Point to the internal entity list for later saving.
+
+        :param point: InfluxDB Point object to be stored.
+        """
         self.__entities.append(point)
         self.__logger and self.__logger.debug(
             'Add point to save (count: ' + str(len(self.__entities)) + '): ' + get_datetime_to_log())
 
     def add_range(self, points: List[Point]):
+        """
+        Adds multiple InfluxDB Points to the internal entity list for later saving.
+
+        :param points: List of InfluxDB Point objects.
+        """
         self.__entities.extend(points)
         self.__logger and self.__logger.debug(
             'Add points to save (count: ' + str(len(self.__entities)) + '): ' + get_datetime_to_log())
 
     def save(self):
+        """
+        Synchronously writes all stored points to the InfluxDB bucket and clears the internal list.
+        Logs each step and handles any exceptions by logging and clearing points.
+        """
         try:
             write_api = self.__client.write_api(write_options=SYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx save ' + get_datetime_to_log())
@@ -49,6 +63,10 @@ class InfluxRepository:
             self.clear_entities()
 
     def save_async(self):
+        """
+        Asynchronously writes all stored points to the InfluxDB bucket and clears the internal list.
+        Logs each step and handles any exceptions by logging and clearing points.
+        """
         try:
             write_api = self.__client.write_api(write_options=ASYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx save ' + get_datetime_to_log())
@@ -61,6 +79,11 @@ class InfluxRepository:
             self.clear_entities()
 
     def save_batch(self, save_after: int = 10):
+        """
+        Asynchronously writes stored points to the InfluxDB bucket if the number of points exceeds the specified threshold.
+
+        :param save_after: Minimum number of points required to trigger a write operation.
+        """
         try:
             write_api = self.__client.write_api(write_options=ASYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
@@ -74,6 +97,11 @@ class InfluxRepository:
             self.clear_entities()
 
     def save_batch_async(self, save_after: int = 10):
+        """
+        Synchronously writes stored points to the InfluxDB bucket if the number of points exceeds the specified threshold.
+
+        :param save_after: Minimum number of points required to trigger a write operation.
+        """
         try:
             write_api = self.__client.write_api(write_options=SYNCHRONOUS)
             self.__logger and self.__logger.debug('START: Influx batch save ' + get_datetime_to_log())
@@ -87,9 +115,19 @@ class InfluxRepository:
             self.clear_entities()
 
     def clear_entities(self):
+        """
+        Clears the internal list of stored points (unsaved data).
+        """
         self.__entities.clear()
 
     def find_last_for_state_tag(self, measurement: str, tag: str):
+        """
+        Finds the most recent timestamp for a specific 'state' tag value in a measurement.
+
+        :param measurement: Measurement name to search in.
+        :param tag: Value of the 'state' tag to filter by.
+        :return: Latest timestamp of matching entry, or a default datetime if none found.
+        """
         query_api = self.__client.query_api()
         p = {"__start": datetime.MINYEAR,
              "__bucket": self.__bucket,
@@ -112,6 +150,13 @@ class InfluxRepository:
             return datetime.datetime(1971, 1, 1).astimezone(pytz.utc)
 
     def find_all_distincted_tag_values(self, measurement: str, tagKey: str):
+        """
+        Retrieves all distinct values for a specific tag key from a given measurement.
+
+        :param measurement: Measurement name to search in.
+        :param tagKey: Tag key to retrieve distinct values for.
+        :return: Query result containing all distinct tag values.
+        """
         query_api = self.__client.query_api()
         p = {"_tagKey": tagKey, "_measurement": measurement, "__bucket": self.__bucket}
 
@@ -126,6 +171,13 @@ class InfluxRepository:
         return tables
 
     def find_all_last_value_for_tag(self, measurement: str, tagKey: str):
+        """
+        Retrieves the last value (latest timestamp) for each distinct value of a tag key.
+
+        :param measurement: Measurement name to search in.
+        :param tagKey: Tag key to group by.
+        :return: Query result with the latest record for each distinct tag value.
+        """
         query_api = self.__client.query_api()
         p = {"_tagKey": tagKey, "_measurement": measurement, "__bucket": self.__bucket}
 
@@ -141,6 +193,14 @@ class InfluxRepository:
         return tables
 
     def filter_last_value(self, measurement: str, ticker: str, start: datetime):
+        """
+        Filters and retrieves the last record for a given ticker starting from a specific datetime.
+
+        :param measurement: Measurement name to search in.
+        :param ticker: Value of the 'ticker' tag to filter by.
+        :param start: Start datetime of the query range.
+        :return: Query result with the latest matching record.
+        """
         query_api = self.__client.query_api()
 
         query_builder = InfluxQueryBuilder()
@@ -156,6 +216,14 @@ class InfluxRepository:
         return tables
 
     def filter_last_value(self, measurement: str, custom_filter: FilterTuple, start: datetime):
+        """
+        Filters and retrieves the last record based on a custom tag-value pair starting from a specific datetime.
+
+        :param measurement: Measurement name to search in.
+        :param custom_filter: FilterTuple containing key and value for filtering.
+        :param start: Start datetime of the query range.
+        :return: Query result with the latest matching record.
+        """
         query_api = self.__client.query_api()
 
         query_builder = InfluxQueryBuilder()

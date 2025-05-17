@@ -8,9 +8,21 @@ from Services.InfluxRepository import InfluxRepository
 
 class MoneySupplyCz:
     def __init__(self, influx_repository: InfluxRepository):
+        """
+        Initializes the MoneySupplyCz class with an InfluxRepository instance.
+
+        :param influx_repository: Instance of InfluxRepository used to store data in InfluxDB.
+        """
         self.influx_repository = influx_repository
 
     def download_money_supply_data(self, measurement: str, table_of_values: ResultSet):
+        """
+        Parses HTML table rows containing money supply data, filters entries not already in InfluxDB,
+        converts them to InfluxDB Points, and writes them to the database.
+
+        :param measurement: Name of the InfluxDB measurement to write data into.
+        :param table_of_values: BeautifulSoup ResultSet of <tr> elements containing date and value cells.
+        """
         money_supply_models = []
 
         for tableRow in table_of_values:

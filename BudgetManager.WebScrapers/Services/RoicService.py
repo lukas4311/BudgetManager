@@ -6,6 +6,9 @@ from config import roicBaseUrl
 
 @dataclass
 class FinData:
+    """
+    Represents a financial data entry for a specific year.
+    """
     year: str
     name: str
     value: str
@@ -13,6 +16,9 @@ class FinData:
 
 @dataclass
 class CompanyData:
+    """
+    Holds main company information such as sector, industry, CEO, employees, and city.
+    """
     sector: str = ''
     industry: str = ''
     ceo: str = ''
@@ -22,6 +28,9 @@ class CompanyData:
 
 @dataclass
 class FinSummary:
+    """
+    Holds financial summary data such as PE ratios, dividend yield, and market cap.
+    """
     pe: str
     fw_pe: str
     pe_to_sp: str
@@ -30,7 +39,17 @@ class FinSummary:
 
 
 class RoicService:
+    """
+    Service class to scrape financial and company data from Roic website.
+    """
+
     def get_main_financial_history(self, ticker: str):
+        """
+        Scrapes and returns historical financial data for the given ticker.
+
+        :param ticker: Stock ticker symbol.
+        :return: List of FinData objects representing historical financial data.
+        """
         request = requests.get(f'{roicBaseUrl}/financials/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
@@ -70,6 +89,12 @@ class RoicService:
         return data
 
     def get_main_summary(self, ticker: str):
+        """
+        Scrapes and returns the main financial summary for the given ticker.
+
+        :param ticker: Stock ticker symbol.
+        :return: FinSummary object containing key financial summary metrics.
+        """
         request = requests.get(f'{roicBaseUrl}/financials/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
@@ -89,6 +114,12 @@ class RoicService:
         return fin_summary
 
     def get_fin_summary(self, ticker: str):
+        """
+        Scrapes detailed financial summary for the given ticker.
+
+        :param ticker: Stock ticker symbol.
+        :return: List of FinData objects with detailed financial metrics.
+        """
         request = requests.get(f'{roicBaseUrl}/company/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
@@ -120,6 +151,12 @@ class RoicService:
         return data
 
     def get_main_company_data(self, ticker: str):
+        """
+        Scrapes main company information such as sector, industry, CEO, employees, and city.
+
+        :param ticker: Stock ticker symbol.
+        :return: CompanyData object with company details.
+        """
         request = requests.get(f'{roicBaseUrl}/company/{ticker}')
         soup = BeautifulSoup(request.text, "html.parser")
         main = soup.findChild("main")
