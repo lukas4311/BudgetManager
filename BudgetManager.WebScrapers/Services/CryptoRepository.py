@@ -1,30 +1,27 @@
 from typing import List
-
 import pandas as pd
 import pyodbc
 from sqlalchemy import create_engine, select, update, and_
 from sqlalchemy.orm import Session
-
 import secret
 from Models.CoinbaseReportData import CoinbaseReportData
 from Services.DB.Orm.BrokerReportToProcess import Base, BrokerReportToProcess
 from Services.DB.Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Services.DB.Orm.BrokerReportType import BrokerReportType
 from Services.DB.Orm.CryptoTradeHistory import CryptoTradeHistory
+from config import dbConnectionString
 
 
 class CryptoRepository:
     def get_ticker_id(self, ticker: str):
-        conn = pyodbc.connect(
-            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        conn = pyodbc.connect(dbConnectionString.format(serverName=secret.serverName, datebaseName=secret.datebaseName))
         stock_ticker_sql = """SELECT [Id] FROM [dbo].[CryptoTicker] WHERE [Ticker] = ?"""
         ticker_data = pd.read_sql_query(stock_ticker_sql, conn, params=[ticker])
         conn.close()
         return ticker_data["Id"].values[0] if ticker_data["Id"].values.size > 0 else None
 
     def create_new_ticker(self, ticker: str):
-        conn = pyodbc.connect(
-            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        conn = pyodbc.connect(dbConnectionString.format(serverName=secret.serverName, datebaseName=secret.datebaseName))
         cursor = conn.cursor()
         params = (ticker, ticker)
         cursor.execute('''INSERT INTO [dbo].[CryptoTicker]([Ticker], [Name]) VALUES(?,?)''', params)
@@ -32,8 +29,7 @@ class CryptoRepository:
         conn.close()
 
     def get_currency_id(self, currency: str):
-        conn = pyodbc.connect(
-            f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+        conn = pyodbc.connect(dbConnectionString.format(serverName=secret.serverName, datebaseName=secret.datebaseName))
         currency_sql = """SELECT Id from CurrencySymbol where SYMBOL = ?"""
         currency_data = pd.read_sql_query(currency_sql, conn, params=[currency])
         conn.close()
@@ -86,7 +82,7 @@ class CryptoRepository:
 
         if crypto_trade is None:
             conn = pyodbc.connect(
-                f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
+                dbConnectionString.format(serverName=secret.serverName, datebaseName=secret.datebaseName))
 
             cursor = conn.cursor()
             params = (
