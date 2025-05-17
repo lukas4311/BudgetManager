@@ -21,6 +21,9 @@ class ComodityTicker(Enum):
 
 class ComodityPriceManager:
     def scrape_comodity_price(self):
+        """
+        A scraping data for comodities
+        """
         stock_price_scraper = StockPriceScraper(influx_repository)
         stock_price_scraper.scrape_stocks_prices('Price', ComodityTicker.Gold.value, ComodityTicker.Gold.name)
         stock_price_scraper.scrape_stocks_prices('Price', ComodityTicker.Silver.value, ComodityTicker.Silver.name)
