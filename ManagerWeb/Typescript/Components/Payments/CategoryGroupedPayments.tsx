@@ -12,13 +12,14 @@ export const CategoryGroupedPayments = (props: CategoryGroupedPaymentsProps) => 
         .map(group => ({ label: group[0].label, value: _.sumBy(group, g => g.spend) })
         )
         .value();
+    const orderredResult = _.orderBy(result, ['value'], ['desc']);
 
     return (
         <div>
             <h2 className="text-2xl mb-4 text-left">Monthly grouped</h2>
             <div className='h-64 paymentsRadar'>
                 <ResponsiveRadar
-                    data={result}
+                    data={orderredResult}
                     keys={['value']}
                     indexBy="label"
                     margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
