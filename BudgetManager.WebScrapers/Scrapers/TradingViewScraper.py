@@ -75,7 +75,25 @@ class TickerMetadata:
 
 class TradingviewScraper:
 
-    def scrape_stock_data(self, ticker: str) -> object:
+    def scrape_stock_data(self, ticker: str) -> (str | None, str | None, TickerMetadata):
+        """
+        Scrapes stock data from TradingView for a given ticker symbol.
+
+        This method fetches comprehensive stock information including ISIN, FIGI,
+        and various metadata fields by parsing the TradingView web page for the
+        specified ticker symbol.
+
+        Args:
+            ticker (str): The stock ticker symbol to scrape data for (e.g., 'AAPL', 'MSFT').
+
+        Returns:
+            tuple: A tuple containing (isin, figi, mapped_data) where:
+                - isin (str | None): The International Securities Identification Number
+                - figi (str | None): The Financial Instrument Global Identifier
+                - mapped_data (TickerMetadata): Object containing comprehensive stock metadata
+                  including short_name, description, currency, exchange, etc.
+                  Returns None for all values if scraping fails.
+        """
         url = f"https://www.tradingview.com/symbols/{ticker}/"
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'

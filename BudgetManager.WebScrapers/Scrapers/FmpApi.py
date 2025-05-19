@@ -11,14 +11,43 @@ from config import token, organizaiton, influxUrl
 
 
 class FmpScraper:
+    """
+    A service class for scraping financial data from Financial Modeling Prep (FMP) API
+    and storing it in SQL Server database and InfluxDB.
+
+    This class handles downloading and storing:
+    - Company profiles
+    - Historical dividend data
+    - Sector performance data
+
+    Attributes:
+        fmp_service (FmpApiService): Service for interacting with FMP API
+        influx_repository (InfluxRepository): Repository for InfluxDB operations
+    """
     fmp_service: FmpApiService
     influx_repository: InfluxRepository
 
     def __init__(self):
+        """
+        Initialize the FmpScraper with necessary services.
+
+        Creates instances of FmpApiService and InfluxRepository using
+        credentials and configuration from imported modules.
+        """
         self.fmp_service = FmpApiService(fmpApiToken)
         self.influx_repository = InfluxRepository(influxUrl, "Stocks", token, organizaiton)
 
     def download_profile(self, ticker: str):
+        """
+        Download and store company profile data for a given ticker symbol.
+
+        Checks if the company profile already exists in the database. If not,
+        fetches the profile from FMP API and stores it in SQL Server database
+        along with address information.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'GOOGL')
+        """
         conn = pyodbc.connect(
             f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={secret.serverName};DATABASE={secret.datebaseName};Trusted_Connection=yes;')
         sql = """SELECT [Id], [CompanyName] FROM [dbo].[CompanyProfile] WHERE [Symbol] = ?"""
@@ -49,6 +78,21 @@ class FmpScraper:
             conn.commit()
 
     def download_dividends(self, ticker: str):
+        """
+        Download historical dividend data for a ticker and store in InfluxDB.
+
+        Fetches historical dividend data from FMP API, converts timestamps to UTC,
+        and stores the data as time-series points in InfluxDB.
+
+        Args:
+            ticker (str): Stock ticker symbol for which to download dividend data
+
+        Process:
+            1. Fetches historical dividend data from FMP API
+            2. Converts dates from Europe/Prague timezone to UTC
+            3. Creates InfluxDB points with dividend and adjusted dividend values
+            4. Stores all points in InfluxDB using batch operation
+        """
         measurement = "Dividends"
         divided_model = self.fmp_service.get_historical_dividend(ticker)
         points = []
@@ -67,6 +111,18 @@ class FmpScraper:
         self.influx_repository.save()
 
     def download_sector_performance(self):
+        """
+        Download current sector performance data and store in InfluxDB.
+
+        Fetches real-time sector performance data from FMP API and stores it
+        as a single time-series point in InfluxDB with current timestamp.
+
+        Process:
+            1. Fetches sector performance data from FMP API
+            2. Creates a single InfluxDB point with current UTC timestamp
+            3. Adds each sector's percentage change as a field
+            4. Stores the point in InfluxDB
+        """
         measurement = "SectorPerformance"
         sector_models = self.fmp_service.get_sector_performance()
         point = Point(measurement).time(datetime.utcnow(), WritePrecision.NS)
@@ -84,4 +140,4 @@ fmpScraper = FmpScraper()
 # fmpScraper.download_dividends("AAPL")
 
 # Every day job
-# fmpScraper.donwload_sector_performance()
+# fmpScraper.download_sector_performance()

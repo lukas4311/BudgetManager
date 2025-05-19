@@ -12,30 +12,74 @@ from bs4 import BeautifulSoup
 import json
 import pandas as pd
 from Services.InfluxRepository import InfluxRepository
-from config import token, organizaiton
+from config import token, organizaiton, macro_trends_url
 from config import influxUrl
+
 utc = pytz.UTC
 
 
 @dataclass
 class FinancialData:
+    """
+    Represents a single financial data point with a date and value.
+
+    Attributes:
+        date (datetime.datetime): The date associated with the financial data
+        value (float): The numerical value of the financial metric
+    """
+
     def __init__(self, date: datetime.datetime, value: float):
+        """
+        Initialize a FinancialData instance.
+
+        Args:
+            date (datetime.datetime): The date for this financial data point
+            value (float): The monetary or ratio value for this data point
+        """
         self.date = date
         self.value = value
 
 
 @dataclass
 class FinancialRecord:
-    def __init__(self, description: str, financial_data_values:  list[FinancialData]):
+    """
+    Represents a collection of financial data points for a specific metric.
+
+    Contains a description of the financial metric and all associated
+    time-series data points for that metric.
+
+    Attributes:
+        description (str): Human-readable description of the financial metric
+        financial_data_values (list[FinancialData]): Time-series data points
+    """
+
+    def __init__(self, description: str, financial_data_values: list[FinancialData]):
+        """
+        Initialize a FinancialRecord instance.
+
+        Args:
+            description (str): Description of the financial metric (e.g., "Revenue", "Net Income")
+            financial_data_values (list[FinancialData]): List of data points across time periods
+        """
         self.description = description
         self.financial_data_values = financial_data_values
 
 
 class MacroTrendScraper:
-    __url_income_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
-    __url_balance_sheet: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/balance-sheet?freq=A"
-    __url_financial_ratios: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/financial-ratios?freq=A"
-    __url_cash_flow_statement: str = "https://www.macrotrends.net/stocks/charts/{ticker}/{ticker}/cash-flow-statement?freq=A"
+    """
+    Web scraper for financial data from MacroTrends.net.
+
+    This scraper extracts financial statements and ratios using Selenium WebDriver
+    to handle JavaScript-rendered content. It supports income statements, balance sheets,
+    cash flow statements, and financial ratios with both annual and quarterly frequencies.
+
+    The scraped data is automatically stored in InfluxDB for time-series analysis.
+    """
+
+    __url_income_statement: str = "{macro_base_url}/stocks/charts/{ticker}/{ticker}/income-statement?freq=A"
+    __url_balance_sheet: str = "{macro_base_url}/stocks/charts/{ticker}/{ticker}/balance-sheet?freq=A"
+    __url_financial_ratios: str = "{macro_base_url}/stocks/charts/{ticker}/{ticker}/financial-ratios?freq=A"
+    __url_cash_flow_statement: str = "{macro_base_url}/stocks/charts/{ticker}/{ticker}/cash-flow-statement?freq=A"
 
     pageSourceLocation = "var originalData = "
     mainJsGridId = "columntablejqxgrid"
@@ -43,29 +87,117 @@ class MacroTrendScraper:
     points = []
 
     def __init__(self):
+        """
+        Initialize the MacroTrendScraper with InfluxDB repository connection.
+
+        Sets up the InfluxDB repository using configuration from the config module
+        to store scraped financial data in the "Stocks" bucket.
+        """
         self.influx_repository = InfluxRepository(influxUrl, "Stocks", token, organizaiton)
 
-    def download_income_statement(self, ticker: str, frequency: str = "A"):
+    def download_income_statement(self, ticker: str, frequency: str = "A") -> None:
+        """
+        Downloads complete income statement data for a given ticker.
+
+        Scrapes all available income statement data (revenue, expenses, net income, etc.)
+        from MacroTrends and stores it in InfluxDB.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", None)
 
-    def download_income_statement_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
+    def download_income_statement_from_date(self, ticker: str, from_date: datetime, frequency: str = "A") -> None:
+        """
+        Downloads income statement data for a ticker from a specific date onwards.
+
+        Only retrieves and stores income statement data that is newer than the specified
+        from_date, useful for incremental updates.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            from_date (datetime): Only download data newer than this date
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_income_statement, ticker, frequency, "IncomeStatement", from_date)
 
-    def download_balance_sheet(self, ticker: str, frequency: str = "A"):
+    def download_balance_sheet(self, ticker: str, frequency: str = "A") -> None:
+        """
+        Downloads complete balance sheet data for a given ticker.
+
+        Scrapes all available balance sheet data (assets, liabilities, equity, etc.)
+        from MacroTrends and stores it in InfluxDB.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_balance_sheet, ticker, frequency, "BalanceSheet", None)
 
-    def download_balance_sheet_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
+    def download_balance_sheet_from_date(self, ticker: str, from_date: datetime, frequency: str = "A") -> None:
+        """
+        Downloads balance sheet data for a ticker from a specific date onwards.
+
+        Only retrieves and stores balance sheet data that is newer than the specified
+        from_date, useful for incremental updates.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            from_date (datetime): Only download data newer than this date
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_income_statement, ticker, frequency, "BalanceSheet", from_date)
 
-    def download_cash_flow(self, ticker: str, frequency: str = "A"):
+    def download_cash_flow(self, ticker: str, frequency: str = "A") -> None:
+        """
+        Downloads complete cash flow statement data for a given ticker.
+
+        Scrapes all available cash flow data (operating, investing, financing activities)
+        from MacroTrends and stores it in InfluxDB.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_cash_flow_statement, ticker, frequency, "CashFlow", None)
 
-    def download_cash_flow_from_date(self, ticker: str, from_date: datetime, frequency: str = "A"):
+    def download_cash_flow_from_date(self, ticker: str, from_date: datetime, frequency: str = "A") -> None:
+        """
+        Downloads cash flow statement data for a ticker from a specific date onwards.
+
+        Only retrieves and stores cash flow data that is newer than the specified
+        from_date, useful for incremental updates.
+
+        Args:
+            ticker (str): Stock ticker symbol (e.g., 'AAPL', 'MSFT')
+            from_date (datetime): Only download data newer than this date
+            frequency (str, optional): Data frequency - 'A' for annual, 'Q' for quarterly.
+                                     Defaults to 'A'.
+        """
         self.__download_data(self.__url_cash_flow_statement, ticker, frequency, "CashFlow", from_date)
 
-    def __download_data(self, url: str, ticker: str, frequency: str, measurement: str, from_date: datetime):
+    def __download_data(self, url: str, ticker: str, frequency: str, measurement: str, from_date: datetime) -> None:
+        """
+        Internal method to handle the web scraping and data processing logic.
+
+        Uses Selenium WebDriver to navigate to MacroTrends, wait for JavaScript content
+        to load, extract JSON data from the page source, and process financial records.
+
+        Args:
+            url (str): URL template for the specific financial statement type
+            ticker (str): Stock ticker symbol
+            frequency (str): Data frequency ('A' for annual, 'Q' for quarterly)
+            measurement (str): InfluxDB measurement name for categorizing data
+            from_date (datetime): Optional filter to only process data after this date
+        """
         print(url.format(ticker=ticker))
-        url_with_ticker = url.format(ticker=ticker)
+        url_with_ticker = url.format(macro_base_url = macro_trends_url,ticker=ticker)
 
         options = Options()
         options.binary_location = "C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -81,7 +213,8 @@ class MacroTrendScraper:
         json_data_object = None
 
         try:
-            _ = WebDriverWait(driver, delay, poll_frequency=7).until(EC.presence_of_element_located((By.ID, self.mainJsGridId)))
+            _ = WebDriverWait(driver, delay, poll_frequency=7).until(
+                EC.presence_of_element_located((By.ID, self.mainJsGridId)))
             page = driver.page_source
             index = page.find(self.pageSourceLocation)
             index2 = page.rfind("var source") - 1
@@ -103,7 +236,8 @@ class MacroTrendScraper:
                         date = val
                         value = jsonData[val]
                         parsed_date = self.__parse_date_to_pandas_date(date)
-                        from_date = utc.localize(from_date) if from_date is not None and from_date.tzinfo is None else from_date
+                        from_date = utc.localize(
+                            from_date) if from_date is not None and from_date.tzinfo is None else from_date
 
                         if from_date is None or from_date < parsed_date:
                             financial_data = FinancialData(parsed_date, value)
@@ -116,24 +250,48 @@ class MacroTrendScraper:
             self.influx_repository.save()
             self.points = []
 
+    def __parse_date_to_pandas_date(self, dateString: str) -> datetime:
+        """
+        Converts a date string to a timezone-aware datetime object.
 
-    def __parse_date_to_pandas_date(self, dateString: str):
+        Parses the input date string using pandas, localizes it to Prague timezone,
+        then converts it to UTC for consistent storage.
+
+        Args:
+            dateString (str): Date string in a format parseable by pandas
+                            (e.g., "2023-12-31", "Dec 31, 2023")
+
+        Returns:
+            datetime: UTC timezone-aware datetime object
+        """
         pandas_date = pd.to_datetime(dateString)
         pandas_date = pandas_date.tz_localize("Europe/Prague")
         pandas_date.tz_convert("utc")
         return pandas_date.astimezone(pytz.utc)
 
-    def __save_data(self, financial_record: FinancialRecord, ticker, measurement, frequency):
+    def __save_data(self, financial_record: FinancialRecord, ticker: str, measurement: str, frequency: str) -> None:
+        """
+        Processes a financial record and prepares InfluxDB points for storage.
+
+        Converts financial record data into InfluxDB Point objects with proper
+        tags and fields. Values are multiplied by 1,000,000 to convert from
+        millions to actual amounts.
+
+        Args:
+            financial_record (FinancialRecord): The financial record to process
+            ticker (str): Stock ticker symbol for tagging
+            measurement (str): InfluxDB measurement name
+            frequency (str): Data frequency for tagging ('A' or 'Q')
+        """
         field_name = financial_record.description.replace('-', '').replace(' ', '')
 
         for data in financial_record.financial_data_values:
             if data.value != "":
                 calculated_value = float(data.value) * 1000000
-                point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker)\
+                point = Point(measurement).time(data.date, WritePrecision.NS).tag("ticker", ticker) \
                     .tag("frequency", frequency).field(field_name, calculated_value)
                 print(f'Data saved ({ticker}): ' + point.to_line_protocol())
                 self.points.append(point)
-
 
 # Testing ...
 # test = MacroTrendScraper()

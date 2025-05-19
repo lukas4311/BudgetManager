@@ -25,13 +25,38 @@ influx_repository = InfluxRepository(influxUrl, "StocksRoic", token, organizaito
 
 
 class StockScrapeManager:
+    """
+    Manages the scraping and storage of financial stock data from multiple sources.
+
+    This class orchestrates the process of downloading financial data, filtering it,
+    and storing it in InfluxDB and SQL Server databases. It handles financial summaries,
+    detailed financial data, and main financial indicators for stock tickers.
+    """
 
     def __init__(self, roic_service: RoicService, fmp_scraper: FmpScraper, influx_repo: InfluxRepository):
+        """
+        Initialize the StockScrapeManager with required services.
+
+        Args:
+            roic_service (RoicService): Service for calculating and retrieving ROIC data
+            fmp_scraper (FmpScraper): Financial Modeling Prep API scraper
+            influx_repo (InfluxRepository): Repository for InfluxDB operations
+        """
         self.influx_repository = influx_repo
         self.fmp_scraper = fmp_scraper
         self.roic_service = roic_service
 
-    def is_record_to_save(self, data_year: str, flux_year: int):
+    def is_record_to_save(self, data_year: str, flux_year: int) -> bool:
+        """
+        Determines if a financial record should be saved based on year comparison.
+
+        Compares the data year with the flux year to decide if the record is newer
+        and should be saved. Handles 'TTM' (Trailing Twelve Months) as current year.
+
+        Args:
+            data_year (str): The year of the financial data ('YYYY' or 'TTM')
+            flux_year (int): The year from existing flux data
+        """
         try:
             if data_year == 'TTM':
                 data_year = datetime.now().year
@@ -41,7 +66,19 @@ class StockScrapeManager:
         except:
             return False
 
-    def filter_financial_data(self, bucket_name, ticker, data):
+    def filter_financial_data(self, bucket_name: str, ticker: str, data: list[FinData]) -> list[FinData]:
+        """
+        Filters financial data to include only records newer than existing data.
+
+        Queries the InfluxDB for the last saved record of the given ticker and bucket,
+        then filters the input data to include only records with years greater than
+        the last saved year.
+
+        Args:
+            bucket_name (str): The InfluxDB bucket name to query
+            ticker (str): The stock ticker symbol
+            data (list[FinData]): List of financial data to filter
+        """
         logging.debug('START: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         date = datetime.min
         data_time = influx_repository.filter_last_value(bucket_name, ticker, date)
@@ -55,7 +92,20 @@ class StockScrapeManager:
         logging.debug('END: Filter financial data:' + datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
         return filtered_data
 
-    def process_financial_data_point(self, bucket_name, point_data, points, ticker):
+    def process_financial_data_point(self, bucket_name: str, point_data: FinData, points: list, ticker: str) -> None:
+        """
+        Processes a single financial data point and converts it to an InfluxDB Point.
+
+        Creates an InfluxDB Point object with proper tags, fields, and timestamp.
+        Handles both historical data (with specific years) and TTM (current year) data.
+        Cleans numeric values by removing formatting characters.
+
+        Args:
+            bucket_name (str): The InfluxDB bucket name for the point
+            point_data (FinData): The financial data to process
+            points (list): List to append the created Point to
+            ticker (str): The stock ticker symbol
+        """
         point = Point(bucket_name) \
             .tag("ticker", ticker).field(point_data.name, float(
             point_data.value.replace(',', '').replace('(', '').replace(')', '').replace('%', '')))
@@ -76,7 +126,16 @@ class StockScrapeManager:
         point = point.time(date, WritePrecision.NS)
         points.append(point)
 
-    def download_fin_summary(self, ticker: str):
+    def download_fin_summary(self, ticker: str) -> None:
+        """
+        Downloads and stores financial summary data for a given ticker.
+
+        Retrieves financial summary data from the ROIC service, filters out
+        already existing records, and stores new data points in InfluxDB.
+
+        Args:
+            ticker (str): The stock ticker symbol to download data for
+        """
         bucket_name = 'FinSummary'
         data = self.roic_service.get_fin_summary(ticker)
         points = []
@@ -94,7 +153,16 @@ class StockScrapeManager:
         else:
             logging.info('Fin summary already saved ' + ticker)
 
-    def download_fin_data(self, ticker: str):
+    def download_fin_data(self, ticker: str) -> None:
+        """
+        Downloads and stores detailed financial data for a given ticker.
+
+        Retrieves main financial history data from the ROIC service, filters out
+        already existing records, and stores new data points in InfluxDB.
+
+        Args:
+            ticker (str): The stock ticker symbol to download data for
+        """
         bucket_name = 'FinData'
         data = self.roic_service.get_main_financial_history(ticker)
         points = []
@@ -112,7 +180,17 @@ class StockScrapeManager:
         else:
             logging.info('Fin data already saved ' + ticker)
 
-    def download_main_fin(self, ticker: str):
+    def download_main_fin(self, ticker: str) -> None:
+        """
+        Downloads and stores main financial indicators for a given ticker.
+
+        Retrieves key financial metrics (PE ratio, dividend yield, market cap, etc.)
+        from the ROIC service and stores them in InfluxDB. Only updates if no data
+        exists for the current year.
+
+        Args:
+            ticker (str): The stock ticker symbol to download data for
+        """
         bucket_name = 'FinMain'
         actual_year = datetime.now().year
         date = datetime.min
@@ -133,13 +211,14 @@ class StockScrapeManager:
                 .field('Fw_Pe', float(
                 main_info.fw_pe.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
                 .field('Pe_To_Sp', float(
-                main_info.pe_to_sp.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T', ''))) \
+                main_info.pe_to_sp.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
+                                                                                                               ''))) \
                 .field('Div_Yield', float(
                 main_info.div_yield.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
-                                                                                                               ''))) \
+                                                                                                                ''))) \
                 .field('MarketCap', float(
                 main_info.market_cap.replace(',', '').replace('(', '').replace(')', '').replace('%', '').replace('T',
-                                                                                                                '')))
+                                                                                                                 '')))
 
             now = datetime.now()
             now_str = now.strftime("%Y-%m-%d")
@@ -157,7 +236,17 @@ class StockScrapeManager:
         else:
             logging.info('Main fin data already saved ' + ticker)
 
-    def store_tickers(self, ticker_shortcut: str, company_name: str):
+    def store_tickers(self, ticker_shortcut: str, company_name: str) -> None:
+        """
+        Stores a ticker symbol and company name in the SQL Server database.
+
+        Creates a new EnumItem record with the ticker as code and company name
+        if it doesn't already exist in the database. Uses the "TradeTicker" enum type.
+
+        Args:
+            ticker_shortcut (str): The stock ticker symbol (e.g., 'AAPL')
+            company_name (str): The full company name (e.g., 'Apple Inc.')
+        """
         engine = create_engine(
             f'mssql+pyodbc://@{secret.serverName}/{secret.datebaseName}?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes')
 
@@ -171,15 +260,36 @@ class StockScrapeManager:
             stmt_enum_item_type = select(EnumItemType).where(EnumItemType.code == "TradeTicker")
             enum_item_type = session.scalars(stmt_enum_item_type).first()
 
-            insert_command = insert(EnumItem).values(code=ticker_shortcut, name=company_name, enumItemTypeId=enum_item_type.id)
+            insert_command = insert(EnumItem).values(code=ticker_shortcut, name=company_name,
+                                                     enumItemTypeId=enum_item_type.id)
             with engine.connect() as conn:
                 conn.execute(insert_command)
                 conn.commit()
 
-    def store_company_profile(self, ticker: str):
+    def store_company_profile(self, ticker: str) -> None:
+        """
+        Downloads and stores company profile data for a given ticker.
+
+        Uses the FMP (Financial Modeling Prep) scraper to download detailed
+        company profile information for the specified ticker.
+
+        Args:
+            ticker (str): The stock ticker symbol to download profile for
+        """
         self.fmpScraper.download_profile(ticker)
 
-    def process_tickers_to_company_profile_to_db(self, rows):
+    def process_tickers_to_company_profile_to_db(self, rows) -> None:
+        """
+        Processes multiple tickers to download company profiles to database.
+
+        Iterates through a collection of ticker data rows and downloads
+        company profile information for each ticker using the FMP scraper.
+        Continues processing even if individual tickers fail.
+
+        Args:
+            rows: Iterable of row objects containing 'Symbol' and 'Name' keys
+                 (typically from CSV DictReader)
+        """
         for row in rows:
             symbol = row["Symbol"]
             name = row["Name"]
@@ -189,7 +299,18 @@ class StockScrapeManager:
             except Exception:
                 print(symbol + " - error")
 
-    def process_tickers_to_store_to_db(self, rows):
+    def process_tickers_to_store_to_db(self, rows) -> None:
+        """
+        Processes multiple tickers to store ticker information in database.
+
+        Iterates through a collection of ticker data rows and stores
+        each ticker symbol and company name in the SQL Server database.
+        Continues processing even if individual tickers fail.
+
+        Args:
+            rows: Iterable of row objects containing 'Symbol' and 'Name' keys
+                 (typically from CSV DictReader)
+        """
         for row in rows:
             symbol = row["Symbol"]
             name = row["Name"]
@@ -200,14 +321,24 @@ class StockScrapeManager:
                 print(symbol + " - error")
 
 
-def add_ticker_from_csv_file(rows, destination: list):
+def add_ticker_from_csv_file(rows, destination: list) -> None:
+    """
+    Loads ticker symbols from CSV rows and adds them to a destination list.
+
+    Processes CSV rows to extract ticker symbols and adds them to the provided
+    list, filtering out symbols that contain the '^' character (typically
+    index symbols).
+
+    Args:
+        rows: Iterable of row objects containing 'Symbol' key (typically from CSV DictReader)
+        destination (list): List to append valid ticker symbols to
+    """
     for row in rows:
         symbol = row["Symbol"]
         logging.debug('Loaded ticker: ' + symbol)
 
         if "^" not in symbol:
             destination.append(symbol)
-
 
 # sp500 = []
 #

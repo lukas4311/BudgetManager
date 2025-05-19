@@ -7,3 +7,4 @@ open_figi_url: str = "https://api.openfigi.com/v3"
 roicBaseUrl: str = 'https://roic.ai'
 alphavantageUrl: str = 'https://www.alphavantage.co'
 dbConnectionString: str = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER={serverName};DATABASE={datebaseName};Trusted_Connection=yes;'
+macro_trends_url = 'https://www.macrotrends.net'
