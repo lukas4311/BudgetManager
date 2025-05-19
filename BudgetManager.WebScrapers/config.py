@@ -8,3 +8,4 @@ roicBaseUrl: str = 'https://roic.ai'
 alphavantageUrl: str = 'https://www.alphavantage.co'
 dbConnectionString: str = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER={serverName};DATABASE={datebaseName};Trusted_Connection=yes;'
 macro_trends_url = 'https://www.macrotrends.net'
+crypto_watch_base_url = "https://api.kraken.com/0/public"

@@ -9,7 +9,7 @@ from Models.FilterTuple import FilterTuple
 from Services.InfluxRepository import InfluxRepository
 from enum import Enum
 from secret import token, organizationId
-from config import influxUrl
+from config import influxUrl, crypto_watch_base_url
 from influxdb_client import Point, WritePrecision
 from typing import List
 
@@ -142,7 +142,6 @@ class CryptoWatchService:
 
     # Class constants
     one_day_limit = 1440  # Minutes in a day - used for daily OHLC intervals
-    crypto_watch_base_url = "https://api.kraken.com/0/public"
 
     def get_crypto_price_history(self, ticker: CryptoTickers) -> List[CryptoPriceData]:
         """
@@ -166,7 +165,7 @@ class CryptoWatchService:
             fromTime = int(time.mktime(last_record_time.timetuple()))
 
             # exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
-            url = f"{self.crypto_watch_base_url}/OHLC?pair={ticker.value}&interval={self.one_day_limit}&since={fromTime}"
+            url = f"{crypto_watch_base_url}/OHLC?pair={ticker.value}&interval={self.one_day_limit}&since={fromTime}"
             print(url)
 
             response = requests.get(url)
