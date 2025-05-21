@@ -278,6 +278,7 @@ namespace BudgetManager.Services
             foreach (TradeGroupedTicker item in data)
             {
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
+                // TODO: need to convert stock price to currency
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, DateTime.Now);
                 double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, DateTime.Now);
                 currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;

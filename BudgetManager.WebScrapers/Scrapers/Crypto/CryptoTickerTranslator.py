@@ -1,4 +1,17 @@
-from Scrapers.Crypto.CryptoHistoryPriceScraper import CryptoTickers
+from enum import Enum
+
+class CryptoTickers(Enum):
+    """
+    Enumeration of supported cryptocurrency trading pairs from Kraken.
+
+    These represent the exact ticker symbols used by the Kraken API.
+    """
+    XXBTZUSD = "XXBTZUSD"  # Bitcoin to USD
+    XETHZUSD = "XETHZUSD"  # Ethereum to USD
+    MATICUSD = "MATICUSD"  # Polygon (MATIC) to USD
+    LINKUSD = "LINKUSD"  # Chainlink to USD
+    SNXUSD = "SNXUSD"  # Synthetix to USD
+    USDCUSD = "USDCUSD"  # USD Coin to USD
 
 
 class CryptoTickerTranslator:

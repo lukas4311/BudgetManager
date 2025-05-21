@@ -6,9 +6,9 @@ import json
 import logging
 
 from Models.FilterTuple import FilterTuple
-from Scrapers.Crypto.CryptoTickerTranslator import CryptoTickerTranslator
+from Scrapers.Crypto.CryptoTickerTranslator import CryptoTickerTranslator, CryptoTickers
 from Services.InfluxRepository import InfluxRepository
-from enum import Enum
+
 from secret import token, organizationId
 from config import influxUrl, crypto_watch_base_url
 from influxdb_client import Point, WritePrecision
@@ -83,20 +83,6 @@ class Result:
         self.count = count
 
 
-class CryptoTickers(Enum):
-    """
-    Enumeration of supported cryptocurrency trading pairs from Kraken.
-
-    These represent the exact ticker symbols used by the Kraken API.
-    """
-    XXBTZUSD = "XXBTZUSD"  # Bitcoin to USD
-    XETHZUSD = "XETHZUSD"  # Ethereum to USD
-    MATICUSD = "MATICUSD"  # Polygon (MATIC) to USD
-    LINKUSD = "LINKUSD"  # Chainlink to USD
-    SNXUSD = "SNXUSD"  # Synthetix to USD
-    USDCUSD = "USDCUSD"  # USD Coin to USD
-
-
 class CryptoWatchService:
     """
     Service class for interacting with the Kraken API to fetch cryptocurrency price data.
@@ -124,39 +110,44 @@ class CryptoWatchService:
         Returns:
             List[CryptoPriceData]: List of price data points, empty if no new data
         """
-        crypto_ticker_translator = CryptoTickerTranslator()
-        translated_ticker = crypto_ticker_translator.translate(ticker)
-        last_record_time = self.__get_last_record_time(translated_ticker)
-        now_datetime_with_offset = datetime.now().astimezone(last_record_time.tzinfo)
 
-        if last_record_time < now_datetime_with_offset:
-            fromTime = int(time.mktime(last_record_time.timetuple()))
+        try:
+            crypto_ticker_translator = CryptoTickerTranslator()
+            translated_ticker = crypto_ticker_translator.translate(ticker)
+            last_record_time = self.__get_last_record_time(translated_ticker)
+            now_datetime_with_offset = datetime.now().astimezone(last_record_time.tzinfo)
 
-            # exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
-            url = f"{crypto_watch_base_url}/OHLC?pair={ticker.value}&interval={self.one_day_limit}&since={fromTime}"
-            print(url)
+            if last_record_time < now_datetime_with_offset:
+                fromTime = int(time.mktime(last_record_time.timetuple()))
 
-            response = requests.get(url)
-            json_data = response.text
-            parsed_data = json.loads(json_data)
-            print(parsed_data)
+                # exchange = geminiExchange if ticker == CryptoTickers.USDC else coinbaseExchange
+                url = f"{crypto_watch_base_url}/OHLC?pair={ticker.value}&interval={self.one_day_limit}&since={fromTime}"
+                print(url)
 
-            result_objects = [Result(*item) for item in parsed_data['result'][ticker.value]]
-            result_data_instance = ResultData(result_objects)
+                response = requests.get(url)
+                json_data = response.text
+                parsed_data = json.loads(json_data)
+                print(parsed_data)
 
-            stockPriceData = [
-                CryptoPriceData(
-                    datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1),
-                    float(round(float(d.close_val), 2)),
-                    translated_ticker
-                )
-                for d in result_data_instance.data
-                if d.timestamp > fromTime
-            ]
+                result_objects = [Result(*item) for item in parsed_data['result'][ticker.value]]
+                result_data_instance = ResultData(result_objects)
 
-            return stockPriceData
+                stockPriceData = [
+                    CryptoPriceData(
+                        datetime.fromtimestamp(d.timestamp).astimezone(timezone.utc) - timedelta(hours=1),
+                        float(round(float(d.close_val), 2)),
+                        translated_ticker
+                    )
+                    for d in result_data_instance.data
+                    if d.timestamp > fromTime
+                ]
 
-        return []
+                return stockPriceData
+
+            return []
+        except Exception as e:
+            logging.error("An error occurred: %s", e)
+            return []
 
     def __get_last_record_time(self, ticker: str) -> datetime:
         """
