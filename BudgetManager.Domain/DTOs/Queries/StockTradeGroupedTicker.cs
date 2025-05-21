@@ -23,7 +23,7 @@
         /// <summary>
         /// Gets or sets the accumulated trade size up to this point.
         /// </summary>
-        public double AccumulatedTradeSize { get; init; }
+        public double AccumulatedSize { get; init; }
 
         /// <summary>
         /// Gets or sets the identifier for the trade currency symbol.

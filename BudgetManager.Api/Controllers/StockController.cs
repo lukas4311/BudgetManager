@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FinancialClient = BudgetManager.Client.FinancialApiClient.FinancialClient;
 
@@ -233,19 +234,10 @@ namespace BudgetManager.Api.Controllers
         }
 
         [HttpGet("trade/tickergrouped-in-currency"), MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetStockTradesInCurrency([FromQuery]string currency)
+        public async Task<ActionResult<IEnumerable<TradeGroupedTickerWithProfitLoss>>> GetStockTradesInCurrency([FromQuery]string currency)
         {
             FinancialClient client = new FinancialClient(finHttpClient);
-            IEnumerable<TradeGroupedTradeTime> data = stockTradeHistoryService.GetAllTradesGroupedByTradeDate(GetUserId());
-
-            foreach (TradeGroupedTradeTime item in data)
-            {
-                Enum.TryParse(item.CurrencyCode, out CurrencySymbol fromSymbol);
-                Enum.TryParse(currency, out CurrencySymbol toSymbol);
-                InfluxDbData.Models.StockPrice stockPrice = await stockTradeHistoryService.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
-                double currencyPrice = await client.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
-            }
-
+            IEnumerable<TradeGroupedTickerWithProfitLoss> data = await stockTradeHistoryService.GetAllTradesGroupedByTickerWithProfitInfo(GetUserId(), currency);
             return Ok(data);
         }
     }

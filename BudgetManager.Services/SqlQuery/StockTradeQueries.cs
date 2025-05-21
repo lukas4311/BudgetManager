@@ -77,11 +77,11 @@ AccumulatedTrades AS (
 )
 SELECT
     TickerId,
-    TradeTimeStamp,
-    TotalTradeSize,
-    TotalTradeValue,
-	TradeCurrencySymbolId,
-    AccumulatedTradeSize,
+    TradeTimeStamp AS TimeStamp,
+    TotalTradeSize AS Size,
+    TotalTradeValue AS Value,
+	TradeCurrencySymbolId AS CurrencySymbolId,
+    AccumulatedTradeSize AS AccumulatedSize,
 	TickerCode,
 	CurrencyCode
 FROM
@@ -157,10 +157,10 @@ AccumulatedTrades AS (
 )
 SELECT
     AT.TickerId,
-    TotalTradeSize,
-    TotalTradeValue,
-    AccumulatedTradeSize,
-	TradeCurrencySymbolId,
+    TotalTradeSize AS Size,
+    TotalTradeValue AS Value,
+    AccumulatedTradeSize AS AccumulatedSize,
+	TradeCurrencySymbolId AS CurrencySymbolId,
 	TickerCode,
 	CurrencyCode
 FROM

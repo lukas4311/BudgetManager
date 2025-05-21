@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the total trade value for the specified month.
         /// </summary>
-        public double TradeValue { get; init; }
+        public double Value { get; init; }
 
         /// <summary>
         /// Gets or sets the accumulated trade size up to and including the specified month.

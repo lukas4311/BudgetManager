@@ -15,27 +15,27 @@ namespace BudgetManager.Domain.DTOs.Queries
         /// <summary>
         /// Gets or sets the trade time stamp.
         /// </summary>
-        public DateTime TradeTimeStamp { get; init; }
+        public DateTime TimeStamp { get; init; }
 
         /// <summary>
         /// Gets or sets the total trade size.
         /// </summary>
-        public double TotalTradeSize { get; init; }
+        public double Size { get; init; }
 
         /// <summary>
         /// Gets or sets the total trade value.
         /// </summary>
-        public double TotalTradeValue { get; init; }
+        public double Value { get; init; }
 
         /// <summary>
         /// Gets or sets the accumulated trade size.
         /// </summary>
-        public double AccumulatedTradeSize { get; init; }
+        public double AccumulatedSize { get; init; }
 
         /// <summary>
         /// Gets or sets Id of currency.
         /// </summary>
-        public int TradeCurrencySymbolId { get; init; }
+        public int CurrencySymbolId { get; init; }
 
         /// <summary>
         /// Gets or sets the code for the ticker.

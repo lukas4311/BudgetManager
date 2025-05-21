@@ -104,5 +104,8 @@ namespace BudgetManager.Services.Contracts
         /// </summary>
         /// <returns></returns>
         IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId);
+        Task<IEnumerable<TradeGroupedTickerWithProfitLoss>> GetAllTradesGroupedByTickerWithProfitInfo(int userId, string currency);
+        Task<IEnumerable<TradeGroupedTradeTimeWithProfitLoss>> GetAllTradesGroupedByTradeDateWithProfitInfo(int userId, string currency);
+        Task<IEnumerable<TradesGroupedMonth>> GetAllTradesGroupedByMonthWithProfitInfo(int userId, string currency);
     }
 }

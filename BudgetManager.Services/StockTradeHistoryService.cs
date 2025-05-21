@@ -248,20 +248,20 @@ namespace BudgetManager.Services
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, tradeDate);
                 double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, tradeDate);
-
+                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
                 TradesGroupedMonthWithProfitLoss profitData = new TradesGroupedMonthWithProfitLoss
                 {
                     TickerId = item.TickerId,
                     Year = item.Year,
                     Month = item.Month,
                     Size = item.Size,
-                    TradeValue = item.TradeValue,
+                    Value = item.Value,
                     AccumulatedSize = item.AccumulatedSize,
                     CurrencySymbolId = item.CurrencySymbolId,
                     TickerCode = item.TickerCode,
                     CurrencyCode = currency,
                     TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.TradeValue * currencyPrice) * 100
+                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
                 };
                 dataWithProfit.Add(profitData);
             }
@@ -280,18 +280,18 @@ namespace BudgetManager.Services
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, DateTime.Now);
                 double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, DateTime.Now);
-
+                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
                 TradeGroupedTickerWithProfitLoss profitData = new TradeGroupedTickerWithProfitLoss
                 {
                     TickerId = item.TickerId,
                     Size = item.Size,
                     Value = item.Value,
-                    AccumulatedTradeSize = item.AccumulatedTradeSize,
+                    AccumulatedSize = item.AccumulatedSize,
                     CurrencySymbolId = item.CurrencySymbolId,
                     TickerCode = item.TickerCode,
                     CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
+                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
                 };
                 dataWithProfit.Add(profitData);
             }
@@ -308,21 +308,21 @@ namespace BudgetManager.Services
             foreach (TradeGroupedTradeTime item in data)
             {
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TradeTimeStamp);
-                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TradeTimeStamp);
-
+                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TimeStamp);
+                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TimeStamp);
+                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
                 TradeGroupedTradeTimeWithProfitLoss profitData = new TradeGroupedTradeTimeWithProfitLoss
                 {
                     TickerId = item.TickerId,
-                    TradeTimeStamp = item.TradeTimeStamp,
-                    TotalTradeSize = item.TotalTradeSize,
-                    TotalTradeValue = item.TotalTradeValue,
-                    AccumulatedTradeSize = item.AccumulatedTradeSize,
-                    TradeCurrencySymbolId = item.TradeCurrencySymbolId,
+                    TimeStamp = item.TimeStamp,
+                    Size = item.Size,
+                    Value = item.Value,
+                    AccumulatedSize = item.AccumulatedSize,
+                    CurrencySymbolId = item.CurrencySymbolId,
                     TickerCode = item.TickerCode,
                     CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedTradeSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.TotalTradeValue * currencyPrice) * 100
+                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
                 };
                 dataWithProfit.Add(profitData);
             }
