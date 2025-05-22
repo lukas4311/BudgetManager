@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
 using IFinancialClient = BudgetManager.Client.FinancialApiClient.IFinancialClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json;
 
 namespace BudgetManager.Services
 {
@@ -37,6 +38,7 @@ namespace BudgetManager.Services
         private readonly IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository;
         private readonly IRepository<BrokerReportToProcess> brokerReportToProcessRepository;
         private readonly IDateTime dateTimeProvider;
+        private readonly IRepository<EnumItem> enumRepository;
         private readonly IFinancialClient financialClient;
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace BudgetManager.Services
             InfluxDbData.IRepository<StockPrice> stockDataInfluxRepo, Infl.IInfluxContext influxContext,
             IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
-            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider,
+            IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider, IRepository<EnumItem> enumRepository,
             IFinancialClient financialClient) : base(repository, mapper)
         {
             this.repository = repository;
@@ -71,6 +73,7 @@ namespace BudgetManager.Services
             this.brokerReportToProcessStateRepository = brokerReportToProcessStateRepository;
             this.brokerReportToProcessRepository = brokerReportToProcessRepository;
             this.dateTimeProvider = dateTimeProvider;
+            this.enumRepository = enumRepository;
             this.financialClient = financialClient;
         }
 
@@ -278,21 +281,42 @@ namespace BudgetManager.Services
             foreach (TradeGroupedTicker item in data)
             {
                 Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-                // TODO: need to convert stock price to currency
+
+                var ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
+
+                if (ticker == null || string.IsNullOrEmpty(ticker.Metadata))
+                    throw new InvalidOperationException("Ticker or metadata not found.");
+
+                var metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
+
+                if (!metadata.TryGetValue("currency", out var tickerCurrency))
+                    continue;
+
+                Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol);
+
+                // Get stock price and convert  
                 StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, DateTime.Now);
-                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, DateTime.Now);
-                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
+                double currencyPriceForTicker = await this.financialClient.GetForexPairPriceAsync(tickerCurrencySymbol, toSymbol);
+                double currencyPriceForValue = await this.financialClient.GetForexPairPriceAsync(fromSymbol, toSymbol);
+                double convertedPrice = (stockPrice?.Price ?? 1) * currencyPriceForTicker;
+                currencyPriceForTicker = currencyPriceForTicker == 0 ? 1 : currencyPriceForTicker;
+                currencyPriceForValue = currencyPriceForValue == 0 ? 1 : currencyPriceForValue;
+
+                double totalAccumulatedValue = item.AccumulatedSize * convertedPrice;
+                double totalPercentageProfitOrLoss = (Math.Abs(totalAccumulatedValue) / (Math.Abs(item.Value) * currencyPriceForValue)) * 100 - 100;
+                //double totalPercentageProfitOrLoss = ((totalAccumulatedValue - (item.Value * currencyPriceForValue)) / (item.Value * currencyPriceForValue)) * 100;
+
                 TradeGroupedTickerWithProfitLoss profitData = new TradeGroupedTickerWithProfitLoss
                 {
                     TickerId = item.TickerId,
                     Size = item.Size,
-                    Value = item.Value,
+                    Value = item.Value * currencyPriceForValue,
                     AccumulatedSize = item.AccumulatedSize,
                     CurrencySymbolId = item.CurrencySymbolId,
                     TickerCode = item.TickerCode,
                     CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
+                    TotalAccumulatedValue = totalAccumulatedValue,
+                    TotalPercentageProfitOrLoss = totalPercentageProfitOrLoss
                 };
                 dataWithProfit.Add(profitData);
             }
