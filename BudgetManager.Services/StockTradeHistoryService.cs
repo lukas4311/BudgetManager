@@ -18,6 +18,9 @@ using Infl = BudgetManager.InfluxDbData;
 using IFinancialClient = BudgetManager.Client.FinancialApiClient.IFinancialClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Timers;
 
 namespace BudgetManager.Services
 {
@@ -239,120 +242,340 @@ namespace BudgetManager.Services
         public IEnumerable<TradeGroupedTradeTime> GetAllTradesGroupedByTradeDate(int userId)
             => brokerReportToProcessRepository.FromSqlRaw<TradeGroupedTradeTime>(StockTradeQueries.GetAllTradesGroupedByTickerAndTradeDate__TradeTable(), userId, nameof(TickerTypes.StockTradeTickers));
 
-        public async Task<IEnumerable<TradesGroupedMonth>> GetAllTradesGroupedByMonthWithProfitInfo(int userId, string currency)
+        private Client.FinancialApiClient.CurrencySymbol? GetMetadataCurrency(EnumItem ticker)
         {
-            IEnumerable<TradesGroupedMonth> data = this.GetAllTradesGroupedByMonth(userId);
-            List<TradesGroupedMonthWithProfitLoss> dataWithProfit = new List<TradesGroupedMonthWithProfitLoss>();
-            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
+            if (ticker == null || string.IsNullOrEmpty(ticker.Metadata))
+                return null;
 
-            foreach (TradesGroupedMonth item in data)
+            Dictionary<string, string> metadata;
+            try
             {
-                var tradeDate = new DateTime(item.Year, item.Month, 1);
-                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, tradeDate);
-                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, tradeDate);
-                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
-                TradesGroupedMonthWithProfitLoss profitData = new TradesGroupedMonthWithProfitLoss
-                {
-                    TickerId = item.TickerId,
-                    Year = item.Year,
-                    Month = item.Month,
-                    Size = item.Size,
-                    Value = item.Value,
-                    AccumulatedSize = item.AccumulatedSize,
-                    CurrencySymbolId = item.CurrencySymbolId,
-                    TickerCode = item.TickerCode,
-                    CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
-                };
-                dataWithProfit.Add(profitData);
+                metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
+            }
+            catch (JsonException)
+            {
+                return null;
             }
 
-            return dataWithProfit;
+            if (!metadata.TryGetValue("currency", out string tickerCurrency) || !Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol))
+                return null;
+
+            return tickerCurrencySymbol;
         }
 
         public async Task<IEnumerable<TradeGroupedTickerWithProfitLoss>> GetAllTradesGroupedByTickerWithProfitInfo(int userId, string currency)
         {
+            ForexRateCache forexCache = new ForexRateCache((from, to) => this.financialClient.GetForexPairPriceAsync(from, to));
             IEnumerable<TradeGroupedTicker> data = this.GetAllTradesGroupedByTicker(userId);
-            List<TradeGroupedTickerWithProfitLoss> dataWithProfit = new List<TradeGroupedTickerWithProfitLoss>();
-            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
 
-            foreach (TradeGroupedTicker item in data)
+            if (!Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol))
+                throw new ArgumentException($"Invalid currency: {currency}");
+
+            async Task<TradeGroupedTickerWithProfitLoss> ProcessTradeItem(TradeGroupedTicker item)
             {
-                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-
-                var ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
-
-                if (ticker == null || string.IsNullOrEmpty(ticker.Metadata))
-                    throw new InvalidOperationException("Ticker or metadata not found.");
-
-                var metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
-
-                if (!metadata.TryGetValue("currency", out var tickerCurrency))
-                    continue;
-
-                Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol);
-
-                // Get stock price and convert  
-                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, DateTime.Now);
-                double currencyPriceForTicker = await this.financialClient.GetForexPairPriceAsync(tickerCurrencySymbol, toSymbol);
-                double currencyPriceForValue = await this.financialClient.GetForexPairPriceAsync(fromSymbol, toSymbol);
-                double convertedPrice = (stockPrice?.Price ?? 1) * currencyPriceForTicker;
-                currencyPriceForTicker = currencyPriceForTicker == 0 ? 1 : currencyPriceForTicker;
-                currencyPriceForValue = currencyPriceForValue == 0 ? 1 : currencyPriceForValue;
-
-                double totalAccumulatedValue = item.AccumulatedSize * convertedPrice;
-                double totalPercentageProfitOrLoss = (Math.Abs(totalAccumulatedValue) / (Math.Abs(item.Value) * currencyPriceForValue)) * 100 - 100;
-                //double totalPercentageProfitOrLoss = ((totalAccumulatedValue - (item.Value * currencyPriceForValue)) / (item.Value * currencyPriceForValue)) * 100;
-
-                TradeGroupedTickerWithProfitLoss profitData = new TradeGroupedTickerWithProfitLoss
+                try
                 {
-                    TickerId = item.TickerId,
-                    Size = item.Size,
-                    Value = item.Value * currencyPriceForValue,
-                    AccumulatedSize = item.AccumulatedSize,
-                    CurrencySymbolId = item.CurrencySymbolId,
-                    TickerCode = item.TickerCode,
-                    CurrencyCode = currency,
-                    TotalAccumulatedValue = totalAccumulatedValue,
-                    TotalPercentageProfitOrLoss = totalPercentageProfitOrLoss
-                };
-                dataWithProfit.Add(profitData);
+                    if (!Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol))
+                        return null;
+
+                    EnumItem ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
+                    Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol = GetMetadataCurrency(ticker) ?? fromSymbol;
+
+                    // Execute operations in parallel
+                    Task<StockPrice> stockPriceTask = GetStockPriceAtDate(item.TickerCode, DateTime.Now);
+                    Task<double> currencyPriceForTickerTask = forexCache.GetRateAsync(tickerCurrencySymbol, toSymbol);
+                    Task<double> currencyPriceForValueTask = forexCache.GetRateAsync(fromSymbol, toSymbol);
+
+                    await Task.WhenAll(stockPriceTask, currencyPriceForTickerTask, currencyPriceForValueTask);
+
+                    StockPrice stockPrice = stockPriceTask.Result;
+                    double currencyPriceForTicker = currencyPriceForTickerTask.Result;
+                    double currencyPriceForValue = currencyPriceForValueTask.Result;
+
+                    double convertedPrice = (stockPrice?.Price ?? 1) * currencyPriceForTicker;
+                    double totalAccumulatedValue = item.AccumulatedSize * convertedPrice;
+                    double totalPercentageProfitOrLoss = (Math.Abs(totalAccumulatedValue) / (Math.Abs(item.Value) * currencyPriceForValue)) * 100 - 100;
+
+                    return new TradeGroupedTickerWithProfitLoss
+                    {
+                        TickerId = item.TickerId,
+                        Size = item.Size,
+                        Value = item.Value * currencyPriceForValue,
+                        AccumulatedSize = item.AccumulatedSize,
+                        CurrencySymbolId = item.CurrencySymbolId,
+                        TickerCode = item.TickerCode,
+                        CurrencyCode = currency,
+                        TotalAccumulatedValue = totalAccumulatedValue,
+                        TotalPercentageProfitOrLoss = totalPercentageProfitOrLoss
+                    };
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
 
-            return dataWithProfit;
+            await PreCacheForexRates(data, toSymbol, forexCache);
+            IEnumerable<Task<TradeGroupedTickerWithProfitLoss>> tasks = data.Select(ProcessTradeItem);
+            TradeGroupedTickerWithProfitLoss[] results = await Task.WhenAll(tasks);
+
+            return results.Where(r => r != null);
+        }
+
+        public async Task<IEnumerable<TradesGroupedMonth>> GetAllTradesGroupedByMonthWithProfitInfo(int userId, string currency)
+        {
+            ForexRateCache forexCache = new ForexRateCache(
+                (from, to) => this.financialClient.GetForexPairPriceAsync(from, to),
+                (from, to, date) => this.financialClient.GetForexPairPriceAtDateAsync(from, to, date)
+            );
+
+            IEnumerable<TradesGroupedMonth> data = this.GetAllTradesGroupedByMonth(userId);
+
+            if (!Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol))
+                throw new ArgumentException($"Invalid currency: {currency}");
+
+            async Task<TradesGroupedMonthWithProfitLoss> ProcessTradeItem(TradesGroupedMonth item)
+            {
+                try
+                {
+                    DateTime tradeDate = new DateTime(item.Year, item.Month, 1);
+
+                    if (!Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol))
+                        return null;
+
+                    // Execute operations in parallel
+                    Task<StockPrice> stockPriceTask = this.GetStockPriceAtDate(item.TickerCode, tradeDate);
+                    Task<double> currencyPriceTask = forexCache.GetRateAtDateAsync(fromSymbol, toSymbol, tradeDate);
+
+                    await Task.WhenAll(stockPriceTask, currencyPriceTask);
+
+                    StockPrice stockPrice = stockPriceTask.Result;
+                    double currencyPrice = currencyPriceTask.Result;
+
+                    return new TradesGroupedMonthWithProfitLoss
+                    {
+                        TickerId = item.TickerId,
+                        Year = item.Year,
+                        Month = item.Month,
+                        Size = item.Size,
+                        Value = item.Value,
+                        AccumulatedSize = item.AccumulatedSize,
+                        CurrencySymbolId = item.CurrencySymbolId,
+                        TickerCode = item.TickerCode,
+                        CurrencyCode = currency,
+                        TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                        TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
+                    };
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            // Pre-cache unique forex pairs for historical dates
+            IEnumerable<(Client.FinancialApiClient.CurrencySymbol FromSymbol, Client.FinancialApiClient.CurrencySymbol ToSymbol, DateTime Date)> uniqueForexPairs = data
+                .Where(item => Enum.TryParse<Client.FinancialApiClient.CurrencySymbol>(item.CurrencyCode, out _))
+                .Select(item => (
+                    FromSymbol: Enum.Parse<Client.FinancialApiClient.CurrencySymbol>(item.CurrencyCode),
+                    ToSymbol: toSymbol,
+                    Date: new DateTime(item.Year, item.Month, 1)
+                ))
+                .Distinct();
+
+            IEnumerable<Task> cacheTasks = uniqueForexPairs.Select(async pair =>
+            {
+                try
+                {
+                    await forexCache.GetRateAtDateAsync(pair.FromSymbol, pair.ToSymbol, pair.Date);
+                }
+                catch (Exception)
+                {
+                    // Log error but continue
+                }
+            });
+
+            await Task.WhenAll(cacheTasks);
+
+            // Process all items in parallel
+            IEnumerable<Task<TradesGroupedMonthWithProfitLoss>> tasks = data.Select(ProcessTradeItem);
+            TradesGroupedMonthWithProfitLoss[] results = await Task.WhenAll(tasks);
+
+            return results.Where(r => r != null);
         }
 
         public async Task<IEnumerable<TradeGroupedTradeTimeWithProfitLoss>> GetAllTradesGroupedByTradeDateWithProfitInfo(int userId, string currency)
         {
-            IEnumerable<TradeGroupedTradeTime> data = this.GetAllTradesGroupedByTradeDate(userId);
-            List<TradeGroupedTradeTimeWithProfitLoss> dataWithProfit = new List<TradeGroupedTradeTimeWithProfitLoss>();
-            Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol);
+            ForexRateCache forexCache = new ForexRateCache(
+                (from, to) => this.financialClient.GetForexPairPriceAsync(from, to),
+                (from, to, date) => this.financialClient.GetForexPairPriceAtDateAsync(from, to, date)
+            );
 
-            foreach (TradeGroupedTradeTime item in data)
+            IEnumerable<TradeGroupedTradeTime> data = this.GetAllTradesGroupedByTradeDate(userId);
+
+            if (!Enum.TryParse(currency, out Client.FinancialApiClient.CurrencySymbol toSymbol))
+                throw new ArgumentException($"Invalid currency: {currency}");
+
+            async Task<TradeGroupedTradeTimeWithProfitLoss> ProcessTradeItem(TradeGroupedTradeTime item)
             {
-                Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol);
-                StockPrice stockPrice = await this.GetStockPriceAtDate(item.TickerCode, item.TimeStamp);
-                double currencyPrice = await this.financialClient.GetForexPairPriceAtDateAsync(fromSymbol, toSymbol, item.TimeStamp);
-                currencyPrice = currencyPrice == 0 ? 1 : currencyPrice;
-                TradeGroupedTradeTimeWithProfitLoss profitData = new TradeGroupedTradeTimeWithProfitLoss
+                try
                 {
-                    TickerId = item.TickerId,
-                    TimeStamp = item.TimeStamp,
-                    Size = item.Size,
-                    Value = item.Value,
-                    AccumulatedSize = item.AccumulatedSize,
-                    CurrencySymbolId = item.CurrencySymbolId,
-                    TickerCode = item.TickerCode,
-                    CurrencyCode = currency,
-                    TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
-                    TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
-                };
-                dataWithProfit.Add(profitData);
+                    if (!Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol))
+                        return null;
+
+                    // Execute operations in parallel
+                    Task<StockPrice> stockPriceTask = this.GetStockPriceAtDate(item.TickerCode, item.TimeStamp);
+                    Task<double> currencyPriceTask = forexCache.GetRateAtDateAsync(fromSymbol, toSymbol, item.TimeStamp);
+
+                    await Task.WhenAll(stockPriceTask, currencyPriceTask);
+
+                    StockPrice stockPrice = stockPriceTask.Result;
+                    double currencyPrice = currencyPriceTask.Result;
+
+                    return new TradeGroupedTradeTimeWithProfitLoss
+                    {
+                        TickerId = item.TickerId,
+                        TimeStamp = item.TimeStamp,
+                        Size = item.Size,
+                        Value = item.Value,
+                        AccumulatedSize = item.AccumulatedSize,
+                        CurrencySymbolId = item.CurrencySymbolId,
+                        TickerCode = item.TickerCode,
+                        CurrencyCode = currency,
+                        TotalAccumulatedValue = item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice,
+                        TotalPercentageProfitOrLoss = (item.AccumulatedSize * (stockPrice?.Price ?? 1) * currencyPrice) / (item.Value * currencyPrice) * 100
+                    };
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
 
-            return dataWithProfit;
+            // Pre-cache unique forex pairs for specific dates
+            IEnumerable<(Client.FinancialApiClient.CurrencySymbol FromSymbol, Client.FinancialApiClient.CurrencySymbol ToSymbol, DateTime Date)> uniqueForexPairs = data
+                .Where(item => Enum.TryParse<Client.FinancialApiClient.CurrencySymbol>(item.CurrencyCode, out _))
+                .Select(item => (
+                    FromSymbol: Enum.Parse<Client.FinancialApiClient.CurrencySymbol>(item.CurrencyCode),
+                    ToSymbol: toSymbol,
+                    Date: item.TimeStamp
+                ))
+                .Distinct();
+
+            IEnumerable<Task> cacheTasks = uniqueForexPairs.Select(async pair =>
+            {
+                try
+                {
+                    await forexCache.GetRateAtDateAsync(pair.FromSymbol, pair.ToSymbol, pair.Date);
+                }
+                catch (Exception)
+                {
+                    // Log error but continue
+                }
+            });
+
+            await Task.WhenAll(cacheTasks);
+
+            // Process all items in parallel
+            IEnumerable<Task<TradeGroupedTradeTimeWithProfitLoss>> tasks = data.Select(ProcessTradeItem);
+            TradeGroupedTradeTimeWithProfitLoss[] results = await Task.WhenAll(tasks);
+
+            return results.Where(r => r != null);
+        }
+
+        // Helper method for the ticker-based method
+        private async Task PreCacheForexRates(IEnumerable<TradeGroupedTicker> data, Client.FinancialApiClient.CurrencySymbol toSymbol, ForexRateCache forexCache)
+        {
+            HashSet<(Client.FinancialApiClient.CurrencySymbol From, Client.FinancialApiClient.CurrencySymbol To)> uniqueForexPairs = new HashSet<(Client.FinancialApiClient.CurrencySymbol From, Client.FinancialApiClient.CurrencySymbol To)>();
+
+            foreach (TradeGroupedTicker item in data)
+            {
+                if (Enum.TryParse(item.CurrencyCode, out Client.FinancialApiClient.CurrencySymbol fromSymbol))
+                    uniqueForexPairs.Add((fromSymbol, toSymbol));
+
+                EnumItem ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
+                if (ticker != null && !string.IsNullOrEmpty(ticker.Metadata))
+                {
+                    try
+                    {
+                        Dictionary<string, string> metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
+                        if (metadata.TryGetValue("currency", out string tickerCurrency) &&
+                            Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol))
+                            uniqueForexPairs.Add((tickerCurrencySymbol, toSymbol));
+                    }
+                    catch (JsonException)
+                    {
+                        // Continue processing
+                    }
+                }
+            }
+
+            IEnumerable<Task> cacheTasks = uniqueForexPairs.Select(async pair =>
+            {
+                try
+                {
+                    await forexCache.GetRateAsync(pair.From, pair.To);
+                }
+                catch (Exception)
+                {
+                    // Log error but continue
+                }
+            });
+
+            await Task.WhenAll(cacheTasks);
+        }
+    }
+
+    public class ForexRateCache
+    {
+        private readonly ConcurrentDictionary<string, Lazy<Task<(double Rate, DateTime CachedAt)>>> _cache = new();
+        private readonly TimeSpan _cacheExpiryTime;
+        private readonly Func<Client.FinancialApiClient.CurrencySymbol, Client.FinancialApiClient.CurrencySymbol, Task<double>> _fetchRate;
+        private readonly Func<Client.FinancialApiClient.CurrencySymbol, Client.FinancialApiClient.CurrencySymbol, DateTime, Task<double>> _fetchRateAtDate;
+
+        public ForexRateCache(
+            Func<Client.FinancialApiClient.CurrencySymbol, Client.FinancialApiClient.CurrencySymbol, Task<double>> fetchRate,
+            Func<Client.FinancialApiClient.CurrencySymbol, Client.FinancialApiClient.CurrencySymbol, DateTime, Task<double>> fetchRateAtDate = null,
+            TimeSpan? cacheExpiryTime = null)
+        {
+            _fetchRate = fetchRate;
+            _fetchRateAtDate = fetchRateAtDate;
+            _cacheExpiryTime = cacheExpiryTime ?? TimeSpan.FromMinutes(5);
+        }
+
+        public async Task<double> GetRateAsync(Client.FinancialApiClient.CurrencySymbol fromSymbol, Client.FinancialApiClient.CurrencySymbol toSymbol)
+        {
+            if (fromSymbol == toSymbol) return 1.0;
+
+            string cacheKey = $"{fromSymbol}_{toSymbol}";
+            return await GetOrFetchRate(cacheKey, () => _fetchRate(fromSymbol, toSymbol));
+        }
+
+        public async Task<double> GetRateAtDateAsync(Client.FinancialApiClient.CurrencySymbol fromSymbol, Client.FinancialApiClient.CurrencySymbol toSymbol, DateTime date)
+        {
+            if (fromSymbol == toSymbol) return 1.0;
+
+            string cacheKey = $"{fromSymbol}_{toSymbol}_{date:yyyy-MM-dd}";
+            return await GetOrFetchRate(cacheKey, () => _fetchRateAtDate(fromSymbol, toSymbol, date));
+        }
+
+        private async Task<double> GetOrFetchRate(string cacheKey, Func<Task<double>> fetchFunc)
+        {
+            Lazy<Task<(double Rate, DateTime CachedAt)>> lazyTask = _cache.GetOrAdd(cacheKey, _ => new Lazy<Task<(double Rate, DateTime CachedAt)>>(async () =>
+            {
+                double rate = await fetchFunc();
+                return (rate == 0 ? 1 : rate, DateTime.UtcNow);
+            }));
+
+            (double rate, DateTime cachedAt) = await lazyTask.Value;
+
+            if (DateTime.UtcNow - cachedAt >= _cacheExpiryTime)
+            {
+                _cache.TryRemove(cacheKey, out _);
+                return await GetOrFetchRate(cacheKey, fetchFunc);
+            }
+
+            return rate;
         }
     }
 }
