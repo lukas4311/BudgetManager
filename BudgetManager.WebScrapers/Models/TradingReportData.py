@@ -13,3 +13,4 @@ class TradingReportData:
     trade_ticker_type_code: str
     isin: str
     transaction_id: str
+    share_currency_id: str

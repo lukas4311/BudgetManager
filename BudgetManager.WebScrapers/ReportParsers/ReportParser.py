@@ -58,10 +58,7 @@ class ReportParser:
         try:
             parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
             rows = csv.DictReader(io.StringIO(parsed_csv))
-            records = []
-            for row in rows:
-                stock_record: TradingReportData = parser.map_report_row_to_model(row)
-                records.append(stock_record)
+            records = parser.map_report_rows_to_model(rows)
 
             all_reports_data.append(
                 {"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
@@ -73,10 +70,8 @@ class ReportParser:
         try:
             with open(file_path, newline='') as csvfile:
                 rows = csv.DictReader(csvfile)
-                records = []
-                for row in rows:
-                    stock_record: TradingReportData = Trading212ReportParser().map_report_row_to_model(row)
-                    records.append(stock_record)
+                parser = Trading212ReportParser()
+                records = parser.map_report_rows_to_model(rows)
 
                 all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
         except Exception as e:
@@ -90,11 +85,11 @@ class ReportParser:
         for parsed_report in all_reports_data:
             try:
                 print(parsed_report)
-                stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"])
+                # stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"])
             except Exception as e:
                 logging.error(e)
 
 
 parser = ReportParser()
 # parser.process_report_data(StockRepository())
-# parser.test(StockRepository())
+parser.test_file_parsing(StockRepository())
