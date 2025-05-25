@@ -63,5 +63,15 @@ namespace BudgetManager.Data.DataModels
         /// External id of transaction
         /// </summary>
         public string TransactionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the identifier of the currency symbol used for the trade.
+        /// </summary>
+        public int? TickerCurrencySymbolId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the currency symbol object used for the trade.
+        /// </summary>
+        public EnumItem TickerCurrencySymbol { get; set; }
     }
 }

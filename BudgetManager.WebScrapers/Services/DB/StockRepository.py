@@ -225,7 +225,7 @@ class StockRepository:
 
         return broker_report_data
 
-    def _insert_stock_trade(self, trading_data: TradingReportData, currency_id: int, user_id: int) -> None:
+    def _insert_stock_trade(self, trading_data: TradingReportData, user_id: int) -> None:
         """
         Insert a single stock trade into the database.
 
@@ -234,7 +234,6 @@ class StockRepository:
 
         Args:
             trading_data (TradingReportData): Trade information to insert
-            currency_id (int): ID of the trading currency
             user_id (int): ID of the user making the trade
 
         Raises:
@@ -245,7 +244,7 @@ class StockRepository:
         if ticker_id is None:
             print(f'Ticker does not exists {trading_data.ticker}')
 
-        if currency_id is None:
+        if trading_data.currency_id is None:
             print('Throw exception')
 
         engine = create_engine(connectionString)
@@ -270,7 +269,7 @@ class StockRepository:
                 tickerId=ticker_id,
                 tradeSize=trading_data.number_of_shares,
                 tradeValue=trading_data.total,
-                tradeCurrencySymbolId=currency_id,
+                tradeCurrencySymbolId=trading_data.currency_id,
                 userIdentityId=user_id,
                 transactionId=trading_data.transaction_id
             )
@@ -301,7 +300,7 @@ class StockRepository:
                 self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code, trade.isin)
 
             # Insert the trade
-            self._insert_stock_trade(trade, trade.currency_id, user_id)
+            self._insert_stock_trade(trade, user_id)
 
     def changeProcessState(self, broker_report_id: int, state_code: str) -> None:
         """
