@@ -10,5 +10,5 @@ class BrokerReportParser(ABC):
         pass
 
     @abstractmethod
-    def map_report_rows_to_model(self, rows: DictReader[str]) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
         pass

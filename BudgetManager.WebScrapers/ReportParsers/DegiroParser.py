@@ -16,39 +16,64 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 
 class DegiroReportParser(BrokerReportParser):
     __stockRepo: StockRepository
-    __index_of_currency: int = -1
 
     def __init__(self):
         self.__stockRepo = StockRepository()
 
-    def map_report_row_to_model(self, row) -> TradingReportData:
-        date = row["Datum"]
-        ticker = row["ISIN"]
-        name = row["Produkt"]
-        number_of_shares = row["Počet"]
-        total = float(row["Celkem"])
-        currency = list(row.values())[self.__index_of_currency] if self.__index_of_currency != -1 else 'EUR'
-        isin = row["ISIN"]
-        share_currency = row["Hodnota v domácí měně"]
+    def map_report_row_to_model(self, row: pd.Series) -> TradingReportData:
+        """
+        Map a single pandas Series row to TradingReportData model
 
-        pandas_date = pd.to_datetime(date)
-        pandas_date = pandas_date.tz_localize("Europe/Prague")
-        pandas_date = pandas_date.tz_convert("utc")
-        currency_id = self.__stockRepo.get_currency_id(currency)
-        share_currency_id = self.__stockRepo.get_currency_id(share_currency)
+        Args:
+            row: pandas Series representing a single row from the DataFrame
 
-        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin, None, share_currency_id)
+        Returns:
+            TradingReportData: Parsed trading data model
+        """
+        try:
+            column_names = list(row.index)
 
-    def map_report_rows_to_model(self, rows: DictReader[str]) -> list[TradingReportData]:
+            date = row["Datum"]
+            ticker = row["ISIN"]
+            name = row["Produkt"]
+            number_of_shares = row["Počet"]
+            total = float(row["Celkem"]) if pd.notna(row["Celkem"]) and row["Celkem"] != '' else 0.0
+            isin = row["ISIN"]
+            hodnota_index = column_names.index("Hodnota")
+            share_currency_col = column_names[hodnota_index - 1]
+            share_currency = row[share_currency_col]
+
+            currency_col = column_names[hodnota_index + 1]
+            currency = row[currency_col]
+
+            pandas_date = pd.to_datetime(date)
+            pandas_date = pandas_date.tz_localize("Europe/Prague")
+            pandas_date = pandas_date.tz_convert("utc")
+
+            currency_id = self.__stockRepo.get_currency_id(currency)
+            share_currency_id = self.__stockRepo.get_currency_id(share_currency)
+
+            return TradingReportData(pandas_date, ticker, name, number_of_shares, total,
+                                     currency_id, 'StockTradeTickers', isin, None, share_currency_id)
+
+        except Exception as e:
+            logging.error(f"Error mapping row to model: {str(e)}, Row index: {row.name}")
+            return None
+
+    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
         records = []
-        fieldnames = rows.fieldnames
-        self.__index_of_currency = fieldnames.index("Celkem") + 1
+        total_rows = len(df)
 
-        for row in rows:
-            stock_record = self.map_report_row_to_model(row)
+        logging.info(f"Processing {total_rows} rows")
 
-            if stock_record is not None:
-                records.append(stock_record)
+        for index, row in df.iterrows():
+            try:
+                stock_record = self.map_report_row_to_model(row)
+                if stock_record is not None:
+                    records.append(stock_record)
+            except Exception as e:
+                logging.error(f"Error processing row {index}: {str(e)}")
+                continue
 
+        logging.info(f"Successfully processed {len(records)} out of {total_rows} rows")
         return records
-

@@ -4,6 +4,9 @@ import io
 import logging
 from datetime import datetime
 from typing import Dict
+
+import pandas as pd
+
 from Exceptions.ParseCsvError import ParseCsvError
 from BrokerReportParser import BrokerReportParser
 from Models.TradingReportData import TradingReportData
@@ -55,31 +58,26 @@ class ReportParser:
                 logging.error(e)
                 stock_repo.changeProcessState(parsed_report["report_id"], "SavingError")
 
-    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser, report_data: BrokerReportToProcess):
+    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser,
+                                   report_data: BrokerReportToProcess):
         try:
             parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
-            rows = csv.DictReader(io.StringIO(parsed_csv))
+            rows = pd.read_csv(io.StringIO(parsed_csv), sep=',', encoding='utf-8')
             records = parser.map_report_rows_to_model(rows)
 
-            all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
+            all_reports_data.append(
+                {"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
         except Exception as e:
             logging.error(e)
             raise ParseCsvError("Error while parsing CSV")
 
     def parse_report_from_file(self, all_reports_data, file_path):
         try:
-            with open(file_path, newline='', encoding='utf-8') as csvfile:
-                rows = csv.DictReader(csvfile)
-                parser = DegiroReportParser()
-                records = parser.map_report_rows_to_model(rows)
 
-                # reader = csv.reader(csvfile)
-                # headers = next(reader)
-                # for row in reader:
-                #     # zip headers with row values, allowing duplicate or empty headers
-                #     print(row)
-
-                all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
+            df = pd.read_csv(file_path, sep=',', encoding='utf-8')
+            parser = DegiroReportParser()
+            records = parser.map_report_rows_to_model(df)
+            all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
         except Exception as e:
             logging.error(e)
             raise ParseCsvError("Error while parsing CSV")
