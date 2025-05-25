@@ -2,6 +2,8 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 import pandas as pd
+from pandas import DataFrame
+
 from Models.TradingReportData import TradingReportData
 from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
@@ -27,7 +29,7 @@ class InteractiveBrokersParse(BrokerReportParser):
     def __init__(self):
         self.__stockRepo = StockRepository()
 
-    def map_report_row_to_model(self, row) -> TradingReportData | None:
+    def map_report_row_to_model(self, row: pd.Series) -> TradingReportData | None:
         if self.__check_row(row):
             return None
 
@@ -48,7 +50,7 @@ class InteractiveBrokersParse(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, ticker, number_of_shares, total_with_action, currency_id, 'StockTradeTickers', None, None, currency_id)
 
-    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df: DataFrame) -> list[TradingReportData]:
         records = []
         total_rows = len(df)
 

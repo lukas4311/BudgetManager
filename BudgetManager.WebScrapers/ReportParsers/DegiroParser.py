@@ -3,6 +3,8 @@ import warnings
 from csv import DictReader
 from datetime import datetime
 import pandas as pd
+from pandas import DataFrame
+
 from Models.TradingReportData import TradingReportData
 from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
@@ -60,7 +62,7 @@ class DegiroReportParser(BrokerReportParser):
             logging.error(f"Error mapping row to model: {str(e)}, Row index: {row.name}")
             return None
 
-    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df: DataFrame) -> list[TradingReportData]:
         records = []
         total_rows = len(df)
 

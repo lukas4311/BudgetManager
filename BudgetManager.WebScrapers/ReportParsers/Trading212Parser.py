@@ -2,6 +2,8 @@ import logging
 import warnings
 from datetime import datetime
 import pandas as pd
+from pandas import DataFrame
+
 from Models.TradingReportData import TradingReportData
 from ReportParsers.BrokerReportParser import BrokerReportParser
 from Services.DB.StockRepository import StockRepository
@@ -19,7 +21,7 @@ class Trading212ReportParser(BrokerReportParser):
     def __init__(self):
         self.__stockRepo = StockRepository()
 
-    def map_report_row_to_model(self, row) -> TradingReportData:
+    def map_report_row_to_model(self, row: pd.Series) -> TradingReportData:
         action = row["Action"]
         time = row["Time"]
         ticker = row["Ticker"]
@@ -41,9 +43,10 @@ class Trading212ReportParser(BrokerReportParser):
         currency_id = self.__stockRepo.get_currency_id(currency_total)
         share_currency_id = self.__stockRepo.get_currency_id(share_currency)
 
-        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin, transaction_id, share_currency_id)
+        return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers',
+                                 isin, transaction_id, share_currency_id)
 
-    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df: DataFrame) -> list[TradingReportData]:
         records = []
         total_rows = len(df)
 

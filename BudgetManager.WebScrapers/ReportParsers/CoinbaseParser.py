@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import DataFrame
 
 from Models.TradingReportData import TradingReportData
 from Models.CoinbaseReportData import CoinbaseReportData
@@ -12,7 +13,7 @@ class CoinbaseParser(BrokerReportParser):
     def __init__(self):
         self.__stockRepo = StockRepository()
 
-    def map_report_row_to_model(self, row) -> TradingReportData:
+    def map_report_row_to_model(self, row: pd.Series) -> TradingReportData:
         ticker = row['size unit']
         time = row['created at']
         buy_or_sell = row['side']
@@ -30,7 +31,7 @@ class CoinbaseParser(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id, 'CryptoTradeTickers', None, transaction_id, currency_id)
 
-    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df: DataFrame) -> list[TradingReportData]:
         records = []
 
         for index, row in df.iterrows():
