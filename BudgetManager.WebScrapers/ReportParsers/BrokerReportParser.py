@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from csv import DictReader, reader
 
 from Models import TradingReportData
 
@@ -9,5 +10,5 @@ class BrokerReportParser(ABC):
         pass
 
     @abstractmethod
-    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, rows: DictReader[str]) -> list[TradingReportData]:
         pass

@@ -1,5 +1,6 @@
 import logging
 import warnings
+from csv import DictReader
 from datetime import datetime
 import pandas as pd
 from Models.TradingReportData import TradingReportData
@@ -38,7 +39,7 @@ class DegiroReportParser(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin, None, share_currency_id)
 
-    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, rows: DictReader[str]) -> list[TradingReportData]:
         records = []
         fieldnames = rows.fieldnames
         self.__index_of_currency = fieldnames.index("Celkem") + 1

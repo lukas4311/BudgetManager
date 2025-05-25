@@ -11,6 +11,7 @@ from ReportParsers.CoinbaseParser import CoinbaseParser
 from ReportParsers.DegiroParser import DegiroReportParser
 from ReportParsers.InteraciveBrokers import InteractiveBrokersParse
 from ReportParsers.Trading212Parser import Trading212ReportParser
+from Services.DB.Orm import BrokerReportToProcess
 from Services.DB.StockRepository import StockRepository
 
 log_name = 'Logs/trading212.' + datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -54,24 +55,29 @@ class ReportParser:
                 logging.error(e)
                 stock_repo.changeProcessState(parsed_report["report_id"], "SavingError")
 
-    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser, report_data):
+    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser, report_data: BrokerReportToProcess):
         try:
             parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
             rows = csv.DictReader(io.StringIO(parsed_csv))
             records = parser.map_report_rows_to_model(rows)
 
-            all_reports_data.append(
-                {"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
+            all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
         except Exception as e:
             logging.error(e)
             raise ParseCsvError("Error while parsing CSV")
 
     def parse_report_from_file(self, all_reports_data, file_path):
         try:
-            with open(file_path, newline='') as csvfile:
+            with open(file_path, newline='', encoding='utf-8') as csvfile:
                 rows = csv.DictReader(csvfile)
-                parser = Trading212ReportParser()
+                parser = DegiroReportParser()
                 records = parser.map_report_rows_to_model(rows)
+
+                # reader = csv.reader(csvfile)
+                # headers = next(reader)
+                # for row in reader:
+                #     # zip headers with row values, allowing duplicate or empty headers
+                #     print(row)
 
                 all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
         except Exception as e:
@@ -80,7 +86,7 @@ class ReportParser:
 
     def test_file_parsing(self, stock_repo: StockRepository):
         all_reports_data = []
-        self.parse_report_from_file(all_reports_data, '../BrokerReports/trading212.csv')
+        self.parse_report_from_file(all_reports_data, '../BrokerReports/Degiro.csv')
 
         for parsed_report in all_reports_data:
             try:
