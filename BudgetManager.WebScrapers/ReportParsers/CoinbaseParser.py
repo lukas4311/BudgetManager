@@ -30,14 +30,16 @@ class CoinbaseParser(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, ticker, size, total, currency_id, 'CryptoTradeTickers', None, transaction_id, currency_id)
 
-    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
         records = []
 
-        for row in rows:
-            stock_record = self.map_report_row_to_model(row)
-
-            if stock_record is not None:
-                records.append(stock_record)
+        for index, row in df.iterrows():
+            try:
+                stock_record = self.map_report_row_to_model(row)
+                if stock_record is not None:
+                    records.append(stock_record)
+            except Exception as e:
+                continue
 
         return records
 

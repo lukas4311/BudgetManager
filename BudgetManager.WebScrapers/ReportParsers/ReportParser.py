@@ -73,9 +73,8 @@ class ReportParser:
 
     def parse_report_from_file(self, all_reports_data, file_path):
         try:
-
             df = pd.read_csv(file_path, sep=',', encoding='utf-8')
-            parser = DegiroReportParser()
+            parser = Trading212ReportParser()
             records = parser.map_report_rows_to_model(df)
             all_reports_data.append({"user_id": 1, "report_id": 0, "data": records})
         except Exception as e:
@@ -84,7 +83,7 @@ class ReportParser:
 
     def test_file_parsing(self, stock_repo: StockRepository):
         all_reports_data = []
-        self.parse_report_from_file(all_reports_data, '../BrokerReports/Degiro.csv')
+        self.parse_report_from_file(all_reports_data, '../BrokerReports/trading212.csv')
 
         for parsed_report in all_reports_data:
             try:

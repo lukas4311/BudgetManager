@@ -48,15 +48,22 @@ class InteractiveBrokersParse(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, ticker, number_of_shares, total_with_action, currency_id, 'StockTradeTickers', None, None, currency_id)
 
-    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
         records = []
+        total_rows = len(df)
 
-        for row in rows:
-            stock_record = self.map_report_row_to_model(row)
+        logging.info(f"Processing {total_rows} rows")
 
-            if stock_record is not None:
-                records.append(stock_record)
+        for index, row in df.iterrows():
+            try:
+                stock_record = self.map_report_row_to_model(row)
+                if stock_record is not None:
+                    records.append(stock_record)
+            except Exception as e:
+                logging.error(f"Error processing row {index}: {str(e)}")
+                continue
 
+        logging.info(f"Successfully processed {len(records)} out of {total_rows} rows")
         return records
 
     def __check_row(self, row):

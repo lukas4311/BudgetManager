@@ -43,11 +43,20 @@ class Trading212ReportParser(BrokerReportParser):
 
         return TradingReportData(pandas_date, ticker, name, number_of_shares, total, currency_id, 'StockTradeTickers', isin, transaction_id, share_currency_id)
 
-    def map_report_rows_to_model(self, rows) -> list[TradingReportData]:
+    def map_report_rows_to_model(self, df) -> list[TradingReportData]:
         records = []
+        total_rows = len(df)
 
-        for i, row in enumerate(rows):
-            stock_record = self.map_report_row_to_model(row)
-            records.append(stock_record)
+        logging.info(f"Processing {total_rows} rows")
 
+        for index, row in df.iterrows():
+            try:
+                stock_record = self.map_report_row_to_model(row)
+                if stock_record is not None:
+                    records.append(stock_record)
+            except Exception as e:
+                logging.error(f"Error processing row {index}: {str(e)}")
+                continue
+
+        logging.info(f"Successfully processed {len(records)} out of {total_rows} rows")
         return records
