@@ -42,4 +42,9 @@ public class StockTradeHistoryModel : IDtoModel
     /// Gets or sets the identifier of the user associated with the trade.
     /// </summary>
     public int UserIdentityId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the ticker currency symbol associated with the trade.
+    /// </summary>
+    public int TickerCurrencySymbolId { get; set; }
 }

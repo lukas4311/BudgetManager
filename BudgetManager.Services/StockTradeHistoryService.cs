@@ -205,8 +205,7 @@ namespace BudgetManager.Services
         {
             foreach (StockTradeHistoryGetModel trade in trades)
             {
-                double splitCoefficient = stockSplitService.GetAccumulatedCoefficient(splits.Where(c =>
-                    c.SplitTimeStamp >= trade.TradeTimeStamp && c.StockTickerId == trade.StockTickerId));
+                double splitCoefficient = stockSplitService.GetAccumulatedCoefficient(splits.Where(c => c.SplitTimeStamp >= trade.TradeTimeStamp && c.StockTickerId == trade.StockTickerId));
                 trade.TradeSizeAfterSplit = splitCoefficient * trade.TradeSize;
             }
         }
@@ -494,13 +493,14 @@ namespace BudgetManager.Services
                     uniqueForexPairs.Add((fromSymbol, toSymbol));
 
                 EnumItem ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
+
                 if (ticker != null && !string.IsNullOrEmpty(ticker.Metadata))
                 {
                     try
                     {
                         Dictionary<string, string> metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
-                        if (metadata.TryGetValue("currency", out string tickerCurrency) &&
-                            Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol))
+
+                        if (metadata.TryGetValue("currency", out string tickerCurrency) && Enum.TryParse(tickerCurrency, out Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol))
                             uniqueForexPairs.Add((tickerCurrencySymbol, toSymbol));
                     }
                     catch (JsonException)

@@ -271,7 +271,8 @@ class StockRepository:
                 tradeValue=trading_data.total,
                 tradeCurrencySymbolId=trading_data.currency_id,
                 userIdentityId=user_id,
-                transactionId=trading_data.transaction_id
+                transactionId=trading_data.transaction_id,
+                tickerCurrencySymbolId=trading_data.share_currency_id
             )
             with engine.connect() as conn:
                 conn.execute(insert_command)
