@@ -15,8 +15,6 @@ logging.basicConfig(filename=log_name, filemode='a', format='%(name)s - %(leveln
 
 class Trading212ReportParser(BrokerReportParser):
     __stockRepo: StockRepository
-    __total_index: int = -1
-    __total_index_currency: str = ""
 
     def __init__(self):
         self.__stockRepo = StockRepository()
@@ -27,8 +25,8 @@ class Trading212ReportParser(BrokerReportParser):
         ticker = row["Ticker"]
         name = row["Name"]
         number_of_shares = float(row["No. of shares"])
-        total = float(row[self.__total_index])
-        currency_total = self.__total_index_currency
+        total = float(row["Total"])
+        currency_total = row["Currency (Total)"]
         isin = row["ISIN"]
         transaction_id = row["ID"]
         share_currency = row["Currency (Price / share)"]
@@ -49,24 +47,7 @@ class Trading212ReportParser(BrokerReportParser):
         records = []
 
         for i, row in enumerate(rows):
-            if i == 0:
-                total_indexes = self.__find_all_indices_containing(rows.fieldnames, "Total")
-                total_index = total_indexes[0]
-                self.__total_index = rows.fieldnames[total_index]
-                self.__total_index_currency = self.__extract_currency_from_header(self.__total_index)
-
             stock_record = self.map_report_row_to_model(row)
             records.append(stock_record)
 
         return records
-
-    def __find_all_indices_containing(self, arr, literal):
-        return [i for i, string in enumerate(arr) if literal in string]
-
-    def __extract_currency_from_header(self, header):
-        start = header.find('(')
-        end = header.find(')')
-
-        if start != -1 and end != -1 and end > start:
-            return header[start + 1:end]
-        return None
