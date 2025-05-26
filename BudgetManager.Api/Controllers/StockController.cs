@@ -182,6 +182,7 @@ namespace BudgetManager.Api.Controllers
         /// Uploads a broker report file for processing.
         /// </summary>
         [HttpPost("brokerReport/{brokerId}"), MapToApiVersion("1.0")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadReport([FromRoute] int brokerId, IFormFile file)
         {
             using MemoryStream ms = new MemoryStream();

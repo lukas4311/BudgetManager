@@ -339,7 +339,7 @@ export class StockApi extends runtime.BaseAPI implements StockApiInterface {
         }
 
         const consumes: runtime.Consume[] = [
-            { contentType: 'multipart/form-data; ver=1.0' },
+            { contentType: 'multipart/form-data' },
         ];
         // @ts-ignore: canConsumeForm may be unused
         const canConsumeForm = runtime.canConsumeForm(consumes);
