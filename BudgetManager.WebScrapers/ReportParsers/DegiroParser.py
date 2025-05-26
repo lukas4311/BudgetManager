@@ -41,6 +41,7 @@ class DegiroReportParser(BrokerReportParser):
             number_of_shares = row["Počet"]
             total = float(row["Celkem"]) if pd.notna(row["Celkem"]) and row["Celkem"] != '' else 0.0
             isin = row["ISIN"]
+            id = row["ID objednávky"] if pd.notna(row["ID objednávky"]) else None
             hodnota_index = column_names.index("Hodnota")
             share_currency_col = column_names[hodnota_index - 1]
             share_currency = row[share_currency_col]
@@ -56,7 +57,7 @@ class DegiroReportParser(BrokerReportParser):
             share_currency_id = self.__stockRepo.get_currency_id(share_currency)
 
             return TradingReportData(pandas_date, ticker, name, number_of_shares, total,
-                                     currency_id, 'StockTradeTickers', isin, None, share_currency_id)
+                                     currency_id, 'StockTradeTickers', isin, id, share_currency_id)
 
         except Exception as e:
             logging.error(f"Error mapping row to model: {str(e)}, Row index: {row.name}")

@@ -94,5 +94,5 @@ class ReportParser:
 
 
 parser = ReportParser()
-# parser.process_report_data(StockRepository())
-parser.test_file_parsing(StockRepository())
+parser.process_report_data(StockRepository())
+#parser.test_file_parsing(StockRepository())
