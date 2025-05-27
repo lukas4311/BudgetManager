@@ -280,8 +280,27 @@ namespace BudgetManager.Services
                     EnumItem ticker = enumRepository.FindByCondition(e => e.Code == item.TickerCode).SingleOrDefault();
                     Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol = GetMetadataCurrency(ticker) ?? fromSymbol;
 
-                    // Execute operations in parallel
-                    Task<StockPrice> stockPriceTask = GetStockPriceAtDate(item.TickerCode, DateTime.Now);
+                    // Check for price_ticker in metadata  
+                    string priceTicker = null;
+
+                    if (ticker != null && !string.IsNullOrEmpty(ticker.Metadata))
+                    {
+                        try
+                        {
+                            Dictionary<string, string> metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
+                            metadata.TryGetValue("price_ticker", out priceTicker);
+                        }
+                        catch (JsonException)
+                        {
+                            // Continue processing  
+                        }
+                    }
+
+                    // Use price_ticker if it exists, otherwise fallback to item.TickerCode  
+                    string tickerToUse = priceTicker ?? item.TickerCode;
+
+                    // Execute operations in parallel  
+                    Task<StockPrice> stockPriceTask = GetStockPriceAtDate(tickerToUse, DateTime.Now);
                     Task<double> currencyPriceForTickerTask = forexCache.GetRateAsync(tickerCurrencySymbol, toSymbol);
                     Task<double> currencyPriceForValueTask = forexCache.GetRateAsync(fromSymbol, toSymbol);
 
