@@ -102,19 +102,37 @@ class TradingviewScraper:
 
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
+            label_element = soup.find('div', string='FIGI')
+            figi = None
+            isin = None
 
-            def find_value(label):
-                label_elem = soup.find('div', class_='label-GgmpMpKr', string=label)
-                if label_elem:
-                    block = label_elem.find_parent('div', class_='block-GgmpMpKr')
-                    if block:
-                        value_elem = block.find('div', class_='value-GgmpMpKr')
-                        if value_elem:
-                            return value_elem.text.strip()
-                return None
+            if label_element:
+                # Navigate up to find the container, then find the value
+                container = label_element.find_parent('div')
+                while container:
+                    # Look for a div that contains the FIGI pattern (BBG followed by alphanumeric)
+                    value_divs = container.find_all('div')
+                    for div in value_divs:
+                        text = div.get_text(strip=True)
+                        # FIGI pattern: starts with BBG followed by 9-12 alphanumeric characters
+                        if text.startswith('BBG') and len(text) >= 12 and text[3:].isalnum():
+                            figi = text
+                    container = container.find_parent('div')
 
-            isin = find_value('ISIN')
-            figi = find_value('FIGI')
+            label_element_isin = soup.find('div', string='ISIN')
+
+            if label_element_isin:
+                # Navigate up to find the container, then find the value
+                container = label_element_isin.find_parent('div')
+                while container:
+                    # Look for a div that contains the ISIN pattern
+                    value_divs = container.find_all('div')
+                    for div in value_divs:
+                        text = div.get_text(strip=True)
+                        # ISIN pattern: 2 letters followed by 10 alphanumeric characters
+                        if len(text) == 12 and text[:2].isalpha() and text[2:].isalnum():
+                            isin = text
+                    container = container.find_parent('div')
 
             script = soup.find('script', string=lambda s: s and 'window.initData.symbolInfo' in s)
 
