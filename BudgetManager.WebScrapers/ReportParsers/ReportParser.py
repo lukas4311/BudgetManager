@@ -58,15 +58,13 @@ class ReportParser:
                 logging.error(e)
                 stock_repo.change_process_state(parsed_report["report_id"], "SavingError")
 
-    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser,
-                                   report_data: BrokerReportToProcess):
+    def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser, report_data: BrokerReportToProcess):
         try:
             parsed_csv = b64.b64decode(report_data.fileContentBase64).decode('utf-8')
             rows = pd.read_csv(io.StringIO(parsed_csv), sep=',', encoding='utf-8')
             records = parser.map_report_rows_to_model(rows)
 
-            all_reports_data.append(
-                {"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
+            all_reports_data.append({"user_id": report_data.userIdentityId, "report_id": report_data.id, "data": records})
         except Exception as e:
             logging.error(e)
             raise ParseCsvError("Error while parsing CSV")

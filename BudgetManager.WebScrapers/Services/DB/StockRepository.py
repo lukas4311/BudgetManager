@@ -146,17 +146,17 @@ class StockRepository:
         Base.metadata.create_all(engine)
         enum_item_type_ticker = self.get_enum_type(ticker_type)
 
-        metadata = Null
+        # metadata = Null
 
-        if isin is not None:
-            data = {"isin": isin}
-            metadata = json.dumps(data)
+        # if isin is not None:
+        #     data = {"isin": isin}
+        #     metadata = json.dumps(data)
 
         insert_command = insert(EnumItem).values(
             code=ticker,
             name=name,
             enumItemTypeId=enum_item_type_ticker,
-            _metadata=metadata
+            _metadata=None
         )
 
         with engine.connect() as conn:
@@ -276,7 +276,10 @@ class StockRepository:
             ValueError: If ticker doesn't exist or currency_id is None
         """
         ticker_id = int(self.get_ticker_id(trading_data.ticker, trading_data.trade_ticker_type_code))
-        ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trading_data.ticker)
+        ticker_adjusted_info = None
+
+        if trading_data.trade_ticker_type_code == 'StockTradeTickers':
+            ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trading_data.ticker)
 
         if ticker_id is None:
             print(f'Ticker does not exists {trading_data.ticker}')
@@ -334,11 +337,18 @@ class StockRepository:
             if not ticker_id:
                 self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code, trade.isin)
 
-            ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trade.ticker)
+            if trade.trade_ticker_type_code == 'StockTradeTickers':
+                ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trade.ticker)
 
-            if not ticker_adjusted_info:
+                if not ticker_adjusted_info:
+                    metadata = Null
+
+                    if trade.isin is not None:
+                        data = {"isin": trade.isin}
+                        metadata = json.dumps(data)
+
                 self._create_new_ticker_adjusted_info(TickerAdjustedInfo(
-                    priceTicker=trade.ticker, companyInfoTicker=trade.ticker, _metadata=None
+                    priceTicker=trade.ticker, companyInfoTicker=trade.ticker, _metadata=metadata
                 ))
 
             # Insert the trade
@@ -361,15 +371,14 @@ class StockRepository:
         session = Session(engine)
 
         # Get the state ID from the code
-        broker_state_command = select(BrokerReportToProcessState).where(
-            BrokerReportToProcessState.code == state_code)
+        broker_state_command = select(BrokerReportToProcessState).where(BrokerReportToProcessState.code == state_code)
         broker_state = session.scalars(broker_state_command).first()
         broker_state_id = broker_state.id
 
         # Update the report state
-        update_command = update(BrokerReportToProcess).where(
-            BrokerReportToProcess.id == broker_report_id).values(
-            brokerReportToProcessStateId=broker_state_id)
+        update_command = (update(BrokerReportToProcess)
+                          .where(BrokerReportToProcess.id == broker_report_id)
+                          .values(brokerReportToProcessStateId=broker_state_id))
 
         with engine.connect() as conn:
             conn.execute(update_command)
