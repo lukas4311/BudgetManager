@@ -13,4 +13,4 @@ class TickerAdjustedInfo(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     priceTicker: Mapped[str] = mapped_column(String, nullable=True)
     companyInfoTicker: Mapped[str] = mapped_column(String, nullable=True)
-    _metadata: Mapped[str] = mapped_column(String, nullable=True, name="metadata")
+    _metadata: Mapped[str] = mapped_column(String, nullable=True, name="Metadata")

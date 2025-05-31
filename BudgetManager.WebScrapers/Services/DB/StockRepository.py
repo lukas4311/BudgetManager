@@ -108,6 +108,20 @@ class StockRepository:
 
         return ticker_adjusted_info
 
+    def get_all_tickers_adjusted_info(self) -> List[TickerAdjustedInfo]:
+        """
+        Retrieve all ticker adjusted info of a specific type.
+
+        Returns:
+            List[TickerAdjustedInfo]: List of all tickers matching the specified type
+        """
+        engine = create_engine(connectionString)
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+
+        stmt = select(TickerAdjustedInfo)
+        return session.scalars(stmt).all()
+
     def get_all_tickers(self, ticker_type: str) -> List[EnumItem]:
         """
         Retrieve all ticker symbols of a specific type.
@@ -194,15 +208,38 @@ class StockRepository:
             metadata (dict): Dictionary containing metadata to store as JSON
         """
         engine = create_engine(connectionString)
-
         Base.metadata.create_all(engine)
         enum_item_type_ticker = self.get_enum_type(ticker_type)
 
         if metadata is not None:
             metadata_string = json.dumps(metadata)
             update_command = (update(EnumItem)
-                              .where(and_(EnumItem.code == ticker,
-                                          EnumItem.enumItemTypeId == enum_item_type_ticker))
+                              .where(and_(EnumItem.code == ticker, EnumItem.enumItemTypeId == enum_item_type_ticker))
+                              .values(_metadata=metadata_string))
+
+            with engine.connect() as conn:
+                conn.execute(update_command)
+                conn.commit()
+
+    def update_ticker_adjusted_metadata(self, ticker: str, metadata: dict) -> None:
+        """
+        Update the metadata for an existing ticker symbol.
+
+        Updates the JSON metadata field for a ticker, allowing storage
+        of additional information like ISIN, exchange details, etc.
+
+        Args:
+            ticker (str): The ticker symbol to update
+            ticker_type (str): Type category for the ticker
+            metadata (dict): Dictionary containing metadata to store as JSON
+        """
+        engine = create_engine(connectionString)
+        Base.metadata.create_all(engine)
+
+        if metadata is not None:
+            metadata_string = json.dumps(metadata)
+            update_command = (update(TickerAdjustedInfo)
+                              .where(TickerAdjustedInfo.companyInfoTicker == ticker)
                               .values(_metadata=metadata_string))
 
             with engine.connect() as conn:

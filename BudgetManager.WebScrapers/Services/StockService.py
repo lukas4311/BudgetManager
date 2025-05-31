@@ -37,22 +37,23 @@ class StockService:
         Adds a 1-second delay between requests to avoid overloading the source.
         Logs errors but continues processing other tickers.
         """
-        tickers = self.stock_repo.get_all_tickers('StockTradeTickers')
+        tickers = self.stock_repo.get_all_tickers_adjusted_info()
 
         for ticker in tickers:
+            print(ticker._metadata)
+
             try:
                 if ticker._metadata is None:
                     scraped_data = self.__get_scraped_metadata(ticker.code)
-                    self.stock_repo.update_ticker_metadata(ticker.code, 'StockTradeTickers',
-                                                           dataclasses.asdict(scraped_data))
+                    self.stock_repo.update_ticker_adjusted_metadata(ticker.code, dataclasses.asdict(scraped_data))
                 else:
-                    print(ticker._metadata, ticker.code)
+                    print(ticker._metadata, ticker.companyInfoTicker)
                     db_metadata = json.loads(ticker._metadata)
                     db_metadata_model = from_dict(TickerMetadata, db_metadata)
 
                     # Check if essential fields are missing
                     if db_metadata_model.isin is None or db_metadata_model.figi is None or db_metadata_model.currency is None:
-                        scraped_data = self.__get_scraped_metadata(ticker.code)
+                        scraped_data = self.__get_scraped_metadata(ticker.companyInfoTicker)
                         merged_data = {}
 
                         # Merge existing DB data
@@ -61,15 +62,15 @@ class StockService:
 
                         # Merge scraped data, but keep existing price_ticker if ticker code differs
                         for key, value in scraped_data.__dict__.items():
-                            if key == 'price_ticker' and ticker.code != db_metadata_model.price_ticker:
+                            if key == 'price_ticker' and ticker.companyInfoTicker != db_metadata_model.price_ticker:
                                 continue
                             else:
                                 merged_data[key] = value
 
                         print(merged_data)
-                        self.stock_repo.update_ticker_metadata(ticker.code, 'StockTradeTickers', merged_data)
+                        self.stock_repo.update_ticker_adjusted_metadata(ticker.companyInfoTicker, merged_data)
 
-                print(f'Metadata scraped for ticker {ticker.code}')
+                print(f'Metadata scraped for ticker {ticker.companyInfoTicker}')
                 time.sleep(1)
             except Exception as e:
                 logging.info('Error while downloading metadata for ticker: ' + ticker.code)
