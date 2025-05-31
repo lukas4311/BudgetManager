@@ -24,6 +24,17 @@ namespace BudgetManager.Data.DataModels
         /// </summary>
         public EnumItem Ticker { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the identifier of the associated ticker adjusted information.
+        /// </summary>
+        public int? TickerAdjustedInfoId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated ticker adjusted information object.
+        /// </summary>
+        public TickerAdjustedInfo TickerAdjustedInfo { get; set; }
+
         /// <summary>
         /// Gets or sets the size of the trade (e.g., number of shares).
         /// </summary>

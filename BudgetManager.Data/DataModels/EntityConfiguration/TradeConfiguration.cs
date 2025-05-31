@@ -23,6 +23,16 @@ namespace BudgetManager.Data.DataModels.EntityConfiguration
 
             builder.Property(p => p.TransactionId)
                 .HasMaxLength(100);
+
+            builder.HasOne(e => e.TickerCurrencySymbol)
+                .WithMany()
+                .HasForeignKey(e => e.TickerCurrencySymbolId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(e => e.TickerAdjustedInfo)
+                .WithMany()
+                .HasForeignKey(e => e.TickerAdjustedInfoId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
