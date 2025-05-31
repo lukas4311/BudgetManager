@@ -108,7 +108,8 @@ ORDER BY
               AND ss.SplitTimeStamp > sth.TradeTimeStamp
         ), 1) AS SplitAdjustment,
 		ei.Code AS TickerCode,
-		cei.Code AS CurrencyCode
+		cei.Code AS CurrencyCode,
+        sth.TickerAdjustedInfoId
     FROM
         [dbo].[Trade] sth
 	JOIN [dbo].[EnumItem] ei ON
@@ -129,19 +130,21 @@ AdjustedTrades AS (
         TradeValue,
 		TradeCurrencySymbolId,
 		TickerCode,
-		CurrencyCode
+		CurrencyCode,
+        TickerAdjustedInfoId
     FROM
         TradesWithSplit
 ),
 AggregatedTrades AS (
     SELECT
         TickerId,
+        TickerAdjustedInfoId,
         ISNULL(SUM(AdjustedTradeSize), 0) AS TotalTradeSize,
         ISNULL(SUM(TradeValue), 0) AS TotalTradeValue
     FROM
         AdjustedTrades
     GROUP BY
-        TickerId
+        TickerId, TickerAdjustedInfoId
 ),
 AccumulatedTrades AS (
     SELECT
@@ -162,7 +165,10 @@ SELECT
     AccumulatedTradeSize AS AccumulatedSize,
 	TradeCurrencySymbolId AS CurrencySymbolId,
 	TickerCode,
-	CurrencyCode
+	CurrencyCode,
+    TickerAdjustedInfoId AS TickerAdjustedInfoId,
+    tai.CompanyInfoTicker,
+    tai.PriceTicker
 FROM
     AggregatedTrades AS AT
 JOIN
@@ -174,6 +180,8 @@ ON
 JOIN AccumulatedTrades acc ON
     lastTrade.TickerId = acc.TickerId
     AND lastTrade.LastTradeTimeStamp = acc.TradeTimeStamp
+LEFT JOIN dbo.TickerAdjustedInfo AS tai ON
+    tai.Id = TickerAdjustedInfoId
 ORDER BY
     TickerId
 ";

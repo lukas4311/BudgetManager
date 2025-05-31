@@ -17,16 +17,18 @@ namespace BudgetManager.Services
     {
         private readonly IRepository<EnumItem> repository;
         private readonly IMapper mapper;
+        private readonly IRepository<TickerAdjustedInfo> tickerAdjustedRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StockTickerService"/> class.
         /// </summary>
         /// <param name="repository">The repository for stock tickers.</param>
         /// <param name="mapper">The mapper for mapping between models.</param>
-        public StockTickerService(IRepository<EnumItem> repository, IMapper mapper)
+        public StockTickerService(IRepository<EnumItem> repository, IMapper mapper, IRepository<TickerAdjustedInfo> tickerAdjustedRepository)
         {
             this.repository = repository;
             this.mapper = mapper;
+            this.tickerAdjustedRepository = tickerAdjustedRepository;
         }
 
         /// <inheritdoc/>
@@ -40,10 +42,9 @@ namespace BudgetManager.Services
         /// <inheritdoc/>
         public IEnumerable<string> GetAllAvailableTickersForPriceSearch()
         {
-            var tickerMetadata = GetAll().Select(t => t.Metadata);
             var tickers = GetAll().Select(t => t.Ticker);
-            var tickersMetadata = tickerMetadata.Where(t => !string.IsNullOrEmpty(t)).Select(m => JsonSerializer.Deserialize<TickerMetadata>(m));
-            IEnumerable<string> allAvailableTickerForPrice = tickers.Union(tickersMetadata.Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker));
+            var tickerAdjustedInfo = tickerAdjustedRepository.FindAll().Where(t => !string.IsNullOrEmpty(t.PriceTicker)).Select(t => t.PriceTicker).ToList();
+            IEnumerable<string> allAvailableTickerForPrice = tickers.Union(tickerAdjustedInfo);
             return allAvailableTickerForPrice;
         }
 

@@ -16,11 +16,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Infl = BudgetManager.InfluxDbData;
 using IFinancialClient = BudgetManager.Client.FinancialApiClient.IFinancialClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Text.Json;
 using System.Collections.Concurrent;
-using System.Threading;
-using System.Timers;
 
 namespace BudgetManager.Services
 {
@@ -43,6 +40,7 @@ namespace BudgetManager.Services
         private readonly IDateTime dateTimeProvider;
         private readonly IRepository<EnumItem> enumRepository;
         private readonly IFinancialClient financialClient;
+        private readonly IRepository<TickerAdjustedInfo> adjustedInfoRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StockTradeHistoryService"/> class.
@@ -63,7 +61,7 @@ namespace BudgetManager.Services
             IStockSplitService stockSplitService, IForexService forexService, IRepository<CurrencySymbol> currencySymbolRepository,
             IRepository<BrokerReportType> brokerReportTypeRepository, IRepository<BrokerReportToProcessState> brokerReportToProcessStateRepository,
             IRepository<BrokerReportToProcess> brokerReportToProcessRepository, IDateTime dateTimeProvider, IRepository<EnumItem> enumRepository,
-            IFinancialClient financialClient) : base(repository, mapper)
+            IFinancialClient financialClient, IRepository<TickerAdjustedInfo> adjustedInfoRepository) : base(repository, mapper)
         {
             this.repository = repository;
             this.mapper = mapper;
@@ -78,6 +76,7 @@ namespace BudgetManager.Services
             this.dateTimeProvider = dateTimeProvider;
             this.enumRepository = enumRepository;
             this.financialClient = financialClient;
+            this.adjustedInfoRepository = adjustedInfoRepository;
         }
 
 
@@ -282,6 +281,8 @@ namespace BudgetManager.Services
 
                     // Check for price_ticker in metadata  
                     string priceTicker = null;
+
+                    // TODO: use new table to search price ticker
 
                     if (ticker != null && !string.IsNullOrEmpty(ticker.Metadata))
                     {

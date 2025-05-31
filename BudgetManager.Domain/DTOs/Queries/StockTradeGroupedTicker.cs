@@ -1,4 +1,6 @@
-﻿namespace BudgetManager.Domain.DTOs.Queries
+﻿using BudgetManager.Data.DataModels;
+
+namespace BudgetManager.Domain.DTOs.Queries
 {
     /// <summary>
     /// Model representing a grouped ticker for stock trades.
@@ -39,6 +41,21 @@
         /// Gets or sets the code for the currency.
         /// </summary>
         public string CurrencyCode { get; init; }
+
+        /// <summary>
+        /// Id of the ticker adjusted info record.
+        /// </summary>
+        public int TickerAdjustedInfoId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ticker information for the company.
+        /// </summary>
+        public string CompanyInfoTicker { get; set; }
+
+        /// <summary>
+        /// Gets or sets the price ticker for the stock.
+        /// </summary>
+        public string PriceTicker { get; set; }
     }
 
     public record TradeGroupedTickerWithProfitLoss : TradeGroupedTicker
