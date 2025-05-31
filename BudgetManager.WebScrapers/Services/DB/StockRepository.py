@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 import secret
 from Models.TradingReportData import TradingReportData
+from Services.DB.Orm.TickerAdjustedInfo import TickerAdjustedInfo
 from Services.DB.Orm.BrokerReportToProcess import BrokerReportToProcess
 from Services.DB.Orm.BrokerReportToProcessState import BrokerReportToProcessState
 from Services.DB.Orm.EnumItem import EnumItem
@@ -79,7 +80,6 @@ class StockRepository:
             Optional[int]: The ID of the ticker, or None if not found
         """
         engine = create_engine(connectionString)
-
         Base.metadata.create_all(engine)
         session = Session(engine)
 
@@ -89,6 +89,22 @@ class StockRepository:
         ticker_model = session.scalars(stmt).first()
 
         return ticker_model.id if ticker_model is not None else None
+
+    def get_ticker_adjusted_info(self, ticker: str) -> TickerAdjustedInfo | None:
+        engine = create_engine(connectionString)
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+        stmt = select(TickerAdjustedInfo).where(TickerAdjustedInfo.companyInfoTicker == ticker)
+        ticker_adjusted_info = session.scalars(stmt).first()
+        return ticker_adjusted_info
+
+    def get_ticker_adjusted_info(self, ticker_adjusted_info_id: int) -> TickerAdjustedInfo | None:
+        engine = create_engine(connectionString)
+        Base.metadata.create_all(engine)
+        session = Session(engine)
+        stmt = select(TickerAdjustedInfo).where(TickerAdjustedInfo.id == ticker_adjusted_info_id)
+        ticker_adjusted_info = session.scalars(stmt).first()
+        return ticker_adjusted_info
 
     def get_all_tickers(self, ticker_type: str) -> List[EnumItem]:
         """
