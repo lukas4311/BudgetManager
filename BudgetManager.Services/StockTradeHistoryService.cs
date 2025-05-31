@@ -280,24 +280,7 @@ namespace BudgetManager.Services
                     Client.FinancialApiClient.CurrencySymbol tickerCurrencySymbol = GetMetadataCurrency(ticker) ?? fromSymbol;
 
                     // Check for price_ticker in metadata  
-                    string priceTicker = null;
-
-                    // TODO: use new table to search price ticker
-
-                    if (ticker != null && !string.IsNullOrEmpty(ticker.Metadata))
-                    {
-                        try
-                        {
-                            Dictionary<string, string> metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(ticker.Metadata);
-                            metadata.TryGetValue("price_ticker", out priceTicker);
-                        }
-                        catch (JsonException)
-                        {
-                            // Continue processing  
-                        }
-                    }
-
-                    // Use price_ticker if it exists, otherwise fallback to item.TickerCode  
+                    string priceTicker = item.PriceTicker;
                     string tickerToUse = priceTicker ?? item.TickerCode;
 
                     // Execute operations in parallel  

@@ -33,8 +33,5 @@ namespace BudgetManager.Domain.Models
 
             [JsonPropertyName("type")]
             public string Type { get; set; }
-
-            [JsonPropertyName("price_ticker")]
-            public string PriceTicker { get; set; }
     }
 }
