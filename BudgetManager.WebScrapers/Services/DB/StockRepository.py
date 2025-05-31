@@ -90,20 +90,22 @@ class StockRepository:
 
         return ticker_model.id if ticker_model is not None else None
 
-    def get_ticker_adjusted_info(self, ticker: str) -> TickerAdjustedInfo | None:
+    def get_ticker_adjusted_info_by_ticker(self, ticker: str) -> TickerAdjustedInfo | None:
         engine = create_engine(connectionString)
         Base.metadata.create_all(engine)
         session = Session(engine)
         stmt = select(TickerAdjustedInfo).where(TickerAdjustedInfo.companyInfoTicker == ticker)
         ticker_adjusted_info = session.scalars(stmt).first()
+
         return ticker_adjusted_info
 
-    def get_ticker_adjusted_info(self, ticker_adjusted_info_id: int) -> TickerAdjustedInfo | None:
+    def get_ticker_adjusted_info_by_id(self, ticker_adjusted_info_id: int) -> TickerAdjustedInfo | None:
         engine = create_engine(connectionString)
         Base.metadata.create_all(engine)
         session = Session(engine)
         stmt = select(TickerAdjustedInfo).where(TickerAdjustedInfo.id == ticker_adjusted_info_id)
         ticker_adjusted_info = session.scalars(stmt).first()
+
         return ticker_adjusted_info
 
     def get_all_tickers(self, ticker_type: str) -> List[EnumItem]:
@@ -155,6 +157,24 @@ class StockRepository:
             name=name,
             enumItemTypeId=enum_item_type_ticker,
             _metadata=metadata
+        )
+
+        with engine.connect() as conn:
+            conn.execute(insert_command)
+            conn.commit()
+
+    def _create_new_ticker_adjusted_info(self, ticker_info: TickerAdjustedInfo) -> None:
+        """
+        Create a new ticker adjusted info in the database.
+        Private method that inserts a new ticker adjusted info.
+        """
+        engine = create_engine(connectionString)
+        Base.metadata.create_all(engine)
+
+        insert_command = insert(TickerAdjustedInfo).values(
+            companyInfoTicker=ticker_info.companyInfoTicker,
+            priceTicker=ticker_info.priceTicker,
+            _metadata=ticker_info._metadata
         )
 
         with engine.connect() as conn:
@@ -241,7 +261,7 @@ class StockRepository:
 
         return broker_report_data
 
-    def _insert_stock_trade(self, trading_data: TradingReportData, user_id: int) -> None:
+    def _create_stock_trade(self, trading_data: TradingReportData, user_id: int) -> None:
         """
         Insert a single stock trade into the database.
 
@@ -256,6 +276,7 @@ class StockRepository:
             ValueError: If ticker doesn't exist or currency_id is None
         """
         ticker_id = int(self.get_ticker_id(trading_data.ticker, trading_data.trade_ticker_type_code))
+        ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trading_data.ticker)
 
         if ticker_id is None:
             print(f'Ticker does not exists {trading_data.ticker}')
@@ -281,14 +302,11 @@ class StockRepository:
         if stock_trade is None:
             # Insert new trade
             insert_command = insert(Trade).values(
-                tradeTimeStamp=trading_data.time,
-                tickerId=ticker_id,
-                tradeSize=trading_data.number_of_shares,
-                tradeValue=trading_data.total,
-                tradeCurrencySymbolId=trading_data.currency_id,
-                userIdentityId=user_id,
-                transactionId=trading_data.transaction_id,
-                tickerCurrencySymbolId=trading_data.share_currency_id
+                tradeTimeStamp=trading_data.time, tickerId=ticker_id,
+                tradeSize=trading_data.number_of_shares, tradeValue=trading_data.total,
+                tradeCurrencySymbolId=trading_data.currency_id, userIdentityId=user_id,
+                transactionId=trading_data.transaction_id, tickerCurrencySymbolId=trading_data.share_currency_id,
+                tickerAdjustedInfoId=ticker_adjusted_info.id
             )
             with engine.connect() as conn:
                 conn.execute(insert_command)
@@ -316,10 +334,17 @@ class StockRepository:
             if not ticker_id:
                 self._create_new_ticker(trade.ticker, trade.name, trade.trade_ticker_type_code, trade.isin)
 
-            # Insert the trade
-            self._insert_stock_trade(trade, user_id)
+            ticker_adjusted_info = self.get_ticker_adjusted_info_by_ticker(trade.ticker)
 
-    def changeProcessState(self, broker_report_id: int, state_code: str) -> None:
+            if not ticker_adjusted_info:
+                self._create_new_ticker_adjusted_info(TickerAdjustedInfo(
+                    priceTicker=trade.ticker, companyInfoTicker=trade.ticker, _metadata=None
+                ))
+
+            # Insert the trade
+            self._create_stock_trade(trade, user_id)
+
+    def change_process_state(self, broker_report_id: int, state_code: str) -> None:
         """
         Change the processing state of a broker report.
 

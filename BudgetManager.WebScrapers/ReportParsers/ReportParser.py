@@ -48,15 +48,15 @@ class ReportParser:
                 self.parse_report_data_to_model(all_reports_data, parser, report_data)
             except Exception as e:
                 print(e)
-                stock_repo.changeProcessState(report_data.id, "ParsingError")
+                stock_repo.change_process_state(report_data.id, "ParsingError")
 
         for parsed_report in all_reports_data:
             try:
                 stock_repo.store_trade_data(parsed_report["data"], parsed_report["user_id"])
-                stock_repo.changeProcessState(parsed_report["report_id"], "Finished")
+                stock_repo.change_process_state(parsed_report["report_id"], "Finished")
             except Exception as e:
                 logging.error(e)
-                stock_repo.changeProcessState(parsed_report["report_id"], "SavingError")
+                stock_repo.change_process_state(parsed_report["report_id"], "SavingError")
 
     def parse_report_data_to_model(self, all_reports_data, parser: BrokerReportParser,
                                    report_data: BrokerReportToProcess):
@@ -94,5 +94,5 @@ class ReportParser:
 
 
 parser = ReportParser()
-parser.process_report_data(StockRepository())
-#parser.test_file_parsing(StockRepository())
+# parser.process_report_data(StockRepository())
+parser.test_file_parsing(StockRepository())
